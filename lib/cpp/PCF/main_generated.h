@@ -1101,6 +1101,44 @@ inline const char *EnumNamepcfGnssSpacecraftBlock(pcfGnssSpacecraftBlock e) {
   return EnumNamespcfGnssSpacecraftBlock()[index];
 }
 
+/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+/// SRP_PRIOR_FORM). Append new values only.
+enum pcfPriorForm : uint8_t {
+  /// Gaussian on the parameter itself, which may take either sign (the
+  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  pcfPriorForm_GAUSSIAN_SIGNED = 0,
+  /// Log-normal: the fit estimates the natural log of the parameter, so the
+  /// parameter is never <= 0. The prior's MEAN is the median, in the
+  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  pcfPriorForm_LOG_NORMAL = 1,
+  pcfPriorForm_MIN = pcfPriorForm_GAUSSIAN_SIGNED,
+  pcfPriorForm_MAX = pcfPriorForm_LOG_NORMAL
+};
+
+inline const pcfPriorForm (&EnumValuespcfPriorForm())[2] {
+  static const pcfPriorForm values[] = {
+    pcfPriorForm_GAUSSIAN_SIGNED,
+    pcfPriorForm_LOG_NORMAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfPriorForm() {
+  static const char * const names[3] = {
+    "GAUSSIAN_SIGNED",
+    "LOG_NORMAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfPriorForm(pcfPriorForm e) {
+  if (::flatbuffers::IsOutRange(e, pcfPriorForm_GAUSSIAN_SIGNED, pcfPriorForm_LOG_NORMAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfPriorForm()[index];
+}
+
 /// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 /// the theory's own sigma and moves only the mean.
 struct PCFGaussianPrior FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -1187,7 +1225,9 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS = 26,
     VT_IMPLAUSIBLE_RMS_KM = 28,
     VT_DRAG_PRIOR = 30,
-    VT_SRP_PRIOR = 32
+    VT_SRP_PRIOR = 32,
+    VT_DRAG_PRIOR_FORM = 34,
+    VT_SRP_PRIOR_FORM = 36
   };
   /// Fit span used when the span rule is not run, hours. Default 48.
   double DEFAULT_SPAN_HOURS() const {
@@ -1259,6 +1299,20 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PCFGaussianPrior *SRP_PRIOR() const {
     return GetPointer<const PCFGaussianPrior *>(VT_SRP_PRIOR);
   }
+  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  /// of ln B_eff.
+  pcfPriorForm DRAG_PRIOR_FORM() const {
+    return static_cast<pcfPriorForm>(GetField<uint8_t>(VT_DRAG_PRIOR_FORM, 0));
+  }
+  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  /// ln AGOM.
+  pcfPriorForm SRP_PRIOR_FORM() const {
+    return static_cast<pcfPriorForm>(GetField<uint8_t>(VT_SRP_PRIOR_FORM, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1280,6 +1334,8 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(DRAG_PRIOR()) &&
            VerifyOffset(verifier, VT_SRP_PRIOR) &&
            verifier.VerifyTable(SRP_PRIOR()) &&
+           VerifyField<uint8_t>(verifier, VT_DRAG_PRIOR_FORM, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SRP_PRIOR_FORM, 1) &&
            verifier.EndTable();
   }
 };
@@ -1333,6 +1389,12 @@ struct PCFFitPolicyBuilder {
   void add_SRP_PRIOR(::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR) {
     fbb_.AddOffset(PCFFitPolicy::VT_SRP_PRIOR, SRP_PRIOR);
   }
+  void add_DRAG_PRIOR_FORM(pcfPriorForm DRAG_PRIOR_FORM) {
+    fbb_.AddElement<uint8_t>(PCFFitPolicy::VT_DRAG_PRIOR_FORM, static_cast<uint8_t>(DRAG_PRIOR_FORM), 0);
+  }
+  void add_SRP_PRIOR_FORM(pcfPriorForm SRP_PRIOR_FORM) {
+    fbb_.AddElement<uint8_t>(PCFFitPolicy::VT_SRP_PRIOR_FORM, static_cast<uint8_t>(SRP_PRIOR_FORM), 0);
+  }
   explicit PCFFitPolicyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1360,7 +1422,9 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
     double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
     double IMPLAUSIBLE_RMS_KM = 100.0,
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
-    ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0) {
+    ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
+    pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
+    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED) {
   PCFFitPolicyBuilder builder_(_fbb);
   builder_.add_IMPLAUSIBLE_RMS_KM(IMPLAUSIBLE_RMS_KM);
   builder_.add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(ECCENTRIC_MAXIMUM_PERIOD_HOURS);
@@ -1376,6 +1440,8 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
   builder_.add_SRP_PRIOR(SRP_PRIOR);
   builder_.add_DRAG_PRIOR(DRAG_PRIOR);
   builder_.add_CANDIDATE_SPANS_HOURS(CANDIDATE_SPANS_HOURS);
+  builder_.add_SRP_PRIOR_FORM(SRP_PRIOR_FORM);
+  builder_.add_DRAG_PRIOR_FORM(DRAG_PRIOR_FORM);
   builder_.add_HAS_HOLDOUT_HOURS(HAS_HOLDOUT_HOURS);
   return builder_.Finish();
 }
@@ -1396,7 +1462,9 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
     double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
     double IMPLAUSIBLE_RMS_KM = 100.0,
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
-    ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0) {
+    ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
+    pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
+    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED) {
   auto CANDIDATE_SPANS_HOURS__ = CANDIDATE_SPANS_HOURS ? _fbb.CreateVector<double>(*CANDIDATE_SPANS_HOURS) : 0;
   return CreatePCFFitPolicy(
       _fbb,
@@ -1414,7 +1482,9 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
       ECCENTRIC_MAXIMUM_PERIOD_HOURS,
       IMPLAUSIBLE_RMS_KM,
       DRAG_PRIOR,
-      SRP_PRIOR);
+      SRP_PRIOR,
+      DRAG_PRIOR_FORM,
+      SRP_PRIOR_FORM);
 }
 
 /// One term of an expression program.

@@ -208,22 +208,48 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+    /// of ln B_eff.
+    /**
+     * @return byte
+     */
+    public function getDRAG_PRIOR_FORM()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfPriorForm::GAUSSIAN_SIGNED;
+    }
+
+    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+    /// ln AGOM.
+    /**
+     * @return byte
+     */
+    public function getSRP_PRIOR_FORM()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfPriorForm::GAUSSIAN_SIGNED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCFFitPolicy(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFFitPolicy
      */
-    public static function createPCFFitPolicy(FlatBufferBuilder $builder, $DEFAULT_SPAN_HOURS, $MINIMUM_SPAN_HOURS, $MAXIMUM_SPAN_HOURS, $CANDIDATE_SPANS_HOURS, $TAIL_HOURS, $EXTENSION_MARGIN, $HOLDOUT_HOURS, $HAS_HOLDOUT_HOURS, $ECCENTRICITY_THRESHOLD, $ECCENTRIC_DEFAULT_SPAN_HOURS, $ECCENTRIC_EXTENSION_MARGIN, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, $IMPLAUSIBLE_RMS_KM, $DRAG_PRIOR, $SRP_PRIOR)
+    public static function createPCFFitPolicy(FlatBufferBuilder $builder, $DEFAULT_SPAN_HOURS, $MINIMUM_SPAN_HOURS, $MAXIMUM_SPAN_HOURS, $CANDIDATE_SPANS_HOURS, $TAIL_HOURS, $EXTENSION_MARGIN, $HOLDOUT_HOURS, $HAS_HOLDOUT_HOURS, $ECCENTRICITY_THRESHOLD, $ECCENTRIC_DEFAULT_SPAN_HOURS, $ECCENTRIC_EXTENSION_MARGIN, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, $IMPLAUSIBLE_RMS_KM, $DRAG_PRIOR, $SRP_PRIOR, $DRAG_PRIOR_FORM, $SRP_PRIOR_FORM)
     {
-        $builder->startObject(15);
+        $builder->startObject(17);
         self::addDEFAULT_SPAN_HOURS($builder, $DEFAULT_SPAN_HOURS);
         self::addMINIMUM_SPAN_HOURS($builder, $MINIMUM_SPAN_HOURS);
         self::addMAXIMUM_SPAN_HOURS($builder, $MAXIMUM_SPAN_HOURS);
@@ -239,6 +265,8 @@ class PCFFitPolicy extends Table
         self::addIMPLAUSIBLE_RMS_KM($builder, $IMPLAUSIBLE_RMS_KM);
         self::addDRAG_PRIOR($builder, $DRAG_PRIOR);
         self::addSRP_PRIOR($builder, $SRP_PRIOR);
+        self::addDRAG_PRIOR_FORM($builder, $DRAG_PRIOR_FORM);
+        self::addSRP_PRIOR_FORM($builder, $SRP_PRIOR_FORM);
         $o = $builder->endObject();
         return $o;
     }
@@ -415,6 +443,26 @@ class PCFFitPolicy extends Table
     public static function addSRP_PRIOR(FlatBufferBuilder $builder, $SRP_PRIOR)
     {
         $builder->addOffsetX(14, $SRP_PRIOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addDRAG_PRIOR_FORM(FlatBufferBuilder $builder, $DRAG_PRIOR_FORM)
+    {
+        $builder->addByteX(15, $DRAG_PRIOR_FORM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSRP_PRIOR_FORM(FlatBufferBuilder $builder, $SRP_PRIOR_FORM)
+    {
+        $builder->addByteX(16, $SRP_PRIOR_FORM, 0);
     }
 
     /**

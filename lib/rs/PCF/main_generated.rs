@@ -2550,6 +2550,109 @@ impl<'a> ::flatbuffers::Verifiable for pcfGnssSpacecraftBlock {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfGnssSpacecraftBlock {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_PRIOR_FORM: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_PRIOR_FORM: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_PRIOR_FORM: [pcfPriorForm; 2] = [
+    pcfPriorForm::GAUSSIAN_SIGNED,
+    pcfPriorForm::LOG_NORMAL,
+];
+
+/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+/// SRP_PRIOR_FORM). Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfPriorForm(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfPriorForm {
+    /// Gaussian on the parameter itself, which may take either sign (the
+    /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+    pub const GAUSSIAN_SIGNED: Self = Self(0);
+    /// Log-normal: the fit estimates the natural log of the parameter, so the
+    /// parameter is never <= 0. The prior's MEAN is the median, in the
+    /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+    /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+    pub const LOG_NORMAL: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::GAUSSIAN_SIGNED,
+        Self::LOG_NORMAL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::GAUSSIAN_SIGNED => Some("GAUSSIAN_SIGNED"),
+            Self::LOG_NORMAL => Some("LOG_NORMAL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfPriorForm {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfPriorForm {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfPriorForm {
+    type Output = pcfPriorForm;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfPriorForm {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfPriorForm {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfPriorForm {}
+
 pub enum PCFGaussianPriorOffset {}
 
 /// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
@@ -2775,6 +2878,8 @@ impl<'a> PCFFitPolicy<'a> {
     pub const VT_IMPLAUSIBLE_RMS_KM: ::flatbuffers::VOffsetT = 28;
     pub const VT_DRAG_PRIOR: ::flatbuffers::VOffsetT = 30;
     pub const VT_SRP_PRIOR: ::flatbuffers::VOffsetT = 32;
+    pub const VT_DRAG_PRIOR_FORM: ::flatbuffers::VOffsetT = 34;
+    pub const VT_SRP_PRIOR_FORM: ::flatbuffers::VOffsetT = 36;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2801,6 +2906,8 @@ impl<'a> PCFFitPolicy<'a> {
         if let Some(x) = args.SRP_PRIOR { builder.add_SRP_PRIOR(x); }
         if let Some(x) = args.DRAG_PRIOR { builder.add_DRAG_PRIOR(x); }
         if let Some(x) = args.CANDIDATE_SPANS_HOURS { builder.add_CANDIDATE_SPANS_HOURS(x); }
+        builder.add_SRP_PRIOR_FORM(args.SRP_PRIOR_FORM);
+        builder.add_DRAG_PRIOR_FORM(args.DRAG_PRIOR_FORM);
         builder.add_HAS_HOLDOUT_HOURS(args.HAS_HOLDOUT_HOURS);
         builder.finish()
     }
@@ -2827,6 +2934,8 @@ impl<'a> PCFFitPolicy<'a> {
         let SRP_PRIOR = self.SRP_PRIOR().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let DRAG_PRIOR_FORM = self.DRAG_PRIOR_FORM();
+        let SRP_PRIOR_FORM = self.SRP_PRIOR_FORM();
         PCFFitPolicyT {
             DEFAULT_SPAN_HOURS,
             MINIMUM_SPAN_HOURS,
@@ -2843,6 +2952,8 @@ impl<'a> PCFFitPolicy<'a> {
             IMPLAUSIBLE_RMS_KM,
             DRAG_PRIOR,
             SRP_PRIOR,
+            DRAG_PRIOR_FORM,
+            SRP_PRIOR_FORM,
         }
     }
 
@@ -2990,6 +3101,30 @@ impl<'a> PCFFitPolicy<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>(PCFFitPolicy::VT_SRP_PRIOR, None)}
     }
+
+    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+    /// of ln B_eff.
+    #[inline]
+    pub fn DRAG_PRIOR_FORM(&self) -> pcfPriorForm {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfPriorForm>(PCFFitPolicy::VT_DRAG_PRIOR_FORM, Some(pcfPriorForm::GAUSSIAN_SIGNED)).unwrap()}
+    }
+
+    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+    /// ln AGOM.
+    #[inline]
+    pub fn SRP_PRIOR_FORM(&self) -> pcfPriorForm {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfPriorForm>(PCFFitPolicy::VT_SRP_PRIOR_FORM, Some(pcfPriorForm::GAUSSIAN_SIGNED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFFitPolicy<'_> {
@@ -3013,6 +3148,8 @@ impl ::flatbuffers::Verifiable for PCFFitPolicy<'_> {
             .visit_field::<f64>("IMPLAUSIBLE_RMS_KM", Self::VT_IMPLAUSIBLE_RMS_KM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>("DRAG_PRIOR", Self::VT_DRAG_PRIOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>("SRP_PRIOR", Self::VT_SRP_PRIOR, false)?
+            .visit_field::<pcfPriorForm>("DRAG_PRIOR_FORM", Self::VT_DRAG_PRIOR_FORM, false)?
+            .visit_field::<pcfPriorForm>("SRP_PRIOR_FORM", Self::VT_SRP_PRIOR_FORM, false)?
             .finish();
         Ok(())
     }
@@ -3034,6 +3171,8 @@ pub struct PCFFitPolicyArgs<'a> {
     pub IMPLAUSIBLE_RMS_KM: f64,
     pub DRAG_PRIOR: Option<::flatbuffers::WIPOffset<PCFGaussianPrior<'a>>>,
     pub SRP_PRIOR: Option<::flatbuffers::WIPOffset<PCFGaussianPrior<'a>>>,
+    pub DRAG_PRIOR_FORM: pcfPriorForm,
+    pub SRP_PRIOR_FORM: pcfPriorForm,
 }
 
 impl<'a> Default for PCFFitPolicyArgs<'a> {
@@ -3055,6 +3194,8 @@ impl<'a> Default for PCFFitPolicyArgs<'a> {
             IMPLAUSIBLE_RMS_KM: 100.0,
             DRAG_PRIOR: None,
             SRP_PRIOR: None,
+            DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
+            SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
         }
     }
 }
@@ -3141,6 +3282,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A
     }
 
     #[inline]
+    pub fn add_DRAG_PRIOR_FORM(&mut self, DRAG_PRIOR_FORM: pcfPriorForm) {
+        self.fbb_.push_slot::<pcfPriorForm>(PCFFitPolicy::VT_DRAG_PRIOR_FORM, DRAG_PRIOR_FORM, pcfPriorForm::GAUSSIAN_SIGNED);
+    }
+
+    #[inline]
+    pub fn add_SRP_PRIOR_FORM(&mut self, SRP_PRIOR_FORM: pcfPriorForm) {
+        self.fbb_.push_slot::<pcfPriorForm>(PCFFitPolicy::VT_SRP_PRIOR_FORM, SRP_PRIOR_FORM, pcfPriorForm::GAUSSIAN_SIGNED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFFitPolicyBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFFitPolicyBuilder {
@@ -3174,6 +3325,8 @@ impl ::core::fmt::Debug for PCFFitPolicy<'_> {
         ds.field("IMPLAUSIBLE_RMS_KM", &self.IMPLAUSIBLE_RMS_KM());
         ds.field("DRAG_PRIOR", &self.DRAG_PRIOR());
         ds.field("SRP_PRIOR", &self.SRP_PRIOR());
+        ds.field("DRAG_PRIOR_FORM", &self.DRAG_PRIOR_FORM());
+        ds.field("SRP_PRIOR_FORM", &self.SRP_PRIOR_FORM());
         ds.finish()
     }
 }
@@ -3196,6 +3349,8 @@ pub struct PCFFitPolicyT {
     pub IMPLAUSIBLE_RMS_KM: f64,
     pub DRAG_PRIOR: Option<alloc::boxed::Box<PCFGaussianPriorT>>,
     pub SRP_PRIOR: Option<alloc::boxed::Box<PCFGaussianPriorT>>,
+    pub DRAG_PRIOR_FORM: pcfPriorForm,
+    pub SRP_PRIOR_FORM: pcfPriorForm,
 }
 
 impl Default for PCFFitPolicyT {
@@ -3216,6 +3371,8 @@ impl Default for PCFFitPolicyT {
             IMPLAUSIBLE_RMS_KM: 100.0,
             DRAG_PRIOR: None,
             SRP_PRIOR: None,
+            DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
+            SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
         }
     }
 }
@@ -3246,6 +3403,8 @@ impl PCFFitPolicyT {
         let SRP_PRIOR = self.SRP_PRIOR.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let DRAG_PRIOR_FORM = self.DRAG_PRIOR_FORM;
+        let SRP_PRIOR_FORM = self.SRP_PRIOR_FORM;
         PCFFitPolicy::create(_fbb, &PCFFitPolicyArgs{
             DEFAULT_SPAN_HOURS,
             MINIMUM_SPAN_HOURS,
@@ -3262,6 +3421,8 @@ impl PCFFitPolicyT {
             IMPLAUSIBLE_RMS_KM,
             DRAG_PRIOR,
             SRP_PRIOR,
+            DRAG_PRIOR_FORM,
+            SRP_PRIOR_FORM,
         })
     }
 }

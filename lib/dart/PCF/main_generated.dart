@@ -951,6 +951,42 @@ class _pcfGnssSpacecraftBlockReader extends fb.Reader<pcfGnssSpacecraftBlock> {
       pcfGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+///  SRP_PRIOR_FORM). Append new values only.
+enum pcfPriorForm {
+  GAUSSIAN_SIGNED(0),
+  LOG_NORMAL(1);
+
+  final int value;
+  const pcfPriorForm(this.value);
+
+  factory pcfPriorForm.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfPriorForm.GAUSSIAN_SIGNED;
+      case 1: return pcfPriorForm.LOG_NORMAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfPriorForm? _createOrNull(int? value) =>
+      value == null ? null : pcfPriorForm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfPriorForm> reader = _pcfPriorFormReader();
+}
+
+class _pcfPriorFormReader extends fb.Reader<pcfPriorForm> {
+  const _pcfPriorFormReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfPriorForm read(fb.BufferContext bc, int offset) =>
+      pcfPriorForm.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 ///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 ///  the theory's own sigma and moves only the mean.
 class PCFGaussianPrior {
@@ -1116,10 +1152,22 @@ class PCFFitPolicy {
   ///  Absent or without sigma: mean 0, sigma 0.05.
   PCFGaussianPrior? get SRP_PRIOR => PCFGaussianPrior.reader.vTableGetNullable(_bc, _bcOffset, 32);
   PCFGaussianPrior? get srpPrior => SRP_PRIOR;
+  ///  The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  ///  estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  ///  MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  ///  of ln B_eff.
+  pcfPriorForm get DRAG_PRIOR_FORM => pcfPriorForm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 34, 0));
+  pcfPriorForm get dragPriorForm => DRAG_PRIOR_FORM;
+  ///  The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  ///  estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  ///  the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  ///  ln AGOM.
+  pcfPriorForm get SRP_PRIOR_FORM => pcfPriorForm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  pcfPriorForm get srpPriorForm => SRP_PRIOR_FORM;
 
   @override
   String toString() {
-    return 'PCFFitPolicy{defaultSpanHours: ${defaultSpanHours}, minimumSpanHours: ${minimumSpanHours}, maximumSpanHours: ${maximumSpanHours}, candidateSpansHours: ${candidateSpansHours}, tailHours: ${tailHours}, extensionMargin: ${extensionMargin}, holdoutHours: ${holdoutHours}, hasHoldoutHours: ${hasHoldoutHours}, eccentricityThreshold: ${eccentricityThreshold}, eccentricDefaultSpanHours: ${eccentricDefaultSpanHours}, eccentricExtensionMargin: ${eccentricExtensionMargin}, eccentricMaximumPeriodHours: ${eccentricMaximumPeriodHours}, implausibleRmsKm: ${implausibleRmsKm}, dragPrior: ${dragPrior}, srpPrior: ${srpPrior}}';
+    return 'PCFFitPolicy{defaultSpanHours: ${defaultSpanHours}, minimumSpanHours: ${minimumSpanHours}, maximumSpanHours: ${maximumSpanHours}, candidateSpansHours: ${candidateSpansHours}, tailHours: ${tailHours}, extensionMargin: ${extensionMargin}, holdoutHours: ${holdoutHours}, hasHoldoutHours: ${hasHoldoutHours}, eccentricityThreshold: ${eccentricityThreshold}, eccentricDefaultSpanHours: ${eccentricDefaultSpanHours}, eccentricExtensionMargin: ${eccentricExtensionMargin}, eccentricMaximumPeriodHours: ${eccentricMaximumPeriodHours}, implausibleRmsKm: ${implausibleRmsKm}, dragPrior: ${dragPrior}, srpPrior: ${srpPrior}, dragPriorForm: ${dragPriorForm}, srpPriorForm: ${srpPriorForm}}';
   }
 }
 
@@ -1137,7 +1185,7 @@ class PCFFitPolicyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(17);
   }
 
   int addDefaultSpanHours(double? DEFAULT_SPAN_HOURS) {
@@ -1200,6 +1248,14 @@ class PCFFitPolicyBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addDragPriorForm(pcfPriorForm? DRAG_PRIOR_FORM) {
+    fbBuilder.addUint8(15, DRAG_PRIOR_FORM?.value);
+    return fbBuilder.offset;
+  }
+  int addSrpPriorForm(pcfPriorForm? SRP_PRIOR_FORM) {
+    fbBuilder.addUint8(16, SRP_PRIOR_FORM?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1222,6 +1278,8 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
   final double? _IMPLAUSIBLE_RMS_KM;
   final PCFGaussianPriorObjectBuilder? _DRAG_PRIOR;
   final PCFGaussianPriorObjectBuilder? _SRP_PRIOR;
+  final pcfPriorForm? _DRAG_PRIOR_FORM;
+  final pcfPriorForm? _SRP_PRIOR_FORM;
 
   PCFFitPolicyObjectBuilder({
     double? DEFAULT_SPAN_HOURS,
@@ -1254,6 +1312,10 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
     PCFGaussianPriorObjectBuilder? dragPrior,
     PCFGaussianPriorObjectBuilder? SRP_PRIOR,
     PCFGaussianPriorObjectBuilder? srpPrior,
+    pcfPriorForm? DRAG_PRIOR_FORM,
+    pcfPriorForm? dragPriorForm,
+    pcfPriorForm? SRP_PRIOR_FORM,
+    pcfPriorForm? srpPriorForm,
   })
       : _DEFAULT_SPAN_HOURS = defaultSpanHours ?? DEFAULT_SPAN_HOURS,
         _MINIMUM_SPAN_HOURS = minimumSpanHours ?? MINIMUM_SPAN_HOURS,
@@ -1269,7 +1331,9 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
         _ECCENTRIC_MAXIMUM_PERIOD_HOURS = eccentricMaximumPeriodHours ?? ECCENTRIC_MAXIMUM_PERIOD_HOURS,
         _IMPLAUSIBLE_RMS_KM = implausibleRmsKm ?? IMPLAUSIBLE_RMS_KM,
         _DRAG_PRIOR = dragPrior ?? DRAG_PRIOR,
-        _SRP_PRIOR = srpPrior ?? SRP_PRIOR;
+        _SRP_PRIOR = srpPrior ?? SRP_PRIOR,
+        _DRAG_PRIOR_FORM = dragPriorForm ?? DRAG_PRIOR_FORM,
+        _SRP_PRIOR_FORM = srpPriorForm ?? SRP_PRIOR_FORM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1278,7 +1342,7 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_CANDIDATE_SPANS_HOURS!);
     final int? DRAG_PRIOROffset = _DRAG_PRIOR?.getOrCreateOffset(fbBuilder);
     final int? SRP_PRIOROffset = _SRP_PRIOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(17);
     fbBuilder.addFloat64(0, _DEFAULT_SPAN_HOURS);
     fbBuilder.addFloat64(1, _MINIMUM_SPAN_HOURS);
     fbBuilder.addFloat64(2, _MAXIMUM_SPAN_HOURS);
@@ -1294,6 +1358,8 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(12, _IMPLAUSIBLE_RMS_KM);
     fbBuilder.addOffset(13, DRAG_PRIOROffset);
     fbBuilder.addOffset(14, SRP_PRIOROffset);
+    fbBuilder.addUint8(15, _DRAG_PRIOR_FORM?.value);
+    fbBuilder.addUint8(16, _SRP_PRIOR_FORM?.value);
     return fbBuilder.endTable();
   }
 

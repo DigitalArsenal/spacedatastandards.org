@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.271.0+1792973018242",
+  version: "1.272.0+1793023215656",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: cfbbb6d32f7962636fdd4577fc865fe6883ea9a5b6dc1330f8f0143440a3f946
-// Version: 1.0.5
+      IDL: `// Hash: d6aa7409973b7e325d38f8794f029adc2c62797e4884e4008ca772b70e8c23eb
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -380,6 +380,19 @@ enum pcfOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
 /// GNSS spacecraft block, selecting the box-wing surfaces.
 enum pcfGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
 
+/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+/// SRP_PRIOR_FORM). Append new values only.
+enum pcfPriorForm : ubyte {
+  /// Gaussian on the parameter itself, which may take either sign (the
+  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  GAUSSIAN_SIGNED = 0,
+  /// Log-normal: the fit estimates the natural log of the parameter, so the
+  /// parameter is never <= 0. The prior's MEAN is the median, in the
+  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  LOG_NORMAL = 1
+}
+
 /// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 /// the theory's own sigma and moves only the mean.
 table PCFGaussianPrior {
@@ -434,6 +447,16 @@ table PCFFitPolicy {
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.
   SRP_PRIOR:PCFGaussianPrior;
+  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  /// of ln B_eff.
+  DRAG_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
+  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  /// ln AGOM.
+  SRP_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
 }
 
 /// One term of an expression program.
@@ -33772,6 +33795,13 @@ var json_default = {
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         RFMOrigin: {
           type: "object",
           description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -35507,6 +35537,14 @@ var json_default = {
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -71883,6 +71921,13 @@ verbatim what that source states about itself.`,
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -75244,6 +75289,14 @@ verbatim what that source states about itself.`,
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -133604,6 +133657,13 @@ format class are named by $NCD's container format.`
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -154164,6 +154224,14 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -233357,6 +233425,13 @@ balance service's own rate.`
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -236631,6 +236706,14 @@ balance service's own rate.`
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -268760,6 +268843,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -272293,6 +272383,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -312272,6 +312370,13 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "GPS_IIF"
           ]
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ]
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -316296,6 +316401,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
             }
           },
           additionalProperties: false
@@ -324487,6 +324600,25 @@ var fbjson_default = {
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         RFMOrigin: {
           type: "object",
           description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -332445,6 +332577,40 @@ var fbjson_default = {
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -422446,6 +422612,25 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -434616,6 +434801,40 @@ verbatim what that source states about itself.`,
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -571832,6 +572051,25 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -620875,6 +621113,40 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -758936,6 +759208,25 @@ balance service's own rate.`,
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -770781,6 +771072,40 @@ balance service's own rate.`,
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -848005,6 +848330,25 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -860609,6 +860953,40 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -939629,6 +940007,25 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             }
           }
         },
+        pcfPriorForm: {
+          type: "string",
+          enum: [
+            "GAUSSIAN_SIGNED",
+            "LOG_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            GAUSSIAN_SIGNED: {
+              value: 0,
+              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            LOG_NORMAL: {
+              value: 1,
+              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          }
+        },
         propagatorStateFlags: {
           type: "string",
           enum: [
@@ -952746,6 +953143,40 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               $ref: "#/definitions/PCFGaussianPrior",
               description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
+            },
+            DRAG_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+            },
+            SRP_PRIOR_FORM: {
+              $ref: "#/definitions/pcfPriorForm",
+              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                GAUSSIAN_SIGNED: {
+                  value: 0,
+                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                },
+                LOG_NORMAL: {
+                  value: 1,
+                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                }
+              },
+              "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             }
           },
           additionalProperties: false
@@ -961417,7 +961848,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

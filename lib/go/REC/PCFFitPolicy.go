@@ -405,8 +405,64 @@ func (rcv *PCFFitPolicy) SrpPrior(obj *PCFGaussianPrior) *PCFGaussianPrior {
 
 /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
 /// Absent or without sigma: mean 0, sigma 0.05.
+/// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+/// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+/// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+/// of ln B_eff.
+func (rcv *PCFFitPolicy) DRAG_PRIOR_FORM() pcfPriorForm {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return pcfPriorForm(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PCFFitPolicy) DragPriorForm() pcfPriorForm {
+	return rcv.DRAG_PRIOR_FORM()
+}
+
+/// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+/// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+/// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+/// of ln B_eff.
+func (rcv *PCFFitPolicy) MutateDRAG_PRIOR_FORM(n pcfPriorForm) bool {
+	return rcv._tab.MutateByteSlot(34, byte(n))
+}
+
+func (rcv *PCFFitPolicy) MutateDragPriorForm(n pcfPriorForm) bool {
+	return rcv.MutateDRAG_PRIOR_FORM(n)
+}
+
+/// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+/// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+/// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+/// ln AGOM.
+func (rcv *PCFFitPolicy) SRP_PRIOR_FORM() pcfPriorForm {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return pcfPriorForm(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PCFFitPolicy) SrpPriorForm() pcfPriorForm {
+	return rcv.SRP_PRIOR_FORM()
+}
+
+/// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+/// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+/// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+/// ln AGOM.
+func (rcv *PCFFitPolicy) MutateSRP_PRIOR_FORM(n pcfPriorForm) bool {
+	return rcv._tab.MutateByteSlot(36, byte(n))
+}
+
+func (rcv *PCFFitPolicy) MutateSrpPriorForm(n pcfPriorForm) bool {
+	return rcv.MutateSRP_PRIOR_FORM(n)
+}
+
 func PCFFitPolicyStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(17)
 }
 func PCFFitPolicyAddDEFAULT_SPAN_HOURS(builder *flatbuffers.Builder, DEFAULT_SPAN_HOURS float64) {
 	builder.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
@@ -503,6 +559,18 @@ func PCFFitPolicyAddSRP_PRIOR(builder *flatbuffers.Builder, SRP_PRIOR flatbuffer
 }
 func PCFFitPolicyAddSrpPrior(builder *flatbuffers.Builder, SRP_PRIOR flatbuffers.UOffsetT) {
 	PCFFitPolicyAddSRP_PRIOR(builder, SRP_PRIOR)
+}
+func PCFFitPolicyAddDRAG_PRIOR_FORM(builder *flatbuffers.Builder, DRAG_PRIOR_FORM pcfPriorForm) {
+	builder.PrependByteSlot(15, byte(DRAG_PRIOR_FORM), 0)
+}
+func PCFFitPolicyAddDragPriorForm(builder *flatbuffers.Builder, DRAG_PRIOR_FORM pcfPriorForm) {
+	PCFFitPolicyAddDRAG_PRIOR_FORM(builder, DRAG_PRIOR_FORM)
+}
+func PCFFitPolicyAddSRP_PRIOR_FORM(builder *flatbuffers.Builder, SRP_PRIOR_FORM pcfPriorForm) {
+	builder.PrependByteSlot(16, byte(SRP_PRIOR_FORM), 0)
+}
+func PCFFitPolicyAddSrpPriorForm(builder *flatbuffers.Builder, SRP_PRIOR_FORM pcfPriorForm) {
+	PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM)
 }
 func PCFFitPolicyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

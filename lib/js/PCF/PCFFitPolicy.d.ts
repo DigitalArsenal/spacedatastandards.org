@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { PCFGaussianPrior, PCFGaussianPriorT } from './PCFGaussianPrior.js';
+import { pcfPriorForm } from './pcfPriorForm.js';
 /**
  * Fit policy: how long an arc a fit uses, how that is validated, and what a
  * fit refuses.
@@ -82,6 +83,20 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
      * Absent or without sigma: mean 0, sigma 0.05.
      */
     SRP_PRIOR(obj?: PCFGaussianPrior): PCFGaussianPrior | null;
+    /**
+     * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+     * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+     * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+     * of ln B_eff.
+     */
+    DRAG_PRIOR_FORM(): pcfPriorForm;
+    /**
+     * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+     * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+     * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+     * ln AGOM.
+     */
+    SRP_PRIOR_FORM(): pcfPriorForm;
     static startPCFFitPolicy(builder: flatbuffers.Builder): void;
     static addDefaultSpanHours(builder: flatbuffers.Builder, DEFAULT_SPAN_HOURS: number): void;
     static addMinimumSpanHours(builder: flatbuffers.Builder, MINIMUM_SPAN_HOURS: number): void;
@@ -104,6 +119,8 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
     static addImplausibleRmsKm(builder: flatbuffers.Builder, IMPLAUSIBLE_RMS_KM: number): void;
     static addDragPrior(builder: flatbuffers.Builder, DRAG_PRIOROffset: flatbuffers.Offset): void;
     static addSrpPrior(builder: flatbuffers.Builder, SRP_PRIOROffset: flatbuffers.Offset): void;
+    static addDragPriorForm(builder: flatbuffers.Builder, DRAG_PRIOR_FORM: pcfPriorForm): void;
+    static addSrpPriorForm(builder: flatbuffers.Builder, SRP_PRIOR_FORM: pcfPriorForm): void;
     static endPCFFitPolicy(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PCFFitPolicyT;
     unpackTo(_o: PCFFitPolicyT): void;
@@ -124,7 +141,9 @@ export declare class PCFFitPolicyT implements flatbuffers.IGeneratedObject {
     IMPLAUSIBLE_RMS_KM: number;
     DRAG_PRIOR: PCFGaussianPriorT | null;
     SRP_PRIOR: PCFGaussianPriorT | null;
-    constructor(DEFAULT_SPAN_HOURS?: number, MINIMUM_SPAN_HOURS?: number, MAXIMUM_SPAN_HOURS?: number, CANDIDATE_SPANS_HOURS?: (number)[], TAIL_HOURS?: number, EXTENSION_MARGIN?: number, HOLDOUT_HOURS?: number, HAS_HOLDOUT_HOURS?: boolean, ECCENTRICITY_THRESHOLD?: number, ECCENTRIC_DEFAULT_SPAN_HOURS?: number, ECCENTRIC_EXTENSION_MARGIN?: number, ECCENTRIC_MAXIMUM_PERIOD_HOURS?: number, IMPLAUSIBLE_RMS_KM?: number, DRAG_PRIOR?: PCFGaussianPriorT | null, SRP_PRIOR?: PCFGaussianPriorT | null);
+    DRAG_PRIOR_FORM: pcfPriorForm;
+    SRP_PRIOR_FORM: pcfPriorForm;
+    constructor(DEFAULT_SPAN_HOURS?: number, MINIMUM_SPAN_HOURS?: number, MAXIMUM_SPAN_HOURS?: number, CANDIDATE_SPANS_HOURS?: (number)[], TAIL_HOURS?: number, EXTENSION_MARGIN?: number, HOLDOUT_HOURS?: number, HAS_HOLDOUT_HOURS?: boolean, ECCENTRICITY_THRESHOLD?: number, ECCENTRIC_DEFAULT_SPAN_HOURS?: number, ECCENTRIC_EXTENSION_MARGIN?: number, ECCENTRIC_MAXIMUM_PERIOD_HOURS?: number, IMPLAUSIBLE_RMS_KM?: number, DRAG_PRIOR?: PCFGaussianPriorT | null, SRP_PRIOR?: PCFGaussianPriorT | null, DRAG_PRIOR_FORM?: pcfPriorForm, SRP_PRIOR_FORM?: pcfPriorForm);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCFFitPolicy.d.ts.map

@@ -1,0 +1,19 @@
+/**
+ * The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+ * SRP_PRIOR_FORM). Append new values only.
+ */
+export declare enum pcfPriorForm {
+    /**
+     * Gaussian on the parameter itself, which may take either sign (the
+     * default): the prior's MEAN and SIGMA are in the parameter's unit.
+     */
+    GAUSSIAN_SIGNED = 0,
+    /**
+     * Log-normal: the fit estimates the natural log of the parameter, so the
+     * parameter is never <= 0. The prior's MEAN is the median, in the
+     * parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+     * the natural log of the parameter. The prior is required (HAS_SIGMA true).
+     */
+    LOG_NORMAL = 1
+}
+//# sourceMappingURL=pcfPriorForm.d.ts.map

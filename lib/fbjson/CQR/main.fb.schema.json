@@ -5146,6 +5146,25 @@
         }
       }
     },
+    "pcfPriorForm": {
+      "type": "string",
+      "enum": [
+        "GAUSSIAN_SIGNED",
+        "LOG_NORMAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "GAUSSIAN_SIGNED": {
+          "value": 0,
+          "description": "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+        },
+        "LOG_NORMAL": {
+          "value": 1,
+          "description": "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+        }
+      }
+    },
     "propagatorStateFlags": {
       "type": "string",
       "enum": [
@@ -17750,6 +17769,40 @@
           "$ref": "#/definitions/PCFGaussianPrior",
           "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
           "x-flatbuffer-type": "PCFGaussianPrior"
+        },
+        "DRAG_PRIOR_FORM": {
+          "$ref": "#/definitions/pcfPriorForm",
+          "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "GAUSSIAN_SIGNED": {
+              "value": 0,
+              "description": "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            "LOG_NORMAL": {
+              "value": 1,
+              "description": "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          },
+          "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+        },
+        "SRP_PRIOR_FORM": {
+          "$ref": "#/definitions/pcfPriorForm",
+          "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "GAUSSIAN_SIGNED": {
+              "value": 0,
+              "description": "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+            },
+            "LOG_NORMAL": {
+              "value": 1,
+              "description": "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+            }
+          },
+          "x-flatbuffer-default": "GAUSSIAN_SIGNED"
         }
       },
       "additionalProperties": false

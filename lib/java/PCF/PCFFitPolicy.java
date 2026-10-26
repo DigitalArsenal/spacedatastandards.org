@@ -105,6 +105,20 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
    */
   public PCFGaussianPrior SRP_PRIOR() { return SRP_PRIOR(new PCFGaussianPrior()); }
   public PCFGaussianPrior SRP_PRIOR(PCFGaussianPrior obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+   * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+   * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+   * of ln B_eff.
+   */
+  public int DRAG_PRIOR_FORM() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+   * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+   * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+   * ln AGOM.
+   */
+  public int SRP_PRIOR_FORM() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createPCFFitPolicy(FlatBufferBuilder builder,
       double DEFAULT_SPAN_HOURS,
@@ -121,8 +135,10 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
       double ECCENTRIC_MAXIMUM_PERIOD_HOURS,
       double IMPLAUSIBLE_RMS_KM,
       int DRAG_PRIOROffset,
-      int SRP_PRIOROffset) {
-    builder.startTable(15);
+      int SRP_PRIOROffset,
+      int DRAG_PRIOR_FORM,
+      int SRP_PRIOR_FORM) {
+    builder.startTable(17);
     PCFFitPolicy.addImplausibleRmsKm(builder, IMPLAUSIBLE_RMS_KM);
     PCFFitPolicy.addEccentricMaximumPeriodHours(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS);
     PCFFitPolicy.addEccentricExtensionMargin(builder, ECCENTRIC_EXTENSION_MARGIN);
@@ -137,11 +153,13 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
     PCFFitPolicy.addSrpPrior(builder, SRP_PRIOROffset);
     PCFFitPolicy.addDragPrior(builder, DRAG_PRIOROffset);
     PCFFitPolicy.addCandidateSpansHours(builder, CANDIDATE_SPANS_HOURSOffset);
+    PCFFitPolicy.addSrpPriorForm(builder, SRP_PRIOR_FORM);
+    PCFFitPolicy.addDragPriorForm(builder, DRAG_PRIOR_FORM);
     PCFFitPolicy.addHasHoldoutHours(builder, HAS_HOLDOUT_HOURS);
     return PCFFitPolicy.endPCFFitPolicy(builder);
   }
 
-  public static void startPCFFitPolicy(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startPCFFitPolicy(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addDefaultSpanHours(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.addDouble(0, DEFAULT_SPAN_HOURS, 48.0); }
   public static void addMinimumSpanHours(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.addDouble(1, MINIMUM_SPAN_HOURS, 24.0); }
   public static void addMaximumSpanHours(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.addDouble(2, MAXIMUM_SPAN_HOURS, 120.0); }
@@ -159,6 +177,8 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   public static void addImplausibleRmsKm(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.addDouble(12, IMPLAUSIBLE_RMS_KM, 100.0); }
   public static void addDragPrior(FlatBufferBuilder builder, int DRAG_PRIOROffset) { builder.addOffset(13, DRAG_PRIOROffset, 0); }
   public static void addSrpPrior(FlatBufferBuilder builder, int SRP_PRIOROffset) { builder.addOffset(14, SRP_PRIOROffset, 0); }
+  public static void addDragPriorForm(FlatBufferBuilder builder, int DRAG_PRIOR_FORM) { builder.addByte(15, (byte) DRAG_PRIOR_FORM, (byte) 0); }
+  public static void addSrpPriorForm(FlatBufferBuilder builder, int SRP_PRIOR_FORM) { builder.addByte(16, (byte) SRP_PRIOR_FORM, (byte) 0); }
   public static int endPCFFitPolicy(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

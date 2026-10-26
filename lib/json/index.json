@@ -937,6 +937,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "RFMOrigin": {
                     "type": "object",
                     "description": "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -2672,6 +2679,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false
@@ -38981,6 +38996,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "propagatorStateFlags": {
                     "type": "string",
                     "enum": [
@@ -42342,6 +42364,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false
@@ -100603,6 +100633,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "propagatorStateFlags": {
                     "type": "string",
                     "enum": [
@@ -121132,6 +121169,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false
@@ -200259,6 +200304,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "propagatorStateFlags": {
                     "type": "string",
                     "enum": [
@@ -203533,6 +203585,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false
@@ -235604,6 +235664,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "propagatorStateFlags": {
                     "type": "string",
                     "enum": [
@@ -239137,6 +239204,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false
@@ -279041,6 +279116,13 @@
                         "GPS_IIF"
                     ]
                 },
+                "pcfPriorForm": {
+                    "type": "string",
+                    "enum": [
+                        "GAUSSIAN_SIGNED",
+                        "LOG_NORMAL"
+                    ]
+                },
                 "propagatorStateFlags": {
                     "type": "string",
                     "enum": [
@@ -283065,6 +283147,14 @@
                         "SRP_PRIOR": {
                             "$ref": "#/definitions/PCFGaussianPrior",
                             "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                        },
+                        "DRAG_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                        },
+                        "SRP_PRIOR_FORM": {
+                            "$ref": "#/definitions/pcfPriorForm",
+                            "description": "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
                         }
                     },
                     "additionalProperties": false

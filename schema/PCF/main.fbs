@@ -1,5 +1,5 @@
-// Hash: cfbbb6d32f7962636fdd4577fc865fe6883ea9a5b6dc1330f8f0143440a3f946
-// Version: 1.0.5
+// Hash: d6aa7409973b7e325d38f8794f029adc2c62797e4884e4008ca772b70e8c23eb
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -344,6 +344,19 @@ enum pcfOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
 /// GNSS spacecraft block, selecting the box-wing surfaces.
 enum pcfGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
 
+/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+/// SRP_PRIOR_FORM). Append new values only.
+enum pcfPriorForm : ubyte {
+  /// Gaussian on the parameter itself, which may take either sign (the
+  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  GAUSSIAN_SIGNED = 0,
+  /// Log-normal: the fit estimates the natural log of the parameter, so the
+  /// parameter is never <= 0. The prior's MEAN is the median, in the
+  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  LOG_NORMAL = 1
+}
+
 /// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 /// the theory's own sigma and moves only the mean.
 table PCFGaussianPrior {
@@ -398,6 +411,16 @@ table PCFFitPolicy {
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.
   SRP_PRIOR:PCFGaussianPrior;
+  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  /// of ln B_eff.
+  DRAG_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
+  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  /// ln AGOM.
+  SRP_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
 }
 
 /// One term of an expression program.

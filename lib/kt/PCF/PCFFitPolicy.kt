@@ -177,6 +177,28 @@ class PCFFitPolicy : Table() {
             null
         }
     }
+    /**
+     * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+     * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+     * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+     * of ln B_eff.
+     */
+    val dragPriorForm : UByte
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+     * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+     * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+     * ln AGOM.
+     */
+    val srpPriorForm : UByte
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFFitPolicy(_bb: ByteBuffer): PCFFitPolicy = getRootAsPCFFitPolicy(_bb, PCFFitPolicy())
@@ -184,8 +206,8 @@ class PCFFitPolicy : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFFitPolicy(builder: FlatBufferBuilder, defaultSpanHours: Double, minimumSpanHours: Double, maximumSpanHours: Double, candidateSpansHoursOffset: Int, tailHours: Double, extensionMargin: Double, holdoutHours: Double, hasHoldoutHours: Boolean, eccentricityThreshold: Double, eccentricDefaultSpanHours: Double, eccentricExtensionMargin: Double, eccentricMaximumPeriodHours: Double, implausibleRmsKm: Double, dragPriorOffset: Int, srpPriorOffset: Int) : Int {
-            builder.startTable(15)
+        fun createPCFFitPolicy(builder: FlatBufferBuilder, defaultSpanHours: Double, minimumSpanHours: Double, maximumSpanHours: Double, candidateSpansHoursOffset: Int, tailHours: Double, extensionMargin: Double, holdoutHours: Double, hasHoldoutHours: Boolean, eccentricityThreshold: Double, eccentricDefaultSpanHours: Double, eccentricExtensionMargin: Double, eccentricMaximumPeriodHours: Double, implausibleRmsKm: Double, dragPriorOffset: Int, srpPriorOffset: Int, dragPriorForm: UByte, srpPriorForm: UByte) : Int {
+            builder.startTable(17)
             addIMPLAUSIBLERMSKM(builder, implausibleRmsKm)
             addECCENTRICMAXIMUMPERIODHOURS(builder, eccentricMaximumPeriodHours)
             addECCENTRICEXTENSIONMARGIN(builder, eccentricExtensionMargin)
@@ -200,10 +222,12 @@ class PCFFitPolicy : Table() {
             addSRPPRIOR(builder, srpPriorOffset)
             addDRAGPRIOR(builder, dragPriorOffset)
             addCANDIDATESPANSHOURS(builder, candidateSpansHoursOffset)
+            addSRPPRIORFORM(builder, srpPriorForm)
+            addDRAGPRIORFORM(builder, dragPriorForm)
             addHASHOLDOUTHOURS(builder, hasHoldoutHours)
             return endPCFFitPolicy(builder)
         }
-        fun startPCFFitPolicy(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startPCFFitPolicy(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addDEFAULTSPANHOURS(builder: FlatBufferBuilder, defaultSpanHours: Double) = builder.addDouble(0, defaultSpanHours, 48.0)
         fun addMINIMUMSPANHOURS(builder: FlatBufferBuilder, minimumSpanHours: Double) = builder.addDouble(1, minimumSpanHours, 24.0)
         fun addMAXIMUMSPANHOURS(builder: FlatBufferBuilder, maximumSpanHours: Double) = builder.addDouble(2, maximumSpanHours, 120.0)
@@ -227,6 +251,8 @@ class PCFFitPolicy : Table() {
         fun addIMPLAUSIBLERMSKM(builder: FlatBufferBuilder, implausibleRmsKm: Double) = builder.addDouble(12, implausibleRmsKm, 100.0)
         fun addDRAGPRIOR(builder: FlatBufferBuilder, dragPrior: Int) = builder.addOffset(13, dragPrior, 0)
         fun addSRPPRIOR(builder: FlatBufferBuilder, srpPrior: Int) = builder.addOffset(14, srpPrior, 0)
+        fun addDRAGPRIORFORM(builder: FlatBufferBuilder, dragPriorForm: UByte) = builder.addByte(15, dragPriorForm.toByte(), 0)
+        fun addSRPPRIORFORM(builder: FlatBufferBuilder, srpPriorForm: UByte) = builder.addByte(16, srpPriorForm.toByte(), 0)
         fun endPCFFitPolicy(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

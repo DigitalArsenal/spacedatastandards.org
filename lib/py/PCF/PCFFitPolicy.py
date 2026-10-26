@@ -188,8 +188,30 @@ class PCFFitPolicy(object):
             return obj
         return None
 
+    # The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    # estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+    # MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+    # of ln B_eff.
+    # PCFFitPolicy
+    def DRAG_PRIOR_FORM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    # estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+    # the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+    # ln AGOM.
+    # PCFFitPolicy
+    def SRP_PRIOR_FORM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def PCFFitPolicyStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(17)
 
 def Start(builder):
     PCFFitPolicyStart(builder)
@@ -300,6 +322,18 @@ def PCFFitPolicyAddSRP_PRIOR(builder, SRP_PRIOR):
 def AddSRP_PRIOR(builder, SRP_PRIOR):
     PCFFitPolicyAddSRP_PRIOR(builder, SRP_PRIOR)
 
+def PCFFitPolicyAddDRAG_PRIOR_FORM(builder, DRAG_PRIOR_FORM):
+    builder.PrependUint8Slot(15, DRAG_PRIOR_FORM, 0)
+
+def AddDRAG_PRIOR_FORM(builder, DRAG_PRIOR_FORM):
+    PCFFitPolicyAddDRAG_PRIOR_FORM(builder, DRAG_PRIOR_FORM)
+
+def PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM):
+    builder.PrependUint8Slot(16, SRP_PRIOR_FORM, 0)
+
+def AddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM):
+    PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM)
+
 def PCFFitPolicyEnd(builder):
     return builder.EndObject()
 
@@ -332,6 +366,8 @@ class PCFFitPolicyT(object):
         IMPLAUSIBLE_RMS_KM = 100.0,
         DRAG_PRIOR = None,
         SRP_PRIOR = None,
+        DRAG_PRIOR_FORM = 0,
+        SRP_PRIOR_FORM = 0,
     ):
         self.DEFAULT_SPAN_HOURS = DEFAULT_SPAN_HOURS  # type: float
         self.MINIMUM_SPAN_HOURS = MINIMUM_SPAN_HOURS  # type: float
@@ -348,6 +384,8 @@ class PCFFitPolicyT(object):
         self.IMPLAUSIBLE_RMS_KM = IMPLAUSIBLE_RMS_KM  # type: float
         self.DRAG_PRIOR = DRAG_PRIOR  # type: Optional[PCFGaussianPrior.PCFGaussianPriorT]
         self.SRP_PRIOR = SRP_PRIOR  # type: Optional[PCFGaussianPrior.PCFGaussianPriorT]
+        self.DRAG_PRIOR_FORM = DRAG_PRIOR_FORM  # type: int
+        self.SRP_PRIOR_FORM = SRP_PRIOR_FORM  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -393,6 +431,8 @@ class PCFFitPolicyT(object):
             self.DRAG_PRIOR = PCFGaussianPrior.PCFGaussianPriorT.InitFromObj(PCFFitPolicy.DRAG_PRIOR())
         if PCFFitPolicy.SRP_PRIOR() is not None:
             self.SRP_PRIOR = PCFGaussianPrior.PCFGaussianPriorT.InitFromObj(PCFFitPolicy.SRP_PRIOR())
+        self.DRAG_PRIOR_FORM = PCFFitPolicy.DRAG_PRIOR_FORM()
+        self.SRP_PRIOR_FORM = PCFFitPolicy.SRP_PRIOR_FORM()
 
     # PCFFitPolicyT
     def Pack(self, builder):
@@ -427,5 +467,7 @@ class PCFFitPolicyT(object):
             PCFFitPolicyAddDRAG_PRIOR(builder, DRAG_PRIOR)
         if self.SRP_PRIOR is not None:
             PCFFitPolicyAddSRP_PRIOR(builder, SRP_PRIOR)
+        PCFFitPolicyAddDRAG_PRIOR_FORM(builder, self.DRAG_PRIOR_FORM)
+        PCFFitPolicyAddSRP_PRIOR_FORM(builder, self.SRP_PRIOR_FORM)
         PCFFitPolicy = PCFFitPolicyEnd(builder)
         return PCFFitPolicy

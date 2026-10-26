@@ -110,6 +110,7 @@ export * from './pcfNeutralWind.js';
 export * from './pcfOceanTideModel.js';
 export * from './PCFOutput.js';
 export * from './pcfOutputFrame.js';
+export * from './pcfPriorForm.js';
 export * from './pcfRadiationPressureFamily.js';
 export * from './pcfRelativityTerms.js';
 export * from './pcfSolidTideModel.js';

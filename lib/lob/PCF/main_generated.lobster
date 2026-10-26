@@ -346,6 +346,18 @@ enum pcfGnssSpacecraftBlock:
     pcfGnssSpacecraftBlock_GPS_IIR_M = 2
     pcfGnssSpacecraftBlock_GPS_IIF = 3
 
+/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+/// SRP_PRIOR_FORM). Append new values only.
+enum pcfPriorForm:
+    /// Gaussian on the parameter itself, which may take either sign (the
+    /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+    pcfPriorForm_GAUSSIAN_SIGNED = 0
+    /// Log-normal: the fit estimates the natural log of the parameter, so the
+    /// parameter is never <= 0. The prior's MEAN is the median, in the
+    /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+    /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+    pcfPriorForm_LOG_NORMAL = 1
+
 class PCFGaussianPrior
 
 class PCFFitPolicy
@@ -464,13 +476,25 @@ class PCFFitPolicy : flatbuffers.handle
     def SRP_PRIOR() -> PCFGaussianPrior?:
         let o = flatbuffers.field_table(buf_, pos_, 32)
         return if o: PCFGaussianPrior { buf_, o } else: nil
+    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+    /// of ln B_eff.
+    def DRAG_PRIOR_FORM() -> pcfPriorForm:
+        return pcfPriorForm(flatbuffers.field_uint8(buf_, pos_, 34, 0))
+    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+    /// ln AGOM.
+    def SRP_PRIOR_FORM() -> pcfPriorForm:
+        return pcfPriorForm(flatbuffers.field_uint8(buf_, pos_, 36, 0))
 
 def GetRootAsPCFFitPolicy(buf:string): return PCFFitPolicy { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFFitPolicyBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(17)
         return this
     def add_DEFAULT_SPAN_HOURS(DEFAULT_SPAN_HOURS:float):
         b_.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
@@ -516,6 +540,12 @@ struct PCFFitPolicyBuilder:
         return this
     def add_SRP_PRIOR(SRP_PRIOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, SRP_PRIOR)
+        return this
+    def add_DRAG_PRIOR_FORM(DRAG_PRIOR_FORM:pcfPriorForm):
+        b_.PrependUint8Slot(15, DRAG_PRIOR_FORM, 0)
+        return this
+    def add_SRP_PRIOR_FORM(SRP_PRIOR_FORM:pcfPriorForm):
+        b_.PrependUint8Slot(16, SRP_PRIOR_FORM, 0)
         return this
     def end():
         return b_.EndObject()

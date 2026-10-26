@@ -65,6 +65,16 @@ public struct PCFFitPolicy : IFlatbufferObject
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.
   public PCFGaussianPrior? SRP_PRIOR { get { int o = __p.__offset(32); return o != 0 ? (PCFGaussianPrior?)(new PCFGaussianPrior()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  /// of ln B_eff.
+  public pcfPriorForm DRAG_PRIOR_FORM { get { int o = __p.__offset(34); return o != 0 ? (pcfPriorForm)__p.bb.Get(o + __p.bb_pos) : pcfPriorForm.GAUSSIAN_SIGNED; } }
+  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  /// ln AGOM.
+  public pcfPriorForm SRP_PRIOR_FORM { get { int o = __p.__offset(36); return o != 0 ? (pcfPriorForm)__p.bb.Get(o + __p.bb_pos) : pcfPriorForm.GAUSSIAN_SIGNED; } }
 
   public static Offset<PCFFitPolicy> CreatePCFFitPolicy(FlatBufferBuilder builder,
       double DEFAULT_SPAN_HOURS = 48.0,
@@ -81,8 +91,10 @@ public struct PCFFitPolicy : IFlatbufferObject
       double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
       double IMPLAUSIBLE_RMS_KM = 100.0,
       Offset<PCFGaussianPrior> DRAG_PRIOROffset = default(Offset<PCFGaussianPrior>),
-      Offset<PCFGaussianPrior> SRP_PRIOROffset = default(Offset<PCFGaussianPrior>)) {
-    builder.StartTable(15);
+      Offset<PCFGaussianPrior> SRP_PRIOROffset = default(Offset<PCFGaussianPrior>),
+      pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED,
+      pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED) {
+    builder.StartTable(17);
     PCFFitPolicy.AddIMPLAUSIBLE_RMS_KM(builder, IMPLAUSIBLE_RMS_KM);
     PCFFitPolicy.AddECCENTRIC_MAXIMUM_PERIOD_HOURS(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS);
     PCFFitPolicy.AddECCENTRIC_EXTENSION_MARGIN(builder, ECCENTRIC_EXTENSION_MARGIN);
@@ -97,11 +109,13 @@ public struct PCFFitPolicy : IFlatbufferObject
     PCFFitPolicy.AddSRP_PRIOR(builder, SRP_PRIOROffset);
     PCFFitPolicy.AddDRAG_PRIOR(builder, DRAG_PRIOROffset);
     PCFFitPolicy.AddCANDIDATE_SPANS_HOURS(builder, CANDIDATE_SPANS_HOURSOffset);
+    PCFFitPolicy.AddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM);
+    PCFFitPolicy.AddDRAG_PRIOR_FORM(builder, DRAG_PRIOR_FORM);
     PCFFitPolicy.AddHAS_HOLDOUT_HOURS(builder, HAS_HOLDOUT_HOURS);
     return PCFFitPolicy.EndPCFFitPolicy(builder);
   }
 
-  public static void StartPCFFitPolicy(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartPCFFitPolicy(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddDEFAULT_SPAN_HOURS(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.AddDouble(0, DEFAULT_SPAN_HOURS, 48.0); }
   public static void AddMINIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.AddDouble(1, MINIMUM_SPAN_HOURS, 24.0); }
   public static void AddMAXIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.AddDouble(2, MAXIMUM_SPAN_HOURS, 120.0); }
@@ -122,6 +136,8 @@ public struct PCFFitPolicy : IFlatbufferObject
   public static void AddIMPLAUSIBLE_RMS_KM(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.AddDouble(12, IMPLAUSIBLE_RMS_KM, 100.0); }
   public static void AddDRAG_PRIOR(FlatBufferBuilder builder, Offset<PCFGaussianPrior> DRAG_PRIOROffset) { builder.AddOffset(13, DRAG_PRIOROffset.Value, 0); }
   public static void AddSRP_PRIOR(FlatBufferBuilder builder, Offset<PCFGaussianPrior> SRP_PRIOROffset) { builder.AddOffset(14, SRP_PRIOROffset.Value, 0); }
+  public static void AddDRAG_PRIOR_FORM(FlatBufferBuilder builder, pcfPriorForm DRAG_PRIOR_FORM) { builder.AddByte(15, (byte)DRAG_PRIOR_FORM, 0); }
+  public static void AddSRP_PRIOR_FORM(FlatBufferBuilder builder, pcfPriorForm SRP_PRIOR_FORM) { builder.AddByte(16, (byte)SRP_PRIOR_FORM, 0); }
   public static Offset<PCFFitPolicy> EndPCFFitPolicy(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFFitPolicy>(o);
@@ -148,6 +164,8 @@ public struct PCFFitPolicy : IFlatbufferObject
     _o.IMPLAUSIBLE_RMS_KM = this.IMPLAUSIBLE_RMS_KM;
     _o.DRAG_PRIOR = this.DRAG_PRIOR.HasValue ? this.DRAG_PRIOR.Value.UnPack() : null;
     _o.SRP_PRIOR = this.SRP_PRIOR.HasValue ? this.SRP_PRIOR.Value.UnPack() : null;
+    _o.DRAG_PRIOR_FORM = this.DRAG_PRIOR_FORM;
+    _o.SRP_PRIOR_FORM = this.SRP_PRIOR_FORM;
   }
   public static Offset<PCFFitPolicy> Pack(FlatBufferBuilder builder, PCFFitPolicyT _o) {
     if (_o == null) return default(Offset<PCFFitPolicy>);
@@ -174,7 +192,9 @@ public struct PCFFitPolicy : IFlatbufferObject
       _o.ECCENTRIC_MAXIMUM_PERIOD_HOURS,
       _o.IMPLAUSIBLE_RMS_KM,
       _DRAG_PRIOR,
-      _SRP_PRIOR);
+      _SRP_PRIOR,
+      _o.DRAG_PRIOR_FORM,
+      _o.SRP_PRIOR_FORM);
   }
 }
 
@@ -195,6 +215,8 @@ public class PCFFitPolicyT
   public double IMPLAUSIBLE_RMS_KM { get; set; }
   public PCFGaussianPriorT DRAG_PRIOR { get; set; }
   public PCFGaussianPriorT SRP_PRIOR { get; set; }
+  public pcfPriorForm DRAG_PRIOR_FORM { get; set; }
+  public pcfPriorForm SRP_PRIOR_FORM { get; set; }
 
   public PCFFitPolicyT() {
     this.DEFAULT_SPAN_HOURS = 48.0;
@@ -212,6 +234,8 @@ public class PCFFitPolicyT
     this.IMPLAUSIBLE_RMS_KM = 100.0;
     this.DRAG_PRIOR = null;
     this.SRP_PRIOR = null;
+    this.DRAG_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED;
+    this.SRP_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED;
   }
 }
 
@@ -236,6 +260,8 @@ static public class PCFFitPolicyVerify
       && verifier.VerifyField(tablePos, 28 /*IMPLAUSIBLE_RMS_KM*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 30 /*DRAG_PRIOR*/, PCFGaussianPriorVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 32 /*SRP_PRIOR*/, PCFGaussianPriorVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 34 /*DRAG_PRIOR_FORM*/, 1 /*pcfPriorForm*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*SRP_PRIOR_FORM*/, 1 /*pcfPriorForm*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

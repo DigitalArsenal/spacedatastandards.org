@@ -524,6 +524,26 @@ public enum pcfGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum,
 }
 
 
+///  The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
+///  SRP_PRIOR_FORM). Append new values only.
+public enum pcfPriorForm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Gaussian on the parameter itself, which may take either sign (the
+  ///  default): the prior's MEAN and SIGMA are in the parameter's unit.
+  case gaussianSigned = 0
+  ///  Log-normal: the fit estimates the natural log of the parameter, so the
+  ///  parameter is never <= 0. The prior's MEAN is the median, in the
+  ///  parameter's unit, and must be > 0; its SIGMA is the standard deviation of
+  ///  the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  case logNormal = 1
+
+  public static var max: pcfPriorForm { return .logNormal }
+  public static var min: pcfPriorForm { return .gaussianSigned }
+}
+
+
 ///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 ///  the theory's own sigma and moves only the mean.
 public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
@@ -606,6 +626,8 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let IMPLAUSIBLE_RMS_KM: VOffset = 28
     static let DRAG_PRIOR: VOffset = 30
     static let SRP_PRIOR: VOffset = 32
+    static let DRAG_PRIOR_FORM: VOffset = 34
+    static let SRP_PRIOR_FORM: VOffset = 36
   }
 
   ///  Fit span used when the span rule is not run, hours. Default 48.
@@ -649,7 +671,17 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   ///  Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   ///  Absent or without sigma: mean 0, sigma 0.05.
   public var SRP_PRIOR: PCFGaussianPrior? { let o = _accessor.offset(VT.SRP_PRIOR); return o == 0 ? nil : PCFGaussianPrior(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  ///  estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+  ///  MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+  ///  of ln B_eff.
+  public var DRAG_PRIOR_FORM: pcfPriorForm { let o = _accessor.offset(VT.DRAG_PRIOR_FORM); return o == 0 ? .gaussianSigned : pcfPriorForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .gaussianSigned }
+  ///  The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+  ///  estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+  ///  the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+  ///  ln AGOM.
+  public var SRP_PRIOR_FORM: pcfPriorForm { let o = _accessor.offset(VT.SRP_PRIOR_FORM); return o == 0 ? .gaussianSigned : pcfPriorForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .gaussianSigned }
+  public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_SPAN_HOURS, def: 48.0, at: VT.DEFAULT_SPAN_HOURS) }
   public static func add(MINIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_SPAN_HOURS, def: 24.0, at: VT.MINIMUM_SPAN_HOURS) }
   public static func add(MAXIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SPAN_HOURS, def: 120.0, at: VT.MAXIMUM_SPAN_HOURS) }
@@ -666,6 +698,8 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public static func add(IMPLAUSIBLE_RMS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPLAUSIBLE_RMS_KM, def: 100.0, at: VT.IMPLAUSIBLE_RMS_KM) }
   public static func add(DRAG_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_PRIOR, at: VT.DRAG_PRIOR) }
   public static func add(SRP_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRP_PRIOR, at: VT.SRP_PRIOR) }
+  public static func add(DRAG_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_PRIOR_FORM.rawValue, def: 0, at: VT.DRAG_PRIOR_FORM) }
+  public static func add(SRP_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_PRIOR_FORM.rawValue, def: 0, at: VT.SRP_PRIOR_FORM) }
   public static func endPCFFitPolicy(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFFitPolicy(
     _ fbb: inout FlatBufferBuilder,
@@ -683,7 +717,9 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double = 36.0,
     IMPLAUSIBLE_RMS_KM: Double = 100.0,
     DRAG_PRIOROffset DRAG_PRIOR: Offset = Offset(),
-    SRP_PRIOROffset SRP_PRIOR: Offset = Offset()
+    SRP_PRIOROffset SRP_PRIOR: Offset = Offset(),
+    DRAG_PRIOR_FORM: pcfPriorForm = .gaussianSigned,
+    SRP_PRIOR_FORM: pcfPriorForm = .gaussianSigned
   ) -> Offset {
     let __start = PCFFitPolicy.startPCFFitPolicy(&fbb)
     PCFFitPolicy.add(DEFAULT_SPAN_HOURS: DEFAULT_SPAN_HOURS, &fbb)
@@ -701,6 +737,8 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     PCFFitPolicy.add(IMPLAUSIBLE_RMS_KM: IMPLAUSIBLE_RMS_KM, &fbb)
     PCFFitPolicy.add(DRAG_PRIOR: DRAG_PRIOR, &fbb)
     PCFFitPolicy.add(SRP_PRIOR: SRP_PRIOR, &fbb)
+    PCFFitPolicy.add(DRAG_PRIOR_FORM: DRAG_PRIOR_FORM, &fbb)
+    PCFFitPolicy.add(SRP_PRIOR_FORM: SRP_PRIOR_FORM, &fbb)
     return PCFFitPolicy.endPCFFitPolicy(&fbb, start: __start)
   }
 
@@ -721,6 +759,8 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     try _v.visit(field: VT.IMPLAUSIBLE_RMS_KM, fieldName: "IMPLAUSIBLE_RMS_KM", required: false, type: Double.self)
     try _v.visit(field: VT.DRAG_PRIOR, fieldName: "DRAG_PRIOR", required: false, type: ForwardOffset<PCFGaussianPrior>.self)
     try _v.visit(field: VT.SRP_PRIOR, fieldName: "SRP_PRIOR", required: false, type: ForwardOffset<PCFGaussianPrior>.self)
+    try _v.visit(field: VT.DRAG_PRIOR_FORM, fieldName: "DRAG_PRIOR_FORM", required: false, type: pcfPriorForm.self)
+    try _v.visit(field: VT.SRP_PRIOR_FORM, fieldName: "SRP_PRIOR_FORM", required: false, type: pcfPriorForm.self)
     _v.finish()
   }
 }

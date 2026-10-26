@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PCFGaussianPrior, PCFGaussianPriorT } from './PCFGaussianPrior.js';
+import { pcfPriorForm } from './pcfPriorForm.js';
 
 
 /**
@@ -169,8 +170,30 @@ SRP_PRIOR(obj?:PCFGaussianPrior):PCFGaussianPrior|null {
   return offset ? (obj || new PCFGaussianPrior()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+ * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
+ * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
+ * of ln B_eff.
+ */
+DRAG_PRIOR_FORM():pcfPriorForm {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfPriorForm.GAUSSIAN_SIGNED;
+}
+
+/**
+ * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
+ * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
+ * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
+ * ln AGOM.
+ */
+SRP_PRIOR_FORM():pcfPriorForm {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfPriorForm.GAUSSIAN_SIGNED;
+}
+
 static startPCFFitPolicy(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(17);
 }
 
 static addDefaultSpanHours(builder:flatbuffers.Builder, DEFAULT_SPAN_HOURS:number) {
@@ -250,6 +273,14 @@ static addSrpPrior(builder:flatbuffers.Builder, SRP_PRIOROffset:flatbuffers.Offs
   builder.addFieldOffset(14, SRP_PRIOROffset, 0);
 }
 
+static addDragPriorForm(builder:flatbuffers.Builder, DRAG_PRIOR_FORM:pcfPriorForm) {
+  builder.addFieldInt8(15, DRAG_PRIOR_FORM, pcfPriorForm.GAUSSIAN_SIGNED);
+}
+
+static addSrpPriorForm(builder:flatbuffers.Builder, SRP_PRIOR_FORM:pcfPriorForm) {
+  builder.addFieldInt8(16, SRP_PRIOR_FORM, pcfPriorForm.GAUSSIAN_SIGNED);
+}
+
 static endPCFFitPolicy(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -272,7 +303,9 @@ unpack(): PCFFitPolicyT {
     this.ECCENTRIC_MAXIMUM_PERIOD_HOURS(),
     this.IMPLAUSIBLE_RMS_KM(),
     (this.DRAG_PRIOR() !== null ? this.DRAG_PRIOR()!.unpack() : null),
-    (this.SRP_PRIOR() !== null ? this.SRP_PRIOR()!.unpack() : null)
+    (this.SRP_PRIOR() !== null ? this.SRP_PRIOR()!.unpack() : null),
+    this.DRAG_PRIOR_FORM(),
+    this.SRP_PRIOR_FORM()
   );
 }
 
@@ -293,6 +326,8 @@ unpackTo(_o: PCFFitPolicyT): void {
   _o.IMPLAUSIBLE_RMS_KM = this.IMPLAUSIBLE_RMS_KM();
   _o.DRAG_PRIOR = (this.DRAG_PRIOR() !== null ? this.DRAG_PRIOR()!.unpack() : null);
   _o.SRP_PRIOR = (this.SRP_PRIOR() !== null ? this.SRP_PRIOR()!.unpack() : null);
+  _o.DRAG_PRIOR_FORM = this.DRAG_PRIOR_FORM();
+  _o.SRP_PRIOR_FORM = this.SRP_PRIOR_FORM();
 }
 }
 
@@ -312,7 +347,9 @@ constructor(
   public ECCENTRIC_MAXIMUM_PERIOD_HOURS: number = 36.0,
   public IMPLAUSIBLE_RMS_KM: number = 100.0,
   public DRAG_PRIOR: PCFGaussianPriorT|null = null,
-  public SRP_PRIOR: PCFGaussianPriorT|null = null
+  public SRP_PRIOR: PCFGaussianPriorT|null = null,
+  public DRAG_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED,
+  public SRP_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED
 ){}
 
 
@@ -337,6 +374,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PCFFitPolicy.addImplausibleRmsKm(builder, this.IMPLAUSIBLE_RMS_KM);
   PCFFitPolicy.addDragPrior(builder, DRAG_PRIOR);
   PCFFitPolicy.addSrpPrior(builder, SRP_PRIOR);
+  PCFFitPolicy.addDragPriorForm(builder, this.DRAG_PRIOR_FORM);
+  PCFFitPolicy.addSrpPriorForm(builder, this.SRP_PRIOR_FORM);
 
   return PCFFitPolicy.endPCFFitPolicy(builder);
 }
