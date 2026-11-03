@@ -54413,6 +54413,22 @@
         "RETRIEVED_AT" : {
                 "type" : "string",
                 "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              },
+        "BEGIN_XRAY_CLASS" : {
+                "type" : "string",
+                "description" : "Soft X-ray class at event begin, verbatim (SWPC begin_class)."
+              },
+        "END_XRAY_CLASS" : {
+                "type" : "string",
+                "description" : "Soft X-ray class at event end, verbatim (SWPC end_class)."
+              },
+        "PEAK_RATIO" : {
+                "type" : "number",
+                "description" : "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent."
+              },
+        "PEAK_RATIO_TIME" : {
+                "type" : "string",
+                "description" : "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated."
               }
       },
       "required" : ["EVENT_ID", "PROVENANCE"],

@@ -524,8 +524,72 @@ func (rcv *SFE) RetrievedAt() []byte {
 }
 
 /// When the source bytes were retrieved, RFC 3339 UTC.
+/// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+func (rcv *SFE) BEGIN_XRAY_CLASS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SFE) BeginXrayClass() []byte {
+	return rcv.BEGIN_XRAY_CLASS()
+}
+
+/// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+/// Soft X-ray class at event end, verbatim (SWPC end_class).
+func (rcv *SFE) END_XRAY_CLASS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SFE) EndXrayClass() []byte {
+	return rcv.END_XRAY_CLASS()
+}
+
+/// Soft X-ray class at event end, verbatim (SWPC end_class).
+/// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+func (rcv *SFE) PEAK_RATIO() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *SFE) PeakRatio() float64 {
+	return rcv.PEAK_RATIO()
+}
+
+/// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+func (rcv *SFE) MutatePEAK_RATIO(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *SFE) MutatePeakRatio(n float64) bool {
+	return rcv.MutatePEAK_RATIO(n)
+}
+
+/// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+func (rcv *SFE) PEAK_RATIO_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SFE) PeakRatioTime() []byte {
+	return rcv.PEAK_RATIO_TIME()
+}
+
+/// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
 func SFEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(28)
+	builder.StartObject(32)
 }
 func SFEAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EVENT_ID), 0)
@@ -694,6 +758,30 @@ func SFEAddRETRIEVED_AT(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.U
 }
 func SFEAddRetrievedAt(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.UOffsetT) {
 	SFEAddRETRIEVED_AT(builder, RETRIEVED_AT)
+}
+func SFEAddBEGIN_XRAY_CLASS(builder *flatbuffers.Builder, BEGIN_XRAY_CLASS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(BEGIN_XRAY_CLASS), 0)
+}
+func SFEAddBeginXrayClass(builder *flatbuffers.Builder, BEGIN_XRAY_CLASS flatbuffers.UOffsetT) {
+	SFEAddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASS)
+}
+func SFEAddEND_XRAY_CLASS(builder *flatbuffers.Builder, END_XRAY_CLASS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(END_XRAY_CLASS), 0)
+}
+func SFEAddEndXrayClass(builder *flatbuffers.Builder, END_XRAY_CLASS flatbuffers.UOffsetT) {
+	SFEAddEND_XRAY_CLASS(builder, END_XRAY_CLASS)
+}
+func SFEAddPEAK_RATIO(builder *flatbuffers.Builder, PEAK_RATIO float64) {
+	builder.PrependFloat64Slot(30, PEAK_RATIO, float64(math.NaN()))
+}
+func SFEAddPeakRatio(builder *flatbuffers.Builder, PEAK_RATIO float64) {
+	SFEAddPEAK_RATIO(builder, PEAK_RATIO)
+}
+func SFEAddPEAK_RATIO_TIME(builder *flatbuffers.Builder, PEAK_RATIO_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(PEAK_RATIO_TIME), 0)
+}
+func SFEAddPeakRatioTime(builder *flatbuffers.Builder, PEAK_RATIO_TIME flatbuffers.UOffsetT) {
+	SFEAddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIME)
 }
 func SFEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

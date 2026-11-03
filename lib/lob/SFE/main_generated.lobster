@@ -106,13 +106,25 @@ class SFE : flatbuffers.handle
     /// When the source bytes were retrieved, RFC 3339 UTC.
     def RETRIEVED_AT() -> string:
         return flatbuffers.field_string(buf_, pos_, 58)
+    /// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+    def BEGIN_XRAY_CLASS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// Soft X-ray class at event end, verbatim (SWPC end_class).
+    def END_XRAY_CLASS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+    def PEAK_RATIO() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, nan)
+    /// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+    def PEAK_RATIO_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 66)
 
 def GetRootAsSFE(buf:string): return SFE { buf, flatbuffers.indirect(buf, 0) }
 
 struct SFEBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(28)
+        b_.StartObject(32)
         return this
     def add_EVENT_ID(EVENT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EVENT_ID)
@@ -197,6 +209,18 @@ struct SFEBuilder:
         return this
     def add_RETRIEVED_AT(RETRIEVED_AT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(27, RETRIEVED_AT)
+        return this
+    def add_BEGIN_XRAY_CLASS(BEGIN_XRAY_CLASS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, BEGIN_XRAY_CLASS)
+        return this
+    def add_END_XRAY_CLASS(END_XRAY_CLASS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, END_XRAY_CLASS)
+        return this
+    def add_PEAK_RATIO(PEAK_RATIO:float):
+        b_.PrependFloat64Slot(30, PEAK_RATIO, nan)
+        return this
+    def add_PEAK_RATIO_TIME(PEAK_RATIO_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, PEAK_RATIO_TIME)
         return this
     def end():
         return b_.EndObject()

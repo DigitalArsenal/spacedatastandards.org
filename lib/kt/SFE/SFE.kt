@@ -365,6 +365,56 @@ class SFE : Table() {
         }
     val retrievedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
     fun retrievedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Soft X-ray class at event begin, verbatim (SWPC begin_class).
+     */
+    val beginXrayClass : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val beginXrayClassAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun beginXrayClassInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Soft X-ray class at event end, verbatim (SWPC end_class).
+     */
+    val endXrayClass : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val endXrayClassAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun endXrayClassInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+     */
+    val peakRatio : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+     */
+    val peakRatioTime : String?
+        get() {
+            val o = __offset(66)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val peakRatioTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun peakRatioTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSFE(_bb: ByteBuffer): SFE = getRootAsSFE(_bb, SFE())
@@ -373,14 +423,18 @@ class SFE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SFE")
-        fun createSFE(builder: FlatBufferBuilder, eventIdOffset: Int, productOffset: Int, observatoryOffset: Int, platformOffset: Int, eventKind: Byte, eventTypeCodeOffset: Int, beginTimeOffset: Int, peakTimeOffset: Int, endTimeOffset: Int, beginQualifierOffset: Int, peakQualifierOffset: Int, endQualifierOffset: Int, xrayClassOffset: Int, opticalImportanceOffset: Int, peakFluxWM2: Double, integratedFluxJM2: Double, passbandMinNm: Double, passbandMaxNm: Double, regionNumber: UInt, hasRegionNumber: Boolean, hgLatitudeDeg: Double, hgLongitudeDeg: Double, statusOffset: Int, revisionOffset: Int, provenanceOffset: Int, sourceCidOffset: Int, sourceDigestOffset: Int, retrievedAtOffset: Int) : Int {
-            builder.startTable(28)
+        fun createSFE(builder: FlatBufferBuilder, eventIdOffset: Int, productOffset: Int, observatoryOffset: Int, platformOffset: Int, eventKind: Byte, eventTypeCodeOffset: Int, beginTimeOffset: Int, peakTimeOffset: Int, endTimeOffset: Int, beginQualifierOffset: Int, peakQualifierOffset: Int, endQualifierOffset: Int, xrayClassOffset: Int, opticalImportanceOffset: Int, peakFluxWM2: Double, integratedFluxJM2: Double, passbandMinNm: Double, passbandMaxNm: Double, regionNumber: UInt, hasRegionNumber: Boolean, hgLatitudeDeg: Double, hgLongitudeDeg: Double, statusOffset: Int, revisionOffset: Int, provenanceOffset: Int, sourceCidOffset: Int, sourceDigestOffset: Int, retrievedAtOffset: Int, beginXrayClassOffset: Int, endXrayClassOffset: Int, peakRatio: Double, peakRatioTimeOffset: Int) : Int {
+            builder.startTable(32)
+            addPEAKRATIO(builder, peakRatio)
             addHGLONGITUDEDEG(builder, hgLongitudeDeg)
             addHGLATITUDEDEG(builder, hgLatitudeDeg)
             addPASSBANDMAXNM(builder, passbandMaxNm)
             addPASSBANDMINNM(builder, passbandMinNm)
             addINTEGRATEDFLUXJM2(builder, integratedFluxJM2)
             addPEAKFLUXWM2(builder, peakFluxWM2)
+            addPEAKRATIOTIME(builder, peakRatioTimeOffset)
+            addENDXRAYCLASS(builder, endXrayClassOffset)
+            addBEGINXRAYCLASS(builder, beginXrayClassOffset)
             addRETRIEVEDAT(builder, retrievedAtOffset)
             addSOURCEDIGEST(builder, sourceDigestOffset)
             addSOURCECID(builder, sourceCidOffset)
@@ -405,7 +459,7 @@ class SFE : Table() {
             addEVENTKIND(builder, eventKind)
             return endSFE(builder)
         }
-        fun startSFE(builder: FlatBufferBuilder) = builder.startTable(28)
+        fun startSFE(builder: FlatBufferBuilder) = builder.startTable(32)
         fun addEVENTID(builder: FlatBufferBuilder, eventId: Int) = builder.addOffset(0, eventId, 0)
         fun addPRODUCT(builder: FlatBufferBuilder, product: Int) = builder.addOffset(1, product, 0)
         fun addOBSERVATORY(builder: FlatBufferBuilder, observatory: Int) = builder.addOffset(2, observatory, 0)
@@ -434,6 +488,10 @@ class SFE : Table() {
         fun addSOURCECID(builder: FlatBufferBuilder, sourceCid: Int) = builder.addOffset(25, sourceCid, 0)
         fun addSOURCEDIGEST(builder: FlatBufferBuilder, sourceDigest: Int) = builder.addOffset(26, sourceDigest, 0)
         fun addRETRIEVEDAT(builder: FlatBufferBuilder, retrievedAt: Int) = builder.addOffset(27, retrievedAt, 0)
+        fun addBEGINXRAYCLASS(builder: FlatBufferBuilder, beginXrayClass: Int) = builder.addOffset(28, beginXrayClass, 0)
+        fun addENDXRAYCLASS(builder: FlatBufferBuilder, endXrayClass: Int) = builder.addOffset(29, endXrayClass, 0)
+        fun addPEAKRATIO(builder: FlatBufferBuilder, peakRatio: Double) = builder.addDouble(30, peakRatio, Double.NaN)
+        fun addPEAKRATIOTIME(builder: FlatBufferBuilder, peakRatioTime: Int) = builder.addOffset(31, peakRatioTime, 0)
         fun endSFE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

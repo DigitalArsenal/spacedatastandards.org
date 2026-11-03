@@ -265,22 +265,53 @@ class SFE extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+    public function getBEGIN_XRAY_CLASS()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Soft X-ray class at event end, verbatim (SWPC end_class).
+    public function getEND_XRAY_CLASS()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+    /**
+     * @return double
+     */
+    public function getPEAK_RATIO()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+    public function getPEAK_RATIO_TIME()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSFE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(28);
+        $builder->StartObject(32);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SFE
      */
-    public static function createSFE(FlatBufferBuilder $builder, $EVENT_ID, $PRODUCT, $OBSERVATORY, $PLATFORM, $EVENT_KIND, $EVENT_TYPE_CODE, $BEGIN_TIME, $PEAK_TIME, $END_TIME, $BEGIN_QUALIFIER, $PEAK_QUALIFIER, $END_QUALIFIER, $XRAY_CLASS, $OPTICAL_IMPORTANCE, $PEAK_FLUX_W_M2, $INTEGRATED_FLUX_J_M2, $PASSBAND_MIN_NM, $PASSBAND_MAX_NM, $REGION_NUMBER, $HAS_REGION_NUMBER, $HG_LATITUDE_DEG, $HG_LONGITUDE_DEG, $STATUS, $REVISION, $PROVENANCE, $SOURCE_CID, $SOURCE_DIGEST, $RETRIEVED_AT)
+    public static function createSFE(FlatBufferBuilder $builder, $EVENT_ID, $PRODUCT, $OBSERVATORY, $PLATFORM, $EVENT_KIND, $EVENT_TYPE_CODE, $BEGIN_TIME, $PEAK_TIME, $END_TIME, $BEGIN_QUALIFIER, $PEAK_QUALIFIER, $END_QUALIFIER, $XRAY_CLASS, $OPTICAL_IMPORTANCE, $PEAK_FLUX_W_M2, $INTEGRATED_FLUX_J_M2, $PASSBAND_MIN_NM, $PASSBAND_MAX_NM, $REGION_NUMBER, $HAS_REGION_NUMBER, $HG_LATITUDE_DEG, $HG_LONGITUDE_DEG, $STATUS, $REVISION, $PROVENANCE, $SOURCE_CID, $SOURCE_DIGEST, $RETRIEVED_AT, $BEGIN_XRAY_CLASS, $END_XRAY_CLASS, $PEAK_RATIO, $PEAK_RATIO_TIME)
     {
-        $builder->startObject(28);
+        $builder->startObject(32);
         self::addEVENT_ID($builder, $EVENT_ID);
         self::addPRODUCT($builder, $PRODUCT);
         self::addOBSERVATORY($builder, $OBSERVATORY);
@@ -309,6 +340,10 @@ class SFE extends Table
         self::addSOURCE_CID($builder, $SOURCE_CID);
         self::addSOURCE_DIGEST($builder, $SOURCE_DIGEST);
         self::addRETRIEVED_AT($builder, $RETRIEVED_AT);
+        self::addBEGIN_XRAY_CLASS($builder, $BEGIN_XRAY_CLASS);
+        self::addEND_XRAY_CLASS($builder, $END_XRAY_CLASS);
+        self::addPEAK_RATIO($builder, $PEAK_RATIO);
+        self::addPEAK_RATIO_TIME($builder, $PEAK_RATIO_TIME);
         $o = $builder->endObject();
         $builder->required($o, 4);  // EVENT_ID
         $builder->required($o, 52);  // PROVENANCE
@@ -593,6 +628,46 @@ class SFE extends Table
     public static function addRETRIEVED_AT(FlatBufferBuilder $builder, $RETRIEVED_AT)
     {
         $builder->addOffsetX(27, $RETRIEVED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBEGIN_XRAY_CLASS(FlatBufferBuilder $builder, $BEGIN_XRAY_CLASS)
+    {
+        $builder->addOffsetX(28, $BEGIN_XRAY_CLASS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEND_XRAY_CLASS(FlatBufferBuilder $builder, $END_XRAY_CLASS)
+    {
+        $builder->addOffsetX(29, $END_XRAY_CLASS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPEAK_RATIO(FlatBufferBuilder $builder, $PEAK_RATIO)
+    {
+        $builder->addDoubleX(30, $PEAK_RATIO, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPEAK_RATIO_TIME(FlatBufferBuilder $builder, $PEAK_RATIO_TIME)
+    {
+        $builder->addOffsetX(31, $PEAK_RATIO_TIME, 0);
     }
 
     /**

@@ -183,6 +183,32 @@ public struct SFE : IFlatbufferObject
   public ArraySegment<byte>? GetRETRIEVED_ATBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
   public byte[] GetRETRIEVED_ATArray() { return __p.__vector_as_array<byte>(58); }
+  /// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+  public string BEGIN_XRAY_CLASS { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBEGIN_XRAY_CLASSBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetBEGIN_XRAY_CLASSBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetBEGIN_XRAY_CLASSArray() { return __p.__vector_as_array<byte>(60); }
+  /// Soft X-ray class at event end, verbatim (SWPC end_class).
+  public string END_XRAY_CLASS { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEND_XRAY_CLASSBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetEND_XRAY_CLASSBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetEND_XRAY_CLASSArray() { return __p.__vector_as_array<byte>(62); }
+  /// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+  public double PEAK_RATIO { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+  public string PEAK_RATIO_TIME { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPEAK_RATIO_TIMEBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetPEAK_RATIO_TIMEBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetPEAK_RATIO_TIMEArray() { return __p.__vector_as_array<byte>(66); }
 
   public static Offset<SFE> CreateSFE(FlatBufferBuilder builder,
       StringOffset EVENT_IDOffset = default(StringOffset),
@@ -212,14 +238,22 @@ public struct SFE : IFlatbufferObject
       Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
       StringOffset SOURCE_CIDOffset = default(StringOffset),
       StringOffset SOURCE_DIGESTOffset = default(StringOffset),
-      StringOffset RETRIEVED_ATOffset = default(StringOffset)) {
-    builder.StartTable(28);
+      StringOffset RETRIEVED_ATOffset = default(StringOffset),
+      StringOffset BEGIN_XRAY_CLASSOffset = default(StringOffset),
+      StringOffset END_XRAY_CLASSOffset = default(StringOffset),
+      double PEAK_RATIO = Double.NaN,
+      StringOffset PEAK_RATIO_TIMEOffset = default(StringOffset)) {
+    builder.StartTable(32);
+    SFE.AddPEAK_RATIO(builder, PEAK_RATIO);
     SFE.AddHG_LONGITUDE_DEG(builder, HG_LONGITUDE_DEG);
     SFE.AddHG_LATITUDE_DEG(builder, HG_LATITUDE_DEG);
     SFE.AddPASSBAND_MAX_NM(builder, PASSBAND_MAX_NM);
     SFE.AddPASSBAND_MIN_NM(builder, PASSBAND_MIN_NM);
     SFE.AddINTEGRATED_FLUX_J_M2(builder, INTEGRATED_FLUX_J_M2);
     SFE.AddPEAK_FLUX_W_M2(builder, PEAK_FLUX_W_M2);
+    SFE.AddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIMEOffset);
+    SFE.AddEND_XRAY_CLASS(builder, END_XRAY_CLASSOffset);
+    SFE.AddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASSOffset);
     SFE.AddRETRIEVED_AT(builder, RETRIEVED_ATOffset);
     SFE.AddSOURCE_DIGEST(builder, SOURCE_DIGESTOffset);
     SFE.AddSOURCE_CID(builder, SOURCE_CIDOffset);
@@ -245,7 +279,7 @@ public struct SFE : IFlatbufferObject
     return SFE.EndSFE(builder);
   }
 
-  public static void StartSFE(FlatBufferBuilder builder) { builder.StartTable(28); }
+  public static void StartSFE(FlatBufferBuilder builder) { builder.StartTable(32); }
   public static void AddEVENT_ID(FlatBufferBuilder builder, StringOffset EVENT_IDOffset) { builder.AddOffset(0, EVENT_IDOffset.Value, 0); }
   public static void AddPRODUCT(FlatBufferBuilder builder, StringOffset PRODUCTOffset) { builder.AddOffset(1, PRODUCTOffset.Value, 0); }
   public static void AddOBSERVATORY(FlatBufferBuilder builder, StringOffset OBSERVATORYOffset) { builder.AddOffset(2, OBSERVATORYOffset.Value, 0); }
@@ -274,6 +308,10 @@ public struct SFE : IFlatbufferObject
   public static void AddSOURCE_CID(FlatBufferBuilder builder, StringOffset SOURCE_CIDOffset) { builder.AddOffset(25, SOURCE_CIDOffset.Value, 0); }
   public static void AddSOURCE_DIGEST(FlatBufferBuilder builder, StringOffset SOURCE_DIGESTOffset) { builder.AddOffset(26, SOURCE_DIGESTOffset.Value, 0); }
   public static void AddRETRIEVED_AT(FlatBufferBuilder builder, StringOffset RETRIEVED_ATOffset) { builder.AddOffset(27, RETRIEVED_ATOffset.Value, 0); }
+  public static void AddBEGIN_XRAY_CLASS(FlatBufferBuilder builder, StringOffset BEGIN_XRAY_CLASSOffset) { builder.AddOffset(28, BEGIN_XRAY_CLASSOffset.Value, 0); }
+  public static void AddEND_XRAY_CLASS(FlatBufferBuilder builder, StringOffset END_XRAY_CLASSOffset) { builder.AddOffset(29, END_XRAY_CLASSOffset.Value, 0); }
+  public static void AddPEAK_RATIO(FlatBufferBuilder builder, double PEAK_RATIO) { builder.AddDouble(30, PEAK_RATIO, Double.NaN); }
+  public static void AddPEAK_RATIO_TIME(FlatBufferBuilder builder, StringOffset PEAK_RATIO_TIMEOffset) { builder.AddOffset(31, PEAK_RATIO_TIMEOffset.Value, 0); }
   public static Offset<SFE> EndSFE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // EVENT_ID
@@ -316,6 +354,10 @@ public struct SFE : IFlatbufferObject
     _o.SOURCE_CID = this.SOURCE_CID;
     _o.SOURCE_DIGEST = this.SOURCE_DIGEST;
     _o.RETRIEVED_AT = this.RETRIEVED_AT;
+    _o.BEGIN_XRAY_CLASS = this.BEGIN_XRAY_CLASS;
+    _o.END_XRAY_CLASS = this.END_XRAY_CLASS;
+    _o.PEAK_RATIO = this.PEAK_RATIO;
+    _o.PEAK_RATIO_TIME = this.PEAK_RATIO_TIME;
   }
   public static Offset<SFE> Pack(FlatBufferBuilder builder, SFET _o) {
     if (_o == null) return default(Offset<SFE>);
@@ -338,6 +380,9 @@ public struct SFE : IFlatbufferObject
     var _SOURCE_CID = _o.SOURCE_CID == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_CID);
     var _SOURCE_DIGEST = _o.SOURCE_DIGEST == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_DIGEST);
     var _RETRIEVED_AT = _o.RETRIEVED_AT == null ? default(StringOffset) : builder.CreateString(_o.RETRIEVED_AT);
+    var _BEGIN_XRAY_CLASS = _o.BEGIN_XRAY_CLASS == null ? default(StringOffset) : builder.CreateString(_o.BEGIN_XRAY_CLASS);
+    var _END_XRAY_CLASS = _o.END_XRAY_CLASS == null ? default(StringOffset) : builder.CreateString(_o.END_XRAY_CLASS);
+    var _PEAK_RATIO_TIME = _o.PEAK_RATIO_TIME == null ? default(StringOffset) : builder.CreateString(_o.PEAK_RATIO_TIME);
     return CreateSFE(
       builder,
       _EVENT_ID,
@@ -367,7 +412,11 @@ public struct SFE : IFlatbufferObject
       _PROVENANCE,
       _SOURCE_CID,
       _SOURCE_DIGEST,
-      _RETRIEVED_AT);
+      _RETRIEVED_AT,
+      _BEGIN_XRAY_CLASS,
+      _END_XRAY_CLASS,
+      _o.PEAK_RATIO,
+      _PEAK_RATIO_TIME);
   }
 }
 
@@ -401,6 +450,10 @@ public class SFET
   public string SOURCE_CID { get; set; }
   public string SOURCE_DIGEST { get; set; }
   public string RETRIEVED_AT { get; set; }
+  public string BEGIN_XRAY_CLASS { get; set; }
+  public string END_XRAY_CLASS { get; set; }
+  public double PEAK_RATIO { get; set; }
+  public string PEAK_RATIO_TIME { get; set; }
 
   public SFET() {
     this.EVENT_ID = null;
@@ -431,6 +484,10 @@ public class SFET
     this.SOURCE_CID = null;
     this.SOURCE_DIGEST = null;
     this.RETRIEVED_AT = null;
+    this.BEGIN_XRAY_CLASS = null;
+    this.END_XRAY_CLASS = null;
+    this.PEAK_RATIO = Double.NaN;
+    this.PEAK_RATIO_TIME = null;
   }
   public static SFET DeserializeFromBinary(byte[] fbBuffer) {
     return SFE.GetRootAsSFE(new ByteBuffer(fbBuffer)).UnPack();
@@ -476,6 +533,10 @@ static public class SFEVerify
       && verifier.VerifyString(tablePos, 54 /*SOURCE_CID*/, false)
       && verifier.VerifyString(tablePos, 56 /*SOURCE_DIGEST*/, false)
       && verifier.VerifyString(tablePos, 58 /*RETRIEVED_AT*/, false)
+      && verifier.VerifyString(tablePos, 60 /*BEGIN_XRAY_CLASS*/, false)
+      && verifier.VerifyString(tablePos, 62 /*END_XRAY_CLASS*/, false)
+      && verifier.VerifyField(tablePos, 64 /*PEAK_RATIO*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 66 /*PEAK_RATIO_TIME*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

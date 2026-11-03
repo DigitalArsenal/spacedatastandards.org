@@ -177,6 +177,28 @@ public final class SFE extends com.google.flatbuffers.Table {
   public String RETRIEVED_AT() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer RETRIEVED_ATAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
   public ByteBuffer RETRIEVED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Soft X-ray class at event begin, verbatim (SWPC begin_class).
+   */
+  public String BEGIN_XRAY_CLASS() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BEGIN_XRAY_CLASSAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer BEGIN_XRAY_CLASSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Soft X-ray class at event end, verbatim (SWPC end_class).
+   */
+  public String END_XRAY_CLASS() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_XRAY_CLASSAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer END_XRAY_CLASSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+   */
+  public double PEAK_RATIO() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+   */
+  public String PEAK_RATIO_TIME() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PEAK_RATIO_TIMEAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer PEAK_RATIO_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
 
   public static int createSFE(FlatBufferBuilder builder,
       int EVENT_IDOffset,
@@ -206,14 +228,22 @@ public final class SFE extends com.google.flatbuffers.Table {
       int PROVENANCEOffset,
       int SOURCE_CIDOffset,
       int SOURCE_DIGESTOffset,
-      int RETRIEVED_ATOffset) {
-    builder.startTable(28);
+      int RETRIEVED_ATOffset,
+      int BEGIN_XRAY_CLASSOffset,
+      int END_XRAY_CLASSOffset,
+      double PEAK_RATIO,
+      int PEAK_RATIO_TIMEOffset) {
+    builder.startTable(32);
+    SFE.addPeakRatio(builder, PEAK_RATIO);
     SFE.addHgLongitudeDeg(builder, HG_LONGITUDE_DEG);
     SFE.addHgLatitudeDeg(builder, HG_LATITUDE_DEG);
     SFE.addPassbandMaxNm(builder, PASSBAND_MAX_NM);
     SFE.addPassbandMinNm(builder, PASSBAND_MIN_NM);
     SFE.addIntegratedFluxJM2(builder, INTEGRATED_FLUX_J_M2);
     SFE.addPeakFluxWM2(builder, PEAK_FLUX_W_M2);
+    SFE.addPeakRatioTime(builder, PEAK_RATIO_TIMEOffset);
+    SFE.addEndXrayClass(builder, END_XRAY_CLASSOffset);
+    SFE.addBeginXrayClass(builder, BEGIN_XRAY_CLASSOffset);
     SFE.addRetrievedAt(builder, RETRIEVED_ATOffset);
     SFE.addSourceDigest(builder, SOURCE_DIGESTOffset);
     SFE.addSourceCid(builder, SOURCE_CIDOffset);
@@ -239,7 +269,7 @@ public final class SFE extends com.google.flatbuffers.Table {
     return SFE.endSFE(builder);
   }
 
-  public static void startSFE(FlatBufferBuilder builder) { builder.startTable(28); }
+  public static void startSFE(FlatBufferBuilder builder) { builder.startTable(32); }
   public static void addEventId(FlatBufferBuilder builder, int EVENT_IDOffset) { builder.addOffset(0, EVENT_IDOffset, 0); }
   public static void addProduct(FlatBufferBuilder builder, int PRODUCTOffset) { builder.addOffset(1, PRODUCTOffset, 0); }
   public static void addObservatory(FlatBufferBuilder builder, int OBSERVATORYOffset) { builder.addOffset(2, OBSERVATORYOffset, 0); }
@@ -268,6 +298,10 @@ public final class SFE extends com.google.flatbuffers.Table {
   public static void addSourceCid(FlatBufferBuilder builder, int SOURCE_CIDOffset) { builder.addOffset(25, SOURCE_CIDOffset, 0); }
   public static void addSourceDigest(FlatBufferBuilder builder, int SOURCE_DIGESTOffset) { builder.addOffset(26, SOURCE_DIGESTOffset, 0); }
   public static void addRetrievedAt(FlatBufferBuilder builder, int RETRIEVED_ATOffset) { builder.addOffset(27, RETRIEVED_ATOffset, 0); }
+  public static void addBeginXrayClass(FlatBufferBuilder builder, int BEGIN_XRAY_CLASSOffset) { builder.addOffset(28, BEGIN_XRAY_CLASSOffset, 0); }
+  public static void addEndXrayClass(FlatBufferBuilder builder, int END_XRAY_CLASSOffset) { builder.addOffset(29, END_XRAY_CLASSOffset, 0); }
+  public static void addPeakRatio(FlatBufferBuilder builder, double PEAK_RATIO) { builder.addDouble(30, PEAK_RATIO, Double.NaN); }
+  public static void addPeakRatioTime(FlatBufferBuilder builder, int PEAK_RATIO_TIMEOffset) { builder.addOffset(31, PEAK_RATIO_TIMEOffset, 0); }
   public static int endSFE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // EVENT_ID

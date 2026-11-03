@@ -70,6 +70,10 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SOURCE_CID: VOffset = 54
     static let SOURCE_DIGEST: VOffset = 56
     static let RETRIEVED_AT: VOffset = 58
+    static let BEGIN_XRAY_CLASS: VOffset = 60
+    static let END_XRAY_CLASS: VOffset = 62
+    static let PEAK_RATIO: VOffset = 64
+    static let PEAK_RATIO_TIME: VOffset = 66
   }
 
   ///  The source's own event identity, verbatim.
@@ -146,7 +150,18 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  When the source bytes were retrieved, RFC 3339 UTC.
   public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
   public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
-  public static func startSFE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  ///  Soft X-ray class at event begin, verbatim (SWPC begin_class).
+  public var BEGIN_XRAY_CLASS: String? { let o = _accessor.offset(VT.BEGIN_XRAY_CLASS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BEGIN_XRAY_CLASSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BEGIN_XRAY_CLASS) }
+  ///  Soft X-ray class at event end, verbatim (SWPC end_class).
+  public var END_XRAY_CLASS: String? { let o = _accessor.offset(VT.END_XRAY_CLASS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_XRAY_CLASSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_XRAY_CLASS) }
+  ///  Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+  public var PEAK_RATIO: Double { let o = _accessor.offset(VT.PEAK_RATIO); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+  public var PEAK_RATIO_TIME: String? { let o = _accessor.offset(VT.PEAK_RATIO_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PEAK_RATIO_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PEAK_RATIO_TIME) }
+  public static func startSFE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
   public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VT.EVENT_ID) }
   public static func add(PRODUCT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCT, at: VT.PRODUCT) }
   public static func add(OBSERVATORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATORY, at: VT.OBSERVATORY) }
@@ -176,6 +191,10 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(SOURCE_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CID, at: VT.SOURCE_CID) }
   public static func add(SOURCE_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_DIGEST, at: VT.SOURCE_DIGEST) }
   public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
+  public static func add(BEGIN_XRAY_CLASS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEGIN_XRAY_CLASS, at: VT.BEGIN_XRAY_CLASS) }
+  public static func add(END_XRAY_CLASS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_XRAY_CLASS, at: VT.END_XRAY_CLASS) }
+  public static func add(PEAK_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_RATIO, def: .nan, at: VT.PEAK_RATIO) }
+  public static func add(PEAK_RATIO_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PEAK_RATIO_TIME, at: VT.PEAK_RATIO_TIME) }
   public static func endSFE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 52]); return end }
   public static func createSFE(
     _ fbb: inout FlatBufferBuilder,
@@ -206,7 +225,11 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PROVENANCEOffset PROVENANCE: Offset,
     SOURCE_CIDOffset SOURCE_CID: Offset = Offset(),
     SOURCE_DIGESTOffset SOURCE_DIGEST: Offset = Offset(),
-    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset(),
+    BEGIN_XRAY_CLASSOffset BEGIN_XRAY_CLASS: Offset = Offset(),
+    END_XRAY_CLASSOffset END_XRAY_CLASS: Offset = Offset(),
+    PEAK_RATIO: Double = .nan,
+    PEAK_RATIO_TIMEOffset PEAK_RATIO_TIME: Offset = Offset()
   ) -> Offset {
     let __start = SFE.startSFE(&fbb)
     SFE.add(EVENT_ID: EVENT_ID, &fbb)
@@ -237,6 +260,10 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SFE.add(SOURCE_CID: SOURCE_CID, &fbb)
     SFE.add(SOURCE_DIGEST: SOURCE_DIGEST, &fbb)
     SFE.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    SFE.add(BEGIN_XRAY_CLASS: BEGIN_XRAY_CLASS, &fbb)
+    SFE.add(END_XRAY_CLASS: END_XRAY_CLASS, &fbb)
+    SFE.add(PEAK_RATIO: PEAK_RATIO, &fbb)
+    SFE.add(PEAK_RATIO_TIME: PEAK_RATIO_TIME, &fbb)
     return SFE.endSFE(&fbb, start: __start)
   }
 
@@ -270,6 +297,10 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SOURCE_CID, fieldName: "SOURCE_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SOURCE_DIGEST, fieldName: "SOURCE_DIGEST", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BEGIN_XRAY_CLASS, fieldName: "BEGIN_XRAY_CLASS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_XRAY_CLASS, fieldName: "END_XRAY_CLASS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PEAK_RATIO, fieldName: "PEAK_RATIO", required: false, type: Double.self)
+    try _v.visit(field: VT.PEAK_RATIO_TIME, fieldName: "PEAK_RATIO_TIME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

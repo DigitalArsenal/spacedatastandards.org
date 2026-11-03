@@ -257,8 +257,40 @@ class SFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Soft X-ray class at event begin, verbatim (SWPC begin_class).
+    # SFE
+    def BEGIN_XRAY_CLASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Soft X-ray class at event end, verbatim (SWPC end_class).
+    # SFE
+    def END_XRAY_CLASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+    # SFE
+    def PEAK_RATIO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+    # SFE
+    def PEAK_RATIO_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def SFEStart(builder):
-    builder.StartObject(28)
+    builder.StartObject(32)
 
 def Start(builder):
     SFEStart(builder)
@@ -431,6 +463,30 @@ def SFEAddRETRIEVED_AT(builder, RETRIEVED_AT):
 def AddRETRIEVED_AT(builder, RETRIEVED_AT):
     SFEAddRETRIEVED_AT(builder, RETRIEVED_AT)
 
+def SFEAddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASS):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(BEGIN_XRAY_CLASS), 0)
+
+def AddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASS):
+    SFEAddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASS)
+
+def SFEAddEND_XRAY_CLASS(builder, END_XRAY_CLASS):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(END_XRAY_CLASS), 0)
+
+def AddEND_XRAY_CLASS(builder, END_XRAY_CLASS):
+    SFEAddEND_XRAY_CLASS(builder, END_XRAY_CLASS)
+
+def SFEAddPEAK_RATIO(builder, PEAK_RATIO):
+    builder.PrependFloat64Slot(30, PEAK_RATIO, float('nan'))
+
+def AddPEAK_RATIO(builder, PEAK_RATIO):
+    SFEAddPEAK_RATIO(builder, PEAK_RATIO)
+
+def SFEAddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIME):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PEAK_RATIO_TIME), 0)
+
+def AddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIME):
+    SFEAddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIME)
+
 def SFEEnd(builder):
     return builder.EndObject()
 
@@ -476,6 +532,10 @@ class SFET(object):
         SOURCE_CID = None,
         SOURCE_DIGEST = None,
         RETRIEVED_AT = None,
+        BEGIN_XRAY_CLASS = None,
+        END_XRAY_CLASS = None,
+        PEAK_RATIO = float('nan'),
+        PEAK_RATIO_TIME = None,
     ):
         self.EVENT_ID = EVENT_ID  # type: Optional[str]
         self.PRODUCT = PRODUCT  # type: Optional[str]
@@ -505,6 +565,10 @@ class SFET(object):
         self.SOURCE_CID = SOURCE_CID  # type: Optional[str]
         self.SOURCE_DIGEST = SOURCE_DIGEST  # type: Optional[str]
         self.RETRIEVED_AT = RETRIEVED_AT  # type: Optional[str]
+        self.BEGIN_XRAY_CLASS = BEGIN_XRAY_CLASS  # type: Optional[str]
+        self.END_XRAY_CLASS = END_XRAY_CLASS  # type: Optional[str]
+        self.PEAK_RATIO = PEAK_RATIO  # type: float
+        self.PEAK_RATIO_TIME = PEAK_RATIO_TIME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -556,6 +620,10 @@ class SFET(object):
         self.SOURCE_CID = SFE.SOURCE_CID()
         self.SOURCE_DIGEST = SFE.SOURCE_DIGEST()
         self.RETRIEVED_AT = SFE.RETRIEVED_AT()
+        self.BEGIN_XRAY_CLASS = SFE.BEGIN_XRAY_CLASS()
+        self.END_XRAY_CLASS = SFE.END_XRAY_CLASS()
+        self.PEAK_RATIO = SFE.PEAK_RATIO()
+        self.PEAK_RATIO_TIME = SFE.PEAK_RATIO_TIME()
 
     # SFET
     def Pack(self, builder):
@@ -597,6 +665,12 @@ class SFET(object):
             SOURCE_DIGEST = builder.CreateString(self.SOURCE_DIGEST)
         if self.RETRIEVED_AT is not None:
             RETRIEVED_AT = builder.CreateString(self.RETRIEVED_AT)
+        if self.BEGIN_XRAY_CLASS is not None:
+            BEGIN_XRAY_CLASS = builder.CreateString(self.BEGIN_XRAY_CLASS)
+        if self.END_XRAY_CLASS is not None:
+            END_XRAY_CLASS = builder.CreateString(self.END_XRAY_CLASS)
+        if self.PEAK_RATIO_TIME is not None:
+            PEAK_RATIO_TIME = builder.CreateString(self.PEAK_RATIO_TIME)
         SFEStart(builder)
         if self.EVENT_ID is not None:
             SFEAddEVENT_ID(builder, EVENT_ID)
@@ -645,5 +719,12 @@ class SFET(object):
             SFEAddSOURCE_DIGEST(builder, SOURCE_DIGEST)
         if self.RETRIEVED_AT is not None:
             SFEAddRETRIEVED_AT(builder, RETRIEVED_AT)
+        if self.BEGIN_XRAY_CLASS is not None:
+            SFEAddBEGIN_XRAY_CLASS(builder, BEGIN_XRAY_CLASS)
+        if self.END_XRAY_CLASS is not None:
+            SFEAddEND_XRAY_CLASS(builder, END_XRAY_CLASS)
+        SFEAddPEAK_RATIO(builder, self.PEAK_RATIO)
+        if self.PEAK_RATIO_TIME is not None:
+            SFEAddPEAK_RATIO_TIME(builder, PEAK_RATIO_TIME)
         SFE = SFEEnd(builder)
         return SFE

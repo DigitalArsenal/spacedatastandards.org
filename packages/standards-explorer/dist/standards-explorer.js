@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.273.0+1793729247815",
+  version: "1.274.0+1793733211105",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: d6aa7409973b7e325d38f8794f029adc2c62797e4884e4008ca772b70e8c23eb
@@ -8430,8 +8430,8 @@ file_identifier "$PPE";`,
       ]
     },
     SFE: {
-      IDL: `// Hash: f14a7ff6de691dc76148f690059fc0baa38f933015cf98f28f0da39e19442274
-// Version: 1.259.0
+      IDL: `// Hash: ddda335f781f8973191540435c6a19580c808cb9fa7d61a114e19996e78fc485
+// Version: 1.259.1
 // -----------------------------------END_HEADER
 include "../PVN/main.fbs";
 // Solar Flare Event (SFE)
@@ -8513,6 +8513,14 @@ table SFE {
   SOURCE_DIGEST: string;
   /// When the source bytes were retrieved, RFC 3339 UTC.
   RETRIEVED_AT: string;
+  /// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+  BEGIN_XRAY_CLASS: string;
+  /// Soft X-ray class at event end, verbatim (SWPC end_class).
+  END_XRAY_CLASS: string;
+  /// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+  PEAK_RATIO: double = nan;
+  /// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+  PEAK_RATIO_TIME: string;
 }
 
 table SFECOLLECTION {
@@ -82670,6 +82678,22 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             RETRIEVED_AT: {
               type: "string",
               description: "When the source bytes were retrieved, RFC 3339 UTC."
+            },
+            BEGIN_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event begin, verbatim (SWPC begin_class)."
+            },
+            END_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event end, verbatim (SWPC end_class)."
+            },
+            PEAK_RATIO: {
+              type: "number",
+              description: "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent."
+            },
+            PEAK_RATIO_TIME: {
+              type: "string",
+              description: "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated."
             }
           },
           required: [
@@ -201113,6 +201137,22 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             RETRIEVED_AT: {
               type: "string",
               description: "When the source bytes were retrieved, RFC 3339 UTC."
+            },
+            BEGIN_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event begin, verbatim (SWPC begin_class)."
+            },
+            END_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event end, verbatim (SWPC end_class)."
+            },
+            PEAK_RATIO: {
+              type: "number",
+              description: "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent."
+            },
+            PEAK_RATIO_TIME: {
+              type: "string",
+              description: "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated."
             }
           },
           required: [
@@ -452566,6 +452606,27 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               type: "string",
               description: "When the source bytes were retrieved, RFC 3339 UTC.",
               "x-flatbuffer-type": "string"
+            },
+            BEGIN_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event begin, verbatim (SWPC begin_class).",
+              "x-flatbuffer-type": "string"
+            },
+            END_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event end, verbatim (SWPC end_class).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_RATIO: {
+              type: "number",
+              description: "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PEAK_RATIO_TIME: {
+              type: "string",
+              description: "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.",
+              "x-flatbuffer-type": "string"
             }
           },
           required: [
@@ -693356,6 +693417,27 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             RETRIEVED_AT: {
               type: "string",
               description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            BEGIN_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event begin, verbatim (SWPC begin_class).",
+              "x-flatbuffer-type": "string"
+            },
+            END_XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class at event end, verbatim (SWPC end_class).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_RATIO: {
+              type: "number",
+              description: "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PEAK_RATIO_TIME: {
+              type: "string",
+              description: "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.",
               "x-flatbuffer-type": "string"
             }
           },

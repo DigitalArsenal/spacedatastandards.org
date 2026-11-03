@@ -141,6 +141,25 @@ export declare class SFE implements flatbuffers.IUnpackableObject<SFET> {
      */
     RETRIEVED_AT(): string | null;
     RETRIEVED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Soft X-ray class at event begin, verbatim (SWPC begin_class).
+     */
+    BEGIN_XRAY_CLASS(): string | null;
+    BEGIN_XRAY_CLASS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Soft X-ray class at event end, verbatim (SWPC end_class).
+     */
+    END_XRAY_CLASS(): string | null;
+    END_XRAY_CLASS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+     */
+    PEAK_RATIO(): number;
+    /**
+     * Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+     */
+    PEAK_RATIO_TIME(): string | null;
+    PEAK_RATIO_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSFE(builder: flatbuffers.Builder): void;
     static addEventId(builder: flatbuffers.Builder, EVENT_IDOffset: flatbuffers.Offset): void;
     static addProduct(builder: flatbuffers.Builder, PRODUCTOffset: flatbuffers.Offset): void;
@@ -170,6 +189,10 @@ export declare class SFE implements flatbuffers.IUnpackableObject<SFET> {
     static addSourceCid(builder: flatbuffers.Builder, SOURCE_CIDOffset: flatbuffers.Offset): void;
     static addSourceDigest(builder: flatbuffers.Builder, SOURCE_DIGESTOffset: flatbuffers.Offset): void;
     static addRetrievedAt(builder: flatbuffers.Builder, RETRIEVED_ATOffset: flatbuffers.Offset): void;
+    static addBeginXrayClass(builder: flatbuffers.Builder, BEGIN_XRAY_CLASSOffset: flatbuffers.Offset): void;
+    static addEndXrayClass(builder: flatbuffers.Builder, END_XRAY_CLASSOffset: flatbuffers.Offset): void;
+    static addPeakRatio(builder: flatbuffers.Builder, PEAK_RATIO: number): void;
+    static addPeakRatioTime(builder: flatbuffers.Builder, PEAK_RATIO_TIMEOffset: flatbuffers.Offset): void;
     static endSFE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSFEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSFEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -205,7 +228,11 @@ export declare class SFET implements flatbuffers.IGeneratedObject {
     SOURCE_CID: string | Uint8Array | null;
     SOURCE_DIGEST: string | Uint8Array | null;
     RETRIEVED_AT: string | Uint8Array | null;
-    constructor(EVENT_ID?: string | Uint8Array | null, PRODUCT?: string | Uint8Array | null, OBSERVATORY?: string | Uint8Array | null, PLATFORM?: string | Uint8Array | null, EVENT_KIND?: sfeEventKind, EVENT_TYPE_CODE?: string | Uint8Array | null, BEGIN_TIME?: string | Uint8Array | null, PEAK_TIME?: string | Uint8Array | null, END_TIME?: string | Uint8Array | null, BEGIN_QUALIFIER?: string | Uint8Array | null, PEAK_QUALIFIER?: string | Uint8Array | null, END_QUALIFIER?: string | Uint8Array | null, XRAY_CLASS?: string | Uint8Array | null, OPTICAL_IMPORTANCE?: string | Uint8Array | null, PEAK_FLUX_W_M2?: number, INTEGRATED_FLUX_J_M2?: number, PASSBAND_MIN_NM?: number, PASSBAND_MAX_NM?: number, REGION_NUMBER?: number, HAS_REGION_NUMBER?: boolean, HG_LATITUDE_DEG?: number, HG_LONGITUDE_DEG?: number, STATUS?: string | Uint8Array | null, REVISION?: string | Uint8Array | null, PROVENANCE?: PVNT | null, SOURCE_CID?: string | Uint8Array | null, SOURCE_DIGEST?: string | Uint8Array | null, RETRIEVED_AT?: string | Uint8Array | null);
+    BEGIN_XRAY_CLASS: string | Uint8Array | null;
+    END_XRAY_CLASS: string | Uint8Array | null;
+    PEAK_RATIO: number;
+    PEAK_RATIO_TIME: string | Uint8Array | null;
+    constructor(EVENT_ID?: string | Uint8Array | null, PRODUCT?: string | Uint8Array | null, OBSERVATORY?: string | Uint8Array | null, PLATFORM?: string | Uint8Array | null, EVENT_KIND?: sfeEventKind, EVENT_TYPE_CODE?: string | Uint8Array | null, BEGIN_TIME?: string | Uint8Array | null, PEAK_TIME?: string | Uint8Array | null, END_TIME?: string | Uint8Array | null, BEGIN_QUALIFIER?: string | Uint8Array | null, PEAK_QUALIFIER?: string | Uint8Array | null, END_QUALIFIER?: string | Uint8Array | null, XRAY_CLASS?: string | Uint8Array | null, OPTICAL_IMPORTANCE?: string | Uint8Array | null, PEAK_FLUX_W_M2?: number, INTEGRATED_FLUX_J_M2?: number, PASSBAND_MIN_NM?: number, PASSBAND_MAX_NM?: number, REGION_NUMBER?: number, HAS_REGION_NUMBER?: boolean, HG_LATITUDE_DEG?: number, HG_LONGITUDE_DEG?: number, STATUS?: string | Uint8Array | null, REVISION?: string | Uint8Array | null, PROVENANCE?: PVNT | null, SOURCE_CID?: string | Uint8Array | null, SOURCE_DIGEST?: string | Uint8Array | null, RETRIEVED_AT?: string | Uint8Array | null, BEGIN_XRAY_CLASS?: string | Uint8Array | null, END_XRAY_CLASS?: string | Uint8Array | null, PEAK_RATIO?: number, PEAK_RATIO_TIME?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SFE.d.ts.map

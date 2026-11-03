@@ -162,6 +162,10 @@ impl<'a> SFE<'a> {
     pub const VT_SOURCE_CID: ::flatbuffers::VOffsetT = 54;
     pub const VT_SOURCE_DIGEST: ::flatbuffers::VOffsetT = 56;
     pub const VT_RETRIEVED_AT: ::flatbuffers::VOffsetT = 58;
+    pub const VT_BEGIN_XRAY_CLASS: ::flatbuffers::VOffsetT = 60;
+    pub const VT_END_XRAY_CLASS: ::flatbuffers::VOffsetT = 62;
+    pub const VT_PEAK_RATIO: ::flatbuffers::VOffsetT = 64;
+    pub const VT_PEAK_RATIO_TIME: ::flatbuffers::VOffsetT = 66;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -174,12 +178,16 @@ impl<'a> SFE<'a> {
         args: &'args SFEArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SFE<'bldr>> {
         let mut builder = SFEBuilder::new(_fbb);
+        builder.add_PEAK_RATIO(args.PEAK_RATIO);
         builder.add_HG_LONGITUDE_DEG(args.HG_LONGITUDE_DEG);
         builder.add_HG_LATITUDE_DEG(args.HG_LATITUDE_DEG);
         builder.add_PASSBAND_MAX_NM(args.PASSBAND_MAX_NM);
         builder.add_PASSBAND_MIN_NM(args.PASSBAND_MIN_NM);
         builder.add_INTEGRATED_FLUX_J_M2(args.INTEGRATED_FLUX_J_M2);
         builder.add_PEAK_FLUX_W_M2(args.PEAK_FLUX_W_M2);
+        if let Some(x) = args.PEAK_RATIO_TIME { builder.add_PEAK_RATIO_TIME(x); }
+        if let Some(x) = args.END_XRAY_CLASS { builder.add_END_XRAY_CLASS(x); }
+        if let Some(x) = args.BEGIN_XRAY_CLASS { builder.add_BEGIN_XRAY_CLASS(x); }
         if let Some(x) = args.RETRIEVED_AT { builder.add_RETRIEVED_AT(x); }
         if let Some(x) = args.SOURCE_DIGEST { builder.add_SOURCE_DIGEST(x); }
         if let Some(x) = args.SOURCE_CID { builder.add_SOURCE_CID(x); }
@@ -274,6 +282,16 @@ impl<'a> SFE<'a> {
         let RETRIEVED_AT = self.RETRIEVED_AT().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let BEGIN_XRAY_CLASS = self.BEGIN_XRAY_CLASS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let END_XRAY_CLASS = self.END_XRAY_CLASS().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PEAK_RATIO = self.PEAK_RATIO();
+        let PEAK_RATIO_TIME = self.PEAK_RATIO_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         SFET {
             EVENT_ID,
             PRODUCT,
@@ -303,6 +321,10 @@ impl<'a> SFE<'a> {
             SOURCE_CID,
             SOURCE_DIGEST,
             RETRIEVED_AT,
+            BEGIN_XRAY_CLASS,
+            END_XRAY_CLASS,
+            PEAK_RATIO,
+            PEAK_RATIO_TIME,
         }
     }
 
@@ -557,6 +579,42 @@ impl<'a> SFE<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SFE::VT_RETRIEVED_AT, None)}
     }
+
+    /// Soft X-ray class at event begin, verbatim (SWPC begin_class).
+    #[inline]
+    pub fn BEGIN_XRAY_CLASS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SFE::VT_BEGIN_XRAY_CLASS, None)}
+    }
+
+    /// Soft X-ray class at event end, verbatim (SWPC end_class).
+    #[inline]
+    pub fn END_XRAY_CLASS(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SFE::VT_END_XRAY_CLASS, None)}
+    }
+
+    /// Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+    #[inline]
+    pub fn PEAK_RATIO(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SFE::VT_PEAK_RATIO, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+    #[inline]
+    pub fn PEAK_RATIO_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SFE::VT_PEAK_RATIO_TIME, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SFE<'_> {
@@ -593,6 +651,10 @@ impl ::flatbuffers::Verifiable for SFE<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_CID", Self::VT_SOURCE_CID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_DIGEST", Self::VT_SOURCE_DIGEST, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RETRIEVED_AT", Self::VT_RETRIEVED_AT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BEGIN_XRAY_CLASS", Self::VT_BEGIN_XRAY_CLASS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("END_XRAY_CLASS", Self::VT_END_XRAY_CLASS, false)?
+            .visit_field::<f64>("PEAK_RATIO", Self::VT_PEAK_RATIO, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PEAK_RATIO_TIME", Self::VT_PEAK_RATIO_TIME, false)?
             .finish();
         Ok(())
     }
@@ -627,6 +689,10 @@ pub struct SFEArgs<'a> {
     pub SOURCE_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_DIGEST: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub RETRIEVED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BEGIN_XRAY_CLASS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub END_XRAY_CLASS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PEAK_RATIO: f64,
+    pub PEAK_RATIO_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for SFEArgs<'a> {
@@ -661,6 +727,10 @@ impl<'a> Default for SFEArgs<'a> {
             SOURCE_CID: None,
             SOURCE_DIGEST: None,
             RETRIEVED_AT: None,
+            BEGIN_XRAY_CLASS: None,
+            END_XRAY_CLASS: None,
+            PEAK_RATIO: f64::NAN,
+            PEAK_RATIO_TIME: None,
         }
     }
 }
@@ -812,6 +882,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SFEBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_BEGIN_XRAY_CLASS(&mut self, BEGIN_XRAY_CLASS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SFE::VT_BEGIN_XRAY_CLASS, BEGIN_XRAY_CLASS);
+    }
+
+    #[inline]
+    pub fn add_END_XRAY_CLASS(&mut self, END_XRAY_CLASS: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SFE::VT_END_XRAY_CLASS, END_XRAY_CLASS);
+    }
+
+    #[inline]
+    pub fn add_PEAK_RATIO(&mut self, PEAK_RATIO: f64) {
+        self.fbb_.push_slot::<f64>(SFE::VT_PEAK_RATIO, PEAK_RATIO, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PEAK_RATIO_TIME(&mut self, PEAK_RATIO_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SFE::VT_PEAK_RATIO_TIME, PEAK_RATIO_TIME);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SFEBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SFEBuilder {
@@ -860,6 +950,10 @@ impl ::core::fmt::Debug for SFE<'_> {
         ds.field("SOURCE_CID", &self.SOURCE_CID());
         ds.field("SOURCE_DIGEST", &self.SOURCE_DIGEST());
         ds.field("RETRIEVED_AT", &self.RETRIEVED_AT());
+        ds.field("BEGIN_XRAY_CLASS", &self.BEGIN_XRAY_CLASS());
+        ds.field("END_XRAY_CLASS", &self.END_XRAY_CLASS());
+        ds.field("PEAK_RATIO", &self.PEAK_RATIO());
+        ds.field("PEAK_RATIO_TIME", &self.PEAK_RATIO_TIME());
         ds.finish()
     }
 }
@@ -895,6 +989,10 @@ pub struct SFET {
     pub SOURCE_CID: Option<alloc::string::String>,
     pub SOURCE_DIGEST: Option<alloc::string::String>,
     pub RETRIEVED_AT: Option<alloc::string::String>,
+    pub BEGIN_XRAY_CLASS: Option<alloc::string::String>,
+    pub END_XRAY_CLASS: Option<alloc::string::String>,
+    pub PEAK_RATIO: f64,
+    pub PEAK_RATIO_TIME: Option<alloc::string::String>,
 }
 
 impl Default for SFET {
@@ -928,6 +1026,10 @@ impl Default for SFET {
             SOURCE_CID: None,
             SOURCE_DIGEST: None,
             RETRIEVED_AT: None,
+            BEGIN_XRAY_CLASS: None,
+            END_XRAY_CLASS: None,
+            PEAK_RATIO: f64::NAN,
+            PEAK_RATIO_TIME: None,
         }
     }
 }
@@ -1005,6 +1107,16 @@ impl SFET {
         let RETRIEVED_AT = self.RETRIEVED_AT.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let BEGIN_XRAY_CLASS = self.BEGIN_XRAY_CLASS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let END_XRAY_CLASS = self.END_XRAY_CLASS.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PEAK_RATIO = self.PEAK_RATIO;
+        let PEAK_RATIO_TIME = self.PEAK_RATIO_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         SFE::create(_fbb, &SFEArgs{
             EVENT_ID,
             PRODUCT,
@@ -1034,6 +1146,10 @@ impl SFET {
             SOURCE_CID,
             SOURCE_DIGEST,
             RETRIEVED_AT,
+            BEGIN_XRAY_CLASS,
+            END_XRAY_CLASS,
+            PEAK_RATIO,
+            PEAK_RATIO_TIME,
         })
     }
 }

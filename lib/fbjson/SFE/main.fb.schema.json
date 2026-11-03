@@ -375,6 +375,27 @@
           "type": "string",
           "description": "When the source bytes were retrieved, RFC 3339 UTC.",
           "x-flatbuffer-type": "string"
+        },
+        "BEGIN_XRAY_CLASS": {
+          "type": "string",
+          "description": "Soft X-ray class at event begin, verbatim (SWPC begin_class).",
+          "x-flatbuffer-type": "string"
+        },
+        "END_XRAY_CLASS": {
+          "type": "string",
+          "description": "Soft X-ray class at event end, verbatim (SWPC end_class).",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_RATIO": {
+          "type": "number",
+          "description": "Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PEAK_RATIO_TIME": {
+          "type": "string",
+          "description": "Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.",
+          "x-flatbuffer-type": "string"
         }
       },
       "required": [

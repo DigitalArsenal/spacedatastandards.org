@@ -293,8 +293,46 @@ RETRIEVED_AT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Soft X-ray class at event begin, verbatim (SWPC begin_class).
+ */
+BEGIN_XRAY_CLASS():string|null
+BEGIN_XRAY_CLASS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BEGIN_XRAY_CLASS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Soft X-ray class at event end, verbatim (SWPC end_class).
+ */
+END_XRAY_CLASS():string|null
+END_XRAY_CLASS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_XRAY_CLASS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+ */
+PEAK_RATIO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+ */
+PEAK_RATIO_TIME():string|null
+PEAK_RATIO_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PEAK_RATIO_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSFE(builder:flatbuffers.Builder) {
-  builder.startObject(28);
+  builder.startObject(32);
 }
 
 static addEventId(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset) {
@@ -409,6 +447,22 @@ static addRetrievedAt(builder:flatbuffers.Builder, RETRIEVED_ATOffset:flatbuffer
   builder.addFieldOffset(27, RETRIEVED_ATOffset, 0);
 }
 
+static addBeginXrayClass(builder:flatbuffers.Builder, BEGIN_XRAY_CLASSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, BEGIN_XRAY_CLASSOffset, 0);
+}
+
+static addEndXrayClass(builder:flatbuffers.Builder, END_XRAY_CLASSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, END_XRAY_CLASSOffset, 0);
+}
+
+static addPeakRatio(builder:flatbuffers.Builder, PEAK_RATIO:number) {
+  builder.addFieldFloat64(30, PEAK_RATIO, NaN);
+}
+
+static addPeakRatioTime(builder:flatbuffers.Builder, PEAK_RATIO_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, PEAK_RATIO_TIMEOffset, 0);
+}
+
 static endSFE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // EVENT_ID
@@ -454,7 +508,11 @@ unpack(): SFET {
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
     this.SOURCE_CID(),
     this.SOURCE_DIGEST(),
-    this.RETRIEVED_AT()
+    this.RETRIEVED_AT(),
+    this.BEGIN_XRAY_CLASS(),
+    this.END_XRAY_CLASS(),
+    this.PEAK_RATIO(),
+    this.PEAK_RATIO_TIME()
   );
 }
 
@@ -488,6 +546,10 @@ unpackTo(_o: SFET): void {
   _o.SOURCE_CID = this.SOURCE_CID();
   _o.SOURCE_DIGEST = this.SOURCE_DIGEST();
   _o.RETRIEVED_AT = this.RETRIEVED_AT();
+  _o.BEGIN_XRAY_CLASS = this.BEGIN_XRAY_CLASS();
+  _o.END_XRAY_CLASS = this.END_XRAY_CLASS();
+  _o.PEAK_RATIO = this.PEAK_RATIO();
+  _o.PEAK_RATIO_TIME = this.PEAK_RATIO_TIME();
 }
 }
 
@@ -520,7 +582,11 @@ constructor(
   public PROVENANCE: PVNT|null = null,
   public SOURCE_CID: string|Uint8Array|null = null,
   public SOURCE_DIGEST: string|Uint8Array|null = null,
-  public RETRIEVED_AT: string|Uint8Array|null = null
+  public RETRIEVED_AT: string|Uint8Array|null = null,
+  public BEGIN_XRAY_CLASS: string|Uint8Array|null = null,
+  public END_XRAY_CLASS: string|Uint8Array|null = null,
+  public PEAK_RATIO: number = NaN,
+  public PEAK_RATIO_TIME: string|Uint8Array|null = null
 ){}
 
 
@@ -544,6 +610,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SOURCE_CID = (this.SOURCE_CID !== null ? builder.createString(this.SOURCE_CID!) : 0);
   const SOURCE_DIGEST = (this.SOURCE_DIGEST !== null ? builder.createString(this.SOURCE_DIGEST!) : 0);
   const RETRIEVED_AT = (this.RETRIEVED_AT !== null ? builder.createString(this.RETRIEVED_AT!) : 0);
+  const BEGIN_XRAY_CLASS = (this.BEGIN_XRAY_CLASS !== null ? builder.createString(this.BEGIN_XRAY_CLASS!) : 0);
+  const END_XRAY_CLASS = (this.END_XRAY_CLASS !== null ? builder.createString(this.END_XRAY_CLASS!) : 0);
+  const PEAK_RATIO_TIME = (this.PEAK_RATIO_TIME !== null ? builder.createString(this.PEAK_RATIO_TIME!) : 0);
 
   SFE.startSFE(builder);
   SFE.addEventId(builder, EVENT_ID);
@@ -574,6 +643,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SFE.addSourceCid(builder, SOURCE_CID);
   SFE.addSourceDigest(builder, SOURCE_DIGEST);
   SFE.addRetrievedAt(builder, RETRIEVED_AT);
+  SFE.addBeginXrayClass(builder, BEGIN_XRAY_CLASS);
+  SFE.addEndXrayClass(builder, END_XRAY_CLASS);
+  SFE.addPeakRatio(builder, this.PEAK_RATIO);
+  SFE.addPeakRatioTime(builder, PEAK_RATIO_TIME);
 
   return SFE.endSFE(builder);
 }

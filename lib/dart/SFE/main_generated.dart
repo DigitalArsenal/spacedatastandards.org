@@ -139,10 +139,22 @@ class SFE {
   ///  When the source bytes were retrieved, RFC 3339 UTC.
   String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
   String? get retrievedAt => RETRIEVED_AT;
+  ///  Soft X-ray class at event begin, verbatim (SWPC begin_class).
+  String? get BEGIN_XRAY_CLASS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get beginXrayClass => BEGIN_XRAY_CLASS;
+  ///  Soft X-ray class at event end, verbatim (SWPC end_class).
+  String? get END_XRAY_CLASS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get endXrayClass => END_XRAY_CLASS;
+  ///  Peak X-ray ratio, dimensionless, as published (SWPC max_ratio); NaN when absent.
+  double get PEAK_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  double get peakRatio => PEAK_RATIO;
+  ///  Time of the peak X-ray ratio, RFC 3339 UTC (SWPC max_ratio_time); absent when unstated.
+  String? get PEAK_RATIO_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  String? get peakRatioTime => PEAK_RATIO_TIME;
 
   @override
   String toString() {
-    return 'SFE{eventId: ${eventId}, PRODUCT: ${PRODUCT}, OBSERVATORY: ${OBSERVATORY}, PLATFORM: ${PLATFORM}, eventKind: ${eventKind}, eventTypeCode: ${eventTypeCode}, beginTime: ${beginTime}, peakTime: ${peakTime}, endTime: ${endTime}, beginQualifier: ${beginQualifier}, peakQualifier: ${peakQualifier}, endQualifier: ${endQualifier}, xrayClass: ${xrayClass}, opticalImportance: ${opticalImportance}, peakFluxWM2: ${peakFluxWM2}, integratedFluxJM2: ${integratedFluxJM2}, passbandMinNm: ${passbandMinNm}, passbandMaxNm: ${passbandMaxNm}, regionNumber: ${regionNumber}, hasRegionNumber: ${hasRegionNumber}, hgLatitudeDeg: ${hgLatitudeDeg}, hgLongitudeDeg: ${hgLongitudeDeg}, STATUS: ${STATUS}, REVISION: ${REVISION}, PROVENANCE: ${PROVENANCE}, sourceCid: ${sourceCid}, sourceDigest: ${sourceDigest}, retrievedAt: ${retrievedAt}}';
+    return 'SFE{eventId: ${eventId}, PRODUCT: ${PRODUCT}, OBSERVATORY: ${OBSERVATORY}, PLATFORM: ${PLATFORM}, eventKind: ${eventKind}, eventTypeCode: ${eventTypeCode}, beginTime: ${beginTime}, peakTime: ${peakTime}, endTime: ${endTime}, beginQualifier: ${beginQualifier}, peakQualifier: ${peakQualifier}, endQualifier: ${endQualifier}, xrayClass: ${xrayClass}, opticalImportance: ${opticalImportance}, peakFluxWM2: ${peakFluxWM2}, integratedFluxJM2: ${integratedFluxJM2}, passbandMinNm: ${passbandMinNm}, passbandMaxNm: ${passbandMaxNm}, regionNumber: ${regionNumber}, hasRegionNumber: ${hasRegionNumber}, hgLatitudeDeg: ${hgLatitudeDeg}, hgLongitudeDeg: ${hgLongitudeDeg}, STATUS: ${STATUS}, REVISION: ${REVISION}, PROVENANCE: ${PROVENANCE}, sourceCid: ${sourceCid}, sourceDigest: ${sourceDigest}, retrievedAt: ${retrievedAt}, beginXrayClass: ${beginXrayClass}, endXrayClass: ${endXrayClass}, peakRatio: ${peakRatio}, peakRatioTime: ${peakRatioTime}}';
   }
 }
 
@@ -160,7 +172,7 @@ class SFEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(28);
+    fbBuilder.startTable(32);
   }
 
   int addEventIdOffset(int? offset) {
@@ -275,6 +287,22 @@ class SFEBuilder {
     fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
+  int addBeginXrayClassOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addEndXrayClassOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addPeakRatio(double? PEAK_RATIO) {
+    fbBuilder.addFloat64(30, PEAK_RATIO);
+    return fbBuilder.offset;
+  }
+  int addPeakRatioTimeOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -310,6 +338,10 @@ class SFEObjectBuilder extends fb.ObjectBuilder {
   final String? _SOURCE_CID;
   final String? _SOURCE_DIGEST;
   final String? _RETRIEVED_AT;
+  final String? _BEGIN_XRAY_CLASS;
+  final String? _END_XRAY_CLASS;
+  final double? _PEAK_RATIO;
+  final String? _PEAK_RATIO_TIME;
 
   SFEObjectBuilder({
     String? EVENT_ID,
@@ -362,6 +394,14 @@ class SFEObjectBuilder extends fb.ObjectBuilder {
     String? sourceDigest,
     String? RETRIEVED_AT,
     String? retrievedAt,
+    String? BEGIN_XRAY_CLASS,
+    String? beginXrayClass,
+    String? END_XRAY_CLASS,
+    String? endXrayClass,
+    double? PEAK_RATIO,
+    double? peakRatio,
+    String? PEAK_RATIO_TIME,
+    String? peakRatioTime,
   })
       : _EVENT_ID = eventId ?? EVENT_ID,
         _PRODUCT = PRODUCT,
@@ -390,7 +430,11 @@ class SFEObjectBuilder extends fb.ObjectBuilder {
         _PROVENANCE = PROVENANCE,
         _SOURCE_CID = sourceCid ?? SOURCE_CID,
         _SOURCE_DIGEST = sourceDigest ?? SOURCE_DIGEST,
-        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _BEGIN_XRAY_CLASS = beginXrayClass ?? BEGIN_XRAY_CLASS,
+        _END_XRAY_CLASS = endXrayClass ?? END_XRAY_CLASS,
+        _PEAK_RATIO = peakRatio ?? PEAK_RATIO,
+        _PEAK_RATIO_TIME = peakRatioTime ?? PEAK_RATIO_TIME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -432,7 +476,13 @@ class SFEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOURCE_DIGEST!);
     final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
         : fbBuilder.writeString(_RETRIEVED_AT!);
-    fbBuilder.startTable(28);
+    final int? BEGIN_XRAY_CLASSOffset = _BEGIN_XRAY_CLASS == null ? null
+        : fbBuilder.writeString(_BEGIN_XRAY_CLASS!);
+    final int? END_XRAY_CLASSOffset = _END_XRAY_CLASS == null ? null
+        : fbBuilder.writeString(_END_XRAY_CLASS!);
+    final int? PEAK_RATIO_TIMEOffset = _PEAK_RATIO_TIME == null ? null
+        : fbBuilder.writeString(_PEAK_RATIO_TIME!);
+    fbBuilder.startTable(32);
     fbBuilder.addOffset(0, EVENT_IDOffset);
     fbBuilder.addOffset(1, PRODUCTOffset);
     fbBuilder.addOffset(2, OBSERVATORYOffset);
@@ -461,6 +511,10 @@ class SFEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(25, SOURCE_CIDOffset);
     fbBuilder.addOffset(26, SOURCE_DIGESTOffset);
     fbBuilder.addOffset(27, RETRIEVED_ATOffset);
+    fbBuilder.addOffset(28, BEGIN_XRAY_CLASSOffset);
+    fbBuilder.addOffset(29, END_XRAY_CLASSOffset);
+    fbBuilder.addFloat64(30, _PEAK_RATIO);
+    fbBuilder.addOffset(31, PEAK_RATIO_TIMEOffset);
     return fbBuilder.endTable();
   }
 
