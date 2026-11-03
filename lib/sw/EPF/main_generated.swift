@@ -27,7 +27,7 @@ public enum epfLimitCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  One source's contribution to one sample.
-public struct EPFContributor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EPFContributor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -137,7 +137,7 @@ public struct EPFContributor: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  FlatSQL-queryable compliance verdict consumed directly by `$RPT`.
-public struct EPFVerdict: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EPFVerdict: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -206,7 +206,7 @@ public struct EPFVerdict: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Aggregate Interference and Flux-Density Compliance
-public struct EPF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

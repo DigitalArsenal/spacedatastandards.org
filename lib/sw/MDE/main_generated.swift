@@ -106,7 +106,7 @@ public enum mdeComparisonMode: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Detection settings. Every field has its default.
-public struct MDEDetectOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEDetectOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -295,7 +295,7 @@ public struct MDEDetectOptions: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  One pair of consecutive element sets, compared at the crossing of their
 ///  predictions.
-public struct MDECrossingPair: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDECrossingPair: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -418,7 +418,7 @@ public struct MDECrossingPair: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  The level of one element set in the GLR series.
-public struct MDELevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDELevel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -492,7 +492,7 @@ public struct MDELevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 
 ///  The statistic behind one event. A combined event lists the evidence of
 ///  each detector in COMPONENTS.
-public struct MDEEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEEvidence: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -690,7 +690,7 @@ public struct MDEEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  One event a detector raised.
-public struct MDEEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -837,7 +837,7 @@ public struct MDEEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  An element set dropped as a republication of another.
-public struct MDEDuplicateEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEDuplicateEpoch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -894,7 +894,7 @@ public struct MDEDuplicateEpoch: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  An element set that could not be used.
-public struct MDERefusedSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDERefusedSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -952,7 +952,7 @@ public struct MDERefusedSet: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  One object screened.
-public struct MDEObjectDetection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEObjectDetection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1053,7 +1053,7 @@ public struct MDEObjectDetection: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Result of a detection run.
-public struct MDEDetectReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEDetectReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1134,7 +1134,7 @@ public struct MDEDetectReport: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Settings of a comparison of ephemeris versions.
-public struct MDECompareOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDECompareOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1214,7 +1214,7 @@ public struct MDECompareOptions: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  One comparison of two versions (or one version with itself).
-public struct MDEVersionChange: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEVersionChange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1321,7 +1321,7 @@ public struct MDEVersionChange: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One planned maneuver checked against the versions.
-public struct MDEPlannedCheck: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEPlannedCheck: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1477,7 +1477,7 @@ public struct MDEPlannedCheck: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Comparison results for one object.
-public struct MDEObjectComparison: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEObjectComparison: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1533,7 +1533,7 @@ public struct MDEObjectComparison: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Result of comparing ephemeris versions.
-public struct MDECompareReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDECompareReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1599,7 +1599,7 @@ public struct MDECompareReport: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  A time span of one object.
-public struct MDEObjectSpan: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEObjectSpan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1648,7 +1648,7 @@ public struct MDEObjectSpan: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Settings of scoring detections against known maneuvers.
-public struct MDEScoreOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEScoreOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1721,7 +1721,7 @@ public struct MDEScoreOptions: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Summary of a distribution.
-public struct MDEDistribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEDistribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1775,7 +1775,7 @@ public struct MDEDistribution: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Recall in one delta-v bin.
-public struct MDERecallBin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDERecallBin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1850,7 +1850,7 @@ public struct MDERecallBin: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Scoring summary.
-public struct MDEScoreSummary: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEScoreSummary: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1978,7 +1978,7 @@ public struct MDEScoreSummary: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  A known maneuver and the detection matched to it (if any).
-public struct MDETruthMatch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDETruthMatch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2087,7 +2087,7 @@ public struct MDETruthMatch: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A detection matched to no known maneuver.
-public struct MDEUnmatchedEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEUnmatchedEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2171,7 +2171,7 @@ public struct MDEUnmatchedEvent: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Result of scoring detections.
-public struct MDEScoreReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDEScoreReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2232,7 +2232,7 @@ public struct MDEScoreReport: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Maneuver Detection Evidence - exactly one arm is set.
-public struct MDE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MDE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

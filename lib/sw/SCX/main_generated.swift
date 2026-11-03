@@ -51,7 +51,7 @@ public enum memoBindingScheme: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  Recipient of an on-chain revenue split. The identity binds to an `$EPM`
 ///  via CHAIN_PROOFS so a payout address is provably the recipient's.
-public struct SplitRecipient: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SplitRecipient: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -118,7 +118,7 @@ public struct SplitRecipient: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  `$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is
 ///  realized by the splitter contract itself when the buyer pays it; there is no
 ///  off-chain or manual settlement step.
-public struct SCX: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SCX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

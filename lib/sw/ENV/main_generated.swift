@@ -72,7 +72,7 @@ public enum TerrainType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Atmosphere and Environment
-public struct ENV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ENV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

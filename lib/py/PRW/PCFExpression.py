@@ -78,7 +78,7 @@ def PCFExpressionCreateTERMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTERMSVector(builder, data):
-    return PCFExpressionCreateTERMSVector(builder, data)
+    PCFExpressionCreateTERMSVector(builder, data)
 
 def PCFExpressionEnd(builder):
     return builder.EndObject()

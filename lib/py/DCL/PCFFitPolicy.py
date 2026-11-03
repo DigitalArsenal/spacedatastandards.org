@@ -254,7 +254,7 @@ def PCFFitPolicyCreateCANDIDATE_SPANS_HOURSVector(builder, data):
     return builder.EndVector()
 
 def CreateCANDIDATE_SPANS_HOURSVector(builder, data):
-    return PCFFitPolicyCreateCANDIDATE_SPANS_HOURSVector(builder, data)
+    PCFFitPolicyCreateCANDIDATE_SPANS_HOURSVector(builder, data)
 
 def PCFFitPolicyAddTAIL_HOURS(builder, TAIL_HOURS):
     builder.PrependFloat64Slot(4, TAIL_HOURS, 24.0)

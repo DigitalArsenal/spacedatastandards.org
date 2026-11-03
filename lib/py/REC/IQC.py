@@ -655,7 +655,7 @@ def IQCCreateEXTENSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXTENSIONSVector(builder, data):
-    return IQCCreateEXTENSIONSVector(builder, data)
+    IQCCreateEXTENSIONSVector(builder, data)
 
 def IQCAddDATATYPE(builder, DATATYPE):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DATATYPE), 0)
@@ -751,7 +751,7 @@ def IQCCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    return IQCCreateSEGMENTSVector(builder, data)
+    IQCCreateSEGMENTSVector(builder, data)
 
 def IQCAddANNOTATIONS(builder, ANNOTATIONS):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(ANNOTATIONS), 0)
@@ -769,7 +769,7 @@ def IQCCreateANNOTATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANNOTATIONSVector(builder, data):
-    return IQCCreateANNOTATIONSVector(builder, data)
+    IQCCreateANNOTATIONSVector(builder, data)
 
 def IQCAddLABELS(builder, LABELS):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(LABELS), 0)
@@ -787,7 +787,7 @@ def IQCCreateLABELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLABELSVector(builder, data):
-    return IQCCreateLABELSVector(builder, data)
+    IQCCreateLABELSVector(builder, data)
 
 def IQCAddGEOLOCATION(builder, GEOLOCATION):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(GEOLOCATION), 0)
@@ -889,7 +889,7 @@ def IQCCreatePAYLOADSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAYLOADSVector(builder, data):
-    return IQCCreatePAYLOADSVector(builder, data)
+    IQCCreatePAYLOADSVector(builder, data)
 
 def IQCAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)

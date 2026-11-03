@@ -227,7 +227,7 @@ public enum xmtObjectOutcome: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Content identifiers of one record.
-public struct XMTRecordRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTRecordRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -279,7 +279,7 @@ public struct XMTRecordRef: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  A trajectory or state product taking part in a comparison.
-public struct XMTTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -343,7 +343,7 @@ public struct XMTTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  Tolerances of a trajectory comparison. Both trajectories must be on the
 ///  same uniform UTC grid in the same Earth-centred inertial frame.
-public struct XMTMatchPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTMatchPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -402,7 +402,7 @@ public struct XMTMatchPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  A request to compare proposed identity pairs over trajectories.
-public struct XMTMatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTMatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -455,7 +455,7 @@ public struct XMTMatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Result of comparing one proposed pair.
-public struct XMTPairResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTPairResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -566,7 +566,7 @@ public struct XMTPairResult: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  The comparison of a set of proposed pairs.
-public struct XMTMatchReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTMatchReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -614,7 +614,7 @@ public struct XMTMatchReport: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  One catalog layer of a composition, in priority order.
-public struct XMTLayer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTLayer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -692,7 +692,7 @@ public struct XMTLayer: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  A per-object override of a composition.
-public struct XMTObjectOverride: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTObjectOverride: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -755,7 +755,7 @@ public struct XMTObjectOverride: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  One available orbital state of an object.
-public struct XMTStateCandidate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTStateCandidate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -815,7 +815,7 @@ public struct XMTStateCandidate: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  The objects a source declares it covers.
-public struct XMTSourceCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTSourceCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -867,7 +867,7 @@ public struct XMTSourceCoverage: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Recipe of a catalog composition.
-public struct XMTComposeRecipe: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTComposeRecipe: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -949,7 +949,7 @@ public struct XMTComposeRecipe: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One layer's record of an object.
-public struct XMTLayerRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTLayerRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1018,7 +1018,7 @@ public struct XMTLayerRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  The state-source choice for one object.
-public struct XMTStateSelection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTStateSelection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1084,7 +1084,7 @@ public struct XMTStateSelection: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  The composition decision for one object.
-public struct XMTComposedObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTComposedObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1165,7 +1165,7 @@ public struct XMTComposedObject: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Result of a catalog composition.
-public struct XMTComposeReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTComposeReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1222,7 +1222,7 @@ public struct XMTComposeReport: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Measured error of one source's product kind in one regime and horizon.
-public struct XMTMeasuredError: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTMeasuredError: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1296,7 +1296,7 @@ public struct XMTMeasuredError: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  How one product is chosen per object.
-public struct XMTSelectionPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTSelectionPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1368,7 +1368,7 @@ public struct XMTSelectionPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  How maneuvers from several sources are merged.
-public struct XMTManeuverPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTManeuverPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1433,7 +1433,7 @@ public struct XMTManeuverPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Recipe of a catalog integration.
-public struct XMTIntegrateRecipe: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTIntegrateRecipe: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1489,7 +1489,7 @@ public struct XMTIntegrateRecipe: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  One source's report of a merged maneuver.
-public struct XMTManeuverMember: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTManeuverMember: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1547,7 +1547,7 @@ public struct XMTManeuverMember: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  One maneuver event of an object after merging.
-public struct XMTManeuverEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTManeuverEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1611,7 +1611,7 @@ public struct XMTManeuverEvent: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One source's product as a candidate for one object.
-public struct XMTProductCandidate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTProductCandidate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1704,7 +1704,7 @@ public struct XMTProductCandidate: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  The product chosen for one object and kind.
-public struct XMTProductSelection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTProductSelection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1795,7 +1795,7 @@ public struct XMTProductSelection: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  The choice for one product kind of one object.
-public struct XMTProductChoice: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTProductChoice: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1846,7 +1846,7 @@ public struct XMTProductChoice: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  The integration of one catalog object.
-public struct XMTIntegratedObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTIntegratedObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1948,7 +1948,7 @@ public struct XMTIntegratedObject: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  A product that could not be placed on a catalog object.
-public struct XMTUnplacedRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTUnplacedRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2033,7 +2033,7 @@ public struct XMTUnplacedRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Count of records under one reason.
-public struct XMTReasonCount: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTReasonCount: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2076,7 +2076,7 @@ public struct XMTReasonCount: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Result of a catalog integration.
-public struct XMTIntegrateReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTIntegrateReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2246,7 +2246,7 @@ public struct XMTIntegrateReport: FlatBufferVerifiableTable, FlatbuffersVectorIn
 
 ///  Policy of an epoch-state fit to a provider ephemeris, validated on
 ///  held-out samples.
-public struct XMTEpochFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTEpochFitPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2379,7 +2379,7 @@ public struct XMTEpochFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIni
 
 ///  Training and held-out residuals of an epoch state against a provider's
 ///  ephemeris.
-public struct XMTEpochFitReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMTEpochFitReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2540,7 +2540,7 @@ public struct XMTEpochFitReport: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Catalog Cross-Match - exactly one arm is set.
-public struct XMT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XMT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

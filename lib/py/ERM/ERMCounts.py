@@ -562,7 +562,7 @@ def ERMCountsCreateFRAME_COUNTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFRAME_COUNTSVector(builder, data):
-    return ERMCountsCreateFRAME_COUNTSVector(builder, data)
+    ERMCountsCreateFRAME_COUNTSVector(builder, data)
 
 def ERMCountsAddRULE_COUNTS(builder, RULE_COUNTS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(RULE_COUNTS), 0)
@@ -584,7 +584,7 @@ def ERMCountsCreateRULE_COUNTSVector(builder, data):
     return builder.EndVector()
 
 def CreateRULE_COUNTSVector(builder, data):
-    return ERMCountsCreateRULE_COUNTSVector(builder, data)
+    ERMCountsCreateRULE_COUNTSVector(builder, data)
 
 def ERMCountsAddCALIBRATED_ROWS(builder, CALIBRATED_ROWS):
     builder.PrependUint32Slot(35, CALIBRATED_ROWS, 0)

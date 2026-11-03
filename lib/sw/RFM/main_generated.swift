@@ -477,7 +477,7 @@ public enum RFMUnion: UInt8, FlatbuffersVectorInitializable, UnionEnum {
 ///  The point a coordinate system is centred on. Body and barycentre
 ///  identifiers are integer ephemeris body codes; text NAME is descriptive
 ///  only and is never the machine key.
-public struct RFMOrigin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFMOrigin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -601,7 +601,7 @@ public struct RFMOrigin: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  Axes built from the relative geometry of two objects. Exactly two of the
 ///  three axis assignments are independent; the third completes the triad.
-public struct RFMObjectReferencedAxes: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFMObjectReferencedAxes: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -665,7 +665,7 @@ public struct RFMObjectReferencedAxes: FlatBufferVerifiableTable, FlatbuffersVec
 ///  Axes built by aligning one vector with a reference direction and using a
 ///  second vector as a constraint. Vectors are 3-element, expressed in the
 ///  coordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.
-public struct RFMLocalAlignedConstrainedAxes: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFMLocalAlignedConstrainedAxes: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -740,7 +740,7 @@ public struct RFMLocalAlignedConstrainedAxes: FlatBufferVerifiableTable, Flatbuf
 ///  and time system the axis set is evaluated at. This is the unit a frames
 ///  consumer needs; the pre-existing RFMUnion members name an axis convention
 ///  alone and cannot express an origin.
-public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFMCoordinateSystem: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -917,7 +917,7 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
   }
 }
 
-public struct CelestialFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CelestialFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -952,7 +952,7 @@ public struct CelestialFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVecto
   }
 }
 
-public struct SpacecraftFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SpacecraftFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -987,7 +987,7 @@ public struct SpacecraftFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVect
   }
 }
 
-public struct OrbitFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct OrbitFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1022,7 +1022,7 @@ public struct OrbitFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorIni
   }
 }
 
-public struct CustomFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CustomFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1057,7 +1057,7 @@ public struct CustomFrameWrapper: FlatBufferVerifiableTable, FlatbuffersVectorIn
   }
 }
 
-public struct RFMCoordinateSystemWrapper: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFMCoordinateSystemWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1093,7 +1093,7 @@ public struct RFMCoordinateSystemWrapper: FlatBufferVerifiableTable, Flatbuffers
 }
 
 ///  Reference Frame Message
-public struct RFM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

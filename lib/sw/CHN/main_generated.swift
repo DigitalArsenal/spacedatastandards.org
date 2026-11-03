@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Communications Channel
-public struct CHN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CHN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

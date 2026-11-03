@@ -51,7 +51,7 @@ public enum gnpFeatureClass: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  carried as the gazetteer publishes it; a consumer choosing a display name
 ///  applies its own policy over these flags and never has the choice baked in
 ///  by the publisher.
-public struct GNPName: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GNPName: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -153,7 +153,7 @@ public struct GNPName: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 ///  licence are unstated is not publishable. Dataset identity is DATA:
 ///  DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the gazetteer
 ///  states about itself. The standard names no gazetteer, dataset, or site.
-public struct GNPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GNPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -334,7 +334,7 @@ public struct GNPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  Positions are decimal degrees on WGS 84 and elevations are metres,
 ///  unconverted. A consumer needing other units converts at the join,
 ///  explicitly.
-public struct GNP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GNP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

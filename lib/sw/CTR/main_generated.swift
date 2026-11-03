@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Country Identity Message
-public struct CTR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CTR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

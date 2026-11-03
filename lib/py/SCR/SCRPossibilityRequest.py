@@ -197,7 +197,7 @@ def SCRPossibilityRequestCreateA_POINTSVector(builder, data):
     return builder.EndVector()
 
 def CreateA_POINTSVector(builder, data):
-    return SCRPossibilityRequestCreateA_POINTSVector(builder, data)
+    SCRPossibilityRequestCreateA_POINTSVector(builder, data)
 
 def SCRPossibilityRequestAddB_POINTS(builder, B_POINTS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(B_POINTS), 0)
@@ -219,7 +219,7 @@ def SCRPossibilityRequestCreateB_POINTSVector(builder, data):
     return builder.EndVector()
 
 def CreateB_POINTSVector(builder, data):
-    return SCRPossibilityRequestCreateB_POINTSVector(builder, data)
+    SCRPossibilityRequestCreateB_POINTSVector(builder, data)
 
 def SCRPossibilityRequestAddA_KERNEL(builder, A_KERNEL):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(A_KERNEL), 0)
@@ -253,7 +253,7 @@ def SCRPossibilityRequestCreateALPHA_LEVELSVector(builder, data):
     return builder.EndVector()
 
 def CreateALPHA_LEVELSVector(builder, data):
-    return SCRPossibilityRequestCreateALPHA_LEVELSVector(builder, data)
+    SCRPossibilityRequestCreateALPHA_LEVELSVector(builder, data)
 
 def SCRPossibilityRequestEnd(builder):
     return builder.EndObject()

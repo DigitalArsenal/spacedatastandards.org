@@ -212,7 +212,7 @@ def SRGRetrievalSettingsCreatePATHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePATHSVector(builder, data):
-    return SRGRetrievalSettingsCreatePATHSVector(builder, data)
+    SRGRetrievalSettingsCreatePATHSVector(builder, data)
 
 def SRGRetrievalSettingsAddEPOCH_MS(builder, EPOCH_MS):
     builder.PrependInt64Slot(10, EPOCH_MS, 0)

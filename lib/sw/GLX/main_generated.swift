@@ -93,7 +93,7 @@ public enum glxTruthValue: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 }
 
 
-public struct GLX: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GLX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

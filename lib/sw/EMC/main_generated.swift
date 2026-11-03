@@ -68,7 +68,7 @@ public enum emcResolutionState: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Stable reference to one endpoint of the assessment.
-public struct EMCEndpointRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EMCEndpointRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -160,7 +160,7 @@ public struct EMCEndpointRef: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  One signed integer coefficient in an intermodulation product. The product
 ///  frequency is the exact sum of COEFFICIENT * SOURCE_FREQUENCY_HZ terms.
-public struct EMCIntermodulationTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EMCIntermodulationTerm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -209,7 +209,7 @@ public struct EMCIntermodulationTerm: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  Electromagnetic Compatibility Assessment
-public struct EMC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EMC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

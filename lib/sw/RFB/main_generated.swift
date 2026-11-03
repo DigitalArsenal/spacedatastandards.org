@@ -103,7 +103,7 @@ public enum rfTransmitterState: Int8, FlatbuffersVectorInitializable, Enum, Veri
 ///  transponder is therefore represented as TWO RFB records — one UPLINK and
 ///  one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 ///  FREQ_MIN, FREQ_MAX and CENTER_FREQ.
-public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

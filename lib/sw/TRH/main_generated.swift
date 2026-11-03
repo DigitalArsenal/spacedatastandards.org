@@ -37,7 +37,7 @@ public enum trhTurnaroundMode: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 }
 
 
-public struct TRHAntenna: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHAntenna: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -97,7 +97,7 @@ public struct TRHAntenna: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct TRHTransmitter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHTransmitter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -165,7 +165,7 @@ public struct TRHTransmitter: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct TRHReceiver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHReceiver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -232,7 +232,7 @@ public struct TRHReceiver: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct TRHTransponder: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHTransponder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -306,7 +306,7 @@ public struct TRHTransponder: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct TRHHardwareRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHHardwareRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -348,7 +348,7 @@ public struct TRHHardwareRef: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct TRHInstallation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHInstallation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -402,7 +402,7 @@ public struct TRHInstallation: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
-public struct TRHAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRHAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -463,7 +463,7 @@ public struct TRHAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  and transponders to either a surface site or a tracked object. Delays are
 ///  seconds, frequencies hertz, temperatures kelvin and powers watts. JSON
 ///  projections preserve these IDL-capitalized field names exactly.
-public struct TRH: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

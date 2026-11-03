@@ -128,7 +128,7 @@ def MDEObjectComparisonCreateCHANGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHANGESVector(builder, data):
-    return MDEObjectComparisonCreateCHANGESVector(builder, data)
+    MDEObjectComparisonCreateCHANGESVector(builder, data)
 
 def MDEObjectComparisonAddPLANNED(builder, PLANNED):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(PLANNED), 0)
@@ -146,7 +146,7 @@ def MDEObjectComparisonCreatePLANNEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLANNEDVector(builder, data):
-    return MDEObjectComparisonCreatePLANNEDVector(builder, data)
+    MDEObjectComparisonCreatePLANNEDVector(builder, data)
 
 def MDEObjectComparisonEnd(builder):
     return builder.EndObject()

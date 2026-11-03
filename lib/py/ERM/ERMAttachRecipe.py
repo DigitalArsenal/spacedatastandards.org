@@ -174,7 +174,7 @@ def ERMAttachRecipeCreateREALISMVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREALISMVector(builder, data):
-    return ERMAttachRecipeCreateREALISMVector(builder, data)
+    ERMAttachRecipeCreateREALISMVector(builder, data)
 
 def ERMAttachRecipeAddMODELS(builder, MODELS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MODELS), 0)
@@ -192,7 +192,7 @@ def ERMAttachRecipeCreateMODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODELSVector(builder, data):
-    return ERMAttachRecipeCreateMODELSVector(builder, data)
+    ERMAttachRecipeCreateMODELSVector(builder, data)
 
 def ERMAttachRecipeEnd(builder):
     return builder.EndObject()

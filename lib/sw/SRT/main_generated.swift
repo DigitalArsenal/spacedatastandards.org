@@ -82,7 +82,7 @@ public enum srtPayloadFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  One class of a categorical raster.
-public struct SRTClass: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRTClass: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -134,7 +134,7 @@ public struct SRTClass: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Surface Raster Tile
-public struct SRT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

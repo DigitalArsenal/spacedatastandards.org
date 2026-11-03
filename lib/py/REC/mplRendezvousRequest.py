@@ -323,7 +323,7 @@ def mplRendezvousRequestCreateINITIAL_POSITION_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateINITIAL_POSITION_KMVector(builder, data):
-    return mplRendezvousRequestCreateINITIAL_POSITION_KMVector(builder, data)
+    mplRendezvousRequestCreateINITIAL_POSITION_KMVector(builder, data)
 
 def mplRendezvousRequestAddINITIAL_VELOCITY_KM_S(builder, INITIAL_VELOCITY_KM_S):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VELOCITY_KM_S), 0)
@@ -345,7 +345,7 @@ def mplRendezvousRequestCreateINITIAL_VELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateINITIAL_VELOCITY_KM_SVector(builder, data):
-    return mplRendezvousRequestCreateINITIAL_VELOCITY_KM_SVector(builder, data)
+    mplRendezvousRequestCreateINITIAL_VELOCITY_KM_SVector(builder, data)
 
 def mplRendezvousRequestAddBRAKE_POINT_KM(builder, BRAKE_POINT_KM):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BRAKE_POINT_KM), 0)
@@ -367,7 +367,7 @@ def mplRendezvousRequestCreateBRAKE_POINT_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateBRAKE_POINT_KMVector(builder, data):
-    return mplRendezvousRequestCreateBRAKE_POINT_KMVector(builder, data)
+    mplRendezvousRequestCreateBRAKE_POINT_KMVector(builder, data)
 
 def mplRendezvousRequestAddHOLD_POINT_KM(builder, HOLD_POINT_KM):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(HOLD_POINT_KM), 0)
@@ -389,7 +389,7 @@ def mplRendezvousRequestCreateHOLD_POINT_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateHOLD_POINT_KMVector(builder, data):
-    return mplRendezvousRequestCreateHOLD_POINT_KMVector(builder, data)
+    mplRendezvousRequestCreateHOLD_POINT_KMVector(builder, data)
 
 def mplRendezvousRequestAddDRIFT_DURATION_S(builder, DRIFT_DURATION_S):
     builder.PrependFloat64Slot(5, DRIFT_DURATION_S, 0.0)

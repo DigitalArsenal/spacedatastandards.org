@@ -522,7 +522,7 @@ def ppsTelemetryCreateELAPSED_SVector(builder, data):
     return builder.EndVector()
 
 def CreateELAPSED_SVector(builder, data):
-    return ppsTelemetryCreateELAPSED_SVector(builder, data)
+    ppsTelemetryCreateELAPSED_SVector(builder, data)
 
 def ppsTelemetryAddMODE(builder, MODE):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MODE), 0)
@@ -544,7 +544,7 @@ def ppsTelemetryCreateMODEVector(builder, data):
     return builder.EndVector()
 
 def CreateMODEVector(builder, data):
-    return ppsTelemetryCreateMODEVector(builder, data)
+    ppsTelemetryCreateMODEVector(builder, data)
 
 def ppsTelemetryAddPOINTING_ERROR_DEG(builder, POINTING_ERROR_DEG):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(POINTING_ERROR_DEG), 0)
@@ -566,7 +566,7 @@ def ppsTelemetryCreatePOINTING_ERROR_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreatePOINTING_ERROR_DEGVector(builder, data):
-    return ppsTelemetryCreatePOINTING_ERROR_DEGVector(builder, data)
+    ppsTelemetryCreatePOINTING_ERROR_DEGVector(builder, data)
 
 def ppsTelemetryAddBODY_RATE_DEG_S(builder, BODY_RATE_DEG_S):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(BODY_RATE_DEG_S), 0)
@@ -588,7 +588,7 @@ def ppsTelemetryCreateBODY_RATE_DEG_SVector(builder, data):
     return builder.EndVector()
 
 def CreateBODY_RATE_DEG_SVector(builder, data):
-    return ppsTelemetryCreateBODY_RATE_DEG_SVector(builder, data)
+    ppsTelemetryCreateBODY_RATE_DEG_SVector(builder, data)
 
 def ppsTelemetryAddBODY_RATE_VECTOR_DEG_S(builder, BODY_RATE_VECTOR_DEG_S):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BODY_RATE_VECTOR_DEG_S), 0)
@@ -610,7 +610,7 @@ def ppsTelemetryCreateBODY_RATE_VECTOR_DEG_SVector(builder, data):
     return builder.EndVector()
 
 def CreateBODY_RATE_VECTOR_DEG_SVector(builder, data):
-    return ppsTelemetryCreateBODY_RATE_VECTOR_DEG_SVector(builder, data)
+    ppsTelemetryCreateBODY_RATE_VECTOR_DEG_SVector(builder, data)
 
 def ppsTelemetryAddATTITUDE_QUATERNION(builder, ATTITUDE_QUATERNION):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_QUATERNION), 0)
@@ -632,7 +632,7 @@ def ppsTelemetryCreateATTITUDE_QUATERNIONVector(builder, data):
     return builder.EndVector()
 
 def CreateATTITUDE_QUATERNIONVector(builder, data):
-    return ppsTelemetryCreateATTITUDE_QUATERNIONVector(builder, data)
+    ppsTelemetryCreateATTITUDE_QUATERNIONVector(builder, data)
 
 def ppsTelemetryAddWHEEL_MOMENTUM_NMS(builder, WHEEL_MOMENTUM_NMS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(WHEEL_MOMENTUM_NMS), 0)
@@ -654,7 +654,7 @@ def ppsTelemetryCreateWHEEL_MOMENTUM_NMSVector(builder, data):
     return builder.EndVector()
 
 def CreateWHEEL_MOMENTUM_NMSVector(builder, data):
-    return ppsTelemetryCreateWHEEL_MOMENTUM_NMSVector(builder, data)
+    ppsTelemetryCreateWHEEL_MOMENTUM_NMSVector(builder, data)
 
 def ppsTelemetryAddSENSOR_NOISE_ARCSEC(builder, SENSOR_NOISE_ARCSEC):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_NOISE_ARCSEC), 0)
@@ -676,7 +676,7 @@ def ppsTelemetryCreateSENSOR_NOISE_ARCSECVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_NOISE_ARCSECVector(builder, data):
-    return ppsTelemetryCreateSENSOR_NOISE_ARCSECVector(builder, data)
+    ppsTelemetryCreateSENSOR_NOISE_ARCSECVector(builder, data)
 
 def ppsTelemetryAddRELATIVE_POSITION_M(builder, RELATIVE_POSITION_M):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RELATIVE_POSITION_M), 0)
@@ -698,7 +698,7 @@ def ppsTelemetryCreateRELATIVE_POSITION_MVector(builder, data):
     return builder.EndVector()
 
 def CreateRELATIVE_POSITION_MVector(builder, data):
-    return ppsTelemetryCreateRELATIVE_POSITION_MVector(builder, data)
+    ppsTelemetryCreateRELATIVE_POSITION_MVector(builder, data)
 
 def ppsTelemetryAddILLUMINATION(builder, ILLUMINATION):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ILLUMINATION), 0)
@@ -720,7 +720,7 @@ def ppsTelemetryCreateILLUMINATIONVector(builder, data):
     return builder.EndVector()
 
 def CreateILLUMINATIONVector(builder, data):
-    return ppsTelemetryCreateILLUMINATIONVector(builder, data)
+    ppsTelemetryCreateILLUMINATIONVector(builder, data)
 
 def ppsTelemetryAddIN_ECLIPSE(builder, IN_ECLIPSE):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(IN_ECLIPSE), 0)
@@ -742,7 +742,7 @@ def ppsTelemetryCreateIN_ECLIPSEVector(builder, data):
     return builder.EndVector()
 
 def CreateIN_ECLIPSEVector(builder, data):
-    return ppsTelemetryCreateIN_ECLIPSEVector(builder, data)
+    ppsTelemetryCreateIN_ECLIPSEVector(builder, data)
 
 def ppsTelemetryAddGENERATED_POWER_W(builder, GENERATED_POWER_W):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(GENERATED_POWER_W), 0)
@@ -764,7 +764,7 @@ def ppsTelemetryCreateGENERATED_POWER_WVector(builder, data):
     return builder.EndVector()
 
 def CreateGENERATED_POWER_WVector(builder, data):
-    return ppsTelemetryCreateGENERATED_POWER_WVector(builder, data)
+    ppsTelemetryCreateGENERATED_POWER_WVector(builder, data)
 
 def ppsTelemetryAddLOAD_POWER_W(builder, LOAD_POWER_W):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LOAD_POWER_W), 0)
@@ -786,7 +786,7 @@ def ppsTelemetryCreateLOAD_POWER_WVector(builder, data):
     return builder.EndVector()
 
 def CreateLOAD_POWER_WVector(builder, data):
-    return ppsTelemetryCreateLOAD_POWER_WVector(builder, data)
+    ppsTelemetryCreateLOAD_POWER_WVector(builder, data)
 
 def ppsTelemetryAddNET_POWER_W(builder, NET_POWER_W):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NET_POWER_W), 0)
@@ -808,7 +808,7 @@ def ppsTelemetryCreateNET_POWER_WVector(builder, data):
     return builder.EndVector()
 
 def CreateNET_POWER_WVector(builder, data):
-    return ppsTelemetryCreateNET_POWER_WVector(builder, data)
+    ppsTelemetryCreateNET_POWER_WVector(builder, data)
 
 def ppsTelemetryAddBATTERY_STATE_OF_CHARGE(builder, BATTERY_STATE_OF_CHARGE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BATTERY_STATE_OF_CHARGE), 0)
@@ -830,7 +830,7 @@ def ppsTelemetryCreateBATTERY_STATE_OF_CHARGEVector(builder, data):
     return builder.EndVector()
 
 def CreateBATTERY_STATE_OF_CHARGEVector(builder, data):
-    return ppsTelemetryCreateBATTERY_STATE_OF_CHARGEVector(builder, data)
+    ppsTelemetryCreateBATTERY_STATE_OF_CHARGEVector(builder, data)
 
 def ppsTelemetryAddBATTERY_ENERGY_WH(builder, BATTERY_ENERGY_WH):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(BATTERY_ENERGY_WH), 0)
@@ -852,7 +852,7 @@ def ppsTelemetryCreateBATTERY_ENERGY_WHVector(builder, data):
     return builder.EndVector()
 
 def CreateBATTERY_ENERGY_WHVector(builder, data):
-    return ppsTelemetryCreateBATTERY_ENERGY_WHVector(builder, data)
+    ppsTelemetryCreateBATTERY_ENERGY_WHVector(builder, data)
 
 def ppsTelemetryEnd(builder):
     return builder.EndObject()

@@ -141,7 +141,7 @@ def ERMPredictionSampleCreateSTATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATEVector(builder, data):
-    return ERMPredictionSampleCreateSTATEVector(builder, data)
+    ERMPredictionSampleCreateSTATEVector(builder, data)
 
 def ERMPredictionSampleAddP0_POSITION(builder, P0_POSITION):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(P0_POSITION), 0)
@@ -163,7 +163,7 @@ def ERMPredictionSampleCreateP0_POSITIONVector(builder, data):
     return builder.EndVector()
 
 def CreateP0_POSITIONVector(builder, data):
-    return ERMPredictionSampleCreateP0_POSITIONVector(builder, data)
+    ERMPredictionSampleCreateP0_POSITIONVector(builder, data)
 
 def ERMPredictionSampleAddNOISE_RESPONSES(builder, NOISE_RESPONSES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_RESPONSES), 0)
@@ -185,7 +185,7 @@ def ERMPredictionSampleCreateNOISE_RESPONSESVector(builder, data):
     return builder.EndVector()
 
 def CreateNOISE_RESPONSESVector(builder, data):
-    return ERMPredictionSampleCreateNOISE_RESPONSESVector(builder, data)
+    ERMPredictionSampleCreateNOISE_RESPONSESVector(builder, data)
 
 def ERMPredictionSampleEnd(builder):
     return builder.EndObject()

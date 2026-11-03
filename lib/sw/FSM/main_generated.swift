@@ -37,7 +37,7 @@ public enum fieldStreamValueEncodingCategory: Int8, FlatbuffersVectorInitializab
 }
 
 
-public struct FieldStreamValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FieldStreamValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -147,7 +147,7 @@ public struct FieldStreamValue: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-public struct FSM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

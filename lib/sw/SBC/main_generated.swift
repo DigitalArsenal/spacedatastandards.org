@@ -74,7 +74,7 @@ public enum sbcContributorKind: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  One sensor's bias.
-public struct SBCBiasTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SBCBiasTerm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -195,7 +195,7 @@ public struct SBCBiasTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  The contributors to combine into one object's covariance.
-public struct SBCCovarianceRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SBCCovarianceRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -266,7 +266,7 @@ public struct SBCCovarianceRequest: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Variance one contributor added, per axis.
-public struct SBCContribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SBCContribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -346,7 +346,7 @@ public struct SBCContribution: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Diagnostics of a combined covariance.
-public struct SBCDiagnostics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SBCDiagnostics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -485,7 +485,7 @@ public struct SBCDiagnostics: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Sensor Bias Contribution - exactly one arm is set.
-public struct SBC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SBC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

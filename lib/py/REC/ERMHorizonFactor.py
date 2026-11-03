@@ -145,7 +145,7 @@ def ERMHorizonFactorCreateAXES_FACTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateAXES_FACTORSVector(builder, data):
-    return ERMHorizonFactorCreateAXES_FACTORSVector(builder, data)
+    ERMHorizonFactorCreateAXES_FACTORSVector(builder, data)
 
 def ERMHorizonFactorAddSTATUS(builder, STATUS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS), 0)

@@ -231,7 +231,7 @@ public struct FSGInstance_Mutable: FlatBufferStruct, FlatbuffersVectorInitializa
 }
 
 ///  FlatSQL Segment.
-public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FSG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

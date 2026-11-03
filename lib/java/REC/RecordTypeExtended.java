@@ -49,4 +49,7 @@ public final class RecordTypeExtended {
   public static final int SRO = 289;
   public static final int SRT = 290;
   public static final int GNM = 291;
+  public static final int CME = 292;
+  public static final int SWA = 293;
+  public static final int SWS = 294;
 }

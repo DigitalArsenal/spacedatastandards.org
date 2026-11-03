@@ -121,7 +121,7 @@ def MDECompareReportCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    return MDECompareReportCreateOBJECTSVector(builder, data)
+    MDECompareReportCreateOBJECTSVector(builder, data)
 
 def MDECompareReportAddEXECUTED_COUNT(builder, EXECUTED_COUNT):
     builder.PrependUint32Slot(2, EXECUTED_COUNT, 0)

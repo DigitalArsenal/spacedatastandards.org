@@ -155,7 +155,7 @@ def dclHarmonicSegmentCreateCOEFFICIENTS_KVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFFICIENTS_KVector(builder, data):
-    return dclHarmonicSegmentCreateCOEFFICIENTS_KVector(builder, data)
+    dclHarmonicSegmentCreateCOEFFICIENTS_KVector(builder, data)
 
 def dclHarmonicSegmentAddSIGMAS_K(builder, SIGMAS_K):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SIGMAS_K), 0)
@@ -177,7 +177,7 @@ def dclHarmonicSegmentCreateSIGMAS_KVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGMAS_KVector(builder, data):
-    return dclHarmonicSegmentCreateSIGMAS_KVector(builder, data)
+    dclHarmonicSegmentCreateSIGMAS_KVector(builder, data)
 
 def dclHarmonicSegmentAddFIT(builder, FIT):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FIT), 0)

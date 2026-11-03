@@ -399,7 +399,7 @@ def SRTCreateCLASS_LEGENDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCLASS_LEGENDVector(builder, data):
-    return SRTCreateCLASS_LEGENDVector(builder, data)
+    SRTCreateCLASS_LEGENDVector(builder, data)
 
 def SRTAddCRS(builder, CRS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CRS), 0)
@@ -427,7 +427,7 @@ def SRTCreateAFFINE_TRANSFORMVector(builder, data):
     return builder.EndVector()
 
 def CreateAFFINE_TRANSFORMVector(builder, data):
-    return SRTCreateAFFINE_TRANSFORMVector(builder, data)
+    SRTCreateAFFINE_TRANSFORMVector(builder, data)
 
 def SRTAddPIXEL_REGISTRATION(builder, PIXEL_REGISTRATION):
     builder.PrependInt8Slot(12, PIXEL_REGISTRATION, 0)

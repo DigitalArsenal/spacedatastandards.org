@@ -112,7 +112,7 @@ def PRWWindowRequestCreateQUERIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateQUERIESVector(builder, data):
-    return PRWWindowRequestCreateQUERIESVector(builder, data)
+    PRWWindowRequestCreateQUERIESVector(builder, data)
 
 def PRWWindowRequestAddPROPAGATOR_PORT_ID(builder, PROPAGATOR_PORT_ID):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATOR_PORT_ID), 0)

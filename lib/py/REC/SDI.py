@@ -606,7 +606,7 @@ def SDICreatePCVector(builder, data):
     return builder.EndVector()
 
 def CreatePCVector(builder, data):
-    return SDICreatePCVector(builder, data)
+    SDICreatePCVector(builder, data)
 
 def SDIAddRSUN_OBS_ARCSEC(builder, RSUN_OBS_ARCSEC):
     builder.PrependFloat64Slot(30, RSUN_OBS_ARCSEC, float('nan'))

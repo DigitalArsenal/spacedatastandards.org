@@ -72,7 +72,7 @@ public enum srgRetrievalState: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  One data provider: a publisher a retriever may fetch from.
-public struct SRGProvider: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRGProvider: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -204,7 +204,7 @@ public struct SRGProvider: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 
 ///  One retrievable resource of a provider: a file or an endpoint that
 ///  returns one document.
-public struct SRGResource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRGResource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -299,7 +299,7 @@ public struct SRGResource: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 
 ///  Receipt from a content-addressed store (IPFS or similar) for bytes it
 ///  stored.
-public struct SRGContentReceipt: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRGContentReceipt: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -401,7 +401,7 @@ public struct SRGContentReceipt: FlatBufferVerifiableTable, FlatbuffersVectorIni
 
 ///  Limits and choices a retriever runs under. A field left 0 or empty takes
 ///  the retriever's default.
-public struct SRGRetrievalSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRGRetrievalSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -516,7 +516,7 @@ public struct SRGRetrievalSettings: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Progress of a retriever through a provider's resources.
-public struct SRGRetrievalStatus: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRGRetrievalStatus: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -687,7 +687,7 @@ public struct SRGRetrievalStatus: FlatBufferVerifiableTable, FlatbuffersVectorIn
 
 ///  Data Source Registry - providers, their resources, storage receipts and
 ///  retrieval progress.
-public struct SRG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SRG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

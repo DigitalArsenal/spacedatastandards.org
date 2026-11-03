@@ -215,7 +215,7 @@ def PPSCreatePRODUCTSVector(builder, data):
     return builder.EndVector()
 
 def CreatePRODUCTSVector(builder, data):
-    return PPSCreatePRODUCTSVector(builder, data)
+    PPSCreatePRODUCTSVector(builder, data)
 
 def PPSAddASSUMPTIONS(builder, ASSUMPTIONS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ASSUMPTIONS), 0)
@@ -233,7 +233,7 @@ def PPSCreateASSUMPTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSUMPTIONSVector(builder, data):
-    return PPSCreateASSUMPTIONSVector(builder, data)
+    PPSCreateASSUMPTIONSVector(builder, data)
 
 def PPSAddTELEMETRY(builder, TELEMETRY):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TELEMETRY), 0)

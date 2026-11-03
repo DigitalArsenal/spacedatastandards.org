@@ -153,7 +153,7 @@ def SBCCovarianceRequestCreateELEMENT_SET_SERIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEMENT_SET_SERIESVector(builder, data):
-    return SBCCovarianceRequestCreateELEMENT_SET_SERIESVector(builder, data)
+    SBCCovarianceRequestCreateELEMENT_SET_SERIESVector(builder, data)
 
 def SBCCovarianceRequestAddSENSOR_BIASES(builder, SENSOR_BIASES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_BIASES), 0)
@@ -171,7 +171,7 @@ def SBCCovarianceRequestCreateSENSOR_BIASESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSENSOR_BIASESVector(builder, data):
-    return SBCCovarianceRequestCreateSENSOR_BIASESVector(builder, data)
+    SBCCovarianceRequestCreateSENSOR_BIASESVector(builder, data)
 
 def SBCCovarianceRequestEnd(builder):
     return builder.EndObject()

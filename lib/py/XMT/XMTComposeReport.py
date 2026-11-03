@@ -118,7 +118,7 @@ def XMTComposeReportCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    return XMTComposeReportCreateOBJECTSVector(builder, data)
+    XMTComposeReportCreateOBJECTSVector(builder, data)
 
 def XMTComposeReportEnd(builder):
     return builder.EndObject()

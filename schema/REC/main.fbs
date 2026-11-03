@@ -1,5 +1,5 @@
-// Hash: aa1a2984ad3bfbf6c894188255822b2fbc5c058f71da96675cf7ea1f6541184f
-// Version: 1.44.87
+// Hash: 4bdb0e813a0e03a7bb04e861643be64260a3f0e45ea6c6b6aa76f6ee4c9f3909
+// Version: 1.44.88
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -38,6 +38,7 @@ include "../CFP/main.fbs";
 include "../CHN/main.fbs";
 include "../CLM/main.fbs";
 include "../CLT/main.fbs";
+include "../CME/main.fbs";
 include "../CMR/main.fbs";
 include "../CMS/main.fbs";
 include "../CMT/main.fbs";
@@ -257,7 +258,9 @@ include "../STR/main.fbs";
 include "../STV/main.fbs";
 include "../STX/main.fbs";
 include "../SUB/main.fbs";
+include "../SWA/main.fbs";
 include "../SWR/main.fbs";
+include "../SWS/main.fbs";
 include "../TAB/main.fbs";
 include "../TBP/main.fbs";
 include "../TBS/main.fbs";
@@ -418,7 +421,10 @@ enum RecordTypeExtended : ushort {
   SFE = 288,
   SRO = 289,
   SRT = 290,
-  GNM = 291
+  GNM = 291,
+  CME = 292,
+  SWA = 293,
+  SWS = 294
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

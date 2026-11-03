@@ -83,7 +83,7 @@ def PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data):
     return builder.EndVector()
 
 def CreateCOEFFICIENTSVector(builder, data):
-    return PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data)
+    PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data)
 
 def PolynomialCalibratorEnd(builder):
     return builder.EndObject()

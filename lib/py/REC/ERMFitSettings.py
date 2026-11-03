@@ -372,7 +372,7 @@ def ERMFitSettingsCreateSIGMA_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGMA_RTN_KMVector(builder, data):
-    return ERMFitSettingsCreateSIGMA_RTN_KMVector(builder, data)
+    ERMFitSettingsCreateSIGMA_RTN_KMVector(builder, data)
 
 def ERMFitSettingsAddVELOCITY(builder, VELOCITY):
     builder.PrependBoolSlot(11, VELOCITY, 0)

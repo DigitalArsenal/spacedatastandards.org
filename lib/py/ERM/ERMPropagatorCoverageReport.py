@@ -136,7 +136,7 @@ def ERMPropagatorCoverageReportCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    return ERMPropagatorCoverageReportCreateSTRATAVector(builder, data)
+    ERMPropagatorCoverageReportCreateSTRATAVector(builder, data)
 
 def ERMPropagatorCoverageReportEnd(builder):
     return builder.EndObject()

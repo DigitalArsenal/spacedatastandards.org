@@ -370,7 +370,7 @@ def tbpPeriodicOrbitCreateMONODROMYVector(builder, data):
     return builder.EndVector()
 
 def CreateMONODROMYVector(builder, data):
-    return tbpPeriodicOrbitCreateMONODROMYVector(builder, data)
+    tbpPeriodicOrbitCreateMONODROMYVector(builder, data)
 
 def tbpPeriodicOrbitAddFLOQUET_REAL(builder, FLOQUET_REAL):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(FLOQUET_REAL), 0)
@@ -392,7 +392,7 @@ def tbpPeriodicOrbitCreateFLOQUET_REALVector(builder, data):
     return builder.EndVector()
 
 def CreateFLOQUET_REALVector(builder, data):
-    return tbpPeriodicOrbitCreateFLOQUET_REALVector(builder, data)
+    tbpPeriodicOrbitCreateFLOQUET_REALVector(builder, data)
 
 def tbpPeriodicOrbitAddFLOQUET_IMAGINARY(builder, FLOQUET_IMAGINARY):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(FLOQUET_IMAGINARY), 0)
@@ -414,7 +414,7 @@ def tbpPeriodicOrbitCreateFLOQUET_IMAGINARYVector(builder, data):
     return builder.EndVector()
 
 def CreateFLOQUET_IMAGINARYVector(builder, data):
-    return tbpPeriodicOrbitCreateFLOQUET_IMAGINARYVector(builder, data)
+    tbpPeriodicOrbitCreateFLOQUET_IMAGINARYVector(builder, data)
 
 def tbpPeriodicOrbitAddSTABILITY_INDEX(builder, STABILITY_INDEX):
     builder.PrependFloat64Slot(17, STABILITY_INDEX, 0.0)

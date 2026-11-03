@@ -199,7 +199,7 @@ def PRWPropagationSampleCreateBURNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBURNSVector(builder, data):
-    return PRWPropagationSampleCreateBURNSVector(builder, data)
+    PRWPropagationSampleCreateBURNSVector(builder, data)
 
 def PRWPropagationSampleAddPROCESS_NOISE(builder, PROCESS_NOISE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)

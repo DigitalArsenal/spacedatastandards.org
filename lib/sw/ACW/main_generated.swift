@@ -163,7 +163,7 @@ public enum acwSensorPhenomenology: UInt8, FlatbuffersVectorInitializable, Enum,
 
 
 ///  Target Cartesian state sample in an Earth-fixed frame.
-public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWStateSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -241,7 +241,7 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Azimuth-dependent minimum elevation mask point.
-public struct ACWElevationMaskPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWElevationMaskPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -285,7 +285,7 @@ public struct ACWElevationMaskPoint: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Atmospheric refraction model for apparent-elevation access checks.
-public struct ACWRefractionModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWRefractionModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -335,7 +335,7 @@ public struct ACWRefractionModel: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Ground-station blackout interval.
-public struct ACWBlackoutWindow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWBlackoutWindow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -379,7 +379,7 @@ public struct ACWBlackoutWindow: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Ground-station geodetic definition and scheduling constraints.
-public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWGroundStation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -465,7 +465,7 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  One access constraint. Fields not used by KIND are ignored.
-public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWConstraint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -551,7 +551,7 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A boolean composition of constraints and nested sets.
-public struct ACWConstraintSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWConstraintSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -608,7 +608,7 @@ public struct ACWConstraintSet: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
 ///  the same frame and time scale as ACWRequest.STATES.
-public struct ACWObserverTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWObserverTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -665,7 +665,7 @@ public struct ACWObserverTrajectory: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Observable signature of a simulated target.
-public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWTargetSignature: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -730,7 +730,7 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  One simulated target: truth states and signature.
-public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -795,7 +795,7 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  A simulated sensor hosted by a ground station or an observer trajectory.
-public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -966,7 +966,7 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).
-public struct ACWSensorAccess: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWSensorAccess: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1016,7 +1016,7 @@ public struct ACWSensorAccess: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  One simulated track: a sensor's scheduled look at a target.
-public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1095,7 +1095,7 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  One access-window compute request.
-public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1281,7 +1281,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  One computed access interval.
-public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWAccessWindow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1408,7 +1408,7 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Result for one access-window compute request.
-public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACWResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1493,7 +1493,7 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Access-window analysis envelope.
-public struct ACW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

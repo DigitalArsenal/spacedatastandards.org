@@ -183,7 +183,7 @@ def mplGeometrySolutionCreateRIC_BASISVector(builder, data):
     return builder.EndVector()
 
 def CreateRIC_BASISVector(builder, data):
-    return mplGeometrySolutionCreateRIC_BASISVector(builder, data)
+    mplGeometrySolutionCreateRIC_BASISVector(builder, data)
 
 def mplGeometrySolutionAddVNC_BASIS(builder, VNC_BASIS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(VNC_BASIS), 0)
@@ -205,7 +205,7 @@ def mplGeometrySolutionCreateVNC_BASISVector(builder, data):
     return builder.EndVector()
 
 def CreateVNC_BASISVector(builder, data):
-    return mplGeometrySolutionCreateVNC_BASISVector(builder, data)
+    mplGeometrySolutionCreateVNC_BASISVector(builder, data)
 
 def mplGeometrySolutionAddTIME_OF_FLIGHT_S(builder, TIME_OF_FLIGHT_S):
     builder.PrependFloat64Slot(5, TIME_OF_FLIGHT_S, 0.0)

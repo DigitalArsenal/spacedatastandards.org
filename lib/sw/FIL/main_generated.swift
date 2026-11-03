@@ -57,7 +57,7 @@ public enum filDigestAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  One entry of a directory listing.
-public struct FILEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FILEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -115,7 +115,7 @@ public struct FILEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  File - a file, its description and, when being moved, its content.
-public struct FIL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FIL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

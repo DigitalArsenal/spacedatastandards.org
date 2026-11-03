@@ -385,7 +385,7 @@ def XMTIntegrateReportCreateUNLINKED_COUNTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNLINKED_COUNTSVector(builder, data):
-    return XMTIntegrateReportCreateUNLINKED_COUNTSVector(builder, data)
+    XMTIntegrateReportCreateUNLINKED_COUNTSVector(builder, data)
 
 def XMTIntegrateReportAddREFUSED_COUNT(builder, REFUSED_COUNT):
     builder.PrependUint32Slot(16, REFUSED_COUNT, 0)
@@ -415,7 +415,7 @@ def XMTIntegrateReportCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    return XMTIntegrateReportCreateOBJECTSVector(builder, data)
+    XMTIntegrateReportCreateOBJECTSVector(builder, data)
 
 def XMTIntegrateReportAddUNLINKED(builder, UNLINKED):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(UNLINKED), 0)
@@ -433,7 +433,7 @@ def XMTIntegrateReportCreateUNLINKEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNLINKEDVector(builder, data):
-    return XMTIntegrateReportCreateUNLINKEDVector(builder, data)
+    XMTIntegrateReportCreateUNLINKEDVector(builder, data)
 
 def XMTIntegrateReportAddREFUSED(builder, REFUSED):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(REFUSED), 0)
@@ -451,7 +451,7 @@ def XMTIntegrateReportCreateREFUSEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFUSEDVector(builder, data):
-    return XMTIntegrateReportCreateREFUSEDVector(builder, data)
+    XMTIntegrateReportCreateREFUSEDVector(builder, data)
 
 def XMTIntegrateReportEnd(builder):
     return builder.EndObject()

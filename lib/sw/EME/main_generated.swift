@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Encrypted Message Envelope
-public struct EME: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

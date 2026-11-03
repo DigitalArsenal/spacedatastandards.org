@@ -179,7 +179,7 @@ def gnssSatObsCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    return gnssSatObsCreateOBSERVATIONSVector(builder, data)
+    gnssSatObsCreateOBSERVATIONSVector(builder, data)
 
 def gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER):
     builder.PrependInt8Slot(7, GLONASS_FREQUENCY_NUMBER, 0)

@@ -19,7 +19,7 @@ public enum ScoreType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
-public struct Score: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Score: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -75,7 +75,7 @@ public struct Score: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 }
 
 ///  Hypothesis Message
-public struct HYP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct HYP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -30,7 +30,7 @@ public enum sfeEventKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Solar Flare Event
-public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -274,7 +274,7 @@ public struct SFE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   }
 }
 
-public struct SFECOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SFECOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

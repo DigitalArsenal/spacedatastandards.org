@@ -301,7 +301,7 @@ def ERMResidualStatisticsCreateRMS_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateRMS_RTN_KMVector(builder, data):
-    return ERMResidualStatisticsCreateRMS_RTN_KMVector(builder, data)
+    ERMResidualStatisticsCreateRMS_RTN_KMVector(builder, data)
 
 def ERMResidualStatisticsAddMEAN_RTN_KM(builder, MEAN_RTN_KM):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_RTN_KM), 0)
@@ -323,7 +323,7 @@ def ERMResidualStatisticsCreateMEAN_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateMEAN_RTN_KMVector(builder, data):
-    return ERMResidualStatisticsCreateMEAN_RTN_KMVector(builder, data)
+    ERMResidualStatisticsCreateMEAN_RTN_KMVector(builder, data)
 
 def ERMResidualStatisticsAddMAX_3D_KM(builder, MAX_3D_KM):
     builder.PrependFloat64Slot(11, MAX_3D_KM, float('nan'))
@@ -357,7 +357,7 @@ def ERMResidualStatisticsCreateMAX_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateMAX_RTN_KMVector(builder, data):
-    return ERMResidualStatisticsCreateMAX_RTN_KMVector(builder, data)
+    ERMResidualStatisticsCreateMAX_RTN_KMVector(builder, data)
 
 def ERMResidualStatisticsAddRMS_VELOCITY_KM_S(builder, RMS_VELOCITY_KM_S):
     builder.PrependFloat64Slot(14, RMS_VELOCITY_KM_S, float('nan'))
@@ -381,7 +381,7 @@ def ERMResidualStatisticsCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    return ERMResidualStatisticsCreateSAMPLESVector(builder, data)
+    ERMResidualStatisticsCreateSAMPLESVector(builder, data)
 
 def ERMResidualStatisticsEnd(builder):
     return builder.EndObject()

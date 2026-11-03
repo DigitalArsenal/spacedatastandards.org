@@ -196,7 +196,7 @@ def ERMCommonEpochResultCreateSTATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATEVector(builder, data):
-    return ERMCommonEpochResultCreateSTATEVector(builder, data)
+    ERMCommonEpochResultCreateSTATEVector(builder, data)
 
 def ERMCommonEpochResultAddSETS(builder, SETS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SETS), 0)
@@ -214,7 +214,7 @@ def ERMCommonEpochResultCreateSETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSETSVector(builder, data):
-    return ERMCommonEpochResultCreateSETSVector(builder, data)
+    ERMCommonEpochResultCreateSETSVector(builder, data)
 
 def ERMCommonEpochResultAddMISSING_SETS(builder, MISSING_SETS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MISSING_SETS), 0)
@@ -232,7 +232,7 @@ def ERMCommonEpochResultCreateMISSING_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMISSING_SETSVector(builder, data):
-    return ERMCommonEpochResultCreateMISSING_SETSVector(builder, data)
+    ERMCommonEpochResultCreateMISSING_SETSVector(builder, data)
 
 def ERMCommonEpochResultEnd(builder):
     return builder.EndObject()

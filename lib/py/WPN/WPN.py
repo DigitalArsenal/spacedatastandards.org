@@ -290,7 +290,7 @@ def WPNCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    return WPNCreateRESERVEDVector(builder, data)
+    WPNCreateRESERVEDVector(builder, data)
 
 def WPNEnd(builder):
     return builder.EndObject()

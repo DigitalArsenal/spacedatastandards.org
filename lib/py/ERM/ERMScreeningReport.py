@@ -154,7 +154,7 @@ def ERMScreeningReportCreateSUMMARYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSUMMARYVector(builder, data):
-    return ERMScreeningReportCreateSUMMARYVector(builder, data)
+    ERMScreeningReportCreateSUMMARYVector(builder, data)
 
 def ERMScreeningReportAddSTRATA(builder, STRATA):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STRATA), 0)
@@ -172,7 +172,7 @@ def ERMScreeningReportCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    return ERMScreeningReportCreateSTRATAVector(builder, data)
+    ERMScreeningReportCreateSTRATAVector(builder, data)
 
 def ERMScreeningReportEnd(builder):
     return builder.EndObject()

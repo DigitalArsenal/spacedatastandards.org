@@ -395,7 +395,7 @@ def MPLCreateBURNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBURNSVector(builder, data):
-    return MPLCreateBURNSVector(builder, data)
+    MPLCreateBURNSVector(builder, data)
 
 def MPLAddARCS(builder, ARCS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ARCS), 0)
@@ -413,7 +413,7 @@ def MPLCreateARCSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARCSVector(builder, data):
-    return MPLCreateARCSVector(builder, data)
+    MPLCreateARCSVector(builder, data)
 
 def MPLAddTOTAL_DELTA_V_KM_S(builder, TOTAL_DELTA_V_KM_S):
     builder.PrependFloat64Slot(14, TOTAL_DELTA_V_KM_S, 0.0)
@@ -455,7 +455,7 @@ def MPLCreateOPTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOPTIONSVector(builder, data):
-    return MPLCreateOPTIONSVector(builder, data)
+    MPLCreateOPTIONSVector(builder, data)
 
 def MPLAddTRAJECTORY(builder, TRAJECTORY):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJECTORY), 0)

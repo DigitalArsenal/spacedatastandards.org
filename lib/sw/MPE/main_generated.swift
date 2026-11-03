@@ -10,7 +10,7 @@ import FlatBuffers
 
 ///  One constraint in a maneuver-targeting problem and how well the converged
 ///  solution satisfies it.
-public struct MPETargeterConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MPETargeterConstraint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -102,7 +102,7 @@ public struct MPETargeterConstraint: FlatBufferVerifiableTable, FlatbuffersVecto
 ///  Maneuver-targeter solution and convergence metadata carried with an
 ///  extended MPE: the solver that produced the targeted element set, its
 ///  iteration/residual history, and the constraint set it satisfied.
-public struct MPETargeterSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MPETargeterSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -199,7 +199,7 @@ public struct MPETargeterSolution: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Minimum Propagatable Element Set
-public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -62,7 +62,7 @@ public enum aciHandoverKind: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  The server that served an interval best, and what it beat. Publishing the
 ///  runner-up is what makes a best-server claim auditable rather than an
 ///  assertion.
-public struct ACIBestServer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACIBestServer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -161,7 +161,7 @@ public struct ACIBestServer: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A transition of service between two links.
-public struct ACIHandover: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACIHandover: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -257,7 +257,7 @@ public struct ACIHandover: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  One interval.
-public struct ACIInterval: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACIInterval: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -549,7 +549,7 @@ public struct ACIInterval: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Where this interval set came from.
-public struct ACIProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACIProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -716,7 +716,7 @@ public struct ACIProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  Data carried by one modulation-and-coding choice during one interval.
 ///  Entries are explicit rows so FlatSQL and `$RPT` can group volume by link,
 ///  interval, or choice without decoding a producer-specific map.
-public struct ACIDataVolumeByModCod: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACIDataVolumeByModCod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -801,7 +801,7 @@ public struct ACIDataVolumeByModCod: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Access Interval
-public struct ACI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

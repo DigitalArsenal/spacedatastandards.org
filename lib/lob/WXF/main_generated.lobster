@@ -165,6 +165,8 @@ enum wxfVariable:
     wxfVariable_CloudEffectiveRadius = 36
     /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
     wxfVariable_CloudEmissivity = 37
+    /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+    wxfVariable_AuroraProbability = 38
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
 /// reuse existing values.

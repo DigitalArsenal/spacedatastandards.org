@@ -234,7 +234,7 @@ public struct detectionResult_Mutable: FlatBufferStruct, FlatbuffersVectorInitia
 }
 
 ///  Radar sensor configuration.
-public struct SDRRadarConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRRadarConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -341,7 +341,7 @@ public struct SDRRadarConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Generic sensor configuration.
-public struct SDRSensorConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRSensorConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -437,7 +437,7 @@ public struct SDRSensorConfig: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Batch detection request (arena-addressed, zero-copy).
-public struct SDRBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -539,7 +539,7 @@ public struct SDRBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Batch detection response header.
-public struct SDRBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -606,7 +606,7 @@ public struct SDRBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  Compact single-frame detection input used by pluggable sensor models that
 ///  do not drive arena-backed batches.
-public struct SDRSingleInput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRSingleInput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -702,7 +702,7 @@ public struct SDRSingleInput: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Compact single-frame detection result.
-public struct SDRSingleResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDRSingleResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -789,7 +789,7 @@ public struct SDRSingleResult: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Sensor Detection Report envelope message.
-public struct SDR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SDR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

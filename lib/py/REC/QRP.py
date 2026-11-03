@@ -594,7 +594,7 @@ def QRPCreateFILTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFILTERSVector(builder, data):
-    return QRPCreateFILTERSVector(builder, data)
+    QRPCreateFILTERSVector(builder, data)
 
 def QRPAddSORT_FIELD(builder, SORT_FIELD):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SORT_FIELD), 0)
@@ -768,7 +768,7 @@ def QRPCreateCOLUMNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMNSVector(builder, data):
-    return QRPCreateCOLUMNSVector(builder, data)
+    QRPCreateCOLUMNSVector(builder, data)
 
 def QRPAddTIME_PROFILE(builder, TIME_PROFILE):
     builder.PrependInt8Slot(37, TIME_PROFILE, 0)
@@ -804,7 +804,7 @@ def QRPCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    return QRPCreatePARAMETERSVector(builder, data)
+    QRPCreatePARAMETERSVector(builder, data)
 
 def QRPAddROWS(builder, ROWS):
     builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(ROWS), 0)
@@ -822,7 +822,7 @@ def QRPCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    return QRPCreateROWSVector(builder, data)
+    QRPCreateROWSVector(builder, data)
 
 def QRPAddTABLES(builder, TABLES):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(TABLES), 0)
@@ -840,7 +840,7 @@ def QRPCreateTABLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTABLESVector(builder, data):
-    return QRPCreateTABLESVector(builder, data)
+    QRPCreateTABLESVector(builder, data)
 
 def QRPAddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS):
     builder.PrependUint32Slot(43, MAX_ELAPSED_MS, 0)

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Weather Data
-public struct WTH: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct WTH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

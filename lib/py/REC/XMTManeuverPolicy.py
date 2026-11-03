@@ -153,7 +153,7 @@ def XMTManeuverPolicyCreateMANEUVERABLE_STATUSESVector(builder, data):
     return builder.EndVector()
 
 def CreateMANEUVERABLE_STATUSESVector(builder, data):
-    return XMTManeuverPolicyCreateMANEUVERABLE_STATUSESVector(builder, data)
+    XMTManeuverPolicyCreateMANEUVERABLE_STATUSESVector(builder, data)
 
 def XMTManeuverPolicyAddRETIRING_STATUSES(builder, RETIRING_STATUSES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(RETIRING_STATUSES), 0)
@@ -175,7 +175,7 @@ def XMTManeuverPolicyCreateRETIRING_STATUSESVector(builder, data):
     return builder.EndVector()
 
 def CreateRETIRING_STATUSESVector(builder, data):
-    return XMTManeuverPolicyCreateRETIRING_STATUSESVector(builder, data)
+    XMTManeuverPolicyCreateRETIRING_STATUSESVector(builder, data)
 
 def XMTManeuverPolicyEnd(builder):
     return builder.EndObject()

@@ -30,7 +30,7 @@ public enum rcfPduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Return Channel Frames Service (CCSDS 913.5-B-2)
-public struct RCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

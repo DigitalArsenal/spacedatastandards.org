@@ -112,7 +112,7 @@ def PNVCreateENTRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRIESVector(builder, data):
-    return PNVCreateENTRIESVector(builder, data)
+    PNVCreateENTRIESVector(builder, data)
 
 def PNVAddETAG(builder, ETAG):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ETAG), 0)

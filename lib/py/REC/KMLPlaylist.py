@@ -77,7 +77,7 @@ def KMLPlaylistCreatePRIMITIVESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePRIMITIVESVector(builder, data):
-    return KMLPlaylistCreatePRIMITIVESVector(builder, data)
+    KMLPlaylistCreatePRIMITIVESVector(builder, data)
 
 def KMLPlaylistEnd(builder):
     return builder.EndObject()

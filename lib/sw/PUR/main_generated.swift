@@ -29,7 +29,7 @@ public enum purchaseLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum,
 
 
 ///  Purchase Request - Request to purchase data from a storefront listing
-public struct PUR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PUR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

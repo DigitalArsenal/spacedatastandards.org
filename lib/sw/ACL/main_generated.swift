@@ -25,7 +25,7 @@ public enum grantLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum, Ve
 
 
 ///  Access Control Grant - Permission to access purchased data
-public struct ACL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -102,7 +102,7 @@ def ACWSensorAccessCreateWINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWINDOWSVector(builder, data):
-    return ACWSensorAccessCreateWINDOWSVector(builder, data)
+    ACWSensorAccessCreateWINDOWSVector(builder, data)
 
 def ACWSensorAccessEnd(builder):
     return builder.EndObject()

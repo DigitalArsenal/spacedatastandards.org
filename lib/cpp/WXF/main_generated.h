@@ -269,11 +269,13 @@ enum wxfVariable : int8_t {
   wxfVariable_CloudEffectiveRadius = 36,
   /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
   wxfVariable_CloudEmissivity = 37,
+  /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+  wxfVariable_AuroraProbability = 38,
   wxfVariable_MIN = wxfVariable_Unspecified,
-  wxfVariable_MAX = wxfVariable_CloudEmissivity
+  wxfVariable_MAX = wxfVariable_AuroraProbability
 };
 
-inline const wxfVariable (&EnumValueswxfVariable())[38] {
+inline const wxfVariable (&EnumValueswxfVariable())[39] {
   static const wxfVariable values[] = {
     wxfVariable_Unspecified,
     wxfVariable_Temperature2m,
@@ -312,13 +314,14 @@ inline const wxfVariable (&EnumValueswxfVariable())[38] {
     wxfVariable_CloudPhase,
     wxfVariable_CloudOpticalDepth,
     wxfVariable_CloudEffectiveRadius,
-    wxfVariable_CloudEmissivity
+    wxfVariable_CloudEmissivity,
+    wxfVariable_AuroraProbability
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfVariable() {
-  static const char * const names[39] = {
+  static const char * const names[40] = {
     "Unspecified",
     "Temperature2m",
     "DewpointTemperature2m",
@@ -357,13 +360,14 @@ inline const char * const *EnumNameswxfVariable() {
     "CloudOpticalDepth",
     "CloudEffectiveRadius",
     "CloudEmissivity",
+    "AuroraProbability",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfVariable(wxfVariable e) {
-  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_CloudEmissivity)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_AuroraProbability)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfVariable()[index];
 }

@@ -214,7 +214,7 @@ def XMTComposeRecipeCreateLAYERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLAYERSVector(builder, data):
-    return XMTComposeRecipeCreateLAYERSVector(builder, data)
+    XMTComposeRecipeCreateLAYERSVector(builder, data)
 
 def XMTComposeRecipeAddSTATE_SOURCES(builder, STATE_SOURCES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_SOURCES), 0)
@@ -232,7 +232,7 @@ def XMTComposeRecipeCreateSTATE_SOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_SOURCESVector(builder, data):
-    return XMTComposeRecipeCreateSTATE_SOURCESVector(builder, data)
+    XMTComposeRecipeCreateSTATE_SOURCESVector(builder, data)
 
 def XMTComposeRecipeAddOVERRIDES(builder, OVERRIDES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OVERRIDES), 0)
@@ -250,7 +250,7 @@ def XMTComposeRecipeCreateOVERRIDESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOVERRIDESVector(builder, data):
-    return XMTComposeRecipeCreateOVERRIDESVector(builder, data)
+    XMTComposeRecipeCreateOVERRIDESVector(builder, data)
 
 def XMTComposeRecipeAddSTATE_CANDIDATES(builder, STATE_CANDIDATES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_CANDIDATES), 0)
@@ -268,7 +268,7 @@ def XMTComposeRecipeCreateSTATE_CANDIDATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_CANDIDATESVector(builder, data):
-    return XMTComposeRecipeCreateSTATE_CANDIDATESVector(builder, data)
+    XMTComposeRecipeCreateSTATE_CANDIDATESVector(builder, data)
 
 def XMTComposeRecipeAddCOVERAGE(builder, COVERAGE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE), 0)
@@ -286,7 +286,7 @@ def XMTComposeRecipeCreateCOVERAGEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOVERAGEVector(builder, data):
-    return XMTComposeRecipeCreateCOVERAGEVector(builder, data)
+    XMTComposeRecipeCreateCOVERAGEVector(builder, data)
 
 def XMTComposeRecipeEnd(builder):
     return builder.EndObject()

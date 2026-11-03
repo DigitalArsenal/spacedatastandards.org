@@ -376,7 +376,7 @@ def FMBCreateROWSVector(builder, data):
     return builder.EndVector()
 
 def CreateROWSVector(builder, data):
-    return FMBCreateROWSVector(builder, data)
+    FMBCreateROWSVector(builder, data)
 
 def FMBAddDIGESTS(builder, DIGESTS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DIGESTS), 0)
@@ -398,7 +398,7 @@ def FMBCreateDIGESTSVector(builder, data):
     return builder.EndVector()
 
 def CreateDIGESTSVector(builder, data):
-    return FMBCreateDIGESTSVector(builder, data)
+    FMBCreateDIGESTSVector(builder, data)
 
 def FMBAddGROUPS(builder, GROUPS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GROUPS), 0)
@@ -420,7 +420,7 @@ def FMBCreateGROUPSVector(builder, data):
     return builder.EndVector()
 
 def CreateGROUPSVector(builder, data):
-    return FMBCreateGROUPSVector(builder, data)
+    FMBCreateGROUPSVector(builder, data)
 
 def FMBAddDICTIONARY(builder, DICTIONARY):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DICTIONARY), 0)
@@ -438,7 +438,7 @@ def FMBCreateDICTIONARYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDICTIONARYVector(builder, data):
-    return FMBCreateDICTIONARYVector(builder, data)
+    FMBCreateDICTIONARYVector(builder, data)
 
 def FMBAddREMOVALS(builder, REMOVALS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(REMOVALS), 0)
@@ -460,7 +460,7 @@ def FMBCreateREMOVALSVector(builder, data):
     return builder.EndVector()
 
 def CreateREMOVALSVector(builder, data):
-    return FMBCreateREMOVALSVector(builder, data)
+    FMBCreateREMOVALSVector(builder, data)
 
 def FMBAddURLS(builder, URLS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(URLS), 0)
@@ -482,7 +482,7 @@ def FMBCreateURLSVector(builder, data):
     return builder.EndVector()
 
 def CreateURLSVector(builder, data):
-    return FMBCreateURLSVector(builder, data)
+    FMBCreateURLSVector(builder, data)
 
 def FMBAddSIGNATURES(builder, SIGNATURES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURES), 0)
@@ -500,7 +500,7 @@ def FMBCreateSIGNATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSIGNATURESVector(builder, data):
-    return FMBCreateSIGNATURESVector(builder, data)
+    FMBCreateSIGNATURESVector(builder, data)
 
 def FMBAddSEALED(builder, SEALED):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SEALED), 0)
@@ -518,7 +518,7 @@ def FMBCreateSEALEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEALEDVector(builder, data):
-    return FMBCreateSEALEDVector(builder, data)
+    FMBCreateSEALEDVector(builder, data)
 
 def FMBAddIDENTITIES(builder, IDENTITIES):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(IDENTITIES), 0)
@@ -536,7 +536,7 @@ def FMBCreateIDENTITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateIDENTITIESVector(builder, data):
-    return FMBCreateIDENTITIESVector(builder, data)
+    FMBCreateIDENTITIESVector(builder, data)
 
 def FMBAddLARGE(builder, LARGE):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LARGE), 0)
@@ -554,7 +554,7 @@ def FMBCreateLARGEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLARGEVector(builder, data):
-    return FMBCreateLARGEVector(builder, data)
+    FMBCreateLARGEVector(builder, data)
 
 def FMBEnd(builder):
     return builder.EndObject()

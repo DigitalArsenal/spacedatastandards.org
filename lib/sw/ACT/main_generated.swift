@@ -34,7 +34,7 @@ public enum actKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  One purpose-key slot of an operator.
-public struct ACTKeySlot: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACTKeySlot: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -103,7 +103,7 @@ public struct ACTKeySlot: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Account Record - operator, session, challenge or external link.
-public struct ACT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ACT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

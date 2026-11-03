@@ -154,7 +154,7 @@ def FMBSealedCreateLEAF_DIGESTVector(builder, data):
     return builder.EndVector()
 
 def CreateLEAF_DIGESTVector(builder, data):
-    return FMBSealedCreateLEAF_DIGESTVector(builder, data)
+    FMBSealedCreateLEAF_DIGESTVector(builder, data)
 
 def FMBSealedAddCOLUMNS(builder, COLUMNS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLUMNS), 0)
@@ -176,7 +176,7 @@ def FMBSealedCreateCOLUMNSVector(builder, data):
     return builder.EndVector()
 
 def CreateCOLUMNSVector(builder, data):
-    return FMBSealedCreateCOLUMNSVector(builder, data)
+    FMBSealedCreateCOLUMNSVector(builder, data)
 
 def FMBSealedEnd(builder):
     return builder.EndObject()

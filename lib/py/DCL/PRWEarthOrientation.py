@@ -79,7 +79,7 @@ def PRWEarthOrientationCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    return PRWEarthOrientationCreateROWSVector(builder, data)
+    PRWEarthOrientationCreateROWSVector(builder, data)
 
 def PRWEarthOrientationEnd(builder):
     return builder.EndObject()

@@ -28,7 +28,7 @@ public enum GPXFixType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  GPX link to an external resource
-public struct GPXLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPXLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -82,7 +82,7 @@ public struct GPXLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 }
 
 ///  A waypoint, point of interest, or named feature
-public struct GPXWaypoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPXWaypoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -273,7 +273,7 @@ public struct GPXWaypoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Track segment (continuous span of track points)
-public struct GPXTrackSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPXTrackSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -310,7 +310,7 @@ public struct GPXTrackSegment: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Track (ordered list of track segments)
-public struct GPXTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPXTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -401,7 +401,7 @@ public struct GPXTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Route (ordered list of waypoints for navigation)
-public struct GPXRoute: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPXRoute: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -492,7 +492,7 @@ public struct GPXRoute: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  GPX Document
-public struct GPX: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GPX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

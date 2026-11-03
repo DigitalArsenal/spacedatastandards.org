@@ -1,0 +1,31 @@
+/**
+ * Where the values apply. Append only.
+ */
+export declare enum swsLocation {
+    Unspecified = 0,
+    /**
+     * At the measuring spacecraft (e.g. L1).
+     */
+    AtSpacecraft = 1,
+    /**
+     * Time-shifted by the source to Earth's bow shock nose (e.g. OMNI).
+     */
+    BowShockNose = 2,
+    /**
+     * Propagated by the source to Earth; PROPAGATED_EPOCHS_MS holds arrivals.
+     */
+    PropagatedToEarth = 3,
+    /**
+     * Earth-orbiting monitor (e.g. GOES).
+     */
+    EarthOrbit = 4,
+    /**
+     * Index derived from a ground magnetometer network.
+     */
+    GroundNetwork = 5,
+    /**
+     * Model output at Earth.
+     */
+    ModelAtEarth = 6
+}
+//# sourceMappingURL=swsLocation.d.ts.map

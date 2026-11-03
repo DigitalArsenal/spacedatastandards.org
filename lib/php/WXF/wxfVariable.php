@@ -101,6 +101,8 @@ class wxfVariable
     const CloudEffectiveRadius = 36;
     /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
     const CloudEmissivity = 37;
+    /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+    const AuroraProbability = 38;
 
     private static $names = array(
         wxfVariable::Unspecified=>"Unspecified",
@@ -141,6 +143,7 @@ class wxfVariable
         wxfVariable::CloudOpticalDepth=>"CloudOpticalDepth",
         wxfVariable::CloudEffectiveRadius=>"CloudEffectiveRadius",
         wxfVariable::CloudEmissivity=>"CloudEmissivity",
+        wxfVariable::AuroraProbability=>"AuroraProbability",
     );
 
     public static function Name($e)

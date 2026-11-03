@@ -259,7 +259,7 @@ def dclCorrectionCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    return dclCorrectionCreateSEGMENTSVector(builder, data)
+    dclCorrectionCreateSEGMENTSVector(builder, data)
 
 def dclCorrectionAddNODE_TIMES_MS(builder, NODE_TIMES_MS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_TIMES_MS), 0)
@@ -281,7 +281,7 @@ def dclCorrectionCreateNODE_TIMES_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateNODE_TIMES_MSVector(builder, data):
-    return dclCorrectionCreateNODE_TIMES_MSVector(builder, data)
+    dclCorrectionCreateNODE_TIMES_MSVector(builder, data)
 
 def dclCorrectionAddNODE_ALTITUDES_KM(builder, NODE_ALTITUDES_KM):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_ALTITUDES_KM), 0)
@@ -303,7 +303,7 @@ def dclCorrectionCreateNODE_ALTITUDES_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateNODE_ALTITUDES_KMVector(builder, data):
-    return dclCorrectionCreateNODE_ALTITUDES_KMVector(builder, data)
+    dclCorrectionCreateNODE_ALTITUDES_KMVector(builder, data)
 
 def dclCorrectionAddNODE_VALUES_K(builder, NODE_VALUES_K):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_VALUES_K), 0)
@@ -325,7 +325,7 @@ def dclCorrectionCreateNODE_VALUES_KVector(builder, data):
     return builder.EndVector()
 
 def CreateNODE_VALUES_KVector(builder, data):
-    return dclCorrectionCreateNODE_VALUES_KVector(builder, data)
+    dclCorrectionCreateNODE_VALUES_KVector(builder, data)
 
 def dclCorrectionAddNODE_SIGMAS_K(builder, NODE_SIGMAS_K):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_SIGMAS_K), 0)
@@ -347,7 +347,7 @@ def dclCorrectionCreateNODE_SIGMAS_KVector(builder, data):
     return builder.EndVector()
 
 def CreateNODE_SIGMAS_KVector(builder, data):
-    return dclCorrectionCreateNODE_SIGMAS_KVector(builder, data)
+    dclCorrectionCreateNODE_SIGMAS_KVector(builder, data)
 
 def dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS), 0)
@@ -369,7 +369,7 @@ def dclCorrectionCreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data)
     return builder.EndVector()
 
 def CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data):
-    return dclCorrectionCreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data)
+    dclCorrectionCreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data)
 
 def dclCorrectionEnd(builder):
     return builder.EndObject()

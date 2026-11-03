@@ -307,7 +307,7 @@ public struct ERMHistogramBin_Mutable: FlatBufferStruct, FlatbuffersVectorInitia
 ///  One orbit regime: a set falls in the first regime whose half-open ranges
 ///  hold its mean altitude (from un-Kozai'd SGP4 mean motion, WGS-72) and
 ///  eccentricity.
-public struct ERMRegime: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRegime: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -369,7 +369,7 @@ public struct ERMRegime: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  A prediction-age bin, days, half-open (the last bin includes its upper
 ///  edge).
-public struct ERMAgeBin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAgeBin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -411,7 +411,7 @@ public struct ERMAgeBin: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Robust clipping centre and scale of one stratum.
-public struct ERMClipCentre: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMClipCentre: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -469,7 +469,7 @@ public struct ERMClipCentre: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Clipping of outlying errors.
-public struct ERMClipSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMClipSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -514,7 +514,7 @@ public struct ERMClipSettings: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 
 ///  The strata of a model and how samples are taken. Empty REGIMES and
 ///  AGE_BINS mean the producer's defaults.
-public struct ERMStrataSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStrataSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -569,7 +569,7 @@ public struct ERMStrataSettings: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Coverage gate of a realism test.
-public struct ERMGate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMGate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -642,7 +642,7 @@ public struct ERMGate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 }
 
 ///  Counters of a run. A counter a run does not keep is 0.
-public struct ERMCounts: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCounts: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -909,7 +909,7 @@ public struct ERMCounts: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  A count under a name.
-public struct ERMNamedCount: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMNamedCount: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -952,7 +952,7 @@ public struct ERMNamedCount: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  First and second moments of error vectors.
-public struct ERMMoments: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMMoments: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1004,7 +1004,7 @@ public struct ERMMoments: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Histogram of one error component.
-public struct ERMHistogram: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMHistogram: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1045,7 +1045,7 @@ public struct ERMHistogram: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Running realism test of one stratum.
-public struct ERMCoverageTally: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCoverageTally: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1119,7 +1119,7 @@ public struct ERMCoverageTally: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Accumulated errors of one stratum.
-public struct ERMAccumulatorStratum: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAccumulatorStratum: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1188,7 +1188,7 @@ public struct ERMAccumulatorStratum: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Errors accumulated over batches; a later batch adds to it as its prior.
-public struct ERMAccumulator: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAccumulator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1258,7 +1258,7 @@ public struct ERMAccumulator: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Statistics after clipping.
-public struct ERMClippedStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMClippedStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1322,7 +1322,7 @@ public struct ERMClippedStatistics: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Result of a realism test of one stratum.
-public struct ERMCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1407,7 +1407,7 @@ public struct ERMCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Per-axis scale applied to a stratum's position covariance.
-public struct ERMStratumScale: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStratumScale: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1452,7 +1452,7 @@ public struct ERMStratumScale: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  One stratum of a model.
-public struct ERMModelStratum: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMModelStratum: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1596,7 +1596,7 @@ public struct ERMModelStratum: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  A realism cell: a regime and age tested at a horizon.
-public struct ERMRealismCell: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRealismCell: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1655,7 +1655,7 @@ public struct ERMRealismCell: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  A factor applied to one stratum (or a status for it).
-public struct ERMStratumFactor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStratumFactor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1712,7 +1712,7 @@ public struct ERMStratumFactor: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  A factor by regime and horizon.
-public struct ERMHorizonFactor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMHorizonFactor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1785,7 +1785,7 @@ public struct ERMHorizonFactor: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Process noise of a numerical propagation: white acceleration.
-public struct ERMProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMProcessNoise: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1846,7 +1846,7 @@ public struct ERMProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  How a process noise was fitted.
-public struct ERMNoiseFit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMNoiseFit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1951,7 +1951,7 @@ public struct ERMNoiseFit: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Initial covariance and process noise of one regime.
-public struct ERMPropagatorRegime: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPropagatorRegime: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2040,7 +2040,7 @@ public struct ERMPropagatorRegime: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Where a model was measured.
-public struct ERMMeasuredOn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMMeasuredOn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2099,7 +2099,7 @@ public struct ERMMeasuredOn: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A file a model was derived from.
-public struct ERMProvenanceFile: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMProvenanceFile: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2143,7 +2143,7 @@ public struct ERMProvenanceFile: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Model-level scaling record.
-public struct ERMModelScale: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMModelScale: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2201,7 +2201,7 @@ public struct ERMModelScale: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  An orbit error model.
-public struct ERMModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2437,7 +2437,7 @@ public struct ERMModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Options of a model scaling.
-public struct ERMScaleOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScaleOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2474,7 +2474,7 @@ public struct ERMScaleOptions: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Settings of a screening-rule evaluation.
-public struct ERMScreeningSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2561,7 +2561,7 @@ public struct ERMScreeningSettings: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  A screening case: two objects' position errors and covariances.
-public struct ERMScreeningCase: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningCase: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2621,7 +2621,7 @@ public struct ERMScreeningCase: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Caller-supplied screening cases.
-public struct ERMScreeningCases: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningCases: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2657,7 +2657,7 @@ public struct ERMScreeningCases: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Rule scores at one miss distance.
-public struct ERMScreeningRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningRow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2743,7 +2743,7 @@ public struct ERMScreeningRow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Scores for one encounter geometry.
-public struct ERMScreeningGeometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2787,7 +2787,7 @@ public struct ERMScreeningGeometry: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Screening scores of one stratum.
-public struct ERMScreeningStratum: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningStratum: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2880,7 +2880,7 @@ public struct ERMScreeningStratum: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Definitions of the terms of a screening report (human-readable).
-public struct ERMScreeningDefinitions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningDefinitions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2959,7 +2959,7 @@ public struct ERMScreeningDefinitions: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Scores of probabilistic, bounded-set and possibility screening rules.
-public struct ERMScreeningReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMScreeningReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3021,7 +3021,7 @@ public struct ERMScreeningReport: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Settings of an arc plan.
-public struct ERMArcOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArcOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3080,7 +3080,7 @@ public struct ERMArcOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  One target of an arc.
-public struct ERMArcTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArcTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3138,7 +3138,7 @@ public struct ERMArcTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  One propagation arc from an element set.
-public struct ERMArc: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArc: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3221,7 +3221,7 @@ public struct ERMArc: FlatBufferVerifiableTable, FlatbuffersVectorInitializable 
 }
 
 ///  Propagation arcs to run.
-public struct ERMArcPlan: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArcPlan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3297,7 +3297,7 @@ public struct ERMArcPlan: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  A propagated state at one arc target.
-public struct ERMPredictionSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPredictionSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3353,7 +3353,7 @@ public struct ERMPredictionSample: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Predictions of one arc, aligned with its targets.
-public struct ERMArcPrediction: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArcPrediction: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3395,7 +3395,7 @@ public struct ERMArcPrediction: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Predictions for an arc plan.
-public struct ERMArcPredictions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMArcPredictions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3431,7 +3431,7 @@ public struct ERMArcPredictions: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Settings of a propagator covariance coverage run.
-public struct ERMCoverageOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCoverageOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3508,7 +3508,7 @@ public struct ERMCoverageOptions: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Coverage of one stratum of a propagator covariance.
-public struct ERMPropagatorCoverageStratum: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPropagatorCoverageStratum: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3610,7 +3610,7 @@ public struct ERMPropagatorCoverageStratum: FlatBufferVerifiableTable, Flatbuffe
 }
 
 ///  Coverage test of a propagator covariance.
-public struct ERMPropagatorCoverageReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPropagatorCoverageReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3672,7 +3672,7 @@ public struct ERMPropagatorCoverageReport: FlatBufferVerifiableTable, Flatbuffer
 }
 
 ///  A request for differences at a common epoch.
-public struct ERMCommonEpochTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCommonEpochTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3744,7 +3744,7 @@ public struct ERMCommonEpochTarget: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  One element set's difference from the origin.
-public struct ERMSetDifference: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMSetDifference: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3797,7 +3797,7 @@ public struct ERMSetDifference: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Differences at one common epoch.
-public struct ERMCommonEpochResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCommonEpochResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3883,7 +3883,7 @@ public struct ERMCommonEpochResult: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Common-epoch requests or results.
-public struct ERMCommonEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCommonEpoch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3938,7 +3938,7 @@ public struct ERMCommonEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  A covariance to map through a state transition.
-public struct ERMMapRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMMapRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4027,7 +4027,7 @@ public struct ERMMapRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  The Lambert arc of a mapping.
-public struct ERMLambertArc: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMLambertArc: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4097,7 +4097,7 @@ public struct ERMLambertArc: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A mapped covariance at one target.
-public struct ERMMappedCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMMappedCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4164,7 +4164,7 @@ public struct ERMMappedCovariance: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Mapping of one request.
-public struct ERMMapResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMMapResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4240,7 +4240,7 @@ public struct ERMMapResult: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Covariance mapping requests or results.
-public struct ERMCovarianceMap: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCovarianceMap: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4295,7 +4295,7 @@ public struct ERMCovarianceMap: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  A weighted covariance term.
-public struct ERMWeightedCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMWeightedCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4339,7 +4339,7 @@ public struct ERMWeightedCovariance: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  A sampled state with a covariance.
-public struct ERMStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStateSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4397,7 +4397,7 @@ public struct ERMStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  One side of a predicted-versus-truth pair.
-public struct ERMPairSide: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPairSide: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4484,7 +4484,7 @@ public struct ERMPairSide: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  A predicted state and a truth state.
-public struct ERMStatePair: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStatePair: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4533,7 +4533,7 @@ public struct ERMStatePair: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Statistics of one pair.
-public struct ERMPairStatistic: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPairStatistic: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4661,7 +4661,7 @@ public struct ERMPairStatistic: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Pair statistics request or result.
-public struct ERMPairStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMPairStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4722,7 +4722,7 @@ public struct ERMPairStatistics: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  An error with its predicted covariance, for fitting calibration factors.
-public struct ERMCalibrationSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibrationSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4783,7 +4783,7 @@ public struct ERMCalibrationSample: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Fitted calibration of one stratum.
-public struct ERMCalibrationStratum: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibrationStratum: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4883,7 +4883,7 @@ public struct ERMCalibrationStratum: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Calibration factor fit: samples, settings and result.
-public struct ERMCalibration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4957,7 +4957,7 @@ public struct ERMCalibration: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  An object to give a calibrated covariance.
-public struct ERMCalibrationObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibrationObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5065,7 +5065,7 @@ public struct ERMCalibrationObject: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  A calibrated covariance.
-public struct ERMCalibratedCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibratedCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5171,7 +5171,7 @@ public struct ERMCalibratedCovariance: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Calibrated covariances: the objects and the result.
-public struct ERMCalibratedCovariances: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMCalibratedCovariances: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5246,7 +5246,7 @@ public struct ERMCalibratedCovariances: FlatBufferVerifiableTable, FlatbuffersVe
 }
 
 ///  A segment of the density forecast at one lead day.
-public struct ERMDensitySegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMDensitySegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5297,7 +5297,7 @@ public struct ERMDensitySegment: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Sensitivity of one epoch to the density error.
-public struct ERMConsiderEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMConsiderEpoch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5365,7 +5365,7 @@ public struct ERMConsiderEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  A density-forecast consider covariance at one epoch.
-public struct ERMConsiderCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMConsiderCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5451,7 +5451,7 @@ public struct ERMConsiderCovariance: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Density-forecast consider covariance: request and result.
-public struct ERMConsiderCovariances: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMConsiderCovariances: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5550,7 +5550,7 @@ public struct ERMConsiderCovariances: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  An STM sample of a propagation.
-public struct ERMStmSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMStmSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5603,7 +5603,7 @@ public struct ERMStmSample: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Unit process-noise responses at one target.
-public struct ERMNoiseResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMNoiseResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5660,7 +5660,7 @@ public struct ERMNoiseResponse: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Process-noise responses: request and result.
-public struct ERMNoiseResponses: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMNoiseResponses: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5730,7 +5730,7 @@ public struct ERMNoiseResponses: FlatBufferVerifiableTable, FlatbuffersVectorIni
 
 ///  Settings of a fit of element sets to an ephemeris (shared, or for one
 ///  object when NORAD_CAT_ID is set).
-public struct ERMFitSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMFitSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5981,7 +5981,7 @@ public struct ERMFitSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Fit settings: shared by every object, and per object.
-public struct ERMFitOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMFitOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6026,7 +6026,7 @@ public struct ERMFitOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A residual sample, km.
-public struct ERMResidualSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMResidualSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6081,7 +6081,7 @@ public struct ERMResidualSample: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Residual statistics over a span.
-public struct ERMResidualStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMResidualStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6218,7 +6218,7 @@ public struct ERMResidualStatistics: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  One stage of a fit.
-public struct ERMFitStage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMFitStage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6288,7 +6288,7 @@ public struct ERMFitStage: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Covariance of a fit.
-public struct ERMFitCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMFitCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6369,7 +6369,7 @@ public struct ERMFitCovariance: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  The half-split closure test of a fit.
-public struct ERMClosureTest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMClosureTest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6438,7 +6438,7 @@ public struct ERMClosureTest: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  The fit of one object. The fitted element set is the companion $OMM.
-public struct ERMElementFit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMElementFit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6611,7 +6611,7 @@ public struct ERMElementFit: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  A residual request.
-public struct ERMResidualRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMResidualRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6680,7 +6680,7 @@ public struct ERMResidualRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Residuals of one request.
-public struct ERMResidualResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMResidualResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6743,7 +6743,7 @@ public struct ERMResidualResult: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Element-set fits or residuals against an ephemeris.
-public struct ERMElementFits: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMElementFits: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6834,7 +6834,7 @@ public struct ERMElementFits: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  A measured realism factor for a source's fit class.
-public struct ERMRealismFactor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRealismFactor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6887,7 +6887,7 @@ public struct ERMRealismFactor: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Recipe for attaching covariances to one source's products.
-public struct ERMAttachRecipe: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAttachRecipe: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -6966,7 +6966,7 @@ public struct ERMAttachRecipe: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Why an earlier rule did not apply.
-public struct ERMRuleNote: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRuleNote: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -7023,7 +7023,7 @@ public struct ERMRuleNote: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  The covariance of one row of a product.
-public struct ERMRowLabel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRowLabel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -7096,7 +7096,7 @@ public struct ERMRowLabel: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  One object's product and the covariance it got.
-public struct ERMAttachedObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAttachedObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -7210,7 +7210,7 @@ public struct ERMAttachedObject: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  A record that could not be used.
-public struct ERMRefusedRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMRefusedRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -7269,7 +7269,7 @@ public struct ERMRefusedRecord: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Report of attaching covariances (or attributing maneuvers).
-public struct ERMAttachReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERMAttachReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -7335,7 +7335,7 @@ public struct ERMAttachReport: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Orbit Error Model - exactly one arm is set.
-public struct ERM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ERM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

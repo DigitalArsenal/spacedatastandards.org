@@ -317,7 +317,7 @@ public enum mplRendezvousPhase: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 ///  Classical (osculating) orbital elements of one orbit. In a request the
 ///  first fields describe the orbit; in an answer the derived fields are
 ///  filled too.
-public struct mplElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -464,7 +464,7 @@ public struct mplElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 ///  One orbit, given by EXACTLY ONE of ELEMENTS or STATE. A request that
 ///  carries both, or neither, is invalid: the form is always stated, never
 ///  inferred.
-public struct mplOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplOrbit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -517,7 +517,7 @@ public struct mplOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  One impulsive (or short finite) burn of a plan.
-public struct mplBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplBurn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -649,7 +649,7 @@ public struct mplBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 ///  States sampled along an arc or a whole plan, column-major and parallel:
 ///  OFFSETS_S has one entry per sample and STATES has STATE_SIZE entries per
 ///  sample.
-public struct mplTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -713,7 +713,7 @@ public struct mplTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Solver evidence for an arc or a plan.
-public struct mplSolver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplSolver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -782,7 +782,7 @@ public struct mplSolver: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  One arc of a plan: a coast or transfer between burns, or a leg, phase or
 ///  segment of a relative-motion plan.
-public struct mplArc: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplArc: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -949,7 +949,7 @@ public struct mplArc: FlatBufferVerifiableTable, FlatbuffersVectorInitializable 
 ///  An option the planner weighed: another revolution count or branch of a
 ///  Lambert problem, or the other phasing direction. Lets a consumer show the
 ///  road not taken beside the chosen plan.
-public struct mplOption: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplOption: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1066,7 +1066,7 @@ public struct mplOption: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  Classical transfer and plane change between circular orbits (Hohmann,
 ///  BiElliptic, PlaneChange, CombinedTransfer).
-public struct mplTransferRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplTransferRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1135,7 +1135,7 @@ public struct mplTransferRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  give the two positions; their velocities, when given, are the velocities
 ///  of the orbits being left and joined, and make the result's burns real
 ///  delta-v (LambertMinimumDeltaV requires them, since ranking needs a cost).
-public struct mplLambertRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplLambertRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1220,7 +1220,7 @@ public struct mplLambertRequest: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Phasing (Phasing, PhasingToTarget).
-public struct mplPhasingRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplPhasingRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1379,7 +1379,7 @@ public struct mplPhasingRequest: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  A differential-drag model for relative motion.
-public struct mplDifferentialDrag: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplDifferentialDrag: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1439,7 +1439,7 @@ public struct mplDifferentialDrag: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  One relative waypoint.
-public struct mplWaypoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplWaypoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1494,7 +1494,7 @@ public struct mplWaypoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 ///  Relative-motion planning about a reference orbit
 ///  (RelativeStateTransition, RelativeWaypoints, CollisionAvoidance,
 ///  ApproachCorridor).
-public struct mplRelativeRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplRelativeRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1717,7 +1717,7 @@ public struct mplRelativeRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  Closed-loop rendezvous in the target's RIC axes: a free-drift leg to a
 ///  brake point, a fifth-order braking profile to a hold point, and a hold,
 ///  tracked by a feedback controller and propagated on a truth model.
-public struct mplRendezvousRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplRendezvousRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1913,7 +1913,7 @@ public struct mplRendezvousRequest: FlatBufferVerifiableTable, FlatbuffersVector
 
 ///  Orbit-geometry questions (OrbitGeometry, AnomalyConversion,
 ///  TimeOfFlight, OrbitSampling, DeltaVTransform).
-public struct mplGeometryRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplGeometryRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2055,7 +2055,7 @@ public struct mplGeometryRequest: FlatBufferVerifiableTable, FlatbuffersVectorIn
 
 ///  The question: which problem and its inputs. Only the sub-table matching
 ///  PROBLEM is read.
-public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2129,7 +2129,7 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Phasing detail: the phase geometry and the floor guard.
-public struct mplPhasingSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplPhasingSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2371,7 +2371,7 @@ public struct mplPhasingSolution: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Relative-motion detail.
-public struct mplRelativeSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplRelativeSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2499,7 +2499,7 @@ public struct mplRelativeSolution: FlatBufferVerifiableTable, FlatbuffersVectorI
 ///  Closed-loop rendezvous detail. Samples are column-major and parallel,
 ///  one entry (or three, for vectors) per sample, all in the target's RIC
 ///  axes.
-public struct mplRendezvousSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplRendezvousSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2717,7 +2717,7 @@ public struct mplRendezvousSolution: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Orbit-geometry detail.
-public struct mplGeometrySolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct mplGeometrySolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2800,7 +2800,7 @@ public struct mplGeometrySolution: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Maneuver Plan - one planning request and the plan that answers it.
-public struct MPL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MPL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

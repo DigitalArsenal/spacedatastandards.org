@@ -165,7 +165,7 @@ def ERMScreeningCaseCreateERROR1_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateERROR1_KMVector(builder, data):
-    return ERMScreeningCaseCreateERROR1_KMVector(builder, data)
+    ERMScreeningCaseCreateERROR1_KMVector(builder, data)
 
 def ERMScreeningCaseAddERROR2_KM(builder, ERROR2_KM):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ERROR2_KM), 0)
@@ -187,7 +187,7 @@ def ERMScreeningCaseCreateERROR2_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateERROR2_KMVector(builder, data):
-    return ERMScreeningCaseCreateERROR2_KMVector(builder, data)
+    ERMScreeningCaseCreateERROR2_KMVector(builder, data)
 
 def ERMScreeningCaseAddCOVARIANCE1_KM2(builder, COVARIANCE1_KM2):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE1_KM2), 0)
@@ -209,7 +209,7 @@ def ERMScreeningCaseCreateCOVARIANCE1_KM2Vector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE1_KM2Vector(builder, data):
-    return ERMScreeningCaseCreateCOVARIANCE1_KM2Vector(builder, data)
+    ERMScreeningCaseCreateCOVARIANCE1_KM2Vector(builder, data)
 
 def ERMScreeningCaseAddCOVARIANCE2_KM2(builder, COVARIANCE2_KM2):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE2_KM2), 0)
@@ -231,7 +231,7 @@ def ERMScreeningCaseCreateCOVARIANCE2_KM2Vector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE2_KM2Vector(builder, data):
-    return ERMScreeningCaseCreateCOVARIANCE2_KM2Vector(builder, data)
+    ERMScreeningCaseCreateCOVARIANCE2_KM2Vector(builder, data)
 
 def ERMScreeningCaseEnd(builder):
     return builder.EndObject()

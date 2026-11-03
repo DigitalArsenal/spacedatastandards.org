@@ -249,7 +249,7 @@ def ERMConsiderCovariancesCreateLEAD_COVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateLEAD_COVARIANCEVector(builder, data):
-    return ERMConsiderCovariancesCreateLEAD_COVARIANCEVector(builder, data)
+    ERMConsiderCovariancesCreateLEAD_COVARIANCEVector(builder, data)
 
 def ERMConsiderCovariancesAddSTART(builder, START):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(START), 0)
@@ -273,7 +273,7 @@ def ERMConsiderCovariancesCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    return ERMConsiderCovariancesCreateSEGMENTSVector(builder, data)
+    ERMConsiderCovariancesCreateSEGMENTSVector(builder, data)
 
 def ERMConsiderCovariancesAddBALLISTIC_COEFFICIENT(builder, BALLISTIC_COEFFICIENT):
     builder.PrependFloat64Slot(4, BALLISTIC_COEFFICIENT, 0.0)
@@ -301,7 +301,7 @@ def ERMConsiderCovariancesCreateSTART_STMVector(builder, data):
     return builder.EndVector()
 
 def CreateSTART_STMVector(builder, data):
-    return ERMConsiderCovariancesCreateSTART_STMVector(builder, data)
+    ERMConsiderCovariancesCreateSTART_STMVector(builder, data)
 
 def ERMConsiderCovariancesAddSTART_S(builder, START_S):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(START_S), 0)
@@ -323,7 +323,7 @@ def ERMConsiderCovariancesCreateSTART_SVector(builder, data):
     return builder.EndVector()
 
 def CreateSTART_SVector(builder, data):
-    return ERMConsiderCovariancesCreateSTART_SVector(builder, data)
+    ERMConsiderCovariancesCreateSTART_SVector(builder, data)
 
 def ERMConsiderCovariancesAddEPOCHS(builder, EPOCHS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCHS), 0)
@@ -341,7 +341,7 @@ def ERMConsiderCovariancesCreateEPOCHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEPOCHSVector(builder, data):
-    return ERMConsiderCovariancesCreateEPOCHSVector(builder, data)
+    ERMConsiderCovariancesCreateEPOCHSVector(builder, data)
 
 def ERMConsiderCovariancesAddRULE(builder, RULE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(RULE), 0)
@@ -365,7 +365,7 @@ def ERMConsiderCovariancesCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    return ERMConsiderCovariancesCreateRESULTSVector(builder, data)
+    ERMConsiderCovariancesCreateRESULTSVector(builder, data)
 
 def ERMConsiderCovariancesEnd(builder):
     return builder.EndObject()

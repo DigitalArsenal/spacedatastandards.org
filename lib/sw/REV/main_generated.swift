@@ -25,7 +25,7 @@ public enum reviewLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum, V
 
 
 ///  Data quality metrics attached to a review.
-public struct DataQualityMetrics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DataQualityMetrics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -79,7 +79,7 @@ public struct DataQualityMetrics: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Review - User review of a storefront listing
-public struct REV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

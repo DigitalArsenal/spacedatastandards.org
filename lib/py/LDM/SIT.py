@@ -578,7 +578,7 @@ def SITCreateCENTER_POINT_GEOMETRYVector(builder, data):
     return builder.EndVector()
 
 def CreateCENTER_POINT_GEOMETRYVector(builder, data):
-    return SITCreateCENTER_POINT_GEOMETRYVector(builder, data)
+    SITCreateCENTER_POINT_GEOMETRYVector(builder, data)
 
 def SITAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
@@ -668,7 +668,7 @@ def SITCreateINTEGRATED_DEVICESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTEGRATED_DEVICESVector(builder, data):
-    return SITCreateINTEGRATED_DEVICESVector(builder, data)
+    SITCreateINTEGRATED_DEVICESVector(builder, data)
 
 def SITAddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS):
     builder.PrependInt8Slot(24, LIFECYCLE_STATUS, 0)
@@ -704,7 +704,7 @@ def SITCreateSTATUS_EVIDENCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATUS_EVIDENCEVector(builder, data):
-    return SITCreateSTATUS_EVIDENCEVector(builder, data)
+    SITCreateSTATUS_EVIDENCEVector(builder, data)
 
 def SITAddSITE_KIND(builder, SITE_KIND):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SITE_KIND), 0)
@@ -746,7 +746,7 @@ def SITCreateEXTERNAL_REFERENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXTERNAL_REFERENCESVector(builder, data):
-    return SITCreateEXTERNAL_REFERENCESVector(builder, data)
+    SITCreateEXTERNAL_REFERENCESVector(builder, data)
 
 def SITAddPARTIES(builder, PARTIES):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(PARTIES), 0)
@@ -764,7 +764,7 @@ def SITCreatePARTIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARTIESVector(builder, data):
-    return SITCreatePARTIESVector(builder, data)
+    SITCreatePARTIESVector(builder, data)
 
 def SITAddQUANTITIES(builder, QUANTITIES):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTITIES), 0)
@@ -782,7 +782,7 @@ def SITCreateQUANTITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateQUANTITIESVector(builder, data):
-    return SITCreateQUANTITIESVector(builder, data)
+    SITCreateQUANTITIESVector(builder, data)
 
 def SITAddPROVENANCE(builder, PROVENANCE):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)

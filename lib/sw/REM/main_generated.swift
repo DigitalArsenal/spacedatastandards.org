@@ -43,7 +43,7 @@ public enum remBreakupMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Reentry fragment evaluation.
-public struct remFragmentEvaluation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct remFragmentEvaluation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -168,7 +168,7 @@ public struct remFragmentEvaluation: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Reentry Evaluation Message
-public struct REM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct REM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

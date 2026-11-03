@@ -152,7 +152,7 @@ def ERMGateCreateNOMINALVector(builder, data):
     return builder.EndVector()
 
 def CreateNOMINALVector(builder, data):
-    return ERMGateCreateNOMINALVector(builder, data)
+    ERMGateCreateNOMINALVector(builder, data)
 
 def ERMGateEnd(builder):
     return builder.EndObject()

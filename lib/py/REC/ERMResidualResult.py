@@ -128,7 +128,7 @@ def ERMResidualResultCreateWINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWINDOWSVector(builder, data):
-    return ERMResidualResultCreateWINDOWSVector(builder, data)
+    ERMResidualResultCreateWINDOWSVector(builder, data)
 
 def ERMResidualResultEnd(builder):
     return builder.EndObject()

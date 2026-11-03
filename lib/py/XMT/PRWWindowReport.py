@@ -139,7 +139,7 @@ def PRWWindowReportCreateREFUSALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFUSALSVector(builder, data):
-    return PRWWindowReportCreateREFUSALSVector(builder, data)
+    PRWWindowReportCreateREFUSALSVector(builder, data)
 
 def PRWWindowReportAddPROVIDER(builder, PROVIDER):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER), 0)

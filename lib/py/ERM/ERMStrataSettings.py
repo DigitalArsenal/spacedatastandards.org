@@ -121,7 +121,7 @@ def ERMStrataSettingsCreateREGIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREGIMESVector(builder, data):
-    return ERMStrataSettingsCreateREGIMESVector(builder, data)
+    ERMStrataSettingsCreateREGIMESVector(builder, data)
 
 def ERMStrataSettingsAddAGE_BINS(builder, AGE_BINS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(AGE_BINS), 0)
@@ -139,7 +139,7 @@ def ERMStrataSettingsCreateAGE_BINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAGE_BINSVector(builder, data):
-    return ERMStrataSettingsCreateAGE_BINSVector(builder, data)
+    ERMStrataSettingsCreateAGE_BINSVector(builder, data)
 
 def ERMStrataSettingsAddREFERENCE_STEP_S(builder, REFERENCE_STEP_S):
     builder.PrependFloat64Slot(2, REFERENCE_STEP_S, 300.0)

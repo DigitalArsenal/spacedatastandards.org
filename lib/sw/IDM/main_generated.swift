@@ -159,7 +159,7 @@ public enum DeviceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Frequency range with lower and upper limits
-public struct FrequencyRange: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FrequencyRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -203,7 +203,7 @@ public struct FrequencyRange: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Stokes parameters, representing different aspects of polarization
-public struct StokesParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StokesParameters: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -261,7 +261,7 @@ public struct StokesParameters: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Table representing a frequency band with a name and frequency range
-public struct Band: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Band: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -306,7 +306,7 @@ public struct Band: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 }
 
 ///  Integrated Device Message
-public struct IDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

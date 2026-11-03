@@ -249,7 +249,7 @@ def ACWSensorCreateERROR_MODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateERROR_MODELSVector(builder, data):
-    return ACWSensorCreateERROR_MODELSVector(builder, data)
+    ACWSensorCreateERROR_MODELSVector(builder, data)
 
 def ACWSensorAddCONSTRAINTS(builder, CONSTRAINTS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINTS), 0)

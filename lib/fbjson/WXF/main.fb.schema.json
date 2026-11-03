@@ -163,7 +163,8 @@
         "CloudPhase",
         "CloudOpticalDepth",
         "CloudEffectiveRadius",
-        "CloudEmissivity"
+        "CloudEmissivity",
+        "AuroraProbability"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -319,6 +320,10 @@
         "CloudEmissivity": {
           "value": 37,
           "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
+        },
+        "AuroraProbability": {
+          "value": 38,
+          "description": "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
         }
       }
     },
@@ -888,6 +893,10 @@
             "CloudEmissivity": {
               "value": 37,
               "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
+            },
+            "AuroraProbability": {
+              "value": 38,
+              "description": "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
             }
           },
           "x-flatbuffer-default": "Unspecified"

@@ -162,7 +162,7 @@ def ERMMapRequestCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return ERMMapRequestCreateCOVARIANCEVector(builder, data)
+    ERMMapRequestCreateCOVARIANCEVector(builder, data)
 
 def ERMMapRequestAddTO_EPOCHS(builder, TO_EPOCHS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TO_EPOCHS), 0)
@@ -180,7 +180,7 @@ def ERMMapRequestCreateTO_EPOCHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTO_EPOCHSVector(builder, data):
-    return ERMMapRequestCreateTO_EPOCHSVector(builder, data)
+    ERMMapRequestCreateTO_EPOCHSVector(builder, data)
 
 def ERMMapRequestAddFROM_EPOCH(builder, FROM_EPOCH):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FROM_EPOCH), 0)

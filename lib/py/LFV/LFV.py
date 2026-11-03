@@ -201,7 +201,7 @@ def LFVCreateFEATURE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURE_NAMESVector(builder, data):
-    return LFVCreateFEATURE_NAMESVector(builder, data)
+    LFVCreateFEATURE_NAMESVector(builder, data)
 
 def LFVAddFEATURE_UNITS(builder, FEATURE_UNITS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURE_UNITS), 0)
@@ -219,7 +219,7 @@ def LFVCreateFEATURE_UNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURE_UNITSVector(builder, data):
-    return LFVCreateFEATURE_UNITSVector(builder, data)
+    LFVCreateFEATURE_UNITSVector(builder, data)
 
 def LFVAddWINDOW_START_MS(builder, WINDOW_START_MS):
     builder.PrependInt64Slot(3, WINDOW_START_MS, 0)
@@ -255,7 +255,7 @@ def LFVCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    return LFVCreateROWSVector(builder, data)
+    LFVCreateROWSVector(builder, data)
 
 def LFVAddSOURCE_COUNT(builder, SOURCE_COUNT):
     builder.PrependUint32Slot(7, SOURCE_COUNT, 0)

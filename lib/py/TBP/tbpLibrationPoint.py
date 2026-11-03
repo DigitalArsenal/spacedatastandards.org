@@ -186,7 +186,7 @@ def tbpLibrationPointCreateEIGENVALUES_REALVector(builder, data):
     return builder.EndVector()
 
 def CreateEIGENVALUES_REALVector(builder, data):
-    return tbpLibrationPointCreateEIGENVALUES_REALVector(builder, data)
+    tbpLibrationPointCreateEIGENVALUES_REALVector(builder, data)
 
 def tbpLibrationPointAddEIGENVALUES_IMAGINARY(builder, EIGENVALUES_IMAGINARY):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EIGENVALUES_IMAGINARY), 0)
@@ -208,7 +208,7 @@ def tbpLibrationPointCreateEIGENVALUES_IMAGINARYVector(builder, data):
     return builder.EndVector()
 
 def CreateEIGENVALUES_IMAGINARYVector(builder, data):
-    return tbpLibrationPointCreateEIGENVALUES_IMAGINARYVector(builder, data)
+    tbpLibrationPointCreateEIGENVALUES_IMAGINARYVector(builder, data)
 
 def tbpLibrationPointAddSTABLE(builder, STABLE):
     builder.PrependBoolSlot(7, STABLE, 0)

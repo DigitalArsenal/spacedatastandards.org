@@ -76,7 +76,7 @@ def QRPRowCreateCELLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCELLSVector(builder, data):
-    return QRPRowCreateCELLSVector(builder, data)
+    QRPRowCreateCELLSVector(builder, data)
 
 def QRPRowEnd(builder):
     return builder.EndObject()

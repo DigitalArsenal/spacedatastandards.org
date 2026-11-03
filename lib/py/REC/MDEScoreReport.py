@@ -161,7 +161,7 @@ def MDEScoreReportCreateMATCHESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMATCHESVector(builder, data):
-    return MDEScoreReportCreateMATCHESVector(builder, data)
+    MDEScoreReportCreateMATCHESVector(builder, data)
 
 def MDEScoreReportAddMISSED(builder, MISSED):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MISSED), 0)
@@ -179,7 +179,7 @@ def MDEScoreReportCreateMISSEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMISSEDVector(builder, data):
-    return MDEScoreReportCreateMISSEDVector(builder, data)
+    MDEScoreReportCreateMISSEDVector(builder, data)
 
 def MDEScoreReportAddUNMATCHED(builder, UNMATCHED):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UNMATCHED), 0)
@@ -197,7 +197,7 @@ def MDEScoreReportCreateUNMATCHEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNMATCHEDVector(builder, data):
-    return MDEScoreReportCreateUNMATCHEDVector(builder, data)
+    MDEScoreReportCreateUNMATCHEDVector(builder, data)
 
 def MDEScoreReportEnd(builder):
     return builder.EndObject()

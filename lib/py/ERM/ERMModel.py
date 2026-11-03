@@ -505,7 +505,7 @@ def ERMModelCreateHORIZONS_DAYSVector(builder, data):
     return builder.EndVector()
 
 def CreateHORIZONS_DAYSVector(builder, data):
-    return ERMModelCreateHORIZONS_DAYSVector(builder, data)
+    ERMModelCreateHORIZONS_DAYSVector(builder, data)
 
 def ERMModelAddCOUNTS(builder, COUNTS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTS), 0)
@@ -533,7 +533,7 @@ def ERMModelCreateQUANTILE_PROBABILITIESVector(builder, data):
     return builder.EndVector()
 
 def CreateQUANTILE_PROBABILITIESVector(builder, data):
-    return ERMModelCreateQUANTILE_PROBABILITIESVector(builder, data)
+    ERMModelCreateQUANTILE_PROBABILITIESVector(builder, data)
 
 def ERMModelAddCOVERAGE_MODEL(builder, COVERAGE_MODEL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE_MODEL), 0)
@@ -563,7 +563,7 @@ def ERMModelCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    return ERMModelCreateSTRATAVector(builder, data)
+    ERMModelCreateSTRATAVector(builder, data)
 
 def ERMModelAddSCALE(builder, SCALE):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SCALE), 0)
@@ -587,7 +587,7 @@ def ERMModelCreateCELLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCELLSVector(builder, data):
-    return ERMModelCreateCELLSVector(builder, data)
+    ERMModelCreateCELLSVector(builder, data)
 
 def ERMModelAddSTRATUM_FACTORS(builder, STRATUM_FACTORS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(STRATUM_FACTORS), 0)
@@ -605,7 +605,7 @@ def ERMModelCreateSTRATUM_FACTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATUM_FACTORSVector(builder, data):
-    return ERMModelCreateSTRATUM_FACTORSVector(builder, data)
+    ERMModelCreateSTRATUM_FACTORSVector(builder, data)
 
 def ERMModelAddMINIMUM_BIN_SAMPLES(builder, MINIMUM_BIN_SAMPLES):
     builder.PrependUint64Slot(17, MINIMUM_BIN_SAMPLES, 0)
@@ -629,7 +629,7 @@ def ERMModelCreateHORIZON_FACTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHORIZON_FACTORSVector(builder, data):
-    return ERMModelCreateHORIZON_FACTORSVector(builder, data)
+    ERMModelCreateHORIZON_FACTORSVector(builder, data)
 
 def ERMModelAddPROPAGATOR_REGIMES(builder, PROPAGATOR_REGIMES):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATOR_REGIMES), 0)
@@ -647,7 +647,7 @@ def ERMModelCreatePROPAGATOR_REGIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROPAGATOR_REGIMESVector(builder, data):
-    return ERMModelCreatePROPAGATOR_REGIMESVector(builder, data)
+    ERMModelCreatePROPAGATOR_REGIMESVector(builder, data)
 
 def ERMModelAddEPOCH_WINDOW_START(builder, EPOCH_WINDOW_START):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_WINDOW_START), 0)
@@ -683,7 +683,7 @@ def ERMModelCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    return ERMModelCreateSOURCESVector(builder, data)
+    ERMModelCreateSOURCESVector(builder, data)
 
 def ERMModelAddPOOLED(builder, POOLED):
     builder.PrependBoolSlot(24, POOLED, 0)
@@ -719,7 +719,7 @@ def ERMModelCreatePROVENANCE_FILESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROVENANCE_FILESVector(builder, data):
-    return ERMModelCreatePROVENANCE_FILESVector(builder, data)
+    ERMModelCreatePROVENANCE_FILESVector(builder, data)
 
 def ERMModelAddLABEL(builder, LABEL):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(LABEL), 0)

@@ -153,7 +153,7 @@ def FMBLargeCreateROOT_CIDVector(builder, data):
     return builder.EndVector()
 
 def CreateROOT_CIDVector(builder, data):
-    return FMBLargeCreateROOT_CIDVector(builder, data)
+    FMBLargeCreateROOT_CIDVector(builder, data)
 
 def FMBLargeAddROOT_NODE(builder, ROOT_NODE):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ROOT_NODE), 0)
@@ -175,7 +175,7 @@ def FMBLargeCreateROOT_NODEVector(builder, data):
     return builder.EndVector()
 
 def CreateROOT_NODEVector(builder, data):
-    return FMBLargeCreateROOT_NODEVector(builder, data)
+    FMBLargeCreateROOT_NODEVector(builder, data)
 
 def FMBLargeAddLEAF_DIGESTS(builder, LEAF_DIGESTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LEAF_DIGESTS), 0)
@@ -197,7 +197,7 @@ def FMBLargeCreateLEAF_DIGESTSVector(builder, data):
     return builder.EndVector()
 
 def CreateLEAF_DIGESTSVector(builder, data):
-    return FMBLargeCreateLEAF_DIGESTSVector(builder, data)
+    FMBLargeCreateLEAF_DIGESTSVector(builder, data)
 
 def FMBLargeEnd(builder):
     return builder.EndObject()

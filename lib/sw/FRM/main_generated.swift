@@ -102,7 +102,7 @@ public enum frmStateRepresentation: UInt8, FlatbuffersVectorInitializable, Enum,
 }
 
 
-public struct FRMVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRMVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -149,7 +149,7 @@ public struct FRMVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct FRMMatrix3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRMMatrix3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -237,7 +237,7 @@ public struct FRMMatrix3: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 ///  POSITION and VELOCITY are the Cartesian projection of the same state and
 ///  are populated when REPRESENTATION is CARTESIAN or when the provider can
 ///  supply them; a consumer MUST NOT infer velocity from POSITION alone.
-public struct FRMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRMStateVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -327,7 +327,7 @@ public struct FRMStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   }
 }
 
-public struct FRMFrameTransformRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRMFrameTransformRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -449,7 +449,7 @@ public struct FRMFrameTransformRequest: FlatBufferVerifiableTable, FlatbuffersVe
   }
 }
 
-public struct FRMFrameTransformResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRMFrameTransformResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -551,7 +551,7 @@ public struct FRMFrameTransformResult: FlatBufferVerifiableTable, FlatbuffersVec
   }
 }
 
-public struct FRM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

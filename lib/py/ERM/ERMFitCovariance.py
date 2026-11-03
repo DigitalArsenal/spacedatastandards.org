@@ -177,7 +177,7 @@ def ERMFitCovarianceCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    return ERMFitCovarianceCreatePARAMETERSVector(builder, data)
+    ERMFitCovarianceCreatePARAMETERSVector(builder, data)
 
 def ERMFitCovarianceAddEQUINOCTIAL(builder, EQUINOCTIAL):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EQUINOCTIAL), 0)
@@ -199,7 +199,7 @@ def ERMFitCovarianceCreateEQUINOCTIALVector(builder, data):
     return builder.EndVector()
 
 def CreateEQUINOCTIALVector(builder, data):
-    return ERMFitCovarianceCreateEQUINOCTIALVector(builder, data)
+    ERMFitCovarianceCreateEQUINOCTIALVector(builder, data)
 
 def ERMFitCovarianceAddSCALE(builder, SCALE):
     builder.PrependFloat64Slot(2, SCALE, 0.0)
@@ -227,7 +227,7 @@ def ERMFitCovarianceCreateCLASSICALVector(builder, data):
     return builder.EndVector()
 
 def CreateCLASSICALVector(builder, data):
-    return ERMFitCovarianceCreateCLASSICALVector(builder, data)
+    ERMFitCovarianceCreateCLASSICALVector(builder, data)
 
 def ERMFitCovarianceAddCLASSICAL_UNITS(builder, CLASSICAL_UNITS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSICAL_UNITS), 0)
@@ -255,7 +255,7 @@ def ERMFitCovarianceCreateCARTESIAN_RSWVector(builder, data):
     return builder.EndVector()
 
 def CreateCARTESIAN_RSWVector(builder, data):
-    return ERMFitCovarianceCreateCARTESIAN_RSWVector(builder, data)
+    ERMFitCovarianceCreateCARTESIAN_RSWVector(builder, data)
 
 def ERMFitCovarianceAddCARTESIAN_UNITS(builder, CARTESIAN_UNITS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CARTESIAN_UNITS), 0)

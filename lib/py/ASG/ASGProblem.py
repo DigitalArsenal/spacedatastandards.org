@@ -220,7 +220,7 @@ def ASGProblemCreateDENSE_COSTVector(builder, data):
     return builder.EndVector()
 
 def CreateDENSE_COSTVector(builder, data):
-    return ASGProblemCreateDENSE_COSTVector(builder, data)
+    ASGProblemCreateDENSE_COSTVector(builder, data)
 
 def ASGProblemAddENTRIES(builder, ENTRIES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ENTRIES), 0)
@@ -238,7 +238,7 @@ def ASGProblemCreateENTRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRIESVector(builder, data):
-    return ASGProblemCreateENTRIESVector(builder, data)
+    ASGProblemCreateENTRIESVector(builder, data)
 
 def ASGProblemAddUNASSIGNED_COST(builder, UNASSIGNED_COST):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UNASSIGNED_COST), 0)
@@ -260,7 +260,7 @@ def ASGProblemCreateUNASSIGNED_COSTVector(builder, data):
     return builder.EndVector()
 
 def CreateUNASSIGNED_COSTVector(builder, data):
-    return ASGProblemCreateUNASSIGNED_COSTVector(builder, data)
+    ASGProblemCreateUNASSIGNED_COSTVector(builder, data)
 
 def ASGProblemAddOBJECTIVE(builder, OBJECTIVE):
     builder.PrependUint8Slot(5, OBJECTIVE, 0)
@@ -284,7 +284,7 @@ def ASGProblemCreateROW_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROW_IDSVector(builder, data):
-    return ASGProblemCreateROW_IDSVector(builder, data)
+    ASGProblemCreateROW_IDSVector(builder, data)
 
 def ASGProblemAddCOLUMN_IDS(builder, COLUMN_IDS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COLUMN_IDS), 0)
@@ -302,7 +302,7 @@ def ASGProblemCreateCOLUMN_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMN_IDSVector(builder, data):
-    return ASGProblemCreateCOLUMN_IDSVector(builder, data)
+    ASGProblemCreateCOLUMN_IDSVector(builder, data)
 
 def ASGProblemEnd(builder):
     return builder.EndObject()

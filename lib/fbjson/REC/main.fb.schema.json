@@ -6780,6 +6780,27 @@
         }
       }
     },
+    "cmeArrivalKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Predicted",
+        "Observed"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Predicted": {
+          "value": 1
+        },
+        "Observed": {
+          "value": 2
+        }
+      }
+    },
     "cmrEvidenceRole": {
       "type": "string",
       "enum": [
@@ -15535,7 +15556,8 @@
         "CloudPhase",
         "CloudOpticalDepth",
         "CloudEffectiveRadius",
-        "CloudEmissivity"
+        "CloudEmissivity",
+        "AuroraProbability"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -15691,6 +15713,10 @@
         "CloudEmissivity": {
           "value": 37,
           "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
+        },
+        "AuroraProbability": {
+          "value": 38,
+          "description": "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
         }
       }
     },
@@ -27006,6 +27032,433 @@
         }
       }
     },
+    "swaMessageKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Alert",
+        "Warning",
+        "Watch",
+        "Summary",
+        "Forecast",
+        "Cancellation",
+        "Custom"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Alert": {
+          "value": 1
+        },
+        "Warning": {
+          "value": 2
+        },
+        "Watch": {
+          "value": 3
+        },
+        "Summary": {
+          "value": 4
+        },
+        "Forecast": {
+          "value": 5
+        },
+        "Cancellation": {
+          "value": 6
+        },
+        "Custom": {
+          "value": 7
+        }
+      }
+    },
+    "swaScaleFamily": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Geomagnetic",
+        "SolarRadiation",
+        "RadioBlackout"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0
+        },
+        "Geomagnetic": {
+          "value": 1
+        },
+        "SolarRadiation": {
+          "value": 2
+        },
+        "RadioBlackout": {
+          "value": 3
+        }
+      }
+    },
+    "swsQuantity": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ImfMagnitude",
+        "ImfX",
+        "ImfY",
+        "ImfZ",
+        "ImfLongitude",
+        "ImfLatitude",
+        "ProtonSpeed",
+        "ProtonVelocityX",
+        "ProtonVelocityY",
+        "ProtonVelocityZ",
+        "ProtonDensity",
+        "ProtonTemperature",
+        "AlphaSpeed",
+        "AlphaDensity",
+        "AlphaTemperature",
+        "FlowPressure",
+        "ElectricField",
+        "PlasmaBeta",
+        "AlfvenMachNumber",
+        "Kp",
+        "Ap",
+        "Hpo",
+        "Apo",
+        "Dst",
+        "SymH",
+        "SymD",
+        "AsyH",
+        "AsyD",
+        "Ae",
+        "Al",
+        "Au",
+        "Ao",
+        "PcNorth",
+        "PcSouth",
+        "XrayFlux",
+        "XrayFluxUncorrected",
+        "ProtonIntegralFlux",
+        "ElectronIntegralFlux",
+        "ProtonDifferentialFlux",
+        "F107Observed",
+        "F107Adjusted",
+        "HemisphericPower"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "QUANTITY_NAME and UNITS carry the source's own quantity."
+        },
+        "ImfMagnitude": {
+          "value": 1,
+          "description": "Interplanetary magnetic field magnitude (Bt), nT."
+        },
+        "ImfX": {
+          "value": 2,
+          "description": "IMF component along REFERENCE_FRAME's X, Y, Z axis, nT."
+        },
+        "ImfY": {
+          "value": 3
+        },
+        "ImfZ": {
+          "value": 4
+        },
+        "ImfLongitude": {
+          "value": 5,
+          "description": "IMF longitude (phi) in REFERENCE_FRAME, degrees, 0 to 360."
+        },
+        "ImfLatitude": {
+          "value": 6,
+          "description": "IMF latitude (theta) in REFERENCE_FRAME, degrees, -90 to 90."
+        },
+        "ProtonSpeed": {
+          "value": 7,
+          "description": "Bulk proton speed, km/s."
+        },
+        "ProtonVelocityX": {
+          "value": 8,
+          "description": "Proton bulk velocity along REFERENCE_FRAME's X, Y, Z axis, km/s."
+        },
+        "ProtonVelocityY": {
+          "value": 9
+        },
+        "ProtonVelocityZ": {
+          "value": 10
+        },
+        "ProtonDensity": {
+          "value": 11,
+          "description": "Proton number density, cm^-3."
+        },
+        "ProtonTemperature": {
+          "value": 12,
+          "description": "Proton temperature, K."
+        },
+        "AlphaSpeed": {
+          "value": 13,
+          "description": "Alpha-particle speed (km/s), density (cm^-3), temperature (K)."
+        },
+        "AlphaDensity": {
+          "value": 14
+        },
+        "AlphaTemperature": {
+          "value": 15
+        },
+        "FlowPressure": {
+          "value": 16,
+          "description": "Flow pressure, nPa."
+        },
+        "ElectricField": {
+          "value": 17,
+          "description": "Solar wind electric field, mV/m."
+        },
+        "PlasmaBeta": {
+          "value": 18,
+          "description": "Plasma beta, dimensionless."
+        },
+        "AlfvenMachNumber": {
+          "value": 19,
+          "description": "Alfven Mach number, dimensionless."
+        },
+        "Kp": {
+          "value": 20,
+          "description": "Planetary Kp in decimal thirds (8.333 is 8+), 0 to 9."
+        },
+        "Ap": {
+          "value": 21,
+          "description": "Planetary ap for the sample's interval, ap units (2 nT)."
+        },
+        "Hpo": {
+          "value": 22,
+          "description": "Hpo index (Hp30 or Hp60 by CADENCE_S), open-ended, in decimal thirds."
+        },
+        "Apo": {
+          "value": 23,
+          "description": "apo for the same interval, ap units."
+        },
+        "Dst": {
+          "value": 24,
+          "description": "Disturbance storm time index, nT."
+        },
+        "SymH": {
+          "value": 25,
+          "description": "SYM-H, SYM-D, ASY-H, ASY-D, nT."
+        },
+        "SymD": {
+          "value": 26
+        },
+        "AsyH": {
+          "value": 27
+        },
+        "AsyD": {
+          "value": 28
+        },
+        "Ae": {
+          "value": 29,
+          "description": "Auroral electrojet indices AE, AL, AU, AO, nT."
+        },
+        "Al": {
+          "value": 30
+        },
+        "Au": {
+          "value": 31
+        },
+        "Ao": {
+          "value": 32
+        },
+        "PcNorth": {
+          "value": 33,
+          "description": "Polar cap index, north and south, mV/m."
+        },
+        "PcSouth": {
+          "value": 34
+        },
+        "XrayFlux": {
+          "value": 35,
+          "description": "Soft X-ray irradiance in PASSBAND_MIN_NM..PASSBAND_MAX_NM, W/m^2."
+        },
+        "XrayFluxUncorrected": {
+          "value": 36,
+          "description": "The same before the source's electron correction, W/m^2."
+        },
+        "ProtonIntegralFlux": {
+          "value": 37,
+          "description": "Integral proton flux above ENERGY_MIN_MEV, pfu (cm^-2 s^-1 sr^-1)."
+        },
+        "ElectronIntegralFlux": {
+          "value": 38,
+          "description": "Integral electron flux above ENERGY_MIN_MEV, pfu."
+        },
+        "ProtonDifferentialFlux": {
+          "value": 39,
+          "description": "Differential proton flux in ENERGY_MIN_MEV..ENERGY_MAX_MEV, cm^-2 s^-1 sr^-1 MeV^-1."
+        },
+        "F107Observed": {
+          "value": 40,
+          "description": "10.7 cm solar radio flux as observed (sfu) and adjusted to 1 AU (sfu)."
+        },
+        "F107Adjusted": {
+          "value": 41
+        },
+        "HemisphericPower": {
+          "value": 42,
+          "description": "Hemispheric auroral power, GW."
+        }
+      }
+    },
+    "swsValueStatus": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "RealTime",
+        "Estimated",
+        "Quicklook",
+        "Nowcast",
+        "Provisional",
+        "Definitive",
+        "Predicted",
+        "Modeled"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "RealTime": {
+          "value": 1,
+          "description": "Real-time, unedited (e.g. SWPC RTSW)."
+        },
+        "Estimated": {
+          "value": 2,
+          "description": "Estimated from a partial network (e.g. SWPC estimated Kp)."
+        },
+        "Quicklook": {
+          "value": 3,
+          "description": "Quicklook (e.g. Kyoto real-time Dst)."
+        },
+        "Nowcast": {
+          "value": 4
+        },
+        "Provisional": {
+          "value": 5
+        },
+        "Definitive": {
+          "value": 6
+        },
+        "Predicted": {
+          "value": 7,
+          "description": "Issued forecast; FORECAST_ISSUED_AT is its issue time."
+        },
+        "Modeled": {
+          "value": 8,
+          "description": "Output of a model run named in MODEL_RUN_ID (e.g. WSA-ENLIL)."
+        }
+      }
+    },
+    "swsLocation": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "AtSpacecraft",
+        "BowShockNose",
+        "PropagatedToEarth",
+        "EarthOrbit",
+        "GroundNetwork",
+        "ModelAtEarth"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "AtSpacecraft": {
+          "value": 1,
+          "description": "At the measuring spacecraft (e.g. L1)."
+        },
+        "BowShockNose": {
+          "value": 2,
+          "description": "Time-shifted by the source to Earth's bow shock nose (e.g. OMNI)."
+        },
+        "PropagatedToEarth": {
+          "value": 3,
+          "description": "Propagated by the source to Earth; PROPAGATED_EPOCHS_MS holds arrivals."
+        },
+        "EarthOrbit": {
+          "value": 4,
+          "description": "Earth-orbiting monitor (e.g. GOES)."
+        },
+        "GroundNetwork": {
+          "value": 5,
+          "description": "Index derived from a ground magnetometer network."
+        },
+        "ModelAtEarth": {
+          "value": 6,
+          "description": "Model output at Earth."
+        }
+      }
+    },
+    "swsSampleConvention": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Instant",
+        "IntervalStart",
+        "IntervalCenter",
+        "IntervalEnd"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Instant": {
+          "value": 1
+        },
+        "IntervalStart": {
+          "value": 2,
+          "description": "The value covers [EPOCH, EPOCH + CADENCE_S)."
+        },
+        "IntervalCenter": {
+          "value": 3
+        },
+        "IntervalEnd": {
+          "value": 4
+        }
+      }
+    },
+    "swsNoaaScale": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Geomagnetic",
+        "SolarRadiation",
+        "RadioBlackout"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0
+        },
+        "Geomagnetic": {
+          "value": 1,
+          "description": "G: geomagnetic storms."
+        },
+        "SolarRadiation": {
+          "value": 2,
+          "description": "S: solar radiation storms."
+        },
+        "RadioBlackout": {
+          "value": 3,
+          "description": "R: radio blackouts."
+        }
+      }
+    },
     "tbpProblem": {
       "type": "string",
       "enum": [
@@ -30393,7 +30846,10 @@
         "SFE",
         "SRO",
         "SRT",
-        "GNM"
+        "GNM",
+        "CME",
+        "SWA",
+        "SWS"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -30508,6 +30964,15 @@
         },
         "GNM": {
           "value": 291
+        },
+        "CME": {
+          "value": 292
+        },
+        "SWA": {
+          "value": 293
+        },
+        "SWS": {
+          "value": 294
         }
       }
     },
@@ -50077,6 +50542,318 @@
           },
           "description": "CLTU data",
           "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CMEMeasurement": {
+      "type": "object",
+      "description": "One analysis of a CME's geometry and speed.",
+      "properties": {
+        "CATALOG": {
+          "type": "string",
+          "description": "Catalog and technique, verbatim (e.g. M2M_CATALOG, SWPC_CAT; CDAW).",
+          "x-flatbuffer-type": "string"
+        },
+        "TECHNIQUE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_MOST_ACCURATE": {
+          "type": "boolean",
+          "description": "The source marks this analysis as its best.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "REFERENCE_TIME": {
+          "type": "string",
+          "description": "The instant the measurement refers to, RFC 3339 UTC (DONKI time21_5;\nCDAW first C2 appearance).",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_HEIGHT_RSUN": {
+          "type": "number",
+          "description": "Heliocentric distance of REFERENCE_TIME, solar radii (21.5 for DONKI).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Stonyhurst direction of propagation, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CENTRAL_PA_DEG": {
+          "type": "number",
+          "description": "Plane-of-sky central and measurement position angles, and width, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MEASUREMENT_PA_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ANGULAR_WIDTH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPEED_KM_S": {
+          "type": "number",
+          "description": "Speeds, km/s: the analysis's speed; CDAW linear, 2nd-order initial,\nfinal and at 20 Rs.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPEED_INITIAL_KM_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPEED_FINAL_KM_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPEED_20RSUN_KM_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ACCELERATION_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MASS_G": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "KINETIC_ENERGY_ERG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TYPE_CODE": {
+          "type": "string",
+          "description": "Source type token, verbatim (e.g. S, C, O, R, ER).",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CMEArrival": {
+      "type": "object",
+      "description": "One arrival at one place.",
+      "properties": {
+        "TARGET": {
+          "type": "string",
+          "description": "Target, verbatim (e.g. Earth, STEREO A, Mars).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/cmeArrivalKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Predicted": {
+              "value": 1
+            },
+            "Observed": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MODEL": {
+          "type": "string",
+          "description": "Model, verbatim (e.g. WSA-ENLIL+Cone); empty for an observation.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_EVENT_ID": {
+          "type": "string",
+          "description": "Model run or observed-event identity, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ISSUED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ARRIVAL_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ARRIVAL_UNCERTAINTY_H": {
+          "type": "number",
+          "description": "Stated plus-or-minus uncertainty, hours.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DURATION_H": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GLANCING_BLOW": {
+          "type": "boolean",
+          "description": "True when the source states a glancing blow; meaningful only when HAS_GLANCING_BLOW.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "HAS_GLANCING_BLOW": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "KP_PREDICTED": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Predicted Kp per assumed IMF clock angle (DONKI kp_18 .. kp_180).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "KP_CLOCK_ANGLES_DEG": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "required": [
+        "TARGET"
+      ],
+      "additionalProperties": false
+    },
+    "CME": {
+      "type": "object",
+      "description": "Coronal Mass Ejection",
+      "properties": {
+        "EVENT_ID": {
+          "type": "string",
+          "description": "The source's own identity, verbatim (DONKI activityID; CDAW date-time).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CATALOG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "START_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_LOCATION": {
+          "type": "string",
+          "description": "Source location token, verbatim (e.g. N12W05), and parsed Stonyhurst.",
+          "x-flatbuffer-type": "string"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REGION_NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "HAS_REGION_NUMBER": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "INSTRUMENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "LINKED_EVENT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Linked event identities as the source states them (flares, shocks, storms).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MEASUREMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CMEMeasurement"
+          },
+          "x-flatbuffer-type": "[CMEMeasurement]"
+        },
+        "ARRIVALS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CMEArrival"
+          },
+          "x-flatbuffer-type": "[CMEArrival]"
+        },
+        "NOTE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "EVENT_ID",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "CMECOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CME"
+          },
+          "x-flatbuffer-type": "[CME]"
         }
       },
       "additionalProperties": false
@@ -88355,6 +89132,10 @@
             "CloudEmissivity": {
               "value": 37,
               "description": "Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1]."
+            },
+            "AuroraProbability": {
+              "value": 38,
+              "description": "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -137624,6 +138405,156 @@
       ],
       "additionalProperties": false
     },
+    "SWA": {
+      "type": "object",
+      "description": "Space Weather Alert",
+      "properties": {
+        "PRODUCT_ID": {
+          "type": "string",
+          "description": "Product identity, verbatim (e.g. K05A, EF3A).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MESSAGE_CODE": {
+          "type": "string",
+          "description": "Message code and serial number, verbatim (e.g. ALTK05, 2051).",
+          "x-flatbuffer-type": "string"
+        },
+        "SERIAL_NUMBER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERS_TO_SERIAL": {
+          "type": "string",
+          "description": "Serial this message continues, extends or cancels, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/swaMessageKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Alert": {
+              "value": 1
+            },
+            "Warning": {
+              "value": 2
+            },
+            "Watch": {
+              "value": 3
+            },
+            "Summary": {
+              "value": 4
+            },
+            "Forecast": {
+              "value": 5
+            },
+            "Cancellation": {
+              "value": 6
+            },
+            "Custom": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ISSUED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "BEGIN_TIME": {
+          "type": "string",
+          "description": "Times stated in the text, RFC 3339 UTC; absent when not stated.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_FROM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_TO": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCALE_FAMILY": {
+          "$ref": "#/definitions/swaScaleFamily",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0
+            },
+            "Geomagnetic": {
+              "value": 1
+            },
+            "SolarRadiation": {
+              "value": 2
+            },
+            "RadioBlackout": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "SCALE_LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Scale level 1-5; 0 when none is stated.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MESSAGE": {
+          "type": "string",
+          "description": "The message, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "PRODUCT_ID",
+        "ISSUED_AT",
+        "MESSAGE",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SWACOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SWA"
+          },
+          "x-flatbuffer-type": "[SWA]"
+        }
+      },
+      "additionalProperties": false
+    },
     "SWR": {
       "type": "object",
       "description": "Short-Wave Infrared Observation",
@@ -137733,6 +138664,531 @@
           "maximum": 255,
           "description": "Data quality (0-9, 9=best)",
           "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SWS": {
+      "type": "object",
+      "description": "Space Weather Series",
+      "properties": {
+        "SERIES_ID": {
+          "type": "string",
+          "description": "Publisher-stable identifier of the series.",
+          "x-flatbuffer-type": "string"
+        },
+        "QUANTITY": {
+          "$ref": "#/definitions/swsQuantity",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "QUANTITY_NAME and UNITS carry the source's own quantity."
+            },
+            "ImfMagnitude": {
+              "value": 1,
+              "description": "Interplanetary magnetic field magnitude (Bt), nT."
+            },
+            "ImfX": {
+              "value": 2,
+              "description": "IMF component along REFERENCE_FRAME's X, Y, Z axis, nT."
+            },
+            "ImfY": {
+              "value": 3
+            },
+            "ImfZ": {
+              "value": 4
+            },
+            "ImfLongitude": {
+              "value": 5,
+              "description": "IMF longitude (phi) in REFERENCE_FRAME, degrees, 0 to 360."
+            },
+            "ImfLatitude": {
+              "value": 6,
+              "description": "IMF latitude (theta) in REFERENCE_FRAME, degrees, -90 to 90."
+            },
+            "ProtonSpeed": {
+              "value": 7,
+              "description": "Bulk proton speed, km/s."
+            },
+            "ProtonVelocityX": {
+              "value": 8,
+              "description": "Proton bulk velocity along REFERENCE_FRAME's X, Y, Z axis, km/s."
+            },
+            "ProtonVelocityY": {
+              "value": 9
+            },
+            "ProtonVelocityZ": {
+              "value": 10
+            },
+            "ProtonDensity": {
+              "value": 11,
+              "description": "Proton number density, cm^-3."
+            },
+            "ProtonTemperature": {
+              "value": 12,
+              "description": "Proton temperature, K."
+            },
+            "AlphaSpeed": {
+              "value": 13,
+              "description": "Alpha-particle speed (km/s), density (cm^-3), temperature (K)."
+            },
+            "AlphaDensity": {
+              "value": 14
+            },
+            "AlphaTemperature": {
+              "value": 15
+            },
+            "FlowPressure": {
+              "value": 16,
+              "description": "Flow pressure, nPa."
+            },
+            "ElectricField": {
+              "value": 17,
+              "description": "Solar wind electric field, mV/m."
+            },
+            "PlasmaBeta": {
+              "value": 18,
+              "description": "Plasma beta, dimensionless."
+            },
+            "AlfvenMachNumber": {
+              "value": 19,
+              "description": "Alfven Mach number, dimensionless."
+            },
+            "Kp": {
+              "value": 20,
+              "description": "Planetary Kp in decimal thirds (8.333 is 8+), 0 to 9."
+            },
+            "Ap": {
+              "value": 21,
+              "description": "Planetary ap for the sample's interval, ap units (2 nT)."
+            },
+            "Hpo": {
+              "value": 22,
+              "description": "Hpo index (Hp30 or Hp60 by CADENCE_S), open-ended, in decimal thirds."
+            },
+            "Apo": {
+              "value": 23,
+              "description": "apo for the same interval, ap units."
+            },
+            "Dst": {
+              "value": 24,
+              "description": "Disturbance storm time index, nT."
+            },
+            "SymH": {
+              "value": 25,
+              "description": "SYM-H, SYM-D, ASY-H, ASY-D, nT."
+            },
+            "SymD": {
+              "value": 26
+            },
+            "AsyH": {
+              "value": 27
+            },
+            "AsyD": {
+              "value": 28
+            },
+            "Ae": {
+              "value": 29,
+              "description": "Auroral electrojet indices AE, AL, AU, AO, nT."
+            },
+            "Al": {
+              "value": 30
+            },
+            "Au": {
+              "value": 31
+            },
+            "Ao": {
+              "value": 32
+            },
+            "PcNorth": {
+              "value": 33,
+              "description": "Polar cap index, north and south, mV/m."
+            },
+            "PcSouth": {
+              "value": 34
+            },
+            "XrayFlux": {
+              "value": 35,
+              "description": "Soft X-ray irradiance in PASSBAND_MIN_NM..PASSBAND_MAX_NM, W/m^2."
+            },
+            "XrayFluxUncorrected": {
+              "value": 36,
+              "description": "The same before the source's electron correction, W/m^2."
+            },
+            "ProtonIntegralFlux": {
+              "value": 37,
+              "description": "Integral proton flux above ENERGY_MIN_MEV, pfu (cm^-2 s^-1 sr^-1)."
+            },
+            "ElectronIntegralFlux": {
+              "value": 38,
+              "description": "Integral electron flux above ENERGY_MIN_MEV, pfu."
+            },
+            "ProtonDifferentialFlux": {
+              "value": 39,
+              "description": "Differential proton flux in ENERGY_MIN_MEV..ENERGY_MAX_MEV, cm^-2 s^-1 sr^-1 MeV^-1."
+            },
+            "F107Observed": {
+              "value": 40,
+              "description": "10.7 cm solar radio flux as observed (sfu) and adjusted to 1 AU (sfu)."
+            },
+            "F107Adjusted": {
+              "value": 41
+            },
+            "HemisphericPower": {
+              "value": 42,
+              "description": "Hemispheric auroral power, GW."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "QUANTITY_NAME": {
+          "type": "string",
+          "description": "The source's own quantity name, verbatim (e.g. bz_gsm, BZ_GSM).",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units, fixed by QUANTITY and repeated here (e.g. nT).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Axes of a vector component (GSE, GSM, ...); absent for a scalar.",
+          "x-flatbuffer-type": "RFM"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/swsValueStatus",
+          "description": "Status of every sample, unless SAMPLE_STATUS gives it per sample.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "RealTime": {
+              "value": 1,
+              "description": "Real-time, unedited (e.g. SWPC RTSW)."
+            },
+            "Estimated": {
+              "value": 2,
+              "description": "Estimated from a partial network (e.g. SWPC estimated Kp)."
+            },
+            "Quicklook": {
+              "value": 3,
+              "description": "Quicklook (e.g. Kyoto real-time Dst)."
+            },
+            "Nowcast": {
+              "value": 4
+            },
+            "Provisional": {
+              "value": 5
+            },
+            "Definitive": {
+              "value": 6
+            },
+            "Predicted": {
+              "value": 7,
+              "description": "Issued forecast; FORECAST_ISSUED_AT is its issue time."
+            },
+            "Modeled": {
+              "value": 8,
+              "description": "Output of a model run named in MODEL_RUN_ID (e.g. WSA-ENLIL)."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "SAMPLE_STATUS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/swsValueStatus"
+          },
+          "description": "Per-sample status, index-aligned; empty = STATUS for all.",
+          "x-flatbuffer-type": "[swsValueStatus]"
+        },
+        "LOCATION": {
+          "$ref": "#/definitions/swsLocation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "AtSpacecraft": {
+              "value": 1,
+              "description": "At the measuring spacecraft (e.g. L1)."
+            },
+            "BowShockNose": {
+              "value": 2,
+              "description": "Time-shifted by the source to Earth's bow shock nose (e.g. OMNI)."
+            },
+            "PropagatedToEarth": {
+              "value": 3,
+              "description": "Propagated by the source to Earth; PROPAGATED_EPOCHS_MS holds arrivals."
+            },
+            "EarthOrbit": {
+              "value": 4,
+              "description": "Earth-orbiting monitor (e.g. GOES)."
+            },
+            "GroundNetwork": {
+              "value": 5,
+              "description": "Index derived from a ground magnetometer network."
+            },
+            "ModelAtEarth": {
+              "value": 6,
+              "description": "Model output at Earth."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "PLATFORMS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source platforms, verbatim (e.g. SOLAR1, ACE, GOES-18, Wind).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SAMPLE_PLATFORM": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Per-sample index into PLATFORMS; empty = PLATFORMS[0] for all.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "NORAD_CAT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Catalog numbers of PLATFORMS, index-aligned; 0 = none stated.",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "INSTRUMENT": {
+          "type": "string",
+          "description": "Instrument, verbatim (e.g. MAG, SWEPAM, XRS, SEISS).",
+          "x-flatbuffer-type": "string"
+        },
+        "CADENCE_S": {
+          "type": "number",
+          "description": "Nominal sample spacing in seconds.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SAMPLE_CONVENTION": {
+          "$ref": "#/definitions/swsSampleConvention",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Instant": {
+              "value": 1
+            },
+            "IntervalStart": {
+              "value": 2,
+              "description": "The value covers [EPOCH, EPOCH + CADENCE_S)."
+            },
+            "IntervalCenter": {
+              "value": 3
+            },
+            "IntervalEnd": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ENERGY_MIN_MEV": {
+          "type": "number",
+          "description": "Particle energy bounds, MeV; NaN maximum = integral above the minimum.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ENERGY_MAX_MEV": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MIN_NM": {
+          "type": "number",
+          "description": "Irradiance passband, nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MAX_NM": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EPOCHS_MS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9223372036854775808,
+            "maximum": 9223372036854775807
+          },
+          "description": "Sample epochs, UTC Unix milliseconds, ascending.",
+          "x-flatbuffer-type": "[int64]",
+          "x-flatbuffer-required": true
+        },
+        "VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "One value per epoch, in UNITS; NaN = missing.",
+          "x-flatbuffer-type": "[double]",
+          "x-flatbuffer-required": true
+        },
+        "SIGMAS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "One-sigma per epoch, in UNITS, when the source states it.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PROPAGATED_EPOCHS_MS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9223372036854775808,
+            "maximum": 9223372036854775807
+          },
+          "description": "Arrival times at LOCATION when the source propagates (UTC Unix ms).",
+          "x-flatbuffer-type": "[int64]"
+        },
+        "QUALITY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "description": "The source's per-sample overall quality code, verbatim.",
+          "x-flatbuffer-type": "[int32]"
+        },
+        "ACTIVE": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "description": "True where the sample's platform was the source's operational one.",
+          "x-flatbuffer-type": "[bool]"
+        },
+        "SAMPLE_COUNTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Source samples (or stations, for an index) behind each value.",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "FLAG_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names of further per-sample source flags, verbatim.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "FLAG_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Flag-major values: flag f, sample i at f * count + i; NaN = null.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NOAA_SCALE_KIND": {
+          "$ref": "#/definitions/swsNoaaScale",
+          "description": "The NOAA scale NOAA_SCALE_LEVELS reports, and its level per sample (0-5).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0
+            },
+            "Geomagnetic": {
+              "value": 1,
+              "description": "G: geomagnetic storms."
+            },
+            "SolarRadiation": {
+              "value": 2,
+              "description": "S: solar radiation storms."
+            },
+            "RadioBlackout": {
+              "value": 3,
+              "description": "R: radio blackouts."
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "NOAA_SCALE_LEVELS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "FORECAST_ISSUED_AT": {
+          "type": "string",
+          "description": "Issue time of a Predicted series, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_RUN_ID": {
+          "type": "string",
+          "description": "Model run identity of a Modeled series, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "UNITS",
+        "EPOCHS_MS",
+        "VALUES",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SWSCOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SWS"
+          },
+          "x-flatbuffer-type": "[SWS]"
         }
       },
       "additionalProperties": false
@@ -151591,6 +153047,15 @@
             },
             "GNM": {
               "value": 291
+            },
+            "CME": {
+              "value": 292
+            },
+            "SWA": {
+              "value": 293
+            },
+            "SWS": {
+              "value": 294
             }
           },
           "x-flatbuffer-default": "NONE"

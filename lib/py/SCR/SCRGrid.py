@@ -176,7 +176,7 @@ def SCRGridCreateSTATESVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATESVector(builder, data):
-    return SCRGridCreateSTATESVector(builder, data)
+    SCRGridCreateSTATESVector(builder, data)
 
 def SCRGridAddBANDS(builder, BANDS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BANDS), 0)
@@ -198,7 +198,7 @@ def SCRGridCreateBANDSVector(builder, data):
     return builder.EndVector()
 
 def CreateBANDSVector(builder, data):
-    return SCRGridCreateBANDSVector(builder, data)
+    SCRGridCreateBANDSVector(builder, data)
 
 def SCRGridEnd(builder):
     return builder.EndObject()

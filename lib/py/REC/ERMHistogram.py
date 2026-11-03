@@ -79,7 +79,7 @@ def ERMHistogramCreateBINSVector(builder, data):
     return builder.EndVector()
 
 def CreateBINSVector(builder, data):
-    return ERMHistogramCreateBINSVector(builder, data)
+    ERMHistogramCreateBINSVector(builder, data)
 
 def ERMHistogramEnd(builder):
     return builder.EndObject()

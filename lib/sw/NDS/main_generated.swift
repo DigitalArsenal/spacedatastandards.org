@@ -58,7 +58,7 @@ public enum ndsIngestEventKind: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  One standard's record footprint in the node store.
-public struct NDSSchemaStat: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSSchemaStat: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -123,7 +123,7 @@ public struct NDSSchemaStat: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  One (standard, provider, source, batch) ingest lane's live progress and
 ///  provenance.
-public struct NDSSourceStat: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSSourceStat: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -323,7 +323,7 @@ public struct NDSSourceStat: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  One source-ingest transition surfaced to the dashboard.
-public struct NDSIngestEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSIngestEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -400,7 +400,7 @@ public struct NDSIngestEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Live traffic for one publish/subscribe topic.
-public struct NDSTopicStat: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSTopicStat: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -457,7 +457,7 @@ public struct NDSTopicStat: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Runtime counters for one installed module or flow.
-public struct NDSModuleStat: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSModuleStat: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -528,7 +528,7 @@ public struct NDSModuleStat: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Counters for the node's trust rule evaluation engine.
-public struct NDSTrustEngineStat: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDSTrustEngineStat: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -578,7 +578,7 @@ public struct NDSTrustEngineStat: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Node Data Statistics - one node's data-plane snapshot.
-public struct NDS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct NDS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -84,7 +84,7 @@ public struct lambertVector3_Mutable: FlatBufferStruct, FlatbuffersVectorInitial
 }
 
 ///  One returned Lambert solution branch.
-public struct lambertSolutionBranch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct lambertSolutionBranch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -151,7 +151,7 @@ public struct lambertSolutionBranch: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Lambert solve result.
-public struct LMO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LMO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

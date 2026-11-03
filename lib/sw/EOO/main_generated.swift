@@ -39,7 +39,7 @@ public enum ObservationPosition: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Electro-Optical Observation
-public struct EOO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EOO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

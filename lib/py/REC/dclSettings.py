@@ -339,7 +339,7 @@ def dclSettingsCreatePRIOR_SIGMA_KVector(builder, data):
     return builder.EndVector()
 
 def CreatePRIOR_SIGMA_KVector(builder, data):
-    return dclSettingsCreatePRIOR_SIGMA_KVector(builder, data)
+    dclSettingsCreatePRIOR_SIGMA_KVector(builder, data)
 
 def dclSettingsAddMIN_POINTS(builder, MIN_POINTS):
     builder.PrependUint32Slot(6, MIN_POINTS, 0)
@@ -385,7 +385,7 @@ def dclSettingsCreateNODE_ALTITUDES_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateNODE_ALTITUDES_KMVector(builder, data):
-    return dclSettingsCreateNODE_ALTITUDES_KMVector(builder, data)
+    dclSettingsCreateNODE_ALTITUDES_KMVector(builder, data)
 
 def dclSettingsAddRANDOM_WALK_K_PER_SQRT_DAY(builder, RANDOM_WALK_K_PER_SQRT_DAY):
     builder.PrependFloat64Slot(11, RANDOM_WALK_K_PER_SQRT_DAY, 0.0)

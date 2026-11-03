@@ -46,7 +46,7 @@ public enum gnssNavMessageType: Int8, FlatbuffersVectorInitializable, Enum, Veri
 ///  Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the
 ///  symbols of IS-GPS-200. Angles in radians, lengths in meters, times in
 ///  seconds; every field defaults to 0.
-public struct gnssKeplerianBroadcast: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct gnssKeplerianBroadcast: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -210,7 +210,7 @@ public struct gnssKeplerianBroadcast: FlatBufferVerifiableTable, FlatbuffersVect
 
 ///  GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame
 ///  (PZ-90 or the system frame): km, km/s, km/s^2.
-public struct gnssStateBroadcast: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct gnssStateBroadcast: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -331,7 +331,7 @@ public struct gnssStateBroadcast: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  of KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The
 ///  parameters are the broadcast ones, not an evaluated orbit; an evaluated
 ///  orbit belongs in $OEM.
-public struct GNM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

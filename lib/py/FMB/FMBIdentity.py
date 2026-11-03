@@ -96,7 +96,7 @@ def FMBIdentityCreateHASHVector(builder, data):
     return builder.EndVector()
 
 def CreateHASHVector(builder, data):
-    return FMBIdentityCreateHASHVector(builder, data)
+    FMBIdentityCreateHASHVector(builder, data)
 
 def FMBIdentityEnd(builder):
     return builder.EndObject()

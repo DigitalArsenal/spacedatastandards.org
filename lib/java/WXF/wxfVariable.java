@@ -179,8 +179,12 @@ public final class wxfVariable {
    * Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
    */
   public static final byte CloudEmissivity = 37;
+  /**
+   * Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+   */
+  public static final byte AuroraProbability = 38;
 
-  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", };
+  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", "AuroraProbability", };
 
   public static String name(int e) { return names[e]; }
 }

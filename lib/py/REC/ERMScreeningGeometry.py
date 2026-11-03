@@ -90,7 +90,7 @@ def ERMScreeningGeometryCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    return ERMScreeningGeometryCreateROWSVector(builder, data)
+    ERMScreeningGeometryCreateROWSVector(builder, data)
 
 def ERMScreeningGeometryEnd(builder):
     return builder.EndObject()

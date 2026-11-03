@@ -105,7 +105,7 @@ public enum memIonosphereModel: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 
 ///  Noise, bias and editing rules for one observable. Standard deviations and
 ///  biases use the observable's SI unit. ANGLE observables use radians.
-public struct MEMErrorModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MEMErrorModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -231,7 +231,7 @@ public struct MEMErrorModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  One deterministic editing decision. The observation identity is carried
 ///  from the tracking-data input so rejected sets can be compared exactly.
-public struct MEMEditingDecision: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MEMEditingDecision: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -300,7 +300,7 @@ public struct MEMEditingDecision: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  Dual-form signature. Presence means both signatures are required and both
 ///  MUST verify independently; an invalid member rejects the record rather
 ///  than downgrading it to unsigned.
-public struct MEMAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MEMAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -361,7 +361,7 @@ public struct MEMAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  field names exactly. The FlatBuffer signature covers the size-prefixed
 ///  buffer with both signature vectors zeroed; the canonical-JSON signature
 ///  covers RFC 8785 canonical JSON with both signature fields omitted.
-public struct MEM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

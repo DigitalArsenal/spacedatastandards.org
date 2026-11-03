@@ -75,7 +75,7 @@ def SDICOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    return SDICOLLECTIONCreateRECORDSVector(builder, data)
+    SDICOLLECTIONCreateRECORDSVector(builder, data)
 
 def SDICOLLECTIONEnd(builder):
     return builder.EndObject()

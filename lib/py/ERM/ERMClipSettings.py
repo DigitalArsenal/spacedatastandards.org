@@ -91,7 +91,7 @@ def ERMClipSettingsCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    return ERMClipSettingsCreateSTRATAVector(builder, data)
+    ERMClipSettingsCreateSTRATAVector(builder, data)
 
 def ERMClipSettingsEnd(builder):
     return builder.EndObject()

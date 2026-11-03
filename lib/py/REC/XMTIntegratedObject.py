@@ -199,7 +199,7 @@ def XMTIntegratedObjectCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    return XMTIntegratedObjectCreateMANEUVERSVector(builder, data)
+    XMTIntegratedObjectCreateMANEUVERSVector(builder, data)
 
 def XMTIntegratedObjectAddREGIME(builder, REGIME):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REGIME), 0)
@@ -223,7 +223,7 @@ def XMTIntegratedObjectCreatePRODUCTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePRODUCTSVector(builder, data):
-    return XMTIntegratedObjectCreatePRODUCTSVector(builder, data)
+    XMTIntegratedObjectCreatePRODUCTSVector(builder, data)
 
 def XMTIntegratedObjectAddOUTCOME(builder, OUTCOME):
     builder.PrependUint8Slot(9, OUTCOME, 0)

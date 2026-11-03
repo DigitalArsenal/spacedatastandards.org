@@ -244,7 +244,7 @@ public struct FCKSegment_Mutable: FlatBufferStruct, FlatbuffersVectorInitializab
 }
 
 ///  FlatSQL Checkpoint.
-public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FCK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

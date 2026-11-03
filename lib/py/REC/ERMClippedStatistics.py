@@ -150,7 +150,7 @@ def ERMClippedStatisticsCreateMEANVector(builder, data):
     return builder.EndVector()
 
 def CreateMEANVector(builder, data):
-    return ERMClippedStatisticsCreateMEANVector(builder, data)
+    ERMClippedStatisticsCreateMEANVector(builder, data)
 
 def ERMClippedStatisticsAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -172,7 +172,7 @@ def ERMClippedStatisticsCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return ERMClippedStatisticsCreateCOVARIANCEVector(builder, data)
+    ERMClippedStatisticsCreateCOVARIANCEVector(builder, data)
 
 def ERMClippedStatisticsEnd(builder):
     return builder.EndObject()

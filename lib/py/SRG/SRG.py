@@ -222,7 +222,7 @@ def SRGCreatePROVIDERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROVIDERSVector(builder, data):
-    return SRGCreatePROVIDERSVector(builder, data)
+    SRGCreatePROVIDERSVector(builder, data)
 
 def SRGAddRESOURCES(builder, RESOURCES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RESOURCES), 0)
@@ -240,7 +240,7 @@ def SRGCreateRESOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESOURCESVector(builder, data):
-    return SRGCreateRESOURCESVector(builder, data)
+    SRGCreateRESOURCESVector(builder, data)
 
 def SRGAddRECEIPTS(builder, RECEIPTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIPTS), 0)
@@ -258,7 +258,7 @@ def SRGCreateRECEIPTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECEIPTSVector(builder, data):
-    return SRGCreateRECEIPTSVector(builder, data)
+    SRGCreateRECEIPTSVector(builder, data)
 
 def SRGAddSTATUS(builder, STATUS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS), 0)

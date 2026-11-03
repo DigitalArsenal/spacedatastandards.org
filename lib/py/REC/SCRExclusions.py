@@ -76,7 +76,7 @@ def SCRExclusionsCreateEXCLUSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXCLUSIONSVector(builder, data):
-    return SCRExclusionsCreateEXCLUSIONSVector(builder, data)
+    SCRExclusionsCreateEXCLUSIONSVector(builder, data)
 
 def SCRExclusionsEnd(builder):
     return builder.EndObject()

@@ -105,7 +105,7 @@ public enum ppsStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  One pointing-mode interval.
-public struct ppsPointingSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ppsPointingSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -173,7 +173,7 @@ public struct ppsPointingSegment: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  The solar array.
-public struct ppsSolarArray: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ppsSolarArray: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -241,7 +241,7 @@ public struct ppsSolarArray: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  The battery.
-public struct ppsBattery: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ppsBattery: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -306,7 +306,7 @@ public struct ppsBattery: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  The scenario: what to simulate.
-public struct ppsScenario: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ppsScenario: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -480,7 +480,7 @@ public struct ppsScenario: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 
 ///  The telemetry: simulated time series, column-major and parallel. An empty
 ///  series was not produced.
-public struct ppsTelemetry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ppsTelemetry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -649,7 +649,7 @@ public struct ppsTelemetry: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 
 ///  Pointing and Power Scenario - a scenario, and the telemetry a run of it
 ///  produced.
-public struct PPS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PPS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

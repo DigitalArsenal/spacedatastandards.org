@@ -157,7 +157,7 @@ def PCFIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data):
     return builder.EndVector()
 
 def CreateABSOLUTE_TOLERANCESVector(builder, data):
-    return PCFIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data)
+    PCFIntegratorSettingsCreateABSOLUTE_TOLERANCESVector(builder, data)
 
 def PCFIntegratorSettingsAddRELATIVE_TOLERANCE(builder, RELATIVE_TOLERANCE):
     builder.PrependFloat64Slot(5, RELATIVE_TOLERANCE, 1e-12)

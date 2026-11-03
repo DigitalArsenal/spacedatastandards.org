@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Atmospheric Propagation Loss Statistics
-public struct APL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct APL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

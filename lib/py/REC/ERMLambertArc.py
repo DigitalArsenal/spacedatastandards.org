@@ -131,7 +131,7 @@ def ERMLambertArcCreateV1_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateV1_KM_SVector(builder, data):
-    return ERMLambertArcCreateV1_KM_SVector(builder, data)
+    ERMLambertArcCreateV1_KM_SVector(builder, data)
 
 def ERMLambertArcAddENERGY(builder, ENERGY):
     builder.PrependFloat64Slot(3, ENERGY, 0.0)

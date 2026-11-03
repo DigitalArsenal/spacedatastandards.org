@@ -46,7 +46,7 @@ public enum davUnavailableReason: UInt8, FlatbuffersVectorInitializable, Enum, V
 
 
 ///  Dataset Availability - the latest dataset of a lane, as one node holds it.
-public struct DAV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -1,0 +1,501 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", "GALACTIC"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
+    "swsQuantity" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ImfMagnitude", "ImfX", "ImfY", "ImfZ", "ImfLongitude", "ImfLatitude", "ProtonSpeed", "ProtonVelocityX", "ProtonVelocityY", "ProtonVelocityZ", "ProtonDensity", "ProtonTemperature", "AlphaSpeed", "AlphaDensity", "AlphaTemperature", "FlowPressure", "ElectricField", "PlasmaBeta", "AlfvenMachNumber", "Kp", "Ap", "Hpo", "Apo", "Dst", "SymH", "SymD", "AsyH", "AsyD", "Ae", "Al", "Au", "Ao", "PcNorth", "PcSouth", "XrayFlux", "XrayFluxUncorrected", "ProtonIntegralFlux", "ElectronIntegralFlux", "ProtonDifferentialFlux", "F107Observed", "F107Adjusted", "HemisphericPower"]
+    },
+    "swsValueStatus" : {
+      "type" : "string",
+      "enum": ["Unspecified", "RealTime", "Estimated", "Quicklook", "Nowcast", "Provisional", "Definitive", "Predicted", "Modeled"]
+    },
+    "swsLocation" : {
+      "type" : "string",
+      "enum": ["Unspecified", "AtSpacecraft", "BowShockNose", "PropagatedToEarth", "EarthOrbit", "GroundNetwork", "ModelAtEarth"]
+    },
+    "swsSampleConvention" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Instant", "IntervalStart", "IntervalCenter", "IntervalEnd"]
+    },
+    "swsNoaaScale" : {
+      "type" : "string",
+      "enum": ["None", "Geomagnetic", "SolarRadiation", "RadioBlackout"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              },
+        "GALCEN_RA_DEG" : {
+                "type" : "number",
+                "description" : "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DEC_DEG" : {
+                "type" : "number",
+                "description" : "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DISTANCE_PC" : {
+                "type" : "number",
+                "description" : "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10)."
+              },
+        "Z_SUN_PC" : {
+                "type" : "number",
+                "description" : "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417)."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default."
+              },
+        "V_SUN_KMS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SWS" : {
+      "type" : "object",
+      "description" : "Space Weather Series",
+      "properties" : {
+        "SERIES_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier of the series."
+              },
+        "QUANTITY" : {
+                "$ref" : "#/definitions/swsQuantity"
+              },
+        "QUANTITY_NAME" : {
+                "type" : "string",
+                "description" : "The source's own quantity name, verbatim (e.g. bz_gsm, BZ_GSM)."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units, fixed by QUANTITY and repeated here (e.g. nT)."
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Axes of a vector component (GSE, GSM, ...); absent for a scalar."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/swsValueStatus",
+                "description" : "Status of every sample, unless SAMPLE_STATUS gives it per sample."
+              },
+        "SAMPLE_STATUS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/swsValueStatus"},
+                "description" : "Per-sample status, index-aligned; empty = STATUS for all."
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/swsLocation"
+              },
+        "PLATFORMS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source platforms, verbatim (e.g. SOLAR1, ACE, GOES-18, Wind)."
+              },
+        "SAMPLE_PLATFORM" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Per-sample index into PLATFORMS; empty = PLATFORMS[0] for all."
+              },
+        "NORAD_CAT_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Catalog numbers of PLATFORMS, index-aligned; 0 = none stated."
+              },
+        "INSTRUMENT" : {
+                "type" : "string",
+                "description" : "Instrument, verbatim (e.g. MAG, SWEPAM, XRS, SEISS)."
+              },
+        "CADENCE_S" : {
+                "type" : "number",
+                "description" : "Nominal sample spacing in seconds."
+              },
+        "SAMPLE_CONVENTION" : {
+                "$ref" : "#/definitions/swsSampleConvention"
+              },
+        "ENERGY_MIN_MEV" : {
+                "type" : "number",
+                "description" : "Particle energy bounds, MeV; NaN maximum = integral above the minimum."
+              },
+        "ENERGY_MAX_MEV" : {
+                "type" : "number"
+              },
+        "PASSBAND_MIN_NM" : {
+                "type" : "number",
+                "description" : "Irradiance passband, nm."
+              },
+        "PASSBAND_MAX_NM" : {
+                "type" : "number"
+              },
+        "EPOCHS_MS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807},
+                "description" : "Sample epochs, UTC Unix milliseconds, ascending."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "One value per epoch, in UNITS; NaN = missing."
+              },
+        "SIGMAS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "One-sigma per epoch, in UNITS, when the source states it."
+              },
+        "PROPAGATED_EPOCHS_MS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807},
+                "description" : "Arrival times at LOCATION when the source propagates (UTC Unix ms)."
+              },
+        "QUALITY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647},
+                "description" : "The source's per-sample overall quality code, verbatim."
+              },
+        "ACTIVE" : {
+                "type" : "array", "items" : {"type" : "boolean"},
+                "description" : "True where the sample's platform was the source's operational one."
+              },
+        "SAMPLE_COUNTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Source samples (or stations, for an index) behind each value."
+              },
+        "FLAG_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Names of further per-sample source flags, verbatim."
+              },
+        "FLAG_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Flag-major values: flag f, sample i at f * count + i; NaN = null."
+              },
+        "NOAA_SCALE_KIND" : {
+                "$ref" : "#/definitions/swsNoaaScale",
+                "description" : "The NOAA scale NOAA_SCALE_LEVELS reports, and its level per sample (0-5)."
+              },
+        "NOAA_SCALE_LEVELS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "FORECAST_ISSUED_AT" : {
+                "type" : "string",
+                "description" : "Issue time of a Predicted series, RFC 3339 UTC."
+              },
+        "MODEL_RUN_ID" : {
+                "type" : "string",
+                "description" : "Model run identity of a Modeled series, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["UNITS", "EPOCHS_MS", "VALUES", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SWSCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SWS"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SWS"
+}

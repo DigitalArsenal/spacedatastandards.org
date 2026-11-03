@@ -122,7 +122,7 @@ def ERMCommonEpochTargetCreateSETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSETSVector(builder, data):
-    return ERMCommonEpochTargetCreateSETSVector(builder, data)
+    ERMCommonEpochTargetCreateSETSVector(builder, data)
 
 def ERMCommonEpochTargetAddORIGIN(builder, ORIGIN):
     builder.PrependUint8Slot(3, ORIGIN, 0)

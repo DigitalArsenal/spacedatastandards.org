@@ -1,0 +1,105 @@
+// Hash: 066c3554a60e8b9458b648895b81f758b80f91ee19efec413ff52a829c06d63c
+// Version: 1.272.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+
+// Coronal Mass Ejection (CME)
+//
+// One CME as a catalog reports it: its identity, source, the analyses of its
+// direction and speed, and predicted or observed arrivals. Values verbatim;
+// an absent double is NaN. Links to flares, shocks and storms are the
+// source's own, never inferred from timing.
+
+/// Whether an arrival is a prediction or an observation. Append only.
+enum cmeArrivalKind : byte {
+  Unspecified,
+  Predicted,
+  Observed
+}
+
+/// One analysis of a CME's geometry and speed.
+table CMEMeasurement {
+  /// Catalog and technique, verbatim (e.g. M2M_CATALOG, SWPC_CAT; CDAW).
+  CATALOG: string;
+  TECHNIQUE: string;
+  /// The source marks this analysis as its best.
+  IS_MOST_ACCURATE: bool = false;
+  /// The instant the measurement refers to, RFC 3339 UTC (DONKI time21_5;
+  /// CDAW first C2 appearance).
+  REFERENCE_TIME: string;
+  /// Heliocentric distance of REFERENCE_TIME, solar radii (21.5 for DONKI).
+  REFERENCE_HEIGHT_RSUN: double = nan;
+  /// Stonyhurst direction of propagation, degrees.
+  HG_LATITUDE_DEG: double = nan;
+  HG_LONGITUDE_DEG: double = nan;
+  HALF_ANGLE_DEG: double = nan;
+  /// Plane-of-sky central and measurement position angles, and width, degrees.
+  CENTRAL_PA_DEG: double = nan;
+  MEASUREMENT_PA_DEG: double = nan;
+  ANGULAR_WIDTH_DEG: double = nan;
+  /// Speeds, km/s: the analysis's speed; CDAW linear, 2nd-order initial,
+  /// final and at 20 Rs.
+  SPEED_KM_S: double = nan;
+  SPEED_INITIAL_KM_S: double = nan;
+  SPEED_FINAL_KM_S: double = nan;
+  SPEED_20RSUN_KM_S: double = nan;
+  ACCELERATION_M_S2: double = nan;
+  MASS_G: double = nan;
+  KINETIC_ENERGY_ERG: double = nan;
+  /// Source type token, verbatim (e.g. S, C, O, R, ER).
+  TYPE_CODE: string;
+  NOTE: string;
+}
+
+/// One arrival at one place.
+table CMEArrival {
+  /// Target, verbatim (e.g. Earth, STEREO A, Mars).
+  TARGET: string (required);
+  KIND: cmeArrivalKind = Unspecified;
+  /// Model, verbatim (e.g. WSA-ENLIL+Cone); empty for an observation.
+  MODEL: string;
+  /// Model run or observed-event identity, verbatim.
+  SOURCE_EVENT_ID: string;
+  ISSUED_AT: string;
+  ARRIVAL_TIME: string;
+  /// Stated plus-or-minus uncertainty, hours.
+  ARRIVAL_UNCERTAINTY_H: double = nan;
+  DURATION_H: double = nan;
+  /// True when the source states a glancing blow; meaningful only when HAS_GLANCING_BLOW.
+  GLANCING_BLOW: bool = false;
+  HAS_GLANCING_BLOW: bool = false;
+  /// Predicted Kp per assumed IMF clock angle (DONKI kp_18 .. kp_180).
+  KP_PREDICTED: [double];
+  KP_CLOCK_ANGLES_DEG: [double];
+}
+
+/// Coronal Mass Ejection
+table CME {
+  /// The source's own identity, verbatim (DONKI activityID; CDAW date-time).
+  EVENT_ID: string (required);
+  CATALOG: string;
+  START_TIME: string;
+  /// Source location token, verbatim (e.g. N12W05), and parsed Stonyhurst.
+  SOURCE_LOCATION: string;
+  HG_LATITUDE_DEG: double = nan;
+  HG_LONGITUDE_DEG: double = nan;
+  REGION_NUMBER: uint32;
+  HAS_REGION_NUMBER: bool = false;
+  INSTRUMENTS: [string];
+  /// Linked event identities as the source states them (flares, shocks, storms).
+  LINKED_EVENT_IDS: [string];
+  MEASUREMENTS: [CMEMeasurement];
+  ARRIVALS: [CMEArrival];
+  NOTE: string;
+  PROVENANCE: PVN (required);
+  SOURCE_CID: string;
+  SOURCE_DIGEST: string;
+  RETRIEVED_AT: string;
+}
+
+table CMECOLLECTION {
+  RECORDS: [CME];
+}
+
+root_type CME;
+file_identifier "$CME";

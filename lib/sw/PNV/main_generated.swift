@@ -63,7 +63,7 @@ public enum pnvKeySource: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  One received notice and the verdict on it.
-public struct PNVEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PNVEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -236,7 +236,7 @@ public struct PNVEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Publication Verification - one node's verdicts on received notices.
-public struct PNV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

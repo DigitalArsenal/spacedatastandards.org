@@ -179,5 +179,9 @@ class wxfVariable private constructor() {
          * Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
          */
         const val CloudEmissivity: Byte = 37
+        /**
+         * Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+         */
+        const val AuroraProbability: Byte = 38
     }
 }

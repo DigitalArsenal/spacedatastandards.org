@@ -137,7 +137,7 @@ public enum phbBoundKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  One source's brightness in one band.
-public struct PHBMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PHBMeasurement: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -248,7 +248,7 @@ public struct PHBMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Photometric Band: one passband's place on the spectrum and its calibration.
-public struct PHB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PHB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

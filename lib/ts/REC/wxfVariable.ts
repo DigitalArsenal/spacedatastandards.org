@@ -215,5 +215,10 @@ export enum wxfVariable {
   /**
    * Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
    */
-  CloudEmissivity = 37
+  CloudEmissivity = 37,
+
+  /**
+   * Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+   */
+  AuroraProbability = 38
 }

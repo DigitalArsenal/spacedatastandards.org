@@ -157,7 +157,7 @@ def RNDCreateBYTESVector(builder, data):
     return builder.EndVector()
 
 def CreateBYTESVector(builder, data):
-    return RNDCreateBYTESVector(builder, data)
+    RNDCreateBYTESVector(builder, data)
 
 def RNDAddSOURCE(builder, SOURCE):
     builder.PrependUint8Slot(2, SOURCE, 0)
@@ -203,7 +203,7 @@ def RNDCreateSEEDVector(builder, data):
     return builder.EndVector()
 
 def CreateSEEDVector(builder, data):
-    return RNDCreateSEEDVector(builder, data)
+    RNDCreateSEEDVector(builder, data)
 
 def RNDEnd(builder):
     return builder.EndObject()

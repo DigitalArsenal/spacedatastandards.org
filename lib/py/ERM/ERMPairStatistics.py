@@ -144,7 +144,7 @@ def ERMPairStatisticsCreatePAIRSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAIRSVector(builder, data):
-    return ERMPairStatisticsCreatePAIRSVector(builder, data)
+    ERMPairStatisticsCreatePAIRSVector(builder, data)
 
 def ERMPairStatisticsAddSTATISTICS(builder, STATISTICS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STATISTICS), 0)
@@ -162,7 +162,7 @@ def ERMPairStatisticsCreateSTATISTICSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATISTICSVector(builder, data):
-    return ERMPairStatisticsCreateSTATISTICSVector(builder, data)
+    ERMPairStatisticsCreateSTATISTICSVector(builder, data)
 
 def ERMPairStatisticsEnd(builder):
     return builder.EndObject()

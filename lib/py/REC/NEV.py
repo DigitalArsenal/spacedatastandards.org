@@ -121,7 +121,7 @@ def NEVCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    return NEVCreateEVENTSVector(builder, data)
+    NEVCreateEVENTSVector(builder, data)
 
 def NEVAddTOTAL_EVENTS(builder, TOTAL_EVENTS):
     builder.PrependUint64Slot(3, TOTAL_EVENTS, 0)

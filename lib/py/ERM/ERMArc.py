@@ -181,7 +181,7 @@ def ERMArcCreateTARGETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGETSVector(builder, data):
-    return ERMArcCreateTARGETSVector(builder, data)
+    ERMArcCreateTARGETSVector(builder, data)
 
 def ERMArcAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -203,7 +203,7 @@ def ERMArcCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return ERMArcCreateCOVARIANCEVector(builder, data)
+    ERMArcCreateCOVARIANCEVector(builder, data)
 
 def ERMArcAddPROCESS_NOISE(builder, PROCESS_NOISE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)

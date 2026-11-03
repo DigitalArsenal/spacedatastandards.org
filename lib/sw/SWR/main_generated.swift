@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Short-Wave Infrared Observation
-public struct SWR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

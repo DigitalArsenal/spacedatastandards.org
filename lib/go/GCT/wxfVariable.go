@@ -105,6 +105,8 @@ const (
 	wxfVariableCloudEffectiveRadius                  wxfVariable = 36
 	/// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
 	wxfVariableCloudEmissivity                       wxfVariable = 37
+	/// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+	wxfVariableAuroraProbability                     wxfVariable = 38
 )
 
 var EnumNameswxfVariable = map[wxfVariable]string{
@@ -146,6 +148,7 @@ var EnumNameswxfVariable = map[wxfVariable]string{
 	wxfVariableCloudOpticalDepth:                     "CloudOpticalDepth",
 	wxfVariableCloudEffectiveRadius:                  "CloudEffectiveRadius",
 	wxfVariableCloudEmissivity:                       "CloudEmissivity",
+	wxfVariableAuroraProbability:                     "AuroraProbability",
 }
 
 var EnumValueswxfVariable = map[string]wxfVariable{
@@ -187,6 +190,7 @@ var EnumValueswxfVariable = map[string]wxfVariable{
 	"CloudOpticalDepth":                     wxfVariableCloudOpticalDepth,
 	"CloudEffectiveRadius":                  wxfVariableCloudEffectiveRadius,
 	"CloudEmissivity":                       wxfVariableCloudEmissivity,
+	"AuroraProbability":                     wxfVariableAuroraProbability,
 }
 
 func (v wxfVariable) String() string {

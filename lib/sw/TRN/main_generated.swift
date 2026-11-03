@@ -68,7 +68,7 @@ public enum TerrainInterpolation: Int8, FlatbuffersVectorInitializable, Enum, Ve
 
 
 ///  Terrain Models
-public struct TRN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TRN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

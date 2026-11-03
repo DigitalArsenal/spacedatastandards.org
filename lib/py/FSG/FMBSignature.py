@@ -96,7 +96,7 @@ def FMBSignatureCreateBYTESVector(builder, data):
     return builder.EndVector()
 
 def CreateBYTESVector(builder, data):
-    return FMBSignatureCreateBYTESVector(builder, data)
+    FMBSignatureCreateBYTESVector(builder, data)
 
 def FMBSignatureEnd(builder):
     return builder.EndObject()

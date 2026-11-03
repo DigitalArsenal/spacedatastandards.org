@@ -331,7 +331,7 @@ def MNFCreateELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEMENTSVector(builder, data):
-    return MNFCreateELEMENTSVector(builder, data)
+    MNFCreateELEMENTSVector(builder, data)
 
 def MNFAddCORRELATED_ID(builder, CORRELATED_ID):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CORRELATED_ID), 0)

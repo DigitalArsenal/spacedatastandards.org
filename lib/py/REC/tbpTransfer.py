@@ -219,7 +219,7 @@ def tbpTransferCreateBURNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBURNSVector(builder, data):
-    return tbpTransferCreateBURNSVector(builder, data)
+    tbpTransferCreateBURNSVector(builder, data)
 
 def tbpTransferAddTOTAL_DELTA_V_KM_S(builder, TOTAL_DELTA_V_KM_S):
     builder.PrependFloat64Slot(9, TOTAL_DELTA_V_KM_S, 0.0)

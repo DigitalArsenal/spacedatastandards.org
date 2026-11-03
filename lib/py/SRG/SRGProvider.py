@@ -196,7 +196,7 @@ def SRGProviderCreateORIGINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateORIGINSVector(builder, data):
-    return SRGProviderCreateORIGINSVector(builder, data)
+    SRGProviderCreateORIGINSVector(builder, data)
 
 def SRGProviderAddREFRESH_INTERVAL_S(builder, REFRESH_INTERVAL_S):
     builder.PrependUint32Slot(5, REFRESH_INTERVAL_S, 0)

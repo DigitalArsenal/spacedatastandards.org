@@ -187,7 +187,7 @@ public enum rfsAnalyticShape: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 ///  The material's electromagnetic properties at ONE frequency. A table of
 ///  these beats the power-law fit wherever it covers the frequency.
-public struct RFSFrequencySample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFSFrequencySample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -298,7 +298,7 @@ public struct RFSFrequencySample: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  Reflection and transmission at one incidence angle and polarization. The
 ///  angular dependence of a real surface cannot be carried by a single
 ///  normal-incidence number.
-public struct RFSReflectionEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFSReflectionEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -385,7 +385,7 @@ public struct RFSReflectionEntry: FlatBufferVerifiableTable, FlatbuffersVectorIn
 ///  Where and what this material is attached to. A material record with no
 ///  geometry describes a substance; a material record WITH geometry describes
 ///  an obstacle a solver can intersect.
-public struct RFSGeometryRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFSGeometryRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -599,7 +599,7 @@ public struct RFSGeometryRef: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Where these properties came from.
-public struct RFSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -741,7 +741,7 @@ public struct RFSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  RF Surface Material
-public struct RFS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RFS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

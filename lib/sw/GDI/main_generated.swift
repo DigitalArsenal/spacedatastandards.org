@@ -27,7 +27,7 @@ public enum imageFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Ground Imagery
-public struct GDI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GDI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

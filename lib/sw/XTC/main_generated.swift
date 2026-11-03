@@ -314,7 +314,7 @@ public enum ErrorDetectionType: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Integer data encoding specification
-public struct IntegerDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IntegerDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -380,7 +380,7 @@ public struct IntegerDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Float data encoding specification
-public struct FloatDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FloatDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -446,7 +446,7 @@ public struct FloatDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  String data encoding specification
-public struct StringDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StringDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -518,7 +518,7 @@ public struct StringDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Binary data encoding specification
-public struct BinaryDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BinaryDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -569,7 +569,7 @@ public struct BinaryDataEncoding: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Polynomial calibrator - converts raw to engineering using polynomial
-public struct PolynomialCalibrator: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PolynomialCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -607,7 +607,7 @@ public struct PolynomialCalibrator: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Spline point for spline calibration
-public struct SplinePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SplinePoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -651,7 +651,7 @@ public struct SplinePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Spline calibrator - piecewise linear interpolation
-public struct SplineCalibrator: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SplineCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -704,7 +704,7 @@ public struct SplineCalibrator: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Mathematical operation for math operation calibrator
-public struct MathOperation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MathOperation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -742,7 +742,7 @@ public struct MathOperation: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Context-dependent calibrator selection
-public struct ContextCalibrator: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContextCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -800,7 +800,7 @@ public struct ContextCalibrator: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Numeric alarm range
-public struct AlarmRange: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AlarmRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -858,7 +858,7 @@ public struct AlarmRange: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Static numeric alarm levels
-public struct StaticAlarmRanges: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StaticAlarmRanges: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -923,7 +923,7 @@ public struct StaticAlarmRanges: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Enumerated alarm
-public struct EnumerationAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EnumerationAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -968,7 +968,7 @@ public struct EnumerationAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Default alarm definition
-public struct DefaultAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DefaultAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1019,7 +1019,7 @@ public struct DefaultAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Context-dependent alarm
-public struct ContextAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContextAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1063,7 +1063,7 @@ public struct ContextAlarm: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Parameter comparison for match criteria
-public struct ParameterComparison: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ParameterComparison: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1124,7 +1124,7 @@ public struct ParameterComparison: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Boolean expression combining comparisons
-public struct BooleanExpression: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BooleanExpression: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1175,7 +1175,7 @@ public struct BooleanExpression: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Match criteria for conditional logic
-public struct MatchCriteria: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MatchCriteria: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1234,7 +1234,7 @@ public struct MatchCriteria: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Unit specification
-public struct Unit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Unit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1294,7 +1294,7 @@ public struct Unit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 }
 
 ///  Enumeration value mapping
-public struct EnumerationValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EnumerationValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1354,7 +1354,7 @@ public struct EnumerationValue: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Integer parameter type
-public struct IntegerParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IntegerParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1472,7 +1472,7 @@ public struct IntegerParameterType: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Float parameter type
-public struct FloatParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FloatParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1582,7 +1582,7 @@ public struct FloatParameterType: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  String parameter type
-public struct StringParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StringParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1673,7 +1673,7 @@ public struct StringParameterType: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Boolean parameter type
-public struct BooleanParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BooleanParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1758,7 +1758,7 @@ public struct BooleanParameterType: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Enumerated parameter type
-public struct EnumeratedParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EnumeratedParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1848,7 +1848,7 @@ public struct EnumeratedParameterType: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Binary parameter type
-public struct BinaryParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BinaryParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1917,7 +1917,7 @@ public struct BinaryParameterType: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Absolute time parameter type
-public struct AbsoluteTimeParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AbsoluteTimeParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2021,7 +2021,7 @@ public struct AbsoluteTimeParameterType: FlatBufferVerifiableTable, FlatbuffersV
 }
 
 ///  Relative time parameter type
-public struct RelativeTimeParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RelativeTimeParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2103,7 +2103,7 @@ public struct RelativeTimeParameterType: FlatBufferVerifiableTable, FlatbuffersV
 }
 
 ///  Array dimension specification
-public struct ArrayDimension: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArrayDimension: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2148,7 +2148,7 @@ public struct ArrayDimension: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Array parameter type
-public struct ArrayParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArrayParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2217,7 +2217,7 @@ public struct ArrayParameterType: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Aggregate member definition
-public struct AggregateMember: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AggregateMember: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2271,7 +2271,7 @@ public struct AggregateMember: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Aggregate parameter type (structure)
-public struct AggregateParameterType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AggregateParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2332,7 +2332,7 @@ public struct AggregateParameterType: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  Collection of all parameter types
-public struct ParameterTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ParameterTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2432,7 +2432,7 @@ public struct ParameterTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Parameter properties
-public struct ParameterProperties: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ParameterProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2492,7 +2492,7 @@ public struct ParameterProperties: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Parameter definition
-public struct Parameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Parameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2577,7 +2577,7 @@ public struct Parameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Collection of parameters
-public struct ParameterSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ParameterSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2614,7 +2614,7 @@ public struct ParameterSet: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Location specification within a container
-public struct LocationInContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LocationInContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2658,7 +2658,7 @@ public struct LocationInContainer: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Repeat entry specification
-public struct RepeatEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RepeatEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2710,7 +2710,7 @@ public struct RepeatEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Parameter reference entry in container
-public struct ParameterRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2777,7 +2777,7 @@ public struct ParameterRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Container reference entry (nested container)
-public struct ContainerRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContainerRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2836,7 +2836,7 @@ public struct ContainerRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Fixed value entry (static padding/header)
-public struct FixedValueEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FixedValueEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2896,7 +2896,7 @@ public struct FixedValueEntry: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Array parameter reference entry
-public struct ArrayParameterRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArrayParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2955,7 +2955,7 @@ public struct ArrayParameterRefEntry: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  Container entry list item (union of entry types)
-public struct ContainerEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3013,7 +3013,7 @@ public struct ContainerEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Base container reference with restriction
-public struct BaseContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BaseContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3058,7 +3058,7 @@ public struct BaseContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Rate specification for container in stream
-public struct RateInStream: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct RateInStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3110,7 +3110,7 @@ public struct RateInStream: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Binary encoding specification for container
-public struct ContainerBinaryEncoding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContainerBinaryEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3162,7 +3162,7 @@ public struct ContainerBinaryEncoding: FlatBufferVerifiableTable, FlatbuffersVec
 }
 
 ///  Sequence container (packet definition)
-public struct SequenceContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SequenceContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3260,7 +3260,7 @@ public struct SequenceContainer: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Collection of sequence containers
-public struct ContainerSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ContainerSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3297,7 +3297,7 @@ public struct ContainerSet: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Algorithm input binding
-public struct AlgorithmInput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AlgorithmInput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3343,7 +3343,7 @@ public struct AlgorithmInput: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Algorithm output binding
-public struct AlgorithmOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AlgorithmOutput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3389,7 +3389,7 @@ public struct AlgorithmOutput: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Trigger condition for algorithm execution
-public struct AlgorithmTrigger: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AlgorithmTrigger: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3442,7 +3442,7 @@ public struct AlgorithmTrigger: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Custom algorithm definition
-public struct CustomAlgorithm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CustomAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3541,7 +3541,7 @@ public struct CustomAlgorithm: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Math algorithm (inline calculation)
-public struct MathAlgorithm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MathAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3610,7 +3610,7 @@ public struct MathAlgorithm: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Collection of algorithms
-public struct AlgorithmSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AlgorithmSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3654,7 +3654,7 @@ public struct AlgorithmSet: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Integer argument type
-public struct IntegerArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct IntegerArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3758,7 +3758,7 @@ public struct IntegerArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Float argument type
-public struct FloatArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FloatArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3854,7 +3854,7 @@ public struct FloatArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  String argument type
-public struct StringArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StringArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3931,7 +3931,7 @@ public struct StringArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Boolean argument type
-public struct BooleanArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BooleanArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4016,7 +4016,7 @@ public struct BooleanArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Enumerated argument type
-public struct EnumeratedArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct EnumeratedArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4092,7 +4092,7 @@ public struct EnumeratedArgumentType: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  Binary argument type
-public struct BinaryArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BinaryArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4161,7 +4161,7 @@ public struct BinaryArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Aggregate argument type
-public struct AggregateArgumentType: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct AggregateArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4222,7 +4222,7 @@ public struct AggregateArgumentType: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Collection of argument types
-public struct ArgumentTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArgumentTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4301,7 +4301,7 @@ public struct ArgumentTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Command argument definition
-public struct Argument: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Argument: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4371,7 +4371,7 @@ public struct Argument: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  Argument reference entry in command container
-public struct ArgumentRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArgumentRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4424,7 +4424,7 @@ public struct ArgumentRefEntry: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Command container entry
-public struct CommandContainerEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CommandContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4475,7 +4475,7 @@ public struct CommandContainerEntry: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Command container definition
-public struct CommandContainer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CommandContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4527,7 +4527,7 @@ public struct CommandContainer: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Command verifier definition
-public struct CommandVerifier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CommandVerifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4608,7 +4608,7 @@ public struct CommandVerifier: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Significance of command execution
-public struct CommandSignificance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CommandSignificance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4653,7 +4653,7 @@ public struct CommandSignificance: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Base metacommand reference
-public struct BaseMetaCommand: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct BaseMetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4698,7 +4698,7 @@ public struct BaseMetaCommand: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Argument assignment (value binding)
-public struct ArgumentAssignment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ArgumentAssignment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4744,7 +4744,7 @@ public struct ArgumentAssignment: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Interlock constraint
-public struct Interlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Interlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4797,7 +4797,7 @@ public struct Interlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  MetaCommand definition
-public struct MetaCommand: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4908,7 +4908,7 @@ public struct MetaCommand: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Collection of metacommands
-public struct MetaCommandSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct MetaCommandSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4945,7 +4945,7 @@ public struct MetaCommandSet: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Fixed frame stream
-public struct FixedFrameStream: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FixedFrameStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5006,7 +5006,7 @@ public struct FixedFrameStream: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Variable frame stream
-public struct VariableFrameStream: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct VariableFrameStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5080,7 +5080,7 @@ public struct VariableFrameStream: FlatBufferVerifiableTable, FlatbuffersVectorI
 }
 
 ///  Custom stream
-public struct CustomStream: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CustomStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5134,7 +5134,7 @@ public struct CustomStream: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Collection of streams
-public struct StreamSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct StreamSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5185,7 +5185,7 @@ public struct StreamSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Service definition
-public struct Service: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct Service: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5253,7 +5253,7 @@ public struct Service: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 }
 
 ///  Collection of services
-public struct ServiceSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ServiceSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5290,7 +5290,7 @@ public struct ServiceSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Document header information
-public struct XTCHeader: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XTCHeader: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5367,7 +5367,7 @@ public struct XTCHeader: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  Telemetry metadata collection
-public struct TelemetryMetaData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TelemetryMetaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5432,7 +5432,7 @@ public struct TelemetryMetaData: FlatBufferVerifiableTable, FlatbuffersVectorIni
 }
 
 ///  Command metadata collection
-public struct CommandMetaData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CommandMetaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -5514,7 +5514,7 @@ public struct CommandMetaData: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 ///  A SpaceSystem defines the telemetry and command configuration for a space
 ///  vehicle or subsystem. SpaceSystems can be nested hierarchically to represent
 ///  the structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).
-public struct XTC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct XTC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

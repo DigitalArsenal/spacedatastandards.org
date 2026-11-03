@@ -331,7 +331,7 @@ public struct FMBUrl_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
 }
 
 ///  A dictionary entry first used by this round.
-public struct FMBEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMBEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -379,7 +379,7 @@ public struct FMBEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  A row's signature bytes.
-public struct FMBSignature: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMBSignature: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -424,7 +424,7 @@ public struct FMBSignature: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 
 ///  What a sealed (encrypted) row needs beyond FMBRow: its ciphertext cannot be
 ///  re-extracted.
-public struct FMBSealed: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMBSealed: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -491,7 +491,7 @@ public struct FMBSealed: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  An ingest identity registered by a row (32-byte hash).
-public struct FMBIdentity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMBIdentity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -535,7 +535,7 @@ public struct FMBIdentity: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  A record over 1 MiB: a UnixFS file DAG of 1 MiB raw leaves over its range.
-public struct FMBLarge: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMBLarge: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -596,7 +596,7 @@ public struct FMBLarge: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  FlatSQL Batch Metadata: one per feed per commit round.
-public struct FMB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct FMB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

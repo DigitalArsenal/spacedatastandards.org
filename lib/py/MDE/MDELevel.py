@@ -147,7 +147,7 @@ def MDELevelCreatePLANE_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreatePLANE_M_SVector(builder, data):
-    return MDELevelCreatePLANE_M_SVector(builder, data)
+    MDELevelCreatePLANE_M_SVector(builder, data)
 
 def MDELevelAddPLANE_SIGMA_M_S(builder, PLANE_SIGMA_M_S):
     builder.PrependFloat64Slot(5, PLANE_SIGMA_M_S, 0.0)

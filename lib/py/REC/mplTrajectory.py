@@ -145,7 +145,7 @@ def mplTrajectoryCreateOFFSETS_SVector(builder, data):
     return builder.EndVector()
 
 def CreateOFFSETS_SVector(builder, data):
-    return mplTrajectoryCreateOFFSETS_SVector(builder, data)
+    mplTrajectoryCreateOFFSETS_SVector(builder, data)
 
 def mplTrajectoryAddSTATES(builder, STATES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
@@ -167,7 +167,7 @@ def mplTrajectoryCreateSTATESVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATESVector(builder, data):
-    return mplTrajectoryCreateSTATESVector(builder, data)
+    mplTrajectoryCreateSTATESVector(builder, data)
 
 def mplTrajectoryEnd(builder):
     return builder.EndObject()

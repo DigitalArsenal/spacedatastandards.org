@@ -61,7 +61,7 @@ public enum papGainCutAxis: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  One array element and its applied complex weight.
-public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PAPElement: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -177,7 +177,7 @@ public struct PAPElement: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  One one-dimensional gain cut through the synthesized pattern.
-public struct PAPGainCut: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PAPGainCut: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -240,7 +240,7 @@ public struct PAPGainCut: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  One requested adaptive null and its achieved result.
-public struct PAPNull: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PAPNull: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -314,7 +314,7 @@ public struct PAPNull: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 }
 
 ///  Phased Array Pattern Synthesis
-public struct PAP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PAP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

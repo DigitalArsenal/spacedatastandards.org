@@ -306,7 +306,7 @@ public enum legacyCountryCode: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Legacy Country Code
-public struct LCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

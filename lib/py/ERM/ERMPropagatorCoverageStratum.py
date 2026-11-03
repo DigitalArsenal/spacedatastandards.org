@@ -251,7 +251,7 @@ def ERMPropagatorCoverageStratumCreateRMS_ERROR_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateRMS_ERROR_RTN_KMVector(builder, data):
-    return ERMPropagatorCoverageStratumCreateRMS_ERROR_RTN_KMVector(builder, data)
+    ERMPropagatorCoverageStratumCreateRMS_ERROR_RTN_KMVector(builder, data)
 
 def ERMPropagatorCoverageStratumAddRMS_SIGMA_RTN_KM(builder, RMS_SIGMA_RTN_KM):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RMS_SIGMA_RTN_KM), 0)
@@ -273,7 +273,7 @@ def ERMPropagatorCoverageStratumCreateRMS_SIGMA_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateRMS_SIGMA_RTN_KMVector(builder, data):
-    return ERMPropagatorCoverageStratumCreateRMS_SIGMA_RTN_KMVector(builder, data)
+    ERMPropagatorCoverageStratumCreateRMS_SIGMA_RTN_KMVector(builder, data)
 
 def ERMPropagatorCoverageStratumAddRMS_SIGMA_P0_ONLY_RTN_KM(builder, RMS_SIGMA_P0_ONLY_RTN_KM):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(RMS_SIGMA_P0_ONLY_RTN_KM), 0)
@@ -295,7 +295,7 @@ def ERMPropagatorCoverageStratumCreateRMS_SIGMA_P0_ONLY_RTN_KMVector(builder, da
     return builder.EndVector()
 
 def CreateRMS_SIGMA_P0_ONLY_RTN_KMVector(builder, data):
-    return ERMPropagatorCoverageStratumCreateRMS_SIGMA_P0_ONLY_RTN_KMVector(builder, data)
+    ERMPropagatorCoverageStratumCreateRMS_SIGMA_P0_ONLY_RTN_KMVector(builder, data)
 
 def ERMPropagatorCoverageStratumAddSPECTRAL_DENSITY_M2_S3(builder, SPECTRAL_DENSITY_M2_S3):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_DENSITY_M2_S3), 0)
@@ -317,7 +317,7 @@ def ERMPropagatorCoverageStratumCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data
     return builder.EndVector()
 
 def CreateSPECTRAL_DENSITY_M2_S3Vector(builder, data):
-    return ERMPropagatorCoverageStratumCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
+    ERMPropagatorCoverageStratumCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
 
 def ERMPropagatorCoverageStratumAddCOVERAGE(builder, COVERAGE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE), 0)

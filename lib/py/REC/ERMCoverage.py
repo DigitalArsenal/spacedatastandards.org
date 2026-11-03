@@ -180,7 +180,7 @@ def ERMCoverageCreateINSIDEVector(builder, data):
     return builder.EndVector()
 
 def CreateINSIDEVector(builder, data):
-    return ERMCoverageCreateINSIDEVector(builder, data)
+    ERMCoverageCreateINSIDEVector(builder, data)
 
 def ERMCoverageAddPIT(builder, PIT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PIT), 0)
@@ -202,7 +202,7 @@ def ERMCoverageCreatePITVector(builder, data):
     return builder.EndVector()
 
 def CreatePITVector(builder, data):
-    return ERMCoverageCreatePITVector(builder, data)
+    ERMCoverageCreatePITVector(builder, data)
 
 def ERMCoverageAddPIT_MAX_CDF_GAP(builder, PIT_MAX_CDF_GAP):
     builder.PrependFloat64Slot(6, PIT_MAX_CDF_GAP, float('nan'))

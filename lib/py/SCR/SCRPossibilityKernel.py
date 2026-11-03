@@ -112,7 +112,7 @@ def SCRPossibilityKernelCreateCENTREVector(builder, data):
     return builder.EndVector()
 
 def CreateCENTREVector(builder, data):
-    return SCRPossibilityKernelCreateCENTREVector(builder, data)
+    SCRPossibilityKernelCreateCENTREVector(builder, data)
 
 def SCRPossibilityKernelAddSHAPE(builder, SHAPE):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE), 0)
@@ -134,7 +134,7 @@ def SCRPossibilityKernelCreateSHAPEVector(builder, data):
     return builder.EndVector()
 
 def CreateSHAPEVector(builder, data):
-    return SCRPossibilityKernelCreateSHAPEVector(builder, data)
+    SCRPossibilityKernelCreateSHAPEVector(builder, data)
 
 def SCRPossibilityKernelEnd(builder):
     return builder.EndObject()

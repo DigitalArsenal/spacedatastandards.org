@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "swaMessageKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Alert", "Warning", "Watch", "Summary", "Forecast", "Cancellation", "Custom"]
+    },
+    "swaScaleFamily" : {
+      "type" : "string",
+      "enum": ["None", "Geomagnetic", "SolarRadiation", "RadioBlackout"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SWA" : {
+      "type" : "object",
+      "description" : "Space Weather Alert",
+      "properties" : {
+        "PRODUCT_ID" : {
+                "type" : "string",
+                "description" : "Product identity, verbatim (e.g. K05A, EF3A)."
+              },
+        "MESSAGE_CODE" : {
+                "type" : "string",
+                "description" : "Message code and serial number, verbatim (e.g. ALTK05, 2051)."
+              },
+        "SERIAL_NUMBER" : {
+                "type" : "string"
+              },
+        "REFERS_TO_SERIAL" : {
+                "type" : "string",
+                "description" : "Serial this message continues, extends or cancels, verbatim."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/swaMessageKind"
+              },
+        "ISSUED_AT" : {
+                "type" : "string"
+              },
+        "BEGIN_TIME" : {
+                "type" : "string",
+                "description" : "Times stated in the text, RFC 3339 UTC; absent when not stated."
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "VALID_FROM" : {
+                "type" : "string"
+              },
+        "VALID_TO" : {
+                "type" : "string"
+              },
+        "SCALE_FAMILY" : {
+                "$ref" : "#/definitions/swaScaleFamily"
+              },
+        "SCALE_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Scale level 1-5; 0 when none is stated."
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "The message, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN"
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["PRODUCT_ID", "ISSUED_AT", "MESSAGE", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SWACOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SWA"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SWA"
+}

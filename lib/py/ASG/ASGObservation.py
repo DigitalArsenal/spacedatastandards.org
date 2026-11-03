@@ -333,7 +333,7 @@ def ASGObservationCreateMEASUREMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEASUREMENTSVector(builder, data):
-    return ASGObservationCreateMEASUREMENTSVector(builder, data)
+    ASGObservationCreateMEASUREMENTSVector(builder, data)
 
 def ASGObservationAddDEGREES_OF_FREEDOM(builder, DEGREES_OF_FREEDOM):
     builder.PrependUint8Slot(7, DEGREES_OF_FREEDOM, 0)
@@ -387,7 +387,7 @@ def ASGObservationCreateCANDIDATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCANDIDATESVector(builder, data):
-    return ASGObservationCreateCANDIDATESVector(builder, data)
+    ASGObservationCreateCANDIDATESVector(builder, data)
 
 def ASGObservationAddASSIGNED_CANDIDATE(builder, ASSIGNED_CANDIDATE):
     builder.PrependInt32Slot(14, ASSIGNED_CANDIDATE, -1)
@@ -415,7 +415,7 @@ def ASGObservationCreateSENSOR_POSITION_GCRF_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_POSITION_GCRF_KMVector(builder, data):
-    return ASGObservationCreateSENSOR_POSITION_GCRF_KMVector(builder, data)
+    ASGObservationCreateSENSOR_POSITION_GCRF_KMVector(builder, data)
 
 def ASGObservationAddSENSOR_VELOCITY_GCRF_KM_S(builder, SENSOR_VELOCITY_GCRF_KM_S):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_VELOCITY_GCRF_KM_S), 0)
@@ -437,7 +437,7 @@ def ASGObservationCreateSENSOR_VELOCITY_GCRF_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_VELOCITY_GCRF_KM_SVector(builder, data):
-    return ASGObservationCreateSENSOR_VELOCITY_GCRF_KM_SVector(builder, data)
+    ASGObservationCreateSENSOR_VELOCITY_GCRF_KM_SVector(builder, data)
 
 def ASGObservationAddLINE_OF_SIGHT_GCRF(builder, LINE_OF_SIGHT_GCRF):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LINE_OF_SIGHT_GCRF), 0)
@@ -459,7 +459,7 @@ def ASGObservationCreateLINE_OF_SIGHT_GCRFVector(builder, data):
     return builder.EndVector()
 
 def CreateLINE_OF_SIGHT_GCRFVector(builder, data):
-    return ASGObservationCreateLINE_OF_SIGHT_GCRFVector(builder, data)
+    ASGObservationCreateLINE_OF_SIGHT_GCRFVector(builder, data)
 
 def ASGObservationEnd(builder):
     return builder.EndObject()

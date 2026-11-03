@@ -93,7 +93,7 @@ public enum stfRetentionPolicy: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Field-level stream policy bound into protected delivery and grants.
-public struct GrantFieldStreamPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct GrantFieldStreamPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -182,7 +182,7 @@ public struct GrantFieldStreamPolicy: FlatBufferVerifiableTable, FlatbuffersVect
 }
 
 ///  Immutable encrypted artifact/window metadata for protected delivery.
-public struct ProtectedDeliveryBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ProtectedDeliveryBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -287,7 +287,7 @@ public struct ProtectedDeliveryBinding: FlatBufferVerifiableTable, FlatbuffersVe
 }
 
 ///  Provider reputation summary surfaced in marketplace listings.
-public struct ProviderReputation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ProviderReputation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -359,7 +359,7 @@ public struct ProviderReputation: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  Spatial coverage definition
-public struct SpatialCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -433,7 +433,7 @@ public struct SpatialCoverage: FlatBufferVerifiableTable, FlatbuffersVectorIniti
 }
 
 ///  Temporal coverage definition
-public struct TemporalCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct TemporalCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -501,7 +501,7 @@ public struct TemporalCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInit
 }
 
 ///  Data coverage combining spatial and temporal
-public struct DataCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DataCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -545,7 +545,7 @@ public struct DataCoverage: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Pricing tier for a listing
-public struct PricingTier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -633,7 +633,7 @@ public struct PricingTier: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct STF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

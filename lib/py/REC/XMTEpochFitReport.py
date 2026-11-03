@@ -331,7 +331,7 @@ def XMTEpochFitReportCreatePOSITION_CORRECTION_KMVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_CORRECTION_KMVector(builder, data):
-    return XMTEpochFitReportCreatePOSITION_CORRECTION_KMVector(builder, data)
+    XMTEpochFitReportCreatePOSITION_CORRECTION_KMVector(builder, data)
 
 def XMTEpochFitReportAddVELOCITY_CORRECTION_KM_S(builder, VELOCITY_CORRECTION_KM_S):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_CORRECTION_KM_S), 0)
@@ -353,7 +353,7 @@ def XMTEpochFitReportCreateVELOCITY_CORRECTION_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_CORRECTION_KM_SVector(builder, data):
-    return XMTEpochFitReportCreateVELOCITY_CORRECTION_KM_SVector(builder, data)
+    XMTEpochFitReportCreateVELOCITY_CORRECTION_KM_SVector(builder, data)
 
 def XMTEpochFitReportAddNOTE(builder, NOTE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(NOTE), 0)

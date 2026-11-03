@@ -487,7 +487,7 @@ def PhysicalPropertiesCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    return PhysicalPropertiesCreateCOMMENTVector(builder, data)
+    PhysicalPropertiesCreateCOMMENTVector(builder, data)
 
 def PhysicalPropertiesAddWET_MASS(builder, WET_MASS):
     builder.PrependFloat64Slot(1, WET_MASS, 0.0)

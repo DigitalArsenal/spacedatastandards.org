@@ -57,7 +57,7 @@ public enum pinClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  One rule of the policy.
-public struct PINRule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PINRule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -130,7 +130,7 @@ public struct PINRule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct PIN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PIN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

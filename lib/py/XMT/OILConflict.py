@@ -109,7 +109,7 @@ def OILConflictCreateLEFT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLEFT_IDSVector(builder, data):
-    return OILConflictCreateLEFT_IDSVector(builder, data)
+    OILConflictCreateLEFT_IDSVector(builder, data)
 
 def OILConflictAddRIGHT_IDS(builder, RIGHT_IDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RIGHT_IDS), 0)
@@ -127,7 +127,7 @@ def OILConflictCreateRIGHT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRIGHT_IDSVector(builder, data):
-    return OILConflictCreateRIGHT_IDSVector(builder, data)
+    OILConflictCreateRIGHT_IDSVector(builder, data)
 
 def OILConflictAddSHAPE(builder, SHAPE):
     builder.PrependUint8Slot(2, SHAPE, 0)

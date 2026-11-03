@@ -212,7 +212,7 @@ def ERMConsiderCovarianceCreateWEIGHTSVector(builder, data):
     return builder.EndVector()
 
 def CreateWEIGHTSVector(builder, data):
-    return ERMConsiderCovarianceCreateWEIGHTSVector(builder, data)
+    ERMConsiderCovarianceCreateWEIGHTSVector(builder, data)
 
 def ERMConsiderCovarianceAddWEIGHT_COVERED(builder, WEIGHT_COVERED):
     builder.PrependFloat64Slot(4, WEIGHT_COVERED, 0.0)
@@ -240,7 +240,7 @@ def ERMConsiderCovarianceCreateSENSITIVITYVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSITIVITYVector(builder, data):
-    return ERMConsiderCovarianceCreateSENSITIVITYVector(builder, data)
+    ERMConsiderCovarianceCreateSENSITIVITYVector(builder, data)
 
 def ERMConsiderCovarianceAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -262,7 +262,7 @@ def ERMConsiderCovarianceCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return ERMConsiderCovarianceCreateCOVARIANCEVector(builder, data)
+    ERMConsiderCovarianceCreateCOVARIANCEVector(builder, data)
 
 def ERMConsiderCovarianceAddTOTAL(builder, TOTAL):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TOTAL), 0)
@@ -284,7 +284,7 @@ def ERMConsiderCovarianceCreateTOTALVector(builder, data):
     return builder.EndVector()
 
 def CreateTOTALVector(builder, data):
-    return ERMConsiderCovarianceCreateTOTALVector(builder, data)
+    ERMConsiderCovarianceCreateTOTALVector(builder, data)
 
 def ERMConsiderCovarianceEnd(builder):
     return builder.EndObject()

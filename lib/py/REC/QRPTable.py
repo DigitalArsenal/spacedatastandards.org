@@ -134,7 +134,7 @@ def QRPTableCreateCOLUMNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMNSVector(builder, data):
-    return QRPTableCreateCOLUMNSVector(builder, data)
+    QRPTableCreateCOLUMNSVector(builder, data)
 
 def QRPTableEnd(builder):
     return builder.EndObject()

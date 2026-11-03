@@ -200,7 +200,7 @@ def CCTCreateCATEGORIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCATEGORIESVector(builder, data):
-    return CCTCreateCATEGORIESVector(builder, data)
+    CCTCreateCATEGORIESVector(builder, data)
 
 def CCTAddROLLUPS(builder, ROLLUPS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ROLLUPS), 0)
@@ -218,7 +218,7 @@ def CCTCreateROLLUPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROLLUPSVector(builder, data):
-    return CCTCreateROLLUPSVector(builder, data)
+    CCTCreateROLLUPSVector(builder, data)
 
 def CCTAddSIGNATURE(builder, SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
@@ -240,7 +240,7 @@ def CCTCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    return CCTCreateSIGNATUREVector(builder, data)
+    CCTCreateSIGNATUREVector(builder, data)
 
 def CCTEnd(builder):
     return builder.EndObject()

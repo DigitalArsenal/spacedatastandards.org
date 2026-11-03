@@ -97,7 +97,7 @@ public enum cvpEmitterRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 ///  An emitter that contributed to this geometry. Identity and the few
 ///  parameters that determine the boundary; everything else is joined from
 ///  `$RFB` and `$RFE`.
-public struct CVPEmitterRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVPEmitterRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -247,7 +247,7 @@ public struct CVPEmitterRef: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  A receiver the coverage was evaluated FOR. Coverage is never absolute: a
 ///  -110 dBW contour means one thing for a 60 cm terminal and another for a
 ///  12 m dish, so the assumed receiver is part of the record.
-public struct CVPReceiverRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVPReceiverRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -359,7 +359,7 @@ public struct CVPReceiverRef: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 ///  buildings, a spacecraft structure or terrain is a claim about those
 ///  objects; publishing the obstacle set with its `$RFS` materials is what
 ///  makes the clipped boundary reproducible.
-public struct CVPObstacleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVPObstacleRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -485,7 +485,7 @@ public struct CVPObstacleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  How wrong this geometry can be. A contour with no uncertainty is a drawing,
 ///  not a measurement.
-public struct CVPUncertainty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVPUncertainty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -569,7 +569,7 @@ public struct CVPUncertainty: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Where this geometry came from.
-public struct CVPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -742,7 +742,7 @@ public struct CVPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Coverage Geometry
-public struct CVP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CVP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -50,6 +50,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../CHN/main_generated.h"
 #include "../CLM/main_generated.h"
 #include "../CLT/main_generated.h"
+#include "../CME/main_generated.h"
 #include "../CMR/main_generated.h"
 #include "../CMS/main_generated.h"
 #include "../CMT/main_generated.h"
@@ -269,7 +270,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../STV/main_generated.h"
 #include "../STX/main_generated.h"
 #include "../SUB/main_generated.h"
+#include "../SWA/main_generated.h"
 #include "../SWR/main_generated.h"
+#include "../SWS/main_generated.h"
 #include "../TAB/main_generated.h"
 #include "../TBP/main_generated.h"
 #include "../TBS/main_generated.h"
@@ -2191,11 +2194,14 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_SRO = 289,
   RecordTypeExtended_SRT = 290,
   RecordTypeExtended_GNM = 291,
+  RecordTypeExtended_CME = 292,
+  RecordTypeExtended_SWA = 293,
+  RecordTypeExtended_SWS = 294,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_GNM
+  RecordTypeExtended_MAX = RecordTypeExtended_SWS
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[37] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[40] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2233,7 +2239,10 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[37] {
     RecordTypeExtended_SFE,
     RecordTypeExtended_SRO,
     RecordTypeExtended_SRT,
-    RecordTypeExtended_GNM
+    RecordTypeExtended_GNM,
+    RecordTypeExtended_CME,
+    RecordTypeExtended_SWA,
+    RecordTypeExtended_SWS
   };
   return values;
 }
@@ -2277,6 +2286,9 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_SRO: return "SRO";
     case RecordTypeExtended_SRT: return "SRT";
     case RecordTypeExtended_GNM: return "GNM";
+    case RecordTypeExtended_CME: return "CME";
+    case RecordTypeExtended_SWA: return "SWA";
+    case RecordTypeExtended_SWS: return "SWS";
     default: return "";
   }
 }

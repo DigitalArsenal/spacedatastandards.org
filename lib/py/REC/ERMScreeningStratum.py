@@ -212,7 +212,7 @@ def ERMScreeningStratumCreateSIGMA_RTN_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGMA_RTN_KMVector(builder, data):
-    return ERMScreeningStratumCreateSIGMA_RTN_KMVector(builder, data)
+    ERMScreeningStratumCreateSIGMA_RTN_KMVector(builder, data)
 
 def ERMScreeningStratumAddGEOMETRIES(builder, GEOMETRIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRIES), 0)
@@ -230,7 +230,7 @@ def ERMScreeningStratumCreateGEOMETRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGEOMETRIESVector(builder, data):
-    return ERMScreeningStratumCreateGEOMETRIESVector(builder, data)
+    ERMScreeningStratumCreateGEOMETRIESVector(builder, data)
 
 def ERMScreeningStratumEnd(builder):
     return builder.EndObject()

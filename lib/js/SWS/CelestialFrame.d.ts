@@ -1,0 +1,146 @@
+/**
+ * https://www.sanaregistry.org/r/celestial_body_reference_frames/
+ * Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+ */
+export declare enum CelestialFrame {
+    /**
+     * OID: 1.3.112.4.57.2.9
+     * Inertial Earth-centered frame aligned with Earth's center of mass.
+     */
+    GCRF = 0,
+    /**
+     * OID: 1.3.112.4.57.2.11
+     * International Celestial Reference Frame based on distant quasars.
+     */
+    ICRF = 1,
+    /**
+     * OID: 1.3.112.4.57.2.14
+     * Classical J2000 inertial frame defined at epoch J2000.0.
+     */
+    J2000 = 2,
+    /**
+     * OID: 1.3.112.4.57.2.15
+     * Updated J2000 frame using IAU2000A precession-nutation models.
+     */
+    J2000A = 3,
+    /**
+     * OID: 1.3.112.4.57.2.7
+     * Earth Mean Equator frame at epoch J2000 used in orbit determination.
+     */
+    EME2000 = 4,
+    /**
+     * OID: 1.3.112.4.57.2.25
+     * True Equator Mean Equinox of Date frame for satellite tracking.
+     */
+    TEMEOFDATE = 5,
+    /**
+     * OID: 1.3.112.4.57.2.10
+     * Greenwich True of Date: Earth rotation relative to celestial reference.
+     */
+    GTOD = 6,
+    /**
+     * OID: 1.3.112.4.57.2.4
+     * Celestial Intermediate Reference System based on CIP and CIO.
+     */
+    CIRS = 7,
+    /**
+     * OID: 1.3.112.4.57.2.18
+     * Mean of Date (MOD) Earth frame using IAU1976 precession.
+     */
+    MOD_EARTH = 8,
+    /**
+     * OID: 1.3.112.4.57.2.17
+     * Mean of Date (MOD) celestial body frame evaluated at each epoch.
+     */
+    MOD_CB = 9,
+    /**
+     * OID: 1.3.112.4.57.2.19
+     * Mean of Date (MOD) Moon frame evaluated at each epoch.
+     */
+    MOD_MOON = 10,
+    /**
+     * OID: 1.3.112.4.57.2.29
+     * True of Date (TOD) Earth frame with polar motion included.
+     */
+    TOD_EARTH = 11,
+    /**
+     * OID: 1.3.112.4.57.2.28
+     * True of Date (TOD) celestial body frame.
+     */
+    TOD_CB = 12,
+    /**
+     * OID: 1.3.112.4.57.2.30
+     * True of Date (TOD) Moon frame.
+     */
+    TOD_MOON = 13,
+    /**
+     * OID: 1.3.112.4.57.2.32
+     * True of Epoch (TOE) Earth frame at specific epoch.
+     */
+    TOE_EARTH = 14,
+    /**
+     * OID: 1.3.112.4.57.2.31
+     * True of Epoch (TOE) celestial body frame at specific epoch.
+     */
+    TOE_CB = 15,
+    /**
+     * OID: 1.3.112.4.57.2.33
+     * True of Epoch (TOE) Moon frame at specific epoch.
+     */
+    TOE_MOON = 16,
+    /**
+     * OID: 1.3.112.4.57.2.13
+     * International Terrestrial Reference Frame 2000 (Earth-fixed).
+     */
+    ITRF2000 = 17,
+    /**
+     * OID: 1.3.112.4.57.2.13
+     * International Terrestrial Reference Frame 1993 (Earth-fixed).
+     */
+    ITRF93 = 18,
+    /**
+     * OID: 1.3.112.4.57.2.13
+     * International Terrestrial Reference Frame 1997 (Earth-fixed).
+     */
+    ITRF97 = 19,
+    /**
+     * OID: 1.3.112.4.57.2.6
+     * Earth-Fixed Geocentric frame using geodetic coordinates.
+     */
+    EFG = 20,
+    /**
+     * OID: 1.3.112.4.57.2.8
+     * Fixed frame of a celestial body.
+     */
+    FIXED_CB = 21,
+    /**
+     * OID: 1.3.112.4.57.2.39
+     * Fixed Earth frame aligned with WGS84 ellipsoid.
+     */
+    FIXED_EARTH = 22,
+    /**
+     * WGS84 Earth-fixed terrestrial system.
+     */
+    WGS84 = 23,
+    /**
+     * OID: 1.3.112.4.57.2.5
+     * Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+     */
+    DTRFYYYY = 24,
+    /**
+     * OID: 1.3.112.4.57.2.2
+     * Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+     */
+    ALIGN_EARTH = 25,
+    /**
+     * OID: 1.3.112.4.57.2.1
+     * Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+     */
+    ALIGN_CB = 26,
+    /**
+     * OID: 1.3.112.4.57.2.3
+     * Classical Besselian 1950 equator and equinox frame.
+     */
+    B1950 = 27
+}
+//# sourceMappingURL=CelestialFrame.d.ts.map

@@ -136,7 +136,7 @@ def ASGSolutionCreateASSIGNMENTVector(builder, data):
     return builder.EndVector()
 
 def CreateASSIGNMENTVector(builder, data):
-    return ASGSolutionCreateASSIGNMENTVector(builder, data)
+    ASGSolutionCreateASSIGNMENTVector(builder, data)
 
 def ASGSolutionAddTOTAL_COST(builder, TOTAL_COST):
     builder.PrependFloat64Slot(3, TOTAL_COST, 0.0)

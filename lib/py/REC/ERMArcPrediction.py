@@ -89,7 +89,7 @@ def ERMArcPredictionCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    return ERMArcPredictionCreateSAMPLESVector(builder, data)
+    ERMArcPredictionCreateSAMPLESVector(builder, data)
 
 def ERMArcPredictionEnd(builder):
     return builder.EndObject()

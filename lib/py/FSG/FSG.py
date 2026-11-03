@@ -374,7 +374,7 @@ def FSGCreateREPLACESVector(builder, data):
     return builder.EndVector()
 
 def CreateREPLACESVector(builder, data):
-    return FSGCreateREPLACESVector(builder, data)
+    FSGCreateREPLACESVector(builder, data)
 
 def FSGAddENTRIES(builder, ENTRIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENTRIES), 0)
@@ -392,7 +392,7 @@ def FSGCreateENTRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRIESVector(builder, data):
-    return FSGCreateENTRIESVector(builder, data)
+    FSGCreateENTRIESVector(builder, data)
 
 def FSGAddLATEST(builder, LATEST):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LATEST), 0)
@@ -414,7 +414,7 @@ def FSGCreateLATESTVector(builder, data):
     return builder.EndVector()
 
 def CreateLATESTVector(builder, data):
-    return FSGCreateLATESTVector(builder, data)
+    FSGCreateLATESTVector(builder, data)
 
 def FSGAddINSTANCES(builder, INSTANCES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(INSTANCES), 0)
@@ -436,7 +436,7 @@ def FSGCreateINSTANCESVector(builder, data):
     return builder.EndVector()
 
 def CreateINSTANCESVector(builder, data):
-    return FSGCreateINSTANCESVector(builder, data)
+    FSGCreateINSTANCESVector(builder, data)
 
 def FSGAddTOKENS(builder, TOKENS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TOKENS), 0)
@@ -454,7 +454,7 @@ def FSGCreateTOKENSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTOKENSVector(builder, data):
-    return FSGCreateTOKENSVector(builder, data)
+    FSGCreateTOKENSVector(builder, data)
 
 def FSGAddPAIRS(builder, PAIRS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PAIRS), 0)
@@ -476,7 +476,7 @@ def FSGCreatePAIRSVector(builder, data):
     return builder.EndVector()
 
 def CreatePAIRSVector(builder, data):
-    return FSGCreatePAIRSVector(builder, data)
+    FSGCreatePAIRSVector(builder, data)
 
 def FSGAddCOLUMN(builder, COLUMN):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(COLUMN), 0)
@@ -498,7 +498,7 @@ def FSGCreateCOLUMNVector(builder, data):
     return builder.EndVector()
 
 def CreateCOLUMNVector(builder, data):
-    return FSGCreateCOLUMNVector(builder, data)
+    FSGCreateCOLUMNVector(builder, data)
 
 def FSGAddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(INSTANCE_URL_IDS), 0)
@@ -520,7 +520,7 @@ def FSGCreateINSTANCE_URL_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateINSTANCE_URL_IDSVector(builder, data):
-    return FSGCreateINSTANCE_URL_IDSVector(builder, data)
+    FSGCreateINSTANCE_URL_IDSVector(builder, data)
 
 def FSGEnd(builder):
     return builder.EndObject()

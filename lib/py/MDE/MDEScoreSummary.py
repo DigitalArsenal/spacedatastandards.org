@@ -230,7 +230,7 @@ def MDEScoreSummaryCreateBY_DELTA_VVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBY_DELTA_VVector(builder, data):
-    return MDEScoreSummaryCreateBY_DELTA_VVector(builder, data)
+    MDEScoreSummaryCreateBY_DELTA_VVector(builder, data)
 
 def MDEScoreSummaryAddTIME_ERROR_ABS_S(builder, TIME_ERROR_ABS_S):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_ERROR_ABS_S), 0)

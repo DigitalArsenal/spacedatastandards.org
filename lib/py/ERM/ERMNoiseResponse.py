@@ -122,7 +122,7 @@ def ERMNoiseResponseCreateRESPONSESVector(builder, data):
     return builder.EndVector()
 
 def CreateRESPONSESVector(builder, data):
-    return ERMNoiseResponseCreateRESPONSESVector(builder, data)
+    ERMNoiseResponseCreateRESPONSESVector(builder, data)
 
 def ERMNoiseResponseEnd(builder):
     return builder.EndObject()

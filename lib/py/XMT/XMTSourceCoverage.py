@@ -99,7 +99,7 @@ def XMTSourceCoverageCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    return XMTSourceCoverageCreateOBJECTSVector(builder, data)
+    XMTSourceCoverageCreateOBJECTSVector(builder, data)
 
 def XMTSourceCoverageEnd(builder):
     return builder.EndObject()

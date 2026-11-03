@@ -192,7 +192,7 @@ def LFVRowCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    return LFVRowCreateVALUESVector(builder, data)
+    LFVRowCreateVALUESVector(builder, data)
 
 def LFVRowAddSCORE(builder, SCORE):
     builder.PrependFloat64Slot(6, SCORE, float('nan'))
@@ -216,7 +216,7 @@ def LFVRowCreateELEMENT_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEMENT_SETSVector(builder, data):
-    return LFVRowCreateELEMENT_SETSVector(builder, data)
+    LFVRowCreateELEMENT_SETSVector(builder, data)
 
 def LFVRowEnd(builder):
     return builder.EndObject()

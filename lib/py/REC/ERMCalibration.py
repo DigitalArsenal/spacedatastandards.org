@@ -167,7 +167,7 @@ def ERMCalibrationCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    return ERMCalibrationCreateSAMPLESVector(builder, data)
+    ERMCalibrationCreateSAMPLESVector(builder, data)
 
 def ERMCalibrationAddSTRATA(builder, STRATA):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STRATA), 0)
@@ -185,7 +185,7 @@ def ERMCalibrationCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    return ERMCalibrationCreateSTRATAVector(builder, data)
+    ERMCalibrationCreateSTRATAVector(builder, data)
 
 def ERMCalibrationEnd(builder):
     return builder.EndObject()

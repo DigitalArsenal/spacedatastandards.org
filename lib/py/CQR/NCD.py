@@ -398,7 +398,7 @@ def NCDCreateCOMMENT_AREAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENT_AREAVector(builder, data):
-    return NCDCreateCOMMENT_AREAVector(builder, data)
+    NCDCreateCOMMENT_AREAVector(builder, data)
 
 def NCDAddNATIVE_FRAME_NAME(builder, NATIVE_FRAME_NAME):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(NATIVE_FRAME_NAME), 0)
@@ -434,7 +434,7 @@ def NCDCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    return NCDCreateSEGMENTSVector(builder, data)
+    NCDCreateSEGMENTSVector(builder, data)
 
 def NCDAddSP3_HEADER(builder, SP3_HEADER):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SP3_HEADER), 0)
@@ -518,7 +518,7 @@ def NCDCreateSELECT_SATELLITE_SYSTEMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSELECT_SATELLITE_SYSTEMSVector(builder, data):
-    return NCDCreateSELECT_SATELLITE_SYSTEMSVector(builder, data)
+    NCDCreateSELECT_SATELLITE_SYSTEMSVector(builder, data)
 
 def NCDAddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(SELECT_OBSERVATION_CODES), 0)
@@ -536,7 +536,7 @@ def NCDCreateSELECT_OBSERVATION_CODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSELECT_OBSERVATION_CODESVector(builder, data):
-    return NCDCreateSELECT_OBSERVATION_CODESVector(builder, data)
+    NCDCreateSELECT_OBSERVATION_CODESVector(builder, data)
 
 def NCDAddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID):
     builder.PrependInt32Slot(25, SELECT_CLOCK_ID, 0)

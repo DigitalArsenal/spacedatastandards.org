@@ -202,7 +202,7 @@ def ERMCalibrationStratumCreateAXES_FACTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateAXES_FACTORSVector(builder, data):
-    return ERMCalibrationStratumCreateAXES_FACTORSVector(builder, data)
+    ERMCalibrationStratumCreateAXES_FACTORSVector(builder, data)
 
 def ERMCalibrationStratumAddAFTER_MEAN_D2_OVER_3(builder, AFTER_MEAN_D2_OVER_3):
     builder.PrependFloat64Slot(9, AFTER_MEAN_D2_OVER_3, float('nan'))

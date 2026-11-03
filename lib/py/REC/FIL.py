@@ -265,7 +265,7 @@ def FILCreateDIGESTVector(builder, data):
     return builder.EndVector()
 
 def CreateDIGESTVector(builder, data):
-    return FILCreateDIGESTVector(builder, data)
+    FILCreateDIGESTVector(builder, data)
 
 def FILAddCONTENT(builder, CONTENT):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CONTENT), 0)
@@ -287,7 +287,7 @@ def FILCreateCONTENTVector(builder, data):
     return builder.EndVector()
 
 def CreateCONTENTVector(builder, data):
-    return FILCreateCONTENTVector(builder, data)
+    FILCreateCONTENTVector(builder, data)
 
 def FILAddAPPEND(builder, APPEND):
     builder.PrependBoolSlot(10, APPEND, 0)
@@ -317,7 +317,7 @@ def FILCreateENTRIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRIESVector(builder, data):
-    return FILCreateENTRIESVector(builder, data)
+    FILCreateENTRIESVector(builder, data)
 
 def FILEnd(builder):
     return builder.EndObject()

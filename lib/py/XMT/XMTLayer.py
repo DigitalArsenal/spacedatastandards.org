@@ -143,7 +143,7 @@ def XMTLayerCreateNATIVE_KEYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNATIVE_KEYSVector(builder, data):
-    return XMTLayerCreateNATIVE_KEYSVector(builder, data)
+    XMTLayerCreateNATIVE_KEYSVector(builder, data)
 
 def XMTLayerEnd(builder):
     return builder.EndObject()

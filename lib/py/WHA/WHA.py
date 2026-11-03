@@ -273,7 +273,7 @@ def WHACreateACCOUNTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCOUNTSVector(builder, data):
-    return WHACreateACCOUNTSVector(builder, data)
+    WHACreateACCOUNTSVector(builder, data)
 
 def WHAAddHOLDINGS(builder, HOLDINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(HOLDINGS), 0)
@@ -291,7 +291,7 @@ def WHACreateHOLDINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHOLDINGSVector(builder, data):
-    return WHACreateHOLDINGSVector(builder, data)
+    WHACreateHOLDINGSVector(builder, data)
 
 def WHAAddCHAINS(builder, CHAINS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CHAINS), 0)
@@ -309,7 +309,7 @@ def WHACreateCHAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHAINSVector(builder, data):
-    return WHACreateCHAINSVector(builder, data)
+    WHACreateCHAINSVector(builder, data)
 
 def WHAAddCURRENCY(builder, CURRENCY):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CURRENCY), 0)
@@ -345,7 +345,7 @@ def WHACreateERRORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateERRORSVector(builder, data):
-    return WHACreateERRORSVector(builder, data)
+    WHACreateERRORSVector(builder, data)
 
 def WHAAddAS_OF_MS(builder, AS_OF_MS):
     builder.PrependInt64Slot(10, AS_OF_MS, 0)
@@ -379,7 +379,7 @@ def WHACreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    return WHACreateSIGNATUREVector(builder, data)
+    WHACreateSIGNATUREVector(builder, data)
 
 def WHAAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)

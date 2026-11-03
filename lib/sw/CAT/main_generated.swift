@@ -122,7 +122,7 @@ public enum catalogProductKind: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  One product the catalog selected for the object, by content identifier.
-public struct CATProduct: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CATProduct: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -205,7 +205,7 @@ public struct CATProduct: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  Catalog Entity Message
-public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct CAT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

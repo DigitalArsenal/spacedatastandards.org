@@ -76,7 +76,7 @@ def ERMArcPredictionsCreateARCSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARCSVector(builder, data):
-    return ERMArcPredictionsCreateARCSVector(builder, data)
+    ERMArcPredictionsCreateARCSVector(builder, data)
 
 def ERMArcPredictionsEnd(builder):
     return builder.EndObject()

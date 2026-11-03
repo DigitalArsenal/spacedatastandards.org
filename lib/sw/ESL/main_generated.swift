@@ -11,7 +11,7 @@ import FlatBuffers
 ///  Entity / Standards Link — join-table row connecting a host-local entity
 ///  metadata record to a standards record index row, enabling cascade-safe
 ///  mutation and cross-plugin query ownership.
-public struct ESL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ESL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

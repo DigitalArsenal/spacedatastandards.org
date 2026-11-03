@@ -22,7 +22,7 @@ import FlatBuffers
 ///  the signed commitment, and each provider response carries records plus
 ///  Merkle proof material that the subscriber verifies against the DPM roots and
 ///  the announced FILE_ID before import.
-public struct PNM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

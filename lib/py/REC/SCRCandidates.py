@@ -79,7 +79,7 @@ def SCRCandidatesCreatePAIRSVector(builder, data):
     return builder.EndVector()
 
 def CreatePAIRSVector(builder, data):
-    return SCRCandidatesCreatePAIRSVector(builder, data)
+    SCRCandidatesCreatePAIRSVector(builder, data)
 
 def SCRCandidatesEnd(builder):
     return builder.EndObject()

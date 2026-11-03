@@ -1,5 +1,5 @@
-// Hash: 6e93291800d6dc3f28faa638bfb9c1ab5d5f6bcd47de37ca30ad4ed89801ba71
-// Version: 1.208.5
+// Hash: c55cd2e08ef6d9155394a1dc6c9c6babe9ceaffd811a057cc63f76c955bb7ce0
+// Version: 1.208.6
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -167,7 +167,9 @@ enum wxfVariable : byte {
   /// Cloud-top effective particle radius, micrometres (units "um").
   CloudEffectiveRadius,
   /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
-  CloudEmissivity
+  CloudEmissivity,
+  /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+  AuroraProbability
 }
 
 /// Vertical coordinate of the field. Append new values only; never reorder or

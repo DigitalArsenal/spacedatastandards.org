@@ -191,8 +191,10 @@ public enum wxfVariable: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   case cloudeffectiveradius = 36
   ///  Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
   case cloudemissivity = 37
+  ///  Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
+  case auroraprobability = 38
 
-  public static var max: wxfVariable { return .cloudemissivity }
+  public static var max: wxfVariable { return .auroraprobability }
   public static var min: wxfVariable { return .unspecified }
 }
 
@@ -352,7 +354,7 @@ public enum wxfTimeBasis: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 ///  (LAT0 + i * DLAT, LON0 + j * DLON). DLAT is negative when rows run north
 ///  to south. Longitudes are in [-180, 180) or [0, 360) exactly as the
 ///  producer publishes them; a consumer normalises.
-public struct WXFGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct WXFGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -440,7 +442,7 @@ public struct WXFGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
 
 ///  Weather Forecast Field - One variable, level, member and valid time on a
 ///  regular grid.
-public struct WXF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct WXF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

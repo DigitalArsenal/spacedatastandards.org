@@ -414,7 +414,7 @@ def NHSCreateTHROUGHPUT_HISTORYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTHROUGHPUT_HISTORYVector(builder, data):
-    return NHSCreateTHROUGHPUT_HISTORYVector(builder, data)
+    NHSCreateTHROUGHPUT_HISTORYVector(builder, data)
 
 def NHSAddHAS_COMPUTE(builder, HAS_COMPUTE):
     builder.PrependBoolSlot(20, HAS_COMPUTE, 0)
@@ -468,7 +468,7 @@ def NHSCreateNOTESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNOTESVector(builder, data):
-    return NHSCreateNOTESVector(builder, data)
+    NHSCreateNOTESVector(builder, data)
 
 def NHSEnd(builder):
     return builder.EndObject()

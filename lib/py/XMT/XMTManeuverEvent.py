@@ -130,7 +130,7 @@ def XMTManeuverEventCreateMEMBERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMBERSVector(builder, data):
-    return XMTManeuverEventCreateMEMBERSVector(builder, data)
+    XMTManeuverEventCreateMEMBERSVector(builder, data)
 
 def XMTManeuverEventAddRECORD(builder, RECORD):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(RECORD), 0)

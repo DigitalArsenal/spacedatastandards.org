@@ -234,7 +234,7 @@ def ERMAttachedObjectCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    return ERMAttachedObjectCreateROWSVector(builder, data)
+    ERMAttachedObjectCreateROWSVector(builder, data)
 
 def ERMAttachedObjectAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -252,7 +252,7 @@ def ERMAttachedObjectCreateNOTESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNOTESVector(builder, data):
-    return ERMAttachedObjectCreateNOTESVector(builder, data)
+    ERMAttachedObjectCreateNOTESVector(builder, data)
 
 def ERMAttachedObjectEnd(builder):
     return builder.EndObject()

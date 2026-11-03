@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "cmeArrivalKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Predicted", "Observed"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMEMeasurement" : {
+      "type" : "object",
+      "description" : "One analysis of a CME's geometry and speed.",
+      "properties" : {
+        "CATALOG" : {
+                "type" : "string",
+                "description" : "Catalog and technique, verbatim (e.g. M2M_CATALOG, SWPC_CAT; CDAW)."
+              },
+        "TECHNIQUE" : {
+                "type" : "string"
+              },
+        "IS_MOST_ACCURATE" : {
+                "type" : "boolean",
+                "description" : "The source marks this analysis as its best."
+              },
+        "REFERENCE_TIME" : {
+                "type" : "string",
+                "description" : "The instant the measurement refers to, RFC 3339 UTC (DONKI time21_5;\nCDAW first C2 appearance)."
+              },
+        "REFERENCE_HEIGHT_RSUN" : {
+                "type" : "number",
+                "description" : "Heliocentric distance of REFERENCE_TIME, solar radii (21.5 for DONKI)."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Stonyhurst direction of propagation, degrees."
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "CENTRAL_PA_DEG" : {
+                "type" : "number",
+                "description" : "Plane-of-sky central and measurement position angles, and width, degrees."
+              },
+        "MEASUREMENT_PA_DEG" : {
+                "type" : "number"
+              },
+        "ANGULAR_WIDTH_DEG" : {
+                "type" : "number"
+              },
+        "SPEED_KM_S" : {
+                "type" : "number",
+                "description" : "Speeds, km/s: the analysis's speed; CDAW linear, 2nd-order initial,\nfinal and at 20 Rs."
+              },
+        "SPEED_INITIAL_KM_S" : {
+                "type" : "number"
+              },
+        "SPEED_FINAL_KM_S" : {
+                "type" : "number"
+              },
+        "SPEED_20RSUN_KM_S" : {
+                "type" : "number"
+              },
+        "ACCELERATION_M_S2" : {
+                "type" : "number"
+              },
+        "MASS_G" : {
+                "type" : "number"
+              },
+        "KINETIC_ENERGY_ERG" : {
+                "type" : "number"
+              },
+        "TYPE_CODE" : {
+                "type" : "string",
+                "description" : "Source type token, verbatim (e.g. S, C, O, R, ER)."
+              },
+        "NOTE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMEArrival" : {
+      "type" : "object",
+      "description" : "One arrival at one place.",
+      "properties" : {
+        "TARGET" : {
+                "type" : "string",
+                "description" : "Target, verbatim (e.g. Earth, STEREO A, Mars)."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/cmeArrivalKind"
+              },
+        "MODEL" : {
+                "type" : "string",
+                "description" : "Model, verbatim (e.g. WSA-ENLIL+Cone); empty for an observation."
+              },
+        "SOURCE_EVENT_ID" : {
+                "type" : "string",
+                "description" : "Model run or observed-event identity, verbatim."
+              },
+        "ISSUED_AT" : {
+                "type" : "string"
+              },
+        "ARRIVAL_TIME" : {
+                "type" : "string"
+              },
+        "ARRIVAL_UNCERTAINTY_H" : {
+                "type" : "number",
+                "description" : "Stated plus-or-minus uncertainty, hours."
+              },
+        "DURATION_H" : {
+                "type" : "number"
+              },
+        "GLANCING_BLOW" : {
+                "type" : "boolean",
+                "description" : "True when the source states a glancing blow; meaningful only when HAS_GLANCING_BLOW."
+              },
+        "HAS_GLANCING_BLOW" : {
+                "type" : "boolean"
+              },
+        "KP_PREDICTED" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted Kp per assumed IMF clock angle (DONKI kp_18 .. kp_180)."
+              },
+        "KP_CLOCK_ANGLES_DEG" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "required" : ["TARGET"],
+      "additionalProperties" : false
+    },
+    "CME" : {
+      "type" : "object",
+      "description" : "Coronal Mass Ejection",
+      "properties" : {
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "The source's own identity, verbatim (DONKI activityID; CDAW date-time)."
+              },
+        "CATALOG" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "SOURCE_LOCATION" : {
+                "type" : "string",
+                "description" : "Source location token, verbatim (e.g. N12W05), and parsed Stonyhurst."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number"
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "REGION_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "HAS_REGION_NUMBER" : {
+                "type" : "boolean"
+              },
+        "INSTRUMENTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LINKED_EVENT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Linked event identities as the source states them (flares, shocks, storms)."
+              },
+        "MEASUREMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CMEMeasurement"}
+              },
+        "ARRIVALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CMEArrival"}
+              },
+        "NOTE" : {
+                "type" : "string"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN"
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["EVENT_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "CMECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CME"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CME"
+}

@@ -111,7 +111,7 @@ public enum dclStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Fit statistics of one fit (a bin, an object, or the whole calibration).
-public struct dclFitStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclFitStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -199,7 +199,7 @@ public struct dclFitStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInit
 ///  l of P_l^m(sin lat) (a_lm cos m h + b_lm sin m h), Schmidt
 ///  semi-normalised, h the hour angle from the Sun (local solar time = 12 h +
 ///  h). It applies from FROM_MS (inclusive) to TO_MS (exclusive).
-public struct dclHarmonicSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclHarmonicSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -267,7 +267,7 @@ public struct dclHarmonicSegment: FlatBufferVerifiableTable, FlatbuffersVectorIn
 }
 
 ///  The mean level of a node correction at one altitude node.
-public struct dclLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclLevel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -318,7 +318,7 @@ public struct dclLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
 }
 
 ///  An exospheric-temperature correction or a dimensionless log-density scale.
-public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclCorrection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -424,7 +424,7 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  Points, column-major and parallel (one entry per point; vectors as
 ///  stated).
-public struct dclPoints: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclPoints: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -582,7 +582,7 @@ public struct dclPoints: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  A refused element set.
-public struct dclRefusal: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclRefusal: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -627,7 +627,7 @@ public struct dclRefusal: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  One object's element-set history and its decay.
-public struct dclObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -935,7 +935,7 @@ public struct dclObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 }
 
 ///  One iteration of a decay calibration.
-public struct dclIteration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclIteration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1003,7 +1003,7 @@ public struct dclIteration: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  Settings of a calibration or a forward model.
-public struct dclSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1229,7 +1229,7 @@ public struct dclSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 ///  States for energy and drag work: an $OEM ephemeris block (GCRF, km,
 ///  km/s) and, parallel to its states, the Earth-orientation values used to
 ///  turn each into Earth-fixed axes, with the results per state.
-public struct dclStates: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct dclStates: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1397,7 +1397,7 @@ public struct dclStates: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
 
 ///  Density Calibration - a density-model correction, how it was fitted, and
 ///  the densities, decays, energies and drag work computed with it.
-public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct DCL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -63,7 +63,7 @@ public enum lfvRegionSide: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  One labelled feature vector.
-public struct LFVRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVRow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -160,7 +160,7 @@ public struct LFVRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable 
 
 ///  Probability that the real row of a group scores highest among N
 ///  candidates (one real, N - 1 decoys).
-public struct LFVRankProbability: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVRankProbability: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -222,7 +222,7 @@ public struct LFVRankProbability: FlatBufferVerifiableTable, FlatbuffersVectorIn
 
 ///  One threshold test on the scores, decided on one part of the data and
 ///  counted on another (held out).
-public struct LFVThresholdTest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVThresholdTest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -316,7 +316,7 @@ public struct LFVThresholdTest: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  How well one feature separates the roles on its own, and how much the
 ///  classifier used it.
-public struct LFVFeatureSeparation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVFeatureSeparation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -376,7 +376,7 @@ public struct LFVFeatureSeparation: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Results for the real rows of one class.
-public struct LFVClassResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVClassResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -434,7 +434,7 @@ public struct LFVClassResult: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  Rank of each real row within its own group, when groups have enough
 ///  decoys.
-public struct LFVWithinGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVWithinGroup: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -516,7 +516,7 @@ public struct LFVWithinGroup: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 
 ///  The classifier and how it was validated. In a request, the settings to
 ///  use; 0 or empty = the method's default.
-public struct LFVClassifier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVClassifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -614,7 +614,7 @@ public struct LFVClassifier: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 }
 
 ///  Report of a test that distinguishes the labelled classes.
-public struct LFVTestReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFVTestReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -758,7 +758,7 @@ public struct LFVTestReport: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 
 ///  Labelled Feature Vectors - labelled rows and, optionally, the report of a
 ///  test that distinguishes their classes.
-public struct LFV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct LFV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

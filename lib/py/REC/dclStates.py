@@ -545,7 +545,7 @@ def dclStatesCreateDUT1_SVector(builder, data):
     return builder.EndVector()
 
 def CreateDUT1_SVector(builder, data):
-    return dclStatesCreateDUT1_SVector(builder, data)
+    dclStatesCreateDUT1_SVector(builder, data)
 
 def dclStatesAddPOLAR_MOTION_X_ARCSEC(builder, POLAR_MOTION_X_ARCSEC):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POLAR_MOTION_X_ARCSEC), 0)
@@ -567,7 +567,7 @@ def dclStatesCreatePOLAR_MOTION_X_ARCSECVector(builder, data):
     return builder.EndVector()
 
 def CreatePOLAR_MOTION_X_ARCSECVector(builder, data):
-    return dclStatesCreatePOLAR_MOTION_X_ARCSECVector(builder, data)
+    dclStatesCreatePOLAR_MOTION_X_ARCSECVector(builder, data)
 
 def dclStatesAddPOLAR_MOTION_Y_ARCSEC(builder, POLAR_MOTION_Y_ARCSEC):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(POLAR_MOTION_Y_ARCSEC), 0)
@@ -589,7 +589,7 @@ def dclStatesCreatePOLAR_MOTION_Y_ARCSECVector(builder, data):
     return builder.EndVector()
 
 def CreatePOLAR_MOTION_Y_ARCSECVector(builder, data):
-    return dclStatesCreatePOLAR_MOTION_Y_ARCSECVector(builder, data)
+    dclStatesCreatePOLAR_MOTION_Y_ARCSECVector(builder, data)
 
 def dclStatesAddENERGY_J_KG(builder, ENERGY_J_KG):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENERGY_J_KG), 0)
@@ -611,7 +611,7 @@ def dclStatesCreateENERGY_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateENERGY_J_KGVector(builder, data):
-    return dclStatesCreateENERGY_J_KGVector(builder, data)
+    dclStatesCreateENERGY_J_KGVector(builder, data)
 
 def dclStatesAddKINETIC_J_KG(builder, KINETIC_J_KG):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(KINETIC_J_KG), 0)
@@ -633,7 +633,7 @@ def dclStatesCreateKINETIC_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateKINETIC_J_KGVector(builder, data):
-    return dclStatesCreateKINETIC_J_KGVector(builder, data)
+    dclStatesCreateKINETIC_J_KGVector(builder, data)
 
 def dclStatesAddPOTENTIAL_J_KG(builder, POTENTIAL_J_KG):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POTENTIAL_J_KG), 0)
@@ -655,7 +655,7 @@ def dclStatesCreatePOTENTIAL_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreatePOTENTIAL_J_KGVector(builder, data):
-    return dclStatesCreatePOTENTIAL_J_KGVector(builder, data)
+    dclStatesCreatePOTENTIAL_J_KGVector(builder, data)
 
 def dclStatesAddROTATIONAL_J_KG(builder, ROTATIONAL_J_KG):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ROTATIONAL_J_KG), 0)
@@ -677,7 +677,7 @@ def dclStatesCreateROTATIONAL_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateROTATIONAL_J_KGVector(builder, data):
-    return dclStatesCreateROTATIONAL_J_KGVector(builder, data)
+    dclStatesCreateROTATIONAL_J_KGVector(builder, data)
 
 def dclStatesAddENERGY_GRADIENT(builder, ENERGY_GRADIENT):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ENERGY_GRADIENT), 0)
@@ -699,7 +699,7 @@ def dclStatesCreateENERGY_GRADIENTVector(builder, data):
     return builder.EndVector()
 
 def CreateENERGY_GRADIENTVector(builder, data):
-    return dclStatesCreateENERGY_GRADIENTVector(builder, data)
+    dclStatesCreateENERGY_GRADIENTVector(builder, data)
 
 def dclStatesAddRELATIVE_SPEED_M_S(builder, RELATIVE_SPEED_M_S):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RELATIVE_SPEED_M_S), 0)
@@ -721,7 +721,7 @@ def dclStatesCreateRELATIVE_SPEED_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateRELATIVE_SPEED_M_SVector(builder, data):
-    return dclStatesCreateRELATIVE_SPEED_M_SVector(builder, data)
+    dclStatesCreateRELATIVE_SPEED_M_SVector(builder, data)
 
 def dclStatesAddLATITUDE_DEG(builder, LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LATITUDE_DEG), 0)
@@ -743,7 +743,7 @@ def dclStatesCreateLATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateLATITUDE_DEGVector(builder, data):
-    return dclStatesCreateLATITUDE_DEGVector(builder, data)
+    dclStatesCreateLATITUDE_DEGVector(builder, data)
 
 def dclStatesAddLONGITUDE_DEG(builder, LONGITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LONGITUDE_DEG), 0)
@@ -765,7 +765,7 @@ def dclStatesCreateLONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateLONGITUDE_DEGVector(builder, data):
-    return dclStatesCreateLONGITUDE_DEGVector(builder, data)
+    dclStatesCreateLONGITUDE_DEGVector(builder, data)
 
 def dclStatesAddALTITUDE_KM(builder, ALTITUDE_KM):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ALTITUDE_KM), 0)
@@ -787,7 +787,7 @@ def dclStatesCreateALTITUDE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateALTITUDE_KMVector(builder, data):
-    return dclStatesCreateALTITUDE_KMVector(builder, data)
+    dclStatesCreateALTITUDE_KMVector(builder, data)
 
 def dclStatesAddDENSITY_KG_M3(builder, DENSITY_KG_M3):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_KG_M3), 0)
@@ -809,7 +809,7 @@ def dclStatesCreateDENSITY_KG_M3Vector(builder, data):
     return builder.EndVector()
 
 def CreateDENSITY_KG_M3Vector(builder, data):
-    return dclStatesCreateDENSITY_KG_M3Vector(builder, data)
+    dclStatesCreateDENSITY_KG_M3Vector(builder, data)
 
 def dclStatesAddDRAG_POWER_W_KG(builder, DRAG_POWER_W_KG):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DRAG_POWER_W_KG), 0)
@@ -831,7 +831,7 @@ def dclStatesCreateDRAG_POWER_W_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateDRAG_POWER_W_KGVector(builder, data):
-    return dclStatesCreateDRAG_POWER_W_KGVector(builder, data)
+    dclStatesCreateDRAG_POWER_W_KGVector(builder, data)
 
 def dclStatesAddDRAG_WORK_J_KG(builder, DRAG_WORK_J_KG):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DRAG_WORK_J_KG), 0)
@@ -853,7 +853,7 @@ def dclStatesCreateDRAG_WORK_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateDRAG_WORK_J_KGVector(builder, data):
-    return dclStatesCreateDRAG_WORK_J_KGVector(builder, data)
+    dclStatesCreateDRAG_WORK_J_KGVector(builder, data)
 
 def dclStatesAddCUMULATIVE_DRAG_WORK_J_KG(builder, CUMULATIVE_DRAG_WORK_J_KG):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(CUMULATIVE_DRAG_WORK_J_KG), 0)
@@ -875,7 +875,7 @@ def dclStatesCreateCUMULATIVE_DRAG_WORK_J_KGVector(builder, data):
     return builder.EndVector()
 
 def CreateCUMULATIVE_DRAG_WORK_J_KGVector(builder, data):
-    return dclStatesCreateCUMULATIVE_DRAG_WORK_J_KGVector(builder, data)
+    dclStatesCreateCUMULATIVE_DRAG_WORK_J_KGVector(builder, data)
 
 def dclStatesAddREFUSED(builder, REFUSED):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(REFUSED), 0)
@@ -897,7 +897,7 @@ def dclStatesCreateREFUSEDVector(builder, data):
     return builder.EndVector()
 
 def CreateREFUSEDVector(builder, data):
-    return dclStatesCreateREFUSEDVector(builder, data)
+    dclStatesCreateREFUSEDVector(builder, data)
 
 def dclStatesEnd(builder):
     return builder.EndObject()

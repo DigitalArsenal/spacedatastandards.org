@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  On-Orbit Antenna
-public struct OOA: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct OOA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

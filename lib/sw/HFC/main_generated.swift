@@ -42,7 +42,7 @@ public enum hfcAtmosphereCouplingMode: Int8, FlatbuffersVectorInitializable, Enu
 
 
 ///  Hypersonic Flight Conditions
-public struct HFC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct HFC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

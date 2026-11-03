@@ -134,7 +134,7 @@ public enum asgScanGrouping: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  One sparse cost: assigning ROW to COLUMN costs COST.
-public struct ASGCostEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGCostEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -185,7 +185,7 @@ public struct ASGCostEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  A rectangular linear assignment problem.
-public struct ASGProblem: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGProblem: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -278,7 +278,7 @@ public struct ASGProblem: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
 }
 
 ///  The optimal assignment of a problem.
-public struct ASGSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGSolution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -353,7 +353,7 @@ public struct ASGSolution: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
 }
 
 ///  Identity of a predicted object.
-public struct ASGObjectRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGObjectRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -415,7 +415,7 @@ public struct ASGObjectRef: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  One measured quantity of an observation.
-public struct ASGMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGMeasurement: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -474,7 +474,7 @@ public struct ASGMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  One predicted object tested against an observation.
-public struct ASGCandidate: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGCandidate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -599,7 +599,7 @@ public struct ASGCandidate: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
 }
 
 ///  One observation and its association.
-public struct ASGObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGObservation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -771,7 +771,7 @@ public struct ASGObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitia
 }
 
 ///  Settings of a gated association. Every field has its default.
-public struct ASGAssociationOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGAssociationOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -852,7 +852,7 @@ public struct ASGAssociationOptions: FlatBufferVerifiableTable, FlatbuffersVecto
 }
 
 ///  Chi-square gate threshold for one number of degrees of freedom.
-public struct ASGGateThreshold: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGGateThreshold: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -896,7 +896,7 @@ public struct ASGGateThreshold: FlatBufferVerifiableTable, FlatbuffersVectorInit
 
 ///  The evidence of one association run. The association list and the
 ///  uncorrelated list are OBSERVATIONS filtered by OUTCOME.
-public struct ASGAssociationReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASGAssociationReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1004,7 +1004,7 @@ public struct ASGAssociationReport: FlatBufferVerifiableTable, FlatbuffersVector
 }
 
 ///  Assignment - exactly one of the arms is set.
-public struct ASG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+public struct ASG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

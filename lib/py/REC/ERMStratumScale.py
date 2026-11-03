@@ -91,7 +91,7 @@ def ERMStratumScaleCreateFACTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateFACTORSVector(builder, data):
-    return ERMStratumScaleCreateFACTORSVector(builder, data)
+    ERMStratumScaleCreateFACTORSVector(builder, data)
 
 def ERMStratumScaleAddTRUTH_N(builder, TRUTH_N):
     builder.PrependUint64Slot(1, TRUTH_N, 0)

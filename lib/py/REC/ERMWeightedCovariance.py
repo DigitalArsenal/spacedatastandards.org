@@ -96,7 +96,7 @@ def ERMWeightedCovarianceCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    return ERMWeightedCovarianceCreateCOVARIANCEVector(builder, data)
+    ERMWeightedCovarianceCreateCOVARIANCEVector(builder, data)
 
 def ERMWeightedCovarianceEnd(builder):
     return builder.EndObject()

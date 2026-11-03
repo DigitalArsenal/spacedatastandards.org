@@ -147,7 +147,7 @@ def ERMArcPlanCreateTARGET_AGES_DAYSVector(builder, data):
     return builder.EndVector()
 
 def CreateTARGET_AGES_DAYSVector(builder, data):
-    return ERMArcPlanCreateTARGET_AGES_DAYSVector(builder, data)
+    ERMArcPlanCreateTARGET_AGES_DAYSVector(builder, data)
 
 def ERMArcPlanAddEPOCH_TOLERANCE_S(builder, EPOCH_TOLERANCE_S):
     builder.PrependFloat64Slot(1, EPOCH_TOLERANCE_S, 0.0)
@@ -195,7 +195,7 @@ def ERMArcPlanCreateARCSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARCSVector(builder, data):
-    return ERMArcPlanCreateARCSVector(builder, data)
+    ERMArcPlanCreateARCSVector(builder, data)
 
 def ERMArcPlanEnd(builder):
     return builder.EndObject()

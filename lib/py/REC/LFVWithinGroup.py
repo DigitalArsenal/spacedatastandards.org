@@ -187,7 +187,7 @@ def LFVWithinGroupCreateRANK_HISTOGRAMVector(builder, data):
     return builder.EndVector()
 
 def CreateRANK_HISTOGRAMVector(builder, data):
-    return LFVWithinGroupCreateRANK_HISTOGRAMVector(builder, data)
+    LFVWithinGroupCreateRANK_HISTOGRAMVector(builder, data)
 
 def LFVWithinGroupAddRANK_KS(builder, RANK_KS):
     builder.PrependFloat64Slot(4, RANK_KS, 0.0)
@@ -211,7 +211,7 @@ def LFVWithinGroupCreateRANK_PROBABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRANK_PROBABILITIESVector(builder, data):
-    return LFVWithinGroupCreateRANK_PROBABILITIESVector(builder, data)
+    LFVWithinGroupCreateRANK_PROBABILITIESVector(builder, data)
 
 def LFVWithinGroupAddSTANDARDIZED_RANK_PROBABILITIES(builder, STANDARDIZED_RANK_PROBABILITIES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STANDARDIZED_RANK_PROBABILITIES), 0)
@@ -229,7 +229,7 @@ def LFVWithinGroupCreateSTANDARDIZED_RANK_PROBABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTANDARDIZED_RANK_PROBABILITIESVector(builder, data):
-    return LFVWithinGroupCreateSTANDARDIZED_RANK_PROBABILITIESVector(builder, data)
+    LFVWithinGroupCreateSTANDARDIZED_RANK_PROBABILITIESVector(builder, data)
 
 def LFVWithinGroupEnd(builder):
     return builder.EndObject()

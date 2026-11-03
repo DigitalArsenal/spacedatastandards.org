@@ -573,6 +573,10 @@
       "type" : "string",
       "enum": ["BIND_INVOCATION", "BIND_RETURN", "UNBIND_INVOCATION", "UNBIND_RETURN", "START_INVOCATION", "START_RETURN", "STOP_INVOCATION", "STOP_RETURN", "TRANSFER_DATA_INVOCATION", "TRANSFER_DATA_RETURN", "PEER_ABORT"]
     },
+    "cmeArrivalKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Predicted", "Observed"]
+    },
     "cmrEvidenceRole" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "MEMBERSHIP", "OPERATOR", "OBJECT_IDENTITY", "BUS_IDENTITY"]
@@ -1427,7 +1431,7 @@
     },
     "wxfVariable" : {
       "type" : "string",
-      "enum": ["Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity"]
+      "enum": ["Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", "AuroraProbability"]
     },
     "wxfLevelKind" : {
       "type" : "string",
@@ -2701,6 +2705,34 @@
       "type" : "string",
       "enum": ["Active", "Paused", "Cancelled", "Lapsed"]
     },
+    "swaMessageKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Alert", "Warning", "Watch", "Summary", "Forecast", "Cancellation", "Custom"]
+    },
+    "swaScaleFamily" : {
+      "type" : "string",
+      "enum": ["None", "Geomagnetic", "SolarRadiation", "RadioBlackout"]
+    },
+    "swsQuantity" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ImfMagnitude", "ImfX", "ImfY", "ImfZ", "ImfLongitude", "ImfLatitude", "ProtonSpeed", "ProtonVelocityX", "ProtonVelocityY", "ProtonVelocityZ", "ProtonDensity", "ProtonTemperature", "AlphaSpeed", "AlphaDensity", "AlphaTemperature", "FlowPressure", "ElectricField", "PlasmaBeta", "AlfvenMachNumber", "Kp", "Ap", "Hpo", "Apo", "Dst", "SymH", "SymD", "AsyH", "AsyD", "Ae", "Al", "Au", "Ao", "PcNorth", "PcSouth", "XrayFlux", "XrayFluxUncorrected", "ProtonIntegralFlux", "ElectronIntegralFlux", "ProtonDifferentialFlux", "F107Observed", "F107Adjusted", "HemisphericPower"]
+    },
+    "swsValueStatus" : {
+      "type" : "string",
+      "enum": ["Unspecified", "RealTime", "Estimated", "Quicklook", "Nowcast", "Provisional", "Definitive", "Predicted", "Modeled"]
+    },
+    "swsLocation" : {
+      "type" : "string",
+      "enum": ["Unspecified", "AtSpacecraft", "BowShockNose", "PropagatedToEarth", "EarthOrbit", "GroundNetwork", "ModelAtEarth"]
+    },
+    "swsSampleConvention" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Instant", "IntervalStart", "IntervalCenter", "IntervalEnd"]
+    },
+    "swsNoaaScale" : {
+      "type" : "string",
+      "enum": ["None", "Geomagnetic", "SolarRadiation", "RadioBlackout"]
+    },
     "tbpProblem" : {
       "type" : "string",
       "enum": ["Unspecified", "Propagation", "LibrationPoints", "JacobiConstant", "PeriodicOrbit", "HaloFirstGuess", "NearRectilinearHalo", "Transfer", "StationKeeping", "FrameConversion", "Family"]
@@ -3059,7 +3091,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS"]
     },
     "ABA" : {
       "type" : "object",
@@ -12326,6 +12358,202 @@
         "DATA" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "CLTU data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMEMeasurement" : {
+      "type" : "object",
+      "description" : "One analysis of a CME's geometry and speed.",
+      "properties" : {
+        "CATALOG" : {
+                "type" : "string",
+                "description" : "Catalog and technique, verbatim (e.g. M2M_CATALOG, SWPC_CAT; CDAW)."
+              },
+        "TECHNIQUE" : {
+                "type" : "string"
+              },
+        "IS_MOST_ACCURATE" : {
+                "type" : "boolean",
+                "description" : "The source marks this analysis as its best."
+              },
+        "REFERENCE_TIME" : {
+                "type" : "string",
+                "description" : "The instant the measurement refers to, RFC 3339 UTC (DONKI time21_5;\nCDAW first C2 appearance)."
+              },
+        "REFERENCE_HEIGHT_RSUN" : {
+                "type" : "number",
+                "description" : "Heliocentric distance of REFERENCE_TIME, solar radii (21.5 for DONKI)."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Stonyhurst direction of propagation, degrees."
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "CENTRAL_PA_DEG" : {
+                "type" : "number",
+                "description" : "Plane-of-sky central and measurement position angles, and width, degrees."
+              },
+        "MEASUREMENT_PA_DEG" : {
+                "type" : "number"
+              },
+        "ANGULAR_WIDTH_DEG" : {
+                "type" : "number"
+              },
+        "SPEED_KM_S" : {
+                "type" : "number",
+                "description" : "Speeds, km/s: the analysis's speed; CDAW linear, 2nd-order initial,\nfinal and at 20 Rs."
+              },
+        "SPEED_INITIAL_KM_S" : {
+                "type" : "number"
+              },
+        "SPEED_FINAL_KM_S" : {
+                "type" : "number"
+              },
+        "SPEED_20RSUN_KM_S" : {
+                "type" : "number"
+              },
+        "ACCELERATION_M_S2" : {
+                "type" : "number"
+              },
+        "MASS_G" : {
+                "type" : "number"
+              },
+        "KINETIC_ENERGY_ERG" : {
+                "type" : "number"
+              },
+        "TYPE_CODE" : {
+                "type" : "string",
+                "description" : "Source type token, verbatim (e.g. S, C, O, R, ER)."
+              },
+        "NOTE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMEArrival" : {
+      "type" : "object",
+      "description" : "One arrival at one place.",
+      "properties" : {
+        "TARGET" : {
+                "type" : "string",
+                "description" : "Target, verbatim (e.g. Earth, STEREO A, Mars)."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/cmeArrivalKind"
+              },
+        "MODEL" : {
+                "type" : "string",
+                "description" : "Model, verbatim (e.g. WSA-ENLIL+Cone); empty for an observation."
+              },
+        "SOURCE_EVENT_ID" : {
+                "type" : "string",
+                "description" : "Model run or observed-event identity, verbatim."
+              },
+        "ISSUED_AT" : {
+                "type" : "string"
+              },
+        "ARRIVAL_TIME" : {
+                "type" : "string"
+              },
+        "ARRIVAL_UNCERTAINTY_H" : {
+                "type" : "number",
+                "description" : "Stated plus-or-minus uncertainty, hours."
+              },
+        "DURATION_H" : {
+                "type" : "number"
+              },
+        "GLANCING_BLOW" : {
+                "type" : "boolean",
+                "description" : "True when the source states a glancing blow; meaningful only when HAS_GLANCING_BLOW."
+              },
+        "HAS_GLANCING_BLOW" : {
+                "type" : "boolean"
+              },
+        "KP_PREDICTED" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted Kp per assumed IMF clock angle (DONKI kp_18 .. kp_180)."
+              },
+        "KP_CLOCK_ANGLES_DEG" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "required" : ["TARGET"],
+      "additionalProperties" : false
+    },
+    "CME" : {
+      "type" : "object",
+      "description" : "Coronal Mass Ejection",
+      "properties" : {
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "The source's own identity, verbatim (DONKI activityID; CDAW date-time)."
+              },
+        "CATALOG" : {
+                "type" : "string"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "SOURCE_LOCATION" : {
+                "type" : "string",
+                "description" : "Source location token, verbatim (e.g. N12W05), and parsed Stonyhurst."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number"
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number"
+              },
+        "REGION_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "HAS_REGION_NUMBER" : {
+                "type" : "boolean"
+              },
+        "INSTRUMENTS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "LINKED_EVENT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Linked event identities as the source states them (flares, shocks, storms)."
+              },
+        "MEASUREMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CMEMeasurement"}
+              },
+        "ARRIVALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CMEArrival"}
+              },
+        "NOTE" : {
+                "type" : "string"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN"
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["EVENT_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "CMECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CME"}
               }
       },
       "additionalProperties" : false
@@ -57533,6 +57761,80 @@
       "required" : ["SUBSCRIPTION_ID"],
       "additionalProperties" : false
     },
+    "SWA" : {
+      "type" : "object",
+      "description" : "Space Weather Alert",
+      "properties" : {
+        "PRODUCT_ID" : {
+                "type" : "string",
+                "description" : "Product identity, verbatim (e.g. K05A, EF3A)."
+              },
+        "MESSAGE_CODE" : {
+                "type" : "string",
+                "description" : "Message code and serial number, verbatim (e.g. ALTK05, 2051)."
+              },
+        "SERIAL_NUMBER" : {
+                "type" : "string"
+              },
+        "REFERS_TO_SERIAL" : {
+                "type" : "string",
+                "description" : "Serial this message continues, extends or cancels, verbatim."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/swaMessageKind"
+              },
+        "ISSUED_AT" : {
+                "type" : "string"
+              },
+        "BEGIN_TIME" : {
+                "type" : "string",
+                "description" : "Times stated in the text, RFC 3339 UTC; absent when not stated."
+              },
+        "END_TIME" : {
+                "type" : "string"
+              },
+        "VALID_FROM" : {
+                "type" : "string"
+              },
+        "VALID_TO" : {
+                "type" : "string"
+              },
+        "SCALE_FAMILY" : {
+                "$ref" : "#/definitions/swaScaleFamily"
+              },
+        "SCALE_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Scale level 1-5; 0 when none is stated."
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "The message, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN"
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["PRODUCT_ID", "ISSUED_AT", "MESSAGE", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SWACOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SWA"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "SWR" : {
       "type" : "object",
       "description" : "Short-Wave Infrared Observation",
@@ -57608,6 +57910,154 @@
         "QUALITY" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
                 "description" : "Data quality (0-9, 9=best)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SWS" : {
+      "type" : "object",
+      "description" : "Space Weather Series",
+      "properties" : {
+        "SERIES_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier of the series."
+              },
+        "QUANTITY" : {
+                "$ref" : "#/definitions/swsQuantity"
+              },
+        "QUANTITY_NAME" : {
+                "type" : "string",
+                "description" : "The source's own quantity name, verbatim (e.g. bz_gsm, BZ_GSM)."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units, fixed by QUANTITY and repeated here (e.g. nT)."
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Axes of a vector component (GSE, GSM, ...); absent for a scalar."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/swsValueStatus",
+                "description" : "Status of every sample, unless SAMPLE_STATUS gives it per sample."
+              },
+        "SAMPLE_STATUS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/swsValueStatus"},
+                "description" : "Per-sample status, index-aligned; empty = STATUS for all."
+              },
+        "LOCATION" : {
+                "$ref" : "#/definitions/swsLocation"
+              },
+        "PLATFORMS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source platforms, verbatim (e.g. SOLAR1, ACE, GOES-18, Wind)."
+              },
+        "SAMPLE_PLATFORM" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Per-sample index into PLATFORMS; empty = PLATFORMS[0] for all."
+              },
+        "NORAD_CAT_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Catalog numbers of PLATFORMS, index-aligned; 0 = none stated."
+              },
+        "INSTRUMENT" : {
+                "type" : "string",
+                "description" : "Instrument, verbatim (e.g. MAG, SWEPAM, XRS, SEISS)."
+              },
+        "CADENCE_S" : {
+                "type" : "number",
+                "description" : "Nominal sample spacing in seconds."
+              },
+        "SAMPLE_CONVENTION" : {
+                "$ref" : "#/definitions/swsSampleConvention"
+              },
+        "ENERGY_MIN_MEV" : {
+                "type" : "number",
+                "description" : "Particle energy bounds, MeV; NaN maximum = integral above the minimum."
+              },
+        "ENERGY_MAX_MEV" : {
+                "type" : "number"
+              },
+        "PASSBAND_MIN_NM" : {
+                "type" : "number",
+                "description" : "Irradiance passband, nm."
+              },
+        "PASSBAND_MAX_NM" : {
+                "type" : "number"
+              },
+        "EPOCHS_MS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807},
+                "description" : "Sample epochs, UTC Unix milliseconds, ascending."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "One value per epoch, in UNITS; NaN = missing."
+              },
+        "SIGMAS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "One-sigma per epoch, in UNITS, when the source states it."
+              },
+        "PROPAGATED_EPOCHS_MS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807},
+                "description" : "Arrival times at LOCATION when the source propagates (UTC Unix ms)."
+              },
+        "QUALITY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647},
+                "description" : "The source's per-sample overall quality code, verbatim."
+              },
+        "ACTIVE" : {
+                "type" : "array", "items" : {"type" : "boolean"},
+                "description" : "True where the sample's platform was the source's operational one."
+              },
+        "SAMPLE_COUNTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Source samples (or stations, for an index) behind each value."
+              },
+        "FLAG_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Names of further per-sample source flags, verbatim."
+              },
+        "FLAG_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Flag-major values: flag f, sample i at f * count + i; NaN = null."
+              },
+        "NOAA_SCALE_KIND" : {
+                "$ref" : "#/definitions/swsNoaaScale",
+                "description" : "The NOAA scale NOAA_SCALE_LEVELS reports, and its level per sample (0-5)."
+              },
+        "NOAA_SCALE_LEVELS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "FORECAST_ISSUED_AT" : {
+                "type" : "string",
+                "description" : "Issue time of a Predicted series, RFC 3339 UTC."
+              },
+        "MODEL_RUN_ID" : {
+                "type" : "string",
+                "description" : "Model run identity of a Modeled series, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string"
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string"
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["UNITS", "EPOCHS_MS", "VALUES", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SWSCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SWS"}
               }
       },
       "additionalProperties" : false

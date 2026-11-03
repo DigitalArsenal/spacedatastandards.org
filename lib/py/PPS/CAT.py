@@ -459,7 +459,7 @@ def CATCreatePAYLOADSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAYLOADSVector(builder, data):
-    return CATCreatePAYLOADSVector(builder, data)
+    CATCreatePAYLOADSVector(builder, data)
 
 def CATAddBUS_ID(builder, BUS_ID):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_ID), 0)
@@ -495,7 +495,7 @@ def CATCreatePRODUCTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePRODUCTSVector(builder, data):
-    return CATCreatePRODUCTSVector(builder, data)
+    CATCreatePRODUCTSVector(builder, data)
 
 def CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCTS_AS_OF), 0)
