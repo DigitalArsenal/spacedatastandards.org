@@ -143,7 +143,7 @@ def ERMMappedCovarianceCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMMappedCovarianceCreateCOVARIANCEVector(builder, data)
+    return ERMMappedCovarianceCreateCOVARIANCEVector(builder, data)
 
 def ERMMappedCovarianceAddSTM(builder, STM):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STM), 0)
@@ -165,7 +165,7 @@ def ERMMappedCovarianceCreateSTMVector(builder, data):
     return builder.EndVector()
 
 def CreateSTMVector(builder, data):
-    ERMMappedCovarianceCreateSTMVector(builder, data)
+    return ERMMappedCovarianceCreateSTMVector(builder, data)
 
 def ERMMappedCovarianceAddLAMBERT(builder, LAMBERT):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LAMBERT), 0)

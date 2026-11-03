@@ -186,7 +186,7 @@ def CRDCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    CRDCreateRESERVEDVector(builder, data)
+    return CRDCreateRESERVEDVector(builder, data)
 
 def CRDEnd(builder):
     return builder.EndObject()

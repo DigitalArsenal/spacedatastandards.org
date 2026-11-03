@@ -11,7 +11,7 @@ type OIL struct {
 	_tab flatbuffers.Table
 }
 
-const OILIdentifier = "$OIL"
+const OILFileIdentifier = "$OIL"
 
 func GetRootAsOIL(buf []byte, offset flatbuffers.UOffsetT) *OIL {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
@@ -21,12 +21,12 @@ func GetRootAsOIL(buf []byte, offset flatbuffers.UOffsetT) *OIL {
 }
 
 func FinishOILBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(OILIdentifier)
+	identifierBytes := []byte(OILFileIdentifier)
 	builder.FinishWithFileIdentifier(offset, identifierBytes)
 }
 
 func OILBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.BufferHasIdentifier(buf, OILIdentifier)
+	return flatbuffers.BufferHasIdentifier(buf, OILFileIdentifier)
 }
 
 func GetSizePrefixedRootAsOIL(buf []byte, offset flatbuffers.UOffsetT) *OIL {
@@ -37,12 +37,12 @@ func GetSizePrefixedRootAsOIL(buf []byte, offset flatbuffers.UOffsetT) *OIL {
 }
 
 func FinishSizePrefixedOILBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(OILIdentifier)
+	identifierBytes := []byte(OILFileIdentifier)
 	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
 }
 
 func SizePrefixedOILBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, OILIdentifier)
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, OILFileIdentifier)
 }
 
 func (rcv *OIL) Init(buf []byte, i flatbuffers.UOffsetT) {

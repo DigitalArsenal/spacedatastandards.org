@@ -157,7 +157,7 @@ def XMTComposedObjectCreateCANDIDATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCANDIDATESVector(builder, data):
-    XMTComposedObjectCreateCANDIDATESVector(builder, data)
+    return XMTComposedObjectCreateCANDIDATESVector(builder, data)
 
 def XMTComposedObjectAddSTATE(builder, STATE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STATE), 0)

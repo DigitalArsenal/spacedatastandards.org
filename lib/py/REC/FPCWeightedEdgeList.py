@@ -102,7 +102,7 @@ def FPCWeightedEdgeListCreateEDGESVector(builder, data):
     return builder.EndVector()
 
 def CreateEDGESVector(builder, data):
-    FPCWeightedEdgeListCreateEDGESVector(builder, data)
+    return FPCWeightedEdgeListCreateEDGESVector(builder, data)
 
 def FPCWeightedEdgeListAddBUILD_GRAPH(builder, BUILD_GRAPH):
     builder.PrependBoolSlot(2, BUILD_GRAPH, 0)

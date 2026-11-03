@@ -171,7 +171,7 @@ def CZMDynIntervalCreateARRAY_VALUEVector(builder, data):
     return builder.EndVector()
 
 def CreateARRAY_VALUEVector(builder, data):
-    CZMDynIntervalCreateARRAY_VALUEVector(builder, data)
+    return CZMDynIntervalCreateARRAY_VALUEVector(builder, data)
 
 def CZMDynIntervalEnd(builder):
     return builder.EndObject()

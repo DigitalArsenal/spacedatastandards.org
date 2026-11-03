@@ -40,7 +40,7 @@ public enum rfDetectionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  RF Observation
-public struct RFO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RFO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

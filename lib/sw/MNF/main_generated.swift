@@ -24,7 +24,7 @@ public enum manifoldStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Manifold Element Set
-public struct manifoldElset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct manifoldElset: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -167,7 +167,7 @@ public struct manifoldElset: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Orbit Manifold
-public struct MNF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MNF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

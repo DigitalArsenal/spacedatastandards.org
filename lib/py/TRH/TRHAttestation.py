@@ -134,7 +134,7 @@ def TRHAttestationCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    TRHAttestationCreateSIGNATUREVector(builder, data)
+    return TRHAttestationCreateSIGNATUREVector(builder, data)
 
 def TRHAttestationAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -156,7 +156,7 @@ def TRHAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    TRHAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return TRHAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def TRHAttestationEnd(builder):
     return builder.EndObject()

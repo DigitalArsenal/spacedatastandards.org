@@ -345,7 +345,7 @@ def RFMCoordinateSystemCreateV_SUN_KMSVector(builder, data):
     return builder.EndVector()
 
 def CreateV_SUN_KMSVector(builder, data):
-    RFMCoordinateSystemCreateV_SUN_KMSVector(builder, data)
+    return RFMCoordinateSystemCreateV_SUN_KMSVector(builder, data)
 
 def RFMCoordinateSystemEnd(builder):
     return builder.EndObject()

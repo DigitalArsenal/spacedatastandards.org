@@ -50,7 +50,7 @@ public enum whaAssetKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  One wallet or account to read.
-public struct WHAAccount: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WHAAccount: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -115,7 +115,7 @@ public struct WHAAccount: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  One asset held at one address.
-public struct WHAHolding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WHAHolding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -263,7 +263,7 @@ public struct WHAHolding: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  One account's lookup on one chain.
-public struct WHAChain: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WHAChain: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -363,7 +363,7 @@ public struct WHAChain: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
 ///  Wallet Holdings Attestation - holdings of wallets across chains and their
 ///  value at one time.
-public struct WHA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WHA: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

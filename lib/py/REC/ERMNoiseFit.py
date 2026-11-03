@@ -192,7 +192,7 @@ def ERMNoiseFitCreateMAXIMUM_LIKELIHOOD_M2_S3Vector(builder, data):
     return builder.EndVector()
 
 def CreateMAXIMUM_LIKELIHOOD_M2_S3Vector(builder, data):
-    ERMNoiseFitCreateMAXIMUM_LIKELIHOOD_M2_S3Vector(builder, data)
+    return ERMNoiseFitCreateMAXIMUM_LIKELIHOOD_M2_S3Vector(builder, data)
 
 def ERMNoiseFitAddCALIBRATED_STRATA_MAXIMUM_LIKELIHOOD(builder, CALIBRATED_STRATA_MAXIMUM_LIKELIHOOD):
     builder.PrependUint32Slot(7, CALIBRATED_STRATA_MAXIMUM_LIKELIHOOD, 0)

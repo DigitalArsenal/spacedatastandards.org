@@ -201,7 +201,7 @@ def SCRPossibilityResultCreateALPHA_CUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALPHA_CUTSVector(builder, data):
-    SCRPossibilityResultCreateALPHA_CUTSVector(builder, data)
+    return SCRPossibilityResultCreateALPHA_CUTSVector(builder, data)
 
 def SCRPossibilityResultEnd(builder):
     return builder.EndObject()

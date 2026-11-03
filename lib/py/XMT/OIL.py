@@ -334,7 +334,7 @@ def OILCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    OILCreateLINKSVector(builder, data)
+    return OILCreateLINKSVector(builder, data)
 
 def OILAddCONFLICTS(builder, CONFLICTS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CONFLICTS), 0)
@@ -352,7 +352,7 @@ def OILCreateCONFLICTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONFLICTSVector(builder, data):
-    OILCreateCONFLICTSVector(builder, data)
+    return OILCreateCONFLICTSVector(builder, data)
 
 def OILAddGENERATED_AT_MS(builder, GENERATED_AT_MS):
     builder.PrependInt64Slot(18, GENERATED_AT_MS, 0)

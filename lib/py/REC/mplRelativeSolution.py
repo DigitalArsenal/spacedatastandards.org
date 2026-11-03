@@ -254,7 +254,7 @@ def mplRelativeSolutionCreateSTATE_TRANSITIONVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATE_TRANSITIONVector(builder, data):
-    mplRelativeSolutionCreateSTATE_TRANSITIONVector(builder, data)
+    return mplRelativeSolutionCreateSTATE_TRANSITIONVector(builder, data)
 
 def mplRelativeSolutionAddDRAG_COLUMNS(builder, DRAG_COLUMNS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DRAG_COLUMNS), 0)
@@ -276,7 +276,7 @@ def mplRelativeSolutionCreateDRAG_COLUMNSVector(builder, data):
     return builder.EndVector()
 
 def CreateDRAG_COLUMNSVector(builder, data):
-    mplRelativeSolutionCreateDRAG_COLUMNSVector(builder, data)
+    return mplRelativeSolutionCreateDRAG_COLUMNSVector(builder, data)
 
 def mplRelativeSolutionAddDRAG_COLUMN_COUNT(builder, DRAG_COLUMN_COUNT):
     builder.PrependUint8Slot(5, DRAG_COLUMN_COUNT, 0)
@@ -304,7 +304,7 @@ def mplRelativeSolutionCreateINITIAL_ROEVector(builder, data):
     return builder.EndVector()
 
 def CreateINITIAL_ROEVector(builder, data):
-    mplRelativeSolutionCreateINITIAL_ROEVector(builder, data)
+    return mplRelativeSolutionCreateINITIAL_ROEVector(builder, data)
 
 def mplRelativeSolutionAddPROPAGATED_ROE(builder, PROPAGATED_ROE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATED_ROE), 0)
@@ -326,7 +326,7 @@ def mplRelativeSolutionCreatePROPAGATED_ROEVector(builder, data):
     return builder.EndVector()
 
 def CreatePROPAGATED_ROEVector(builder, data):
-    mplRelativeSolutionCreatePROPAGATED_ROEVector(builder, data)
+    return mplRelativeSolutionCreatePROPAGATED_ROEVector(builder, data)
 
 def mplRelativeSolutionAddACHIEVED_MISS_KM(builder, ACHIEVED_MISS_KM):
     builder.PrependFloat64Slot(8, ACHIEVED_MISS_KM, 0.0)

@@ -30,7 +30,7 @@ public enum flatSqlByteStreamKind: UInt8, FlatbuffersVectorInitializable, Enum, 
 ///  opaque snapshot/WAL persistence. DATA carries at most one MiB so larger
 ///  inputs and snapshots are delivered as ordered chunks. The host may persist
 ///  canonical FSB bytes but must not interpret DATA as tables, rows, or SQL.
-public struct FSB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FSB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

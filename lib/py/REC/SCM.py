@@ -107,7 +107,7 @@ def SCMCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    SCMCreateRECORDSVector(builder, data)
+    return SCMCreateRECORDSVector(builder, data)
 
 def SCMAddSTANDARDS_VERSION(builder, STANDARDS_VERSION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STANDARDS_VERSION), 0)

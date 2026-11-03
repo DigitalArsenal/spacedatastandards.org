@@ -33,7 +33,7 @@ public enum licensingConfigRole: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Licensing Configuration Frame
-public struct LCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

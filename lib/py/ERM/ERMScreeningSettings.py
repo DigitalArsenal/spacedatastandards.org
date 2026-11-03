@@ -180,7 +180,7 @@ def ERMScreeningSettingsCreateMISS_DISTANCES_MVector(builder, data):
     return builder.EndVector()
 
 def CreateMISS_DISTANCES_MVector(builder, data):
-    ERMScreeningSettingsCreateMISS_DISTANCES_MVector(builder, data)
+    return ERMScreeningSettingsCreateMISS_DISTANCES_MVector(builder, data)
 
 def ERMScreeningSettingsAddPAIRS_PER_STRATUM(builder, PAIRS_PER_STRATUM):
     builder.PrependUint32Slot(7, PAIRS_PER_STRATUM, 500)

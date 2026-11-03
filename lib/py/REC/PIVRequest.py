@@ -141,7 +141,7 @@ def PIVRequestCreateINPUTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINPUTSVector(builder, data):
-    PIVRequestCreateINPUTSVector(builder, data)
+    return PIVRequestCreateINPUTSVector(builder, data)
 
 def PIVRequestAddPAYLOAD_ARENA(builder, PAYLOAD_ARENA):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_ARENA), 0)
@@ -163,7 +163,7 @@ def PIVRequestCreatePAYLOAD_ARENAVector(builder, data):
     return builder.EndVector()
 
 def CreatePAYLOAD_ARENAVector(builder, data):
-    PIVRequestCreatePAYLOAD_ARENAVector(builder, data)
+    return PIVRequestCreatePAYLOAD_ARENAVector(builder, data)
 
 def PIVRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUint64Slot(3, TRACE_ID, 0)

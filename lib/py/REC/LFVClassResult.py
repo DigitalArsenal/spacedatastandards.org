@@ -117,7 +117,7 @@ def LFVClassResultCreateRANK_PROBABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRANK_PROBABILITIESVector(builder, data):
-    LFVClassResultCreateRANK_PROBABILITIESVector(builder, data)
+    return LFVClassResultCreateRANK_PROBABILITIESVector(builder, data)
 
 def LFVClassResultEnd(builder):
     return builder.EndObject()

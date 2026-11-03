@@ -380,7 +380,7 @@ def LNDCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    LNDCreateTAGSVector(builder, data)
+    return LNDCreateTAGSVector(builder, data)
 
 def LNDEnd(builder):
     return builder.EndObject()

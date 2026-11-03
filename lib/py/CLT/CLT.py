@@ -167,7 +167,7 @@ def CLTCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    CLTCreateDATAVector(builder, data)
+    return CLTCreateDATAVector(builder, data)
 
 def CLTEnd(builder):
     return builder.EndObject()

@@ -113,7 +113,7 @@ def KMLListStyleCreateITEM_ICONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateITEM_ICONSVector(builder, data):
-    KMLListStyleCreateITEM_ICONSVector(builder, data)
+    return KMLListStyleCreateITEM_ICONSVector(builder, data)
 
 def KMLListStyleAddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES):
     builder.PrependInt32Slot(3, MAX_SNIPPET_LINES, 0)

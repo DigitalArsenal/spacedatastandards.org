@@ -156,7 +156,7 @@ def ODRFilterEpochCreateFILTERED_COVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateFILTERED_COVARIANCEVector(builder, data):
-    ODRFilterEpochCreateFILTERED_COVARIANCEVector(builder, data)
+    return ODRFilterEpochCreateFILTERED_COVARIANCEVector(builder, data)
 
 def ODRFilterEpochAddSMOOTHED_STATE(builder, SMOOTHED_STATE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SMOOTHED_STATE), 0)
@@ -184,7 +184,7 @@ def ODRFilterEpochCreateSMOOTHED_COVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateSMOOTHED_COVARIANCEVector(builder, data):
-    ODRFilterEpochCreateSMOOTHED_COVARIANCEVector(builder, data)
+    return ODRFilterEpochCreateSMOOTHED_COVARIANCEVector(builder, data)
 
 def ODRFilterEpochAddNORMALIZED_INNOVATION_SQUARED(builder, NORMALIZED_INNOVATION_SQUARED):
     builder.PrependFloat64Slot(5, NORMALIZED_INNOVATION_SQUARED, 0.0)

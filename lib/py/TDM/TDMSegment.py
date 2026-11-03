@@ -672,7 +672,7 @@ def TDMSegmentCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    TDMSegmentCreateCOMMENTVector(builder, data)
+    return TDMSegmentCreateCOMMENTVector(builder, data)
 
 def TDMSegmentAddMETA_START(builder, META_START):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(META_START), 0)
@@ -918,7 +918,7 @@ def TDMSegmentCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    TDMSegmentCreateOBSERVATIONSVector(builder, data)
+    return TDMSegmentCreateOBSERVATIONSVector(builder, data)
 
 def TDMSegmentAddDATA_STOP(builder, DATA_STOP):
     builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
@@ -942,7 +942,7 @@ def TDMSegmentCreateTRANSMIT_RAMPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSMIT_RAMPSVector(builder, data):
-    TDMSegmentCreateTRANSMIT_RAMPSVector(builder, data)
+    return TDMSegmentCreateTRANSMIT_RAMPSVector(builder, data)
 
 def TDMSegmentAddMESSAGE_ID(builder, MESSAGE_ID):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_ID), 0)

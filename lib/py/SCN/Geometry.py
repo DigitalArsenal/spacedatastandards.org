@@ -97,7 +97,7 @@ def GeometryCreateCOORDINATESVector(builder, data):
     return builder.EndVector()
 
 def CreateCOORDINATESVector(builder, data):
-    GeometryCreateCOORDINATESVector(builder, data)
+    return GeometryCreateCOORDINATESVector(builder, data)
 
 def GeometryEnd(builder):
     return builder.EndObject()

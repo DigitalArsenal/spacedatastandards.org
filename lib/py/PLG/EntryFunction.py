@@ -108,7 +108,7 @@ def EntryFunctionCreateINPUT_SCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINPUT_SCHEMASVector(builder, data):
-    EntryFunctionCreateINPUT_SCHEMASVector(builder, data)
+    return EntryFunctionCreateINPUT_SCHEMASVector(builder, data)
 
 def EntryFunctionAddOUTPUT_SCHEMA(builder, OUTPUT_SCHEMA):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT_SCHEMA), 0)

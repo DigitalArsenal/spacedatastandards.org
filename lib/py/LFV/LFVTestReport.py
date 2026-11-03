@@ -306,7 +306,7 @@ def LFVTestReportCreateEXCLUDED_FEATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXCLUDED_FEATURESVector(builder, data):
-    LFVTestReportCreateEXCLUDED_FEATURESVector(builder, data)
+    return LFVTestReportCreateEXCLUDED_FEATURESVector(builder, data)
 
 def LFVTestReportAddRELATIVE(builder, RELATIVE):
     builder.PrependBoolSlot(7, RELATIVE, 0)
@@ -348,7 +348,7 @@ def LFVTestReportCreateTHRESHOLDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTHRESHOLDSVector(builder, data):
-    LFVTestReportCreateTHRESHOLDSVector(builder, data)
+    return LFVTestReportCreateTHRESHOLDSVector(builder, data)
 
 def LFVTestReportAddRANK_PROBABILITIES(builder, RANK_PROBABILITIES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RANK_PROBABILITIES), 0)
@@ -366,7 +366,7 @@ def LFVTestReportCreateRANK_PROBABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRANK_PROBABILITIESVector(builder, data):
-    LFVTestReportCreateRANK_PROBABILITIESVector(builder, data)
+    return LFVTestReportCreateRANK_PROBABILITIESVector(builder, data)
 
 def LFVTestReportAddCLASS_RESULTS(builder, CLASS_RESULTS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CLASS_RESULTS), 0)
@@ -384,7 +384,7 @@ def LFVTestReportCreateCLASS_RESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCLASS_RESULTSVector(builder, data):
-    LFVTestReportCreateCLASS_RESULTSVector(builder, data)
+    return LFVTestReportCreateCLASS_RESULTSVector(builder, data)
 
 def LFVTestReportAddFEATURES(builder, FEATURES):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURES), 0)
@@ -402,7 +402,7 @@ def LFVTestReportCreateFEATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURESVector(builder, data):
-    LFVTestReportCreateFEATURESVector(builder, data)
+    return LFVTestReportCreateFEATURESVector(builder, data)
 
 def LFVTestReportAddWITHIN_GROUP(builder, WITHIN_GROUP):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(WITHIN_GROUP), 0)

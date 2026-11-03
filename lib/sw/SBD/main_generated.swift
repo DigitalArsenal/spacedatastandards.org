@@ -64,7 +64,7 @@ public enum sbdOrbitClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Small Body
-public struct SBD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SBD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

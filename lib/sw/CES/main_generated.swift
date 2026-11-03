@@ -69,7 +69,7 @@ public enum cesSimilarityKind: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  One catalog object's dense embedding row.
-public struct CESObjectVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CESObjectVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -152,7 +152,7 @@ public struct CESObjectVector: FlatBufferTable, FlatbuffersVectorInitializable, 
 ///  POOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting
 ///  cross-encoding similarity between a query vector and CES rows; a mismatch
 ///  on any one field means the two vector spaces are not comparable.
-public struct CES: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CES: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

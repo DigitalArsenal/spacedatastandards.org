@@ -398,7 +398,7 @@ def mplRelativeRequestCreateINITIAL_ROEVector(builder, data):
     return builder.EndVector()
 
 def CreateINITIAL_ROEVector(builder, data):
-    mplRelativeRequestCreateINITIAL_ROEVector(builder, data)
+    return mplRelativeRequestCreateINITIAL_ROEVector(builder, data)
 
 def mplRelativeRequestAddWAYPOINTS(builder, WAYPOINTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(WAYPOINTS), 0)
@@ -416,7 +416,7 @@ def mplRelativeRequestCreateWAYPOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWAYPOINTSVector(builder, data):
-    mplRelativeRequestCreateWAYPOINTSVector(builder, data)
+    return mplRelativeRequestCreateWAYPOINTSVector(builder, data)
 
 def mplRelativeRequestAddTARGET_VELOCITY_KM_S(builder, TARGET_VELOCITY_KM_S):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_VELOCITY_KM_S), 0)
@@ -438,7 +438,7 @@ def mplRelativeRequestCreateTARGET_VELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateTARGET_VELOCITY_KM_SVector(builder, data):
-    mplRelativeRequestCreateTARGET_VELOCITY_KM_SVector(builder, data)
+    return mplRelativeRequestCreateTARGET_VELOCITY_KM_SVector(builder, data)
 
 def mplRelativeRequestAddMAX_ITERATIONS(builder, MAX_ITERATIONS):
     builder.PrependUint32Slot(9, MAX_ITERATIONS, 0)
@@ -538,7 +538,7 @@ def mplRelativeRequestCreateAPPROACH_TARGET_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateAPPROACH_TARGET_KMVector(builder, data):
-    mplRelativeRequestCreateAPPROACH_TARGET_KMVector(builder, data)
+    return mplRelativeRequestCreateAPPROACH_TARGET_KMVector(builder, data)
 
 def mplRelativeRequestAddAPPROACH_SPEED_KM_S(builder, APPROACH_SPEED_KM_S):
     builder.PrependFloat64Slot(23, APPROACH_SPEED_KM_S, 0.0)

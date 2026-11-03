@@ -179,7 +179,7 @@ def ERMConsiderEpochCreateSENSITIVITYVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSITIVITYVector(builder, data):
-    ERMConsiderEpochCreateSENSITIVITYVector(builder, data)
+    return ERMConsiderEpochCreateSENSITIVITYVector(builder, data)
 
 def ERMConsiderEpochAddSTM(builder, STM):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STM), 0)
@@ -201,7 +201,7 @@ def ERMConsiderEpochCreateSTMVector(builder, data):
     return builder.EndVector()
 
 def CreateSTMVector(builder, data):
-    ERMConsiderEpochCreateSTMVector(builder, data)
+    return ERMConsiderEpochCreateSTMVector(builder, data)
 
 def ERMConsiderEpochAddS(builder, S):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(S), 0)
@@ -223,7 +223,7 @@ def ERMConsiderEpochCreateSVector(builder, data):
     return builder.EndVector()
 
 def CreateSVector(builder, data):
-    ERMConsiderEpochCreateSVector(builder, data)
+    return ERMConsiderEpochCreateSVector(builder, data)
 
 def ERMConsiderEpochAddBASE(builder, BASE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(BASE), 0)
@@ -245,7 +245,7 @@ def ERMConsiderEpochCreateBASEVector(builder, data):
     return builder.EndVector()
 
 def CreateBASEVector(builder, data):
-    ERMConsiderEpochCreateBASEVector(builder, data)
+    return ERMConsiderEpochCreateBASEVector(builder, data)
 
 def ERMConsiderEpochEnd(builder):
     return builder.EndObject()

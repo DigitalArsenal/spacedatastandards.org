@@ -245,7 +245,7 @@ def CMEArrivalCreateKP_PREDICTEDVector(builder, data):
     return builder.EndVector()
 
 def CreateKP_PREDICTEDVector(builder, data):
-    CMEArrivalCreateKP_PREDICTEDVector(builder, data)
+    return CMEArrivalCreateKP_PREDICTEDVector(builder, data)
 
 def CMEArrivalAddKP_CLOCK_ANGLES_DEG(builder, KP_CLOCK_ANGLES_DEG):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(KP_CLOCK_ANGLES_DEG), 0)
@@ -267,7 +267,7 @@ def CMEArrivalCreateKP_CLOCK_ANGLES_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateKP_CLOCK_ANGLES_DEGVector(builder, data):
-    CMEArrivalCreateKP_CLOCK_ANGLES_DEGVector(builder, data)
+    return CMEArrivalCreateKP_CLOCK_ANGLES_DEGVector(builder, data)
 
 def CMEArrivalEnd(builder):
     return builder.EndObject()

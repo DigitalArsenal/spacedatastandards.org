@@ -340,7 +340,7 @@ def FCKCreateSEGMENTSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENTSVector(builder, data):
-    FCKCreateSEGMENTSVector(builder, data)
+    return FCKCreateSEGMENTSVector(builder, data)
 
 def FCKAddSEGMENT_DIGESTS(builder, SEGMENT_DIGESTS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_DIGESTS), 0)
@@ -362,7 +362,7 @@ def FCKCreateSEGMENT_DIGESTSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_DIGESTSVector(builder, data):
-    FCKCreateSEGMENT_DIGESTSVector(builder, data)
+    return FCKCreateSEGMENT_DIGESTSVector(builder, data)
 
 def FCKAddCOMMITS_ROOT_CID(builder, COMMITS_ROOT_CID):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(COMMITS_ROOT_CID), 0)
@@ -384,7 +384,7 @@ def FCKCreateCOMMITS_ROOT_CIDVector(builder, data):
     return builder.EndVector()
 
 def CreateCOMMITS_ROOT_CIDVector(builder, data):
-    FCKCreateCOMMITS_ROOT_CIDVector(builder, data)
+    return FCKCreateCOMMITS_ROOT_CIDVector(builder, data)
 
 def FCKAddPREVIOUS_FEED_ROOT_CID(builder, PREVIOUS_FEED_ROOT_CID):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PREVIOUS_FEED_ROOT_CID), 0)
@@ -406,7 +406,7 @@ def FCKCreatePREVIOUS_FEED_ROOT_CIDVector(builder, data):
     return builder.EndVector()
 
 def CreatePREVIOUS_FEED_ROOT_CIDVector(builder, data):
-    FCKCreatePREVIOUS_FEED_ROOT_CIDVector(builder, data)
+    return FCKCreatePREVIOUS_FEED_ROOT_CIDVector(builder, data)
 
 def FCKAddRECORD_BYTES(builder, RECORD_BYTES):
     builder.PrependUint64Slot(15, RECORD_BYTES, 0)

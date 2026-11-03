@@ -237,7 +237,7 @@ def MDEObjectDetectionCreatePAIRSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAIRSVector(builder, data):
-    MDEObjectDetectionCreatePAIRSVector(builder, data)
+    return MDEObjectDetectionCreatePAIRSVector(builder, data)
 
 def MDEObjectDetectionAddLEVELS(builder, LEVELS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LEVELS), 0)
@@ -255,7 +255,7 @@ def MDEObjectDetectionCreateLEVELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLEVELSVector(builder, data):
-    MDEObjectDetectionCreateLEVELSVector(builder, data)
+    return MDEObjectDetectionCreateLEVELSVector(builder, data)
 
 def MDEObjectDetectionAddDETECTOR_EVENTS(builder, DETECTOR_EVENTS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTOR_EVENTS), 0)
@@ -273,7 +273,7 @@ def MDEObjectDetectionCreateDETECTOR_EVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDETECTOR_EVENTSVector(builder, data):
-    MDEObjectDetectionCreateDETECTOR_EVENTSVector(builder, data)
+    return MDEObjectDetectionCreateDETECTOR_EVENTSVector(builder, data)
 
 def MDEObjectDetectionAddEVENTS(builder, EVENTS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EVENTS), 0)
@@ -291,7 +291,7 @@ def MDEObjectDetectionCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    MDEObjectDetectionCreateEVENTSVector(builder, data)
+    return MDEObjectDetectionCreateEVENTSVector(builder, data)
 
 def MDEObjectDetectionEnd(builder):
     return builder.EndObject()

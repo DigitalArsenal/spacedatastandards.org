@@ -225,7 +225,7 @@ def CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreateCOORDINATES_WSEN_DEGREESVector(builder, data):
-    CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data)
+    return CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data)
 
 def CZMRectangleAddHEIGHT(builder, HEIGHT):
     builder.PrependFloat64Slot(2, HEIGHT, 0.0)

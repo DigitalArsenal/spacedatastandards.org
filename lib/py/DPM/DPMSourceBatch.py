@@ -212,7 +212,7 @@ def DPMSourceBatchCreateWARNINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWARNINGSVector(builder, data):
-    DPMSourceBatchCreateWARNINGSVector(builder, data)
+    return DPMSourceBatchCreateWARNINGSVector(builder, data)
 
 def DPMSourceBatchAddLICENSE(builder, LICENSE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)

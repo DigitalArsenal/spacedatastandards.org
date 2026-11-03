@@ -84,7 +84,7 @@ def SCRRolesCreateROLESVector(builder, data):
     return builder.EndVector()
 
 def CreateROLESVector(builder, data):
-    SCRRolesCreateROLESVector(builder, data)
+    return SCRRolesCreateROLESVector(builder, data)
 
 def SCRRolesEnd(builder):
     return builder.EndObject()

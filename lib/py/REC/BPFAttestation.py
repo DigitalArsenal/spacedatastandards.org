@@ -160,7 +160,7 @@ def BPFAttestationCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    BPFAttestationCreateSIGNATUREVector(builder, data)
+    return BPFAttestationCreateSIGNATUREVector(builder, data)
 
 def BPFAttestationAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -182,7 +182,7 @@ def BPFAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    BPFAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return BPFAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def BPFAttestationEnd(builder):
     return builder.EndObject()

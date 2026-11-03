@@ -850,7 +850,7 @@ def RDOCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    RDOCreateTAGSVector(builder, data)
+    return RDOCreateTAGSVector(builder, data)
 
 def RDOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
     builder.PrependFloat64Slot(52, CORR_MAHALANOBIS_SQ, 0.0)

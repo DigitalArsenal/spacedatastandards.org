@@ -195,7 +195,7 @@ def RCFCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    RCFCreateDATAVector(builder, data)
+    return RCFCreateDATAVector(builder, data)
 
 def RCFEnd(builder):
     return builder.EndObject()

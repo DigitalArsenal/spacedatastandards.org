@@ -155,7 +155,7 @@ def ERMNoiseResponsesCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    ERMNoiseResponsesCreateSAMPLESVector(builder, data)
+    return ERMNoiseResponsesCreateSAMPLESVector(builder, data)
 
 def ERMNoiseResponsesAddTARGET_EPOCHS(builder, TARGET_EPOCHS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_EPOCHS), 0)
@@ -173,7 +173,7 @@ def ERMNoiseResponsesCreateTARGET_EPOCHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGET_EPOCHSVector(builder, data):
-    ERMNoiseResponsesCreateTARGET_EPOCHSVector(builder, data)
+    return ERMNoiseResponsesCreateTARGET_EPOCHSVector(builder, data)
 
 def ERMNoiseResponsesAddUNITS(builder, UNITS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
@@ -197,7 +197,7 @@ def ERMNoiseResponsesCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    ERMNoiseResponsesCreateRESULTSVector(builder, data)
+    return ERMNoiseResponsesCreateRESULTSVector(builder, data)
 
 def ERMNoiseResponsesEnd(builder):
     return builder.EndObject()

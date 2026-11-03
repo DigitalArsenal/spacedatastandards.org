@@ -31,7 +31,7 @@ public enum exoDisposition: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  A measured value, its asymmetric uncertainties, and its own provenance.
 ///  An absent table means no parameter was supplied. NaN means a missing numeric
 ///  cell, including when the archive supplies a reference or limit but no value.
-public struct EXOParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct EXOParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -136,7 +136,7 @@ public struct EXOParameter: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   }
 }
 
-public struct EXO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct EXO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

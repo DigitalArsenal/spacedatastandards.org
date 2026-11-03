@@ -70,7 +70,7 @@ public enum aprRepresentation: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 ///  One named request parameter (a query-string pair, a path segment bound to
 ///  a name, a form field or a header the service reads).
-public struct APRParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APRParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -117,7 +117,7 @@ public struct APRParameter: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  API Request - one normalized request and its serving decision.
-public struct APR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

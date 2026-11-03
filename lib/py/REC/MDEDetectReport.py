@@ -180,7 +180,7 @@ def MDEDetectReportCreateDUPLICATE_EPOCHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDUPLICATE_EPOCHSVector(builder, data):
-    MDEDetectReportCreateDUPLICATE_EPOCHSVector(builder, data)
+    return MDEDetectReportCreateDUPLICATE_EPOCHSVector(builder, data)
 
 def MDEDetectReportAddOPTIONS(builder, OPTIONS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OPTIONS), 0)
@@ -204,7 +204,7 @@ def MDEDetectReportCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    MDEDetectReportCreateOBJECTSVector(builder, data)
+    return MDEDetectReportCreateOBJECTSVector(builder, data)
 
 def MDEDetectReportAddOBJECTS_SCREENED(builder, OBJECTS_SCREENED):
     builder.PrependUint32Slot(5, OBJECTS_SCREENED, 0)
@@ -228,7 +228,7 @@ def MDEDetectReportCreateREFUSED_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFUSED_SETSVector(builder, data):
-    MDEDetectReportCreateREFUSED_SETSVector(builder, data)
+    return MDEDetectReportCreateREFUSED_SETSVector(builder, data)
 
 def MDEDetectReportAddDETECTIONS(builder, DETECTIONS):
     builder.PrependUint32Slot(7, DETECTIONS, 0)

@@ -181,7 +181,7 @@ def SPPCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    SPPCreateDATAVector(builder, data)
+    return SPPCreateDATAVector(builder, data)
 
 def SPPEnd(builder):
     return builder.EndObject()

@@ -331,7 +331,7 @@ def ETSCreateIDENTIFIERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateIDENTIFIERSVector(builder, data):
-    ETSCreateIDENTIFIERSVector(builder, data)
+    return ETSCreateIDENTIFIERSVector(builder, data)
 
 def ETSAddENVIRONMENT(builder, ENVIRONMENT):
     builder.PrependInt8Slot(4, ENVIRONMENT, 5)
@@ -461,7 +461,7 @@ def ETSCreatePAYLOADVector(builder, data):
     return builder.EndVector()
 
 def CreatePAYLOADVector(builder, data):
-    ETSCreatePAYLOADVector(builder, data)
+    return ETSCreatePAYLOADVector(builder, data)
 
 def ETSAddSOURCE(builder, SOURCE):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)

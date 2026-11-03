@@ -54,6 +54,26 @@ func (rcv *REC) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+// Field-encryption format 3 walk program of REC (see flatbuffers_encryption.go).
+var flatbuffersEncryptionProgramREC = []int{
+	3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
+	2, 12, 1,
+}
+
+// RECEncryptBuffer encrypts, in place, the (encrypted) fields of a REC
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func RECEncryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramREC)
+}
+
+// RECDecryptBuffer decrypts, in place, the (encrypted) fields of a REC
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func RECDecryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramREC)
+}
+
 /// Schema version identifier
 func (rcv *REC) version() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))

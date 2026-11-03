@@ -116,7 +116,7 @@ def PRWInitCreateENTITY_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateENTITY_HANDLESVector(builder, data):
-    PRWInitCreateENTITY_HANDLESVector(builder, data)
+    return PRWInitCreateENTITY_HANDLESVector(builder, data)
 
 def PRWInitAddSOURCES(builder, SOURCES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCES), 0)
@@ -134,7 +134,7 @@ def PRWInitCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    PRWInitCreateSOURCESVector(builder, data)
+    return PRWInitCreateSOURCESVector(builder, data)
 
 def PRWInitEnd(builder):
     return builder.EndObject()

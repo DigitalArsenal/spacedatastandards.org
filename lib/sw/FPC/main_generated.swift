@@ -74,7 +74,7 @@ public struct weightedEdge_Mutable: FlatBufferStruct, FlatbuffersVectorInitializ
 }
 
 ///  Graph creation / reset request.
-public struct FPCGraphDefinition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCGraphDefinition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -111,7 +111,7 @@ public struct FPCGraphDefinition: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Bulk weighted-edge ingestion request.
-public struct FPCWeightedEdgeList: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCWeightedEdgeList: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -168,7 +168,7 @@ public struct FPCWeightedEdgeList: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Pre-built CSR graph ingestion request.
-public struct FPCCSRGraph: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCCSRGraph: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -229,7 +229,7 @@ public struct FPCCSRGraph: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Single-source shortest-path request.
-public struct FPCShortestPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCShortestPathRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -273,7 +273,7 @@ public struct FPCShortestPathRequest: FlatBufferTable, FlatbuffersVectorInitiali
 }
 
 ///  Single-source shortest-path result.
-public struct FPCShortestPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCShortestPathResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -340,7 +340,7 @@ public struct FPCShortestPathResult: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Path reconstruction request.
-public struct FPCPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCPathRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -377,7 +377,7 @@ public struct FPCPathRequest: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Path reconstruction result.
-public struct FPCPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPCPathResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -445,7 +445,7 @@ public struct FPCPathResult: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
 ///  Fastest Path Compute — envelope message for weighted graph ingestion and
 ///  single-source shortest path execution.
-public struct FPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FPC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

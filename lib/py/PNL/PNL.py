@@ -187,7 +187,7 @@ def PNLCreatePANELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePANELSVector(builder, data):
-    PNLCreatePANELSVector(builder, data)
+    return PNLCreatePANELSVector(builder, data)
 
 def PNLAddREFERENCE_AREA_M2(builder, REFERENCE_AREA_M2):
     builder.PrependFloat64Slot(7, REFERENCE_AREA_M2, 0.0)

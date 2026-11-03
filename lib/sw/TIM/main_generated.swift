@@ -125,7 +125,7 @@ public enum timConversionStatus: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  CCSDS time-code payload and preamble metadata.
-public struct TIMCcsdsTimeCode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TIMCcsdsTimeCode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -200,7 +200,7 @@ public struct TIMCcsdsTimeCode: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Numeric or textual instant tagged with its time system and representation.
-public struct TIMInstant: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TIMInstant: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -311,7 +311,7 @@ public struct TIMInstant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Request to convert one instant into another time system/representation.
-public struct TIMConversionRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TIMConversionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -400,7 +400,7 @@ public struct TIMConversionRequest: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  Result of a time conversion request.
-public struct TIMConversionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TIMConversionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -474,7 +474,7 @@ public struct TIMConversionResult: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Time System and time-conversion envelope.
-public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TIM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

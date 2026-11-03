@@ -410,7 +410,7 @@ def GELCreateENU_COVARIANCE_M2Vector(builder, data):
     return builder.EndVector()
 
 def CreateENU_COVARIANCE_M2Vector(builder, data):
-    GELCreateENU_COVARIANCE_M2Vector(builder, data)
+    return GELCreateENU_COVARIANCE_M2Vector(builder, data)
 
 def GELAddERROR_ELLIPSE_SEMI_MAJOR_M(builder, ERROR_ELLIPSE_SEMI_MAJOR_M):
     builder.PrependFloat64Slot(10, ERROR_ELLIPSE_SEMI_MAJOR_M, 0.0)
@@ -486,7 +486,7 @@ def GELCreateVELOCITY_COVARIANCE_M2_S2Vector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_COVARIANCE_M2_S2Vector(builder, data):
-    GELCreateVELOCITY_COVARIANCE_M2_S2Vector(builder, data)
+    return GELCreateVELOCITY_COVARIANCE_M2_S2Vector(builder, data)
 
 def GELAddOBSERVATION_REFS(builder, OBSERVATION_REFS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_REFS), 0)
@@ -504,7 +504,7 @@ def GELCreateOBSERVATION_REFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATION_REFSVector(builder, data):
-    GELCreateOBSERVATION_REFSVector(builder, data)
+    return GELCreateOBSERVATION_REFSVector(builder, data)
 
 def GELAddCONVERGENCE_DIAGNOSTICS(builder, CONVERGENCE_DIAGNOSTICS):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(CONVERGENCE_DIAGNOSTICS), 0)
@@ -550,7 +550,7 @@ def GELCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    GELCreateSIGNATUREVector(builder, data)
+    return GELCreateSIGNATUREVector(builder, data)
 
 def GELAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -572,7 +572,7 @@ def GELCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    GELCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return GELCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def GELEnd(builder):
     return builder.EndObject()

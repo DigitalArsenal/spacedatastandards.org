@@ -144,7 +144,7 @@ def ERMAccumulatorStratumCreateHISTOGRAMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHISTOGRAMSVector(builder, data):
-    ERMAccumulatorStratumCreateHISTOGRAMSVector(builder, data)
+    return ERMAccumulatorStratumCreateHISTOGRAMSVector(builder, data)
 
 def ERMAccumulatorStratumAddCLIPPED(builder, CLIPPED):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CLIPPED), 0)

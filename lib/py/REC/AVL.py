@@ -425,7 +425,7 @@ def AVLCreateVERTEX_LONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_LONGITUDE_DEGVector(builder, data):
-    AVLCreateVERTEX_LONGITUDE_DEGVector(builder, data)
+    return AVLCreateVERTEX_LONGITUDE_DEGVector(builder, data)
 
 def AVLAddVERTEX_LATITUDE_DEG(builder, VERTEX_LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(VERTEX_LATITUDE_DEG), 0)
@@ -447,7 +447,7 @@ def AVLCreateVERTEX_LATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateVERTEX_LATITUDE_DEGVector(builder, data):
-    AVLCreateVERTEX_LATITUDE_DEGVector(builder, data)
+    return AVLCreateVERTEX_LATITUDE_DEGVector(builder, data)
 
 def AVLAddRING_OFFSETS(builder, RING_OFFSETS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(RING_OFFSETS), 0)
@@ -469,7 +469,7 @@ def AVLCreateRING_OFFSETSVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_OFFSETSVector(builder, data):
-    AVLCreateRING_OFFSETSVector(builder, data)
+    return AVLCreateRING_OFFSETSVector(builder, data)
 
 def AVLAddRING_POLYGON_INDEXES(builder, RING_POLYGON_INDEXES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(RING_POLYGON_INDEXES), 0)
@@ -491,7 +491,7 @@ def AVLCreateRING_POLYGON_INDEXESVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_POLYGON_INDEXESVector(builder, data):
-    AVLCreateRING_POLYGON_INDEXESVector(builder, data)
+    return AVLCreateRING_POLYGON_INDEXESVector(builder, data)
 
 def AVLAddRING_ROLES(builder, RING_ROLES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(RING_ROLES), 0)
@@ -513,7 +513,7 @@ def AVLCreateRING_ROLESVector(builder, data):
     return builder.EndVector()
 
 def CreateRING_ROLESVector(builder, data):
-    AVLCreateRING_ROLESVector(builder, data)
+    return AVLCreateRING_ROLESVector(builder, data)
 
 def AVLAddPOLYGON_COUNT(builder, POLYGON_COUNT):
     builder.PrependUint32Slot(18, POLYGON_COUNT, 0)

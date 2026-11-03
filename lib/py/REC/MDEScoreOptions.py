@@ -189,7 +189,7 @@ def MDEScoreOptionsCreateBINS_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateBINS_M_SVector(builder, data):
-    MDEScoreOptionsCreateBINS_M_SVector(builder, data)
+    return MDEScoreOptionsCreateBINS_M_SVector(builder, data)
 
 def MDEScoreOptionsAddEXPLAINED(builder, EXPLAINED):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EXPLAINED), 0)
@@ -207,7 +207,7 @@ def MDEScoreOptionsCreateEXPLAINEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXPLAINEDVector(builder, data):
-    MDEScoreOptionsCreateEXPLAINEDVector(builder, data)
+    return MDEScoreOptionsCreateEXPLAINEDVector(builder, data)
 
 def MDEScoreOptionsAddASSESSED(builder, ASSESSED):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ASSESSED), 0)
@@ -225,7 +225,7 @@ def MDEScoreOptionsCreateASSESSEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSESSEDVector(builder, data):
-    MDEScoreOptionsCreateASSESSEDVector(builder, data)
+    return MDEScoreOptionsCreateASSESSEDVector(builder, data)
 
 def MDEScoreOptionsAddSPANS(builder, SPANS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SPANS), 0)
@@ -243,7 +243,7 @@ def MDEScoreOptionsCreateSPANSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPANSVector(builder, data):
-    MDEScoreOptionsCreateSPANSVector(builder, data)
+    return MDEScoreOptionsCreateSPANSVector(builder, data)
 
 def MDEScoreOptionsEnd(builder):
     return builder.EndObject()

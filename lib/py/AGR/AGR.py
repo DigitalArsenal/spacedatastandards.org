@@ -355,7 +355,7 @@ def AGRCreateY_FIELDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateY_FIELDSVector(builder, data):
-    AGRCreateY_FIELDSVector(builder, data)
+    return AGRCreateY_FIELDSVector(builder, data)
 
 def AGRAddX_IS_TIME(builder, X_IS_TIME):
     builder.PrependBoolSlot(5, X_IS_TIME, 0)
@@ -385,7 +385,7 @@ def AGRCreateBINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBINSVector(builder, data):
-    AGRCreateBINSVector(builder, data)
+    return AGRCreateBINSVector(builder, data)
 
 def AGRAddCATEGORIES(builder, CATEGORIES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CATEGORIES), 0)
@@ -403,7 +403,7 @@ def AGRCreateCATEGORIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCATEGORIESVector(builder, data):
-    AGRCreateCATEGORIESVector(builder, data)
+    return AGRCreateCATEGORIESVector(builder, data)
 
 def AGRAddSERIES(builder, SERIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SERIES), 0)
@@ -421,7 +421,7 @@ def AGRCreateSERIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSERIESVector(builder, data):
-    AGRCreateSERIESVector(builder, data)
+    return AGRCreateSERIESVector(builder, data)
 
 def AGRAddPIVOT(builder, PIVOT):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PIVOT), 0)
@@ -439,7 +439,7 @@ def AGRCreatePIVOTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePIVOTVector(builder, data):
-    AGRCreatePIVOTVector(builder, data)
+    return AGRCreatePIVOTVector(builder, data)
 
 def AGRAddROW_KEYS(builder, ROW_KEYS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ROW_KEYS), 0)
@@ -457,7 +457,7 @@ def AGRCreateROW_KEYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROW_KEYSVector(builder, data):
-    AGRCreateROW_KEYSVector(builder, data)
+    return AGRCreateROW_KEYSVector(builder, data)
 
 def AGRAddCOL_KEYS(builder, COL_KEYS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(COL_KEYS), 0)
@@ -475,7 +475,7 @@ def AGRCreateCOL_KEYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOL_KEYSVector(builder, data):
-    AGRCreateCOL_KEYSVector(builder, data)
+    return AGRCreateCOL_KEYSVector(builder, data)
 
 def AGRAddSCANNED(builder, SCANNED):
     builder.PrependUint64Slot(13, SCANNED, 0)

@@ -102,7 +102,7 @@ def TRHInstallationCreateHARDWAREVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHARDWAREVector(builder, data):
-    TRHInstallationCreateHARDWAREVector(builder, data)
+    return TRHInstallationCreateHARDWAREVector(builder, data)
 
 def TRHInstallationAddCLOCK_BIAS_SECONDS(builder, CLOCK_BIAS_SECONDS):
     builder.PrependFloat64Slot(2, CLOCK_BIAS_SECONDS, 0.0)

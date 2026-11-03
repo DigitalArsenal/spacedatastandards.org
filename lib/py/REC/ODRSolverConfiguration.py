@@ -180,7 +180,7 @@ def ODRSolverConfigurationCreatePROCESS_NOISE_SPECTRAL_DENSITYVector(builder, da
     return builder.EndVector()
 
 def CreatePROCESS_NOISE_SPECTRAL_DENSITYVector(builder, data):
-    ODRSolverConfigurationCreatePROCESS_NOISE_SPECTRAL_DENSITYVector(builder, data)
+    return ODRSolverConfigurationCreatePROCESS_NOISE_SPECTRAL_DENSITYVector(builder, data)
 
 def ODRSolverConfigurationAddDYNAMIC_MODEL_CORRELATION_TIME_SECONDS(builder, DYNAMIC_MODEL_CORRELATION_TIME_SECONDS):
     builder.PrependFloat64Slot(7, DYNAMIC_MODEL_CORRELATION_TIME_SECONDS, 0.0)

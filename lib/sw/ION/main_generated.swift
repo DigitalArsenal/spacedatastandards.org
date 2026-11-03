@@ -43,7 +43,7 @@ public enum ionoSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Ionospheric Observation Data Point
-public struct ionoDataPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ionoDataPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -130,7 +130,7 @@ public struct ionoDataPoint: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Ionospheric Electron Density Profile
-public struct ionoDensityProfile: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ionoDensityProfile: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -184,7 +184,7 @@ public struct ionoDensityProfile: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Ionospheric Observation
-public struct ION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

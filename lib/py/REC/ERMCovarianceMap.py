@@ -131,7 +131,7 @@ def ERMCovarianceMapCreateREQUESTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUESTSVector(builder, data):
-    ERMCovarianceMapCreateREQUESTSVector(builder, data)
+    return ERMCovarianceMapCreateREQUESTSVector(builder, data)
 
 def ERMCovarianceMapAddRESULTS(builder, RESULTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RESULTS), 0)
@@ -149,7 +149,7 @@ def ERMCovarianceMapCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    ERMCovarianceMapCreateRESULTSVector(builder, data)
+    return ERMCovarianceMapCreateRESULTSVector(builder, data)
 
 def ERMCovarianceMapEnd(builder):
     return builder.EndObject()

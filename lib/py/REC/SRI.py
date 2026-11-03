@@ -230,7 +230,7 @@ def SRICreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    SRICreateRESERVEDVector(builder, data)
+    return SRICreateRESERVEDVector(builder, data)
 
 def SRIAddCID(builder, CID):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CID), 0)

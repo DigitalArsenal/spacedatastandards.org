@@ -167,7 +167,7 @@ def DomainProofCreateDOMAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDOMAINSVector(builder, data):
-    DomainProofCreateDOMAINSVector(builder, data)
+    return DomainProofCreateDOMAINSVector(builder, data)
 
 def DomainProofEnd(builder):
     return builder.EndObject()

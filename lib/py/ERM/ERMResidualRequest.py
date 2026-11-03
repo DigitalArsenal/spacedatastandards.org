@@ -124,7 +124,7 @@ def ERMResidualRequestCreateWINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWINDOWSVector(builder, data):
-    ERMResidualRequestCreateWINDOWSVector(builder, data)
+    return ERMResidualRequestCreateWINDOWSVector(builder, data)
 
 def ERMResidualRequestAddSTEP_S(builder, STEP_S):
     builder.PrependFloat64Slot(3, STEP_S, 0.0)

@@ -114,7 +114,7 @@ public enum SeekerStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Guided Missiles
-public struct MSL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MSL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

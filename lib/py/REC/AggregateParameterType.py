@@ -119,7 +119,7 @@ def AggregateParameterTypeCreateMEMBERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMBERSVector(builder, data):
-    AggregateParameterTypeCreateMEMBERSVector(builder, data)
+    return AggregateParameterTypeCreateMEMBERSVector(builder, data)
 
 def AggregateParameterTypeEnd(builder):
     return builder.EndObject()

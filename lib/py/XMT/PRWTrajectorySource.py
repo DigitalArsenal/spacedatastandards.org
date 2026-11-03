@@ -120,7 +120,7 @@ def PRWTrajectorySourceCreateSEGMENT_QUALITYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENT_QUALITYVector(builder, data):
-    PRWTrajectorySourceCreateSEGMENT_QUALITYVector(builder, data)
+    return PRWTrajectorySourceCreateSEGMENT_QUALITYVector(builder, data)
 
 def PRWTrajectorySourceEnd(builder):
     return builder.EndObject()

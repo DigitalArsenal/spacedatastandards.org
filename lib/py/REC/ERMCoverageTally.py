@@ -180,7 +180,7 @@ def ERMCoverageTallyCreateINSIDEVector(builder, data):
     return builder.EndVector()
 
 def CreateINSIDEVector(builder, data):
-    ERMCoverageTallyCreateINSIDEVector(builder, data)
+    return ERMCoverageTallyCreateINSIDEVector(builder, data)
 
 def ERMCoverageTallyAddPIT(builder, PIT):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PIT), 0)
@@ -202,7 +202,7 @@ def ERMCoverageTallyCreatePITVector(builder, data):
     return builder.EndVector()
 
 def CreatePITVector(builder, data):
-    ERMCoverageTallyCreatePITVector(builder, data)
+    return ERMCoverageTallyCreatePITVector(builder, data)
 
 def ERMCoverageTallyAddOBJECTS(builder, OBJECTS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTS), 0)
@@ -224,7 +224,7 @@ def ERMCoverageTallyCreateOBJECTSVector(builder, data):
     return builder.EndVector()
 
 def CreateOBJECTSVector(builder, data):
-    ERMCoverageTallyCreateOBJECTSVector(builder, data)
+    return ERMCoverageTallyCreateOBJECTSVector(builder, data)
 
 def ERMCoverageTallyEnd(builder):
     return builder.EndObject()

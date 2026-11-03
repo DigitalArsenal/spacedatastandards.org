@@ -296,7 +296,7 @@ def ASGCandidateCreateRESIDUALVector(builder, data):
     return builder.EndVector()
 
 def CreateRESIDUALVector(builder, data):
-    ASGCandidateCreateRESIDUALVector(builder, data)
+    return ASGCandidateCreateRESIDUALVector(builder, data)
 
 def ASGCandidateAddPREDICTED(builder, PREDICTED):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PREDICTED), 0)
@@ -318,7 +318,7 @@ def ASGCandidateCreatePREDICTEDVector(builder, data):
     return builder.EndVector()
 
 def CreatePREDICTEDVector(builder, data):
-    ASGCandidateCreatePREDICTEDVector(builder, data)
+    return ASGCandidateCreatePREDICTEDVector(builder, data)
 
 def ASGCandidateAddLIGHT_TIME_S(builder, LIGHT_TIME_S):
     builder.PrependFloat64Slot(8, LIGHT_TIME_S, 0.0)
@@ -346,7 +346,7 @@ def ASGCandidateCreatePOSITION_GCRF_KMVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_GCRF_KMVector(builder, data):
-    ASGCandidateCreatePOSITION_GCRF_KMVector(builder, data)
+    return ASGCandidateCreatePOSITION_GCRF_KMVector(builder, data)
 
 def ASGCandidateAddVELOCITY_GCRF_KM_S(builder, VELOCITY_GCRF_KM_S):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_GCRF_KM_S), 0)
@@ -368,7 +368,7 @@ def ASGCandidateCreateVELOCITY_GCRF_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_GCRF_KM_SVector(builder, data):
-    ASGCandidateCreateVELOCITY_GCRF_KM_SVector(builder, data)
+    return ASGCandidateCreateVELOCITY_GCRF_KM_SVector(builder, data)
 
 def ASGCandidateAddPOSITION_COVARIANCE_KM2(builder, POSITION_COVARIANCE_KM2):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_COVARIANCE_KM2), 0)
@@ -390,7 +390,7 @@ def ASGCandidateCreatePOSITION_COVARIANCE_KM2Vector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_COVARIANCE_KM2Vector(builder, data):
-    ASGCandidateCreatePOSITION_COVARIANCE_KM2Vector(builder, data)
+    return ASGCandidateCreatePOSITION_COVARIANCE_KM2Vector(builder, data)
 
 def ASGCandidateEnd(builder):
     return builder.EndObject()

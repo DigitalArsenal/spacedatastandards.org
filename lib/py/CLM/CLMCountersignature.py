@@ -126,7 +126,7 @@ def CLMCountersignatureCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    CLMCountersignatureCreateSIGNATUREVector(builder, data)
+    return CLMCountersignatureCreateSIGNATUREVector(builder, data)
 
 def CLMCountersignatureEnd(builder):
     return builder.EndObject()

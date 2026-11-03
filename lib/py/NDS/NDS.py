@@ -254,7 +254,7 @@ def NDSCreateSCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCHEMASVector(builder, data):
-    NDSCreateSCHEMASVector(builder, data)
+    return NDSCreateSCHEMASVector(builder, data)
 
 def NDSAddSOURCES(builder, SOURCES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCES), 0)
@@ -272,7 +272,7 @@ def NDSCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    NDSCreateSOURCESVector(builder, data)
+    return NDSCreateSOURCESVector(builder, data)
 
 def NDSAddTOTAL_RECORDS(builder, TOTAL_RECORDS):
     builder.PrependInt64Slot(3, TOTAL_RECORDS, 0)
@@ -314,7 +314,7 @@ def NDSCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    NDSCreateEVENTSVector(builder, data)
+    return NDSCreateEVENTSVector(builder, data)
 
 def NDSAddTOPICS(builder, TOPICS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TOPICS), 0)
@@ -332,7 +332,7 @@ def NDSCreateTOPICSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTOPICSVector(builder, data):
-    NDSCreateTOPICSVector(builder, data)
+    return NDSCreateTOPICSVector(builder, data)
 
 def NDSAddMODULES(builder, MODULES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(MODULES), 0)
@@ -350,7 +350,7 @@ def NDSCreateMODULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODULESVector(builder, data):
-    NDSCreateMODULESVector(builder, data)
+    return NDSCreateMODULESVector(builder, data)
 
 def NDSAddTRUST_ENGINE(builder, TRUST_ENGINE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRUST_ENGINE), 0)

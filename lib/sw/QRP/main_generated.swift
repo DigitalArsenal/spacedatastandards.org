@@ -145,7 +145,7 @@ public enum qrpValueKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  One field filter of a request.
-public struct QRPFilter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPFilter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -196,7 +196,7 @@ public struct QRPFilter: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  One column descriptor of a page, in record field order.
-public struct QRPColumn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPColumn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -267,7 +267,7 @@ public struct QRPColumn: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
 ///  One typed value: a bound parameter of a request, or one cell of a row.
 ///  Exactly the field named by KIND is meaningful.
-public struct QRPValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -336,7 +336,7 @@ public struct QRPValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  One row of a projection, its cells in COLUMNS order.
-public struct QRPRow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -372,7 +372,7 @@ public struct QRPRow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 }
 
 ///  One queryable table of the serving node (the query surface).
-public struct QRPTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -441,7 +441,7 @@ public struct QRPTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Query Page - request, page header or error frame.
-public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

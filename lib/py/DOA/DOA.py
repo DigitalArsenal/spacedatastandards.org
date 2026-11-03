@@ -548,7 +548,7 @@ def DOACreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    DOACreateTAGSVector(builder, data)
+    return DOACreateTAGSVector(builder, data)
 
 def DOAEnd(builder):
     return builder.EndObject()

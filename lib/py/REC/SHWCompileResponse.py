@@ -150,7 +150,7 @@ def SHWCompileResponseCreateCOMPILED_BINARYVector(builder, data):
     return builder.EndVector()
 
 def CreateCOMPILED_BINARYVector(builder, data):
-    SHWCompileResponseCreateCOMPILED_BINARYVector(builder, data)
+    return SHWCompileResponseCreateCOMPILED_BINARYVector(builder, data)
 
 def SHWCompileResponseAddLINKED_UNIFORMS(builder, LINKED_UNIFORMS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINKED_UNIFORMS), 0)
@@ -168,7 +168,7 @@ def SHWCompileResponseCreateLINKED_UNIFORMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKED_UNIFORMSVector(builder, data):
-    SHWCompileResponseCreateLINKED_UNIFORMSVector(builder, data)
+    return SHWCompileResponseCreateLINKED_UNIFORMSVector(builder, data)
 
 def SHWCompileResponseEnd(builder):
     return builder.EndObject()

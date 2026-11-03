@@ -418,7 +418,7 @@ def RFECreateRF_EMITTER_DETAILSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRF_EMITTER_DETAILSVector(builder, data):
-    RFECreateRF_EMITTER_DETAILSVector(builder, data)
+    return RFECreateRF_EMITTER_DETAILSVector(builder, data)
 
 def RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(THREAT_LEVEL), 0)
@@ -470,7 +470,7 @@ def RFECreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RFECreateSIGNATUREVector(builder, data)
+    return RFECreateSIGNATUREVector(builder, data)
 
 def RFEAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -492,7 +492,7 @@ def RFECreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    RFECreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return RFECreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def RFEEnd(builder):
     return builder.EndObject()

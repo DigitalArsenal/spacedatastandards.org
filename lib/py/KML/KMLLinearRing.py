@@ -101,7 +101,7 @@ def KMLLinearRingCreateCOORDINATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOORDINATESVector(builder, data):
-    KMLLinearRingCreateCOORDINATESVector(builder, data)
+    return KMLLinearRingCreateCOORDINATESVector(builder, data)
 
 def KMLLinearRingAddEXTRUDE(builder, EXTRUDE):
     builder.PrependBoolSlot(1, EXTRUDE, 0)

@@ -270,7 +270,7 @@ def CVPProvenanceCreateMODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODELSVector(builder, data):
-    CVPProvenanceCreateMODELSVector(builder, data)
+    return CVPProvenanceCreateMODELSVector(builder, data)
 
 def CVPProvenanceAddCONTOUR_ALGORITHM(builder, CONTOUR_ALGORITHM):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CONTOUR_ALGORITHM), 0)

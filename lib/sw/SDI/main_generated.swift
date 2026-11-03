@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Solar Disk Image
-public struct SDI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -369,7 +369,7 @@ public struct SDI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   }
 }
 
-public struct SDICOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDICOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

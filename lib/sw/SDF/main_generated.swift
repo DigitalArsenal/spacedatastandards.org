@@ -194,7 +194,7 @@ public struct sdfTimeRangeResult_Mutable: FlatBufferStruct, FlatbuffersVectorIni
 }
 
 ///  Conical SDF parameters.
-public struct SDFConical: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFConical: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -259,7 +259,7 @@ public struct SDFConical: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Rectangular (pyramidal) SDF parameters.
-public struct SDFRectangular: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFRectangular: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -313,7 +313,7 @@ public struct SDFRectangular: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Spherical SDF parameters.
-public struct SDFSpherical: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFSpherical: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -356,7 +356,7 @@ public struct SDFSpherical: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Cylindrical SDF parameters.
-public struct SDFCylindrical: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFCylindrical: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -398,7 +398,7 @@ public struct SDFCylindrical: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Custom SDF defined by a set of unit boundary-direction vectors.
-public struct SDFCustom: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFCustom: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -442,7 +442,7 @@ public struct SDFCustom: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Constructive composition of two SDFs.
-public struct SDFComposition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFComposition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -499,7 +499,7 @@ public struct SDFComposition: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Single component in a composed SDF.
-public struct SDFComponent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFComponent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -565,7 +565,7 @@ public struct SDFComponent: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Complete SDF configuration.
-public struct SDFConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFConfig: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -624,7 +624,7 @@ public struct SDFConfig: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Batch SDF evaluation request (arena-addressed, zero-copy).
-public struct SDFBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -689,7 +689,7 @@ public struct SDFBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Batch SDF evaluation response header.
-public struct SDFBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDFBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -756,7 +756,7 @@ public struct SDFBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 
 ///  Signed Distance Field envelope message — carries a configuration, a batch
 ///  request, a batch response, or single / time-range result records.
-public struct SDF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

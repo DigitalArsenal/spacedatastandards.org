@@ -133,7 +133,7 @@ def ArrayParameterTypeCreateDIMENSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDIMENSIONSVector(builder, data):
-    ArrayParameterTypeCreateDIMENSIONSVector(builder, data)
+    return ArrayParameterTypeCreateDIMENSIONSVector(builder, data)
 
 def ArrayParameterTypeEnd(builder):
     return builder.EndObject()

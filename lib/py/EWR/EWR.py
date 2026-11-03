@@ -197,7 +197,7 @@ def EWRCreateESM_CONTACTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateESM_CONTACTSVector(builder, data):
-    EWRCreateESM_CONTACTSVector(builder, data)
+    return EWRCreateESM_CONTACTSVector(builder, data)
 
 def EWRAddACTIVE_JAMMING(builder, ACTIVE_JAMMING):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ACTIVE_JAMMING), 0)
@@ -215,7 +215,7 @@ def EWRCreateACTIVE_JAMMINGVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACTIVE_JAMMINGVector(builder, data):
-    EWRCreateACTIVE_JAMMINGVector(builder, data)
+    return EWRCreateACTIVE_JAMMINGVector(builder, data)
 
 def EWRAddCOUNTERMEASURES(builder, COUNTERMEASURES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTERMEASURES), 0)
@@ -239,7 +239,7 @@ def EWRCreateTHREAT_WARNINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTHREAT_WARNINGSVector(builder, data):
-    EWRCreateTHREAT_WARNINGSVector(builder, data)
+    return EWRCreateTHREAT_WARNINGSVector(builder, data)
 
 def EWRAddEMCON_LEVEL(builder, EMCON_LEVEL):
     builder.PrependUint8Slot(9, EMCON_LEVEL, 0)

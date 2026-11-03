@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Launch Data Message
-public struct LDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

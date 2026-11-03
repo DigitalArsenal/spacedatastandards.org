@@ -137,7 +137,7 @@ def ERMClipCentreCreateCENTRE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateCENTRE_KMVector(builder, data):
-    ERMClipCentreCreateCENTRE_KMVector(builder, data)
+    return ERMClipCentreCreateCENTRE_KMVector(builder, data)
 
 def ERMClipCentreAddSCALE_KM(builder, SCALE_KM):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SCALE_KM), 0)
@@ -159,7 +159,7 @@ def ERMClipCentreCreateSCALE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSCALE_KMVector(builder, data):
-    ERMClipCentreCreateSCALE_KMVector(builder, data)
+    return ERMClipCentreCreateSCALE_KMVector(builder, data)
 
 def ERMClipCentreEnd(builder):
     return builder.EndObject()

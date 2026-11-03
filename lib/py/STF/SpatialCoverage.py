@@ -151,7 +151,7 @@ def SpatialCoverageCreateREGIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREGIONSVector(builder, data):
-    SpatialCoverageCreateREGIONSVector(builder, data)
+    return SpatialCoverageCreateREGIONSVector(builder, data)
 
 def SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_IDS), 0)
@@ -169,7 +169,7 @@ def SpatialCoverageCreateOBJECT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECT_IDSVector(builder, data):
-    SpatialCoverageCreateOBJECT_IDSVector(builder, data)
+    return SpatialCoverageCreateOBJECT_IDSVector(builder, data)
 
 def SpatialCoverageAddMIN_ALTITUDE_KM(builder, MIN_ALTITUDE_KM):
     builder.PrependFloat64Slot(3, MIN_ALTITUDE_KM, 0.0)
@@ -203,7 +203,7 @@ def SpatialCoverageCreateGEO_BOUNDSVector(builder, data):
     return builder.EndVector()
 
 def CreateGEO_BOUNDSVector(builder, data):
-    SpatialCoverageCreateGEO_BOUNDSVector(builder, data)
+    return SpatialCoverageCreateGEO_BOUNDSVector(builder, data)
 
 def SpatialCoverageEnd(builder):
     return builder.EndObject()

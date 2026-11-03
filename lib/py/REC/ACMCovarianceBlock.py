@@ -201,7 +201,7 @@ def ACMCovarianceBlockCreateTIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTIMESVector(builder, data):
-    ACMCovarianceBlockCreateTIMESVector(builder, data)
+    return ACMCovarianceBlockCreateTIMESVector(builder, data)
 
 def ACMCovarianceBlockAddVALUES(builder, VALUES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(VALUES), 0)
@@ -223,7 +223,7 @@ def ACMCovarianceBlockCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    ACMCovarianceBlockCreateVALUESVector(builder, data)
+    return ACMCovarianceBlockCreateVALUESVector(builder, data)
 
 def ACMCovarianceBlockEnd(builder):
     return builder.EndObject()

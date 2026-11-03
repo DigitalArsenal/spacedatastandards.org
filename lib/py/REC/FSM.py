@@ -301,7 +301,7 @@ def FSMCreateSCHEMA_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateSCHEMA_HASHVector(builder, data):
-    FSMCreateSCHEMA_HASHVector(builder, data)
+    return FSMCreateSCHEMA_HASHVector(builder, data)
 
 def FSMAddPOLICY_ID(builder, POLICY_ID):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POLICY_ID), 0)
@@ -361,7 +361,7 @@ def FSMCreateFIELDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFIELDSVector(builder, data):
-    FSMCreateFIELDSVector(builder, data)
+    return FSMCreateFIELDSVector(builder, data)
 
 def FSMAddPAYLOAD_HASH(builder, PAYLOAD_HASH):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_HASH), 0)
@@ -383,7 +383,7 @@ def FSMCreatePAYLOAD_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreatePAYLOAD_HASHVector(builder, data):
-    FSMCreatePAYLOAD_HASHVector(builder, data)
+    return FSMCreatePAYLOAD_HASHVector(builder, data)
 
 def FSMAddPREVIOUS_MESSAGE_HASH(builder, PREVIOUS_MESSAGE_HASH):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(PREVIOUS_MESSAGE_HASH), 0)
@@ -405,7 +405,7 @@ def FSMCreatePREVIOUS_MESSAGE_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreatePREVIOUS_MESSAGE_HASHVector(builder, data):
-    FSMCreatePREVIOUS_MESSAGE_HASHVector(builder, data)
+    return FSMCreatePREVIOUS_MESSAGE_HASHVector(builder, data)
 
 def FSMAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_SIGNATURE), 0)
@@ -427,7 +427,7 @@ def FSMCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    FSMCreatePROVIDER_SIGNATUREVector(builder, data)
+    return FSMCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def FSMEnd(builder):
     return builder.EndObject()

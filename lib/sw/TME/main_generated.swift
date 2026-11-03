@@ -66,7 +66,7 @@ public enum ClockType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Time Systems
-public struct TME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TME: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

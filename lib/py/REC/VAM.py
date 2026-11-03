@@ -226,7 +226,7 @@ def VAMCreateALTERNATE_VARIANT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_VARIANT_IDSVector(builder, data):
-    VAMCreateALTERNATE_VARIANT_IDSVector(builder, data)
+    return VAMCreateALTERNATE_VARIANT_IDSVector(builder, data)
 
 def VAMAddVARIANTS(builder, VARIANTS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(VARIANTS), 0)
@@ -244,7 +244,7 @@ def VAMCreateVARIANTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIANTSVector(builder, data):
-    VAMCreateVARIANTSVector(builder, data)
+    return VAMCreateVARIANTSVector(builder, data)
 
 def VAMAddREVIEW(builder, REVIEW):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REVIEW), 0)

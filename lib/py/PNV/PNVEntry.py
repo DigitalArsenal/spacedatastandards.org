@@ -328,7 +328,7 @@ def PNVEntryCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PNVEntryCreateSIGNATUREVector(builder, data)
+    return PNVEntryCreateSIGNATUREVector(builder, data)
 
 def PNVEntryAddSIGNATURE_VERIFIED(builder, SIGNATURE_VERIFIED):
     builder.PrependBoolSlot(12, SIGNATURE_VERIFIED, 0)
@@ -362,7 +362,7 @@ def PNVEntryCreatePUBLISHER_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreatePUBLISHER_KEYVector(builder, data):
-    PNVEntryCreatePUBLISHER_KEYVector(builder, data)
+    return PNVEntryCreatePUBLISHER_KEYVector(builder, data)
 
 def PNVEntryAddKEY_SOURCE(builder, KEY_SOURCE):
     builder.PrependUint8Slot(15, KEY_SOURCE, 0)
@@ -396,7 +396,7 @@ def PNVEntryCreatePNM_BYTESVector(builder, data):
     return builder.EndVector()
 
 def CreatePNM_BYTESVector(builder, data):
-    PNVEntryCreatePNM_BYTESVector(builder, data)
+    return PNVEntryCreatePNM_BYTESVector(builder, data)
 
 def PNVEntryEnd(builder):
     return builder.EndObject()

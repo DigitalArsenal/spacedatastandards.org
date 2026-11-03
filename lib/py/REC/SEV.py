@@ -144,7 +144,7 @@ def SEVCreateOB_ARRAYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOB_ARRAYVector(builder, data):
-    SEVCreateOB_ARRAYVector(builder, data)
+    return SEVCreateOB_ARRAYVector(builder, data)
 
 def SEVAddOB_BOOL(builder, OB_BOOL):
     builder.PrependBoolSlot(5, OB_BOOL, 0)

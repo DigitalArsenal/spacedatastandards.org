@@ -150,7 +150,7 @@ public enum capabilityClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  without the label a surface will render, the sentence a browse row will
 ///  show, and the route a link will target. This is what stops each consumer
 ///  from inventing its own wording for the same code.
-public struct CCTCategory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CCTCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -262,7 +262,7 @@ public struct CCTCategory: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  count can never omit when it was taken or what it was taken over. A consumer
 ///  that needs a live number computes it from the items; a consumer rendering a
 ///  published rollup MUST show it as of COUNTED_AT.
-public struct CCTCategoryRollup: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CCTCategoryRollup: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -333,7 +333,7 @@ public struct CCTCategoryRollup: FlatBufferTable, FlatbuffersVectorInitializable
 ///  `$PLG` = one module's listing, which cites categories by code; `$APP` = one
 ///  application's manifest, which cites categories by code; `$PMM` = which
 ///  modules a provider serves; `$STO`/`$STF` = commerce.
-public struct CCT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CCT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

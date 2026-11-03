@@ -161,7 +161,7 @@ def SCRSearchReportCreateEXCLUDEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXCLUDEDVector(builder, data):
-    SCRSearchReportCreateEXCLUDEDVector(builder, data)
+    return SCRSearchReportCreateEXCLUDEDVector(builder, data)
 
 def SCRSearchReportAddPRIMARIES(builder, PRIMARIES):
     builder.PrependUint32Slot(5, PRIMARIES, 0)

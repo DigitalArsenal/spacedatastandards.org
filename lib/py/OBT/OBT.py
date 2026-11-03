@@ -516,7 +516,7 @@ def OBTCreateAOU_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateAOU_DATAVector(builder, data):
-    OBTCreateAOU_DATAVector(builder, data)
+    return OBTCreateAOU_DATAVector(builder, data)
 
 def OBTAddCNTNMNT(builder, CNTNMNT):
     builder.PrependFloat64Slot(23, CNTNMNT, 0.0)
@@ -612,7 +612,7 @@ def OBTCreateTRACK_SENSORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACK_SENSORSVector(builder, data):
-    OBTCreateTRACK_SENSORSVector(builder, data)
+    return OBTCreateTRACK_SENSORSVector(builder, data)
 
 def OBTEnd(builder):
     return builder.EndObject()

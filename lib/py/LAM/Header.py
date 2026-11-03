@@ -117,7 +117,7 @@ def HeaderCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    HeaderCreateCOMMENTVector(builder, data)
+    return HeaderCreateCOMMENTVector(builder, data)
 
 def HeaderAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)

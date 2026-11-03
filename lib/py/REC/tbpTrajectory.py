@@ -195,7 +195,7 @@ def tbpTrajectoryCreateTIMESVector(builder, data):
     return builder.EndVector()
 
 def CreateTIMESVector(builder, data):
-    tbpTrajectoryCreateTIMESVector(builder, data)
+    return tbpTrajectoryCreateTIMESVector(builder, data)
 
 def tbpTrajectoryAddSTATES(builder, STATES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
@@ -217,7 +217,7 @@ def tbpTrajectoryCreateSTATESVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATESVector(builder, data):
-    tbpTrajectoryCreateSTATESVector(builder, data)
+    return tbpTrajectoryCreateSTATESVector(builder, data)
 
 def tbpTrajectoryAddSTATE_TRANSITION(builder, STATE_TRANSITION):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_TRANSITION), 0)
@@ -239,7 +239,7 @@ def tbpTrajectoryCreateSTATE_TRANSITIONVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATE_TRANSITIONVector(builder, data):
-    tbpTrajectoryCreateSTATE_TRANSITIONVector(builder, data)
+    return tbpTrajectoryCreateSTATE_TRANSITIONVector(builder, data)
 
 def tbpTrajectoryAddJACOBI(builder, JACOBI):
     builder.PrependFloat64Slot(6, JACOBI, 0.0)

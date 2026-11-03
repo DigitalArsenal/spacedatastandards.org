@@ -54,7 +54,7 @@ public enum reentryReason: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Reentry State Vector
-public struct reentryStateVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct reentryStateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -142,7 +142,7 @@ public struct reentryStateVector: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Reentry Ground Impact Prediction
-public struct reentryImpact: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct reentryImpact: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -222,7 +222,7 @@ public struct reentryImpact: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Surviving Debris Prediction
-public struct survivingDebris: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct survivingDebris: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -289,7 +289,7 @@ public struct survivingDebris: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Reentry Data Message
-public struct RDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1126,7 +1126,7 @@ public struct RDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
 ///  One USER_DEFINED_x keyword of an RDM, or one USER_DEFINED element of its XML
 ///  form: the parameter name (the x) and the value as written.
-public struct RDMUserDefinedParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RDMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

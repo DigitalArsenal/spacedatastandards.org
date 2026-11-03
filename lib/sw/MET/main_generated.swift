@@ -28,7 +28,7 @@ public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Mean Element Theory
-public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MET: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

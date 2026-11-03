@@ -93,7 +93,7 @@ def ERMRealismFactorCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    ERMRealismFactorCreateSOURCESVector(builder, data)
+    return ERMRealismFactorCreateSOURCESVector(builder, data)
 
 def ERMRealismFactorAddFIT_CLASS(builder, FIT_CLASS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FIT_CLASS), 0)

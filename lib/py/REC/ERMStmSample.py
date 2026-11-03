@@ -124,7 +124,7 @@ def ERMStmSampleCreateSTATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATEVector(builder, data):
-    ERMStmSampleCreateSTATEVector(builder, data)
+    return ERMStmSampleCreateSTATEVector(builder, data)
 
 def ERMStmSampleAddSTM(builder, STM):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STM), 0)
@@ -146,7 +146,7 @@ def ERMStmSampleCreateSTMVector(builder, data):
     return builder.EndVector()
 
 def CreateSTMVector(builder, data):
-    ERMStmSampleCreateSTMVector(builder, data)
+    return ERMStmSampleCreateSTMVector(builder, data)
 
 def ERMStmSampleEnd(builder):
     return builder.EndObject()

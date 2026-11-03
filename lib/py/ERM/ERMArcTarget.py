@@ -123,7 +123,7 @@ def ERMArcTargetCreateTRUTHVector(builder, data):
     return builder.EndVector()
 
 def CreateTRUTHVector(builder, data):
-    ERMArcTargetCreateTRUTHVector(builder, data)
+    return ERMArcTargetCreateTRUTHVector(builder, data)
 
 def ERMArcTargetEnd(builder):
     return builder.EndObject()

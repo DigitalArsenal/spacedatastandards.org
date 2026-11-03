@@ -218,7 +218,7 @@ def ERMPairSideCreatePOSITION_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_MVector(builder, data):
-    ERMPairSideCreatePOSITION_MVector(builder, data)
+    return ERMPairSideCreatePOSITION_MVector(builder, data)
 
 def ERMPairSideAddVELOCITY_M_S(builder, VELOCITY_M_S):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_M_S), 0)
@@ -240,7 +240,7 @@ def ERMPairSideCreateVELOCITY_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_M_SVector(builder, data):
-    ERMPairSideCreateVELOCITY_M_SVector(builder, data)
+    return ERMPairSideCreateVELOCITY_M_SVector(builder, data)
 
 def ERMPairSideAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -262,7 +262,7 @@ def ERMPairSideCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMPairSideCreateCOVARIANCEVector(builder, data)
+    return ERMPairSideCreateCOVARIANCEVector(builder, data)
 
 def ERMPairSideAddCOVARIANCE_TERMS(builder, COVARIANCE_TERMS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_TERMS), 0)
@@ -280,7 +280,7 @@ def ERMPairSideCreateCOVARIANCE_TERMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOVARIANCE_TERMSVector(builder, data):
-    ERMPairSideCreateCOVARIANCE_TERMSVector(builder, data)
+    return ERMPairSideCreateCOVARIANCE_TERMSVector(builder, data)
 
 def ERMPairSideAddCOVARIANCE_AXES(builder, COVARIANCE_AXES):
     builder.PrependUint8Slot(5, COVARIANCE_AXES, 0)
@@ -304,7 +304,7 @@ def ERMPairSideCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    ERMPairSideCreateSAMPLESVector(builder, data)
+    return ERMPairSideCreateSAMPLESVector(builder, data)
 
 def ERMPairSideAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
     builder.PrependUint8Slot(7, INTERPOLATION_DEGREE, 5)

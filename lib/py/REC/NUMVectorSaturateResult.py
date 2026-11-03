@@ -117,7 +117,7 @@ def NUMVectorSaturateResultCreateSATURATED_STATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSATURATED_STATEVector(builder, data):
-    NUMVectorSaturateResultCreateSATURATED_STATEVector(builder, data)
+    return NUMVectorSaturateResultCreateSATURATED_STATEVector(builder, data)
 
 def NUMVectorSaturateResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

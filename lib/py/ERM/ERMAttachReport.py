@@ -185,7 +185,7 @@ def ERMAttachReportCreateREFUSED_ELEMENT_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFUSED_ELEMENT_SETSVector(builder, data):
-    ERMAttachReportCreateREFUSED_ELEMENT_SETSVector(builder, data)
+    return ERMAttachReportCreateREFUSED_ELEMENT_SETSVector(builder, data)
 
 def ERMAttachReportAddUNMATCHED_STATES(builder, UNMATCHED_STATES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UNMATCHED_STATES), 0)
@@ -203,7 +203,7 @@ def ERMAttachReportCreateUNMATCHED_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNMATCHED_STATESVector(builder, data):
-    ERMAttachReportCreateUNMATCHED_STATESVector(builder, data)
+    return ERMAttachReportCreateUNMATCHED_STATESVector(builder, data)
 
 def ERMAttachReportAddUNMATCHED_OPERATOR(builder, UNMATCHED_OPERATOR):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UNMATCHED_OPERATOR), 0)
@@ -221,7 +221,7 @@ def ERMAttachReportCreateUNMATCHED_OPERATORVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNMATCHED_OPERATORVector(builder, data):
-    ERMAttachReportCreateUNMATCHED_OPERATORVector(builder, data)
+    return ERMAttachReportCreateUNMATCHED_OPERATORVector(builder, data)
 
 def ERMAttachReportAddOBJECTS(builder, OBJECTS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTS), 0)
@@ -239,7 +239,7 @@ def ERMAttachReportCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    ERMAttachReportCreateOBJECTSVector(builder, data)
+    return ERMAttachReportCreateOBJECTSVector(builder, data)
 
 def ERMAttachReportEnd(builder):
     return builder.EndObject()

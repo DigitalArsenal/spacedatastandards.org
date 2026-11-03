@@ -399,7 +399,7 @@ def IONCreateDATA_POINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATA_POINTSVector(builder, data):
-    IONCreateDATA_POINTSVector(builder, data)
+    return IONCreateDATA_POINTSVector(builder, data)
 
 def IONAddDENSITY_PROFILES(builder, DENSITY_PROFILES):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_PROFILES), 0)
@@ -417,7 +417,7 @@ def IONCreateDENSITY_PROFILESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDENSITY_PROFILESVector(builder, data):
-    IONCreateDENSITY_PROFILESVector(builder, data)
+    return IONCreateDENSITY_PROFILESVector(builder, data)
 
 def IONAddQUALITY(builder, QUALITY):
     builder.PrependUint8Slot(22, QUALITY, 0)

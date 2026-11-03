@@ -129,7 +129,7 @@ def StreamSetCreateFIXED_FRAME_STREAMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFIXED_FRAME_STREAMSVector(builder, data):
-    StreamSetCreateFIXED_FRAME_STREAMSVector(builder, data)
+    return StreamSetCreateFIXED_FRAME_STREAMSVector(builder, data)
 
 def StreamSetAddVARIABLE_FRAME_STREAMS(builder, VARIABLE_FRAME_STREAMS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_FRAME_STREAMS), 0)
@@ -147,7 +147,7 @@ def StreamSetCreateVARIABLE_FRAME_STREAMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIABLE_FRAME_STREAMSVector(builder, data):
-    StreamSetCreateVARIABLE_FRAME_STREAMSVector(builder, data)
+    return StreamSetCreateVARIABLE_FRAME_STREAMSVector(builder, data)
 
 def StreamSetAddCUSTOM_STREAMS(builder, CUSTOM_STREAMS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CUSTOM_STREAMS), 0)
@@ -165,7 +165,7 @@ def StreamSetCreateCUSTOM_STREAMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCUSTOM_STREAMSVector(builder, data):
-    StreamSetCreateCUSTOM_STREAMSVector(builder, data)
+    return StreamSetCreateCUSTOM_STREAMSVector(builder, data)
 
 def StreamSetEnd(builder):
     return builder.EndObject()

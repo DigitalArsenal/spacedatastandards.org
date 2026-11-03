@@ -21,7 +21,7 @@ public enum packetKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Space Packet Protocol (CCSDS 133.0-B-1)
-public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SPP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

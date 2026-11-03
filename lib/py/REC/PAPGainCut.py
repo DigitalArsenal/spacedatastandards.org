@@ -148,7 +148,7 @@ def PAPGainCutCreateANGLES_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateANGLES_DEGVector(builder, data):
-    PAPGainCutCreateANGLES_DEGVector(builder, data)
+    return PAPGainCutCreateANGLES_DEGVector(builder, data)
 
 def PAPGainCutAddGAIN_DBI(builder, GAIN_DBI):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(GAIN_DBI), 0)
@@ -170,7 +170,7 @@ def PAPGainCutCreateGAIN_DBIVector(builder, data):
     return builder.EndVector()
 
 def CreateGAIN_DBIVector(builder, data):
-    PAPGainCutCreateGAIN_DBIVector(builder, data)
+    return PAPGainCutCreateGAIN_DBIVector(builder, data)
 
 def PAPGainCutEnd(builder):
     return builder.EndObject()

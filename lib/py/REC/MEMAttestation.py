@@ -137,7 +137,7 @@ def MEMAttestationCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    MEMAttestationCreateSIGNATUREVector(builder, data)
+    return MEMAttestationCreateSIGNATUREVector(builder, data)
 
 def MEMAttestationAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -159,7 +159,7 @@ def MEMAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    MEMAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return MEMAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def MEMAttestationEnd(builder):
     return builder.EndObject()

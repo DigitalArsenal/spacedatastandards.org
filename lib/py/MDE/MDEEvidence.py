@@ -400,7 +400,7 @@ def MDEEvidenceCreateCOMPONENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMPONENTSVector(builder, data):
-    MDEEvidenceCreateCOMPONENTSVector(builder, data)
+    return MDEEvidenceCreateCOMPONENTSVector(builder, data)
 
 def MDEEvidenceAddKEPT(builder, KEPT):
     builder.PrependUint8Slot(24, KEPT, 0)

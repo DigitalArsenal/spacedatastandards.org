@@ -305,7 +305,7 @@ def GPXWaypointCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    GPXWaypointCreateLINKSVector(builder, data)
+    return GPXWaypointCreateLINKSVector(builder, data)
 
 def GPXWaypointAddSYMBOL(builder, SYMBOL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SYMBOL), 0)

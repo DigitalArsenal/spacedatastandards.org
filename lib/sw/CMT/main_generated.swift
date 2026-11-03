@@ -64,7 +64,7 @@ public enum splitRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  One recipient's share of a sale, expressed in basis points.
-public struct RevenueSplit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RevenueSplit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -121,7 +121,7 @@ public struct RevenueSplit: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 ///  across store deployments. Commission is realized purely by the buyer's
 ///  payment routing through the on-chain splitter contract described in
 ///  CONTRACTS — never by a manual or off-chain settlement step.
-public struct CMT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

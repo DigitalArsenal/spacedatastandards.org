@@ -78,7 +78,7 @@ public enum sizeShapeProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  Velocity coefficients, if present, follow the same evaluation procedure.
 ///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
 ///  analytically differentiating the position polynomial.
-public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -227,7 +227,7 @@ public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable
 ///    6. Anomaly (degrees) — see ANOMALY_TYPE
 ///
 ///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
-public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PPEOrbitalElementRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -374,7 +374,7 @@ public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitial
 ///  A PPE message may contain position records, orbital element records, or both.
 ///  Records should be ordered chronologically by EPOCH_MID and should collectively
 ///  cover the time span [START_TIME, STOP_TIME] without gaps.
-public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

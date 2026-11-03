@@ -96,7 +96,7 @@ def ERMFitOptionsCreateFITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFITSVector(builder, data):
-    ERMFitOptionsCreateFITSVector(builder, data)
+    return ERMFitOptionsCreateFITSVector(builder, data)
 
 def ERMFitOptionsEnd(builder):
     return builder.EndObject()

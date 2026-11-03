@@ -163,7 +163,7 @@ def NUMVectorDiscretizeRequestCreateSTATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATEVector(builder, data):
-    NUMVectorDiscretizeRequestCreateSTATEVector(builder, data)
+    return NUMVectorDiscretizeRequestCreateSTATEVector(builder, data)
 
 def NUMVectorDiscretizeRequestAddLSB(builder, LSB):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LSB), 0)
@@ -185,7 +185,7 @@ def NUMVectorDiscretizeRequestCreateLSBVector(builder, data):
     return builder.EndVector()
 
 def CreateLSBVector(builder, data):
-    NUMVectorDiscretizeRequestCreateLSBVector(builder, data)
+    return NUMVectorDiscretizeRequestCreateLSBVector(builder, data)
 
 def NUMVectorDiscretizeRequestAddROUND_DIRECTION(builder, ROUND_DIRECTION):
     builder.PrependInt8Slot(2, ROUND_DIRECTION, 0)
@@ -219,7 +219,7 @@ def NUMVectorDiscretizeRequestCreatePREVIOUS_ERRORVector(builder, data):
     return builder.EndVector()
 
 def CreatePREVIOUS_ERRORVector(builder, data):
-    NUMVectorDiscretizeRequestCreatePREVIOUS_ERRORVector(builder, data)
+    return NUMVectorDiscretizeRequestCreatePREVIOUS_ERRORVector(builder, data)
 
 def NUMVectorDiscretizeRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

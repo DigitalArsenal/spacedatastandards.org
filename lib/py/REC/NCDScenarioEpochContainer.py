@@ -211,7 +211,7 @@ def NCDScenarioEpochContainerCreateSEGMENT_BOUNDARY_TIMESVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_BOUNDARY_TIMESVector(builder, data):
-    NCDScenarioEpochContainerCreateSEGMENT_BOUNDARY_TIMESVector(builder, data)
+    return NCDScenarioEpochContainerCreateSEGMENT_BOUNDARY_TIMESVector(builder, data)
 
 def NCDScenarioEpochContainerEnd(builder):
     return builder.EndObject()

@@ -148,7 +148,7 @@ public enum cnpMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 ///  A separate table so an absent REGION means "the source did not key by
 ///  geography", which is different from GLOBAL ("the source aggregated across
 ///  all geographies") and different again from an empty CODE.
-public struct CNPRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CNPRegion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -203,7 +203,7 @@ public struct CNPRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Where one metric came from and under what terms it may be republished.
-public struct CNPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CNPProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -348,7 +348,7 @@ public struct CNPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  One number drawn from a metric's distribution.
-public struct CNPStatistic: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CNPStatistic: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -405,7 +405,7 @@ public struct CNPStatistic: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 ///  `VALUE: double` on this table: a source that publishes only a median
 ///  encodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can
 ///  then never mistake it for a mean.
-public struct CNPMetric: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CNPMetric: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -519,7 +519,7 @@ public struct CNPMetric: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 ///  because a single record may legitimately carry a CC0 open-measurement lane
 ///  beside a CC BY-NC cross-check from a restricted publisher; the restriction
 ///  attaches to the metric that inherited it, never to the record as a whole.
-public struct CNP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CNP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

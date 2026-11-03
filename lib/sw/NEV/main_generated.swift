@@ -59,7 +59,7 @@ public enum nevEventKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  One event.
-public struct NEVEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NEVEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -135,7 +135,7 @@ public struct NEVEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Node Event - one read of a node's event log.
-public struct NEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NEV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

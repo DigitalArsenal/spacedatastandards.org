@@ -114,7 +114,7 @@ public enum bpfLicenseMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 ///  One variable part of the build template and whether this profile embeds
 ///  it.
-public struct BPFPart: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BPFPart: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -219,7 +219,7 @@ public struct BPFPart: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
 ///  One module selected into the build and the tier its payload is protected
 ///  at.
-public struct BPFModule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BPFModule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -341,7 +341,7 @@ public struct BPFModule: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 ///  expires. There is deliberately no stored expiry instant — expiry is
 ///  `COMPILED_AT_MS + TTL_DAYS * 86400000` and a second, storable copy of it
 ///  could disagree with the two values that produce it.
-public struct BPFRuntimeLock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BPFRuntimeLock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -432,7 +432,7 @@ public struct BPFRuntimeLock: FlatBufferTable, FlatbuffersVectorInitializable, V
 ///  "unsigned and therefore acceptable", which would let stripping one
 ///  signature launder a tampered profile past an importer that admits
 ///  unsigned input.
-public struct BPFAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BPFAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -508,7 +508,7 @@ public struct BPFAttestation: FlatBufferTable, FlatbuffersVectorInitializable, V
 ///  carries no authority; all authority over a profile lives in
 ///  `ATTESTATION`. A bare size-prefixed `$BPF` buffer is also a complete,
 ///  valid export.
-public struct BPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BPF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

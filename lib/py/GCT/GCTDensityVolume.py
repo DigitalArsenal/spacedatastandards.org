@@ -165,7 +165,7 @@ def GCTDensityVolumeCreateORIGIN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateORIGIN_MVector(builder, data):
-    GCTDensityVolumeCreateORIGIN_MVector(builder, data)
+    return GCTDensityVolumeCreateORIGIN_MVector(builder, data)
 
 def GCTDensityVolumeAddSPAN_M(builder, SPAN_M):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SPAN_M), 0)
@@ -187,7 +187,7 @@ def GCTDensityVolumeCreateSPAN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSPAN_MVector(builder, data):
-    GCTDensityVolumeCreateSPAN_MVector(builder, data)
+    return GCTDensityVolumeCreateSPAN_MVector(builder, data)
 
 def GCTDensityVolumeAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
@@ -209,7 +209,7 @@ def GCTDensityVolumeCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    GCTDensityVolumeCreateDATAVector(builder, data)
+    return GCTDensityVolumeCreateDATAVector(builder, data)
 
 def GCTDensityVolumeAddCHUNK_CID(builder, CHUNK_CID):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CHUNK_CID), 0)

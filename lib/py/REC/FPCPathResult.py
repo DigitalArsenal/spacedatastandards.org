@@ -139,7 +139,7 @@ def FPCPathResultCreatePATHVector(builder, data):
     return builder.EndVector()
 
 def CreatePATHVector(builder, data):
-    FPCPathResultCreatePATHVector(builder, data)
+    return FPCPathResultCreatePATHVector(builder, data)
 
 def FPCPathResultEnd(builder):
     return builder.EndObject()

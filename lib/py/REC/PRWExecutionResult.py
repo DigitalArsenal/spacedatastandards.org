@@ -210,7 +210,7 @@ def PRWExecutionResultCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    PRWExecutionResultCreateSAMPLESVector(builder, data)
+    return PRWExecutionResultCreateSAMPLESVector(builder, data)
 
 def PRWExecutionResultAddELAPSED_SECONDS(builder, ELAPSED_SECONDS):
     builder.PrependFloat64Slot(2, ELAPSED_SECONDS, 0.0)
@@ -256,7 +256,7 @@ def PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data):
     return builder.EndVector()
 
 def CreateDYNAMIC_PARAMETERSVector(builder, data):
-    PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
+    return PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
 
 def PRWExecutionResultAddEVENTS(builder, EVENTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EVENTS), 0)
@@ -274,7 +274,7 @@ def PRWExecutionResultCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    PRWExecutionResultCreateEVENTSVector(builder, data)
+    return PRWExecutionResultCreateEVENTSVector(builder, data)
 
 def PRWExecutionResultAddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_OCCURRENCES), 0)
@@ -296,7 +296,7 @@ def PRWExecutionResultCreateEVENT_OCCURRENCESVector(builder, data):
     return builder.EndVector()
 
 def CreateEVENT_OCCURRENCESVector(builder, data):
-    PRWExecutionResultCreateEVENT_OCCURRENCESVector(builder, data)
+    return PRWExecutionResultCreateEVENT_OCCURRENCESVector(builder, data)
 
 def PRWExecutionResultAddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT):
     builder.PrependInt32Slot(9, STOPPED_BY_EVENT, -1)

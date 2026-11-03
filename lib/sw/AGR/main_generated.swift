@@ -36,7 +36,7 @@ public enum agrKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  One histogram bin over [LOW, HIGH).
-public struct AGRBin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AGRBin: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -108,7 +108,7 @@ public struct AGRBin: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 }
 
 ///  One category tally.
-public struct AGRCategory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AGRCategory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -157,7 +157,7 @@ public struct AGRCategory: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  One named series with parallel X and Y vectors.
-public struct AGRSeries: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AGRSeries: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -208,7 +208,7 @@ public struct AGRSeries: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  One pivot cell.
-public struct AGRPivotCell: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AGRPivotCell: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -264,7 +264,7 @@ public struct AGRPivotCell: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Aggregation Result - one summary over one standard's records.
-public struct AGR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct AGR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

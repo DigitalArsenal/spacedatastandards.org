@@ -149,7 +149,7 @@ def ERMStateSampleCreatePOSITION_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_MVector(builder, data):
-    ERMStateSampleCreatePOSITION_MVector(builder, data)
+    return ERMStateSampleCreatePOSITION_MVector(builder, data)
 
 def ERMStateSampleAddVELOCITY_M_S(builder, VELOCITY_M_S):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_M_S), 0)
@@ -171,7 +171,7 @@ def ERMStateSampleCreateVELOCITY_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_M_SVector(builder, data):
-    ERMStateSampleCreateVELOCITY_M_SVector(builder, data)
+    return ERMStateSampleCreateVELOCITY_M_SVector(builder, data)
 
 def ERMStateSampleAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -193,7 +193,7 @@ def ERMStateSampleCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMStateSampleCreateCOVARIANCEVector(builder, data)
+    return ERMStateSampleCreateCOVARIANCEVector(builder, data)
 
 def ERMStateSampleEnd(builder):
     return builder.EndObject()

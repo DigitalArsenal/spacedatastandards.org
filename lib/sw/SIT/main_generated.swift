@@ -144,7 +144,7 @@ public enum sitQuantityKind: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 ///  Where one statement about a site was read: the source, the record, the
 ///  version of the record and the field the statement came from.
-public struct SITCitation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SITCitation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -226,7 +226,7 @@ public struct SITCitation: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  One source's assertion of one lifecycle step of a site.
-public struct SITStatusEvidence: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SITStatusEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -278,7 +278,7 @@ public struct SITStatusEvidence: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  A reference to another record about the site or a party.
-public struct SITReference: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SITReference: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -357,7 +357,7 @@ public struct SITReference: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  An organisation with a part at the site.
-public struct SITParty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SITParty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -416,7 +416,7 @@ public struct SITParty: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  One stated quantity of a site.
-public struct SITQuantity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SITQuantity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -483,7 +483,7 @@ public struct SITQuantity: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Geometry table with information about geometric properties
-public struct Geometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Geometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -529,7 +529,7 @@ public struct Geometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Site Information Message
-public struct SIT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -353,7 +353,7 @@ def IDMCreateBANDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBANDVector(builder, data):
-    IDMCreateBANDVector(builder, data)
+    return IDMCreateBANDVector(builder, data)
 
 def IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE):
     builder.PrependInt8Slot(7, POLARIZATION_TYPE, 0)

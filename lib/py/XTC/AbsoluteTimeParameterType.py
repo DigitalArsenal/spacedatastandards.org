@@ -211,7 +211,7 @@ def AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_ALARMSVector(builder, data):
-    AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+    return AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def AbsoluteTimeParameterTypeEnd(builder):
     return builder.EndObject()

@@ -38,7 +38,7 @@ public enum pnlTrackingMode: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 ///  1 for a physically consistent panel. Producers SHOULD state the source of
 ///  the optical properties in the parent record's SOURCE field; a panel model
 ///  whose coefficients have no provenance is worse than none.
-public struct PNLPanel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PNLPanel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -169,7 +169,7 @@ public struct PNLPanel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 ///  inventory; $PHY is simulation configuration (integration method, force-type
 ///  toggles). None of them carries per-panel area, normal, and optical
 ///  coefficients.
-public struct PNL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PNL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

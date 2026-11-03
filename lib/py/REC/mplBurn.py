@@ -225,7 +225,7 @@ def mplBurnCreateDELTA_VVector(builder, data):
     return builder.EndVector()
 
 def CreateDELTA_VVector(builder, data):
-    mplBurnCreateDELTA_VVector(builder, data)
+    return mplBurnCreateDELTA_VVector(builder, data)
 
 def mplBurnAddMAGNITUDE_KM_S(builder, MAGNITUDE_KM_S):
     builder.PrependFloat64Slot(7, MAGNITUDE_KM_S, 0.0)

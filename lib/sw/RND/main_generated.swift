@@ -42,7 +42,7 @@ public enum rndSource: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Random Data - a request for random bytes, or the bytes.
-public struct RND: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RND: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -75,7 +75,7 @@ def CMECOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    CMECOLLECTIONCreateRECORDSVector(builder, data)
+    return CMECOLLECTIONCreateRECORDSVector(builder, data)
 
 def CMECOLLECTIONEnd(builder):
     return builder.EndObject()

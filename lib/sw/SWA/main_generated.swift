@@ -43,7 +43,7 @@ public enum swaScaleFamily: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Space Weather Alert
-public struct SWA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SWA: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -193,7 +193,7 @@ public struct SWA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   }
 }
 
-public struct SWACOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SWACOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

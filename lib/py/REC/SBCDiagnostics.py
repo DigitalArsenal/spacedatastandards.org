@@ -349,7 +349,7 @@ def SBCDiagnosticsCreateCONTRIBUTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateCONTRIBUTORSVector(builder, data):
-    SBCDiagnosticsCreateCONTRIBUTORSVector(builder, data)
+    return SBCDiagnosticsCreateCONTRIBUTORSVector(builder, data)
 
 def SBCDiagnosticsAddCONTRIBUTIONS(builder, CONTRIBUTIONS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
@@ -367,7 +367,7 @@ def SBCDiagnosticsCreateCONTRIBUTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRIBUTIONSVector(builder, data):
-    SBCDiagnosticsCreateCONTRIBUTIONSVector(builder, data)
+    return SBCDiagnosticsCreateCONTRIBUTIONSVector(builder, data)
 
 def SBCDiagnosticsAddPOSITION_SIGMA_RTN_M(builder, POSITION_SIGMA_RTN_M):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_SIGMA_RTN_M), 0)
@@ -389,7 +389,7 @@ def SBCDiagnosticsCreatePOSITION_SIGMA_RTN_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_SIGMA_RTN_MVector(builder, data):
-    SBCDiagnosticsCreatePOSITION_SIGMA_RTN_MVector(builder, data)
+    return SBCDiagnosticsCreatePOSITION_SIGMA_RTN_MVector(builder, data)
 
 def SBCDiagnosticsAddVELOCITY_SIGMA_RTN_M_S(builder, VELOCITY_SIGMA_RTN_M_S):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_SIGMA_RTN_M_S), 0)
@@ -411,7 +411,7 @@ def SBCDiagnosticsCreateVELOCITY_SIGMA_RTN_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_SIGMA_RTN_M_SVector(builder, data):
-    SBCDiagnosticsCreateVELOCITY_SIGMA_RTN_M_SVector(builder, data)
+    return SBCDiagnosticsCreateVELOCITY_SIGMA_RTN_M_SVector(builder, data)
 
 def SBCDiagnosticsAddCOVARIANCE_LOWER_TRIANGLE(builder, COVARIANCE_LOWER_TRIANGLE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_LOWER_TRIANGLE), 0)
@@ -433,7 +433,7 @@ def SBCDiagnosticsCreateCOVARIANCE_LOWER_TRIANGLEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE_LOWER_TRIANGLEVector(builder, data):
-    SBCDiagnosticsCreateCOVARIANCE_LOWER_TRIANGLEVector(builder, data)
+    return SBCDiagnosticsCreateCOVARIANCE_LOWER_TRIANGLEVector(builder, data)
 
 def SBCDiagnosticsAddPOSITION_COVARIANCE_KM2(builder, POSITION_COVARIANCE_KM2):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_COVARIANCE_KM2), 0)
@@ -455,7 +455,7 @@ def SBCDiagnosticsCreatePOSITION_COVARIANCE_KM2Vector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_COVARIANCE_KM2Vector(builder, data):
-    SBCDiagnosticsCreatePOSITION_COVARIANCE_KM2Vector(builder, data)
+    return SBCDiagnosticsCreatePOSITION_COVARIANCE_KM2Vector(builder, data)
 
 def SBCDiagnosticsAddELLIPSOID_SIGMA_LEVEL(builder, ELLIPSOID_SIGMA_LEVEL):
     builder.PrependFloat64Slot(11, ELLIPSOID_SIGMA_LEVEL, 1.0)
@@ -483,7 +483,7 @@ def SBCDiagnosticsCreateELLIPSOID_SEMI_AXES_MVector(builder, data):
     return builder.EndVector()
 
 def CreateELLIPSOID_SEMI_AXES_MVector(builder, data):
-    SBCDiagnosticsCreateELLIPSOID_SEMI_AXES_MVector(builder, data)
+    return SBCDiagnosticsCreateELLIPSOID_SEMI_AXES_MVector(builder, data)
 
 def SBCDiagnosticsAddASSUMPTIONS(builder, ASSUMPTIONS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ASSUMPTIONS), 0)
@@ -501,7 +501,7 @@ def SBCDiagnosticsCreateASSUMPTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSUMPTIONSVector(builder, data):
-    SBCDiagnosticsCreateASSUMPTIONSVector(builder, data)
+    return SBCDiagnosticsCreateASSUMPTIONSVector(builder, data)
 
 def SBCDiagnosticsEnd(builder):
     return builder.EndObject()

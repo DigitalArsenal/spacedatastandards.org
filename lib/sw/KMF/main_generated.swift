@@ -55,20 +55,409 @@ public enum keyMaterialEncoding: Int8, FlatbuffersVectorInitializable, Enum, Ver
 }
 
 
+
+// MARK: - FlatbuffersEncryption
+
+/// Field-encryption format 3: encrypts or decrypts, in place, every
+/// (encrypted) field instance of a buffer exactly as the C++ walker
+/// (flatbuffers::EncryptBuffer/DecryptBuffer, version 3) and flatc-wasm do.
+/// The record's key is
+/// K = HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)),
+/// and each instance is AES-256-CTR encrypted with K and the IV
+/// BE32(position of its first byte in the buffer) || 12 zero bytes, so no two
+/// instances share a key stream. (key, recordIndex) must be unique per buffer.
+/// Generated tables call it with their walk program.
+fileprivate struct FlatbuffersEncryptionError: Error, CustomStringConvertible {
+  let description: String
+}
+
+fileprivate enum FlatbuffersEncryption {
+  static let sbox: [UInt8] = [
+    0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+    0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+    0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+    0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+    0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+    0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+    0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+    0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+    0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+    0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+    0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+    0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+    0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+    0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+    0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
+  ]
+
+  static let k: [UInt32] = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+  ]
+
+  static func rotr(_ x: UInt32, _ n: UInt32) -> UInt32 { (x >> n) | (x << (32 - n)) }
+
+  static func sha256(_ message: [UInt8]) -> [UInt8] {
+    var h: [UInt32] = [
+      0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+      0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
+    ]
+    var data = message
+    data.append(0x80)
+    while data.count % 64 != 56 { data.append(0) }
+    let bits = UInt64(message.count) * 8
+    for i in (0..<8).reversed() { data.append(UInt8(truncatingIfNeeded: bits >> (8 * UInt64(i)))) }
+    var w = [UInt32](repeating: 0, count: 64)
+    for chunk in stride(from: 0, to: data.count, by: 64) {
+      for i in 0..<16 {
+        let j = chunk + 4 * i
+        w[i] = UInt32(data[j]) << 24 | UInt32(data[j + 1]) << 16 | UInt32(data[j + 2]) << 8 | UInt32(data[j + 3])
+      }
+      for i in 16..<64 {
+        let s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >> 3)
+        let s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >> 10)
+        w[i] = w[i - 16] &+ s0 &+ w[i - 7] &+ s1
+      }
+      var v = h
+      for i in 0..<64 {
+        let s1 = rotr(v[4], 6) ^ rotr(v[4], 11) ^ rotr(v[4], 25)
+        let ch = (v[4] & v[5]) ^ (~v[4] & v[6])
+        let t1 = v[7] &+ s1 &+ ch &+ k[i] &+ w[i]
+        let s0 = rotr(v[0], 2) ^ rotr(v[0], 13) ^ rotr(v[0], 22)
+        let maj = (v[0] & v[1]) ^ (v[0] & v[2]) ^ (v[1] & v[2])
+        v = [t1 &+ s0 &+ maj, v[0], v[1], v[2], v[3] &+ t1, v[4], v[5], v[6]]
+      }
+      for i in 0..<8 { h[i] = h[i] &+ v[i] }
+    }
+    var out: [UInt8] = []
+    for value in h {
+      out += [UInt8(value >> 24), UInt8(truncatingIfNeeded: value >> 16),
+              UInt8(truncatingIfNeeded: value >> 8), UInt8(truncatingIfNeeded: value)]
+    }
+    return out
+  }
+
+  static func hmac(_ key: [UInt8], _ message: [UInt8]) -> [UInt8] {
+    var block = key
+    block += [UInt8](repeating: 0, count: 64 - key.count)
+    let inner = sha256(block.map { $0 ^ 0x36 } + message)
+    return sha256(block.map { $0 ^ 0x5c } + inner)
+  }
+
+  /// HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)).
+  static func bufferKey(_ key: [UInt8], _ recordIndex: UInt32) -> [UInt8] {
+    let prk = hmac([UInt8](repeating: 0, count: 32), key)
+    let info = Array("flatbuffers-buffer-v3".utf8) + [
+      UInt8(recordIndex >> 24), UInt8(truncatingIfNeeded: recordIndex >> 16),
+      UInt8(truncatingIfNeeded: recordIndex >> 8), UInt8(truncatingIfNeeded: recordIndex), 1,
+    ]
+    return hmac(prk, info)
+  }
+
+  static func xtime(_ a: UInt8) -> UInt8 { (a << 1) ^ (a & 0x80 != 0 ? 0x1b : 0) }
+
+  static func expandKey(_ key: [UInt8]) -> [UInt8] {
+    var w = key + [UInt8](repeating: 0, count: 208)
+    var rcon: UInt8 = 1
+    for i in stride(from: 32, to: 240, by: 4) {
+      var t = [w[i - 4], w[i - 3], w[i - 2], w[i - 1]]
+      if i % 32 == 0 {
+        t = [sbox[Int(t[1])] ^ rcon, sbox[Int(t[2])], sbox[Int(t[3])], sbox[Int(t[0])]]
+        rcon = xtime(rcon)
+      } else if i % 32 == 16 {
+        t = t.map { sbox[Int($0)] }
+      }
+      for j in 0..<4 { w[i + j] = w[i - 32 + j] ^ t[j] }
+    }
+    return w
+  }
+
+  static func encryptBlock(_ w: [UInt8], _ block: [UInt8]) -> [UInt8] {
+    var s = (0..<16).map { block[$0] ^ w[$0] }
+    for round in 1..<15 {
+      let t = s.map { sbox[Int($0)] }
+      s = [t[0], t[5], t[10], t[15], t[4], t[9], t[14], t[3],
+           t[8], t[13], t[2], t[7], t[12], t[1], t[6], t[11]]
+      if round < 14 {
+        for c in stride(from: 0, to: 16, by: 4) {
+          let (a0, a1, a2, a3) = (s[c], s[c + 1], s[c + 2], s[c + 3])
+          let x = a0 ^ a1 ^ a2 ^ a3
+          s[c] = a0 ^ x ^ xtime(a0 ^ a1)
+          s[c + 1] = a1 ^ x ^ xtime(a1 ^ a2)
+          s[c + 2] = a2 ^ x ^ xtime(a2 ^ a3)
+          s[c + 3] = a3 ^ x ^ xtime(a3 ^ a0)
+        }
+      }
+      for i in 0..<16 { s[i] ^= w[16 * round + i] }
+    }
+    return s
+  }
+
+  /// Encrypts or decrypts (the same operation), in place, every (encrypted)
+  /// field instance of bytes by a table's walk program. Throws, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  static func cryptBuffer(
+    _ bytes: inout [UInt8], key: [UInt8], recordIndex: UInt32, program: [Int]) throws
+  {
+    guard key.count == 32 else {
+      throw FlatbuffersEncryptionError(description: "FlatbuffersEncryption: the key must be 32 bytes")
+    }
+    guard bytes.count >= 4 && bytes.count <= 0x7FFF_FFFF else {
+      throw FlatbuffersEncryptionError(description: "FlatbuffersEncryption: invalid buffer")
+    }
+    var dry = Walk(program: program, roundKeys: nil)
+    let root = try dry.u32(bytes, 0)
+    try dry.check(bytes, root, 4)
+    try dry.walk(&bytes, 0, root, 0)
+    var walk = Walk(program: program, roundKeys: expandKey(bufferKey(key, recordIndex)))
+    try walk.walk(&bytes, 0, root, 0)
+  }
+
+  struct Walk {
+    let program: [Int]
+    let roundKeys: [UInt8]?  // nil: a dry run that only checks the buffer
+    var tables = Set<Int64>()
+    var regions = Set<Int64>()
+
+    init(program: [Int], roundKeys: [UInt8]?) {
+      self.program = program
+      self.roundKeys = roundKeys
+    }
+
+    func fail(_ what: String) -> FlatbuffersEncryptionError {
+      FlatbuffersEncryptionError(description: "FlatbuffersEncryption: " + what)
+    }
+
+    func check(_ buf: [UInt8], _ pos: Int64, _ length: Int64) throws {
+      let size = Int64(buf.count)
+      if pos < 0 || length < 0 || pos > size || length > size - pos {
+        throw fail("the buffer is malformed (offset \(pos) out of bounds)")
+      }
+    }
+
+    func u8(_ buf: [UInt8], _ pos: Int64) throws -> Int64 {
+      try check(buf, pos, 1)
+      return Int64(buf[Int(pos)])
+    }
+
+    func u16(_ buf: [UInt8], _ pos: Int64) throws -> Int64 {
+      try check(buf, pos, 2)
+      return Int64(buf[Int(pos)]) | Int64(buf[Int(pos) + 1]) << 8
+    }
+
+    func u32(_ buf: [UInt8], _ pos: Int64) throws -> Int64 {
+      try check(buf, pos, 4)
+      return try u16(buf, pos) | u16(buf, pos + 2) << 16
+    }
+
+    func follow(_ buf: [UInt8], _ pos: Int64) throws -> Int64 {
+      let target = try pos + u32(buf, pos)
+      try check(buf, target, 4)
+      return target
+    }
+
+    func count(_ buf: [UInt8], _ pos: Int64, _ elementSize: Int64) throws -> Int64 {
+      let n = try u32(buf, pos)
+      try check(buf, pos + 4, n * elementSize)
+      return n
+    }
+
+    mutating func crypt(_ buf: inout [UInt8], _ start: Int64, _ length: Int64) {
+      guard length > 0, regions.insert(start).inserted, let w = roundKeys else { return }
+      var counter = [UInt8](repeating: 0, count: 16)
+      counter[0] = UInt8(truncatingIfNeeded: start >> 24)
+      counter[1] = UInt8(truncatingIfNeeded: start >> 16)
+      counter[2] = UInt8(truncatingIfNeeded: start >> 8)
+      counter[3] = UInt8(truncatingIfNeeded: start)
+      var done: Int64 = 0
+      while done < length {
+        let stream = FlatbuffersEncryption.encryptBlock(w, counter)
+        var i: Int64 = 0
+        while i < 16 && done + i < length {
+          buf[Int(start + done + i)] ^= stream[Int(i)]
+          i += 1
+        }
+        for k in (0..<16).reversed() {
+          counter[k] = counter[k] &+ 1
+          if counter[k] != 0 { break }
+        }
+        done += 16
+      }
+    }
+
+    mutating func string(_ buf: inout [UInt8], _ pos: Int64) throws {
+      let s = try follow(buf, pos)
+      let n = try u32(buf, s)
+      try check(buf, s + 4, n + 1)
+      crypt(&buf, s + 4, n)
+    }
+
+    func vtable(_ buf: [UInt8], _ table: Int64) throws -> Int64 {
+      let soffset = try u32(buf, table)
+      return table - (soffset >= 0x8000_0000 ? soffset - 0x1_0000_0000 : soffset)
+    }
+
+    func field(_ buf: [UInt8], _ table: Int64, _ slot: Int64) throws -> Int64 {
+      let vt = try vtable(buf, table)
+      if try slot + 2 > u16(buf, vt) { return 0 }
+      let offset = try u16(buf, vt + slot)
+      return offset == 0 ? 0 : table + offset
+    }
+
+    mutating func enter(_ buf: [UInt8], _ table: Int64, _ depth: Int) throws -> Bool {
+      if depth > 64 { throw fail("tables nested deeper than 64 levels") }
+      if !tables.insert(table).inserted { return false }
+      let vt = try vtable(buf, table)
+      try check(buf, vt, 4)
+      let vtableSize = try u16(buf, vt)
+      let tableSize = try u16(buf, vt + 2)
+      if vtableSize < 4 || vtableSize & 1 != 0 {
+        throw fail("the buffer is malformed (bad vtable)")
+      }
+      try check(buf, vt, vtableSize)
+      try check(buf, table, tableSize)
+      var slot: Int64 = 4
+      while slot < vtableSize {
+        let offset = try u16(buf, vt + slot)
+        if offset != 0 && offset >= tableSize {
+          throw fail("the buffer is malformed (bad field offset)")
+        }
+        slot += 2
+      }
+      return true
+    }
+
+    func member(_ at: Int, _ n: Int, _ unionType: Int64) -> Int? {
+      for i in 0..<n where Int64(program[at + 2 * i]) == unionType {
+        return program[at + 2 * i + 1]
+      }
+      return nil
+    }
+
+    mutating func walk(_ buf: inout [UInt8], _ index: Int, _ table: Int64, _ depth: Int) throws {
+      if try !enter(buf, table, depth) { return }
+      let p = program
+      var at = p[1 + index]
+      let ops = p[at]
+      at += 1
+      for _ in 0..<ops {
+        let kind = p[at]
+        let slot = Int64(p[at + 1])
+        at += 2
+        var arg: Int64 = 0
+        var typeSlot: Int64 = 0
+        var members = 0
+        var n = 0
+        if kind == 0 || kind == 2 || kind == 4 || kind == 5 {
+          arg = Int64(p[at])
+          at += 1
+        } else if kind == 6 || kind == 7 {
+          typeSlot = Int64(p[at])
+          n = p[at + 1]
+          members = at + 2
+          at += 2 + 2 * n
+        }
+        let loc = try field(buf, table, slot)
+        if loc == 0 { continue }
+        switch kind {
+        case 0:
+          try check(buf, loc, arg)
+          crypt(&buf, loc, arg)
+        case 1:
+          try string(&buf, loc)
+        case 2:
+          let v = try follow(buf, loc)
+          let c = try count(buf, v, arg)
+          crypt(&buf, v + 4, c * arg)
+        case 3:
+          let v = try follow(buf, loc)
+          let c = try count(buf, v, 4)
+          var i: Int64 = 0
+          while i < c {
+            try string(&buf, v + 4 + 4 * i)
+            i += 1
+          }
+        case 4:
+          let target = try follow(buf, loc)
+          try walk(&buf, Int(arg), target, depth + 1)
+        case 5:
+          let v = try follow(buf, loc)
+          let c = try count(buf, v, 4)
+          var i: Int64 = 0
+          while i < c {
+            let target = try follow(buf, v + 4 + 4 * i)
+            try walk(&buf, Int(arg), target, depth + 1)
+            i += 1
+          }
+        case 6:
+          let typeLoc = try field(buf, table, typeSlot)
+          if typeLoc == 0 { continue }
+          if let m = member(members, n, try u8(buf, typeLoc)) {
+            let target = try follow(buf, loc)
+            try walk(&buf, m, target, depth + 1)
+          }
+        case 7:
+          let typeLoc = try field(buf, table, typeSlot)
+          if typeLoc == 0 { continue }
+          let types = try follow(buf, typeLoc)
+          let c = try count(buf, types, 1)
+          let values = try follow(buf, loc)
+          if try count(buf, values, 4) != c {
+            throw fail("the buffer is malformed (union vectors differ)")
+          }
+          var i: Int64 = 0
+          while i < c {
+            if let m = member(members, n, try u8(buf, types + 4 + i)) {
+              let target = try follow(buf, values + 4 + 4 * i)
+              try walk(&buf, m, target, depth + 1)
+            }
+            i += 1
+          }
+        default:
+          throw fail("unknown walk program op \(kind)")
+        }
+      }
+    }
+  }
+}
+
 ///  Key Material Frame
-public struct KMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KMF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  /// Encryption context for decrypting encrypted fields
-  public var encryptionCtx: [UInt8]?
-
   public static var id: String { "$KMF" }
   public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: KMF.id, addPrefix: prefix) }
-  private init(_ t: Table, encryptionCtx: [UInt8]? = nil) { _accessor = t; self.encryptionCtx = encryptionCtx }
-  public init(_ bb: ByteBuffer, o: Int32, encryptionCtx: [UInt8]? = nil) { _accessor = Table(bb: bb, position: o); self.encryptionCtx = encryptionCtx }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  /// Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
+  private static let flatbuffersEncryptionProgram: [Int] = [
+    1, 2, 1, 2, 12, 1,
+  ]
+  /// Encrypts, in place, the (encrypted) fields of a KMF buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per buffer
+  /// under the key). Throws, before any byte changes, for a bad key or a
+  /// malformed buffer.
+  public static func encryptBuffer(_ bytes: inout [UInt8], key: [UInt8], recordIndex: UInt32 = 0) throws {
+    try FlatbuffersEncryption.cryptBuffer(&bytes, key: key, recordIndex: recordIndex, program: flatbuffersEncryptionProgram)
+  }
+  /// Decrypts, in place, the (encrypted) fields of a KMF buffer with
+  /// field-encryption format 3 (key: 32 bytes; recordIndex: unique per buffer
+  /// under the key). Throws, before any byte changes, for a bad key or a
+  /// malformed buffer.
+  public static func decryptBuffer(_ bytes: inout [UInt8], key: [UInt8], recordIndex: UInt32 = 0) throws {
+    try FlatbuffersEncryption.cryptBuffer(&bytes, key: key, recordIndex: recordIndex, program: flatbuffersEncryptionProgram)
+  }
 
   private struct VT {
     static let KEY_ID: VOffset = 4
@@ -138,146 +527,5 @@ public struct KMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt32.self)
     try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
     _v.finish()
-  }
-}
-
-// MARK: - FlatbuffersEncryption
-
-/// FlatBuffers field-level encryption support using AES-256-CTR.
-/// Pure Swift implementation - no external dependencies.
-public class FlatbuffersEncryption {
-
-  private static let sbox: [UInt8] = [
-    0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
-    0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
-    0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,
-    0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,
-    0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,
-    0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,
-    0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,
-    0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,
-    0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,
-    0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,
-    0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,
-    0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,
-    0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,
-    0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,
-    0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,
-    0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16
-  ]
-  private static let rcon: [UInt8] = [0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x1b,0x36]
-
-  private static func xtime(_ x: UInt8) -> UInt8 { ((x << 1) ^ ((x & 0x80) != 0 ? 0x1b : 0)) }
-
-  private static func expandKey(_ key: [UInt8]) -> [UInt8] {
-    var expanded = [UInt8](repeating: 0, count: 240)
-    for i in 0..<32 { expanded[i] = key[i] }
-    var rconIdx = 0
-    var i = 32
-    while i < 240 {
-      var t = [expanded[i-4], expanded[i-3], expanded[i-2], expanded[i-1]]
-      if i % 32 == 0 {
-        t = [sbox[Int(t[1])] ^ rcon[rconIdx], sbox[Int(t[2])], sbox[Int(t[3])], sbox[Int(t[0])]]
-        rconIdx += 1
-      } else if i % 32 == 16 {
-        t = [sbox[Int(t[0])], sbox[Int(t[1])], sbox[Int(t[2])], sbox[Int(t[3])]]
-      }
-      for j in 0..<4 { expanded[i + j] = expanded[i - 32 + j] ^ t[j] }
-      i += 4
-    }
-    return expanded
-  }
-
-  private static func aesEncryptBlock(_ block: [UInt8], _ expandedKey: [UInt8]) -> [UInt8] {
-    var state = block
-    for i in 0..<16 { state[i] ^= expandedKey[i] }
-    for round in 1...14 {
-      for i in 0..<16 { state[i] = sbox[Int(state[i])] }
-      let t1 = state[1]; state[1] = state[5]; state[5] = state[9]; state[9] = state[13]; state[13] = t1
-      let t2 = state[2]; state[2] = state[10]; state[10] = t2
-      let t6 = state[6]; state[6] = state[14]; state[14] = t6
-      let t3 = state[15]; state[15] = state[11]; state[11] = state[7]; state[7] = state[3]; state[3] = t3
-      if round < 14 {
-        for c in 0..<4 {
-          let idx = c * 4
-          let (s0, s1, s2, s3) = (state[idx], state[idx+1], state[idx+2], state[idx+3])
-          let x = s0 ^ s1 ^ s2 ^ s3
-          state[idx] ^= x ^ xtime(s0 ^ s1)
-          state[idx+1] ^= x ^ xtime(s1 ^ s2)
-          state[idx+2] ^= x ^ xtime(s2 ^ s3)
-          state[idx+3] ^= x ^ xtime(s3 ^ s0)
-        }
-      }
-      let offset = round * 16
-      for i in 0..<16 { state[i] ^= expandedKey[offset + i] }
-    }
-    return state
-  }
-
-  private static func incrementCounter(_ counter: inout [UInt8]) {
-    for i in stride(from: 15, through: 0, by: -1) {
-      counter[i] = counter[i] &+ 1
-      if counter[i] != 0 { break }
-    }
-  }
-
-  private static func deriveNonce(_ ctx: [UInt8], fieldId: Int) -> [UInt8] {
-    var nonce = [UInt8](repeating: 0, count: 16)
-    for i in 0..<12 { nonce[i] = ctx[i] }
-    let fieldOffset = UInt32(fieldId)
-    nonce[12] = UInt8(fieldOffset & 0xFF)
-    nonce[13] = UInt8((fieldOffset >> 8) & 0xFF)
-    nonce[14] = UInt8((fieldOffset >> 16) & 0xFF)
-    nonce[15] = UInt8((fieldOffset >> 24) & 0xFF)
-    return nonce
-  }
-
-  private static func decryptBytes(_ data: [UInt8], ctx: [UInt8], fieldId: Int) -> [UInt8] {
-    guard ctx.count >= 32 else { return data }
-    let key = Array(ctx[0..<32])
-    var counter = deriveNonce(ctx, fieldId: fieldId)
-    let expandedKey = expandKey(key)
-    var result = [UInt8](repeating: 0, count: data.count)
-    var i = 0
-    while i < data.count {
-      let keystream = aesEncryptBlock(counter, expandedKey)
-      let blockLen = min(16, data.count - i)
-      for j in 0..<blockLen { result[i + j] = data[i + j] ^ keystream[j] }
-      incrementCounter(&counter)
-      i += 16
-    }
-    return result
-  }
-
-  public static func decryptScalar<T: FixedWidthInteger>(_ value: T, encryptionCtx: [UInt8]?, fieldId: Int) -> T {
-    guard let ctx = encryptionCtx, ctx.count >= 32 else { return value }
-    let bytes = withUnsafeBytes(of: value.littleEndian) { Array($0) }
-    let decrypted = decryptBytes(bytes, ctx: ctx, fieldId: fieldId)
-    return decrypted.withUnsafeBytes { $0.load(as: T.self) }.littleEndian
-  }
-
-  public static func decryptScalar(_ value: Float, encryptionCtx: [UInt8]?, fieldId: Int) -> Float {
-    guard let ctx = encryptionCtx, ctx.count >= 32 else { return value }
-    let bits = value.bitPattern
-    let bytes = withUnsafeBytes(of: bits.littleEndian) { Array($0) }
-    let decrypted = decryptBytes(bytes, ctx: ctx, fieldId: fieldId)
-    let decryptedBits = decrypted.withUnsafeBytes { $0.load(as: UInt32.self) }.littleEndian
-    return Float(bitPattern: decryptedBits)
-  }
-
-  public static func decryptScalar(_ value: Double, encryptionCtx: [UInt8]?, fieldId: Int) -> Double {
-    guard let ctx = encryptionCtx, ctx.count >= 32 else { return value }
-    let bits = value.bitPattern
-    let bytes = withUnsafeBytes(of: bits.littleEndian) { Array($0) }
-    let decrypted = decryptBytes(bytes, ctx: ctx, fieldId: fieldId)
-    let decryptedBits = decrypted.withUnsafeBytes { $0.load(as: UInt64.self) }.littleEndian
-    return Double(bitPattern: decryptedBits)
-  }
-
-  public static func decryptString(_ value: String?, encryptionCtx: [UInt8]?, fieldId: Int) -> String? {
-    guard let str = value, let ctx = encryptionCtx, ctx.count >= 32 else { return value }
-    let bytes = Array(str.utf8)
-    let decrypted = decryptBytes(bytes, ctx: ctx, fieldId: fieldId)
-    return String(bytes: decrypted, encoding: .utf8)
   }
 }

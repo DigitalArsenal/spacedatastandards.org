@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Telecommand Transfer Frame (CCSDS 232.0-B-3)
-public struct TCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

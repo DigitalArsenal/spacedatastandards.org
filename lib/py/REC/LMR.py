@@ -177,7 +177,7 @@ def LMRCreateMODULE_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateMODULE_HASHVector(builder, data):
-    LMRCreateMODULE_HASHVector(builder, data)
+    return LMRCreateMODULE_HASHVector(builder, data)
 
 def LMRAddSTATUS(builder, STATUS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS), 0)

@@ -148,7 +148,7 @@ def XMTSelectionPolicyCreateSOURCE_ORDERVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCE_ORDERVector(builder, data):
-    XMTSelectionPolicyCreateSOURCE_ORDERVector(builder, data)
+    return XMTSelectionPolicyCreateSOURCE_ORDERVector(builder, data)
 
 def XMTSelectionPolicyAddMEASURED(builder, MEASURED):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MEASURED), 0)
@@ -166,7 +166,7 @@ def XMTSelectionPolicyCreateMEASUREDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEASUREDVector(builder, data):
-    XMTSelectionPolicyCreateMEASUREDVector(builder, data)
+    return XMTSelectionPolicyCreateMEASUREDVector(builder, data)
 
 def XMTSelectionPolicyAddMEASURED_ROWS(builder, MEASURED_ROWS):
     builder.PrependUint32Slot(5, MEASURED_ROWS, 0)

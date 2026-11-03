@@ -162,7 +162,7 @@ def RFLModelBindingCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    RFLModelBindingCreatePARAMETERSVector(builder, data)
+    return RFLModelBindingCreatePARAMETERSVector(builder, data)
 
 def RFLModelBindingEnd(builder):
     return builder.EndObject()

@@ -205,7 +205,7 @@ def tbpStationKeepingCreateCYCLE_DELTA_V_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateCYCLE_DELTA_V_KM_SVector(builder, data):
-    tbpStationKeepingCreateCYCLE_DELTA_V_KM_SVector(builder, data)
+    return tbpStationKeepingCreateCYCLE_DELTA_V_KM_SVector(builder, data)
 
 def tbpStationKeepingAddBOUNDED(builder, BOUNDED):
     builder.PrependBoolSlot(9, BOUNDED, 0)

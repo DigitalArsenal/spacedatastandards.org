@@ -92,7 +92,7 @@ public enum icnAuthKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Ingest Connector - Configuration and lifecycle of one ingest source.
-public struct ICN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ICN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

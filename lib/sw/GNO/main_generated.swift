@@ -48,7 +48,7 @@ public enum gnssObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  GNSS Observation Data Point
-public struct gnssObsData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct gnssObsData: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -114,7 +114,7 @@ public struct gnssObsData: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  GNSS Satellite Observation
-public struct gnssSatObs: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -211,7 +211,7 @@ public struct gnssSatObs: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  GNSS Observation
-public struct GNO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

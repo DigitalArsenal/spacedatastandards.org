@@ -129,7 +129,7 @@ def MEMCreateERROR_MODELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateERROR_MODELSVector(builder, data):
-    MEMCreateERROR_MODELSVector(builder, data)
+    return MEMCreateERROR_MODELSVector(builder, data)
 
 def MEMAddEDITING_LEDGER(builder, EDITING_LEDGER):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EDITING_LEDGER), 0)
@@ -147,7 +147,7 @@ def MEMCreateEDITING_LEDGERVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEDITING_LEDGERVector(builder, data):
-    MEMCreateEDITING_LEDGERVector(builder, data)
+    return MEMCreateEDITING_LEDGERVector(builder, data)
 
 def MEMAddRANDOM_SEED(builder, RANDOM_SEED):
     builder.PrependUint64Slot(2, RANDOM_SEED, 0)

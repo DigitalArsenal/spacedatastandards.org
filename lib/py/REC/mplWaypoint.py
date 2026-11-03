@@ -119,7 +119,7 @@ def mplWaypointCreatePOSITION_KMVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_KMVector(builder, data):
-    mplWaypointCreatePOSITION_KMVector(builder, data)
+    return mplWaypointCreatePOSITION_KMVector(builder, data)
 
 def mplWaypointAddVELOCITY_KM_S(builder, VELOCITY_KM_S):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_KM_S), 0)
@@ -141,7 +141,7 @@ def mplWaypointCreateVELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_KM_SVector(builder, data):
-    mplWaypointCreateVELOCITY_KM_SVector(builder, data)
+    return mplWaypointCreateVELOCITY_KM_SVector(builder, data)
 
 def mplWaypointAddTIME_OF_FLIGHT_S(builder, TIME_OF_FLIGHT_S):
     builder.PrependFloat64Slot(2, TIME_OF_FLIGHT_S, 0.0)

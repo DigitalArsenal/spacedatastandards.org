@@ -173,7 +173,7 @@ def PLGFlowNodeCreateCONFIGVector(builder, data):
     return builder.EndVector()
 
 def CreateCONFIGVector(builder, data):
-    PLGFlowNodeCreateCONFIGVector(builder, data)
+    return PLGFlowNodeCreateCONFIGVector(builder, data)
 
 def PLGFlowNodeAddUI_X(builder, UI_X):
     builder.PrependFloat32Slot(6, UI_X, 0.0)

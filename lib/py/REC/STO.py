@@ -264,7 +264,7 @@ def STOCreateACCEPTED_CHAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCEPTED_CHAINSVector(builder, data):
-    STOCreateACCEPTED_CHAINSVector(builder, data)
+    return STOCreateACCEPTED_CHAINSVector(builder, data)
 
 def STOAddCATALOG_ROOT_CID(builder, CATALOG_ROOT_CID):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_ROOT_CID), 0)
@@ -304,7 +304,7 @@ def STOCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    STOCreateSIGNATUREVector(builder, data)
+    return STOCreateSIGNATUREVector(builder, data)
 
 def STOEnd(builder):
     return builder.EndObject()

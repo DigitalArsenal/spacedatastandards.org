@@ -181,7 +181,7 @@ def RAFCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    RAFCreateDATAVector(builder, data)
+    return RAFCreateDATAVector(builder, data)
 
 def RAFEnd(builder):
     return builder.EndObject()

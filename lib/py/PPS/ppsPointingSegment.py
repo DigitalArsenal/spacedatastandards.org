@@ -138,7 +138,7 @@ def ppsPointingSegmentCreateBODY_AXISVector(builder, data):
     return builder.EndVector()
 
 def CreateBODY_AXISVector(builder, data):
-    ppsPointingSegmentCreateBODY_AXISVector(builder, data)
+    return ppsPointingSegmentCreateBODY_AXISVector(builder, data)
 
 def ppsPointingSegmentAddATTITUDE(builder, ATTITUDE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE), 0)

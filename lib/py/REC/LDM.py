@@ -476,7 +476,7 @@ def LDMCreatePOINTS_OF_CONTACTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTS_OF_CONTACTVector(builder, data):
-    LDMCreatePOINTS_OF_CONTACTVector(builder, data)
+    return LDMCreatePOINTS_OF_CONTACTVector(builder, data)
 
 def LDMAddOPERATIONS_POINTS_OF_CONTACT(builder, OPERATIONS_POINTS_OF_CONTACT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATIONS_POINTS_OF_CONTACT), 0)
@@ -494,7 +494,7 @@ def LDMCreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data):
-    LDMCreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data)
+    return LDMCreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data)
 
 def LDMAddNET(builder, NET):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NET), 0)
@@ -566,7 +566,7 @@ def LDMCreateMEDIA_LINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEDIA_LINKSVector(builder, data):
-    LDMCreateMEDIA_LINKSVector(builder, data)
+    return LDMCreateMEDIA_LINKSVector(builder, data)
 
 def LDMAddEARLIEST_LAUNCH_TIMES(builder, EARLIEST_LAUNCH_TIMES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EARLIEST_LAUNCH_TIMES), 0)
@@ -584,7 +584,7 @@ def LDMCreateEARLIEST_LAUNCH_TIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEARLIEST_LAUNCH_TIMESVector(builder, data):
-    LDMCreateEARLIEST_LAUNCH_TIMESVector(builder, data)
+    return LDMCreateEARLIEST_LAUNCH_TIMESVector(builder, data)
 
 def LDMAddLATEST_LAUNCH_TIMES(builder, LATEST_LAUNCH_TIMES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LATEST_LAUNCH_TIMES), 0)
@@ -602,7 +602,7 @@ def LDMCreateLATEST_LAUNCH_TIMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLATEST_LAUNCH_TIMESVector(builder, data):
-    LDMCreateLATEST_LAUNCH_TIMESVector(builder, data)
+    return LDMCreateLATEST_LAUNCH_TIMESVector(builder, data)
 
 def LDMAddLCOLA_WINDOW_CLOSURES(builder, LCOLA_WINDOW_CLOSURES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(LCOLA_WINDOW_CLOSURES), 0)
@@ -620,7 +620,7 @@ def LDMCreateLCOLA_WINDOW_CLOSURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLCOLA_WINDOW_CLOSURESVector(builder, data):
-    LDMCreateLCOLA_WINDOW_CLOSURESVector(builder, data)
+    return LDMCreateLCOLA_WINDOW_CLOSURESVector(builder, data)
 
 def LDMAddOBJECTS(builder, OBJECTS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTS), 0)
@@ -638,7 +638,7 @@ def LDMCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    LDMCreateOBJECTSVector(builder, data)
+    return LDMCreateOBJECTSVector(builder, data)
 
 def LDMAddTRACKING_REQUIREMENTS(builder, TRACKING_REQUIREMENTS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKING_REQUIREMENTS), 0)
@@ -656,7 +656,7 @@ def LDMCreateTRACKING_REQUIREMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACKING_REQUIREMENTSVector(builder, data):
-    LDMCreateTRACKING_REQUIREMENTSVector(builder, data)
+    return LDMCreateTRACKING_REQUIREMENTSVector(builder, data)
 
 def LDMAddCOLA_SCREEN_DURATION(builder, COLA_SCREEN_DURATION):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(COLA_SCREEN_DURATION), 0)
@@ -692,7 +692,7 @@ def LDMCreateCOLA_POINTS_OF_CONTACTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLA_POINTS_OF_CONTACTVector(builder, data):
-    LDMCreateCOLA_POINTS_OF_CONTACTVector(builder, data)
+    return LDMCreateCOLA_POINTS_OF_CONTACTVector(builder, data)
 
 def LDMAddORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(ORBITAL_PARAMETERS), 0)
@@ -710,7 +710,7 @@ def LDMCreateORBITAL_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateORBITAL_PARAMETERSVector(builder, data):
-    LDMCreateORBITAL_PARAMETERSVector(builder, data)
+    return LDMCreateORBITAL_PARAMETERSVector(builder, data)
 
 def LDMAddBURN_OUT_VECTORS(builder, BURN_OUT_VECTORS):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(BURN_OUT_VECTORS), 0)
@@ -728,7 +728,7 @@ def LDMCreateBURN_OUT_VECTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBURN_OUT_VECTORSVector(builder, data):
-    LDMCreateBURN_OUT_VECTORSVector(builder, data)
+    return LDMCreateBURN_OUT_VECTORSVector(builder, data)
 
 def LDMAddID(builder, ID):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)

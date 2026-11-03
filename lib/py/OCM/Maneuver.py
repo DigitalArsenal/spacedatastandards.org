@@ -501,7 +501,7 @@ def ManeuverCreateMAN_UNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_UNITSVector(builder, data):
-    ManeuverCreateMAN_UNITSVector(builder, data)
+    return ManeuverCreateMAN_UNITSVector(builder, data)
 
 def ManeuverAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
@@ -519,7 +519,7 @@ def ManeuverCreateDATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATAVector(builder, data):
-    ManeuverCreateDATAVector(builder, data)
+    return ManeuverCreateDATAVector(builder, data)
 
 def ManeuverAddMAN_COMMENT(builder, MAN_COMMENT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_COMMENT), 0)
@@ -537,7 +537,7 @@ def ManeuverCreateMAN_COMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_COMMENTVector(builder, data):
-    ManeuverCreateMAN_COMMENTVector(builder, data)
+    return ManeuverCreateMAN_COMMENTVector(builder, data)
 
 def ManeuverAddMAN_COMPOSITION(builder, MAN_COMPOSITION):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_COMPOSITION), 0)
@@ -555,7 +555,7 @@ def ManeuverCreateMAN_COMPOSITIONVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_COMPOSITIONVector(builder, data):
-    ManeuverCreateMAN_COMPOSITIONVector(builder, data)
+    return ManeuverCreateMAN_COMPOSITIONVector(builder, data)
 
 def ManeuverAddMAN_NEXT_ID(builder, MAN_NEXT_ID):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_NEXT_ID), 0)
@@ -685,7 +685,7 @@ def ManeuverCreateDC_REF_DIRVector(builder, data):
     return builder.EndVector()
 
 def CreateDC_REF_DIRVector(builder, data):
-    ManeuverCreateDC_REF_DIRVector(builder, data)
+    return ManeuverCreateDC_REF_DIRVector(builder, data)
 
 def ManeuverAddDC_BODY_FRAME(builder, DC_BODY_FRAME):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DC_BODY_FRAME), 0)
@@ -713,7 +713,7 @@ def ManeuverCreateDC_BODY_TRIGGERVector(builder, data):
     return builder.EndVector()
 
 def CreateDC_BODY_TRIGGERVector(builder, data):
-    ManeuverCreateDC_BODY_TRIGGERVector(builder, data)
+    return ManeuverCreateDC_BODY_TRIGGERVector(builder, data)
 
 def ManeuverAddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE):
     builder.PrependFloat64Slot(35, DC_PA_START_ANGLE, float('nan'))

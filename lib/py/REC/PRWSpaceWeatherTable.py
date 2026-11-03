@@ -79,7 +79,7 @@ def PRWSpaceWeatherTableCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    PRWSpaceWeatherTableCreateROWSVector(builder, data)
+    return PRWSpaceWeatherTableCreateROWSVector(builder, data)
 
 def PRWSpaceWeatherTableEnd(builder):
     return builder.EndObject()

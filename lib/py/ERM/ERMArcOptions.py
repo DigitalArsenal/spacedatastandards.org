@@ -117,7 +117,7 @@ def ERMArcOptionsCreateTARGET_AGES_DAYSVector(builder, data):
     return builder.EndVector()
 
 def CreateTARGET_AGES_DAYSVector(builder, data):
-    ERMArcOptionsCreateTARGET_AGES_DAYSVector(builder, data)
+    return ERMArcOptionsCreateTARGET_AGES_DAYSVector(builder, data)
 
 def ERMArcOptionsAddEPOCH_TOLERANCE_S(builder, EPOCH_TOLERANCE_S):
     builder.PrependFloat64Slot(2, EPOCH_TOLERANCE_S, 1800.0)

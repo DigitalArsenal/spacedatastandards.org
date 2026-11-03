@@ -170,7 +170,7 @@ def ERMCalibratedCovariancesCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    ERMCalibratedCovariancesCreateOBJECTSVector(builder, data)
+    return ERMCalibratedCovariancesCreateOBJECTSVector(builder, data)
 
 def ERMCalibratedCovariancesAddRESULTS(builder, RESULTS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RESULTS), 0)
@@ -188,7 +188,7 @@ def ERMCalibratedCovariancesCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    ERMCalibratedCovariancesCreateRESULTSVector(builder, data)
+    return ERMCalibratedCovariancesCreateRESULTSVector(builder, data)
 
 def ERMCalibratedCovariancesEnd(builder):
     return builder.EndObject()

@@ -117,7 +117,7 @@ def SITPartyCreateEXTERNAL_REFERENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXTERNAL_REFERENCESVector(builder, data):
-    SITPartyCreateEXTERNAL_REFERENCESVector(builder, data)
+    return SITPartyCreateEXTERNAL_REFERENCESVector(builder, data)
 
 def SITPartyAddCITATION(builder, CITATION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CITATION), 0)

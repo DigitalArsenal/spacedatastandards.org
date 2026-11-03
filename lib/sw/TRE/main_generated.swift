@@ -14,7 +14,7 @@ import FlatBuffers
 ///  graph is a projection over the latest TRE records by EDGE_ID, with deleted
 ///  records acting as tombstones. Implementations must still validate the
 ///  projected graph for acyclicity before accepting it.
-public struct TRE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

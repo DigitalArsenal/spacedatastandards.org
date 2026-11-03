@@ -256,7 +256,7 @@ def ENTCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    ENTCreatePROVIDER_SIGNATUREVector(builder, data)
+    return ENTCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def ENTEnd(builder):
     return builder.EndObject()

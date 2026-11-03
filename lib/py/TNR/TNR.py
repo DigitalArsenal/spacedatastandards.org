@@ -157,7 +157,7 @@ def TNRCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    TNRCreatePROVIDER_SIGNATUREVector(builder, data)
+    return TNRCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def TNREnd(builder):
     return builder.EndObject()

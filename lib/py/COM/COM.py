@@ -259,7 +259,7 @@ def COMCreateCONNECTED_NODESVector(builder, data):
     return builder.EndVector()
 
 def CreateCONNECTED_NODESVector(builder, data):
-    COMCreateCONNECTED_NODESVector(builder, data)
+    return COMCreateCONNECTED_NODESVector(builder, data)
 
 def COMAddACTIVE_LINKS(builder, ACTIVE_LINKS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ACTIVE_LINKS), 0)
@@ -281,7 +281,7 @@ def COMCreateACTIVE_LINKSVector(builder, data):
     return builder.EndVector()
 
 def CreateACTIVE_LINKSVector(builder, data):
-    COMCreateACTIVE_LINKSVector(builder, data)
+    return COMCreateACTIVE_LINKSVector(builder, data)
 
 def COMAddLAST_UPDATE_MS(builder, LAST_UPDATE_MS):
     builder.PrependInt64Slot(13, LAST_UPDATE_MS, 0)

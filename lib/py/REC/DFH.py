@@ -261,7 +261,7 @@ def DFHCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    DFHCreateRECORDSVector(builder, data)
+    return DFHCreateRECORDSVector(builder, data)
 
 def DFHAddNUM_RECORDS(builder, NUM_RECORDS):
     builder.PrependUint32Slot(13, NUM_RECORDS, 0)

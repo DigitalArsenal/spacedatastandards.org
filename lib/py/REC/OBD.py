@@ -623,7 +623,7 @@ def OBDCreateSENSORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSENSORSVector(builder, data):
-    OBDCreateSENSORSVector(builder, data)
+    return OBDCreateSENSORSVector(builder, data)
 
 def OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_TYPS), 0)
@@ -641,7 +641,7 @@ def OBDCreateACCEPTED_OB_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCEPTED_OB_TYPSVector(builder, data):
-    OBDCreateACCEPTED_OB_TYPSVector(builder, data)
+    return OBDCreateACCEPTED_OB_TYPSVector(builder, data)
 
 def OBDAddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_IDS), 0)
@@ -659,7 +659,7 @@ def OBDCreateACCEPTED_OB_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCEPTED_OB_IDSVector(builder, data):
-    OBDCreateACCEPTED_OB_IDSVector(builder, data)
+    return OBDCreateACCEPTED_OB_IDSVector(builder, data)
 
 def OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_TYPS), 0)
@@ -677,7 +677,7 @@ def OBDCreateREJECTED_OB_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREJECTED_OB_TYPSVector(builder, data):
-    OBDCreateREJECTED_OB_TYPSVector(builder, data)
+    return OBDCreateREJECTED_OB_TYPSVector(builder, data)
 
 def OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_IDS), 0)
@@ -695,7 +695,7 @@ def OBDCreateREJECTED_OB_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREJECTED_OB_IDSVector(builder, data):
-    OBDCreateREJECTED_OB_IDSVector(builder, data)
+    return OBDCreateREJECTED_OB_IDSVector(builder, data)
 
 def OBDEnd(builder):
     return builder.EndObject()

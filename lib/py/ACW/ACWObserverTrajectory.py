@@ -129,7 +129,7 @@ def ACWObserverTrajectoryCreateSTATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATESVector(builder, data):
-    ACWObserverTrajectoryCreateSTATESVector(builder, data)
+    return ACWObserverTrajectoryCreateSTATESVector(builder, data)
 
 def ACWObserverTrajectoryAddBLACKOUT_WINDOWS(builder, BLACKOUT_WINDOWS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BLACKOUT_WINDOWS), 0)
@@ -147,7 +147,7 @@ def ACWObserverTrajectoryCreateBLACKOUT_WINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBLACKOUT_WINDOWSVector(builder, data):
-    ACWObserverTrajectoryCreateBLACKOUT_WINDOWSVector(builder, data)
+    return ACWObserverTrajectoryCreateBLACKOUT_WINDOWSVector(builder, data)
 
 def ACWObserverTrajectoryEnd(builder):
     return builder.EndObject()

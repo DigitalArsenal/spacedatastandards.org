@@ -181,7 +181,7 @@ def RFEEmissionMaskCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    RFEEmissionMaskCreatePOINTSVector(builder, data)
+    return RFEEmissionMaskCreatePOINTSVector(builder, data)
 
 def RFEEmissionMaskAddPROVENANCE(builder, PROVENANCE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)

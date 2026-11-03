@@ -546,7 +546,7 @@ public enum pcfPriorForm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 ///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
 ///  the theory's own sigma and moves only the mean.
-public struct PCFGaussianPrior: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -599,7 +599,7 @@ public struct PCFGaussianPrior: FlatBufferTable, FlatbuffersVectorInitializable,
 
 ///  Fit policy: how long an arc a fit uses, how that is validated, and what a
 ///  fit refuses.
-public struct PCFFitPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -766,7 +766,7 @@ public struct PCFFitPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  One term of an expression program.
-public struct PCFExpressionTerm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFExpressionTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -818,7 +818,7 @@ public struct PCFExpressionTerm: FlatBufferTable, FlatbuffersVectorInitializable
 
 ///  A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
 ///  number.
-public struct PCFExpression: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFExpression: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -857,7 +857,7 @@ public struct PCFExpression: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  One event to locate inside the integration. A $PCF carries the list; a $PRW
 ///  execution request carries the same definitions beside the integrator settings,
 ///  and a located event comes back as a PRWEventRecord.
-public struct PCFEventDefinition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFEventDefinition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -953,7 +953,7 @@ public struct PCFEventDefinition: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Output states: frame, step and size.
-public struct PCFOutput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1007,7 +1007,7 @@ public struct PCFOutput: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 
 ///  Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.
 ///  The TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).
-public struct PCFSpaceWeather: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1077,7 +1077,7 @@ public struct PCFSpaceWeather: FlatBufferTable, FlatbuffersVectorInitializable, 
 ///  doi:10.1007/s00190-015-0814-4, eq. 5), in the D-Y-B frame, added to the a
 ///  priori model and scaled by the visible Sun fraction. Every coefficient is in
 ///  m/s^2 and defaults to 0.
-public struct PCFEcom2: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1174,7 +1174,7 @@ public struct PCFEcom2: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
 ///  Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar
 ///  legacy tolerance must be expanded by the adapter.
-public struct PCFIntegratorSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1258,7 +1258,7 @@ public struct PCFIntegratorSettings: FlatBufferTable, FlatbuffersVectorInitializ
 ///  off unless stated: a force is active only when selected. No implied support
 ///  for coefficients, drag models or bodies the provider cannot supply; a
 ///  provider refuses what it cannot apply, by name.
-public struct PCFForceModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1699,7 +1699,7 @@ public struct PCFForceModel: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  The multi-epoch element store of SDN-AP and the sync harness that fills it:
 ///  how many days of element sets are kept, which set answers a request time and
 ///  how consecutive sets are blended across a handover. Absent: every default below.
-public struct PCFEpochStore: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1783,7 +1783,7 @@ public struct PCFEpochStore: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  PCFForceModel and their enums, so the runtime wire and the configuration
 ///  share one definition of each. Units are in the field names and docs; every
 ///  field states its default.
-public struct PCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

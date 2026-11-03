@@ -357,7 +357,7 @@ def GLXCreateDESIGNATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDESIGNATIONSVector(builder, data):
-    GLXCreateDESIGNATIONSVector(builder, data)
+    return GLXCreateDESIGNATIONSVector(builder, data)
 
 def GLXAddRA_DEG(builder, RA_DEG):
     builder.PrependFloat64Slot(3, RA_DEG, float('nan'))

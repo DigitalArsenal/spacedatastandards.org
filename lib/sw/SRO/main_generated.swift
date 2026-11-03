@@ -28,7 +28,7 @@ public enum sroRegionKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Solar Region Observation
-public struct SRO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SRO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -209,7 +209,7 @@ public struct SRO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   }
 }
 
-public struct SROCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SROCOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

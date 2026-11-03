@@ -183,7 +183,7 @@ def SDLCreateIVVector(builder, data):
     return builder.EndVector()
 
 def CreateIVVector(builder, data):
-    SDLCreateIVVector(builder, data)
+    return SDLCreateIVVector(builder, data)
 
 def SDLAddMAC_LENGTH(builder, MAC_LENGTH):
     builder.PrependUint8Slot(3, MAC_LENGTH, 0)
@@ -211,7 +211,7 @@ def SDLCreateMACVector(builder, data):
     return builder.EndVector()
 
 def CreateMACVector(builder, data):
-    SDLCreateMACVector(builder, data)
+    return SDLCreateMACVector(builder, data)
 
 def SDLAddPAD_LENGTH(builder, PAD_LENGTH):
     builder.PrependUint8Slot(5, PAD_LENGTH, 0)
@@ -239,7 +239,7 @@ def SDLCreatePAYLOADVector(builder, data):
     return builder.EndVector()
 
 def CreatePAYLOADVector(builder, data):
-    SDLCreatePAYLOADVector(builder, data)
+    return SDLCreatePAYLOADVector(builder, data)
 
 def SDLEnd(builder):
     return builder.EndObject()

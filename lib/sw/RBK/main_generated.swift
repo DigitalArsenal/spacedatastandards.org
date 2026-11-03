@@ -179,7 +179,7 @@ public enum rbkResultStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.
-public struct RBKVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBKVector3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -227,7 +227,7 @@ public struct RBKVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
-public struct RBKQuaternion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBKQuaternion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -281,7 +281,7 @@ public struct RBKQuaternion: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Row-major 3x3 direction cosine matrix.
-public struct RBKMatrix3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBKMatrix3: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -365,7 +365,7 @@ public struct RBKMatrix3: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Request for one rigid-body kinematics utility operation.
-public struct RBKRigidBodyKinematicsRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBKRigidBodyKinematicsRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -462,7 +462,7 @@ public struct RBKRigidBodyKinematicsRequest: FlatBufferTable, FlatbuffersVectorI
 }
 
 ///  Result for one rigid-body kinematics utility operation.
-public struct RBKRigidBodyKinematicsResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBKRigidBodyKinematicsResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -530,7 +530,7 @@ public struct RBKRigidBodyKinematicsResult: FlatBufferTable, FlatbuffersVectorIn
 }
 
 ///  Rigid-body kinematics utility envelope.
-public struct RBK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RBK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

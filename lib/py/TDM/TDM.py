@@ -1369,7 +1369,7 @@ def TDMCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    TDMCreateCOMMENTVector(builder, data)
+    return TDMCreateCOMMENTVector(builder, data)
 
 def TDMAddCREATION_DATE(builder, CREATION_DATE):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
@@ -1535,7 +1535,7 @@ def TDMCreateRECEIVE_FREQVector(builder, data):
     return builder.EndVector()
 
 def CreateRECEIVE_FREQVector(builder, data):
-    TDMCreateRECEIVE_FREQVector(builder, data)
+    return TDMCreateRECEIVE_FREQVector(builder, data)
 
 def TDMAddDATA_STOP(builder, DATA_STOP):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
@@ -1575,7 +1575,7 @@ def TDMCreateANGLE_1Vector(builder, data):
     return builder.EndVector()
 
 def CreateANGLE_1Vector(builder, data):
-    TDMCreateANGLE_1Vector(builder, data)
+    return TDMCreateANGLE_1Vector(builder, data)
 
 def TDMAddANGLE_2(builder, ANGLE_2):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
@@ -1597,7 +1597,7 @@ def TDMCreateANGLE_2Vector(builder, data):
     return builder.EndVector()
 
 def CreateANGLE_2Vector(builder, data):
-    TDMCreateANGLE_2Vector(builder, data)
+    return TDMCreateANGLE_2Vector(builder, data)
 
 def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1):
     builder.PrependFloat32Slot(44, ANGLE_UNCERTAINTY_1, 0.0)
@@ -1673,7 +1673,7 @@ def TDMCreateTROPO_DRYVector(builder, data):
     return builder.EndVector()
 
 def CreateTROPO_DRYVector(builder, data):
-    TDMCreateTROPO_DRYVector(builder, data)
+    return TDMCreateTROPO_DRYVector(builder, data)
 
 def TDMAddTROPO_WET(builder, TROPO_WET):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
@@ -1695,7 +1695,7 @@ def TDMCreateTROPO_WETVector(builder, data):
     return builder.EndVector()
 
 def CreateTROPO_WETVector(builder, data):
-    TDMCreateTROPO_WETVector(builder, data)
+    return TDMCreateTROPO_WETVector(builder, data)
 
 def TDMAddSTEC(builder, STEC):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
@@ -1717,7 +1717,7 @@ def TDMCreateSTECVector(builder, data):
     return builder.EndVector()
 
 def CreateSTECVector(builder, data):
-    TDMCreateSTECVector(builder, data)
+    return TDMCreateSTECVector(builder, data)
 
 def TDMAddPRESSURE(builder, PRESSURE):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
@@ -1739,7 +1739,7 @@ def TDMCreatePRESSUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePRESSUREVector(builder, data):
-    TDMCreatePRESSUREVector(builder, data)
+    return TDMCreatePRESSUREVector(builder, data)
 
 def TDMAddRHUMIDITY(builder, RHUMIDITY):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
@@ -1761,7 +1761,7 @@ def TDMCreateRHUMIDITYVector(builder, data):
     return builder.EndVector()
 
 def CreateRHUMIDITYVector(builder, data):
-    TDMCreateRHUMIDITYVector(builder, data)
+    return TDMCreateRHUMIDITYVector(builder, data)
 
 def TDMAddTEMPERATURE(builder, TEMPERATURE):
     builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
@@ -1783,7 +1783,7 @@ def TDMCreateTEMPERATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateTEMPERATUREVector(builder, data):
-    TDMCreateTEMPERATUREVector(builder, data)
+    return TDMCreateTEMPERATUREVector(builder, data)
 
 def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS):
     builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
@@ -1805,7 +1805,7 @@ def TDMCreateCLOCK_BIASVector(builder, data):
     return builder.EndVector()
 
 def CreateCLOCK_BIASVector(builder, data):
-    TDMCreateCLOCK_BIASVector(builder, data)
+    return TDMCreateCLOCK_BIASVector(builder, data)
 
 def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT):
     builder.PrependUOffsetTRelativeSlot(60, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
@@ -1827,7 +1827,7 @@ def TDMCreateCLOCK_DRIFTVector(builder, data):
     return builder.EndVector()
 
 def CreateCLOCK_DRIFTVector(builder, data):
-    TDMCreateCLOCK_DRIFTVector(builder, data)
+    return TDMCreateCLOCK_DRIFTVector(builder, data)
 
 def TDMAddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE):
     builder.PrependUOffsetTRelativeSlot(61, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNAL_TO_NOISE), 0)
@@ -1849,7 +1849,7 @@ def TDMCreateSIGNAL_TO_NOISEVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNAL_TO_NOISEVector(builder, data):
-    TDMCreateSIGNAL_TO_NOISEVector(builder, data)
+    return TDMCreateSIGNAL_TO_NOISEVector(builder, data)
 
 def TDMAddSPECTRAL_MAX(builder, SPECTRAL_MAX):
     builder.PrependUOffsetTRelativeSlot(62, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_MAX), 0)
@@ -1871,7 +1871,7 @@ def TDMCreateSPECTRAL_MAXVector(builder, data):
     return builder.EndVector()
 
 def CreateSPECTRAL_MAXVector(builder, data):
-    TDMCreateSPECTRAL_MAXVector(builder, data)
+    return TDMCreateSPECTRAL_MAXVector(builder, data)
 
 def TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ):
     builder.PrependUOffsetTRelativeSlot(63, flatbuffers.number_types.UOffsetTFlags.py_type(DOPPLER_NOISE_HZ), 0)
@@ -1893,7 +1893,7 @@ def TDMCreateDOPPLER_NOISE_HZVector(builder, data):
     return builder.EndVector()
 
 def CreateDOPPLER_NOISE_HZVector(builder, data):
-    TDMCreateDOPPLER_NOISE_HZVector(builder, data)
+    return TDMCreateDOPPLER_NOISE_HZVector(builder, data)
 
 def TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS):
     builder.PrependUOffsetTRelativeSlot(64, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_RAMPS), 0)
@@ -1911,7 +1911,7 @@ def TDMCreateTRANSMIT_RAMPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSMIT_RAMPSVector(builder, data):
-    TDMCreateTRANSMIT_RAMPSVector(builder, data)
+    return TDMCreateTRANSMIT_RAMPSVector(builder, data)
 
 def TDMAddOBSERVATIONS(builder, OBSERVATIONS):
     builder.PrependUOffsetTRelativeSlot(65, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATIONS), 0)
@@ -1929,7 +1929,7 @@ def TDMCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    TDMCreateOBSERVATIONSVector(builder, data)
+    return TDMCreateOBSERVATIONSVector(builder, data)
 
 def TDMAddSEGMENTS(builder, SEGMENTS):
     builder.PrependUOffsetTRelativeSlot(66, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)
@@ -1947,7 +1947,7 @@ def TDMCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    TDMCreateSEGMENTSVector(builder, data)
+    return TDMCreateSEGMENTSVector(builder, data)
 
 def TDMAddTRANSMIT_FREQ_2(builder, TRANSMIT_FREQ_2):
     builder.PrependFloat64Slot(67, TRANSMIT_FREQ_2, 0.0)

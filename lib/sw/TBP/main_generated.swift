@@ -179,7 +179,7 @@ public enum tbpStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  The two-primary system.
-public struct tbpSystem: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpSystem: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -274,7 +274,7 @@ public struct tbpSystem: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  One synodic state, non-dimensional.
-public struct tbpState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -348,7 +348,7 @@ public struct tbpState: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
 ///  A trajectory, column-major: TIMES has one entry per sample, STATES six,
 ///  STATE_TRANSITION 36 (row-major 6x6) when it was propagated.
-public struct tbpTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -432,7 +432,7 @@ public struct tbpTrajectory: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  One libration point and its linear stability.
-public struct tbpLibrationPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpLibrationPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -518,7 +518,7 @@ public struct tbpLibrationPoint: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  A periodic orbit, or a first guess of one.
-public struct tbpPeriodicOrbit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -697,7 +697,7 @@ public struct tbpPeriodicOrbit: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Options for a propagation.
-public struct tbpPropagationRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpPropagationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -762,7 +762,7 @@ public struct tbpPropagationRequest: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  A transfer into the system.
-public struct tbpTransfer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -875,7 +875,7 @@ public struct tbpTransfer: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Station-keeping budget for a periodic orbit.
-public struct tbpStationKeeping: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -978,7 +978,7 @@ public struct tbpStationKeeping: FlatBufferTable, FlatbuffersVectorInitializable
 ///  frame is centred on the barycentre with its X axis along the synodic X
 ///  axis at REFERENCE_EPOCH_MS (elapsed time 0) and Z along the system's
 ///  angular momentum.
-public struct tbpFrameConversion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1044,7 +1044,7 @@ public struct tbpFrameConversion: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Three-Body Problem - a CR3BP system and one answer about it.
-public struct TBP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

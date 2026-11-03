@@ -504,7 +504,7 @@ def dclPointsCreateTIME_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateTIME_MSVector(builder, data):
-    dclPointsCreateTIME_MSVector(builder, data)
+    return dclPointsCreateTIME_MSVector(builder, data)
 
 def dclPointsAddLATITUDE_DEG(builder, LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LATITUDE_DEG), 0)
@@ -526,7 +526,7 @@ def dclPointsCreateLATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateLATITUDE_DEGVector(builder, data):
-    dclPointsCreateLATITUDE_DEGVector(builder, data)
+    return dclPointsCreateLATITUDE_DEGVector(builder, data)
 
 def dclPointsAddLONGITUDE_DEG(builder, LONGITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONGITUDE_DEG), 0)
@@ -548,7 +548,7 @@ def dclPointsCreateLONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateLONGITUDE_DEGVector(builder, data):
-    dclPointsCreateLONGITUDE_DEGVector(builder, data)
+    return dclPointsCreateLONGITUDE_DEGVector(builder, data)
 
 def dclPointsAddALTITUDE_KM(builder, ALTITUDE_KM):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ALTITUDE_KM), 0)
@@ -570,7 +570,7 @@ def dclPointsCreateALTITUDE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateALTITUDE_KMVector(builder, data):
-    dclPointsCreateALTITUDE_KMVector(builder, data)
+    return dclPointsCreateALTITUDE_KMVector(builder, data)
 
 def dclPointsAddOBSERVED_DENSITY_KG_M3(builder, OBSERVED_DENSITY_KG_M3):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVED_DENSITY_KG_M3), 0)
@@ -592,7 +592,7 @@ def dclPointsCreateOBSERVED_DENSITY_KG_M3Vector(builder, data):
     return builder.EndVector()
 
 def CreateOBSERVED_DENSITY_KG_M3Vector(builder, data):
-    dclPointsCreateOBSERVED_DENSITY_KG_M3Vector(builder, data)
+    return dclPointsCreateOBSERVED_DENSITY_KG_M3Vector(builder, data)
 
 def dclPointsAddWEIGHT(builder, WEIGHT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(WEIGHT), 0)
@@ -614,7 +614,7 @@ def dclPointsCreateWEIGHTVector(builder, data):
     return builder.EndVector()
 
 def CreateWEIGHTVector(builder, data):
-    dclPointsCreateWEIGHTVector(builder, data)
+    return dclPointsCreateWEIGHTVector(builder, data)
 
 def dclPointsAddSUN_RIGHT_ASCENSION_DEG(builder, SUN_RIGHT_ASCENSION_DEG):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_RIGHT_ASCENSION_DEG), 0)
@@ -636,7 +636,7 @@ def dclPointsCreateSUN_RIGHT_ASCENSION_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSUN_RIGHT_ASCENSION_DEGVector(builder, data):
-    dclPointsCreateSUN_RIGHT_ASCENSION_DEGVector(builder, data)
+    return dclPointsCreateSUN_RIGHT_ASCENSION_DEGVector(builder, data)
 
 def dclPointsAddSUN_DECLINATION_DEG(builder, SUN_DECLINATION_DEG):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_DECLINATION_DEG), 0)
@@ -658,7 +658,7 @@ def dclPointsCreateSUN_DECLINATION_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSUN_DECLINATION_DEGVector(builder, data):
-    dclPointsCreateSUN_DECLINATION_DEGVector(builder, data)
+    return dclPointsCreateSUN_DECLINATION_DEGVector(builder, data)
 
 def dclPointsAddMODEL_DRIVERS(builder, MODEL_DRIVERS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL_DRIVERS), 0)
@@ -680,7 +680,7 @@ def dclPointsCreateMODEL_DRIVERSVector(builder, data):
     return builder.EndVector()
 
 def CreateMODEL_DRIVERSVector(builder, data):
-    dclPointsCreateMODEL_DRIVERSVector(builder, data)
+    return dclPointsCreateMODEL_DRIVERSVector(builder, data)
 
 def dclPointsAddDENSITY_KG_M3(builder, DENSITY_KG_M3):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_KG_M3), 0)
@@ -702,7 +702,7 @@ def dclPointsCreateDENSITY_KG_M3Vector(builder, data):
     return builder.EndVector()
 
 def CreateDENSITY_KG_M3Vector(builder, data):
-    dclPointsCreateDENSITY_KG_M3Vector(builder, data)
+    return dclPointsCreateDENSITY_KG_M3Vector(builder, data)
 
 def dclPointsAddDELTA_T_K(builder, DELTA_T_K):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_T_K), 0)
@@ -724,7 +724,7 @@ def dclPointsCreateDELTA_T_KVector(builder, data):
     return builder.EndVector()
 
 def CreateDELTA_T_KVector(builder, data):
-    dclPointsCreateDELTA_T_KVector(builder, data)
+    return dclPointsCreateDELTA_T_KVector(builder, data)
 
 def dclPointsAddLOCAL_SOLAR_TIME_H(builder, LOCAL_SOLAR_TIME_H):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LOCAL_SOLAR_TIME_H), 0)
@@ -746,7 +746,7 @@ def dclPointsCreateLOCAL_SOLAR_TIME_HVector(builder, data):
     return builder.EndVector()
 
 def CreateLOCAL_SOLAR_TIME_HVector(builder, data):
-    dclPointsCreateLOCAL_SOLAR_TIME_HVector(builder, data)
+    return dclPointsCreateLOCAL_SOLAR_TIME_HVector(builder, data)
 
 def dclPointsAddDLN_DENSITY_DT_PER_K(builder, DLN_DENSITY_DT_PER_K):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DLN_DENSITY_DT_PER_K), 0)
@@ -768,7 +768,7 @@ def dclPointsCreateDLN_DENSITY_DT_PER_KVector(builder, data):
     return builder.EndVector()
 
 def CreateDLN_DENSITY_DT_PER_KVector(builder, data):
-    dclPointsCreateDLN_DENSITY_DT_PER_KVector(builder, data)
+    return dclPointsCreateDLN_DENSITY_DT_PER_KVector(builder, data)
 
 def dclPointsAddSUN_LONGITUDE_DEG(builder, SUN_LONGITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_LONGITUDE_DEG), 0)
@@ -790,7 +790,7 @@ def dclPointsCreateSUN_LONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSUN_LONGITUDE_DEGVector(builder, data):
-    dclPointsCreateSUN_LONGITUDE_DEGVector(builder, data)
+    return dclPointsCreateSUN_LONGITUDE_DEGVector(builder, data)
 
 def dclPointsAddSUN_LATITUDE_DEG(builder, SUN_LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_LATITUDE_DEG), 0)
@@ -812,7 +812,7 @@ def dclPointsCreateSUN_LATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSUN_LATITUDE_DEGVector(builder, data):
-    dclPointsCreateSUN_LATITUDE_DEGVector(builder, data)
+    return dclPointsCreateSUN_LATITUDE_DEGVector(builder, data)
 
 def dclPointsAddREFUSED(builder, REFUSED):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(REFUSED), 0)
@@ -834,7 +834,7 @@ def dclPointsCreateREFUSEDVector(builder, data):
     return builder.EndVector()
 
 def CreateREFUSEDVector(builder, data):
-    dclPointsCreateREFUSEDVector(builder, data)
+    return dclPointsCreateREFUSEDVector(builder, data)
 
 def dclPointsEnd(builder):
     return builder.EndObject()

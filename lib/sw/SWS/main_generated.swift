@@ -177,7 +177,7 @@ public enum swsNoaaScale: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Space Weather Series
-public struct SWS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SWS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -462,7 +462,7 @@ public struct SWS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   }
 }
 
-public struct SWSCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SWSCOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

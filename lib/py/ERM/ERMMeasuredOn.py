@@ -94,7 +94,7 @@ def ERMMeasuredOnCreateLINEAGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINEAGESVector(builder, data):
-    ERMMeasuredOnCreateLINEAGESVector(builder, data)
+    return ERMMeasuredOnCreateLINEAGESVector(builder, data)
 
 def ERMMeasuredOnAddWINDOW(builder, WINDOW):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW), 0)

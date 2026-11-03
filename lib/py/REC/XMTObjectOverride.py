@@ -111,7 +111,7 @@ def XMTObjectOverrideCreateSTATE_SOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_SOURCESVector(builder, data):
-    XMTObjectOverrideCreateSTATE_SOURCESVector(builder, data)
+    return XMTObjectOverrideCreateSTATE_SOURCESVector(builder, data)
 
 def XMTObjectOverrideAddMAX_AGE_S(builder, MAX_AGE_S):
     builder.PrependFloat64Slot(3, MAX_AGE_S, float('nan'))

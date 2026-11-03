@@ -209,7 +209,7 @@ def ERMElementFitsCreateFITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFITSVector(builder, data):
-    ERMElementFitsCreateFITSVector(builder, data)
+    return ERMElementFitsCreateFITSVector(builder, data)
 
 def ERMElementFitsAddINCLUDE_SAMPLES(builder, INCLUDE_SAMPLES):
     builder.PrependBoolSlot(6, INCLUDE_SAMPLES, 0)
@@ -233,7 +233,7 @@ def ERMElementFitsCreateRESIDUAL_REQUESTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESIDUAL_REQUESTSVector(builder, data):
-    ERMElementFitsCreateRESIDUAL_REQUESTSVector(builder, data)
+    return ERMElementFitsCreateRESIDUAL_REQUESTSVector(builder, data)
 
 def ERMElementFitsAddRESIDUAL_RESULTS(builder, RESIDUAL_RESULTS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(RESIDUAL_RESULTS), 0)
@@ -251,7 +251,7 @@ def ERMElementFitsCreateRESIDUAL_RESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESIDUAL_RESULTSVector(builder, data):
-    ERMElementFitsCreateRESIDUAL_RESULTSVector(builder, data)
+    return ERMElementFitsCreateRESIDUAL_RESULTSVector(builder, data)
 
 def ERMElementFitsEnd(builder):
     return builder.EndObject()

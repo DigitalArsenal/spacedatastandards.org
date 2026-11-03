@@ -256,7 +256,7 @@ def DPMQueryBindingCreateSCHEMA_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCHEMA_NAMESVector(builder, data):
-    DPMQueryBindingCreateSCHEMA_NAMESVector(builder, data)
+    return DPMQueryBindingCreateSCHEMA_NAMESVector(builder, data)
 
 def DPMQueryBindingAddPROVIDER_IDS(builder, PROVIDER_IDS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_IDS), 0)
@@ -274,7 +274,7 @@ def DPMQueryBindingCreatePROVIDER_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROVIDER_IDSVector(builder, data):
-    DPMQueryBindingCreatePROVIDER_IDSVector(builder, data)
+    return DPMQueryBindingCreatePROVIDER_IDSVector(builder, data)
 
 def DPMQueryBindingAddSOURCE_NAMES(builder, SOURCE_NAMES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_NAMES), 0)
@@ -292,7 +292,7 @@ def DPMQueryBindingCreateSOURCE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCE_NAMESVector(builder, data):
-    DPMQueryBindingCreateSOURCE_NAMESVector(builder, data)
+    return DPMQueryBindingCreateSOURCE_NAMESVector(builder, data)
 
 def DPMQueryBindingAddBATCH_IDS(builder, BATCH_IDS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BATCH_IDS), 0)
@@ -310,7 +310,7 @@ def DPMQueryBindingCreateBATCH_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBATCH_IDSVector(builder, data):
-    DPMQueryBindingCreateBATCH_IDSVector(builder, data)
+    return DPMQueryBindingCreateBATCH_IDSVector(builder, data)
 
 def DPMQueryBindingAddWINDOW_START(builder, WINDOW_START):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_START), 0)

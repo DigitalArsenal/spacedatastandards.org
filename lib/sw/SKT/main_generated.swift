@@ -418,7 +418,7 @@ public struct SKTPoint3D_Mutable: FlatBufferStruct, FlatbuffersVectorInitializab
 
 ///  Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
 ///  or diffuse-map layer.
-public struct SKT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

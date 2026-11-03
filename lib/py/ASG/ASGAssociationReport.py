@@ -192,7 +192,7 @@ def ASGAssociationReportCreateGATE_THRESHOLDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGATE_THRESHOLDSVector(builder, data):
-    ASGAssociationReportCreateGATE_THRESHOLDSVector(builder, data)
+    return ASGAssociationReportCreateGATE_THRESHOLDSVector(builder, data)
 
 def ASGAssociationReportAddEARTH_ORIENTATION_ROWS(builder, EARTH_ORIENTATION_ROWS):
     builder.PrependUint32Slot(3, EARTH_ORIENTATION_ROWS, 0)
@@ -252,7 +252,7 @@ def ASGAssociationReportCreateOBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBSERVATIONSVector(builder, data):
-    ASGAssociationReportCreateOBSERVATIONSVector(builder, data)
+    return ASGAssociationReportCreateOBSERVATIONSVector(builder, data)
 
 def ASGAssociationReportEnd(builder):
     return builder.EndObject()

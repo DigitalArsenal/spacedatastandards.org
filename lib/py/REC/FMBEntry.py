@@ -97,7 +97,7 @@ def FMBEntryCreateTEXTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTEXTVector(builder, data):
-    FMBEntryCreateTEXTVector(builder, data)
+    return FMBEntryCreateTEXTVector(builder, data)
 
 def FMBEntryEnd(builder):
     return builder.EndObject()

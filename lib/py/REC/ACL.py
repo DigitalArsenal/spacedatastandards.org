@@ -365,7 +365,7 @@ def ACLCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
-    ACLCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
+    return ACLCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
 
 def ACLAddACCESS_TYPE(builder, ACCESS_TYPE):
     builder.PrependInt8Slot(4, ACCESS_TYPE, 0)
@@ -423,7 +423,7 @@ def ACLCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    ACLCreatePROVIDER_SIGNATUREVector(builder, data)
+    return ACLCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def ACLAddKEY_ALGORITHM(builder, KEY_ALGORITHM):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ALGORITHM), 0)

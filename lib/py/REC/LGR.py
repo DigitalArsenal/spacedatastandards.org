@@ -389,7 +389,7 @@ def LGRCreateCAPABILITY_TOKENVector(builder, data):
     return builder.EndVector()
 
 def CreateCAPABILITY_TOKENVector(builder, data):
-    LGRCreateCAPABILITY_TOKENVector(builder, data)
+    return LGRCreateCAPABILITY_TOKENVector(builder, data)
 
 def LGRAddMODULE_DESCRIPTOR(builder, MODULE_DESCRIPTOR):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MODULE_DESCRIPTOR), 0)
@@ -423,7 +423,7 @@ def LGRCreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data):
     return builder.EndVector()
 
 def CreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data):
-    LGRCreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data)
+    return LGRCreateWRAPPED_CONTENT_KEY_PAYLOADVector(builder, data)
 
 def LGRAddGRANT_VERIFIER_PUBKEY(builder, GRANT_VERIFIER_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_VERIFIER_PUBKEY), 0)
@@ -445,7 +445,7 @@ def LGRCreateGRANT_VERIFIER_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateGRANT_VERIFIER_PUBKEYVector(builder, data):
-    LGRCreateGRANT_VERIFIER_PUBKEYVector(builder, data)
+    return LGRCreateGRANT_VERIFIER_PUBKEYVector(builder, data)
 
 def LGRAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_SIGNATURE), 0)
@@ -467,7 +467,7 @@ def LGRCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    LGRCreatePROVIDER_SIGNATUREVector(builder, data)
+    return LGRCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def LGREnd(builder):
     return builder.EndObject()

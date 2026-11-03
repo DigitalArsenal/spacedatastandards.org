@@ -124,7 +124,7 @@ def ERMMomentsCreateSUMVector(builder, data):
     return builder.EndVector()
 
 def CreateSUMVector(builder, data):
-    ERMMomentsCreateSUMVector(builder, data)
+    return ERMMomentsCreateSUMVector(builder, data)
 
 def ERMMomentsAddSQUARES(builder, SQUARES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SQUARES), 0)
@@ -146,7 +146,7 @@ def ERMMomentsCreateSQUARESVector(builder, data):
     return builder.EndVector()
 
 def CreateSQUARESVector(builder, data):
-    ERMMomentsCreateSQUARESVector(builder, data)
+    return ERMMomentsCreateSQUARESVector(builder, data)
 
 def ERMMomentsEnd(builder):
     return builder.EndObject()

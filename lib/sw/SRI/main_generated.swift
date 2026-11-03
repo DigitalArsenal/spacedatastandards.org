@@ -11,7 +11,7 @@ import FlatBuffers
 ///  Standards Record Index — local wrapper for a standards payload's identity
 ///  and mutation metadata, participating in shared FlatSQL query and cascade
 ///  paths across plugins that read the same record universe.
-public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SRI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

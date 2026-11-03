@@ -75,7 +75,7 @@ def SPWCOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    SPWCOLLECTIONCreateRECORDSVector(builder, data)
+    return SPWCOLLECTIONCreateRECORDSVector(builder, data)
 
 def SPWCOLLECTIONEnd(builder):
     return builder.EndObject()

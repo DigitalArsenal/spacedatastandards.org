@@ -288,7 +288,7 @@ def rfEmitterDetailCreateEMISSION_MASKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEMISSION_MASKSVector(builder, data):
-    rfEmitterDetailCreateEMISSION_MASKSVector(builder, data)
+    return rfEmitterDetailCreateEMISSION_MASKSVector(builder, data)
 
 def rfEmitterDetailEnd(builder):
     return builder.EndObject()

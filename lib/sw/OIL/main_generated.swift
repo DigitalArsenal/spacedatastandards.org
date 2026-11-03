@@ -75,7 +75,7 @@ public enum oilConflictShape: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  One object identifier in one namespace.
-public struct OILIdentifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OILIdentifier: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -176,7 +176,7 @@ public struct OILIdentifier: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Where a declaration comes from.
-public struct OILEvidence: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OILEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -254,7 +254,7 @@ public struct OILEvidence: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  One candidate link between two identifiers.
-public struct OILLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OILLink: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -335,7 +335,7 @@ public struct OILLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 
 ///  A group of identifiers declared against each other that is not
 ///  one-to-one.
-public struct OILConflict: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OILConflict: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -393,7 +393,7 @@ public struct OILConflict: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Object Identity Link - one crosswalk of candidate links.
-public struct OIL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OIL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

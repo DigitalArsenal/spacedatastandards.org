@@ -142,7 +142,7 @@ def odSensorContributionCreateOB_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOB_TYPESVector(builder, data):
-    odSensorContributionCreateOB_TYPESVector(builder, data)
+    return odSensorContributionCreateOB_TYPESVector(builder, data)
 
 def odSensorContributionEnd(builder):
     return builder.EndObject()

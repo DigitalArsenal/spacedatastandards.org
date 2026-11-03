@@ -85,7 +85,7 @@ public enum gstAntennaAxisType: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 ///  no antenna axis geometry. Station coordinates without a frame realization
 ///  and an epoch cannot be propagated for plate motion and are therefore not
 ///  usable for orbit determination.
-public struct GST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct GST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

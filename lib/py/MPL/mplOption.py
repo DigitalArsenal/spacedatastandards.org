@@ -206,7 +206,7 @@ def mplOptionCreateBURN_DELTA_V_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateBURN_DELTA_V_KM_SVector(builder, data):
-    mplOptionCreateBURN_DELTA_V_KM_SVector(builder, data)
+    return mplOptionCreateBURN_DELTA_V_KM_SVector(builder, data)
 
 def mplOptionAddTOTAL_DELTA_V_KM_S(builder, TOTAL_DELTA_V_KM_S):
     builder.PrependFloat64Slot(7, TOTAL_DELTA_V_KM_S, 0.0)

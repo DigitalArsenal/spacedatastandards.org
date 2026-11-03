@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Chain evidence supporting a value-based predicate result.
-public struct TRVBondEvidence: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRVBondEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -123,7 +123,7 @@ public struct TRVBondEvidence: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Outcome and evidence for one policy predicate.
-public struct TRVPredicateResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRVPredicateResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -215,7 +215,7 @@ public struct TRVPredicateResult: FlatBufferTable, FlatbuffersVectorInitializabl
 ///
 ///  A TRV records one reproducible evaluation of a `$TRP` policy for a subject.
 ///  This record replaces ad-hoc trust status events.
-public struct TRV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TRV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

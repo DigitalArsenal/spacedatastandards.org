@@ -90,7 +90,7 @@ def SDFCustomCreateDIRECTIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateDIRECTIONSVector(builder, data):
-    SDFCustomCreateDIRECTIONSVector(builder, data)
+    return SDFCustomCreateDIRECTIONSVector(builder, data)
 
 def SDFCustomAddMAX_RANGE(builder, MAX_RANGE):
     builder.PrependFloat64Slot(1, MAX_RANGE, 0.0)

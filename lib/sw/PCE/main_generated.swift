@@ -550,7 +550,7 @@ public enum pceParameter: UInt16, FlatbuffersVectorInitializable, Enum, Verifiab
 
 ///  A reference to one parameter, with the dependencies that make it evaluable.
 ///  This is what a request, a stopping condition and a report column all name.
-public struct PCEParameterRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -664,7 +664,7 @@ public struct PCEParameterRef: FlatBufferTable, FlatbuffersVectorInitializable, 
 
 ///  One roster entry as a named publisher implements it. The catalog is the
 ///  authority a consumer resolves a name through BEFORE it asks for a value.
-public struct PCEParameterDescriptor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterDescriptor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -867,7 +867,7 @@ public struct PCEParameterDescriptor: FlatBufferTable, FlatbuffersVectorInitiali
 
 ///  The roster a named publisher offers, resolved as a whole. A consumer
 ///  caches this and resolves every later name against it.
-public struct PCEParameterCatalog: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterCatalog: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -927,7 +927,7 @@ public struct PCEParameterCatalog: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Everything an evaluation needs besides the state itself.
-public struct PCEEvaluationContext: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEEvaluationContext: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1058,7 +1058,7 @@ public struct PCEEvaluationContext: FlatBufferTable, FlatbuffersVectorInitializa
 
 ///  Evaluate these parameters on these states. One state is a point query; a
 ///  run of states is a report or a plot series, and carries the same shape.
-public struct PCEEvaluationRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEEvaluationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1116,7 +1116,7 @@ public struct PCEEvaluationRequest: FlatBufferTable, FlatbuffersVectorInitializa
 
 ///  One parameter's value at one state. STATUS is per value: a request never
 ///  fails as a whole because one name is unavailable.
-public struct PCEParameterValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1219,7 +1219,7 @@ public struct PCEParameterValue: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  The evaluated parameters at ONE epoch.
-public struct PCEParameterSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1270,7 +1270,7 @@ public struct PCEParameterSample: FlatBufferTable, FlatbuffersVectorInitializabl
   }
 }
 
-public struct PCEEvaluationResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEEvaluationResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1338,7 +1338,7 @@ public struct PCEEvaluationResult: FlatBufferTable, FlatbuffersVectorInitializab
 ///  DIRECTION, for the OCCURRENCE-th time. This is the ONE spelling of a
 ///  stopping condition and of a generic event function; $EVL references it
 ///  rather than minting a second one.
-public struct PCEParameterCondition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEParameterCondition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1406,7 +1406,7 @@ public struct PCEParameterCondition: FlatBufferTable, FlatbuffersVectorInitializ
 ///  Propagate until a condition is attained. The propagator itself is NOT named
 ///  here: it is a port the caller supplies, per the pluggable-propagation law.
 ///  This record carries only the condition, the interval and the tolerances.
-public struct PCEStopRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEStopRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1501,7 +1501,7 @@ public struct PCEStopRequest: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Where a propagate-to-condition run actually landed.
-public struct PCEStopReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCEStopReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1646,7 +1646,7 @@ public struct PCEStopReport: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  Angles are radians, lengths metres, durations seconds, masses kilograms.
 ///  A buffer carries the members its exchange needs; a catalog publication and
 ///  an evaluation exchange are both complete $PCE records.
-public struct PCE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PCE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -140,7 +140,7 @@ def SCCStateResponseCreateREFERENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFERENCESVector(builder, data):
-    SCCStateResponseCreateREFERENCESVector(builder, data)
+    return SCCStateResponseCreateREFERENCESVector(builder, data)
 
 def SCCStateResponseAddFOCUSED_REFERENCE_INDEX(builder, FOCUSED_REFERENCE_INDEX):
     builder.PrependInt32Slot(4, FOCUSED_REFERENCE_INDEX, -1)

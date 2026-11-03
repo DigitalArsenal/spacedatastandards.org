@@ -244,7 +244,7 @@ def ERMCalibratedCovarianceCreateAXES_FACTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateAXES_FACTORSVector(builder, data):
-    ERMCalibratedCovarianceCreateAXES_FACTORSVector(builder, data)
+    return ERMCalibratedCovarianceCreateAXES_FACTORSVector(builder, data)
 
 def ERMCalibratedCovarianceAddCOVARIANCE_RTN(builder, COVARIANCE_RTN):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_RTN), 0)
@@ -266,7 +266,7 @@ def ERMCalibratedCovarianceCreateCOVARIANCE_RTNVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE_RTNVector(builder, data):
-    ERMCalibratedCovarianceCreateCOVARIANCE_RTNVector(builder, data)
+    return ERMCalibratedCovarianceCreateCOVARIANCE_RTNVector(builder, data)
 
 def ERMCalibratedCovarianceAddCOVARIANCE_INERTIAL(builder, COVARIANCE_INERTIAL):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_INERTIAL), 0)
@@ -288,7 +288,7 @@ def ERMCalibratedCovarianceCreateCOVARIANCE_INERTIALVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCE_INERTIALVector(builder, data):
-    ERMCalibratedCovarianceCreateCOVARIANCE_INERTIALVector(builder, data)
+    return ERMCalibratedCovarianceCreateCOVARIANCE_INERTIALVector(builder, data)
 
 def ERMCalibratedCovarianceEnd(builder):
     return builder.EndObject()

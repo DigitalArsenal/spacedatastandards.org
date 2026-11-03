@@ -163,7 +163,7 @@ def SLPIterationCreateVARIABLESVector(builder, data):
     return builder.EndVector()
 
 def CreateVARIABLESVector(builder, data):
-    SLPIterationCreateVARIABLESVector(builder, data)
+    return SLPIterationCreateVARIABLESVector(builder, data)
 
 def SLPIterationAddVALUES(builder, VALUES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VALUES), 0)
@@ -185,7 +185,7 @@ def SLPIterationCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    SLPIterationCreateVALUESVector(builder, data)
+    return SLPIterationCreateVALUESVector(builder, data)
 
 def SLPIterationAddRESIDUAL_NORM(builder, RESIDUAL_NORM):
     builder.PrependFloat64Slot(3, RESIDUAL_NORM, 0.0)

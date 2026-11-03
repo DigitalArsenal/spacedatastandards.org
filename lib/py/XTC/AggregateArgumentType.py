@@ -119,7 +119,7 @@ def AggregateArgumentTypeCreateMEMBERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMBERSVector(builder, data):
-    AggregateArgumentTypeCreateMEMBERSVector(builder, data)
+    return AggregateArgumentTypeCreateMEMBERSVector(builder, data)
 
 def AggregateArgumentTypeEnd(builder):
     return builder.EndObject()

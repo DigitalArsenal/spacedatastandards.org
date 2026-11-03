@@ -229,7 +229,7 @@ def CMTCreateSPLITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPLITSVector(builder, data):
-    CMTCreateSPLITSVector(builder, data)
+    return CMTCreateSPLITSVector(builder, data)
 
 def CMTAddPLATFORM_RECIPIENT(builder, PLATFORM_RECIPIENT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_RECIPIENT), 0)
@@ -259,7 +259,7 @@ def CMTCreateCONTRACTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRACTSVector(builder, data):
-    CMTCreateCONTRACTSVector(builder, data)
+    return CMTCreateCONTRACTSVector(builder, data)
 
 def CMTAddEFFECTIVE_AT(builder, EFFECTIVE_AT):
     builder.PrependUint64Slot(8, EFFECTIVE_AT, 0)
@@ -293,7 +293,7 @@ def CMTCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    CMTCreateSIGNATUREVector(builder, data)
+    return CMTCreateSIGNATUREVector(builder, data)
 
 def CMTEnd(builder):
     return builder.EndObject()

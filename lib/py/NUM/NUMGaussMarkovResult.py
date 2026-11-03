@@ -257,7 +257,7 @@ def NUMGaussMarkovResultCreateMEANVector(builder, data):
     return builder.EndVector()
 
 def CreateMEANVector(builder, data):
-    NUMGaussMarkovResultCreateMEANVector(builder, data)
+    return NUMGaussMarkovResultCreateMEANVector(builder, data)
 
 def NUMGaussMarkovResultAddSTANDARD_DEVIATION(builder, STANDARD_DEVIATION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STANDARD_DEVIATION), 0)
@@ -279,7 +279,7 @@ def NUMGaussMarkovResultCreateSTANDARD_DEVIATIONVector(builder, data):
     return builder.EndVector()
 
 def CreateSTANDARD_DEVIATIONVector(builder, data):
-    NUMGaussMarkovResultCreateSTANDARD_DEVIATIONVector(builder, data)
+    return NUMGaussMarkovResultCreateSTANDARD_DEVIATIONVector(builder, data)
 
 def NUMGaussMarkovResultAddMINIMUM(builder, MINIMUM):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MINIMUM), 0)
@@ -301,7 +301,7 @@ def NUMGaussMarkovResultCreateMINIMUMVector(builder, data):
     return builder.EndVector()
 
 def CreateMINIMUMVector(builder, data):
-    NUMGaussMarkovResultCreateMINIMUMVector(builder, data)
+    return NUMGaussMarkovResultCreateMINIMUMVector(builder, data)
 
 def NUMGaussMarkovResultAddMAXIMUM(builder, MAXIMUM):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(MAXIMUM), 0)
@@ -323,7 +323,7 @@ def NUMGaussMarkovResultCreateMAXIMUMVector(builder, data):
     return builder.EndVector()
 
 def CreateMAXIMUMVector(builder, data):
-    NUMGaussMarkovResultCreateMAXIMUMVector(builder, data)
+    return NUMGaussMarkovResultCreateMAXIMUMVector(builder, data)
 
 def NUMGaussMarkovResultAddFINAL_STATE(builder, FINAL_STATE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(FINAL_STATE), 0)
@@ -345,7 +345,7 @@ def NUMGaussMarkovResultCreateFINAL_STATEVector(builder, data):
     return builder.EndVector()
 
 def CreateFINAL_STATEVector(builder, data):
-    NUMGaussMarkovResultCreateFINAL_STATEVector(builder, data)
+    return NUMGaussMarkovResultCreateFINAL_STATEVector(builder, data)
 
 def NUMGaussMarkovResultAddSAMPLES(builder, SAMPLES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLES), 0)
@@ -367,7 +367,7 @@ def NUMGaussMarkovResultCreateSAMPLESVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLESVector(builder, data):
-    NUMGaussMarkovResultCreateSAMPLESVector(builder, data)
+    return NUMGaussMarkovResultCreateSAMPLESVector(builder, data)
 
 def NUMGaussMarkovResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

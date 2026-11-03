@@ -134,7 +134,7 @@ def ODRAttestationCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    ODRAttestationCreateSIGNATUREVector(builder, data)
+    return ODRAttestationCreateSIGNATUREVector(builder, data)
 
 def ODRAttestationAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -156,7 +156,7 @@ def ODRAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    ODRAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return ODRAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def ODRAttestationEnd(builder):
     return builder.EndObject()

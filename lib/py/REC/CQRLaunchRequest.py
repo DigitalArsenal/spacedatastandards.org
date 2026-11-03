@@ -254,7 +254,7 @@ def CQRLaunchRequestCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    CQRLaunchRequestCreateSEGMENTSVector(builder, data)
+    return CQRLaunchRequestCreateSEGMENTSVector(builder, data)
 
 def CQRLaunchRequestAddOBJECTS(builder, OBJECTS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTS), 0)
@@ -272,7 +272,7 @@ def CQRLaunchRequestCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    CQRLaunchRequestCreateOBJECTSVector(builder, data)
+    return CQRLaunchRequestCreateOBJECTSVector(builder, data)
 
 def CQRLaunchRequestAddCRITERIA(builder, CRITERIA):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CRITERIA), 0)
@@ -290,7 +290,7 @@ def CQRLaunchRequestCreateCRITERIAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCRITERIAVector(builder, data):
-    CQRLaunchRequestCreateCRITERIAVector(builder, data)
+    return CQRLaunchRequestCreateCRITERIAVector(builder, data)
 
 def CQRLaunchRequestAddMINIMUM_ALTITUDE_M(builder, MINIMUM_ALTITUDE_M):
     builder.PrependFloat64Slot(8, MINIMUM_ALTITUDE_M, 150000.0)

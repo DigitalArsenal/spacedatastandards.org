@@ -16,111 +16,228 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
-
 /**
- * FlatBuffers field-level encryption support using AES-256-CTR.
+ * Field-encryption format 3: encrypts or decrypts, in place, every (encrypted)
+ * field instance of a buffer exactly as the C++ walker
+ * (flatbuffers::EncryptBuffer/DecryptBuffer, version 3) and flatc-wasm do. The
+ * record's key is
+ * K = HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)),
+ * and each instance is AES-256-CTR encrypted with K and the IV
+ * BE32(position of its first byte in the buffer) || 12 zero bytes, so no two
+ * instances share a key stream. (key, recordIndex) must be unique per buffer.
+ * Generated tables call it with their walk program.
  */
 object FlatbuffersEncryption {
-
-    private fun deriveNonce(ctx: ByteArray, fieldOffset: Int): ByteArray {
-        require(ctx.size >= 12) { "Encryption context must be at least 12 bytes" }
-        val nonce = ByteArray(16)
-        System.arraycopy(ctx, 0, nonce, 0, 12)
-        ByteBuffer.wrap(nonce, 12, 4).order(ByteOrder.LITTLE_ENDIAN).putInt(fieldOffset)
-        return nonce
+    /** HKDF-SHA256(key, no salt, "flatbuffers-buffer-v3" || BE32(recordIndex)). */
+    @JvmStatic
+    fun bufferKey(key: ByteArray, recordIndex: Int): ByteArray {
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(ByteArray(32), "HmacSHA256"))
+        val prk = mac.doFinal(key)
+        mac.init(javax.crypto.spec.SecretKeySpec(prk, "HmacSHA256"))
+        val info = "flatbuffers-buffer-v3".toByteArray(Charsets.US_ASCII) + byteArrayOf(
+            (recordIndex ushr 24).toByte(), (recordIndex ushr 16).toByte(),
+            (recordIndex ushr 8).toByte(), recordIndex.toByte(), 1)
+        return mac.doFinal(info)
     }
 
-    private fun decryptBytes(data: ByteArray, ctx: ByteArray, fieldOffset: Int): ByteArray {
-        require(ctx.size >= 32) { "Encryption context must be at least 32 bytes" }
-        val key = ctx.copyOfRange(0, 32)
-        val nonce = deriveNonce(ctx, fieldOffset)
-        val keySpec = SecretKeySpec(key, "AES")
-        val ivSpec = IvParameterSpec(nonce)
-        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
-        cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
-        return cipher.doFinal(data)
+    /**
+     * Encrypts or decrypts (the same operation), in place, every (encrypted)
+     * field instance of the buffer that starts at bb.position(), by a table's
+     * walk program. recordIndex is an unsigned 32-bit value. Throws
+     * IllegalArgumentException, before any byte changes, for a bad key or a
+     * malformed buffer.
+     */
+    @JvmStatic
+    fun cryptBuffer(bb: ByteBuffer, key: ByteArray, recordIndex: Int, program: IntArray) {
+        require(key.size == 32) { "FlatbuffersEncryption: the key must be 32 bytes" }
+        require(bb.limit() - bb.position() >= 4) { "FlatbuffersEncryption: invalid buffer" }
+        val dry = Walk(bb, program, null)
+        val root = dry.u32(0)
+        dry.check(root, 4)
+        dry.walk(0, root, 0)
+        val aesKey = javax.crypto.spec.SecretKeySpec(bufferKey(key, recordIndex), "AES")
+        Walk(bb, program, aesKey).walk(0, root, 0)
     }
 
-    fun decryptScalar(value: Boolean, ctx: ByteArray?, fieldOffset: Int): Boolean {
-        if (ctx == null) return value
-        val data = byteArrayOf(if (value) 1.toByte() else 0.toByte())
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return decrypted[0] != 0.toByte()
-    }
+    private class Walk(
+        private val bb: ByteBuffer,
+        private val program: IntArray,
+        // null: a dry run that only checks the buffer
+        private val key: javax.crypto.spec.SecretKeySpec?
+    ) {
+        private val base = bb.position()
+        private val size = (bb.limit() - bb.position()).toLong()
+        private val tables = HashSet<Long>()
+        private val regions = HashSet<Long>()
 
-    fun decryptScalar(value: Byte, ctx: ByteArray?, fieldOffset: Int): Byte {
-        if (ctx == null) return value
-        val data = byteArrayOf(value)
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return decrypted[0]
-    }
+        fun fail(what: String): Nothing =
+            throw IllegalArgumentException("FlatbuffersEncryption: " + what)
 
-    fun decryptScalar(value: Short, ctx: ByteArray?, fieldOffset: Int): Short {
-        if (ctx == null) return value
-        val data = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(value).array()
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN).getShort()
-    }
-
-    fun decryptScalar(value: Int, ctx: ByteArray?, fieldOffset: Int): Int {
-        if (ctx == null) return value
-        val data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(value).array()
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN).getInt()
-    }
-
-    fun decryptScalar(value: Long, ctx: ByteArray?, fieldOffset: Int): Long {
-        if (ctx == null) return value
-        val data = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(value).array()
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN).getLong()
-    }
-
-    fun decryptScalar(value: Float, ctx: ByteArray?, fieldOffset: Int): Float {
-        if (ctx == null) return value
-        val data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(value).array()
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN).getFloat()
-    }
-
-    fun decryptScalar(value: Double, ctx: ByteArray?, fieldOffset: Int): Double {
-        if (ctx == null) return value
-        val data = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putDouble(value).array()
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN).getDouble()
-    }
-
-    fun decryptScalar(value: UByte, ctx: ByteArray?, fieldOffset: Int): UByte {
-        return decryptScalar(value.toByte(), ctx, fieldOffset).toUByte()
-    }
-
-    fun decryptScalar(value: UShort, ctx: ByteArray?, fieldOffset: Int): UShort {
-        return decryptScalar(value.toShort(), ctx, fieldOffset).toUShort()
-    }
-
-    fun decryptScalar(value: UInt, ctx: ByteArray?, fieldOffset: Int): UInt {
-        return decryptScalar(value.toInt(), ctx, fieldOffset).toUInt()
-    }
-
-    fun decryptScalar(value: ULong, ctx: ByteArray?, fieldOffset: Int): ULong {
-        return decryptScalar(value.toLong(), ctx, fieldOffset).toULong()
-    }
-
-    fun decryptString(bb: ByteBuffer, offset: Int, ctx: ByteArray?, fieldOffset: Int): String? {
-        // Read raw bytes from the vector
-        val pos = offset + bb.getInt(offset)
-        val len = bb.getInt(pos)
-        val data = ByteArray(len)
-        for (i in 0 until len) data[i] = bb.get(pos + 4 + i)
-        if (ctx == null) {
-            // No encryption context, decode as regular string
-            return String(data, Charsets.UTF_8)
+        fun check(pos: Long, length: Long) {
+            if (pos < 0 || length < 0 || pos > size || length > size - pos) {
+                fail("the buffer is malformed (offset " + pos + " out of bounds)")
+            }
         }
-        // Decrypt and decode
-        val decrypted = decryptBytes(data, ctx, fieldOffset)
-        return String(decrypted, Charsets.UTF_8)
+
+        fun u8(pos: Long): Long {
+            check(pos, 1)
+            return (bb.get(base + pos.toInt()).toInt() and 0xFF).toLong()
+        }
+
+        fun u16(pos: Long): Long {
+            check(pos, 2)
+            return u8(pos) or (u8(pos + 1) shl 8)
+        }
+
+        fun u32(pos: Long): Long {
+            check(pos, 4)
+            return u16(pos) or (u16(pos + 2) shl 16)
+        }
+
+        fun follow(pos: Long): Long {
+            val target = pos + u32(pos)
+            check(target, 4)
+            return target
+        }
+
+        fun count(pos: Long, elementSize: Long): Long {
+            val n = u32(pos)
+            check(pos + 4, n * elementSize)
+            return n
+        }
+
+        fun crypt(start: Long, length: Long) {
+            if (length == 0L || !regions.add(start) || key == null) return
+            val iv = ByteArray(16)
+            iv[0] = (start ushr 24).toByte()
+            iv[1] = (start ushr 16).toByte()
+            iv[2] = (start ushr 8).toByte()
+            iv[3] = start.toByte()
+            val at = base + start.toInt()
+            val data = ByteArray(length.toInt()) { bb.get(at + it) }
+            val cipher = javax.crypto.Cipher.getInstance("AES/CTR/NoPadding")
+            cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, key,
+                javax.crypto.spec.IvParameterSpec(iv))
+            val out = cipher.doFinal(data)
+            for (i in out.indices) bb.put(at + i, out[i])
+        }
+
+        fun string(pos: Long) {
+            val s = follow(pos)
+            val n = u32(s)
+            check(s + 4, n + 1)
+            crypt(s + 4, n)
+        }
+
+        fun vtable(table: Long): Long = table - u32(table).toInt()
+
+        fun field(table: Long, slot: Long): Long {
+            val vtable = vtable(table)
+            if (slot + 2 > u16(vtable)) return 0
+            val offset = u16(vtable + slot)
+            return if (offset == 0L) 0 else table + offset
+        }
+
+        fun enter(table: Long, depth: Int): Boolean {
+            if (depth > 64) fail("tables nested deeper than 64 levels")
+            if (!tables.add(table)) return false
+            val vtable = vtable(table)
+            check(vtable, 4)
+            val vtableSize = u16(vtable)
+            val tableSize = u16(vtable + 2)
+            if (vtableSize < 4 || (vtableSize and 1L) != 0L) {
+                fail("the buffer is malformed (bad vtable)")
+            }
+            check(vtable, vtableSize)
+            check(table, tableSize)
+            var slot = 4L
+            while (slot < vtableSize) {
+                val offset = u16(vtable + slot)
+                if (offset != 0L && offset >= tableSize) {
+                    fail("the buffer is malformed (bad field offset)")
+                }
+                slot += 2
+            }
+            return true
+        }
+
+        fun member(at: Int, n: Int, unionType: Long): Int {
+            for (i in 0 until n) {
+                if (program[at + 2 * i].toLong() == unionType) return program[at + 2 * i + 1]
+            }
+            return -1
+        }
+
+        fun walk(index: Int, table: Long, depth: Int) {
+            if (!enter(table, depth)) return
+            val p = program
+            var at = p[1 + index]
+            val ops = p[at++]
+            for (op in 0 until ops) {
+                val kind = p[at]
+                val slot = p[at + 1].toLong()
+                at += 2
+                var arg = 0
+                var typeSlot = 0L
+                var members = 0
+                var n = 0
+                if (kind == 0 || kind == 2 || kind == 4 || kind == 5) {
+                    arg = p[at++]
+                } else if (kind == 6 || kind == 7) {
+                    typeSlot = p[at].toLong()
+                    n = p[at + 1]
+                    members = at + 2
+                    at += 2 + 2 * n
+                }
+                val loc = field(table, slot)
+                if (loc == 0L) continue
+                when (kind) {
+                    0 -> {
+                        check(loc, arg.toLong())
+                        crypt(loc, arg.toLong())
+                    }
+                    1 -> string(loc)
+                    2 -> {
+                        val v = follow(loc)
+                        crypt(v + 4, count(v, arg.toLong()) * arg)
+                    }
+                    3 -> {
+                        val v = follow(loc)
+                        val c = count(v, 4)
+                        for (i in 0 until c) string(v + 4 + 4 * i)
+                    }
+                    4 -> walk(arg, follow(loc), depth + 1)
+                    5 -> {
+                        val v = follow(loc)
+                        val c = count(v, 4)
+                        for (i in 0 until c) walk(arg, follow(v + 4 + 4 * i), depth + 1)
+                    }
+                    6 -> {
+                        val typeLoc = field(table, typeSlot)
+                        if (typeLoc != 0L) {
+                            val member = member(members, n, u8(typeLoc))
+                            if (member >= 0) walk(member, follow(loc), depth + 1)
+                        }
+                    }
+                    7 -> {
+                        val typeLoc = field(table, typeSlot)
+                        if (typeLoc != 0L) {
+                            val types = follow(typeLoc)
+                            val c = count(types, 1)
+                            val values = follow(loc)
+                            if (count(values, 4) != c) {
+                                fail("the buffer is malformed (union vectors differ)")
+                            }
+                            for (i in 0 until c) {
+                                val member = member(members, n, u8(types + 4 + i))
+                                if (member >= 0) walk(member, follow(values + 4 + 4 * i), depth + 1)
+                            }
+                        }
+                    }
+                    else -> fail("unknown walk program op " + kind)
+                }
+            }
+        }
     }
 }

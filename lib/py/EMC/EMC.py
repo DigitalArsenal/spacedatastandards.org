@@ -381,7 +381,7 @@ def EMCCreateINTERMODULATION_TERMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTERMODULATION_TERMSVector(builder, data):
-    EMCCreateINTERMODULATION_TERMSVector(builder, data)
+    return EMCCreateINTERMODULATION_TERMSVector(builder, data)
 
 def EMCAddINTERMODULATION_PRODUCT_FREQUENCY_HZ(builder, INTERMODULATION_PRODUCT_FREQUENCY_HZ):
     builder.PrependFloat64Slot(10, INTERMODULATION_PRODUCT_FREQUENCY_HZ, 0.0)
@@ -499,7 +499,7 @@ def EMCCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    EMCCreateSIGNATUREVector(builder, data)
+    return EMCCreateSIGNATUREVector(builder, data)
 
 def EMCAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -521,7 +521,7 @@ def EMCCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    EMCCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return EMCCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def EMCEnd(builder):
     return builder.EndObject()

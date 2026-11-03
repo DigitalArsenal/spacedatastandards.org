@@ -277,7 +277,7 @@ def BSPInterpolationResultCreateXD1Vector(builder, data):
     return builder.EndVector()
 
 def CreateXD1Vector(builder, data):
-    BSPInterpolationResultCreateXD1Vector(builder, data)
+    return BSPInterpolationResultCreateXD1Vector(builder, data)
 
 def BSPInterpolationResultAddXD2(builder, XD2):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(XD2), 0)
@@ -299,7 +299,7 @@ def BSPInterpolationResultCreateXD2Vector(builder, data):
     return builder.EndVector()
 
 def CreateXD2Vector(builder, data):
-    BSPInterpolationResultCreateXD2Vector(builder, data)
+    return BSPInterpolationResultCreateXD2Vector(builder, data)
 
 def BSPInterpolationResultAddXD3(builder, XD3):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(XD3), 0)
@@ -321,7 +321,7 @@ def BSPInterpolationResultCreateXD3Vector(builder, data):
     return builder.EndVector()
 
 def CreateXD3Vector(builder, data):
-    BSPInterpolationResultCreateXD3Vector(builder, data)
+    return BSPInterpolationResultCreateXD3Vector(builder, data)
 
 def BSPInterpolationResultAddXDD1(builder, XDD1):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(XDD1), 0)
@@ -343,7 +343,7 @@ def BSPInterpolationResultCreateXDD1Vector(builder, data):
     return builder.EndVector()
 
 def CreateXDD1Vector(builder, data):
-    BSPInterpolationResultCreateXDD1Vector(builder, data)
+    return BSPInterpolationResultCreateXDD1Vector(builder, data)
 
 def BSPInterpolationResultAddXDD2(builder, XDD2):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(XDD2), 0)
@@ -365,7 +365,7 @@ def BSPInterpolationResultCreateXDD2Vector(builder, data):
     return builder.EndVector()
 
 def CreateXDD2Vector(builder, data):
-    BSPInterpolationResultCreateXDD2Vector(builder, data)
+    return BSPInterpolationResultCreateXDD2Vector(builder, data)
 
 def BSPInterpolationResultAddXDD3(builder, XDD3):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(XDD3), 0)
@@ -387,7 +387,7 @@ def BSPInterpolationResultCreateXDD3Vector(builder, data):
     return builder.EndVector()
 
 def CreateXDD3Vector(builder, data):
-    BSPInterpolationResultCreateXDD3Vector(builder, data)
+    return BSPInterpolationResultCreateXDD3Vector(builder, data)
 
 def BSPInterpolationResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

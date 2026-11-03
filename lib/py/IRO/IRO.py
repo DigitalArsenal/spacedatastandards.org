@@ -491,7 +491,7 @@ def IROCreateWAVELENGTHSVector(builder, data):
     return builder.EndVector()
 
 def CreateWAVELENGTHSVector(builder, data):
-    IROCreateWAVELENGTHSVector(builder, data)
+    return IROCreateWAVELENGTHSVector(builder, data)
 
 def IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_VALUES), 0)
@@ -513,7 +513,7 @@ def IROCreateSPECTRAL_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateSPECTRAL_VALUESVector(builder, data):
-    IROCreateSPECTRAL_VALUESVector(builder, data)
+    return IROCreateSPECTRAL_VALUESVector(builder, data)
 
 def IROAddQUALITY(builder, QUALITY):
     builder.PrependUint8Slot(28, QUALITY, 0)

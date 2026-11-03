@@ -368,7 +368,7 @@ def ANICreateLABELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLABELSVector(builder, data):
-    ANICreateLABELSVector(builder, data)
+    return ANICreateLABELSVector(builder, data)
 
 def ANIAddCONFIDENCE(builder, CONFIDENCE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CONFIDENCE), 0)
@@ -390,7 +390,7 @@ def ANICreateCONFIDENCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCONFIDENCEVector(builder, data):
-    ANICreateCONFIDENCEVector(builder, data)
+    return ANICreateCONFIDENCEVector(builder, data)
 
 def ANIAddFEATURES(builder, FEATURES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURES), 0)
@@ -412,7 +412,7 @@ def ANICreateFEATURESVector(builder, data):
     return builder.EndVector()
 
 def CreateFEATURESVector(builder, data):
-    ANICreateFEATURESVector(builder, data)
+    return ANICreateFEATURESVector(builder, data)
 
 def ANIAddQUALITY(builder, QUALITY):
     builder.PrependFloat64Slot(19, QUALITY, 0.0)

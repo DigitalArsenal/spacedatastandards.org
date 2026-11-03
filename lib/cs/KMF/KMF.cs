@@ -10,19 +10,33 @@ using global::Google.FlatBuffers;
 public struct KMF : IFlatbufferObject
 {
   private Table __p;
-  public byte[] EncryptionCtx;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static KMF GetRootAsKMF(ByteBuffer _bb) { return GetRootAsKMF(_bb, new KMF()); }
   public static KMF GetRootAsKMF(ByteBuffer _bb, KMF obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public static KMF GetRootAsKMF(ByteBuffer _bb, byte[] encryptionCtx) { return GetRootAsKMF(_bb, new KMF(), encryptionCtx); }
-  public static KMF GetRootAsKMF(ByteBuffer _bb, KMF obj, byte[] encryptionCtx) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb, encryptionCtx)); }
   public static bool KMFBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$KMF"); }
   public static bool VerifyKMF(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("$KMF", false, KMFVerify.Verify); }
-  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); this.EncryptionCtx = null; }
-  public void __init(int _i, ByteBuffer _bb, byte[] encryptionCtx) { __p = new Table(_i, _bb); this.EncryptionCtx = encryptionCtx; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public KMF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
-  public KMF __assign(int _i, ByteBuffer _bb, byte[] encryptionCtx) { __init(_i, _bb, encryptionCtx); return this; }
+
+  // Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
+  private static readonly int[] FlatbuffersEncryptionProgram = {
+    1, 2, 1, 2, 12, 1
+  };
+  /// <summary>
+  /// Encrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void EncryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
+  /// <summary>
+  /// Decrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void DecryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
 
   /// Logical key identifier used across publication and grant records.
   public string KEY_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }

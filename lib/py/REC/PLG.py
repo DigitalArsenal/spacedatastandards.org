@@ -1049,7 +1049,7 @@ def PLGCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    PLGCreateTAGSVector(builder, data)
+    return PLGCreateTAGSVector(builder, data)
 
 def PLGAddFEATURES(builder, FEATURES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURES), 0)
@@ -1067,7 +1067,7 @@ def PLGCreateFEATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFEATURESVector(builder, data):
-    PLGCreateFEATURESVector(builder, data)
+    return PLGCreateFEATURESVector(builder, data)
 
 def PLGAddSCREENSHOT_URLS(builder, SCREENSHOT_URLS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SCREENSHOT_URLS), 0)
@@ -1085,7 +1085,7 @@ def PLGCreateSCREENSHOT_URLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCREENSHOT_URLSVector(builder, data):
-    PLGCreateSCREENSHOT_URLSVector(builder, data)
+    return PLGCreateSCREENSHOT_URLSVector(builder, data)
 
 def PLGAddBANNER_URL(builder, BANNER_URL):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BANNER_URL), 0)
@@ -1119,7 +1119,7 @@ def PLGCreateWASM_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateWASM_HASHVector(builder, data):
-    PLGCreateWASM_HASHVector(builder, data)
+    return PLGCreateWASM_HASHVector(builder, data)
 
 def PLGAddWASM_SIZE(builder, WASM_SIZE):
     builder.PrependUint64Slot(16, WASM_SIZE, 0)
@@ -1153,7 +1153,7 @@ def PLGCreateENCRYPTED_WASM_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateENCRYPTED_WASM_HASHVector(builder, data):
-    PLGCreateENCRYPTED_WASM_HASHVector(builder, data)
+    return PLGCreateENCRYPTED_WASM_HASHVector(builder, data)
 
 def PLGAddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE):
     builder.PrependUint64Slot(19, ENCRYPTED_WASM_SIZE, 0)
@@ -1177,7 +1177,7 @@ def PLGCreateENTRY_FUNCTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRY_FUNCTIONSVector(builder, data):
-    PLGCreateENTRY_FUNCTIONSVector(builder, data)
+    return PLGCreateENTRY_FUNCTIONSVector(builder, data)
 
 def PLGAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCHEMAS), 0)
@@ -1195,7 +1195,7 @@ def PLGCreateREQUIRED_SCHEMASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUIRED_SCHEMASVector(builder, data):
-    PLGCreateREQUIRED_SCHEMASVector(builder, data)
+    return PLGCreateREQUIRED_SCHEMASVector(builder, data)
 
 def PLGAddDEPENDENCIES(builder, DEPENDENCIES):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(DEPENDENCIES), 0)
@@ -1213,7 +1213,7 @@ def PLGCreateDEPENDENCIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEPENDENCIESVector(builder, data):
-    PLGCreateDEPENDENCIESVector(builder, data)
+    return PLGCreateDEPENDENCIESVector(builder, data)
 
 def PLGAddCAPABILITIES(builder, CAPABILITIES):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CAPABILITIES), 0)
@@ -1231,7 +1231,7 @@ def PLGCreateCAPABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCAPABILITIESVector(builder, data):
-    PLGCreateCAPABILITIESVector(builder, data)
+    return PLGCreateCAPABILITIESVector(builder, data)
 
 def PLGAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
@@ -1285,7 +1285,7 @@ def PLGCreateMIN_PERMISSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMIN_PERMISSIONSVector(builder, data):
-    PLGCreateMIN_PERMISSIONSVector(builder, data)
+    return PLGCreateMIN_PERMISSIONSVector(builder, data)
 
 def PLGAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUint64Slot(31, CREATED_AT, 0)
@@ -1357,7 +1357,7 @@ def PLGCreateACCEPTED_PAYMENT_METHODSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCEPTED_PAYMENT_METHODSVector(builder, data):
-    PLGCreateACCEPTED_PAYMENT_METHODSVector(builder, data)
+    return PLGCreateACCEPTED_PAYMENT_METHODSVector(builder, data)
 
 def PLGAddLISTING_STATUS(builder, LISTING_STATUS):
     builder.PrependInt8Slot(41, LISTING_STATUS, 0)
@@ -1385,7 +1385,7 @@ def PLGCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PLGCreateSIGNATUREVector(builder, data)
+    return PLGCreateSIGNATUREVector(builder, data)
 
 def PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(INVOKE_SURFACES), 0)
@@ -1407,7 +1407,7 @@ def PLGCreateINVOKE_SURFACESVector(builder, data):
     return builder.EndVector()
 
 def CreateINVOKE_SURFACESVector(builder, data):
-    PLGCreateINVOKE_SURFACESVector(builder, data)
+    return PLGCreateINVOKE_SURFACESVector(builder, data)
 
 def PLGAddMETHODS(builder, METHODS):
     builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(METHODS), 0)
@@ -1425,7 +1425,7 @@ def PLGCreateMETHODSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMETHODSVector(builder, data):
-    PLGCreateMETHODSVector(builder, data)
+    return PLGCreateMETHODSVector(builder, data)
 
 def PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES):
     builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(HOST_CAPABILITIES), 0)
@@ -1443,7 +1443,7 @@ def PLGCreateHOST_CAPABILITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHOST_CAPABILITIESVector(builder, data):
-    PLGCreateHOST_CAPABILITIESVector(builder, data)
+    return PLGCreateHOST_CAPABILITIESVector(builder, data)
 
 def PLGAddTIMERS(builder, TIMERS):
     builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(TIMERS), 0)
@@ -1461,7 +1461,7 @@ def PLGCreateTIMERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTIMERSVector(builder, data):
-    PLGCreateTIMERSVector(builder, data)
+    return PLGCreateTIMERSVector(builder, data)
 
 def PLGAddPROTOCOLS(builder, PROTOCOLS):
     builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(PROTOCOLS), 0)
@@ -1479,7 +1479,7 @@ def PLGCreatePROTOCOLSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROTOCOLSVector(builder, data):
-    PLGCreatePROTOCOLSVector(builder, data)
+    return PLGCreatePROTOCOLSVector(builder, data)
 
 def PLGAddSCHEMAS_USED(builder, SCHEMAS_USED):
     builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMAS_USED), 0)
@@ -1497,7 +1497,7 @@ def PLGCreateSCHEMAS_USEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCHEMAS_USEDVector(builder, data):
-    PLGCreateSCHEMAS_USEDVector(builder, data)
+    return PLGCreateSCHEMAS_USEDVector(builder, data)
 
 def PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS):
     builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(BUILD_ARTIFACTS), 0)
@@ -1515,7 +1515,7 @@ def PLGCreateBUILD_ARTIFACTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBUILD_ARTIFACTSVector(builder, data):
-    PLGCreateBUILD_ARTIFACTSVector(builder, data)
+    return PLGCreateBUILD_ARTIFACTSVector(builder, data)
 
 def PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS):
     builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(RUNTIME_TARGETS), 0)
@@ -1533,7 +1533,7 @@ def PLGCreateRUNTIME_TARGETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRUNTIME_TARGETSVector(builder, data):
-    PLGCreateRUNTIME_TARGETSVector(builder, data)
+    return PLGCreateRUNTIME_TARGETSVector(builder, data)
 
 def PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS):
     builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_XPUBS), 0)
@@ -1551,7 +1551,7 @@ def PLGCreateALLOWED_XPUBSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_XPUBSVector(builder, data):
-    PLGCreateALLOWED_XPUBSVector(builder, data)
+    return PLGCreateALLOWED_XPUBSVector(builder, data)
 
 def PLGAddFLOW_NODES(builder, FLOW_NODES):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_NODES), 0)
@@ -1569,7 +1569,7 @@ def PLGCreateFLOW_NODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOW_NODESVector(builder, data):
-    PLGCreateFLOW_NODESVector(builder, data)
+    return PLGCreateFLOW_NODESVector(builder, data)
 
 def PLGAddFLOW_EDGES(builder, FLOW_EDGES):
     builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_EDGES), 0)
@@ -1587,7 +1587,7 @@ def PLGCreateFLOW_EDGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOW_EDGESVector(builder, data):
-    PLGCreateFLOW_EDGESVector(builder, data)
+    return PLGCreateFLOW_EDGESVector(builder, data)
 
 def PLGAddFLOW_TRIGGERS(builder, FLOW_TRIGGERS):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_TRIGGERS), 0)
@@ -1605,7 +1605,7 @@ def PLGCreateFLOW_TRIGGERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOW_TRIGGERSVector(builder, data):
-    PLGCreateFLOW_TRIGGERSVector(builder, data)
+    return PLGCreateFLOW_TRIGGERSVector(builder, data)
 
 def PLGAddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_TRIGGER_BINDINGS), 0)
@@ -1623,7 +1623,7 @@ def PLGCreateFLOW_TRIGGER_BINDINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOW_TRIGGER_BINDINGSVector(builder, data):
-    PLGCreateFLOW_TRIGGER_BINDINGSVector(builder, data)
+    return PLGCreateFLOW_TRIGGER_BINDINGSVector(builder, data)
 
 def PLGAddPRIMARY_CATEGORY(builder, PRIMARY_CATEGORY):
     builder.PrependUint8Slot(56, PRIMARY_CATEGORY, 0)
@@ -1651,7 +1651,7 @@ def PLGCreateCATEGORIESVector(builder, data):
     return builder.EndVector()
 
 def CreateCATEGORIESVector(builder, data):
-    PLGCreateCATEGORIESVector(builder, data)
+    return PLGCreateCATEGORIESVector(builder, data)
 
 def PLGEnd(builder):
     return builder.EndObject()

@@ -802,7 +802,7 @@ def DTTCreateREFERENCE_RADII_MVector(builder, data):
     return builder.EndVector()
 
 def CreateREFERENCE_RADII_MVector(builder, data):
-    DTTCreateREFERENCE_RADII_MVector(builder, data)
+    return DTTCreateREFERENCE_RADII_MVector(builder, data)
 
 def DTTAddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS):
     builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(HORIZON_ELEVATIONS), 0)

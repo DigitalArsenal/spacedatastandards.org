@@ -133,7 +133,7 @@ def MathAlgorithmCreateTRIGGERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRIGGERSVector(builder, data):
-    MathAlgorithmCreateTRIGGERSVector(builder, data)
+    return MathAlgorithmCreateTRIGGERSVector(builder, data)
 
 def MathAlgorithmEnd(builder):
     return builder.EndObject()

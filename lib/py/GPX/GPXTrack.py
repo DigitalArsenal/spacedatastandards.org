@@ -175,7 +175,7 @@ def GPXTrackCreateLINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKSVector(builder, data):
-    GPXTrackCreateLINKSVector(builder, data)
+    return GPXTrackCreateLINKSVector(builder, data)
 
 def GPXTrackAddNUMBER(builder, NUMBER):
     builder.PrependUint32Slot(5, NUMBER, 0)
@@ -205,7 +205,7 @@ def GPXTrackCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    GPXTrackCreateSEGMENTSVector(builder, data)
+    return GPXTrackCreateSEGMENTSVector(builder, data)
 
 def GPXTrackEnd(builder):
     return builder.EndObject()

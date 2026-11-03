@@ -138,7 +138,7 @@ def EVLEclipseConfigurationCreateOCCULTING_BODY_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateOCCULTING_BODY_IDSVector(builder, data):
-    EVLEclipseConfigurationCreateOCCULTING_BODY_IDSVector(builder, data)
+    return EVLEclipseConfigurationCreateOCCULTING_BODY_IDSVector(builder, data)
 
 def EVLEclipseConfigurationAddILLUMINATING_BODY_ID(builder, ILLUMINATING_BODY_ID):
     builder.PrependInt32Slot(1, ILLUMINATING_BODY_ID, 0)

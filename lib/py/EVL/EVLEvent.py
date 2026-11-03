@@ -262,7 +262,7 @@ def EVLEventCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    EVLEventCreateSAMPLESVector(builder, data)
+    return EVLEventCreateSAMPLESVector(builder, data)
 
 def EVLEventEnd(builder):
     return builder.EndObject()

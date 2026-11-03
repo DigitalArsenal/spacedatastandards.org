@@ -326,7 +326,7 @@ def ERMModelStratumCreateMEANVector(builder, data):
     return builder.EndVector()
 
 def CreateMEANVector(builder, data):
-    ERMModelStratumCreateMEANVector(builder, data)
+    return ERMModelStratumCreateMEANVector(builder, data)
 
 def ERMModelStratumAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -348,7 +348,7 @@ def ERMModelStratumCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMModelStratumCreateCOVARIANCEVector(builder, data)
+    return ERMModelStratumCreateCOVARIANCEVector(builder, data)
 
 def ERMModelStratumAddQUANTILES(builder, QUANTILES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTILES), 0)
@@ -370,7 +370,7 @@ def ERMModelStratumCreateQUANTILESVector(builder, data):
     return builder.EndVector()
 
 def CreateQUANTILESVector(builder, data):
-    ERMModelStratumCreateQUANTILESVector(builder, data)
+    return ERMModelStratumCreateQUANTILESVector(builder, data)
 
 def ERMModelStratumAddMEDIAN(builder, MEDIAN):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(MEDIAN), 0)
@@ -392,7 +392,7 @@ def ERMModelStratumCreateMEDIANVector(builder, data):
     return builder.EndVector()
 
 def CreateMEDIANVector(builder, data):
-    ERMModelStratumCreateMEDIANVector(builder, data)
+    return ERMModelStratumCreateMEDIANVector(builder, data)
 
 def ERMModelStratumAddROBUST_SIGMA(builder, ROBUST_SIGMA):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ROBUST_SIGMA), 0)
@@ -414,7 +414,7 @@ def ERMModelStratumCreateROBUST_SIGMAVector(builder, data):
     return builder.EndVector()
 
 def CreateROBUST_SIGMAVector(builder, data):
-    ERMModelStratumCreateROBUST_SIGMAVector(builder, data)
+    return ERMModelStratumCreateROBUST_SIGMAVector(builder, data)
 
 def ERMModelStratumAddCLIPPED(builder, CLIPPED):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLIPPED), 0)

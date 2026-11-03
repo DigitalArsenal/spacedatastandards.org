@@ -185,7 +185,7 @@ def ERMPropagatorRegimeCreateP0Vector(builder, data):
     return builder.EndVector()
 
 def CreateP0Vector(builder, data):
-    ERMPropagatorRegimeCreateP0Vector(builder, data)
+    return ERMPropagatorRegimeCreateP0Vector(builder, data)
 
 def ERMPropagatorRegimeAddPROCESS_NOISE(builder, PROCESS_NOISE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESS_NOISE), 0)

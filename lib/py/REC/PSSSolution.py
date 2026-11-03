@@ -183,7 +183,7 @@ def PSSSolutionCreateVARIABLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIABLESVector(builder, data):
-    PSSSolutionCreateVARIABLESVector(builder, data)
+    return PSSSolutionCreateVARIABLESVector(builder, data)
 
 def PSSSolutionAddOBJECTIVES(builder, OBJECTIVES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTIVES), 0)
@@ -201,7 +201,7 @@ def PSSSolutionCreateOBJECTIVESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTIVESVector(builder, data):
-    PSSSolutionCreateOBJECTIVESVector(builder, data)
+    return PSSSolutionCreateOBJECTIVESVector(builder, data)
 
 def PSSSolutionAddCONSTRAINTS(builder, CONSTRAINTS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINTS), 0)
@@ -219,7 +219,7 @@ def PSSSolutionCreateCONSTRAINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTRAINTSVector(builder, data):
-    PSSSolutionCreateCONSTRAINTSVector(builder, data)
+    return PSSSolutionCreateCONSTRAINTSVector(builder, data)
 
 def PSSSolutionAddDOMINANCE_RANK(builder, DOMINANCE_RANK):
     builder.PrependUint32Slot(5, DOMINANCE_RANK, 0)

@@ -128,7 +128,7 @@ def PCEEvaluationRequestCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    PCEEvaluationRequestCreatePARAMETERSVector(builder, data)
+    return PCEEvaluationRequestCreatePARAMETERSVector(builder, data)
 
 def PCEEvaluationRequestAddSTATES(builder, STATES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
@@ -146,7 +146,7 @@ def PCEEvaluationRequestCreateSTATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATESVector(builder, data):
-    PCEEvaluationRequestCreateSTATESVector(builder, data)
+    return PCEEvaluationRequestCreateSTATESVector(builder, data)
 
 def PCEEvaluationRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

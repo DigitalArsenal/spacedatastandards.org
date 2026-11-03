@@ -222,7 +222,7 @@ def ERMCalibrationObjectCreatePOSITION_MVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_MVector(builder, data):
-    ERMCalibrationObjectCreatePOSITION_MVector(builder, data)
+    return ERMCalibrationObjectCreatePOSITION_MVector(builder, data)
 
 def ERMCalibrationObjectAddVELOCITY_M_S(builder, VELOCITY_M_S):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_M_S), 0)
@@ -244,7 +244,7 @@ def ERMCalibrationObjectCreateVELOCITY_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_M_SVector(builder, data):
-    ERMCalibrationObjectCreateVELOCITY_M_SVector(builder, data)
+    return ERMCalibrationObjectCreateVELOCITY_M_SVector(builder, data)
 
 def ERMCalibrationObjectAddOBJECT_FACTOR(builder, OBJECT_FACTOR):
     builder.PrependFloat64Slot(6, OBJECT_FACTOR, 1.0)
@@ -284,7 +284,7 @@ def ERMCalibrationObjectCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMCalibrationObjectCreateCOVARIANCEVector(builder, data)
+    return ERMCalibrationObjectCreateCOVARIANCEVector(builder, data)
 
 def ERMCalibrationObjectAddCOVARIANCE_AXES(builder, COVARIANCE_AXES):
     builder.PrependUint8Slot(10, COVARIANCE_AXES, 0)

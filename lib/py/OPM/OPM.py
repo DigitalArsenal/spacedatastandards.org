@@ -577,7 +577,7 @@ def OPMCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    OPMCreateCOVARIANCEVector(builder, data)
+    return OPMCreateCOVARIANCEVector(builder, data)
 
 def OPMAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
@@ -595,7 +595,7 @@ def OPMCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    OPMCreateMANEUVERSVector(builder, data)
+    return OPMCreateMANEUVERSVector(builder, data)
 
 def OPMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
@@ -613,7 +613,7 @@ def OPMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
-    OPMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+    return OPMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
 
 def OPMEnd(builder):
     return builder.EndObject()

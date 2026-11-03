@@ -403,7 +403,7 @@ def DCLCreateSPACE_WEATHERVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPACE_WEATHERVector(builder, data):
-    DCLCreateSPACE_WEATHERVector(builder, data)
+    return DCLCreateSPACE_WEATHERVector(builder, data)
 
 def DCLAddGRAVITY_FIELD(builder, GRAVITY_FIELD):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_FIELD), 0)
@@ -493,7 +493,7 @@ def DCLCreateOBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTSVector(builder, data):
-    DCLCreateOBJECTSVector(builder, data)
+    return DCLCreateOBJECTSVector(builder, data)
 
 def DCLAddFIT(builder, FIT):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(FIT), 0)
@@ -517,7 +517,7 @@ def DCLCreateLEVELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLEVELSVector(builder, data):
-    DCLCreateLEVELSVector(builder, data)
+    return DCLCreateLEVELSVector(builder, data)
 
 def DCLAddHISTORY(builder, HISTORY):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(HISTORY), 0)
@@ -535,7 +535,7 @@ def DCLCreateHISTORYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateHISTORYVector(builder, data):
-    DCLCreateHISTORYVector(builder, data)
+    return DCLCreateHISTORYVector(builder, data)
 
 def DCLAddLEVEL_LN_B_CORRELATION(builder, LEVEL_LN_B_CORRELATION):
     builder.PrependFloat64Slot(23, LEVEL_LN_B_CORRELATION, float('nan'))

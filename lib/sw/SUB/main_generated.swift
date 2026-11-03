@@ -47,7 +47,7 @@ public enum subscriptionLifecycleStatus: Int8, FlatbuffersVectorInitializable, E
 
 
 ///  Crypto-native Subscription Authorization
-public struct SUB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SUB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

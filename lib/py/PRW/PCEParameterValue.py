@@ -179,7 +179,7 @@ def PCEParameterValueCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    PCEParameterValueCreateVALUESVector(builder, data)
+    return PCEParameterValueCreateVALUESVector(builder, data)
 
 def PCEParameterValueAddROW_COUNT(builder, ROW_COUNT):
     builder.PrependInt32Slot(5, ROW_COUNT, 0)

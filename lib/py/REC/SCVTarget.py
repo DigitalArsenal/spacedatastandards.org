@@ -214,7 +214,7 @@ def SCVTargetCreatePOLYGON_VERTICESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYGON_VERTICESVector(builder, data):
-    SCVTargetCreatePOLYGON_VERTICESVector(builder, data)
+    return SCVTargetCreatePOLYGON_VERTICESVector(builder, data)
 
 def SCVTargetAddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M):
     builder.PrependFloat64Slot(10, MIN_ALTITUDE_M, 0.0)

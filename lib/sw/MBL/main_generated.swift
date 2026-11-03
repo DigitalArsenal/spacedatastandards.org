@@ -45,7 +45,7 @@ public enum ModulePayloadEncoding: UInt8, FlatbuffersVectorInitializable, Enum, 
 
 
 ///  Canonicalization rule applied before hashing or signature verification.
-public struct CanonicalizationRule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CanonicalizationRule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -108,7 +108,7 @@ public struct CanonicalizationRule: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  One payload carried inside the module bundle.
-public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ModuleBundleEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -243,7 +243,7 @@ public struct ModuleBundleEntry: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Metadata stored in the REC trailer for one module delivery artifact.
-public struct MBL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MBL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

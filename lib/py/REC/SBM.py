@@ -577,7 +577,7 @@ def SBMCreateFRAGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFRAGMENTSVector(builder, data):
-    SBMCreateFRAGMENTSVector(builder, data)
+    return SBMCreateFRAGMENTSVector(builder, data)
 
 def SBMAddASSUMPTIONS(builder, ASSUMPTIONS):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(ASSUMPTIONS), 0)
@@ -595,7 +595,7 @@ def SBMCreateASSUMPTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSUMPTIONSVector(builder, data):
-    SBMCreateASSUMPTIONSVector(builder, data)
+    return SBMCreateASSUMPTIONSVector(builder, data)
 
 def SBMAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)

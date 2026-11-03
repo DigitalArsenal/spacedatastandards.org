@@ -330,7 +330,7 @@ def ACTCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    ACTCreateSIGNATUREVector(builder, data)
+    return ACTCreateSIGNATUREVector(builder, data)
 
 def ACTAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
@@ -372,7 +372,7 @@ def ACTCreateKEY_SLOTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateKEY_SLOTSVector(builder, data):
-    ACTCreateKEY_SLOTSVector(builder, data)
+    return ACTCreateKEY_SLOTSVector(builder, data)
 
 def ACTEnd(builder):
     return builder.EndObject()

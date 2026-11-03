@@ -48,7 +48,7 @@ public enum Ellipsoid: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Coordinate Systems
-public struct CRD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CRD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

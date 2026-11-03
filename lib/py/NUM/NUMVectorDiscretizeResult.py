@@ -145,7 +145,7 @@ def NUMVectorDiscretizeResultCreateDISCRETIZED_STATEVector(builder, data):
     return builder.EndVector()
 
 def CreateDISCRETIZED_STATEVector(builder, data):
-    NUMVectorDiscretizeResultCreateDISCRETIZED_STATEVector(builder, data)
+    return NUMVectorDiscretizeResultCreateDISCRETIZED_STATEVector(builder, data)
 
 def NUMVectorDiscretizeResultAddDISCRETIZATION_ERROR(builder, DISCRETIZATION_ERROR):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DISCRETIZATION_ERROR), 0)
@@ -167,7 +167,7 @@ def NUMVectorDiscretizeResultCreateDISCRETIZATION_ERRORVector(builder, data):
     return builder.EndVector()
 
 def CreateDISCRETIZATION_ERRORVector(builder, data):
-    NUMVectorDiscretizeResultCreateDISCRETIZATION_ERRORVector(builder, data)
+    return NUMVectorDiscretizeResultCreateDISCRETIZATION_ERRORVector(builder, data)
 
 def NUMVectorDiscretizeResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

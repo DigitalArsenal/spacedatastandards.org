@@ -154,7 +154,7 @@ def ERMMapResultCreateTARGETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGETSVector(builder, data):
-    ERMMapResultCreateTARGETSVector(builder, data)
+    return ERMMapResultCreateTARGETSVector(builder, data)
 
 def ERMMapResultEnd(builder):
     return builder.EndObject()

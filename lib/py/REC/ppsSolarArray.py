@@ -135,7 +135,7 @@ def ppsSolarArrayCreateNORMAL_BODYVector(builder, data):
     return builder.EndVector()
 
 def CreateNORMAL_BODYVector(builder, data):
-    ppsSolarArrayCreateNORMAL_BODYVector(builder, data)
+    return ppsSolarArrayCreateNORMAL_BODYVector(builder, data)
 
 def ppsSolarArrayAddDEGRADATION_PER_YEAR(builder, DEGRADATION_PER_YEAR):
     builder.PrependFloat64Slot(4, DEGRADATION_PER_YEAR, 0.0)

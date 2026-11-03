@@ -153,7 +153,7 @@ def GJNFeatureCreatePROPERTIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROPERTIESVector(builder, data):
-    GJNFeatureCreatePROPERTIESVector(builder, data)
+    return GJNFeatureCreatePROPERTIESVector(builder, data)
 
 def GJNFeatureAddNUM_ID(builder, NUM_ID):
     builder.PrependFloat64Slot(3, NUM_ID, 0.0)

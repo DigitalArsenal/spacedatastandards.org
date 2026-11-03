@@ -127,7 +127,7 @@ def XMTStateSelectionCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    XMTStateSelectionCreateSOURCESVector(builder, data)
+    return XMTStateSelectionCreateSOURCESVector(builder, data)
 
 def XMTStateSelectionEnd(builder):
     return builder.EndObject()

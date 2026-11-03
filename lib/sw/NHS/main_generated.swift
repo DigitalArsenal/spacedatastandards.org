@@ -49,7 +49,7 @@ public enum nhsServiceState: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  One sample of network throughput.
-public struct NHSThroughputSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NHSThroughputSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -114,7 +114,7 @@ public struct NHSThroughputSample: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Node Health Status - one snapshot of a node's own health.
-public struct NHS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NHS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

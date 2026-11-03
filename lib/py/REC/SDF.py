@@ -155,7 +155,7 @@ def SDFCreateRESULTSVector(builder, data):
     return builder.EndVector()
 
 def CreateRESULTSVector(builder, data):
-    SDFCreateRESULTSVector(builder, data)
+    return SDFCreateRESULTSVector(builder, data)
 
 def SDFAddTIME_RANGE_RESULTS(builder, TIME_RANGE_RESULTS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_RANGE_RESULTS), 0)
@@ -177,7 +177,7 @@ def SDFCreateTIME_RANGE_RESULTSVector(builder, data):
     return builder.EndVector()
 
 def CreateTIME_RANGE_RESULTSVector(builder, data):
-    SDFCreateTIME_RANGE_RESULTSVector(builder, data)
+    return SDFCreateTIME_RANGE_RESULTSVector(builder, data)
 
 def SDFEnd(builder):
     return builder.EndObject()

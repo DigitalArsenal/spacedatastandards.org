@@ -175,7 +175,7 @@ def CZMCreatePACKETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePACKETSVector(builder, data):
-    CZMCreatePACKETSVector(builder, data)
+    return CZMCreatePACKETSVector(builder, data)
 
 def CZMEnd(builder):
     return builder.EndObject()

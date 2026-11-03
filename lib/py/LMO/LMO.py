@@ -167,7 +167,7 @@ def LMOCreateMULTIVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIVector(builder, data):
-    LMOCreateMULTIVector(builder, data)
+    return LMOCreateMULTIVector(builder, data)
 
 def LMOAddMAX_FEASIBLE_REVS(builder, MAX_FEASIBLE_REVS):
     builder.PrependUint16Slot(6, MAX_FEASIBLE_REVS, 0)

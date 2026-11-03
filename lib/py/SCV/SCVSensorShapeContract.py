@@ -264,7 +264,7 @@ def SCVSensorShapeContractCreatePOLYGON_VERTICESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYGON_VERTICESVector(builder, data):
-    SCVSensorShapeContractCreatePOLYGON_VERTICESVector(builder, data)
+    return SCVSensorShapeContractCreatePOLYGON_VERTICESVector(builder, data)
 
 def SCVSensorShapeContractAddPOLYGON_FRAME(builder, POLYGON_FRAME):
     builder.PrependUint8Slot(15, POLYGON_FRAME, 0)

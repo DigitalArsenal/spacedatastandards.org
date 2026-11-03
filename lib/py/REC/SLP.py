@@ -241,7 +241,7 @@ def SLPCreateVARIABLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIABLESVector(builder, data):
-    SLPCreateVARIABLESVector(builder, data)
+    return SLPCreateVARIABLESVector(builder, data)
 
 def SLPAddGOALS(builder, GOALS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(GOALS), 0)
@@ -259,7 +259,7 @@ def SLPCreateGOALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGOALSVector(builder, data):
-    SLPCreateGOALSVector(builder, data)
+    return SLPCreateGOALSVector(builder, data)
 
 def SLPAddOBJECTIVE(builder, OBJECTIVE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTIVE), 0)
@@ -283,7 +283,7 @@ def SLPCreateCONSTRAINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTRAINTSVector(builder, data):
-    SLPCreateCONSTRAINTSVector(builder, data)
+    return SLPCreateCONSTRAINTSVector(builder, data)
 
 def SLPAddSETTINGS(builder, SETTINGS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SETTINGS), 0)

@@ -61,7 +61,7 @@ public enum bufferOwnership: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Payload-schema identity for a stream frame or an accepted port type.
-public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct FlatBufferTypeRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -167,7 +167,7 @@ public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
-public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TAB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

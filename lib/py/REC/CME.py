@@ -287,7 +287,7 @@ def CMECreateINSTRUMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINSTRUMENTSVector(builder, data):
-    CMECreateINSTRUMENTSVector(builder, data)
+    return CMECreateINSTRUMENTSVector(builder, data)
 
 def CMEAddLINKED_EVENT_IDS(builder, LINKED_EVENT_IDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LINKED_EVENT_IDS), 0)
@@ -305,7 +305,7 @@ def CMECreateLINKED_EVENT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINKED_EVENT_IDSVector(builder, data):
-    CMECreateLINKED_EVENT_IDSVector(builder, data)
+    return CMECreateLINKED_EVENT_IDSVector(builder, data)
 
 def CMEAddMEASUREMENTS(builder, MEASUREMENTS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(MEASUREMENTS), 0)
@@ -323,7 +323,7 @@ def CMECreateMEASUREMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEASUREMENTSVector(builder, data):
-    CMECreateMEASUREMENTSVector(builder, data)
+    return CMECreateMEASUREMENTSVector(builder, data)
 
 def CMEAddARRIVALS(builder, ARRIVALS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ARRIVALS), 0)
@@ -341,7 +341,7 @@ def CMECreateARRIVALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARRIVALSVector(builder, data):
-    CMECreateARRIVALSVector(builder, data)
+    return CMECreateARRIVALSVector(builder, data)
 
 def CMEAddNOTE(builder, NOTE):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(NOTE), 0)

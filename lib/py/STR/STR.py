@@ -919,7 +919,7 @@ def STRCreateDESIGNATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDESIGNATIONSVector(builder, data):
-    STRCreateDESIGNATIONSVector(builder, data)
+    return STRCreateDESIGNATIONSVector(builder, data)
 
 def STRAddVARIABILITY_CLASS(builder, VARIABILITY_CLASS):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABILITY_CLASS), 0)
@@ -961,7 +961,7 @@ def STRCreatePHOTOMETRYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePHOTOMETRYVector(builder, data):
-    STRCreatePHOTOMETRYVector(builder, data)
+    return STRCreatePHOTOMETRYVector(builder, data)
 
 def STRAddDISTANCE_PC(builder, DISTANCE_PC):
     builder.PrependFloat64Slot(59, DISTANCE_PC, float('nan'))

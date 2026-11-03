@@ -75,7 +75,7 @@ def SROCOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    SROCOLLECTIONCreateRECORDSVector(builder, data)
+    return SROCOLLECTIONCreateRECORDSVector(builder, data)
 
 def SROCOLLECTIONEnd(builder):
     return builder.EndObject()

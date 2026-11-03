@@ -305,7 +305,7 @@ def TBPCreateLIBRATION_POINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLIBRATION_POINTSVector(builder, data):
-    TBPCreateLIBRATION_POINTSVector(builder, data)
+    return TBPCreateLIBRATION_POINTSVector(builder, data)
 
 def TBPAddSTATE(builder, STATE):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(STATE), 0)
@@ -335,7 +335,7 @@ def TBPCreateORBITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateORBITSVector(builder, data):
-    TBPCreateORBITSVector(builder, data)
+    return TBPCreateORBITSVector(builder, data)
 
 def TBPAddTRANSFER(builder, TRANSFER):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSFER), 0)

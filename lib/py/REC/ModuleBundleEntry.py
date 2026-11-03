@@ -220,7 +220,7 @@ def ModuleBundleEntryCreatesha256Vector(builder, data):
     return builder.EndVector()
 
 def Createsha256Vector(builder, data):
-    ModuleBundleEntryCreatesha256Vector(builder, data)
+    return ModuleBundleEntryCreatesha256Vector(builder, data)
 
 def ModuleBundleEntryAddpayload(builder, payload):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(payload), 0)
@@ -242,7 +242,7 @@ def ModuleBundleEntryCreatepayloadVector(builder, data):
     return builder.EndVector()
 
 def CreatepayloadVector(builder, data):
-    ModuleBundleEntryCreatepayloadVector(builder, data)
+    return ModuleBundleEntryCreatepayloadVector(builder, data)
 
 def ModuleBundleEntryAdddescription(builder, description):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(description), 0)

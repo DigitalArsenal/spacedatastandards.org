@@ -319,7 +319,7 @@ def APPCreateMODULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODULESVector(builder, data):
-    APPCreateMODULESVector(builder, data)
+    return APPCreateMODULESVector(builder, data)
 
 def APPAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
@@ -337,7 +337,7 @@ def APPCreateDATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATAVector(builder, data):
-    APPCreateDATAVector(builder, data)
+    return APPCreateDATAVector(builder, data)
 
 def APPAddSOURCES(builder, SOURCES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCES), 0)
@@ -355,7 +355,7 @@ def APPCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    APPCreateSOURCESVector(builder, data)
+    return APPCreateSOURCESVector(builder, data)
 
 def APPAddUI(builder, UI):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(UI), 0)
@@ -373,7 +373,7 @@ def APPCreateUIVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUIVector(builder, data):
-    APPCreateUIVector(builder, data)
+    return APPCreateUIVector(builder, data)
 
 def APPAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
@@ -403,7 +403,7 @@ def APPCreateDATAFLOWVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATAFLOWVector(builder, data):
-    APPCreateDATAFLOWVector(builder, data)
+    return APPCreateDATAFLOWVector(builder, data)
 
 def APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS):
     builder.PrependUint8Slot(11, RUNTIME_CLASS, 0)
@@ -437,7 +437,7 @@ def APPCreateCATEGORIESVector(builder, data):
     return builder.EndVector()
 
 def CreateCATEGORIESVector(builder, data):
-    APPCreateCATEGORIESVector(builder, data)
+    return APPCreateCATEGORIESVector(builder, data)
 
 def APPEnd(builder):
     return builder.EndObject()

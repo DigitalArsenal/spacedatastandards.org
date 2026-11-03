@@ -146,7 +146,7 @@ def tbpFrameConversionCreateINERTIALVector(builder, data):
     return builder.EndVector()
 
 def CreateINERTIALVector(builder, data):
-    tbpFrameConversionCreateINERTIALVector(builder, data)
+    return tbpFrameConversionCreateINERTIALVector(builder, data)
 
 def tbpFrameConversionEnd(builder):
     return builder.EndObject()

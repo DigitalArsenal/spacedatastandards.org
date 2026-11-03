@@ -253,7 +253,7 @@ def CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
-    CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+    return CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
 
 def CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
@@ -275,7 +275,7 @@ def CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTESIANVector(builder, data):
-    CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data)
+    return CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMCorridorAddWIDTH(builder, WIDTH):
     builder.PrependFloat64Slot(3, WIDTH, 0.0)

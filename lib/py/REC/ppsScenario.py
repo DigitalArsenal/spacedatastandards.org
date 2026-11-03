@@ -296,7 +296,7 @@ def ppsScenarioCreatePOINTINGVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTINGVector(builder, data):
-    ppsScenarioCreatePOINTINGVector(builder, data)
+    return ppsScenarioCreatePOINTINGVector(builder, data)
 
 def ppsScenarioAddINITIAL_ATTITUDE(builder, INITIAL_ATTITUDE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_ATTITUDE), 0)

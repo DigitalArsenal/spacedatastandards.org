@@ -29,7 +29,7 @@ public enum peerGroupTrustCategory: Int8, FlatbuffersVectorInitializable, Enum, 
 
 
 ///  String metadata key/value attached to a peer group.
-public struct PGMMetadataEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PGMMetadataEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -74,7 +74,7 @@ public struct PGMMetadataEntry: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
-public struct PGM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PGM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -12,7 +12,7 @@ import FlatBuffers
 ///  (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
 ///  kilometers per second (km/s) and time in seconds (s); a producer holding
 ///  another unit converts before writing.
-public struct BOV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BOV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

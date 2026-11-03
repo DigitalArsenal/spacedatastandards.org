@@ -565,7 +565,7 @@ def CZMPacketCreatePOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder, data):
-    CZMPacketCreatePOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder, data)
+    return CZMPacketCreatePOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder, data)
 
 def CZMPacketAddPOSITION_CARTESIAN_ARRAY(builder, POSITION_CARTESIAN_ARRAY):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_CARTESIAN_ARRAY), 0)
@@ -587,7 +587,7 @@ def CZMPacketCreatePOSITION_CARTESIAN_ARRAYVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_CARTESIAN_ARRAYVector(builder, data):
-    CZMPacketCreatePOSITION_CARTESIAN_ARRAYVector(builder, data)
+    return CZMPacketCreatePOSITION_CARTESIAN_ARRAYVector(builder, data)
 
 def CZMPacketAddBILLBOARD(builder, BILLBOARD):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BILLBOARD), 0)
@@ -747,7 +747,7 @@ def CZMPacketCreateORIENTATION_ARRAYVector(builder, data):
     return builder.EndVector()
 
 def CreateORIENTATION_ARRAYVector(builder, data):
-    CZMPacketCreateORIENTATION_ARRAYVector(builder, data)
+    return CZMPacketCreateORIENTATION_ARRAYVector(builder, data)
 
 def CZMPacketAddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION_INTERPOLATION), 0)
@@ -777,7 +777,7 @@ def CZMPacketCreateDYNAMIC_PROPERTIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDYNAMIC_PROPERTIESVector(builder, data):
-    CZMPacketCreateDYNAMIC_PROPERTIESVector(builder, data)
+    return CZMPacketCreateDYNAMIC_PROPERTIESVector(builder, data)
 
 def CZMPacketEnd(builder):
     return builder.EndObject()

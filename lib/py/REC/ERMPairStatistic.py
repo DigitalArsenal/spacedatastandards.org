@@ -291,7 +291,7 @@ def ERMPairStatisticCreateERROR_RTN_MVector(builder, data):
     return builder.EndVector()
 
 def CreateERROR_RTN_MVector(builder, data):
-    ERMPairStatisticCreateERROR_RTN_MVector(builder, data)
+    return ERMPairStatisticCreateERROR_RTN_MVector(builder, data)
 
 def ERMPairStatisticAddVELOCITY_ERROR_RTN_M_S(builder, VELOCITY_ERROR_RTN_M_S):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_ERROR_RTN_M_S), 0)
@@ -313,7 +313,7 @@ def ERMPairStatisticCreateVELOCITY_ERROR_RTN_M_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_ERROR_RTN_M_SVector(builder, data):
-    ERMPairStatisticCreateVELOCITY_ERROR_RTN_M_SVector(builder, data)
+    return ERMPairStatisticCreateVELOCITY_ERROR_RTN_M_SVector(builder, data)
 
 def ERMPairStatisticAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE):
     builder.PrependUint8Slot(4, INTERPOLATION_DEGREE, 0)
@@ -353,7 +353,7 @@ def ERMPairStatisticCreatePREDICTED_RTNVector(builder, data):
     return builder.EndVector()
 
 def CreatePREDICTED_RTNVector(builder, data):
-    ERMPairStatisticCreatePREDICTED_RTNVector(builder, data)
+    return ERMPairStatisticCreatePREDICTED_RTNVector(builder, data)
 
 def ERMPairStatisticAddTRUTH_RTN(builder, TRUTH_RTN):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRUTH_RTN), 0)
@@ -375,7 +375,7 @@ def ERMPairStatisticCreateTRUTH_RTNVector(builder, data):
     return builder.EndVector()
 
 def CreateTRUTH_RTNVector(builder, data):
-    ERMPairStatisticCreateTRUTH_RTNVector(builder, data)
+    return ERMPairStatisticCreateTRUTH_RTNVector(builder, data)
 
 def ERMPairStatisticAddD2_COMBINED(builder, D2_COMBINED):
     builder.PrependFloat64Slot(9, D2_COMBINED, float('nan'))
@@ -415,7 +415,7 @@ def ERMPairStatisticCreateZ_COMBINEDVector(builder, data):
     return builder.EndVector()
 
 def CreateZ_COMBINEDVector(builder, data):
-    ERMPairStatisticCreateZ_COMBINEDVector(builder, data)
+    return ERMPairStatisticCreateZ_COMBINEDVector(builder, data)
 
 def ERMPairStatisticAddZ_PREDICTED(builder, Z_PREDICTED):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(Z_PREDICTED), 0)
@@ -437,7 +437,7 @@ def ERMPairStatisticCreateZ_PREDICTEDVector(builder, data):
     return builder.EndVector()
 
 def CreateZ_PREDICTEDVector(builder, data):
-    ERMPairStatisticCreateZ_PREDICTEDVector(builder, data)
+    return ERMPairStatisticCreateZ_PREDICTEDVector(builder, data)
 
 def ERMPairStatisticEnd(builder):
     return builder.EndObject()

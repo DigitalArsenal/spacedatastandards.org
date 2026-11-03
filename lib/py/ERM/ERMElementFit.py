@@ -318,7 +318,7 @@ def ERMElementFitCreateSTAGESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTAGESVector(builder, data):
-    ERMElementFitCreateSTAGESVector(builder, data)
+    return ERMElementFitCreateSTAGESVector(builder, data)
 
 def ERMElementFitAddITERATIONS(builder, ITERATIONS):
     builder.PrependUint32Slot(8, ITERATIONS, 0)
@@ -366,7 +366,7 @@ def ERMElementFitCreateRESIDUALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESIDUALSVector(builder, data):
-    ERMElementFitCreateRESIDUALSVector(builder, data)
+    return ERMElementFitCreateRESIDUALSVector(builder, data)
 
 def ERMElementFitAddCLOSURE(builder, CLOSURE):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CLOSURE), 0)
@@ -418,7 +418,7 @@ def ERMElementFitCreateEQUINOCTIALVector(builder, data):
     return builder.EndVector()
 
 def CreateEQUINOCTIALVector(builder, data):
-    ERMElementFitCreateEQUINOCTIALVector(builder, data)
+    return ERMElementFitCreateEQUINOCTIALVector(builder, data)
 
 def ERMElementFitAddBSTAR_FITTED(builder, BSTAR_FITTED):
     builder.PrependBoolSlot(20, BSTAR_FITTED, 0)

@@ -157,7 +157,7 @@ def PCFEpochStoreCreateTHEORIESVector(builder, data):
     return builder.EndVector()
 
 def CreateTHEORIESVector(builder, data):
-    PCFEpochStoreCreateTHEORIESVector(builder, data)
+    return PCFEpochStoreCreateTHEORIESVector(builder, data)
 
 def PCFEpochStoreEnd(builder):
     return builder.EndObject()

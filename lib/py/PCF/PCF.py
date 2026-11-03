@@ -208,7 +208,7 @@ def PCFCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    PCFCreateEVENTSVector(builder, data)
+    return PCFCreateEVENTSVector(builder, data)
 
 def PCFAddOUTPUT(builder, OUTPUT):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT), 0)

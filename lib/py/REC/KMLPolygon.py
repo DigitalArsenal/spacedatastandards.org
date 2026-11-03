@@ -119,7 +119,7 @@ def KMLPolygonCreateINNER_BOUNDARIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINNER_BOUNDARIESVector(builder, data):
-    KMLPolygonCreateINNER_BOUNDARIESVector(builder, data)
+    return KMLPolygonCreateINNER_BOUNDARIESVector(builder, data)
 
 def KMLPolygonAddALTITUDE_MODE(builder, ALTITUDE_MODE):
     builder.PrependInt8Slot(2, ALTITUDE_MODE, 0)

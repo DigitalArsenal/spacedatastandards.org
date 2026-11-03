@@ -199,7 +199,7 @@ def STVCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    STVCreateRESERVEDVector(builder, data)
+    return STVCreateRESERVEDVector(builder, data)
 
 def STVEnd(builder):
     return builder.EndObject()

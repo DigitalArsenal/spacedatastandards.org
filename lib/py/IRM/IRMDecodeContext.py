@@ -345,7 +345,7 @@ def IRMDecodeContextCreateCOLUMN_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMN_NAMESVector(builder, data):
-    IRMDecodeContextCreateCOLUMN_NAMESVector(builder, data)
+    return IRMDecodeContextCreateCOLUMN_NAMESVector(builder, data)
 
 def IRMDecodeContextAddDELIMITER(builder, DELIMITER):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DELIMITER), 0)
@@ -409,7 +409,7 @@ def IRMDecodeContextCreateDECODER_STATEVector(builder, data):
     return builder.EndVector()
 
 def CreateDECODER_STATEVector(builder, data):
-    IRMDecodeContextCreateDECODER_STATEVector(builder, data)
+    return IRMDecodeContextCreateDECODER_STATEVector(builder, data)
 
 def IRMDecodeContextAddDECODER_STATE_FORMAT(builder, DECODER_STATE_FORMAT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DECODER_STATE_FORMAT), 0)
@@ -467,7 +467,7 @@ def IRMDecodeContextCreateWINDOWVector(builder, data):
     return builder.EndVector()
 
 def CreateWINDOWVector(builder, data):
-    IRMDecodeContextCreateWINDOWVector(builder, data)
+    return IRMDecodeContextCreateWINDOWVector(builder, data)
 
 def IRMDecodeContextAddWINDOW_BYTE_LENGTH(builder, WINDOW_BYTE_LENGTH):
     builder.PrependUint64Slot(19, WINDOW_BYTE_LENGTH, 0)
@@ -501,7 +501,7 @@ def IRMDecodeContextCreatePARTIAL_RECORDVector(builder, data):
     return builder.EndVector()
 
 def CreatePARTIAL_RECORDVector(builder, data):
-    IRMDecodeContextCreatePARTIAL_RECORDVector(builder, data)
+    return IRMDecodeContextCreatePARTIAL_RECORDVector(builder, data)
 
 def IRMDecodeContextEnd(builder):
     return builder.EndObject()

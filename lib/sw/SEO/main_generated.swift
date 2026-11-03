@@ -61,7 +61,7 @@ public enum seoObservatoryType: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Space Environment Observation
-public struct SEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SEO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

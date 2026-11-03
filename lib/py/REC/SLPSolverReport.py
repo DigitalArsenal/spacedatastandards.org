@@ -190,7 +190,7 @@ def SLPSolverReportCreateITERATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateITERATIONSVector(builder, data):
-    SLPSolverReportCreateITERATIONSVector(builder, data)
+    return SLPSolverReportCreateITERATIONSVector(builder, data)
 
 def SLPSolverReportAddFINAL_VARIABLES(builder, FINAL_VARIABLES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FINAL_VARIABLES), 0)
@@ -212,7 +212,7 @@ def SLPSolverReportCreateFINAL_VARIABLESVector(builder, data):
     return builder.EndVector()
 
 def CreateFINAL_VARIABLESVector(builder, data):
-    SLPSolverReportCreateFINAL_VARIABLESVector(builder, data)
+    return SLPSolverReportCreateFINAL_VARIABLESVector(builder, data)
 
 def SLPSolverReportAddFINAL_VALUES(builder, FINAL_VALUES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FINAL_VALUES), 0)
@@ -234,7 +234,7 @@ def SLPSolverReportCreateFINAL_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateFINAL_VALUESVector(builder, data):
-    SLPSolverReportCreateFINAL_VALUESVector(builder, data)
+    return SLPSolverReportCreateFINAL_VALUESVector(builder, data)
 
 def SLPSolverReportAddOBJECTIVE_VALUE(builder, OBJECTIVE_VALUE):
     builder.PrependFloat64Slot(5, OBJECTIVE_VALUE, 0.0)

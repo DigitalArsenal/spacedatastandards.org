@@ -30,7 +30,7 @@ public enum rafPduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Return All Frames Service (CCSDS 913.1-B-2)
-public struct RAF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RAF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

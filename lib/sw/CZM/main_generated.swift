@@ -185,7 +185,7 @@ public enum CZMDynValueType: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Time interval for time-dynamic properties
-public struct CZMInterval: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMInterval: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -223,7 +223,7 @@ public struct CZMInterval: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Interpolation settings for sampled data
-public struct CZMInterpolation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMInterpolation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -268,7 +268,7 @@ public struct CZMInterpolation: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  A single interval in a time-varying property
-public struct CZMDynInterval: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMDynInterval: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -351,7 +351,7 @@ public struct CZMDynInterval: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Sampled time-varying data
-public struct CZMDynSampled: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMDynSampled: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -411,7 +411,7 @@ public struct CZMDynSampled: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  A single time-dynamic property (non-static value)
-public struct CZMDynamicProperty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMDynamicProperty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -471,7 +471,7 @@ public struct CZMDynamicProperty: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Cartographic position (longitude, latitude, height in radians/meters)
-public struct CZMCartographicDegrees: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMCartographicDegrees: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -522,7 +522,7 @@ public struct CZMCartographicDegrees: FlatBufferTable, FlatbuffersVectorInitiali
 }
 
 ///  Cartesian position (X, Y, Z in meters)
-public struct CZMCartesian: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMCartesian: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -573,7 +573,7 @@ public struct CZMCartesian: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  RGBA color
-public struct CZMColor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMColor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -631,7 +631,7 @@ public struct CZMColor: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Near/Far scalar for distance-based display
-public struct CZMNearFarScalar: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMNearFarScalar: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -689,7 +689,7 @@ public struct CZMNearFarScalar: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Distance display condition
-public struct CZMDistanceDisplayCondition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMDistanceDisplayCondition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -733,7 +733,7 @@ public struct CZMDistanceDisplayCondition: FlatBufferTable, FlatbuffersVectorIni
 }
 
 ///  Orientation as unit quaternion
-public struct CZMOrientation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMOrientation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -791,7 +791,7 @@ public struct CZMOrientation: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Suggested camera offset from entity
-public struct CZMViewFrom: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMViewFrom: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -842,7 +842,7 @@ public struct CZMViewFrom: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Solid color material
-public struct CZMSolidColorMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMSolidColorMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -879,7 +879,7 @@ public struct CZMSolidColorMaterial: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Image material
-public struct CZMImageMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMImageMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -946,7 +946,7 @@ public struct CZMImageMaterial: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Grid material
-public struct CZMGridMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMGridMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1032,7 +1032,7 @@ public struct CZMGridMaterial: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Stripe material
-public struct CZMStripeMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMStripeMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1098,7 +1098,7 @@ public struct CZMStripeMaterial: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Checkerboard material
-public struct CZMCheckerboardMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMCheckerboardMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1156,7 +1156,7 @@ public struct CZMCheckerboardMaterial: FlatBufferTable, FlatbuffersVectorInitial
 }
 
 ///  Surface material (used by polygon, ellipse, box, etc.)
-public struct CZMMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1221,7 +1221,7 @@ public struct CZMMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Polyline outline material
-public struct CZMPolylineOutlineMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineOutlineMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1272,7 +1272,7 @@ public struct CZMPolylineOutlineMaterial: FlatBufferTable, FlatbuffersVectorInit
 }
 
 ///  Polyline arrow material
-public struct CZMPolylineArrowMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineArrowMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1309,7 +1309,7 @@ public struct CZMPolylineArrowMaterial: FlatBufferTable, FlatbuffersVectorInitia
 }
 
 ///  Polyline dash material
-public struct CZMPolylineDashMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineDashMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1367,7 +1367,7 @@ public struct CZMPolylineDashMaterial: FlatBufferTable, FlatbuffersVectorInitial
 }
 
 ///  Polyline glow material
-public struct CZMPolylineGlowMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineGlowMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1418,7 +1418,7 @@ public struct CZMPolylineGlowMaterial: FlatBufferTable, FlatbuffersVectorInitial
 }
 
 ///  Polyline material (used by polyline, path)
-public struct CZMPolylineMaterial: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineMaterial: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1483,7 +1483,7 @@ public struct CZMPolylineMaterial: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Billboard (icon) properties
-public struct CZMBillboard: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMBillboard: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1670,7 +1670,7 @@ public struct CZMBillboard: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Label properties
-public struct CZMLabel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMLabel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1886,7 +1886,7 @@ public struct CZMLabel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Point properties
-public struct CZMPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1994,7 +1994,7 @@ public struct CZMPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Polyline properties
-public struct CZMPolyline: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolyline: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2122,7 +2122,7 @@ public struct CZMPolyline: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Polygon properties
-public struct CZMPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolygon: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2324,7 +2324,7 @@ public struct CZMPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Polygon hole position list
-public struct CZMPolygonHole: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolygonHole: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2370,7 +2370,7 @@ public struct CZMPolygonHole: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Model properties (glTF)
-public struct CZMModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2504,7 +2504,7 @@ public struct CZMModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Path properties (orbit trail)
-public struct CZMPath: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPath: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2584,7 +2584,7 @@ public struct CZMPath: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Ellipse properties (for ground circles/ellipses)
-public struct CZMEllipse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMEllipse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2760,7 +2760,7 @@ public struct CZMEllipse: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Box (rectangular cuboid)
-public struct CZMBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMBox: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2886,7 +2886,7 @@ public struct CZMBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
 }
 
 ///  Corridor (centerline + width shape)
-public struct CZMCorridor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMCorridor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3052,7 +3052,7 @@ public struct CZMCorridor: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Cylinder or cone
-public struct CZMCylinder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMCylinder: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3178,7 +3178,7 @@ public struct CZMCylinder: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Ellipsoid (3D shape)
-public struct CZMEllipsoid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMEllipsoid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3360,7 +3360,7 @@ public struct CZMEllipsoid: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Polyline volume (extruded 2D shape)
-public struct CZMPolylineVolume: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPolylineVolume: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3482,7 +3482,7 @@ public struct CZMPolylineVolume: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Rectangle (cartographic rectangle)
-public struct CZMRectangle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMRectangle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3639,7 +3639,7 @@ public struct CZMRectangle: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  3D Tileset
-public struct CZMTileset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMTileset: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3692,7 +3692,7 @@ public struct CZMTileset: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Wall (vertical curtain)
-public struct CZMWall: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMWall: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3814,7 +3814,7 @@ public struct CZMWall: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  A CZML Packet describing an entity and its properties
-public struct CZMPacket: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZMPacket: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -4117,7 +4117,7 @@ public struct CZMPacket: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  CZML Document
-public struct CZM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CZM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

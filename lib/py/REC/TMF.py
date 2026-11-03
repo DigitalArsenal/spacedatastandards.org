@@ -273,7 +273,7 @@ def TMFCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    TMFCreateDATAVector(builder, data)
+    return TMFCreateDATAVector(builder, data)
 
 def TMFAddOCF(builder, OCF):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OCF), 0)
@@ -295,7 +295,7 @@ def TMFCreateOCFVector(builder, data):
     return builder.EndVector()
 
 def CreateOCFVector(builder, data):
-    TMFCreateOCFVector(builder, data)
+    return TMFCreateOCFVector(builder, data)
 
 def TMFAddFECF(builder, FECF):
     builder.PrependUint16Slot(13, FECF, 0)

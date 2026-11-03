@@ -152,7 +152,7 @@ def ERMAccumulatorCreateSTRATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRATAVector(builder, data):
-    ERMAccumulatorCreateSTRATAVector(builder, data)
+    return ERMAccumulatorCreateSTRATAVector(builder, data)
 
 def ERMAccumulatorEnd(builder):
     return builder.EndObject()

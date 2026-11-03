@@ -48,7 +48,7 @@ public enum cdmManeuverable: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 }
 
 
-public struct CDMObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CDMObject: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -395,7 +395,7 @@ public struct CDMObject: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 ///  MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
 ///  COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
 ///  terms) are held as the message states them.
-public struct CDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CDM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

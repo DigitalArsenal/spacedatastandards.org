@@ -752,7 +752,7 @@ def dclObjectCreateELEMENT_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateELEMENT_SETSVector(builder, data):
-    dclObjectCreateELEMENT_SETSVector(builder, data)
+    return dclObjectCreateELEMENT_SETSVector(builder, data)
 
 def dclObjectAddBALLISTIC_COEFFICIENT_M2_KG(builder, BALLISTIC_COEFFICIENT_M2_KG):
     builder.PrependFloat64Slot(2, BALLISTIC_COEFFICIENT_M2_KG, 0.0)
@@ -806,7 +806,7 @@ def dclObjectCreateREFUSEDVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFUSEDVector(builder, data):
-    dclObjectCreateREFUSEDVector(builder, data)
+    return dclObjectCreateREFUSEDVector(builder, data)
 
 def dclObjectAddSET_TIME_MS(builder, SET_TIME_MS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SET_TIME_MS), 0)
@@ -828,7 +828,7 @@ def dclObjectCreateSET_TIME_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_TIME_MSVector(builder, data):
-    dclObjectCreateSET_TIME_MSVector(builder, data)
+    return dclObjectCreateSET_TIME_MSVector(builder, data)
 
 def dclObjectAddSET_MEAN_SEMI_MAJOR_AXIS_KM(builder, SET_MEAN_SEMI_MAJOR_AXIS_KM):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SET_MEAN_SEMI_MAJOR_AXIS_KM), 0)
@@ -850,7 +850,7 @@ def dclObjectCreateSET_MEAN_SEMI_MAJOR_AXIS_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_MEAN_SEMI_MAJOR_AXIS_KMVector(builder, data):
-    dclObjectCreateSET_MEAN_SEMI_MAJOR_AXIS_KMVector(builder, data)
+    return dclObjectCreateSET_MEAN_SEMI_MAJOR_AXIS_KMVector(builder, data)
 
 def dclObjectAddSET_PERIGEE_HEIGHT_KM(builder, SET_PERIGEE_HEIGHT_KM):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SET_PERIGEE_HEIGHT_KM), 0)
@@ -872,7 +872,7 @@ def dclObjectCreateSET_PERIGEE_HEIGHT_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_PERIGEE_HEIGHT_KMVector(builder, data):
-    dclObjectCreateSET_PERIGEE_HEIGHT_KMVector(builder, data)
+    return dclObjectCreateSET_PERIGEE_HEIGHT_KMVector(builder, data)
 
 def dclObjectAddSET_ECCENTRICITY(builder, SET_ECCENTRICITY):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SET_ECCENTRICITY), 0)
@@ -894,7 +894,7 @@ def dclObjectCreateSET_ECCENTRICITYVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_ECCENTRICITYVector(builder, data):
-    dclObjectCreateSET_ECCENTRICITYVector(builder, data)
+    return dclObjectCreateSET_ECCENTRICITYVector(builder, data)
 
 def dclObjectAddSET_CUMULATIVE_DECAY_M(builder, SET_CUMULATIVE_DECAY_M):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SET_CUMULATIVE_DECAY_M), 0)
@@ -916,7 +916,7 @@ def dclObjectCreateSET_CUMULATIVE_DECAY_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_CUMULATIVE_DECAY_MVector(builder, data):
-    dclObjectCreateSET_CUMULATIVE_DECAY_MVector(builder, data)
+    return dclObjectCreateSET_CUMULATIVE_DECAY_MVector(builder, data)
 
 def dclObjectAddSET_RESIDUAL_M(builder, SET_RESIDUAL_M):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SET_RESIDUAL_M), 0)
@@ -938,7 +938,7 @@ def dclObjectCreateSET_RESIDUAL_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_RESIDUAL_MVector(builder, data):
-    dclObjectCreateSET_RESIDUAL_MVector(builder, data)
+    return dclObjectCreateSET_RESIDUAL_MVector(builder, data)
 
 def dclObjectAddSET_USED(builder, SET_USED):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SET_USED), 0)
@@ -960,7 +960,7 @@ def dclObjectCreateSET_USEDVector(builder, data):
     return builder.EndVector()
 
 def CreateSET_USEDVector(builder, data):
-    dclObjectCreateSET_USEDVector(builder, data)
+    return dclObjectCreateSET_USEDVector(builder, data)
 
 def dclObjectAddSEGMENT_FROM_MS(builder, SEGMENT_FROM_MS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_FROM_MS), 0)
@@ -982,7 +982,7 @@ def dclObjectCreateSEGMENT_FROM_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_FROM_MSVector(builder, data):
-    dclObjectCreateSEGMENT_FROM_MSVector(builder, data)
+    return dclObjectCreateSEGMENT_FROM_MSVector(builder, data)
 
 def dclObjectAddSEGMENT_TO_MS(builder, SEGMENT_TO_MS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_TO_MS), 0)
@@ -1004,7 +1004,7 @@ def dclObjectCreateSEGMENT_TO_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_TO_MSVector(builder, data):
-    dclObjectCreateSEGMENT_TO_MSVector(builder, data)
+    return dclObjectCreateSEGMENT_TO_MSVector(builder, data)
 
 def dclObjectAddSEGMENT_DECAY_M(builder, SEGMENT_DECAY_M):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_DECAY_M), 0)
@@ -1026,7 +1026,7 @@ def dclObjectCreateSEGMENT_DECAY_MVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_DECAY_MVector(builder, data):
-    dclObjectCreateSEGMENT_DECAY_MVector(builder, data)
+    return dclObjectCreateSEGMENT_DECAY_MVector(builder, data)
 
 def dclObjectAddSEGMENT_MEAN_ALTITUDE_KM(builder, SEGMENT_MEAN_ALTITUDE_KM):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_MEAN_ALTITUDE_KM), 0)
@@ -1048,7 +1048,7 @@ def dclObjectCreateSEGMENT_MEAN_ALTITUDE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSEGMENT_MEAN_ALTITUDE_KMVector(builder, data):
-    dclObjectCreateSEGMENT_MEAN_ALTITUDE_KMVector(builder, data)
+    return dclObjectCreateSEGMENT_MEAN_ALTITUDE_KMVector(builder, data)
 
 def dclObjectAddMEAN_ALTITUDE_KM(builder, MEAN_ALTITUDE_KM):
     builder.PrependFloat64Slot(20, MEAN_ALTITUDE_KM, 0.0)
@@ -1136,7 +1136,7 @@ def dclObjectCreateSAMPLE_TIME_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_TIME_MSVector(builder, data):
-    dclObjectCreateSAMPLE_TIME_MSVector(builder, data)
+    return dclObjectCreateSAMPLE_TIME_MSVector(builder, data)
 
 def dclObjectAddSAMPLE_TEME_STATE(builder, SAMPLE_TEME_STATE):
     builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_TEME_STATE), 0)
@@ -1158,7 +1158,7 @@ def dclObjectCreateSAMPLE_TEME_STATEVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_TEME_STATEVector(builder, data):
-    dclObjectCreateSAMPLE_TEME_STATEVector(builder, data)
+    return dclObjectCreateSAMPLE_TEME_STATEVector(builder, data)
 
 def dclObjectAddSAMPLE_LATITUDE_DEG(builder, SAMPLE_LATITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_LATITUDE_DEG), 0)
@@ -1180,7 +1180,7 @@ def dclObjectCreateSAMPLE_LATITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_LATITUDE_DEGVector(builder, data):
-    dclObjectCreateSAMPLE_LATITUDE_DEGVector(builder, data)
+    return dclObjectCreateSAMPLE_LATITUDE_DEGVector(builder, data)
 
 def dclObjectAddSAMPLE_LONGITUDE_DEG(builder, SAMPLE_LONGITUDE_DEG):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_LONGITUDE_DEG), 0)
@@ -1202,7 +1202,7 @@ def dclObjectCreateSAMPLE_LONGITUDE_DEGVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_LONGITUDE_DEGVector(builder, data):
-    dclObjectCreateSAMPLE_LONGITUDE_DEGVector(builder, data)
+    return dclObjectCreateSAMPLE_LONGITUDE_DEGVector(builder, data)
 
 def dclObjectAddSAMPLE_ALTITUDE_KM(builder, SAMPLE_ALTITUDE_KM):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_ALTITUDE_KM), 0)
@@ -1224,7 +1224,7 @@ def dclObjectCreateSAMPLE_ALTITUDE_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_ALTITUDE_KMVector(builder, data):
-    dclObjectCreateSAMPLE_ALTITUDE_KMVector(builder, data)
+    return dclObjectCreateSAMPLE_ALTITUDE_KMVector(builder, data)
 
 def dclObjectAddSAMPLE_DENSITY_KG_M3(builder, SAMPLE_DENSITY_KG_M3):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_DENSITY_KG_M3), 0)
@@ -1246,7 +1246,7 @@ def dclObjectCreateSAMPLE_DENSITY_KG_M3Vector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_DENSITY_KG_M3Vector(builder, data):
-    dclObjectCreateSAMPLE_DENSITY_KG_M3Vector(builder, data)
+    return dclObjectCreateSAMPLE_DENSITY_KG_M3Vector(builder, data)
 
 def dclObjectAddSAMPLE_DECAY_FACTOR_M2_S(builder, SAMPLE_DECAY_FACTOR_M2_S):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_DECAY_FACTOR_M2_S), 0)
@@ -1268,7 +1268,7 @@ def dclObjectCreateSAMPLE_DECAY_FACTOR_M2_SVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_DECAY_FACTOR_M2_SVector(builder, data):
-    dclObjectCreateSAMPLE_DECAY_FACTOR_M2_SVector(builder, data)
+    return dclObjectCreateSAMPLE_DECAY_FACTOR_M2_SVector(builder, data)
 
 def dclObjectEnd(builder):
     return builder.EndObject()

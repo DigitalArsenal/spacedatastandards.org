@@ -197,7 +197,7 @@ def TRHCreateANTENNASVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANTENNASVector(builder, data):
-    TRHCreateANTENNASVector(builder, data)
+    return TRHCreateANTENNASVector(builder, data)
 
 def TRHAddTRANSMITTERS(builder, TRANSMITTERS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMITTERS), 0)
@@ -215,7 +215,7 @@ def TRHCreateTRANSMITTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSMITTERSVector(builder, data):
-    TRHCreateTRANSMITTERSVector(builder, data)
+    return TRHCreateTRANSMITTERSVector(builder, data)
 
 def TRHAddRECEIVERS(builder, RECEIVERS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVERS), 0)
@@ -233,7 +233,7 @@ def TRHCreateRECEIVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECEIVERSVector(builder, data):
-    TRHCreateRECEIVERSVector(builder, data)
+    return TRHCreateRECEIVERSVector(builder, data)
 
 def TRHAddTRANSPONDERS(builder, TRANSPONDERS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSPONDERS), 0)
@@ -251,7 +251,7 @@ def TRHCreateTRANSPONDERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSPONDERSVector(builder, data):
-    TRHCreateTRANSPONDERSVector(builder, data)
+    return TRHCreateTRANSPONDERSVector(builder, data)
 
 def TRHAddINSTALLATIONS(builder, INSTALLATIONS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(INSTALLATIONS), 0)
@@ -269,7 +269,7 @@ def TRHCreateINSTALLATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINSTALLATIONSVector(builder, data):
-    TRHCreateINSTALLATIONSVector(builder, data)
+    return TRHCreateINSTALLATIONSVector(builder, data)
 
 def TRHAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

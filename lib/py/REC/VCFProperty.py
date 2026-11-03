@@ -123,7 +123,7 @@ def VCFPropertyCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    VCFPropertyCreatePARAMETERSVector(builder, data)
+    return VCFPropertyCreatePARAMETERSVector(builder, data)
 
 def VCFPropertyAddVALUE(builder, VALUE):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)

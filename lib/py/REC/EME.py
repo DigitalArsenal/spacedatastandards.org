@@ -183,7 +183,7 @@ def EMECreateENCRYPTED_BLOBVector(builder, data):
     return builder.EndVector()
 
 def CreateENCRYPTED_BLOBVector(builder, data):
-    EMECreateENCRYPTED_BLOBVector(builder, data)
+    return EMECreateENCRYPTED_BLOBVector(builder, data)
 
 def EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERAL_PUBLIC_KEY), 0)
@@ -217,7 +217,7 @@ def EMECreateNONCE_STARTVector(builder, data):
     return builder.EndVector()
 
 def CreateNONCE_STARTVector(builder, data):
-    EMECreateNONCE_STARTVector(builder, data)
+    return EMECreateNONCE_STARTVector(builder, data)
 
 def EMEAddTAG(builder, TAG):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)

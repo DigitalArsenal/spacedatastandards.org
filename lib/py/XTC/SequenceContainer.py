@@ -177,7 +177,7 @@ def SequenceContainerCreateENTRY_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRY_LISTVector(builder, data):
-    SequenceContainerCreateENTRY_LISTVector(builder, data)
+    return SequenceContainerCreateENTRY_LISTVector(builder, data)
 
 def SequenceContainerAddBASE_CONTAINER(builder, BASE_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_CONTAINER), 0)

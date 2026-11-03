@@ -56,7 +56,7 @@ public enum assetCatalogTab: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Request current state from a scenario controls host.
-public struct SCCRequestState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCCRequestState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -102,7 +102,7 @@ public struct SCCRequestState: FlatBufferTable, FlatbuffersVectorInitializable, 
 
 ///  State response. SCENARIO carries full scenario state; REFERENCES can carry
 ///  the lighter reference-list response for reference-only requests.
-public struct SCCStateResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCCStateResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -176,7 +176,7 @@ public struct SCCStateResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Asset-picker request or acknowledgement.
-public struct SCCAssetPicker: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCCAssetPicker: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -229,7 +229,7 @@ public struct SCCAssetPicker: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Startup readiness message.
-public struct SCCReady: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCCReady: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -268,7 +268,7 @@ public struct SCCReady: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
 ///  Scenario Controls - message-bus envelope for scenario setup, state
 ///  requests/responses, startup readiness, and asset-picker delegation.
-public struct SCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

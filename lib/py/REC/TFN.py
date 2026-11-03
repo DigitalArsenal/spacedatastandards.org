@@ -240,7 +240,7 @@ def TFNCreateDESIGNATORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDESIGNATORSVector(builder, data):
-    TFNCreateDESIGNATORSVector(builder, data)
+    return TFNCreateDESIGNATORSVector(builder, data)
 
 def TFNAddCOUNTRY_CODE(builder, COUNTRY_CODE):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY_CODE), 0)
@@ -282,7 +282,7 @@ def TFNCreateOPERATING_SURFACESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOPERATING_SURFACESVector(builder, data):
-    TFNCreateOPERATING_SURFACESVector(builder, data)
+    return TFNCreateOPERATING_SURFACESVector(builder, data)
 
 def TFNAddMAXIMUM_DRAFT_M(builder, MAXIMUM_DRAFT_M):
     builder.PrependFloat64Slot(10, MAXIMUM_DRAFT_M, 0.0)

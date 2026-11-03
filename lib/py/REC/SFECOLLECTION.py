@@ -75,7 +75,7 @@ def SFECOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    SFECOLLECTIONCreateRECORDSVector(builder, data)
+    return SFECOLLECTIONCreateRECORDSVector(builder, data)
 
 def SFECOLLECTIONEnd(builder):
     return builder.EndObject()

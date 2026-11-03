@@ -83,7 +83,7 @@ def PINCreateRULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRULESVector(builder, data):
-    PINCreateRULESVector(builder, data)
+    return PINCreateRULESVector(builder, data)
 
 def PINAddUPDATED_AT(builder, UPDATED_AT):
     builder.PrependUint64Slot(1, UPDATED_AT, 0)

@@ -111,7 +111,7 @@ def PRWDescribeRequestCreateSOURCE_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateSOURCE_HANDLESVector(builder, data):
-    PRWDescribeRequestCreateSOURCE_HANDLESVector(builder, data)
+    return PRWDescribeRequestCreateSOURCE_HANDLESVector(builder, data)
 
 def PRWDescribeRequestEnd(builder):
     return builder.EndObject()

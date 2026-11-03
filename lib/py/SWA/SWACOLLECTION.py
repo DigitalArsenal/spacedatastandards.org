@@ -75,7 +75,7 @@ def SWACOLLECTIONCreateRECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECORDSVector(builder, data):
-    SWACOLLECTIONCreateRECORDSVector(builder, data)
+    return SWACOLLECTIONCreateRECORDSVector(builder, data)
 
 def SWACOLLECTIONEnd(builder):
     return builder.EndObject()

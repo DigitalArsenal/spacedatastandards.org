@@ -123,7 +123,7 @@ def CZMDynSampledCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    CZMDynSampledCreateDATAVector(builder, data)
+    return CZMDynSampledCreateDATAVector(builder, data)
 
 def CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)

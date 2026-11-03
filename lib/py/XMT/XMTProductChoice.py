@@ -102,7 +102,7 @@ def XMTProductChoiceCreateCANDIDATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCANDIDATESVector(builder, data):
-    XMTProductChoiceCreateCANDIDATESVector(builder, data)
+    return XMTProductChoiceCreateCANDIDATESVector(builder, data)
 
 def XMTProductChoiceAddSELECTED(builder, SELECTED):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTED), 0)

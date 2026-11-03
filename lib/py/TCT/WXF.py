@@ -720,7 +720,7 @@ def WXFCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    WXFCreateVALUESVector(builder, data)
+    return WXFCreateVALUESVector(builder, data)
 
 def WXFAddCHUNK_CID(builder, CHUNK_CID):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(CHUNK_CID), 0)
@@ -750,7 +750,7 @@ def WXFCreateCHUNK_CODECSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHUNK_CODECSVector(builder, data):
-    WXFCreateCHUNK_CODECSVector(builder, data)
+    return WXFCreateCHUNK_CODECSVector(builder, data)
 
 def WXFAddCHUNK_BYTE_LENGTH(builder, CHUNK_BYTE_LENGTH):
     builder.PrependUint64Slot(28, CHUNK_BYTE_LENGTH, 0)
@@ -850,7 +850,7 @@ def WXFCreateQUANTIZED_U16Vector(builder, data):
     return builder.EndVector()
 
 def CreateQUANTIZED_U16Vector(builder, data):
-    WXFCreateQUANTIZED_U16Vector(builder, data)
+    return WXFCreateQUANTIZED_U16Vector(builder, data)
 
 def WXFAddQUANTIZED_U8(builder, QUANTIZED_U8):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTIZED_U8), 0)
@@ -872,7 +872,7 @@ def WXFCreateQUANTIZED_U8Vector(builder, data):
     return builder.EndVector()
 
 def CreateQUANTIZED_U8Vector(builder, data):
-    WXFCreateQUANTIZED_U8Vector(builder, data)
+    return WXFCreateQUANTIZED_U8Vector(builder, data)
 
 def WXFAddSCALE_FACTOR(builder, SCALE_FACTOR):
     builder.PrependFloat64Slot(43, SCALE_FACTOR, 1.0)

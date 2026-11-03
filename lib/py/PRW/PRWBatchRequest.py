@@ -124,7 +124,7 @@ def PRWBatchRequestCreateENTITY_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateENTITY_HANDLESVector(builder, data):
-    PRWBatchRequestCreateENTITY_HANDLESVector(builder, data)
+    return PRWBatchRequestCreateENTITY_HANDLESVector(builder, data)
 
 def PRWBatchRequestAddOUTPUT_OFFSET(builder, OUTPUT_OFFSET):
     builder.PrependUint32Slot(2, OUTPUT_OFFSET, 0)

@@ -531,7 +531,7 @@ def mplRendezvousSolutionCreateINITIAL_VELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateINITIAL_VELOCITY_KM_SVector(builder, data):
-    mplRendezvousSolutionCreateINITIAL_VELOCITY_KM_SVector(builder, data)
+    return mplRendezvousSolutionCreateINITIAL_VELOCITY_KM_SVector(builder, data)
 
 def mplRendezvousSolutionAddKP_PER_S2(builder, KP_PER_S2):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(KP_PER_S2), 0)
@@ -553,7 +553,7 @@ def mplRendezvousSolutionCreateKP_PER_S2Vector(builder, data):
     return builder.EndVector()
 
 def CreateKP_PER_S2Vector(builder, data):
-    mplRendezvousSolutionCreateKP_PER_S2Vector(builder, data)
+    return mplRendezvousSolutionCreateKP_PER_S2Vector(builder, data)
 
 def mplRendezvousSolutionAddKD_PER_S(builder, KD_PER_S):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(KD_PER_S), 0)
@@ -575,7 +575,7 @@ def mplRendezvousSolutionCreateKD_PER_SVector(builder, data):
     return builder.EndVector()
 
 def CreateKD_PER_SVector(builder, data):
-    mplRendezvousSolutionCreateKD_PER_SVector(builder, data)
+    return mplRendezvousSolutionCreateKD_PER_SVector(builder, data)
 
 def mplRendezvousSolutionAddDRIFT_END_S(builder, DRIFT_END_S):
     builder.PrependFloat64Slot(5, DRIFT_END_S, 0.0)
@@ -669,7 +669,7 @@ def mplRendezvousSolutionCreateSAMPLE_TIME_SVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_TIME_SVector(builder, data):
-    mplRendezvousSolutionCreateSAMPLE_TIME_SVector(builder, data)
+    return mplRendezvousSolutionCreateSAMPLE_TIME_SVector(builder, data)
 
 def mplRendezvousSolutionAddSAMPLE_PHASE(builder, SAMPLE_PHASE):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_PHASE), 0)
@@ -691,7 +691,7 @@ def mplRendezvousSolutionCreateSAMPLE_PHASEVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_PHASEVector(builder, data):
-    mplRendezvousSolutionCreateSAMPLE_PHASEVector(builder, data)
+    return mplRendezvousSolutionCreateSAMPLE_PHASEVector(builder, data)
 
 def mplRendezvousSolutionAddPOSITION_KM(builder, POSITION_KM):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_KM), 0)
@@ -713,7 +713,7 @@ def mplRendezvousSolutionCreatePOSITION_KMVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_KMVector(builder, data):
-    mplRendezvousSolutionCreatePOSITION_KMVector(builder, data)
+    return mplRendezvousSolutionCreatePOSITION_KMVector(builder, data)
 
 def mplRendezvousSolutionAddVELOCITY_KM_S(builder, VELOCITY_KM_S):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_KM_S), 0)
@@ -735,7 +735,7 @@ def mplRendezvousSolutionCreateVELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_KM_SVector(builder, data):
-    mplRendezvousSolutionCreateVELOCITY_KM_SVector(builder, data)
+    return mplRendezvousSolutionCreateVELOCITY_KM_SVector(builder, data)
 
 def mplRendezvousSolutionAddREFERENCE_POSITION_KM(builder, REFERENCE_POSITION_KM):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_POSITION_KM), 0)
@@ -757,7 +757,7 @@ def mplRendezvousSolutionCreateREFERENCE_POSITION_KMVector(builder, data):
     return builder.EndVector()
 
 def CreateREFERENCE_POSITION_KMVector(builder, data):
-    mplRendezvousSolutionCreateREFERENCE_POSITION_KMVector(builder, data)
+    return mplRendezvousSolutionCreateREFERENCE_POSITION_KMVector(builder, data)
 
 def mplRendezvousSolutionAddREFERENCE_VELOCITY_KM_S(builder, REFERENCE_VELOCITY_KM_S):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_VELOCITY_KM_S), 0)
@@ -779,7 +779,7 @@ def mplRendezvousSolutionCreateREFERENCE_VELOCITY_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateREFERENCE_VELOCITY_KM_SVector(builder, data):
-    mplRendezvousSolutionCreateREFERENCE_VELOCITY_KM_SVector(builder, data)
+    return mplRendezvousSolutionCreateREFERENCE_VELOCITY_KM_SVector(builder, data)
 
 def mplRendezvousSolutionAddREFERENCE_ACCELERATION_KM_S2(builder, REFERENCE_ACCELERATION_KM_S2):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_ACCELERATION_KM_S2), 0)
@@ -801,7 +801,7 @@ def mplRendezvousSolutionCreateREFERENCE_ACCELERATION_KM_S2Vector(builder, data)
     return builder.EndVector()
 
 def CreateREFERENCE_ACCELERATION_KM_S2Vector(builder, data):
-    mplRendezvousSolutionCreateREFERENCE_ACCELERATION_KM_S2Vector(builder, data)
+    return mplRendezvousSolutionCreateREFERENCE_ACCELERATION_KM_S2Vector(builder, data)
 
 def mplRendezvousSolutionAddCONTROL_ACCELERATION_KM_S2(builder, CONTROL_ACCELERATION_KM_S2):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CONTROL_ACCELERATION_KM_S2), 0)
@@ -823,7 +823,7 @@ def mplRendezvousSolutionCreateCONTROL_ACCELERATION_KM_S2Vector(builder, data):
     return builder.EndVector()
 
 def CreateCONTROL_ACCELERATION_KM_S2Vector(builder, data):
-    mplRendezvousSolutionCreateCONTROL_ACCELERATION_KM_S2Vector(builder, data)
+    return mplRendezvousSolutionCreateCONTROL_ACCELERATION_KM_S2Vector(builder, data)
 
 def mplRendezvousSolutionAddPOSITION_ERROR_KM(builder, POSITION_ERROR_KM):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_ERROR_KM), 0)
@@ -845,7 +845,7 @@ def mplRendezvousSolutionCreatePOSITION_ERROR_KMVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITION_ERROR_KMVector(builder, data):
-    mplRendezvousSolutionCreatePOSITION_ERROR_KMVector(builder, data)
+    return mplRendezvousSolutionCreatePOSITION_ERROR_KMVector(builder, data)
 
 def mplRendezvousSolutionAddVELOCITY_ERROR_KM_S(builder, VELOCITY_ERROR_KM_S):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_ERROR_KM_S), 0)
@@ -867,7 +867,7 @@ def mplRendezvousSolutionCreateVELOCITY_ERROR_KM_SVector(builder, data):
     return builder.EndVector()
 
 def CreateVELOCITY_ERROR_KM_SVector(builder, data):
-    mplRendezvousSolutionCreateVELOCITY_ERROR_KM_SVector(builder, data)
+    return mplRendezvousSolutionCreateVELOCITY_ERROR_KM_SVector(builder, data)
 
 def mplRendezvousSolutionEnd(builder):
     return builder.EndObject()

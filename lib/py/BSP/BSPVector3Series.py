@@ -167,7 +167,7 @@ def BSPVector3SeriesCreateTVector(builder, data):
     return builder.EndVector()
 
 def CreateTVector(builder, data):
-    BSPVector3SeriesCreateTVector(builder, data)
+    return BSPVector3SeriesCreateTVector(builder, data)
 
 def BSPVector3SeriesAddX1(builder, X1):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(X1), 0)
@@ -189,7 +189,7 @@ def BSPVector3SeriesCreateX1Vector(builder, data):
     return builder.EndVector()
 
 def CreateX1Vector(builder, data):
-    BSPVector3SeriesCreateX1Vector(builder, data)
+    return BSPVector3SeriesCreateX1Vector(builder, data)
 
 def BSPVector3SeriesAddX2(builder, X2):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(X2), 0)
@@ -211,7 +211,7 @@ def BSPVector3SeriesCreateX2Vector(builder, data):
     return builder.EndVector()
 
 def CreateX2Vector(builder, data):
-    BSPVector3SeriesCreateX2Vector(builder, data)
+    return BSPVector3SeriesCreateX2Vector(builder, data)
 
 def BSPVector3SeriesAddX3(builder, X3):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(X3), 0)
@@ -233,7 +233,7 @@ def BSPVector3SeriesCreateX3Vector(builder, data):
     return builder.EndVector()
 
 def CreateX3Vector(builder, data):
-    BSPVector3SeriesCreateX3Vector(builder, data)
+    return BSPVector3SeriesCreateX3Vector(builder, data)
 
 def BSPVector3SeriesEnd(builder):
     return builder.EndObject()

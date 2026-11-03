@@ -26,7 +26,7 @@ public enum ENGINE_TYPE: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Rocket Configuration
-public struct ROC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ROC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -94,7 +94,7 @@ public struct ROC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 }
 
 ///  Stage Details
-public struct STAGE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STAGE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -160,7 +160,7 @@ public struct STAGE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable
 }
 
 ///  Sustainer Details
-public struct SUSTAINER: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SUSTAINER: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -212,7 +212,7 @@ public struct SUSTAINER: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  Engine Details
-public struct ENGINE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ENGINE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

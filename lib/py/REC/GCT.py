@@ -582,7 +582,7 @@ def GCTCreateENU_TO_ECEFVector(builder, data):
     return builder.EndVector()
 
 def CreateENU_TO_ECEFVector(builder, data):
-    GCTCreateENU_TO_ECEFVector(builder, data)
+    return GCTCreateENU_TO_ECEFVector(builder, data)
 
 def GCTAddFIELD_QUANTITY(builder, FIELD_QUANTITY):
     builder.PrependInt8Slot(19, FIELD_QUANTITY, 0)
@@ -624,7 +624,7 @@ def GCTCreateVARIANTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVARIANTSVector(builder, data):
-    GCTCreateVARIANTSVector(builder, data)
+    return GCTCreateVARIANTSVector(builder, data)
 
 def GCTAddINSTANCES(builder, INSTANCES):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(INSTANCES), 0)
@@ -642,7 +642,7 @@ def GCTCreateINSTANCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINSTANCESVector(builder, data):
-    GCTCreateINSTANCESVector(builder, data)
+    return GCTCreateINSTANCESVector(builder, data)
 
 def GCTAddCOVER(builder, COVER):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(COVER), 0)
@@ -702,7 +702,7 @@ def GCTCreateSOURCE_FIELD_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCE_FIELD_IDSVector(builder, data):
-    GCTCreateSOURCE_FIELD_IDSVector(builder, data)
+    return GCTCreateSOURCE_FIELD_IDSVector(builder, data)
 
 def GCTAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCER_PEER_ID), 0)

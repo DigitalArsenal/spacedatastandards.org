@@ -249,7 +249,7 @@ def PCEStopReportCreateSYNCHRONIZED_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSYNCHRONIZED_STATESVector(builder, data):
-    PCEStopReportCreateSYNCHRONIZED_STATESVector(builder, data)
+    return PCEStopReportCreateSYNCHRONIZED_STATESVector(builder, data)
 
 def PCEStopReportAddSAMPLE(builder, SAMPLE):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE), 0)

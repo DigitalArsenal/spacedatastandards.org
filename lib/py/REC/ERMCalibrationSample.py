@@ -138,7 +138,7 @@ def ERMCalibrationSampleCreateERRORVector(builder, data):
     return builder.EndVector()
 
 def CreateERRORVector(builder, data):
-    ERMCalibrationSampleCreateERRORVector(builder, data)
+    return ERMCalibrationSampleCreateERRORVector(builder, data)
 
 def ERMCalibrationSampleAddCOVARIANCE(builder, COVARIANCE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
@@ -160,7 +160,7 @@ def ERMCalibrationSampleCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    ERMCalibrationSampleCreateCOVARIANCEVector(builder, data)
+    return ERMCalibrationSampleCreateCOVARIANCEVector(builder, data)
 
 def ERMCalibrationSampleEnd(builder):
     return builder.EndObject()

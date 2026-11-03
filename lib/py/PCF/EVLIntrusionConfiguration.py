@@ -252,7 +252,7 @@ def EVLIntrusionConfigurationCreateCUSTOM_MASK_RADVector(builder, data):
     return builder.EndVector()
 
 def CreateCUSTOM_MASK_RADVector(builder, data):
-    EVLIntrusionConfigurationCreateCUSTOM_MASK_RADVector(builder, data)
+    return EVLIntrusionConfigurationCreateCUSTOM_MASK_RADVector(builder, data)
 
 def EVLIntrusionConfigurationAddINTRUDING_BODY_IDS(builder, INTRUDING_BODY_IDS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(INTRUDING_BODY_IDS), 0)
@@ -274,7 +274,7 @@ def EVLIntrusionConfigurationCreateINTRUDING_BODY_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateINTRUDING_BODY_IDSVector(builder, data):
-    EVLIntrusionConfigurationCreateINTRUDING_BODY_IDSVector(builder, data)
+    return EVLIntrusionConfigurationCreateINTRUDING_BODY_IDSVector(builder, data)
 
 def EVLIntrusionConfigurationAddINTRUDING_OBJECT_IDS(builder, INTRUDING_OBJECT_IDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(INTRUDING_OBJECT_IDS), 0)
@@ -292,7 +292,7 @@ def EVLIntrusionConfigurationCreateINTRUDING_OBJECT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTRUDING_OBJECT_IDSVector(builder, data):
-    EVLIntrusionConfigurationCreateINTRUDING_OBJECT_IDSVector(builder, data)
+    return EVLIntrusionConfigurationCreateINTRUDING_OBJECT_IDSVector(builder, data)
 
 def EVLIntrusionConfigurationAddUSE_APPARENT_BODY_RADIUS(builder, USE_APPARENT_BODY_RADIUS):
     builder.PrependBoolSlot(10, USE_APPARENT_BODY_RADIUS, 0)

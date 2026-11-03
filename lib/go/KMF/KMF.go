@@ -9,15 +9,14 @@ import (
 /// Key Material Frame
 type KMF struct {
 	_tab flatbuffers.Table
-	encryptionCtx []byte
 }
 
 const KMFIdentifier = "$KMF"
 
-func GetRootAsKMF(buf []byte, offset flatbuffers.UOffsetT, encryptionCtx ...[]byte) *KMF {
+func GetRootAsKMF(buf []byte, offset flatbuffers.UOffsetT) *KMF {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &KMF{}
-	x.Init(buf, n+offset, encryptionCtx...)
+	x.Init(buf, n+offset)
 	return x
 }
 
@@ -30,10 +29,10 @@ func KMFBufferHasIdentifier(buf []byte) bool {
 	return flatbuffers.BufferHasIdentifier(buf, KMFIdentifier)
 }
 
-func GetSizePrefixedRootAsKMF(buf []byte, offset flatbuffers.UOffsetT, encryptionCtx ...[]byte) *KMF {
+func GetSizePrefixedRootAsKMF(buf []byte, offset flatbuffers.UOffsetT) *KMF {
 	n := flatbuffers.GetUOffsetT(buf[offset+flatbuffers.SizeUint32:])
 	x := &KMF{}
-	x.Init(buf, n+offset+flatbuffers.SizeUint32, encryptionCtx...)
+	x.Init(buf, n+offset+flatbuffers.SizeUint32)
 	return x
 }
 
@@ -46,16 +45,32 @@ func SizePrefixedKMFBufferHasIdentifier(buf []byte) bool {
 	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, KMFIdentifier)
 }
 
-func (rcv *KMF) Init(buf []byte, i flatbuffers.UOffsetT, encryptionCtx ...[]byte) {
+func (rcv *KMF) Init(buf []byte, i flatbuffers.UOffsetT) {
 	rcv._tab.Bytes = buf
 	rcv._tab.Pos = i
-	if len(encryptionCtx) > 0 {
-		rcv.encryptionCtx = encryptionCtx[0]
-	}
 }
 
 func (rcv *KMF) Table() flatbuffers.Table {
 	return rcv._tab
+}
+
+// Field-encryption format 3 walk program of KMF (see flatbuffers_encryption.go).
+var flatbuffersEncryptionProgramKMF = []int{
+	1, 2, 1, 2, 12, 1,
+}
+
+// KMFEncryptBuffer encrypts, in place, the (encrypted) fields of a KMF
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func KMFEncryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramKMF)
+}
+
+// KMFDecryptBuffer decrypts, in place, the (encrypted) fields of a KMF
+// buffer with field-encryption format 3 (key: 32 bytes; recordIndex: unique
+// per buffer under the key). No byte changes when it returns an error.
+func KMFDecryptBuffer(buf, key []byte, recordIndex uint32) error {
+	return flatbuffersEncryptionCrypt(buf, key, recordIndex, flatbuffersEncryptionProgramKMF)
 }
 
 /// Logical key identifier used across publication and grant records.

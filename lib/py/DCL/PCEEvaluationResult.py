@@ -117,7 +117,7 @@ def PCEEvaluationResultCreateSAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAMPLESVector(builder, data):
-    PCEEvaluationResultCreateSAMPLESVector(builder, data)
+    return PCEEvaluationResultCreateSAMPLESVector(builder, data)
 
 def PCEEvaluationResultAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EOP_DATA_SET_CID), 0)

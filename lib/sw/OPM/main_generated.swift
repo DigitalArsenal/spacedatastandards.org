@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Orbit Parameter Message
-public struct OPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -286,7 +286,7 @@ public struct OPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 }
 
 ///  One maneuver of an OPM (CCSDS 502.0-B-3 Table 3-7).
-public struct OPMManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPMManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -376,7 +376,7 @@ public struct OPMManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
 ///  One USER_DEFINED_x keyword of an OPM, or one USER_DEFINED element of its XML
 ///  form: the parameter name (the x) and the value as written.
-public struct OPMUserDefinedParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OPMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

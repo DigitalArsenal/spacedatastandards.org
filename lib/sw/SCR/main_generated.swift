@@ -323,7 +323,7 @@ public struct SCRPossibilityPoint_Mutable: FlatBufferStruct, FlatbuffersVectorIn
 }
 
 ///  A run of coarse steps of the screening window.
-public struct SCRBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -368,7 +368,7 @@ public struct SCRBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  The coarse grid of one block.
-public struct SCRGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -459,7 +459,7 @@ public struct SCRGrid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Roles of the objects of a screen.
-public struct SCRRoles: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRRoles: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -497,7 +497,7 @@ public struct SCRRoles: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Candidates of a block or a screen, ordered by step then pair.
-public struct SCRCandidates: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRCandidates: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -538,7 +538,7 @@ public struct SCRCandidates: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  An object left out of the screen because it could not be propagated.
-public struct SCRExclusion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRExclusion: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -590,7 +590,7 @@ public struct SCRExclusion: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Objects left out of a screen.
-public struct SCRExclusions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRExclusions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -626,7 +626,7 @@ public struct SCRExclusions: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  What one coarse-filter stage did.
-public struct SCRSearchReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRSearchReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -715,7 +715,7 @@ public struct SCRSearchReport: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  An ellipsoidal possibility kernel.
-public struct SCRPossibilityKernel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRPossibilityKernel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -762,7 +762,7 @@ public struct SCRPossibilityKernel: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  A possibility-of-collision assessment of one encounter.
-public struct SCRPossibilityRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRPossibilityRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -857,7 +857,7 @@ public struct SCRPossibilityRequest: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Miss distance and closest-approach time ranges at one alpha level.
-public struct SCRAlphaCut: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRAlphaCut: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -919,7 +919,7 @@ public struct SCRAlphaCut: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Result of a possibility-of-collision assessment.
-public struct SCRPossibilityResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCRPossibilityResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1017,7 +1017,7 @@ public struct SCRPossibilityResult: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  Conjunction Screening - exactly one arm is set.
-public struct SCR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SCR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

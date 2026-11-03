@@ -636,7 +636,7 @@ def SWSCreateSAMPLE_STATUSVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_STATUSVector(builder, data):
-    SWSCreateSAMPLE_STATUSVector(builder, data)
+    return SWSCreateSAMPLE_STATUSVector(builder, data)
 
 def SWSAddLOCATION(builder, LOCATION):
     builder.PrependInt8Slot(7, LOCATION, 0)
@@ -660,7 +660,7 @@ def SWSCreatePLATFORMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLATFORMSVector(builder, data):
-    SWSCreatePLATFORMSVector(builder, data)
+    return SWSCreatePLATFORMSVector(builder, data)
 
 def SWSAddSAMPLE_PLATFORM(builder, SAMPLE_PLATFORM):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_PLATFORM), 0)
@@ -682,7 +682,7 @@ def SWSCreateSAMPLE_PLATFORMVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_PLATFORMVector(builder, data):
-    SWSCreateSAMPLE_PLATFORMVector(builder, data)
+    return SWSCreateSAMPLE_PLATFORMVector(builder, data)
 
 def SWSAddNORAD_CAT_IDS(builder, NORAD_CAT_IDS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(NORAD_CAT_IDS), 0)
@@ -704,7 +704,7 @@ def SWSCreateNORAD_CAT_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateNORAD_CAT_IDSVector(builder, data):
-    SWSCreateNORAD_CAT_IDSVector(builder, data)
+    return SWSCreateNORAD_CAT_IDSVector(builder, data)
 
 def SWSAddINSTRUMENT(builder, INSTRUMENT):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(INSTRUMENT), 0)
@@ -768,7 +768,7 @@ def SWSCreateEPOCHS_MSVector(builder, data):
     return builder.EndVector()
 
 def CreateEPOCHS_MSVector(builder, data):
-    SWSCreateEPOCHS_MSVector(builder, data)
+    return SWSCreateEPOCHS_MSVector(builder, data)
 
 def SWSAddVALUES(builder, VALUES):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(VALUES), 0)
@@ -790,7 +790,7 @@ def SWSCreateVALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUESVector(builder, data):
-    SWSCreateVALUESVector(builder, data)
+    return SWSCreateVALUESVector(builder, data)
 
 def SWSAddSIGMAS(builder, SIGMAS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SIGMAS), 0)
@@ -812,7 +812,7 @@ def SWSCreateSIGMASVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGMASVector(builder, data):
-    SWSCreateSIGMASVector(builder, data)
+    return SWSCreateSIGMASVector(builder, data)
 
 def SWSAddPROPAGATED_EPOCHS_MS(builder, PROPAGATED_EPOCHS_MS):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATED_EPOCHS_MS), 0)
@@ -834,7 +834,7 @@ def SWSCreatePROPAGATED_EPOCHS_MSVector(builder, data):
     return builder.EndVector()
 
 def CreatePROPAGATED_EPOCHS_MSVector(builder, data):
-    SWSCreatePROPAGATED_EPOCHS_MSVector(builder, data)
+    return SWSCreatePROPAGATED_EPOCHS_MSVector(builder, data)
 
 def SWSAddQUALITY(builder, QUALITY):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(QUALITY), 0)
@@ -856,7 +856,7 @@ def SWSCreateQUALITYVector(builder, data):
     return builder.EndVector()
 
 def CreateQUALITYVector(builder, data):
-    SWSCreateQUALITYVector(builder, data)
+    return SWSCreateQUALITYVector(builder, data)
 
 def SWSAddACTIVE(builder, ACTIVE):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(ACTIVE), 0)
@@ -878,7 +878,7 @@ def SWSCreateACTIVEVector(builder, data):
     return builder.EndVector()
 
 def CreateACTIVEVector(builder, data):
-    SWSCreateACTIVEVector(builder, data)
+    return SWSCreateACTIVEVector(builder, data)
 
 def SWSAddSAMPLE_COUNTS(builder, SAMPLE_COUNTS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_COUNTS), 0)
@@ -900,7 +900,7 @@ def SWSCreateSAMPLE_COUNTSVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_COUNTSVector(builder, data):
-    SWSCreateSAMPLE_COUNTSVector(builder, data)
+    return SWSCreateSAMPLE_COUNTSVector(builder, data)
 
 def SWSAddFLAG_NAMES(builder, FLAG_NAMES):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(FLAG_NAMES), 0)
@@ -918,7 +918,7 @@ def SWSCreateFLAG_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLAG_NAMESVector(builder, data):
-    SWSCreateFLAG_NAMESVector(builder, data)
+    return SWSCreateFLAG_NAMESVector(builder, data)
 
 def SWSAddFLAG_VALUES(builder, FLAG_VALUES):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(FLAG_VALUES), 0)
@@ -940,7 +940,7 @@ def SWSCreateFLAG_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateFLAG_VALUESVector(builder, data):
-    SWSCreateFLAG_VALUESVector(builder, data)
+    return SWSCreateFLAG_VALUESVector(builder, data)
 
 def SWSAddNOAA_SCALE_KIND(builder, NOAA_SCALE_KIND):
     builder.PrependInt8Slot(27, NOAA_SCALE_KIND, 0)
@@ -968,7 +968,7 @@ def SWSCreateNOAA_SCALE_LEVELSVector(builder, data):
     return builder.EndVector()
 
 def CreateNOAA_SCALE_LEVELSVector(builder, data):
-    SWSCreateNOAA_SCALE_LEVELSVector(builder, data)
+    return SWSCreateNOAA_SCALE_LEVELSVector(builder, data)
 
 def SWSAddFORECAST_ISSUED_AT(builder, FORECAST_ISSUED_AT):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(FORECAST_ISSUED_AT), 0)

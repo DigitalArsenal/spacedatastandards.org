@@ -316,7 +316,7 @@ def PLKCreateLICENSEE_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateLICENSEE_PUBKEYVector(builder, data):
-    PLKCreateLICENSEE_PUBKEYVector(builder, data)
+    return PLKCreateLICENSEE_PUBKEYVector(builder, data)
 
 def PLKAddISSUER_PUBKEY(builder, ISSUER_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ISSUER_PUBKEY), 0)
@@ -338,7 +338,7 @@ def PLKCreateISSUER_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateISSUER_PUBKEYVector(builder, data):
-    PLKCreateISSUER_PUBKEYVector(builder, data)
+    return PLKCreateISSUER_PUBKEYVector(builder, data)
 
 def PLKAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_DOMAINS), 0)
@@ -356,7 +356,7 @@ def PLKCreateALLOWED_DOMAINSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_DOMAINSVector(builder, data):
-    PLKCreateALLOWED_DOMAINSVector(builder, data)
+    return PLKCreateALLOWED_DOMAINSVector(builder, data)
 
 def PLKAddALLOWED_TLDS(builder, ALLOWED_TLDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_TLDS), 0)
@@ -374,7 +374,7 @@ def PLKCreateALLOWED_TLDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_TLDSVector(builder, data):
-    PLKCreateALLOWED_TLDSVector(builder, data)
+    return PLKCreateALLOWED_TLDSVector(builder, data)
 
 def PLKAddLICENSE_TYPE(builder, LICENSE_TYPE):
     builder.PrependInt8Slot(10, LICENSE_TYPE, 0)
@@ -432,7 +432,7 @@ def PLKCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PLKCreateSIGNATUREVector(builder, data)
+    return PLKCreateSIGNATUREVector(builder, data)
 
 def PLKEnd(builder):
     return builder.EndObject()

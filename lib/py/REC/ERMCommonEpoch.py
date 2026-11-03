@@ -131,7 +131,7 @@ def ERMCommonEpochCreateREQUESTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREQUESTSVector(builder, data):
-    ERMCommonEpochCreateREQUESTSVector(builder, data)
+    return ERMCommonEpochCreateREQUESTSVector(builder, data)
 
 def ERMCommonEpochAddRESULTS(builder, RESULTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RESULTS), 0)
@@ -149,7 +149,7 @@ def ERMCommonEpochCreateRESULTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESULTSVector(builder, data):
-    ERMCommonEpochCreateRESULTSVector(builder, data)
+    return ERMCommonEpochCreateRESULTSVector(builder, data)
 
 def ERMCommonEpochEnd(builder):
     return builder.EndObject()

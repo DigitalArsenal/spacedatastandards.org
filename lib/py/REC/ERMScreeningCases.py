@@ -76,7 +76,7 @@ def ERMScreeningCasesCreateCASESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCASESVector(builder, data):
-    ERMScreeningCasesCreateCASESVector(builder, data)
+    return ERMScreeningCasesCreateCASESVector(builder, data)
 
 def ERMScreeningCasesEnd(builder):
     return builder.EndObject()

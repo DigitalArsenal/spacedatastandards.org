@@ -301,7 +301,7 @@ def APRCreatePARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETERSVector(builder, data):
-    APRCreatePARAMETERSVector(builder, data)
+    return APRCreatePARAMETERSVector(builder, data)
 
 def APRAddSELECTION(builder, SELECTION):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SELECTION), 0)
@@ -353,7 +353,7 @@ def APRCreateBODYVector(builder, data):
     return builder.EndVector()
 
 def CreateBODYVector(builder, data):
-    APRCreateBODYVector(builder, data)
+    return APRCreateBODYVector(builder, data)
 
 def APRAddSTATUS(builder, STATUS):
     builder.PrependUint16Slot(13, STATUS, 0)
@@ -395,7 +395,7 @@ def APRCreateRESPONSE_HEADERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESPONSE_HEADERSVector(builder, data):
-    APRCreateRESPONSE_HEADERSVector(builder, data)
+    return APRCreateRESPONSE_HEADERSVector(builder, data)
 
 def APREnd(builder):
     return builder.EndObject()

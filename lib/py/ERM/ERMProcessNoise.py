@@ -119,7 +119,7 @@ def ERMProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data):
     return builder.EndVector()
 
 def CreateSPECTRAL_DENSITY_M2_S3Vector(builder, data):
-    ERMProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
+    return ERMProcessNoiseCreateSPECTRAL_DENSITY_M2_S3Vector(builder, data)
 
 def ERMProcessNoiseAddDISCRETIZATION_S(builder, DISCRETIZATION_S):
     builder.PrependFloat64Slot(3, DISCRETIZATION_S, 0.0)

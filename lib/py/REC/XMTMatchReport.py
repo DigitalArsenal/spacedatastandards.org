@@ -118,7 +118,7 @@ def XMTMatchReportCreateTRAJECTORIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRAJECTORIESVector(builder, data):
-    XMTMatchReportCreateTRAJECTORIESVector(builder, data)
+    return XMTMatchReportCreateTRAJECTORIESVector(builder, data)
 
 def XMTMatchReportAddPAIRS(builder, PAIRS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PAIRS), 0)
@@ -136,7 +136,7 @@ def XMTMatchReportCreatePAIRSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAIRSVector(builder, data):
-    XMTMatchReportCreatePAIRSVector(builder, data)
+    return XMTMatchReportCreatePAIRSVector(builder, data)
 
 def XMTMatchReportEnd(builder):
     return builder.EndObject()

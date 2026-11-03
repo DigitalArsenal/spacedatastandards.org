@@ -217,7 +217,7 @@ def QEMCreateTOKENSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTOKENSVector(builder, data):
-    QEMCreateTOKENSVector(builder, data)
+    return QEMCreateTOKENSVector(builder, data)
 
 def QEMEnd(builder):
     return builder.EndObject()

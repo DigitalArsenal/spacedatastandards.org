@@ -111,7 +111,7 @@ def ERMSetDifferenceCreateRTNVector(builder, data):
     return builder.EndVector()
 
 def CreateRTNVector(builder, data):
-    ERMSetDifferenceCreateRTNVector(builder, data)
+    return ERMSetDifferenceCreateRTNVector(builder, data)
 
 def ERMSetDifferenceEnd(builder):
     return builder.EndObject()

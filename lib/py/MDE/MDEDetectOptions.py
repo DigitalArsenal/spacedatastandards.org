@@ -252,7 +252,7 @@ def MDEDetectOptionsCreateDETECTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateDETECTORSVector(builder, data):
-    MDEDetectOptionsCreateDETECTORSVector(builder, data)
+    return MDEDetectOptionsCreateDETECTORSVector(builder, data)
 
 def MDEDetectOptionsAddREPORT_TIME_MS(builder, REPORT_TIME_MS):
     builder.PrependInt64Slot(1, REPORT_TIME_MS, 0)

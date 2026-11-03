@@ -23,7 +23,7 @@ public enum cmeArrivalKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  One analysis of a CME's geometry and speed.
-public struct CMEMeasurement: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMEMeasurement: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -189,7 +189,7 @@ public struct CMEMeasurement: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  One arrival at one place.
-public struct CMEArrival: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMEArrival: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -306,7 +306,7 @@ public struct CMEArrival: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Coronal Mass Ejection
-public struct CME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CME: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -449,7 +449,7 @@ public struct CME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   }
 }
 
-public struct CMECOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMECOLLECTION: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

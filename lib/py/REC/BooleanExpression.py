@@ -117,7 +117,7 @@ def BooleanExpressionCreateCONDITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONDITIONSVector(builder, data):
-    BooleanExpressionCreateCONDITIONSVector(builder, data)
+    return BooleanExpressionCreateCONDITIONSVector(builder, data)
 
 def BooleanExpressionAddEXPRESSIONS(builder, EXPRESSIONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(EXPRESSIONS), 0)
@@ -135,7 +135,7 @@ def BooleanExpressionCreateEXPRESSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXPRESSIONSVector(builder, data):
-    BooleanExpressionCreateEXPRESSIONSVector(builder, data)
+    return BooleanExpressionCreateEXPRESSIONSVector(builder, data)
 
 def BooleanExpressionEnd(builder):
     return builder.EndObject()

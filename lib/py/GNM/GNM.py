@@ -340,7 +340,7 @@ def GNMCreateGROUP_DELAYSVector(builder, data):
     return builder.EndVector()
 
 def CreateGROUP_DELAYSVector(builder, data):
-    GNMCreateGROUP_DELAYSVector(builder, data)
+    return GNMCreateGROUP_DELAYSVector(builder, data)
 
 def GNMAddGROUP_DELAY_NAMES(builder, GROUP_DELAY_NAMES):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(GROUP_DELAY_NAMES), 0)
@@ -358,7 +358,7 @@ def GNMCreateGROUP_DELAY_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUP_DELAY_NAMESVector(builder, data):
-    GNMCreateGROUP_DELAY_NAMESVector(builder, data)
+    return GNMCreateGROUP_DELAY_NAMESVector(builder, data)
 
 def GNMAddKEPLERIAN(builder, KEPLERIAN):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(KEPLERIAN), 0)

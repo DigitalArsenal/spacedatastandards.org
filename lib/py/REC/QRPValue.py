@@ -148,7 +148,7 @@ def QRPValueCreateBYTES_VALUEVector(builder, data):
     return builder.EndVector()
 
 def CreateBYTES_VALUEVector(builder, data):
-    QRPValueCreateBYTES_VALUEVector(builder, data)
+    return QRPValueCreateBYTES_VALUEVector(builder, data)
 
 def QRPValueEnd(builder):
     return builder.EndObject()

@@ -153,7 +153,7 @@ def FPCShortestPathResultCreateDISTANCESVector(builder, data):
     return builder.EndVector()
 
 def CreateDISTANCESVector(builder, data):
-    FPCShortestPathResultCreateDISTANCESVector(builder, data)
+    return FPCShortestPathResultCreateDISTANCESVector(builder, data)
 
 def FPCShortestPathResultAddPREDECESSORS(builder, PREDECESSORS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PREDECESSORS), 0)
@@ -175,7 +175,7 @@ def FPCShortestPathResultCreatePREDECESSORSVector(builder, data):
     return builder.EndVector()
 
 def CreatePREDECESSORSVector(builder, data):
-    FPCShortestPathResultCreatePREDECESSORSVector(builder, data)
+    return FPCShortestPathResultCreatePREDECESSORSVector(builder, data)
 
 def FPCShortestPathResultEnd(builder):
     return builder.EndObject()
