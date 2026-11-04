@@ -69,12 +69,15 @@ enum massCategory: byte {
 enum catalogProductKind: byte {
   /// Not stated
   Unspecified,
-  /// $OMM with MEAN_ELEMENT_THEORY SGP4
+  /// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+  /// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
   Sgp4Elements,
-  /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  /// As Sgp4Elements, under SGP4XP
   Sgp4XpElements,
   /// $OCM: a state and its covariance
-  StateCovariance
+  StateCovariance,
+  /// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+  ApElements
 }
 
 /// One product the catalog selected for the object, by content identifier.
@@ -86,8 +89,8 @@ table CATProduct {
   RECORD_CID: string;
   /// The product's source: its PROVENANCE SOURCE_ID.
   SOURCE_ID: string;
-  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-  /// epoch.
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+  /// MEAN_ELEMENTS.EPOCH or first state epoch.
   EPOCH: string;
   /// Why the catalog selected this product over the other candidates of its
   /// KIND, as the selecting integrator states it (for example, the lowest

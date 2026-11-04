@@ -10,7 +10,14 @@ enum meanElementSource : byte {
   /// Draper Semi-analytical Satellite Theory
   DSST,
   /// Universal Semianalytical Method
-  USM
+  USM,
+  /// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+  /// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+  /// unused: it was a cut value of an earlier theory.
+  AP = 5,
+  /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+  /// set is always written.
+  UNSPECIFIED = 6
 }
 
 /// Mean Element Theory

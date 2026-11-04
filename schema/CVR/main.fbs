@@ -120,6 +120,20 @@ table CVR {
   /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
   /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
   SHRINKAGE_WEIGHT: double = nan;
+  /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+  /// state count once here. 0 when not stated.
+  TRUTH_EPOCHS: uint;
+  /// Share of the held-out samples whose error lies inside the 1-sigma band of
+  /// the first, second and third axis of the covariance's frame (radial,
+  /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+  /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+  COVERAGE_1_SIGMA_AXIS1: double = nan;
+  COVERAGE_1_SIGMA_AXIS2: double = nan;
+  COVERAGE_1_SIGMA_AXIS3: double = nan;
+  /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+  COVERAGE_3_SIGMA_AXIS1: double = nan;
+  COVERAGE_3_SIGMA_AXIS2: double = nan;
+  COVERAGE_3_SIGMA_AXIS3: double = nan;
 }
 
 root_type CVR;

@@ -69,6 +69,21 @@ table PVN {
   /// republish one upstream share its lineage, so their products are not
   /// independent of each other.
   LINEAGE: string;
+  /// Replayable URL or provider query identifying the source material as it
+  /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+  SOURCE_URL: string;
+  /// Source revision, edition or upstream update marker verbatim: for a file
+  /// its originator stamps, the stamp.
+  SOURCE_VERSION: string;
+  /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+  RETRIEVED_AT: string;
+  /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+  /// hexadecimal characters. Empty when the source cannot expose replayable
+  /// bytes.
+  SOURCE_SHA256: string;
+  /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+  /// the source was fetched by range. 0 when not stated.
+  SOURCE_BYTES: uint64;
 }
 
 root_type PVN;
