@@ -1,0 +1,35 @@
+/**
+ * How the adopted distance was measured.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum ssyDistanceTechnique {
+    UNSPECIFIED = 0,
+    /**
+     * The host's distance is adopted (no independent error).
+     */
+    HOST = 1,
+    TRGB = 2,
+    SBF = 3,
+    TULLY_FISHER = 4,
+    BARYONIC_TULLY_FISHER = 5,
+    CMD = 6,
+    RR_LYRAE = 7,
+    HORIZONTAL_BRANCH = 8,
+    /**
+     * Numerical action model.
+     */
+    NUMERICAL_ACTION = 9,
+    BRIGHTEST_STARS = 10,
+    SUPERNOVA = 11,
+    CEPHEID = 12,
+    PARALLAX = 13,
+    /**
+     * Kinematic distance (dispersion profiles), as for globular clusters.
+     */
+    KINEMATIC = 14,
+    /**
+     * Stated verbatim in DISTANCE_METHOD_TEXT.
+     */
+    OTHER = 15
+}
+//# sourceMappingURL=ssyDistanceTechnique.d.ts.map

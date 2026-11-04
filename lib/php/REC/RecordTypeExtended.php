@@ -50,6 +50,7 @@ class RecordTypeExtended
     const CME = 292;
     const SWA = 293;
     const SWS = 294;
+    const SSY = 295;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -92,6 +93,7 @@ class RecordTypeExtended
         RecordTypeExtended::CME=>"CME",
         RecordTypeExtended::SWA=>"SWA",
         RecordTypeExtended::SWS=>"SWS",
+        RecordTypeExtended::SSY=>"SSY",
     );
 
     public static function Name($e)

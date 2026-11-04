@@ -1,0 +1,27 @@
+/**
+ * Physical class of the system.
+ * Append new values only; never reorder or reuse existing values.
+ */
+export declare enum ssySystemKind {
+    UNSPECIFIED = 0,
+    /**
+     * Dwarf galaxy (dSph, dIrr, UFD, dE, BCD, ...).
+     */
+    DWARF_GALAXY = 1,
+    /**
+     * Galaxy that is not a dwarf (a host).
+     */
+    GALAXY = 2,
+    GLOBULAR_CLUSTER = 3,
+    OPEN_CLUSTER = 4,
+    NUCLEAR_STAR_CLUSTER = 5,
+    /**
+     * Compact system not yet classed as galaxy or cluster.
+     */
+    AMBIGUOUS = 6,
+    /**
+     * Class stated in MORPHOLOGY.
+     */
+    OTHER = 7
+}
+//# sourceMappingURL=ssySystemKind.d.ts.map

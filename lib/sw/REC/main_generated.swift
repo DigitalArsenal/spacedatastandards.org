@@ -344,8 +344,9 @@ public enum RecordTypeExtended: UInt16, FlatbuffersVectorInitializable, Enum, Ve
   case cme = 292
   case swa = 293
   case sws = 294
+  case ssy = 295
 
-  public static var max: RecordTypeExtended { return .sws }
+  public static var max: RecordTypeExtended { return .ssy }
   public static var min: RecordTypeExtended { return .none_ }
 }
 

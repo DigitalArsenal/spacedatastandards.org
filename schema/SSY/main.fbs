@@ -1,0 +1,286 @@
+// Hash: be09b5d885861d27f4af55c2aa6d1099c2f3896e5c508138b9cc89eeb464ed82
+// Version: 1.274.0
+// -----------------------------------END_HEADER
+include "../EXO/main.fbs";
+
+// Stellar System (SSY)
+// Description
+// One gravitationally bound system of stars, or a candidate for one, with the
+// properties a literature compilation states for it: a dwarf or larger galaxy
+// of the Local Group and Local Volume, a globular cluster, an open cluster, a
+// nuclear star cluster or an ambiguous compact system. `$GLX` is a galaxy
+// survey row, `$CSO` a non-stellar source or transient, `$STR` one star.
+//
+// MEASURED VALUES. Every measured or derived quantity is an `EXOParameter`:
+// VALUE, ERR1 (to the upper edge of the interval, positive), ERR2 (to the
+// lower edge, negative), LIMIT (0 measurement, +1 VALUE is an upper limit,
+// -1 a lower limit), UNIT (IVOA VOUnit, as the source states it, never
+// silently converted) and the reference of that one value. The interval and
+// the limit confidence are stated once, in UNCERTAINTY_CONVENTION and
+// LIMIT_CONFIDENCE. An absent table means the source gave no value.
+//
+// POSITION. RA and DEC are ICRS degrees (J2000.0). Distances are heliocentric.
+// PLACEMENT carries the publisher's derived frame coordinates verbatim.
+//
+// ABSENT IS NOT ZERO. Missing quantities are absent; missing numeric cells are NaN.
+
+/// Physical class of the system.
+/// Append new values only; never reorder or reuse existing values.
+enum ssySystemKind : ubyte {
+  UNSPECIFIED = 0,
+  /// Dwarf galaxy (dSph, dIrr, UFD, dE, BCD, ...).
+  DWARF_GALAXY = 1,
+  /// Galaxy that is not a dwarf (a host).
+  GALAXY = 2,
+  GLOBULAR_CLUSTER = 3,
+  OPEN_CLUSTER = 4,
+  NUCLEAR_STAR_CLUSTER = 5,
+  /// Compact system not yet classed as galaxy or cluster.
+  AMBIGUOUS = 6,
+  /// Class stated in MORPHOLOGY.
+  OTHER = 7
+}
+
+/// A missing verdict is distinct from a negative one.
+enum ssyVerdict : ubyte { UNKNOWN = 0, NO = 1, YES = 2 }
+
+/// Whether the system was shown not to be a real nearby system.
+enum ssyFalsePositiveVerdict : ubyte {
+  UNKNOWN = 0, NOT_FALSE_POSITIVE = 1, FALSE_POSITIVE = 2, BACKGROUND_GALAXY = 3
+}
+
+/// How the adopted distance was measured.
+/// Append new values only; never reorder or reuse existing values.
+enum ssyDistanceTechnique : ubyte {
+  UNSPECIFIED = 0,
+  /// The host's distance is adopted (no independent error).
+  HOST = 1, TRGB = 2, SBF = 3, TULLY_FISHER = 4, BARYONIC_TULLY_FISHER = 5,
+  CMD = 6, RR_LYRAE = 7, HORIZONTAL_BRANCH = 8,
+  /// Numerical action model.
+  NUMERICAL_ACTION = 9,
+  BRIGHTEST_STARS = 10, SUPERNOVA = 11, CEPHEID = 12, PARALLAX = 13,
+  /// Kinematic distance (dispersion profiles), as for globular clusters.
+  KINEMATIC = 14,
+  /// Stated verbatim in DISTANCE_METHOD_TEXT.
+  OTHER = 15
+}
+
+/// Which measurement METALLICITY adopts.
+enum ssyMetallicityTechnique : ubyte {
+  UNSPECIFIED = 0, SPECTROSCOPIC = 1, PHOTOMETRIC = 2, ISOCHRONE = 3
+}
+
+/// Surface-density profile of a structural fit.
+enum ssyProfileModel : ubyte {
+  UNSPECIFIED = 0, PLUMMER = 1, EXPONENTIAL = 2, SERSIC = 3, KING = 4, EFF = 5
+}
+
+/// One structural fit of one profile model.
+table SSYProfileFit {
+  MODEL: ssyProfileModel = UNSPECIFIED;
+  /// Scale radius of MODEL (Plummer, exponential, Sersic, EFF), arcmin.
+  RADIUS: EXOParameter;
+  /// King core and tidal radii, arcmin; King concentration log10(rt/rc).
+  CORE_RADIUS: EXOParameter;
+  TIDAL_RADIUS: EXOParameter;
+  CONCENTRATION: EXOParameter;
+  /// Sersic n or EFF gamma, dimensionless.
+  SHAPE_INDEX: EXOParameter;
+  ELLIPTICITY: EXOParameter;
+  POSITION_ANGLE: EXOParameter;
+  /// Central surface brightness, mag/arcsec^2.
+  CENTRAL_SURFACE_BRIGHTNESS: EXOParameter;
+}
+
+/// One systemic proper-motion measurement and its PMRA-PMDEC correlation.
+table SSYProperMotion {
+  /// PMRA includes cos(DEC); mas/yr.
+  PMRA: EXOParameter;
+  PMDEC: EXOParameter;
+  /// Correlation coefficient of PMRA and PMDEC, [-1, 1].
+  CORRELATION: EXOParameter;
+  /// Source method token verbatim, e.g. GAIA_EDR3, HST, GaiaHub.
+  METHOD: string;
+  /// True for the measurement the record adopts in PMRA/PMDEC.
+  ADOPTED: bool = false;
+  COMMENTS: string;
+}
+
+/// One J-factor (dark-matter annihilation) measurement.
+table SSYJFactor {
+  /// Integration angle, degrees.
+  ANGLE_DEG: EXOParameter;
+  /// log10 J, GeV^2 cm^-5; ERR1/ERR2 at 84th/16th percentiles.
+  LOG_J: EXOParameter;
+  /// 5th and 95th percentiles of log10 J; 95% upper limit when unbounded.
+  LOG_J_P05: EXOParameter;
+  LOG_J_P95: EXOParameter;
+  LOG_J_UPPER_LIMIT_95: EXOParameter;
+  SELECTION: string;
+  USE: string;
+  COMMENTS: string;
+}
+
+/// A further value of a quantity the record already carries.
+table SSYAlternate {
+  /// Name of the SSY field this value is for, exactly, e.g. VLOS_SIGMA.
+  FIELD: string (required);
+  VALUE: EXOParameter (required);
+  NOTE: string;
+}
+
+/// An identifier of the same system in another catalog.
+table SSYCrossIdentifier {
+  /// Catalog, e.g. LVG, HyperLEDA, NED-LVS, SGA, Harris, Hunt+Reffert2023.
+  CATALOG: string (required);
+  IDENTIFIER: string (required);
+}
+
+/// Frame coordinates the publisher derived from position and distance.
+table SSYPlacement {
+  GALACTIC_L_DEG: EXOParameter;
+  GALACTIC_B_DEG: EXOParameter;
+  SUPERGALACTIC_X_KPC: EXOParameter;
+  SUPERGALACTIC_Y_KPC: EXOParameter;
+  SUPERGALACTIC_Z_KPC: EXOParameter;
+  DISTANCE_GALACTIC_CENTER_KPC: EXOParameter;
+  DISTANCE_M31_KPC: EXOParameter;
+  DISTANCE_LOCAL_GROUP_KPC: EXOParameter;
+  DISTANCE_HOST_KPC: EXOParameter;
+  /// Frame constants used, verbatim (e.g. astropy Galactocentric "latest";
+  /// LG apex 316 km/s toward l=93, b=-4).
+  FRAME_NOTE: string;
+}
+
+/// Stellar System: one galaxy or star cluster and its cited properties.
+table SSY {
+  /// Stable identifier, publisher-qualified, e.g. "lvdb:antlia_2".
+  ID: string (required);
+  NAME: string;
+  ABBREVIATION: string;
+  DESIGNATIONS: [string];
+  CROSS_IDS: [SSYCrossIdentifier];
+  SYSTEM_CLASS: ssySystemKind = UNSPECIFIED;
+  /// Morphological type verbatim, e.g. dSph, dIrr, GC, NSC.
+  MORPHOLOGY: string;
+  /// ID of the host system's SSY record, e.g. "lvdb:m_031".
+  HOST_ID: string;
+  CONFIRMED_REAL: ssyVerdict = UNKNOWN;
+  CONFIRMED_GALAXY: ssyVerdict = UNKNOWN;
+  CONFIRMED_STAR_CLUSTER: ssyVerdict = UNKNOWN;
+  FALSE_POSITIVE: ssyFalsePositiveVerdict = UNKNOWN;
+  FALSE_POSITIVE_REFS: [string];
+  /// Calendar year; -1 absent.
+  DISCOVERY_YEAR: int = -1;
+  DISCOVERY_REFS: [string];
+  NOTES: [string];
+
+  /// ICRS degrees.
+  RA: EXOParameter;
+  DEC: EXOParameter;
+
+  DISTANCE_MODULUS: EXOParameter;
+  /// Heliocentric distance, kpc (derived from DISTANCE_MODULUS when the source says so).
+  DISTANCE: EXOParameter;
+  DISTANCE_METHOD: ssyDistanceTechnique = UNSPECIFIED;
+  DISTANCE_METHOD_TEXT: string;
+  /// Trigonometric parallax, mas (open and globular clusters).
+  PARALLAX: EXOParameter;
+  PLACEMENT: SSYPlacement;
+
+  APPARENT_MAG_V: EXOParameter;
+  APPARENT_MAG_B: EXOParameter;
+  APPARENT_MAG_I: EXOParameter;
+  MEAN_EBV: EXOParameter;
+  EXTINCTION_AV: EXOParameter;
+  ABSOLUTE_MAG_V: EXOParameter;
+  /// log10 stellar mass, dex(solMass); the reference states the M/L.
+  STELLAR_MASS_LOG: EXOParameter;
+
+  /// Adopted half-light ellipse: semi-major axis (arcmin), 1 - b/a, PA N->E (deg).
+  RHALF: EXOParameter;
+  ELLIPTICITY: EXOParameter;
+  POSITION_ANGLE: EXOParameter;
+  /// Model of the adopted RHALF, verbatim from the source.
+  STRUCTURE_MODEL: string;
+  /// Projected half-light radius in pc; and its azimuthal average.
+  RHALF_PC: EXOParameter;
+  RHALF_SPH_PC: EXOParameter;
+  SURFACE_BRIGHTNESS_RHALF: EXOParameter;
+  HOLMBERG_DIAMETER: EXOParameter;
+  PROFILE_FITS: [SSYProfileFit];
+
+  /// Heliocentric systemic line-of-sight velocity and dispersions, km/s.
+  VLOS_SYSTEMIC: EXOParameter;
+  VLOS_SIGMA: EXOParameter;
+  VLOS_SIGMA_CENTRAL: EXOParameter;
+  VLOS_ROTATION: EXOParameter;
+  VELOCITY_GSR: EXOParameter;
+  VELOCITY_LG: EXOParameter;
+  /// Adopted systemic proper motion, mas/yr (PMRA includes cos DEC).
+  PMRA: EXOParameter;
+  PMDEC: EXOParameter;
+  PMRA_PMDEC_CORR: EXOParameter;
+  PROPER_MOTIONS: [SSYProperMotion];
+
+  METALLICITY_SPECTROSCOPIC: EXOParameter;
+  METALLICITY_SPECTROSCOPIC_SIGMA: EXOParameter;
+  METALLICITY_PHOTOMETRIC: EXOParameter;
+  METALLICITY_PHOTOMETRIC_SIGMA: EXOParameter;
+  METALLICITY_ISOCHRONE: EXOParameter;
+  METALLICITY_ISOCHRONE_SIGMA: EXOParameter;
+  /// Adopted [Fe/H], dex, and which measurement it is.
+  METALLICITY: EXOParameter;
+  METALLICITY_BASIS: ssyMetallicityTechnique = UNSPECIFIED;
+  GAS_PHASE_METALLICITY: EXOParameter;
+  GAS_PHASE_METALLICITY_METHOD: string;
+
+  /// Age in Gyr, or log10 age in yr as the source states it.
+  AGE: EXOParameter;
+  LOG_AGE: EXOParameter;
+  /// Lookback times at which 50, 80 and 90% of stars had formed, Gyr.
+  TAU_50: EXOParameter;
+  TAU_80: EXOParameter;
+  TAU_90: EXOParameter;
+
+  /// HI flux, Jy km/s; HI kinematics, km/s; log10 HI mass, dex(solMass).
+  FLUX_HI: EXOParameter;
+  VLOS_SYSTEMIC_HI: EXOParameter;
+  SIGMA_HI: EXOParameter;
+  VROT_HI: EXOParameter;
+  HI_LINE_WIDTH_50: EXOParameter;
+  HI_MASS_LOG: EXOParameter;
+
+  /// log10 masses, dex(solMass): Wolf et al. 2010 within r_1/2, and total.
+  DYNAMICAL_MASS_WOLF_LOG: EXOParameter;
+  TOTAL_MASS_LOG: EXOParameter;
+  /// Open clusters: member count and Jacobi radius (pc).
+  MEMBER_COUNT: EXOParameter;
+  JACOBI_RADIUS_PC: EXOParameter;
+  /// Published orbit, kpc, and the potential it was integrated in, verbatim.
+  PERICENTER: EXOParameter;
+  APOCENTER: EXOParameter;
+  ORBIT_POTENTIAL: string;
+  J_FACTORS: [SSYJFactor];
+  ALTERNATES: [SSYAlternate];
+
+  /// Interval meaning of ERR1/ERR2, e.g. "84th and 16th percentiles".
+  UNCERTAINTY_CONVENTION: string;
+  /// Confidence of LIMIT values, (0, 1), e.g. 0.95.
+  LIMIT_CONFIDENCE: double = nan;
+  /// Source catalog, its release, its own key and table, and the row URL.
+  SOURCE_CATALOG: string;
+  SOURCE_RELEASE: string;
+  SOURCE_KEY: string;
+  SOURCE_TABLE: string;
+  SOURCE_URL: string;
+  /// sha256 of the source files this record was parsed from.
+  SOURCE_SHA256: [string];
+  CITATION: string;
+  /// Dataset license; absent means unknown terms, not a grant.
+  LICENSE: string;
+  RETRIEVED_AT: string;
+}
+
+root_type SSY;
+file_identifier "$SSY";

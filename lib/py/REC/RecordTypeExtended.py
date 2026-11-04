@@ -50,3 +50,4 @@ class RecordTypeExtended(object):
     CME = 292
     SWA = 293
     SWS = 294
+    SSY = 295

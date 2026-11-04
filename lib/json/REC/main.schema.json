@@ -2649,6 +2649,30 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "RASTER_GEOTIFF", "SAMPLES_ROW_MAJOR_LE", "CUSTOM"]
     },
+    "ssySystemKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DWARF_GALAXY", "GALAXY", "GLOBULAR_CLUSTER", "OPEN_CLUSTER", "NUCLEAR_STAR_CLUSTER", "AMBIGUOUS", "OTHER"]
+    },
+    "ssyVerdict" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "NO", "YES"]
+    },
+    "ssyFalsePositiveVerdict" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "NOT_FALSE_POSITIVE", "FALSE_POSITIVE", "BACKGROUND_GALAXY"]
+    },
+    "ssyDistanceTechnique" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "HOST", "TRGB", "SBF", "TULLY_FISHER", "BARYONIC_TULLY_FISHER", "CMD", "RR_LYRAE", "HORIZONTAL_BRANCH", "NUMERICAL_ACTION", "BRIGHTEST_STARS", "SUPERNOVA", "CEPHEID", "PARALLAX", "KINEMATIC", "OTHER"]
+    },
+    "ssyMetallicityTechnique" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPECTROSCOPIC", "PHOTOMETRIC", "ISOCHRONE"]
+    },
+    "ssyProfileModel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PLUMMER", "EXPONENTIAL", "SERSIC", "KING", "EFF"]
+    },
     "strDistanceEstimator" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "BAILER_JONES_2021_GEO", "BAILER_JONES_2021_PHOTOGEO", "EDSD_POSTERIOR", "PARALLAX_INVERSE"]
@@ -3091,7 +3115,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS", "SSY"]
     },
     "ABA" : {
       "type" : "object",
@@ -56921,6 +56945,484 @@
               }
       },
       "required" : ["TILESET_ID", "CRS", "PAYLOAD", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SSYProfileFit" : {
+      "type" : "object",
+      "description" : "One structural fit of one profile model.",
+      "properties" : {
+        "MODEL" : {
+                "$ref" : "#/definitions/ssyProfileModel"
+              },
+        "RADIUS" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Scale radius of MODEL (Plummer, exponential, Sersic, EFF), arcmin."
+              },
+        "CORE_RADIUS" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "King core and tidal radii, arcmin; King concentration log10(rt/rc)."
+              },
+        "TIDAL_RADIUS" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "CONCENTRATION" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SHAPE_INDEX" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Sersic n or EFF gamma, dimensionless."
+              },
+        "ELLIPTICITY" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "POSITION_ANGLE" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "CENTRAL_SURFACE_BRIGHTNESS" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Central surface brightness, mag/arcsec^2."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SSYProperMotion" : {
+      "type" : "object",
+      "description" : "One systemic proper-motion measurement and its PMRA-PMDEC correlation.",
+      "properties" : {
+        "PMRA" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "PMRA includes cos(DEC); mas/yr."
+              },
+        "PMDEC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "CORRELATION" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Correlation coefficient of PMRA and PMDEC, [-1, 1]."
+              },
+        "METHOD" : {
+                "type" : "string",
+                "description" : "Source method token verbatim, e.g. GAIA_EDR3, HST, GaiaHub."
+              },
+        "ADOPTED" : {
+                "type" : "boolean",
+                "description" : "True for the measurement the record adopts in PMRA/PMDEC."
+              },
+        "COMMENTS" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SSYJFactor" : {
+      "type" : "object",
+      "description" : "One J-factor (dark-matter annihilation) measurement.",
+      "properties" : {
+        "ANGLE_DEG" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Integration angle, degrees."
+              },
+        "LOG_J" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "log10 J, GeV^2 cm^-5; ERR1/ERR2 at 84th/16th percentiles."
+              },
+        "LOG_J_P05" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "5th and 95th percentiles of log10 J; 95% upper limit when unbounded."
+              },
+        "LOG_J_P95" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "LOG_J_UPPER_LIMIT_95" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SELECTION" : {
+                "type" : "string"
+              },
+        "USE" : {
+                "type" : "string"
+              },
+        "COMMENTS" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SSYAlternate" : {
+      "type" : "object",
+      "description" : "A further value of a quantity the record already carries.",
+      "properties" : {
+        "FIELD" : {
+                "type" : "string",
+                "description" : "Name of the SSY field this value is for, exactly, e.g. VLOS_SIGMA."
+              },
+        "VALUE" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "NOTE" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["FIELD", "VALUE"],
+      "additionalProperties" : false
+    },
+    "SSYCrossIdentifier" : {
+      "type" : "object",
+      "description" : "An identifier of the same system in another catalog.",
+      "properties" : {
+        "CATALOG" : {
+                "type" : "string",
+                "description" : "Catalog, e.g. LVG, HyperLEDA, NED-LVS, SGA, Harris, Hunt+Reffert2023."
+              },
+        "IDENTIFIER" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["CATALOG", "IDENTIFIER"],
+      "additionalProperties" : false
+    },
+    "SSYPlacement" : {
+      "type" : "object",
+      "description" : "Frame coordinates the publisher derived from position and distance.",
+      "properties" : {
+        "GALACTIC_L_DEG" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "GALACTIC_B_DEG" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SUPERGALACTIC_X_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SUPERGALACTIC_Y_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SUPERGALACTIC_Z_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE_GALACTIC_CENTER_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE_M31_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE_LOCAL_GROUP_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE_HOST_KPC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "FRAME_NOTE" : {
+                "type" : "string",
+                "description" : "Frame constants used, verbatim (e.g. astropy Galactocentric \"latest\";\nLG apex 316 km/s toward l=93, b=-4)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SSY" : {
+      "type" : "object",
+      "description" : "Stellar System: one galaxy or star cluster and its cited properties.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier, publisher-qualified, e.g. \"lvdb:antlia_2\"."
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "ABBREVIATION" : {
+                "type" : "string"
+              },
+        "DESIGNATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "CROSS_IDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SSYCrossIdentifier"}
+              },
+        "SYSTEM_CLASS" : {
+                "$ref" : "#/definitions/ssySystemKind"
+              },
+        "MORPHOLOGY" : {
+                "type" : "string",
+                "description" : "Morphological type verbatim, e.g. dSph, dIrr, GC, NSC."
+              },
+        "HOST_ID" : {
+                "type" : "string",
+                "description" : "ID of the host system's SSY record, e.g. \"lvdb:m_031\"."
+              },
+        "CONFIRMED_REAL" : {
+                "$ref" : "#/definitions/ssyVerdict"
+              },
+        "CONFIRMED_GALAXY" : {
+                "$ref" : "#/definitions/ssyVerdict"
+              },
+        "CONFIRMED_STAR_CLUSTER" : {
+                "$ref" : "#/definitions/ssyVerdict"
+              },
+        "FALSE_POSITIVE" : {
+                "$ref" : "#/definitions/ssyFalsePositiveVerdict"
+              },
+        "FALSE_POSITIVE_REFS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DISCOVERY_YEAR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Calendar year; -1 absent."
+              },
+        "DISCOVERY_REFS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "NOTES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RA" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "ICRS degrees."
+              },
+        "DEC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE_MODULUS" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DISTANCE" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Heliocentric distance, kpc (derived from DISTANCE_MODULUS when the source says so)."
+              },
+        "DISTANCE_METHOD" : {
+                "$ref" : "#/definitions/ssyDistanceTechnique"
+              },
+        "DISTANCE_METHOD_TEXT" : {
+                "type" : "string"
+              },
+        "PARALLAX" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Trigonometric parallax, mas (open and globular clusters)."
+              },
+        "PLACEMENT" : {
+                "$ref" : "#/definitions/SSYPlacement"
+              },
+        "APPARENT_MAG_V" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "APPARENT_MAG_B" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "APPARENT_MAG_I" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "MEAN_EBV" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "EXTINCTION_AV" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "ABSOLUTE_MAG_V" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "STELLAR_MASS_LOG" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "log10 stellar mass, dex(solMass); the reference states the M/L."
+              },
+        "RHALF" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Adopted half-light ellipse: semi-major axis (arcmin), 1 - b/a, PA N->E (deg)."
+              },
+        "ELLIPTICITY" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "POSITION_ANGLE" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "STRUCTURE_MODEL" : {
+                "type" : "string",
+                "description" : "Model of the adopted RHALF, verbatim from the source."
+              },
+        "RHALF_PC" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Projected half-light radius in pc; and its azimuthal average."
+              },
+        "RHALF_SPH_PC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SURFACE_BRIGHTNESS_RHALF" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "HOLMBERG_DIAMETER" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "PROFILE_FITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SSYProfileFit"}
+              },
+        "VLOS_SYSTEMIC" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Heliocentric systemic line-of-sight velocity and dispersions, km/s."
+              },
+        "VLOS_SIGMA" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "VLOS_SIGMA_CENTRAL" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "VLOS_ROTATION" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "VELOCITY_GSR" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "VELOCITY_LG" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "PMRA" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Adopted systemic proper motion, mas/yr (PMRA includes cos DEC)."
+              },
+        "PMDEC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "PMRA_PMDEC_CORR" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "PROPER_MOTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SSYProperMotion"}
+              },
+        "METALLICITY_SPECTROSCOPIC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY_SPECTROSCOPIC_SIGMA" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY_PHOTOMETRIC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY_PHOTOMETRIC_SIGMA" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY_ISOCHRONE" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY_ISOCHRONE_SIGMA" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "METALLICITY" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Adopted [Fe/H], dex, and which measurement it is."
+              },
+        "METALLICITY_BASIS" : {
+                "$ref" : "#/definitions/ssyMetallicityTechnique"
+              },
+        "GAS_PHASE_METALLICITY" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "GAS_PHASE_METALLICITY_METHOD" : {
+                "type" : "string"
+              },
+        "AGE" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Age in Gyr, or log10 age in yr as the source states it."
+              },
+        "LOG_AGE" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "TAU_50" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Lookback times at which 50, 80 and 90% of stars had formed, Gyr."
+              },
+        "TAU_80" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "TAU_90" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "FLUX_HI" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "HI flux, Jy km/s; HI kinematics, km/s; log10 HI mass, dex(solMass)."
+              },
+        "VLOS_SYSTEMIC_HI" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "SIGMA_HI" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "VROT_HI" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "HI_LINE_WIDTH_50" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "HI_MASS_LOG" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "DYNAMICAL_MASS_WOLF_LOG" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "log10 masses, dex(solMass): Wolf et al. 2010 within r_1/2, and total."
+              },
+        "TOTAL_MASS_LOG" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "MEMBER_COUNT" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Open clusters: member count and Jacobi radius (pc)."
+              },
+        "JACOBI_RADIUS_PC" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "PERICENTER" : {
+                "$ref" : "#/definitions/EXOParameter",
+                "description" : "Published orbit, kpc, and the potential it was integrated in, verbatim."
+              },
+        "APOCENTER" : {
+                "$ref" : "#/definitions/EXOParameter"
+              },
+        "ORBIT_POTENTIAL" : {
+                "type" : "string"
+              },
+        "J_FACTORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SSYJFactor"}
+              },
+        "ALTERNATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SSYAlternate"}
+              },
+        "UNCERTAINTY_CONVENTION" : {
+                "type" : "string",
+                "description" : "Interval meaning of ERR1/ERR2, e.g. \"84th and 16th percentiles\"."
+              },
+        "LIMIT_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Confidence of LIMIT values, (0, 1), e.g. 0.95."
+              },
+        "SOURCE_CATALOG" : {
+                "type" : "string",
+                "description" : "Source catalog, its release, its own key and table, and the row URL."
+              },
+        "SOURCE_RELEASE" : {
+                "type" : "string"
+              },
+        "SOURCE_KEY" : {
+                "type" : "string"
+              },
+        "SOURCE_TABLE" : {
+                "type" : "string"
+              },
+        "SOURCE_URL" : {
+                "type" : "string"
+              },
+        "SOURCE_SHA256" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "sha256 of the source files this record was parsed from."
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Dataset license; absent means unknown terms, not a grant."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["ID"],
       "additionalProperties" : false
     },
     "STOModuleRef" : {

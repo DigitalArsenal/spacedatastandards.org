@@ -1,5 +1,5 @@
-// Hash: 4bdb0e813a0e03a7bb04e861643be64260a3f0e45ea6c6b6aa76f6ee4c9f3909
-// Version: 1.44.88
+// Hash: 5c8076966a3c6f63e900e431f05c9050c747eacf2560c6b03fce03ade73c9beb
+// Version: 1.44.89
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -252,6 +252,7 @@ include "../SRG/main.fbs";
 include "../SRI/main.fbs";
 include "../SRO/main.fbs";
 include "../SRT/main.fbs";
+include "../SSY/main.fbs";
 include "../STF/main.fbs";
 include "../STO/main.fbs";
 include "../STR/main.fbs";
@@ -424,7 +425,8 @@ enum RecordTypeExtended : ushort {
   GNM = 291,
   CME = 292,
   SWA = 293,
-  SWS = 294
+  SWS = 294,
+  SSY = 295
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

@@ -251,6 +251,7 @@ import SRG.main_generated
 import SRI.main_generated
 import SRO.main_generated
 import SRT.main_generated
+import SSY.main_generated
 import STF.main_generated
 import STO.main_generated
 import STR.main_generated
@@ -994,6 +995,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_CME = 292
     RecordTypeExtended_SWA = 293
     RecordTypeExtended_SWS = 294
+    RecordTypeExtended_SSY = 295
 
 class Record
 

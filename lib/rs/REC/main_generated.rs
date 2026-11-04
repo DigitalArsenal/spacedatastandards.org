@@ -294,6 +294,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8798,11 +8799,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 294;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 295;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 40] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 41] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8843,6 +8844,7 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 40] = [
     RecordTypeExtended::CME,
     RecordTypeExtended::SWA,
     RecordTypeExtended::SWS,
+    RecordTypeExtended::SSY,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8898,9 +8900,10 @@ impl RecordTypeExtended {
     pub const CME: Self = Self(292);
     pub const SWA: Self = Self(293);
     pub const SWS: Self = Self(294);
+    pub const SSY: Self = Self(295);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 294;
+    pub const ENUM_MAX: u16 = 295;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8942,6 +8945,7 @@ impl RecordTypeExtended {
         Self::CME,
         Self::SWA,
         Self::SWS,
+        Self::SSY,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -8987,6 +8991,7 @@ impl RecordTypeExtended {
             Self::CME => Some("CME"),
             Self::SWA => Some("SWA"),
             Self::SWS => Some("SWS"),
+            Self::SSY => Some("SSY"),
             _ => None,
         }
     }

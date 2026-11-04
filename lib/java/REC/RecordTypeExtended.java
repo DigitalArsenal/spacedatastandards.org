@@ -52,4 +52,5 @@ public final class RecordTypeExtended {
   public static final int CME = 292;
   public static final int SWA = 293;
   public static final int SWS = 294;
+  public static final int SSY = 295;
 }
