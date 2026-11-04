@@ -10,6 +10,15 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -164,6 +173,766 @@ impl<'a> ::flatbuffers::Verifiable for trajectoryType {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for trajectoryType {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_MESSAGE_STATUS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_MESSAGE_STATUS: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_MESSAGE_STATUS: [ocmMessageStatus; 4] = [
+    ocmMessageStatus::UNSPECIFIED,
+    ocmMessageStatus::REAL,
+    ocmMessageStatus::TEST,
+    ocmMessageStatus::EXERCISE,
+];
+
+/// Whether a message is real, test or exercise data (the Real/Test/Exercise
+/// indicator of the legacy SP Vector/Covariance Message). Append new values
+/// only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmMessageStatus(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmMessageStatus {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Real data.
+    pub const REAL: Self = Self(1);
+    /// Test data.
+    pub const TEST: Self = Self(2);
+    /// Exercise data; the exercise is named in EXERCISE_NAME.
+    pub const EXERCISE: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::REAL,
+        Self::TEST,
+        Self::EXERCISE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::REAL => Some("REAL"),
+            Self::TEST => Some("TEST"),
+            Self::EXERCISE => Some("EXERCISE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmMessageStatus {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmMessageStatus {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmMessageStatus {
+    type Output = ocmMessageStatus;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmMessageStatus {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmMessageStatus {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmMessageStatus {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_TRAJECTORY_BASIS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_TRAJECTORY_BASIS: u8 = 5;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_TRAJECTORY_BASIS: [ocmTrajectoryBasis; 6] = [
+    ocmTrajectoryBasis::UNSPECIFIED,
+    ocmTrajectoryBasis::PREDICTED,
+    ocmTrajectoryBasis::DETERMINED,
+    ocmTrajectoryBasis::TELEMETRY,
+    ocmTrajectoryBasis::SIMULATED,
+    ocmTrajectoryBasis::OTHER,
+];
+
+/// Basis of a trajectory (CCSDS 502.0-B-3 TRAJ_BASIS, a closed set). Append new
+/// values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmTrajectoryBasis(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmTrajectoryBasis {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Computed forward from a determination or a plan.
+    pub const PREDICTED: Self = Self(1);
+    /// Determined from observations or from element sets in force at each time.
+    pub const DETERMINED: Self = Self(2);
+    /// Reported by the object.
+    pub const TELEMETRY: Self = Self(3);
+    /// Produced by a simulation.
+    pub const SIMULATED: Self = Self(4);
+    /// None of the above.
+    pub const OTHER: Self = Self(5);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 5;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::PREDICTED,
+        Self::DETERMINED,
+        Self::TELEMETRY,
+        Self::SIMULATED,
+        Self::OTHER,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::PREDICTED => Some("PREDICTED"),
+            Self::DETERMINED => Some("DETERMINED"),
+            Self::TELEMETRY => Some("TELEMETRY"),
+            Self::SIMULATED => Some("SIMULATED"),
+            Self::OTHER => Some("OTHER"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmTrajectoryBasis {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmTrajectoryBasis {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmTrajectoryBasis {
+    type Output = ocmTrajectoryBasis;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmTrajectoryBasis {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmTrajectoryBasis {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmTrajectoryBasis {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_INTEGRATOR_MODE: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_INTEGRATOR_MODE: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_INTEGRATOR_MODE: [ocmIntegratorMode; 3] = [
+    ocmIntegratorMode::UNSPECIFIED,
+    ocmIntegratorMode::SPADOC,
+    ocmIntegratorMode::ASW,
+];
+
+/// Integrator mode of the legacy SP system that made a solution (INTEGRATOR
+/// MODE of the SP Vector/Covariance Message). Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmIntegratorMode(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmIntegratorMode {
+    /// Not stated: the solution did not come from an SP integrator.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// SPADOC.
+    pub const SPADOC: Self = Self(1);
+    /// ASW.
+    pub const ASW: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::SPADOC,
+        Self::ASW,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::SPADOC => Some("SPADOC"),
+            Self::ASW => Some("ASW"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmIntegratorMode {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmIntegratorMode {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmIntegratorMode {
+    type Output = ocmIntegratorMode;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmIntegratorMode {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmIntegratorMode {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmIntegratorMode {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_INTEGRATION_FRAME: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_INTEGRATION_FRAME: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_INTEGRATION_FRAME: [ocmIntegrationFrame; 3] = [
+    ocmIntegrationFrame::UNSPECIFIED,
+    ocmIntegrationFrame::J2000,
+    ocmIntegrationFrame::EPOCH,
+];
+
+/// Coordinate system a numerical integrator integrates in (COORD SYS of the SP
+/// Vector/Covariance Message). Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmIntegrationFrame(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmIntegrationFrame {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Mean equator and mean equinox of J2000.0.
+    pub const J2000: Self = Self(1);
+    /// True equator and mean equinox of the epoch of the solution.
+    pub const EPOCH: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::J2000,
+        Self::EPOCH,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::J2000 => Some("J2000"),
+            Self::EPOCH => Some("EPOCH"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmIntegrationFrame {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmIntegrationFrame {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmIntegrationFrame {
+    type Output = ocmIntegrationFrame;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmIntegrationFrame {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmIntegrationFrame {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmIntegrationFrame {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_PARTIALS_METHOD: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_PARTIALS_METHOD: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_PARTIALS_METHOD: [ocmPartialsMethod; 4] = [
+    ocmPartialsMethod::UNSPECIFIED,
+    ocmPartialsMethod::ANALYTIC,
+    ocmPartialsMethod::FULL_NUMERICAL,
+    ocmPartialsMethod::FAST_NUMERICAL,
+];
+
+/// How the partial derivatives of the dynamics are computed (PARTIALS of the SP
+/// Vector/Covariance Message). Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmPartialsMethod(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmPartialsMethod {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Analytic partials.
+    pub const ANALYTIC: Self = Self(1);
+    /// Full numerical partials.
+    pub const FULL_NUMERICAL: Self = Self(2);
+    /// Fast numerical partials.
+    pub const FAST_NUMERICAL: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::ANALYTIC,
+        Self::FULL_NUMERICAL,
+        Self::FAST_NUMERICAL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::ANALYTIC => Some("ANALYTIC"),
+            Self::FULL_NUMERICAL => Some("FULL_NUMERICAL"),
+            Self::FAST_NUMERICAL => Some("FAST_NUMERICAL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmPartialsMethod {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmPartialsMethod {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmPartialsMethod {
+    type Output = ocmPartialsMethod;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmPartialsMethod {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmPartialsMethod {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmPartialsMethod {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_STEP_MODE: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_STEP_MODE: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_STEP_MODE: [ocmStepMode; 4] = [
+    ocmStepMode::UNSPECIFIED,
+    ocmStepMode::AUTO,
+    ocmStepMode::TIME,
+    ocmStepMode::S,
+];
+
+/// Integrator step mode (STEP MODE of the SP Vector/Covariance Message). Append
+/// new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmStepMode(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmStepMode {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// The integrator chooses.
+    pub const AUTO: Self = Self(1);
+    /// Steps in time.
+    pub const TIME: Self = Self(2);
+    /// Steps in the integrator's variable S, which the format does not define
+    /// further.
+    pub const S: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::AUTO,
+        Self::TIME,
+        Self::S,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::AUTO => Some("AUTO"),
+            Self::TIME => Some("TIME"),
+            Self::S => Some("S"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmStepMode {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmStepMode {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmStepMode {
+    type Output = ocmStepMode;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmStepMode {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmStepMode {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmStepMode {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OCM_STEP_SELECTION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OCM_STEP_SELECTION: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OCM_STEP_SELECTION: [ocmStepSelection; 3] = [
+    ocmStepSelection::UNSPECIFIED,
+    ocmStepSelection::AUTO,
+    ocmStepSelection::MANUAL,
+];
+
+/// How the initial integration step is selected (STEP SIZE SELECTION of the SP
+/// Vector/Covariance Message). Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ocmStepSelection(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ocmStepSelection {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// The integrator selects it.
+    pub const AUTO: Self = Self(1);
+    /// INITIAL_STEP_SECONDS states it.
+    pub const MANUAL: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::AUTO,
+        Self::MANUAL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::AUTO => Some("AUTO"),
+            Self::MANUAL => Some("MANUAL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ocmStepSelection {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ocmStepSelection {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ocmStepSelection {
+    type Output = ocmStepSelection;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ocmStepSelection {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ocmStepSelection {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ocmStepSelection {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_ESTIMATOR_CATEGORY: i8 = 0;
@@ -417,6 +1186,8 @@ impl<'a> Header<'a> {
     pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 10;
     pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 12;
     pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 14;
+    pub const VT_MESSAGE_STATUS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_EXERCISE_NAME: ::flatbuffers::VOffsetT = 18;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -429,12 +1200,14 @@ impl<'a> Header<'a> {
         args: &'args HeaderArgs<'args>
     ) -> ::flatbuffers::WIPOffset<Header<'bldr>> {
         let mut builder = HeaderBuilder::new(_fbb);
+        if let Some(x) = args.EXERCISE_NAME { builder.add_EXERCISE_NAME(x); }
         if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
         if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
         if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
         if let Some(x) = args.CLASSIFICATION { builder.add_CLASSIFICATION(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.CCSDS_OCM_VERS { builder.add_CCSDS_OCM_VERS(x); }
+        builder.add_MESSAGE_STATUS(args.MESSAGE_STATUS);
         builder.finish()
     }
 
@@ -457,6 +1230,10 @@ impl<'a> Header<'a> {
         let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let MESSAGE_STATUS = self.MESSAGE_STATUS();
+        let EXERCISE_NAME = self.EXERCISE_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         HeaderT {
             CCSDS_OCM_VERS,
             COMMENT,
@@ -464,6 +1241,8 @@ impl<'a> Header<'a> {
             CREATION_DATE,
             ORIGINATOR,
             MESSAGE_ID,
+            MESSAGE_STATUS,
+            EXERCISE_NAME,
         }
     }
 
@@ -520,6 +1299,24 @@ impl<'a> Header<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_MESSAGE_ID, None)}
     }
+
+    /// Whether the message is real, test or exercise data.
+    #[inline]
+    pub fn MESSAGE_STATUS(&self) -> ocmMessageStatus {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmMessageStatus>(Header::VT_MESSAGE_STATUS, Some(ocmMessageStatus::UNSPECIFIED)).unwrap()}
+    }
+
+    /// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+    #[inline]
+    pub fn EXERCISE_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Header::VT_EXERCISE_NAME, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Header<'_> {
@@ -534,6 +1331,8 @@ impl ::flatbuffers::Verifiable for Header<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+            .visit_field::<ocmMessageStatus>("MESSAGE_STATUS", Self::VT_MESSAGE_STATUS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EXERCISE_NAME", Self::VT_EXERCISE_NAME, false)?
             .finish();
         Ok(())
     }
@@ -546,6 +1345,8 @@ pub struct HeaderArgs<'a> {
     pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_STATUS: ocmMessageStatus,
+    pub EXERCISE_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for HeaderArgs<'a> {
@@ -558,6 +1359,8 @@ impl<'a> Default for HeaderArgs<'a> {
             CREATION_DATE: None,
             ORIGINATOR: None,
             MESSAGE_ID: None,
+            MESSAGE_STATUS: ocmMessageStatus::UNSPECIFIED,
+            EXERCISE_NAME: None,
         }
     }
 }
@@ -599,6 +1402,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> HeaderBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_MESSAGE_STATUS(&mut self, MESSAGE_STATUS: ocmMessageStatus) {
+        self.fbb_.push_slot::<ocmMessageStatus>(Header::VT_MESSAGE_STATUS, MESSAGE_STATUS, ocmMessageStatus::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_EXERCISE_NAME(&mut self, EXERCISE_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Header::VT_EXERCISE_NAME, EXERCISE_NAME);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> HeaderBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         HeaderBuilder {
@@ -623,6 +1436,8 @@ impl ::core::fmt::Debug for Header<'_> {
         ds.field("CREATION_DATE", &self.CREATION_DATE());
         ds.field("ORIGINATOR", &self.ORIGINATOR());
         ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+        ds.field("MESSAGE_STATUS", &self.MESSAGE_STATUS());
+        ds.field("EXERCISE_NAME", &self.EXERCISE_NAME());
         ds.finish()
     }
 }
@@ -636,6 +1451,8 @@ pub struct HeaderT {
     pub CREATION_DATE: Option<alloc::string::String>,
     pub ORIGINATOR: Option<alloc::string::String>,
     pub MESSAGE_ID: Option<alloc::string::String>,
+    pub MESSAGE_STATUS: ocmMessageStatus,
+    pub EXERCISE_NAME: Option<alloc::string::String>,
 }
 
 impl Default for HeaderT {
@@ -647,6 +1464,8 @@ impl Default for HeaderT {
             CREATION_DATE: None,
             ORIGINATOR: None,
             MESSAGE_ID: None,
+            MESSAGE_STATUS: ocmMessageStatus::UNSPECIFIED,
+            EXERCISE_NAME: None,
         }
     }
 }
@@ -674,6 +1493,10 @@ impl HeaderT {
         let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let MESSAGE_STATUS = self.MESSAGE_STATUS;
+        let EXERCISE_NAME = self.EXERCISE_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         Header::create(_fbb, &HeaderArgs{
             CCSDS_OCM_VERS,
             COMMENT,
@@ -681,6 +1504,8 @@ impl HeaderT {
             CREATION_DATE,
             ORIGINATOR,
             MESSAGE_ID,
+            MESSAGE_STATUS,
+            EXERCISE_NAME,
         })
     }
 }
@@ -750,6 +1575,7 @@ impl<'a> Metadata<'a> {
     pub const VT_EOP_SOURCE: ::flatbuffers::VOffsetT = 94;
     pub const VT_INTERP_METHOD_EOP: ::flatbuffers::VOffsetT = 96;
     pub const VT_CELESTIAL_SOURCE: ::flatbuffers::VOffsetT = 98;
+    pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 100;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -768,6 +1594,7 @@ impl<'a> Metadata<'a> {
         builder.add_TIME_SPAN(args.TIME_SPAN);
         builder.add_SCLK_SEC_PER_SI_SEC(args.SCLK_SEC_PER_SI_SEC);
         builder.add_SCLK_OFFSET_AT_EPOCH(args.SCLK_OFFSET_AT_EPOCH);
+        builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         if let Some(x) = args.CELESTIAL_SOURCE { builder.add_CELESTIAL_SOURCE(x); }
         if let Some(x) = args.INTERP_METHOD_EOP { builder.add_INTERP_METHOD_EOP(x); }
         if let Some(x) = args.EOP_SOURCE { builder.add_EOP_SOURCE(x); }
@@ -946,6 +1773,7 @@ impl<'a> Metadata<'a> {
         let CELESTIAL_SOURCE = self.CELESTIAL_SOURCE().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let NORAD_CAT_ID = self.NORAD_CAT_ID();
         MetadataT {
             COMMENT,
             OBJECT_NAME,
@@ -995,6 +1823,7 @@ impl<'a> Metadata<'a> {
             EOP_SOURCE,
             INTERP_METHOD_EOP,
             CELESTIAL_SOURCE,
+            NORAD_CAT_ID,
         }
     }
 
@@ -1429,6 +2258,18 @@ impl<'a> Metadata<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Metadata::VT_CELESTIAL_SOURCE, None)}
     }
+
+    /// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+    /// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+    /// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+    /// the object has no NORAD number.
+    #[inline]
+    pub fn NORAD_CAT_ID(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(Metadata::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Metadata<'_> {
@@ -1485,6 +2326,7 @@ impl ::flatbuffers::Verifiable for Metadata<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EOP_SOURCE", Self::VT_EOP_SOURCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERP_METHOD_EOP", Self::VT_INTERP_METHOD_EOP, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CELESTIAL_SOURCE", Self::VT_CELESTIAL_SOURCE, false)?
+            .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
             .finish();
         Ok(())
     }
@@ -1539,6 +2381,7 @@ pub struct MetadataArgs<'a> {
     pub EOP_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub INTERP_METHOD_EOP: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CELESTIAL_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NORAD_CAT_ID: u32,
 }
 
 impl<'a> Default for MetadataArgs<'a> {
@@ -1593,6 +2436,7 @@ impl<'a> Default for MetadataArgs<'a> {
             EOP_SOURCE: None,
             INTERP_METHOD_EOP: None,
             CELESTIAL_SOURCE: None,
+            NORAD_CAT_ID: 0,
         }
     }
 }
@@ -1844,6 +2688,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MetadataBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+        self.fbb_.push_slot::<u32>(Metadata::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MetadataBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         MetadataBuilder {
@@ -1910,6 +2759,7 @@ impl ::core::fmt::Debug for Metadata<'_> {
         ds.field("EOP_SOURCE", &self.EOP_SOURCE());
         ds.field("INTERP_METHOD_EOP", &self.INTERP_METHOD_EOP());
         ds.field("CELESTIAL_SOURCE", &self.CELESTIAL_SOURCE());
+        ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
         ds.finish()
     }
 }
@@ -1965,6 +2815,7 @@ pub struct MetadataT {
     pub EOP_SOURCE: Option<alloc::string::String>,
     pub INTERP_METHOD_EOP: Option<alloc::string::String>,
     pub CELESTIAL_SOURCE: Option<alloc::string::String>,
+    pub NORAD_CAT_ID: u32,
 }
 
 impl Default for MetadataT {
@@ -2018,6 +2869,7 @@ impl Default for MetadataT {
             EOP_SOURCE: None,
             INTERP_METHOD_EOP: None,
             CELESTIAL_SOURCE: None,
+            NORAD_CAT_ID: 0,
         }
     }
 }
@@ -2159,6 +3011,7 @@ impl MetadataT {
         let CELESTIAL_SOURCE = self.CELESTIAL_SOURCE.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let NORAD_CAT_ID = self.NORAD_CAT_ID;
         Metadata::create(_fbb, &MetadataArgs{
             COMMENT,
             OBJECT_NAME,
@@ -2208,6 +3061,7 @@ impl MetadataT {
             EOP_SOURCE,
             INTERP_METHOD_EOP,
             CELESTIAL_SOURCE,
+            NORAD_CAT_ID,
         })
     }
 }
@@ -4171,6 +5025,15 @@ impl<'a> Perturbations<'a> {
     pub const VT_FIXED_S10P7_MEAN: ::flatbuffers::VOffsetT = 74;
     pub const VT_FIXED_Y10P7: ::flatbuffers::VOffsetT = 76;
     pub const VT_FIXED_Y10P7_MEAN: ::flatbuffers::VOffsetT = 78;
+    pub const VT_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 80;
+    pub const VT_MAXIMUM_ZONAL_DEGREE: ::flatbuffers::VOffsetT = 82;
+    pub const VT_WEATHER_SOURCE: ::flatbuffers::VOffsetT = 84;
+    pub const VT_DENSITY_CORRECTION: ::flatbuffers::VOffsetT = 86;
+    pub const VT_DENSITY_CORRECTION_CID: ::flatbuffers::VOffsetT = 88;
+    pub const VT_SPACE_WEATHER: ::flatbuffers::VOffsetT = 90;
+    pub const VT_DENSITY_CORRECTION_NODE_TIMES_MS: ::flatbuffers::VOffsetT = 92;
+    pub const VT_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: ::flatbuffers::VOffsetT = 94;
+    pub const VT_REDUCTION_THEORY_TERMS: ::flatbuffers::VOffsetT = 96;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4198,6 +5061,10 @@ impl<'a> Perturbations<'a> {
         builder.add_FIXED_F10P7(args.FIXED_F10P7);
         builder.add_FIXED_GEOMAG_KP(args.FIXED_GEOMAG_KP);
         builder.add_GM(args.GM);
+        if let Some(x) = args.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS { builder.add_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(x); }
+        if let Some(x) = args.DENSITY_CORRECTION_NODE_TIMES_MS { builder.add_DENSITY_CORRECTION_NODE_TIMES_MS(x); }
+        if let Some(x) = args.SPACE_WEATHER { builder.add_SPACE_WEATHER(x); }
+        if let Some(x) = args.DENSITY_CORRECTION_CID { builder.add_DENSITY_CORRECTION_CID(x); }
         if let Some(x) = args.SW_INTERP_METHOD { builder.add_SW_INTERP_METHOD(x); }
         if let Some(x) = args.SW_DATA_EPOCH { builder.add_SW_DATA_EPOCH(x); }
         if let Some(x) = args.SW_DATA_SOURCE { builder.add_SW_DATA_SOURCE(x); }
@@ -4221,6 +5088,11 @@ impl<'a> Perturbations<'a> {
         if let Some(x) = args.GRAVITY_MODEL { builder.add_GRAVITY_MODEL(x); }
         if let Some(x) = args.ATMOSPHERIC_MODEL { builder.add_ATMOSPHERIC_MODEL(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+        builder.add_REDUCTION_THEORY_TERMS(args.REDUCTION_THEORY_TERMS);
+        builder.add_MAXIMUM_ZONAL_DEGREE(args.MAXIMUM_ZONAL_DEGREE);
+        builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
+        builder.add_DENSITY_CORRECTION(args.DENSITY_CORRECTION);
+        builder.add_WEATHER_SOURCE(args.WEATHER_SOURCE);
         builder.finish()
     }
 
@@ -4303,6 +5175,23 @@ impl<'a> Perturbations<'a> {
         let FIXED_S10P7_MEAN = self.FIXED_S10P7_MEAN();
         let FIXED_Y10P7 = self.FIXED_Y10P7();
         let FIXED_Y10P7_MEAN = self.FIXED_Y10P7_MEAN();
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE();
+        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE();
+        let WEATHER_SOURCE = self.WEATHER_SOURCE();
+        let DENSITY_CORRECTION = self.DENSITY_CORRECTION();
+        let DENSITY_CORRECTION_CID = self.DENSITY_CORRECTION_CID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SPACE_WEATHER = self.SPACE_WEATHER().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let DENSITY_CORRECTION_NODE_TIMES_MS = self.DENSITY_CORRECTION_NODE_TIMES_MS().map(|x| {
+            x.into_iter().collect()
+        });
+        let DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS().map(|x| {
+            x.into_iter().collect()
+        });
+        let REDUCTION_THEORY_TERMS = self.REDUCTION_THEORY_TERMS();
         PerturbationsT {
             COMMENT,
             ATMOSPHERIC_MODEL,
@@ -4342,6 +5231,15 @@ impl<'a> Perturbations<'a> {
             FIXED_S10P7_MEAN,
             FIXED_Y10P7,
             FIXED_Y10P7_MEAN,
+            MAXIMUM_TESSERAL_DEGREE,
+            MAXIMUM_ZONAL_DEGREE,
+            WEATHER_SOURCE,
+            DENSITY_CORRECTION,
+            DENSITY_CORRECTION_CID,
+            SPACE_WEATHER,
+            DENSITY_CORRECTION_NODE_TIMES_MS,
+            DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS,
+            REDUCTION_THEORY_TERMS,
         }
     }
 
@@ -4688,6 +5586,118 @@ impl<'a> Perturbations<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(Perturbations::VT_FIXED_Y10P7_MEAN, Some(f64::NAN)).unwrap()}
     }
+
+    /// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+    /// the gravity field the record was computed with (SDS addition; the $PCF
+    /// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+    /// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+    /// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+    /// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+    /// order pair cannot state a tesseral cap below a zonal one.
+    #[inline]
+    pub fn MAXIMUM_TESSERAL_DEGREE(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(Perturbations::VT_MAXIMUM_TESSERAL_DEGREE, Some(0)).unwrap()}
+    }
+
+    /// Highest degree of the zonal terms (order 0) of the gravity field the
+    /// record was computed with (SDS addition). For a mean-element set the tail
+    /// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+    /// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+    /// otherwise not stated.
+    #[inline]
+    pub fn MAXIMUM_ZONAL_DEGREE(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(Perturbations::VT_MAXIMUM_ZONAL_DEGREE, Some(0)).unwrap()}
+    }
+
+    /// Where the space weather behind the drag density comes from. RECORDS: the
+    /// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+    /// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+    /// in an element-set record.
+    #[inline]
+    pub fn WEATHER_SOURCE(&self) -> pcfWeatherSource {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfWeatherSource>(Perturbations::VT_WEATHER_SOURCE, Some(pcfWeatherSource::UNSPECIFIED)).unwrap()}
+    }
+
+    /// Correction applied to the atmosphere model's density.
+    #[inline]
+    pub fn DENSITY_CORRECTION(&self) -> pcfDensityCorrection {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfDensityCorrection>(Perturbations::VT_DENSITY_CORRECTION, Some(pcfDensityCorrection::NONE)).unwrap()}
+    }
+
+    /// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+    /// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+    /// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+    #[inline]
+    pub fn DENSITY_CORRECTION_CID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(Perturbations::VT_DENSITY_CORRECTION_CID, None)}
+    }
+
+    /// The daily space weather the drag density reads (SDS addition; CCSDS
+    /// 502.0-B-3 names only the source, epoch and interpolation as text and
+    /// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+    /// UTC day, DATE ascending, no gap, from the day before the first day the
+    /// record is flown or was fitted through its last day. The record is flown
+    /// to the end of the last row's day and no further. Each row carries DATE,
+    /// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+    /// PRD, PRM predicted); other SPW fields unwritten.
+    #[inline]
+    pub fn SPACE_WEATHER(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW>>>>(Perturbations::VT_SPACE_WEATHER, None)}
+    }
+
+    /// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+    /// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+    /// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+    /// Empty when DENSITY_CORRECTION is NONE.
+    #[inline]
+    pub fn DENSITY_CORRECTION_NODE_TIMES_MS(&self) -> Option<::flatbuffers::Vector<'a, i64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, i64>>>(Perturbations::VT_DENSITY_CORRECTION_NODE_TIMES_MS, None)}
+    }
+
+    /// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+    /// entry, dimensionless, as that $DCL's
+    /// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+    /// held at the end values outside them.
+    #[inline]
+    pub fn DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(Perturbations::VT_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS, None)}
+    }
+
+    /// Number of terms of the nutation series REDUCTION_THEORY names that the
+    /// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+    /// 4, 50 or 106). 0 when the series is not truncated or the count is not
+    /// stated.
+    #[inline]
+    pub fn REDUCTION_THEORY_TERMS(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(Perturbations::VT_REDUCTION_THEORY_TERMS, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Perturbations<'_> {
@@ -4734,6 +5744,15 @@ impl ::flatbuffers::Verifiable for Perturbations<'_> {
             .visit_field::<f64>("FIXED_S10P7_MEAN", Self::VT_FIXED_S10P7_MEAN, false)?
             .visit_field::<f64>("FIXED_Y10P7", Self::VT_FIXED_Y10P7, false)?
             .visit_field::<f64>("FIXED_Y10P7_MEAN", Self::VT_FIXED_Y10P7_MEAN, false)?
+            .visit_field::<u16>("MAXIMUM_TESSERAL_DEGREE", Self::VT_MAXIMUM_TESSERAL_DEGREE, false)?
+            .visit_field::<u16>("MAXIMUM_ZONAL_DEGREE", Self::VT_MAXIMUM_ZONAL_DEGREE, false)?
+            .visit_field::<pcfWeatherSource>("WEATHER_SOURCE", Self::VT_WEATHER_SOURCE, false)?
+            .visit_field::<pcfDensityCorrection>("DENSITY_CORRECTION", Self::VT_DENSITY_CORRECTION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DENSITY_CORRECTION_CID", Self::VT_DENSITY_CORRECTION_CID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SPW>>>>("SPACE_WEATHER", Self::VT_SPACE_WEATHER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, i64>>>("DENSITY_CORRECTION_NODE_TIMES_MS", Self::VT_DENSITY_CORRECTION_NODE_TIMES_MS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS", Self::VT_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS, false)?
+            .visit_field::<u16>("REDUCTION_THEORY_TERMS", Self::VT_REDUCTION_THEORY_TERMS, false)?
             .finish();
         Ok(())
     }
@@ -4778,6 +5797,15 @@ pub struct PerturbationsArgs<'a> {
     pub FIXED_S10P7_MEAN: f64,
     pub FIXED_Y10P7: f64,
     pub FIXED_Y10P7_MEAN: f64,
+    pub MAXIMUM_TESSERAL_DEGREE: u16,
+    pub MAXIMUM_ZONAL_DEGREE: u16,
+    pub WEATHER_SOURCE: pcfWeatherSource,
+    pub DENSITY_CORRECTION: pcfDensityCorrection,
+    pub DENSITY_CORRECTION_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SPACE_WEATHER: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SPW<'a>>>>>,
+    pub DENSITY_CORRECTION_NODE_TIMES_MS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, i64>>>,
+    pub DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub REDUCTION_THEORY_TERMS: u16,
 }
 
 impl<'a> Default for PerturbationsArgs<'a> {
@@ -4822,6 +5850,15 @@ impl<'a> Default for PerturbationsArgs<'a> {
             FIXED_S10P7_MEAN: f64::NAN,
             FIXED_Y10P7: f64::NAN,
             FIXED_Y10P7_MEAN: f64::NAN,
+            MAXIMUM_TESSERAL_DEGREE: 0,
+            MAXIMUM_ZONAL_DEGREE: 0,
+            WEATHER_SOURCE: pcfWeatherSource::UNSPECIFIED,
+            DENSITY_CORRECTION: pcfDensityCorrection::NONE,
+            DENSITY_CORRECTION_CID: None,
+            SPACE_WEATHER: None,
+            DENSITY_CORRECTION_NODE_TIMES_MS: None,
+            DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: None,
+            REDUCTION_THEORY_TERMS: 0,
         }
     }
 }
@@ -5023,6 +6060,51 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PerturbationsBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_MAXIMUM_TESSERAL_DEGREE(&mut self, MAXIMUM_TESSERAL_DEGREE: u16) {
+        self.fbb_.push_slot::<u16>(Perturbations::VT_MAXIMUM_TESSERAL_DEGREE, MAXIMUM_TESSERAL_DEGREE, 0);
+    }
+
+    #[inline]
+    pub fn add_MAXIMUM_ZONAL_DEGREE(&mut self, MAXIMUM_ZONAL_DEGREE: u16) {
+        self.fbb_.push_slot::<u16>(Perturbations::VT_MAXIMUM_ZONAL_DEGREE, MAXIMUM_ZONAL_DEGREE, 0);
+    }
+
+    #[inline]
+    pub fn add_WEATHER_SOURCE(&mut self, WEATHER_SOURCE: pcfWeatherSource) {
+        self.fbb_.push_slot::<pcfWeatherSource>(Perturbations::VT_WEATHER_SOURCE, WEATHER_SOURCE, pcfWeatherSource::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_DENSITY_CORRECTION(&mut self, DENSITY_CORRECTION: pcfDensityCorrection) {
+        self.fbb_.push_slot::<pcfDensityCorrection>(Perturbations::VT_DENSITY_CORRECTION, DENSITY_CORRECTION, pcfDensityCorrection::NONE);
+    }
+
+    #[inline]
+    pub fn add_DENSITY_CORRECTION_CID(&mut self, DENSITY_CORRECTION_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_DENSITY_CORRECTION_CID, DENSITY_CORRECTION_CID);
+    }
+
+    #[inline]
+    pub fn add_SPACE_WEATHER(&mut self, SPACE_WEATHER: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SPW<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_SPACE_WEATHER, SPACE_WEATHER);
+    }
+
+    #[inline]
+    pub fn add_DENSITY_CORRECTION_NODE_TIMES_MS(&mut self, DENSITY_CORRECTION_NODE_TIMES_MS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , i64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_DENSITY_CORRECTION_NODE_TIMES_MS, DENSITY_CORRECTION_NODE_TIMES_MS);
+    }
+
+    #[inline]
+    pub fn add_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(&mut self, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(Perturbations::VT_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS);
+    }
+
+    #[inline]
+    pub fn add_REDUCTION_THEORY_TERMS(&mut self, REDUCTION_THEORY_TERMS: u16) {
+        self.fbb_.push_slot::<u16>(Perturbations::VT_REDUCTION_THEORY_TERMS, REDUCTION_THEORY_TERMS, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PerturbationsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PerturbationsBuilder {
@@ -5079,6 +6161,15 @@ impl ::core::fmt::Debug for Perturbations<'_> {
         ds.field("FIXED_S10P7_MEAN", &self.FIXED_S10P7_MEAN());
         ds.field("FIXED_Y10P7", &self.FIXED_Y10P7());
         ds.field("FIXED_Y10P7_MEAN", &self.FIXED_Y10P7_MEAN());
+        ds.field("MAXIMUM_TESSERAL_DEGREE", &self.MAXIMUM_TESSERAL_DEGREE());
+        ds.field("MAXIMUM_ZONAL_DEGREE", &self.MAXIMUM_ZONAL_DEGREE());
+        ds.field("WEATHER_SOURCE", &self.WEATHER_SOURCE());
+        ds.field("DENSITY_CORRECTION", &self.DENSITY_CORRECTION());
+        ds.field("DENSITY_CORRECTION_CID", &self.DENSITY_CORRECTION_CID());
+        ds.field("SPACE_WEATHER", &self.SPACE_WEATHER());
+        ds.field("DENSITY_CORRECTION_NODE_TIMES_MS", &self.DENSITY_CORRECTION_NODE_TIMES_MS());
+        ds.field("DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS", &self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS());
+        ds.field("REDUCTION_THEORY_TERMS", &self.REDUCTION_THEORY_TERMS());
         ds.finish()
     }
 }
@@ -5124,6 +6215,15 @@ pub struct PerturbationsT {
     pub FIXED_S10P7_MEAN: f64,
     pub FIXED_Y10P7: f64,
     pub FIXED_Y10P7_MEAN: f64,
+    pub MAXIMUM_TESSERAL_DEGREE: u16,
+    pub MAXIMUM_ZONAL_DEGREE: u16,
+    pub WEATHER_SOURCE: pcfWeatherSource,
+    pub DENSITY_CORRECTION: pcfDensityCorrection,
+    pub DENSITY_CORRECTION_CID: Option<alloc::string::String>,
+    pub SPACE_WEATHER: Option<alloc::vec::Vec<SPWT>>,
+    pub DENSITY_CORRECTION_NODE_TIMES_MS: Option<alloc::vec::Vec<i64>>,
+    pub DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: Option<alloc::vec::Vec<f64>>,
+    pub REDUCTION_THEORY_TERMS: u16,
 }
 
 impl Default for PerturbationsT {
@@ -5167,6 +6267,15 @@ impl Default for PerturbationsT {
             FIXED_S10P7_MEAN: f64::NAN,
             FIXED_Y10P7: f64::NAN,
             FIXED_Y10P7_MEAN: f64::NAN,
+            MAXIMUM_TESSERAL_DEGREE: 0,
+            MAXIMUM_ZONAL_DEGREE: 0,
+            WEATHER_SOURCE: pcfWeatherSource::UNSPECIFIED,
+            DENSITY_CORRECTION: pcfDensityCorrection::NONE,
+            DENSITY_CORRECTION_CID: None,
+            SPACE_WEATHER: None,
+            DENSITY_CORRECTION_NODE_TIMES_MS: None,
+            DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: None,
+            REDUCTION_THEORY_TERMS: 0,
         }
     }
 }
@@ -5254,6 +6363,23 @@ impl PerturbationsT {
         let FIXED_S10P7_MEAN = self.FIXED_S10P7_MEAN;
         let FIXED_Y10P7 = self.FIXED_Y10P7;
         let FIXED_Y10P7_MEAN = self.FIXED_Y10P7_MEAN;
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE;
+        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE;
+        let WEATHER_SOURCE = self.WEATHER_SOURCE;
+        let DENSITY_CORRECTION = self.DENSITY_CORRECTION;
+        let DENSITY_CORRECTION_CID = self.DENSITY_CORRECTION_CID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SPACE_WEATHER = self.SPACE_WEATHER.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let DENSITY_CORRECTION_NODE_TIMES_MS = self.DENSITY_CORRECTION_NODE_TIMES_MS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let REDUCTION_THEORY_TERMS = self.REDUCTION_THEORY_TERMS;
         Perturbations::create(_fbb, &PerturbationsArgs{
             COMMENT,
             ATMOSPHERIC_MODEL,
@@ -5293,6 +6419,15 @@ impl PerturbationsT {
             FIXED_S10P7_MEAN,
             FIXED_Y10P7,
             FIXED_Y10P7_MEAN,
+            MAXIMUM_TESSERAL_DEGREE,
+            MAXIMUM_ZONAL_DEGREE,
+            WEATHER_SOURCE,
+            DENSITY_CORRECTION,
+            DENSITY_CORRECTION_CID,
+            SPACE_WEATHER,
+            DENSITY_CORRECTION_NODE_TIMES_MS,
+            DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS,
+            REDUCTION_THEORY_TERMS,
         })
     }
 }
@@ -5351,6 +6486,7 @@ impl<'a> Maneuver<'a> {
     pub const VT_DC_BODY_TRIGGER: ::flatbuffers::VOffsetT = 72;
     pub const VT_DC_PA_START_ANGLE: ::flatbuffers::VOffsetT = 74;
     pub const VT_DC_PA_STOP_ANGLE: ::flatbuffers::VOffsetT = 76;
+    pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 78;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5368,6 +6504,7 @@ impl<'a> Maneuver<'a> {
         builder.add_DC_TIME_PULSE_PERIOD(args.DC_TIME_PULSE_PERIOD);
         builder.add_DC_TIME_PULSE_DURATION(args.DC_TIME_PULSE_DURATION);
         builder.add_MAN_DURATION(args.MAN_DURATION);
+        builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         if let Some(x) = args.DC_BODY_TRIGGER { builder.add_DC_BODY_TRIGGER(x); }
         if let Some(x) = args.DC_BODY_FRAME { builder.add_DC_BODY_FRAME(x); }
         if let Some(x) = args.DC_REF_DIR { builder.add_DC_REF_DIR(x); }
@@ -5497,6 +6634,7 @@ impl<'a> Maneuver<'a> {
         });
         let DC_PA_START_ANGLE = self.DC_PA_START_ANGLE();
         let DC_PA_STOP_ANGLE = self.DC_PA_STOP_ANGLE();
+        let NORAD_CAT_ID = self.NORAD_CAT_ID();
         ManeuverT {
             MAN_ID,
             MAN_BASIS,
@@ -5535,6 +6673,7 @@ impl<'a> Maneuver<'a> {
             DC_BODY_TRIGGER,
             DC_PA_START_ANGLE,
             DC_PA_STOP_ANGLE,
+            NORAD_CAT_ID,
         }
     }
 
@@ -5873,6 +7012,17 @@ impl<'a> Maneuver<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(Maneuver::VT_DC_PA_STOP_ANGLE, Some(f64::NAN)).unwrap()}
     }
+
+    /// NORAD_CAT_ID of the object that maneuvered, for a message whose
+    /// maneuvers belong to more than one object (a relative-motion message's
+    /// chaser and target). 0 when the message's own object maneuvered.
+    #[inline]
+    pub fn NORAD_CAT_ID(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(Maneuver::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for Maneuver<'_> {
@@ -5918,6 +7068,7 @@ impl ::flatbuffers::Verifiable for Maneuver<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DC_BODY_TRIGGER", Self::VT_DC_BODY_TRIGGER, false)?
             .visit_field::<f64>("DC_PA_START_ANGLE", Self::VT_DC_PA_START_ANGLE, false)?
             .visit_field::<f64>("DC_PA_STOP_ANGLE", Self::VT_DC_PA_STOP_ANGLE, false)?
+            .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
             .finish();
         Ok(())
     }
@@ -5961,6 +7112,7 @@ pub struct ManeuverArgs<'a> {
     pub DC_BODY_TRIGGER: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub DC_PA_START_ANGLE: f64,
     pub DC_PA_STOP_ANGLE: f64,
+    pub NORAD_CAT_ID: u32,
 }
 
 impl<'a> Default for ManeuverArgs<'a> {
@@ -6004,6 +7156,7 @@ impl<'a> Default for ManeuverArgs<'a> {
             DC_BODY_TRIGGER: None,
             DC_PA_START_ANGLE: f64::NAN,
             DC_PA_STOP_ANGLE: f64::NAN,
+            NORAD_CAT_ID: 0,
         }
     }
 }
@@ -6200,6 +7353,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ManeuverBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+        self.fbb_.push_slot::<u32>(Maneuver::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ManeuverBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ManeuverBuilder {
@@ -6255,6 +7413,7 @@ impl ::core::fmt::Debug for Maneuver<'_> {
         ds.field("DC_BODY_TRIGGER", &self.DC_BODY_TRIGGER());
         ds.field("DC_PA_START_ANGLE", &self.DC_PA_START_ANGLE());
         ds.field("DC_PA_STOP_ANGLE", &self.DC_PA_STOP_ANGLE());
+        ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
         ds.finish()
     }
 }
@@ -6299,6 +7458,7 @@ pub struct ManeuverT {
     pub DC_BODY_TRIGGER: Option<alloc::vec::Vec<f64>>,
     pub DC_PA_START_ANGLE: f64,
     pub DC_PA_STOP_ANGLE: f64,
+    pub NORAD_CAT_ID: u32,
 }
 
 impl Default for ManeuverT {
@@ -6341,6 +7501,7 @@ impl Default for ManeuverT {
             DC_BODY_TRIGGER: None,
             DC_PA_START_ANGLE: f64::NAN,
             DC_PA_STOP_ANGLE: f64::NAN,
+            NORAD_CAT_ID: 0,
         }
     }
 }
@@ -6443,6 +7604,7 @@ impl ManeuverT {
         });
         let DC_PA_START_ANGLE = self.DC_PA_START_ANGLE;
         let DC_PA_STOP_ANGLE = self.DC_PA_STOP_ANGLE;
+        let NORAD_CAT_ID = self.NORAD_CAT_ID;
         Maneuver::create(_fbb, &ManeuverArgs{
             MAN_ID,
             MAN_BASIS,
@@ -6481,6 +7643,7 @@ impl ManeuverT {
             DC_BODY_TRIGGER,
             DC_PA_START_ANGLE,
             DC_PA_STOP_ANGLE,
+            NORAD_CAT_ID,
         })
     }
 }
@@ -6508,6 +7671,7 @@ impl<'a> OCMDynamicParameter<'a> {
     pub const VT_VALUE: ::flatbuffers::VOffsetT = 6;
     pub const VT_UNITS: ::flatbuffers::VOffsetT = 8;
     pub const VT_SOLVED_FOR: ::flatbuffers::VOffsetT = 10;
+    pub const VT_PARAMETER: ::flatbuffers::VOffsetT = 12;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6523,6 +7687,7 @@ impl<'a> OCMDynamicParameter<'a> {
         builder.add_VALUE(args.VALUE);
         if let Some(x) = args.UNITS { builder.add_UNITS(x); }
         if let Some(x) = args.NAME { builder.add_NAME(x); }
+        builder.add_PARAMETER(args.PARAMETER);
         builder.add_SOLVED_FOR(args.SOLVED_FOR);
         builder.finish()
     }
@@ -6536,17 +7701,19 @@ impl<'a> OCMDynamicParameter<'a> {
             alloc::string::ToString::to_string(x)
         });
         let SOLVED_FOR = self.SOLVED_FOR();
+        let PARAMETER = self.PARAMETER();
         OCMDynamicParameterT {
             NAME,
             VALUE,
             UNITS,
             SOLVED_FOR,
+            PARAMETER,
         }
     }
 
     /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-    /// are the producer's, as in USER_DEFINED_PARAMETERS.
+    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+    /// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
     #[inline]
     pub fn NAME(&self) -> Option<&'a str> {
         // Safety:
@@ -6582,6 +7749,15 @@ impl<'a> OCMDynamicParameter<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(OCMDynamicParameter::VT_SOLVED_FOR, Some(false)).unwrap()}
     }
+
+    /// The parameter, typed: every reader keys on this, never on NAME.
+    #[inline]
+    pub fn PARAMETER(&self) -> prwDynamicParameter {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<prwDynamicParameter>(OCMDynamicParameter::VT_PARAMETER, Some(prwDynamicParameter::UNSPECIFIED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCMDynamicParameter<'_> {
@@ -6594,6 +7770,7 @@ impl ::flatbuffers::Verifiable for OCMDynamicParameter<'_> {
             .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UNITS", Self::VT_UNITS, false)?
             .visit_field::<bool>("SOLVED_FOR", Self::VT_SOLVED_FOR, false)?
+            .visit_field::<prwDynamicParameter>("PARAMETER", Self::VT_PARAMETER, false)?
             .finish();
         Ok(())
     }
@@ -6604,6 +7781,7 @@ pub struct OCMDynamicParameterArgs<'a> {
     pub VALUE: f64,
     pub UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOLVED_FOR: bool,
+    pub PARAMETER: prwDynamicParameter,
 }
 
 impl<'a> Default for OCMDynamicParameterArgs<'a> {
@@ -6614,6 +7792,7 @@ impl<'a> Default for OCMDynamicParameterArgs<'a> {
             VALUE: 0.0,
             UNITS: None,
             SOLVED_FOR: false,
+            PARAMETER: prwDynamicParameter::UNSPECIFIED,
         }
     }
 }
@@ -6645,6 +7824,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMDynamicParameterBuilder<'a
     }
 
     #[inline]
+    pub fn add_PARAMETER(&mut self, PARAMETER: prwDynamicParameter) {
+        self.fbb_.push_slot::<prwDynamicParameter>(OCMDynamicParameter::VT_PARAMETER, PARAMETER, prwDynamicParameter::UNSPECIFIED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMDynamicParameterBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMDynamicParameterBuilder {
@@ -6667,6 +7851,7 @@ impl ::core::fmt::Debug for OCMDynamicParameter<'_> {
         ds.field("VALUE", &self.VALUE());
         ds.field("UNITS", &self.UNITS());
         ds.field("SOLVED_FOR", &self.SOLVED_FOR());
+        ds.field("PARAMETER", &self.PARAMETER());
         ds.finish()
     }
 }
@@ -6678,6 +7863,7 @@ pub struct OCMDynamicParameterT {
     pub VALUE: f64,
     pub UNITS: Option<alloc::string::String>,
     pub SOLVED_FOR: bool,
+    pub PARAMETER: prwDynamicParameter,
 }
 
 impl Default for OCMDynamicParameterT {
@@ -6687,6 +7873,7 @@ impl Default for OCMDynamicParameterT {
             VALUE: 0.0,
             UNITS: None,
             SOLVED_FOR: false,
+            PARAMETER: prwDynamicParameter::UNSPECIFIED,
         }
     }
 }
@@ -6704,11 +7891,3723 @@ impl OCMDynamicParameterT {
             _fbb.create_string(x)
         });
         let SOLVED_FOR = self.SOLVED_FOR;
+        let PARAMETER = self.PARAMETER;
         OCMDynamicParameter::create(_fbb, &OCMDynamicParameterArgs{
             NAME,
             VALUE,
             UNITS,
             SOLVED_FOR,
+            PARAMETER,
+        })
+    }
+}
+
+pub enum OCMHeldOutDayOffset {}
+
+/// One day of held-out prediction error after the end of a fit arc.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMHeldOutDay<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMHeldOutDay<'a> {
+    type Inner = OCMHeldOutDay<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMHeldOutDay<'a> {
+    pub const VT_DAY: ::flatbuffers::VOffsetT = 4;
+    pub const VT_STATES: ::flatbuffers::VOffsetT = 6;
+    pub const VT_RMS_KM: ::flatbuffers::VOffsetT = 8;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMHeldOutDay { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMHeldOutDayArgs
+    ) -> ::flatbuffers::WIPOffset<OCMHeldOutDay<'bldr>> {
+        let mut builder = OCMHeldOutDayBuilder::new(_fbb);
+        builder.add_RMS_KM(args.RMS_KM);
+        builder.add_STATES(args.STATES);
+        builder.add_DAY(args.DAY);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMHeldOutDayT {
+        let DAY = self.DAY();
+        let STATES = self.STATES();
+        let RMS_KM = self.RMS_KM();
+        OCMHeldOutDayT {
+            DAY,
+            STATES,
+            RMS_KM,
+        }
+    }
+
+    /// The day after the end of the fit arc, from 1.
+    #[inline]
+    pub fn DAY(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(OCMHeldOutDay::VT_DAY, Some(0)).unwrap()}
+    }
+
+    /// Reference states in the day.
+    #[inline]
+    pub fn STATES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMHeldOutDay::VT_STATES, Some(0)).unwrap()}
+    }
+
+    /// Position RMS over the day, km.
+    #[inline]
+    pub fn RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMHeldOutDay::VT_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMHeldOutDay<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u16>("DAY", Self::VT_DAY, false)?
+            .visit_field::<u32>("STATES", Self::VT_STATES, false)?
+            .visit_field::<f64>("RMS_KM", Self::VT_RMS_KM, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMHeldOutDayArgs {
+    pub DAY: u16,
+    pub STATES: u32,
+    pub RMS_KM: f64,
+}
+
+impl<'a> Default for OCMHeldOutDayArgs {
+    #[inline]
+    fn default() -> Self {
+        OCMHeldOutDayArgs {
+            DAY: 0,
+            STATES: 0,
+            RMS_KM: f64::NAN,
+        }
+    }
+}
+
+pub struct OCMHeldOutDayBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMHeldOutDayBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_DAY(&mut self, DAY: u16) {
+        self.fbb_.push_slot::<u16>(OCMHeldOutDay::VT_DAY, DAY, 0);
+    }
+
+    #[inline]
+    pub fn add_STATES(&mut self, STATES: u32) {
+        self.fbb_.push_slot::<u32>(OCMHeldOutDay::VT_STATES, STATES, 0);
+    }
+
+    #[inline]
+    pub fn add_RMS_KM(&mut self, RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMHeldOutDay::VT_RMS_KM, RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMHeldOutDayBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMHeldOutDayBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMHeldOutDay<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMHeldOutDay<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMHeldOutDay");
+        ds.field("DAY", &self.DAY());
+        ds.field("STATES", &self.STATES());
+        ds.field("RMS_KM", &self.RMS_KM());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMHeldOutDayT {
+    pub DAY: u16,
+    pub STATES: u32,
+    pub RMS_KM: f64,
+}
+
+impl Default for OCMHeldOutDayT {
+    fn default() -> Self {
+        Self {
+            DAY: 0,
+            STATES: 0,
+            RMS_KM: f64::NAN,
+        }
+    }
+}
+
+impl OCMHeldOutDayT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMHeldOutDay<'b>> {
+        let DAY = self.DAY;
+        let STATES = self.STATES;
+        let RMS_KM = self.RMS_KM;
+        OCMHeldOutDay::create(_fbb, &OCMHeldOutDayArgs{
+            DAY,
+            STATES,
+            RMS_KM,
+        })
+    }
+}
+
+pub enum OCMFitStatisticsOffset {}
+
+/// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
+/// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMFitStatistics<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMFitStatistics<'a> {
+    type Inner = OCMFitStatistics<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMFitStatistics<'a> {
+    pub const VT_FIT_STATES: ::flatbuffers::VOffsetT = 4;
+    pub const VT_FIT_RMS_KM: ::flatbuffers::VOffsetT = 6;
+    pub const VT_FIT_MAX_KM: ::flatbuffers::VOffsetT = 8;
+    pub const VT_FIT_RADIAL_RMS_KM: ::flatbuffers::VOffsetT = 10;
+    pub const VT_FIT_IN_TRACK_RMS_KM: ::flatbuffers::VOffsetT = 12;
+    pub const VT_FIT_CROSS_TRACK_RMS_KM: ::flatbuffers::VOffsetT = 14;
+    pub const VT_ITERATIONS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_CONVERGED: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HELD_OUT_STOP: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HELD_OUT_STATES: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HELD_OUT_RMS_KM: ::flatbuffers::VOffsetT = 24;
+    pub const VT_HELD_OUT_MAX_KM: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HELD_OUT_DAYS: ::flatbuffers::VOffsetT = 28;
+    pub const VT_PCF_CID: ::flatbuffers::VOffsetT = 30;
+    pub const VT_FIT_START: ::flatbuffers::VOffsetT = 32;
+    pub const VT_FIT_STOP: ::flatbuffers::VOffsetT = 34;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMFitStatistics { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMFitStatisticsArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMFitStatistics<'bldr>> {
+        let mut builder = OCMFitStatisticsBuilder::new(_fbb);
+        builder.add_HELD_OUT_MAX_KM(args.HELD_OUT_MAX_KM);
+        builder.add_HELD_OUT_RMS_KM(args.HELD_OUT_RMS_KM);
+        builder.add_FIT_CROSS_TRACK_RMS_KM(args.FIT_CROSS_TRACK_RMS_KM);
+        builder.add_FIT_IN_TRACK_RMS_KM(args.FIT_IN_TRACK_RMS_KM);
+        builder.add_FIT_RADIAL_RMS_KM(args.FIT_RADIAL_RMS_KM);
+        builder.add_FIT_MAX_KM(args.FIT_MAX_KM);
+        builder.add_FIT_RMS_KM(args.FIT_RMS_KM);
+        if let Some(x) = args.FIT_STOP { builder.add_FIT_STOP(x); }
+        if let Some(x) = args.FIT_START { builder.add_FIT_START(x); }
+        if let Some(x) = args.PCF_CID { builder.add_PCF_CID(x); }
+        if let Some(x) = args.HELD_OUT_DAYS { builder.add_HELD_OUT_DAYS(x); }
+        builder.add_HELD_OUT_STATES(args.HELD_OUT_STATES);
+        if let Some(x) = args.HELD_OUT_STOP { builder.add_HELD_OUT_STOP(x); }
+        builder.add_ITERATIONS(args.ITERATIONS);
+        builder.add_FIT_STATES(args.FIT_STATES);
+        builder.add_CONVERGED(args.CONVERGED);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMFitStatisticsT {
+        let FIT_STATES = self.FIT_STATES();
+        let FIT_RMS_KM = self.FIT_RMS_KM();
+        let FIT_MAX_KM = self.FIT_MAX_KM();
+        let FIT_RADIAL_RMS_KM = self.FIT_RADIAL_RMS_KM();
+        let FIT_IN_TRACK_RMS_KM = self.FIT_IN_TRACK_RMS_KM();
+        let FIT_CROSS_TRACK_RMS_KM = self.FIT_CROSS_TRACK_RMS_KM();
+        let ITERATIONS = self.ITERATIONS();
+        let CONVERGED = self.CONVERGED();
+        let HELD_OUT_STOP = self.HELD_OUT_STOP().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let HELD_OUT_STATES = self.HELD_OUT_STATES();
+        let HELD_OUT_RMS_KM = self.HELD_OUT_RMS_KM();
+        let HELD_OUT_MAX_KM = self.HELD_OUT_MAX_KM();
+        let HELD_OUT_DAYS = self.HELD_OUT_DAYS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let PCF_CID = self.PCF_CID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let FIT_START = self.FIT_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let FIT_STOP = self.FIT_STOP().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        OCMFitStatisticsT {
+            FIT_STATES,
+            FIT_RMS_KM,
+            FIT_MAX_KM,
+            FIT_RADIAL_RMS_KM,
+            FIT_IN_TRACK_RMS_KM,
+            FIT_CROSS_TRACK_RMS_KM,
+            ITERATIONS,
+            CONVERGED,
+            HELD_OUT_STOP,
+            HELD_OUT_STATES,
+            HELD_OUT_RMS_KM,
+            HELD_OUT_MAX_KM,
+            HELD_OUT_DAYS,
+            PCF_CID,
+            FIT_START,
+            FIT_STOP,
+        }
+    }
+
+    /// Reference states fitted.
+    #[inline]
+    pub fn FIT_STATES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMFitStatistics::VT_FIT_STATES, Some(0)).unwrap()}
+    }
+
+    /// Position RMS over the fit arc, km.
+    #[inline]
+    pub fn FIT_RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Largest position error over the fit arc, km.
+    #[inline]
+    pub fn FIT_MAX_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_MAX_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    /// RMS of each position error component in the model's radial, in-track and cross-track
+    /// axes, km.
+    #[inline]
+    pub fn FIT_RADIAL_RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_RADIAL_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FIT_IN_TRACK_RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_IN_TRACK_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FIT_CROSS_TRACK_RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_CROSS_TRACK_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Iterations the fit took.
+    #[inline]
+    pub fn ITERATIONS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMFitStatistics::VT_ITERATIONS, Some(0)).unwrap()}
+    }
+
+    /// True when the fit converged.
+    #[inline]
+    pub fn CONVERGED(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(OCMFitStatistics::VT_CONVERGED, Some(false)).unwrap()}
+    }
+
+    /// End of the held-out window (ISO 8601 UTC); empty without one.
+    #[inline]
+    pub fn HELD_OUT_STOP(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMFitStatistics::VT_HELD_OUT_STOP, None)}
+    }
+
+    /// Held-out reference states, their position RMS and largest error, km.
+    #[inline]
+    pub fn HELD_OUT_STATES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMFitStatistics::VT_HELD_OUT_STATES, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HELD_OUT_RMS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_HELD_OUT_RMS_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HELD_OUT_MAX_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_HELD_OUT_MAX_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    /// The held-out error by day after the fit arc.
+    #[inline]
+    pub fn HELD_OUT_DAYS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMHeldOutDay<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMHeldOutDay>>>>(OCMFitStatistics::VT_HELD_OUT_DAYS, None)}
+    }
+
+    /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    #[inline]
+    pub fn PCF_CID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMFitStatistics::VT_PCF_CID, None)}
+    }
+
+    /// First epoch of the fit arc (ISO 8601 UTC).
+    #[inline]
+    pub fn FIT_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMFitStatistics::VT_FIT_START, None)}
+    }
+
+    /// Last epoch of the fit arc (ISO 8601 UTC).
+    #[inline]
+    pub fn FIT_STOP(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMFitStatistics::VT_FIT_STOP, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMFitStatistics<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u32>("FIT_STATES", Self::VT_FIT_STATES, false)?
+            .visit_field::<f64>("FIT_RMS_KM", Self::VT_FIT_RMS_KM, false)?
+            .visit_field::<f64>("FIT_MAX_KM", Self::VT_FIT_MAX_KM, false)?
+            .visit_field::<f64>("FIT_RADIAL_RMS_KM", Self::VT_FIT_RADIAL_RMS_KM, false)?
+            .visit_field::<f64>("FIT_IN_TRACK_RMS_KM", Self::VT_FIT_IN_TRACK_RMS_KM, false)?
+            .visit_field::<f64>("FIT_CROSS_TRACK_RMS_KM", Self::VT_FIT_CROSS_TRACK_RMS_KM, false)?
+            .visit_field::<u32>("ITERATIONS", Self::VT_ITERATIONS, false)?
+            .visit_field::<bool>("CONVERGED", Self::VT_CONVERGED, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("HELD_OUT_STOP", Self::VT_HELD_OUT_STOP, false)?
+            .visit_field::<u32>("HELD_OUT_STATES", Self::VT_HELD_OUT_STATES, false)?
+            .visit_field::<f64>("HELD_OUT_RMS_KM", Self::VT_HELD_OUT_RMS_KM, false)?
+            .visit_field::<f64>("HELD_OUT_MAX_KM", Self::VT_HELD_OUT_MAX_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMHeldOutDay>>>>("HELD_OUT_DAYS", Self::VT_HELD_OUT_DAYS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PCF_CID", Self::VT_PCF_CID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FIT_START", Self::VT_FIT_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FIT_STOP", Self::VT_FIT_STOP, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMFitStatisticsArgs<'a> {
+    pub FIT_STATES: u32,
+    pub FIT_RMS_KM: f64,
+    pub FIT_MAX_KM: f64,
+    pub FIT_RADIAL_RMS_KM: f64,
+    pub FIT_IN_TRACK_RMS_KM: f64,
+    pub FIT_CROSS_TRACK_RMS_KM: f64,
+    pub ITERATIONS: u32,
+    pub CONVERGED: bool,
+    pub HELD_OUT_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HELD_OUT_STATES: u32,
+    pub HELD_OUT_RMS_KM: f64,
+    pub HELD_OUT_MAX_KM: f64,
+    pub HELD_OUT_DAYS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMHeldOutDay<'a>>>>>,
+    pub PCF_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIT_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIT_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for OCMFitStatisticsArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMFitStatisticsArgs {
+            FIT_STATES: 0,
+            FIT_RMS_KM: f64::NAN,
+            FIT_MAX_KM: f64::NAN,
+            FIT_RADIAL_RMS_KM: f64::NAN,
+            FIT_IN_TRACK_RMS_KM: f64::NAN,
+            FIT_CROSS_TRACK_RMS_KM: f64::NAN,
+            ITERATIONS: 0,
+            CONVERGED: false,
+            HELD_OUT_STOP: None,
+            HELD_OUT_STATES: 0,
+            HELD_OUT_RMS_KM: f64::NAN,
+            HELD_OUT_MAX_KM: f64::NAN,
+            HELD_OUT_DAYS: None,
+            PCF_CID: None,
+            FIT_START: None,
+            FIT_STOP: None,
+        }
+    }
+}
+
+pub struct OCMFitStatisticsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMFitStatisticsBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_FIT_STATES(&mut self, FIT_STATES: u32) {
+        self.fbb_.push_slot::<u32>(OCMFitStatistics::VT_FIT_STATES, FIT_STATES, 0);
+    }
+
+    #[inline]
+    pub fn add_FIT_RMS_KM(&mut self, FIT_RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_FIT_RMS_KM, FIT_RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIT_MAX_KM(&mut self, FIT_MAX_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_FIT_MAX_KM, FIT_MAX_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIT_RADIAL_RMS_KM(&mut self, FIT_RADIAL_RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_FIT_RADIAL_RMS_KM, FIT_RADIAL_RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIT_IN_TRACK_RMS_KM(&mut self, FIT_IN_TRACK_RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_FIT_IN_TRACK_RMS_KM, FIT_IN_TRACK_RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_FIT_CROSS_TRACK_RMS_KM(&mut self, FIT_CROSS_TRACK_RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_FIT_CROSS_TRACK_RMS_KM, FIT_CROSS_TRACK_RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ITERATIONS(&mut self, ITERATIONS: u32) {
+        self.fbb_.push_slot::<u32>(OCMFitStatistics::VT_ITERATIONS, ITERATIONS, 0);
+    }
+
+    #[inline]
+    pub fn add_CONVERGED(&mut self, CONVERGED: bool) {
+        self.fbb_.push_slot::<bool>(OCMFitStatistics::VT_CONVERGED, CONVERGED, false);
+    }
+
+    #[inline]
+    pub fn add_HELD_OUT_STOP(&mut self, HELD_OUT_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMFitStatistics::VT_HELD_OUT_STOP, HELD_OUT_STOP);
+    }
+
+    #[inline]
+    pub fn add_HELD_OUT_STATES(&mut self, HELD_OUT_STATES: u32) {
+        self.fbb_.push_slot::<u32>(OCMFitStatistics::VT_HELD_OUT_STATES, HELD_OUT_STATES, 0);
+    }
+
+    #[inline]
+    pub fn add_HELD_OUT_RMS_KM(&mut self, HELD_OUT_RMS_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_HELD_OUT_RMS_KM, HELD_OUT_RMS_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_HELD_OUT_MAX_KM(&mut self, HELD_OUT_MAX_KM: f64) {
+        self.fbb_.push_slot::<f64>(OCMFitStatistics::VT_HELD_OUT_MAX_KM, HELD_OUT_MAX_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_HELD_OUT_DAYS(&mut self, HELD_OUT_DAYS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OCMHeldOutDay<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMFitStatistics::VT_HELD_OUT_DAYS, HELD_OUT_DAYS);
+    }
+
+    #[inline]
+    pub fn add_PCF_CID(&mut self, PCF_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMFitStatistics::VT_PCF_CID, PCF_CID);
+    }
+
+    #[inline]
+    pub fn add_FIT_START(&mut self, FIT_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMFitStatistics::VT_FIT_START, FIT_START);
+    }
+
+    #[inline]
+    pub fn add_FIT_STOP(&mut self, FIT_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMFitStatistics::VT_FIT_STOP, FIT_STOP);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMFitStatisticsBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMFitStatisticsBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMFitStatistics<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMFitStatistics<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMFitStatistics");
+        ds.field("FIT_STATES", &self.FIT_STATES());
+        ds.field("FIT_RMS_KM", &self.FIT_RMS_KM());
+        ds.field("FIT_MAX_KM", &self.FIT_MAX_KM());
+        ds.field("FIT_RADIAL_RMS_KM", &self.FIT_RADIAL_RMS_KM());
+        ds.field("FIT_IN_TRACK_RMS_KM", &self.FIT_IN_TRACK_RMS_KM());
+        ds.field("FIT_CROSS_TRACK_RMS_KM", &self.FIT_CROSS_TRACK_RMS_KM());
+        ds.field("ITERATIONS", &self.ITERATIONS());
+        ds.field("CONVERGED", &self.CONVERGED());
+        ds.field("HELD_OUT_STOP", &self.HELD_OUT_STOP());
+        ds.field("HELD_OUT_STATES", &self.HELD_OUT_STATES());
+        ds.field("HELD_OUT_RMS_KM", &self.HELD_OUT_RMS_KM());
+        ds.field("HELD_OUT_MAX_KM", &self.HELD_OUT_MAX_KM());
+        ds.field("HELD_OUT_DAYS", &self.HELD_OUT_DAYS());
+        ds.field("PCF_CID", &self.PCF_CID());
+        ds.field("FIT_START", &self.FIT_START());
+        ds.field("FIT_STOP", &self.FIT_STOP());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMFitStatisticsT {
+    pub FIT_STATES: u32,
+    pub FIT_RMS_KM: f64,
+    pub FIT_MAX_KM: f64,
+    pub FIT_RADIAL_RMS_KM: f64,
+    pub FIT_IN_TRACK_RMS_KM: f64,
+    pub FIT_CROSS_TRACK_RMS_KM: f64,
+    pub ITERATIONS: u32,
+    pub CONVERGED: bool,
+    pub HELD_OUT_STOP: Option<alloc::string::String>,
+    pub HELD_OUT_STATES: u32,
+    pub HELD_OUT_RMS_KM: f64,
+    pub HELD_OUT_MAX_KM: f64,
+    pub HELD_OUT_DAYS: Option<alloc::vec::Vec<OCMHeldOutDayT>>,
+    pub PCF_CID: Option<alloc::string::String>,
+    pub FIT_START: Option<alloc::string::String>,
+    pub FIT_STOP: Option<alloc::string::String>,
+}
+
+impl Default for OCMFitStatisticsT {
+    fn default() -> Self {
+        Self {
+            FIT_STATES: 0,
+            FIT_RMS_KM: f64::NAN,
+            FIT_MAX_KM: f64::NAN,
+            FIT_RADIAL_RMS_KM: f64::NAN,
+            FIT_IN_TRACK_RMS_KM: f64::NAN,
+            FIT_CROSS_TRACK_RMS_KM: f64::NAN,
+            ITERATIONS: 0,
+            CONVERGED: false,
+            HELD_OUT_STOP: None,
+            HELD_OUT_STATES: 0,
+            HELD_OUT_RMS_KM: f64::NAN,
+            HELD_OUT_MAX_KM: f64::NAN,
+            HELD_OUT_DAYS: None,
+            PCF_CID: None,
+            FIT_START: None,
+            FIT_STOP: None,
+        }
+    }
+}
+
+impl OCMFitStatisticsT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMFitStatistics<'b>> {
+        let FIT_STATES = self.FIT_STATES;
+        let FIT_RMS_KM = self.FIT_RMS_KM;
+        let FIT_MAX_KM = self.FIT_MAX_KM;
+        let FIT_RADIAL_RMS_KM = self.FIT_RADIAL_RMS_KM;
+        let FIT_IN_TRACK_RMS_KM = self.FIT_IN_TRACK_RMS_KM;
+        let FIT_CROSS_TRACK_RMS_KM = self.FIT_CROSS_TRACK_RMS_KM;
+        let ITERATIONS = self.ITERATIONS;
+        let CONVERGED = self.CONVERGED;
+        let HELD_OUT_STOP = self.HELD_OUT_STOP.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let HELD_OUT_STATES = self.HELD_OUT_STATES;
+        let HELD_OUT_RMS_KM = self.HELD_OUT_RMS_KM;
+        let HELD_OUT_MAX_KM = self.HELD_OUT_MAX_KM;
+        let HELD_OUT_DAYS = self.HELD_OUT_DAYS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let PCF_CID = self.PCF_CID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let FIT_START = self.FIT_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let FIT_STOP = self.FIT_STOP.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        OCMFitStatistics::create(_fbb, &OCMFitStatisticsArgs{
+            FIT_STATES,
+            FIT_RMS_KM,
+            FIT_MAX_KM,
+            FIT_RADIAL_RMS_KM,
+            FIT_IN_TRACK_RMS_KM,
+            FIT_CROSS_TRACK_RMS_KM,
+            ITERATIONS,
+            CONVERGED,
+            HELD_OUT_STOP,
+            HELD_OUT_STATES,
+            HELD_OUT_RMS_KM,
+            HELD_OUT_MAX_KM,
+            HELD_OUT_DAYS,
+            PCF_CID,
+            FIT_START,
+            FIT_STOP,
+        })
+    }
+}
+
+pub enum OCMMeanElementsOffset {}
+
+/// A mean element set under a named theory, with the elements exactly as the theory defines
+/// them. SDS addition: CCSDS 502.0-B-3 OCM carries no mean-motion element set. Epoch in
+/// METADATA.TIME_SYSTEM; frame is TRAJ_REF_FRAME about CENTER_NAME (EARTH).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMMeanElements<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMMeanElements<'a> {
+    type Inner = OCMMeanElements<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMMeanElements<'a> {
+    pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 4;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 6;
+    pub const VT_MEAN_MOTION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 10;
+    pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 12;
+    pub const VT_RA_OF_ASC_NODE: ::flatbuffers::VOffsetT = 14;
+    pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 16;
+    pub const VT_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 18;
+    pub const VT_BSTAR: ::flatbuffers::VOffsetT = 20;
+    pub const VT_MEAN_MOTION_DOT: ::flatbuffers::VOffsetT = 22;
+    pub const VT_MEAN_MOTION_DDOT: ::flatbuffers::VOffsetT = 24;
+    pub const VT_BTERM: ::flatbuffers::VOffsetT = 26;
+    pub const VT_AGOM: ::flatbuffers::VOffsetT = 28;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMMeanElements { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMMeanElementsArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMMeanElements<'bldr>> {
+        let mut builder = OCMMeanElementsBuilder::new(_fbb);
+        builder.add_AGOM(args.AGOM);
+        builder.add_BTERM(args.BTERM);
+        builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
+        builder.add_MEAN_MOTION_DOT(args.MEAN_MOTION_DOT);
+        builder.add_BSTAR(args.BSTAR);
+        builder.add_MEAN_ANOMALY(args.MEAN_ANOMALY);
+        builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
+        builder.add_RA_OF_ASC_NODE(args.RA_OF_ASC_NODE);
+        builder.add_INCLINATION(args.INCLINATION);
+        builder.add_ECCENTRICITY(args.ECCENTRICITY);
+        builder.add_MEAN_MOTION(args.MEAN_MOTION);
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMMeanElementsT {
+        let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
+        let EPOCH = {
+            let x = self.EPOCH();
+            alloc::string::ToString::to_string(x)
+        };
+        let MEAN_MOTION = self.MEAN_MOTION();
+        let ECCENTRICITY = self.ECCENTRICITY();
+        let INCLINATION = self.INCLINATION();
+        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE();
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
+        let MEAN_ANOMALY = self.MEAN_ANOMALY();
+        let BSTAR = self.BSTAR();
+        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
+        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
+        let BTERM = self.BTERM();
+        let AGOM = self.AGOM();
+        OCMMeanElementsT {
+            MEAN_ELEMENT_THEORY,
+            EPOCH,
+            MEAN_MOTION,
+            ECCENTRICITY,
+            INCLINATION,
+            RA_OF_ASC_NODE,
+            ARG_OF_PERICENTER,
+            MEAN_ANOMALY,
+            BSTAR,
+            MEAN_MOTION_DOT,
+            MEAN_MOTION_DDOT,
+            BTERM,
+            AGOM,
+        }
+    }
+
+    /// The theory the set is defined under and flies on, written explicitly, SGP4 (0)
+    /// included. A reader refuses UNSPECIFIED.
+    #[inline]
+    pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementSource {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<meanElementSource>(OCMMeanElements::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::UNSPECIFIED)).unwrap()}
+    }
+
+    /// EPOCH of the elements (ISO 8601 UTC).
+    #[inline]
+    pub fn EPOCH(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMMeanElements::VT_EPOCH, None).unwrap()}
+    }
+
+    /// MEAN_MOTION in rev/day as the theory defines it: Kozai for SGP4, Brouwer for SGP4-XP
+    /// and AP. Never derived from a semi-major axis.
+    #[inline]
+    pub fn MEAN_MOTION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_MEAN_MOTION, Some(0.0)).unwrap()}
+    }
+
+    /// ECCENTRICITY (unitless).
+    #[inline]
+    pub fn ECCENTRICITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+    }
+
+    /// INCLINATION, deg.
+    #[inline]
+    pub fn INCLINATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_INCLINATION, Some(0.0)).unwrap()}
+    }
+
+    /// RA_OF_ASC_NODE, deg.
+    #[inline]
+    pub fn RA_OF_ASC_NODE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
+    }
+
+    /// ARG_OF_PERICENTER, deg.
+    #[inline]
+    pub fn ARG_OF_PERICENTER(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
+    }
+
+    /// MEAN_ANOMALY, deg.
+    #[inline]
+    pub fn MEAN_ANOMALY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
+    }
+
+    /// BSTAR in 1/Earth radii. SGP4 only; 0 for SGP4-XP and AP.
+    #[inline]
+    pub fn BSTAR(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_BSTAR, Some(0.0)).unwrap()}
+    }
+
+    /// MEAN_MOTION_DOT in rev/day**2. SGP4 only.
+    #[inline]
+    pub fn MEAN_MOTION_DOT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
+    }
+
+    /// MEAN_MOTION_DDOT in rev/day**3. SGP4 only.
+    #[inline]
+    pub fn MEAN_MOTION_DDOT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
+    }
+
+    /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+    #[inline]
+    pub fn BTERM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_BTERM, Some(0.0)).unwrap()}
+    }
+
+    /// AGOM, the SGP4-XP radiation term Cr*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+    #[inline]
+    pub fn AGOM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMMeanElements::VT_AGOM, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMMeanElements<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, true)?
+            .visit_field::<f64>("MEAN_MOTION", Self::VT_MEAN_MOTION, false)?
+            .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+            .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+            .visit_field::<f64>("RA_OF_ASC_NODE", Self::VT_RA_OF_ASC_NODE, false)?
+            .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
+            .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
+            .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
+            .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
+            .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
+            .visit_field::<f64>("BTERM", Self::VT_BTERM, false)?
+            .visit_field::<f64>("AGOM", Self::VT_AGOM, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMMeanElementsArgs<'a> {
+    pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MEAN_MOTION: f64,
+    pub ECCENTRICITY: f64,
+    pub INCLINATION: f64,
+    pub RA_OF_ASC_NODE: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub MEAN_ANOMALY: f64,
+    pub BSTAR: f64,
+    pub MEAN_MOTION_DOT: f64,
+    pub MEAN_MOTION_DDOT: f64,
+    pub BTERM: f64,
+    pub AGOM: f64,
+}
+
+impl<'a> Default for OCMMeanElementsArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMMeanElementsArgs {
+            MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
+            EPOCH: None, // required field
+            MEAN_MOTION: 0.0,
+            ECCENTRICITY: 0.0,
+            INCLINATION: 0.0,
+            RA_OF_ASC_NODE: 0.0,
+            ARG_OF_PERICENTER: 0.0,
+            MEAN_ANOMALY: 0.0,
+            BSTAR: 0.0,
+            MEAN_MOTION_DOT: 0.0,
+            MEAN_MOTION_DDOT: 0.0,
+            BTERM: 0.0,
+            AGOM: 0.0,
+        }
+    }
+}
+
+pub struct OCMMeanElementsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMMeanElementsBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
+        self.fbb_.push_slot::<meanElementSource>(OCMMeanElements::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMMeanElements::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_MEAN_MOTION(&mut self, MEAN_MOTION: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_INCLINATION, INCLINATION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_RA_OF_ASC_NODE(&mut self, RA_OF_ASC_NODE: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ARG_OF_PERICENTER(&mut self, ARG_OF_PERICENTER: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MEAN_ANOMALY(&mut self, MEAN_ANOMALY: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_BSTAR(&mut self, BSTAR: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_BSTAR, BSTAR, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MEAN_MOTION_DOT(&mut self, MEAN_MOTION_DOT: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MEAN_MOTION_DDOT(&mut self, MEAN_MOTION_DDOT: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_BTERM(&mut self, BTERM: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_BTERM, BTERM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_AGOM(&mut self, AGOM: f64) {
+        self.fbb_.push_slot::<f64>(OCMMeanElements::VT_AGOM, AGOM, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMMeanElementsBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMMeanElementsBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMMeanElements<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, OCMMeanElements::VT_EPOCH,"EPOCH");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMMeanElements<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMMeanElements");
+        ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("MEAN_MOTION", &self.MEAN_MOTION());
+        ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+        ds.field("INCLINATION", &self.INCLINATION());
+        ds.field("RA_OF_ASC_NODE", &self.RA_OF_ASC_NODE());
+        ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
+        ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
+        ds.field("BSTAR", &self.BSTAR());
+        ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
+        ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
+        ds.field("BTERM", &self.BTERM());
+        ds.field("AGOM", &self.AGOM());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMMeanElementsT {
+    pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub EPOCH: alloc::string::String,
+    pub MEAN_MOTION: f64,
+    pub ECCENTRICITY: f64,
+    pub INCLINATION: f64,
+    pub RA_OF_ASC_NODE: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub MEAN_ANOMALY: f64,
+    pub BSTAR: f64,
+    pub MEAN_MOTION_DOT: f64,
+    pub MEAN_MOTION_DDOT: f64,
+    pub BTERM: f64,
+    pub AGOM: f64,
+}
+
+impl Default for OCMMeanElementsT {
+    fn default() -> Self {
+        Self {
+            MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
+            EPOCH: alloc::string::ToString::to_string(""),
+            MEAN_MOTION: 0.0,
+            ECCENTRICITY: 0.0,
+            INCLINATION: 0.0,
+            RA_OF_ASC_NODE: 0.0,
+            ARG_OF_PERICENTER: 0.0,
+            MEAN_ANOMALY: 0.0,
+            BSTAR: 0.0,
+            MEAN_MOTION_DOT: 0.0,
+            MEAN_MOTION_DDOT: 0.0,
+            BTERM: 0.0,
+            AGOM: 0.0,
+        }
+    }
+}
+
+impl OCMMeanElementsT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMMeanElements<'b>> {
+        let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
+        let EPOCH = Some({
+            let x = &self.EPOCH;
+            _fbb.create_string(x)
+        });
+        let MEAN_MOTION = self.MEAN_MOTION;
+        let ECCENTRICITY = self.ECCENTRICITY;
+        let INCLINATION = self.INCLINATION;
+        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE;
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
+        let MEAN_ANOMALY = self.MEAN_ANOMALY;
+        let BSTAR = self.BSTAR;
+        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
+        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
+        let BTERM = self.BTERM;
+        let AGOM = self.AGOM;
+        OCMMeanElements::create(_fbb, &OCMMeanElementsArgs{
+            MEAN_ELEMENT_THEORY,
+            EPOCH,
+            MEAN_MOTION,
+            ECCENTRICITY,
+            INCLINATION,
+            RA_OF_ASC_NODE,
+            ARG_OF_PERICENTER,
+            MEAN_ANOMALY,
+            BSTAR,
+            MEAN_MOTION_DOT,
+            MEAN_MOTION_DDOT,
+            BTERM,
+            AGOM,
+        })
+    }
+}
+
+pub enum OCMCovariancePropagationOffset {}
+
+/// What propagates the covariance of a mean element set beyond its epoch value.
+/// SDS addition (no CCSDS counterpart; OD_PROCESS_NOISE is free text).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMCovariancePropagation<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMCovariancePropagation<'a> {
+    type Inner = OCMCovariancePropagation<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMCovariancePropagation<'a> {
+    pub const VT_FLOOR_UU_KM2: ::flatbuffers::VOffsetT = 4;
+    pub const VT_FLOOR_VU_KM2: ::flatbuffers::VOffsetT = 6;
+    pub const VT_FLOOR_VV_KM2: ::flatbuffers::VOffsetT = 8;
+    pub const VT_FLOOR_WU_KM2: ::flatbuffers::VOffsetT = 10;
+    pub const VT_FLOOR_WV_KM2: ::flatbuffers::VOffsetT = 12;
+    pub const VT_FLOOR_WW_KM2: ::flatbuffers::VOffsetT = 14;
+    pub const VT_NOISE_ECCENTRICITY_PER_DAY: ::flatbuffers::VOffsetT = 16;
+    pub const VT_NOISE_INCLINATION_PER_DAY: ::flatbuffers::VOffsetT = 18;
+    pub const VT_NOISE_MEAN_MOTION_RELATIVE: ::flatbuffers::VOffsetT = 20;
+    pub const VT_NOISE_NON_GRAVITATIONAL_RAD_DAY2: ::flatbuffers::VOffsetT = 22;
+    pub const VT_NOISE_START_MINUTES: ::flatbuffers::VOffsetT = 24;
+    pub const VT_NON_GRAVITATIONAL_SHARE: ::flatbuffers::VOffsetT = 26;
+    pub const VT_NON_GRAVITATIONAL_RATE_PER_DAY: ::flatbuffers::VOffsetT = 28;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMCovariancePropagation { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMCovariancePropagationArgs
+    ) -> ::flatbuffers::WIPOffset<OCMCovariancePropagation<'bldr>> {
+        let mut builder = OCMCovariancePropagationBuilder::new(_fbb);
+        builder.add_NON_GRAVITATIONAL_RATE_PER_DAY(args.NON_GRAVITATIONAL_RATE_PER_DAY);
+        builder.add_NON_GRAVITATIONAL_SHARE(args.NON_GRAVITATIONAL_SHARE);
+        builder.add_NOISE_START_MINUTES(args.NOISE_START_MINUTES);
+        builder.add_NOISE_NON_GRAVITATIONAL_RAD_DAY2(args.NOISE_NON_GRAVITATIONAL_RAD_DAY2);
+        builder.add_NOISE_MEAN_MOTION_RELATIVE(args.NOISE_MEAN_MOTION_RELATIVE);
+        builder.add_NOISE_INCLINATION_PER_DAY(args.NOISE_INCLINATION_PER_DAY);
+        builder.add_NOISE_ECCENTRICITY_PER_DAY(args.NOISE_ECCENTRICITY_PER_DAY);
+        builder.add_FLOOR_WW_KM2(args.FLOOR_WW_KM2);
+        builder.add_FLOOR_WV_KM2(args.FLOOR_WV_KM2);
+        builder.add_FLOOR_WU_KM2(args.FLOOR_WU_KM2);
+        builder.add_FLOOR_VV_KM2(args.FLOOR_VV_KM2);
+        builder.add_FLOOR_VU_KM2(args.FLOOR_VU_KM2);
+        builder.add_FLOOR_UU_KM2(args.FLOOR_UU_KM2);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMCovariancePropagationT {
+        let FLOOR_UU_KM2 = self.FLOOR_UU_KM2();
+        let FLOOR_VU_KM2 = self.FLOOR_VU_KM2();
+        let FLOOR_VV_KM2 = self.FLOOR_VV_KM2();
+        let FLOOR_WU_KM2 = self.FLOOR_WU_KM2();
+        let FLOOR_WV_KM2 = self.FLOOR_WV_KM2();
+        let FLOOR_WW_KM2 = self.FLOOR_WW_KM2();
+        let NOISE_ECCENTRICITY_PER_DAY = self.NOISE_ECCENTRICITY_PER_DAY();
+        let NOISE_INCLINATION_PER_DAY = self.NOISE_INCLINATION_PER_DAY();
+        let NOISE_MEAN_MOTION_RELATIVE = self.NOISE_MEAN_MOTION_RELATIVE();
+        let NOISE_NON_GRAVITATIONAL_RAD_DAY2 = self.NOISE_NON_GRAVITATIONAL_RAD_DAY2();
+        let NOISE_START_MINUTES = self.NOISE_START_MINUTES();
+        let NON_GRAVITATIONAL_SHARE = self.NON_GRAVITATIONAL_SHARE();
+        let NON_GRAVITATIONAL_RATE_PER_DAY = self.NON_GRAVITATIONAL_RATE_PER_DAY();
+        OCMCovariancePropagationT {
+            FLOOR_UU_KM2,
+            FLOOR_VU_KM2,
+            FLOOR_VV_KM2,
+            FLOOR_WU_KM2,
+            FLOOR_WV_KM2,
+            FLOOR_WW_KM2,
+            NOISE_ECCENTRICITY_PER_DAY,
+            NOISE_INCLINATION_PER_DAY,
+            NOISE_MEAN_MOTION_RELATIVE,
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2,
+            NOISE_START_MINUTES,
+            NON_GRAVITATIONAL_SHARE,
+            NON_GRAVITATIONAL_RATE_PER_DAY,
+        }
+    }
+
+    /// Theory floor, the fit's residual covariance in the UVW axes of the state at each time
+    /// (U radial, V in-track, W along r x v), km**2: the uu, vu, vv, wu, wv and ww entries.
+    /// Included in the state block of COVARIANCE_DATA at epoch; subtracted when read, added at
+    /// every time.
+    #[inline]
+    pub fn FLOOR_UU_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_UU_KM2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FLOOR_VU_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_VU_KM2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FLOOR_VV_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_VV_KM2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FLOOR_WU_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_WU_KM2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FLOOR_WV_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_WV_KM2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FLOOR_WW_KM2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_FLOOR_WW_KM2, Some(0.0)).unwrap()}
+    }
+
+    /// Rate errors of the mean elements from NOISE_START_MINUTES on: eccentricity vector and
+    /// inclination vector, 1/day.
+    #[inline]
+    pub fn NOISE_ECCENTRICITY_PER_DAY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NOISE_ECCENTRICITY_PER_DAY, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn NOISE_INCLINATION_PER_DAY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NOISE_INCLINATION_PER_DAY, Some(0.0)).unwrap()}
+    }
+
+    /// Relative mean-motion error, dimensionless.
+    #[inline]
+    pub fn NOISE_MEAN_MOTION_RELATIVE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NOISE_MEAN_MOTION_RELATIVE, Some(0.0)).unwrap()}
+    }
+
+    /// Non-gravitational mean-motion rate error, rad/day**2: the value that flies.
+    #[inline]
+    pub fn NOISE_NON_GRAVITATIONAL_RAD_DAY2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NOISE_NON_GRAVITATIONAL_RAD_DAY2, Some(0.0)).unwrap()}
+    }
+
+    /// Start of the rate errors: end of the fit arc, minutes from the set's epoch (signed).
+    #[inline]
+    pub fn NOISE_START_MINUTES(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NOISE_START_MINUTES, Some(0.0)).unwrap()}
+    }
+
+    /// Share c of the non-gravitational mean-motion rate that is error, dimensionless, and the
+    /// rate itself as n-dot_ng / n, 1/day. NOISE_NON_GRAVITATIONAL_RAD_DAY2 = c |n-dot_ng|.
+    #[inline]
+    pub fn NON_GRAVITATIONAL_SHARE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NON_GRAVITATIONAL_SHARE, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn NON_GRAVITATIONAL_RATE_PER_DAY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMCovariancePropagation::VT_NON_GRAVITATIONAL_RATE_PER_DAY, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMCovariancePropagation<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<f64>("FLOOR_UU_KM2", Self::VT_FLOOR_UU_KM2, false)?
+            .visit_field::<f64>("FLOOR_VU_KM2", Self::VT_FLOOR_VU_KM2, false)?
+            .visit_field::<f64>("FLOOR_VV_KM2", Self::VT_FLOOR_VV_KM2, false)?
+            .visit_field::<f64>("FLOOR_WU_KM2", Self::VT_FLOOR_WU_KM2, false)?
+            .visit_field::<f64>("FLOOR_WV_KM2", Self::VT_FLOOR_WV_KM2, false)?
+            .visit_field::<f64>("FLOOR_WW_KM2", Self::VT_FLOOR_WW_KM2, false)?
+            .visit_field::<f64>("NOISE_ECCENTRICITY_PER_DAY", Self::VT_NOISE_ECCENTRICITY_PER_DAY, false)?
+            .visit_field::<f64>("NOISE_INCLINATION_PER_DAY", Self::VT_NOISE_INCLINATION_PER_DAY, false)?
+            .visit_field::<f64>("NOISE_MEAN_MOTION_RELATIVE", Self::VT_NOISE_MEAN_MOTION_RELATIVE, false)?
+            .visit_field::<f64>("NOISE_NON_GRAVITATIONAL_RAD_DAY2", Self::VT_NOISE_NON_GRAVITATIONAL_RAD_DAY2, false)?
+            .visit_field::<f64>("NOISE_START_MINUTES", Self::VT_NOISE_START_MINUTES, false)?
+            .visit_field::<f64>("NON_GRAVITATIONAL_SHARE", Self::VT_NON_GRAVITATIONAL_SHARE, false)?
+            .visit_field::<f64>("NON_GRAVITATIONAL_RATE_PER_DAY", Self::VT_NON_GRAVITATIONAL_RATE_PER_DAY, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMCovariancePropagationArgs {
+    pub FLOOR_UU_KM2: f64,
+    pub FLOOR_VU_KM2: f64,
+    pub FLOOR_VV_KM2: f64,
+    pub FLOOR_WU_KM2: f64,
+    pub FLOOR_WV_KM2: f64,
+    pub FLOOR_WW_KM2: f64,
+    pub NOISE_ECCENTRICITY_PER_DAY: f64,
+    pub NOISE_INCLINATION_PER_DAY: f64,
+    pub NOISE_MEAN_MOTION_RELATIVE: f64,
+    pub NOISE_NON_GRAVITATIONAL_RAD_DAY2: f64,
+    pub NOISE_START_MINUTES: f64,
+    pub NON_GRAVITATIONAL_SHARE: f64,
+    pub NON_GRAVITATIONAL_RATE_PER_DAY: f64,
+}
+
+impl<'a> Default for OCMCovariancePropagationArgs {
+    #[inline]
+    fn default() -> Self {
+        OCMCovariancePropagationArgs {
+            FLOOR_UU_KM2: 0.0,
+            FLOOR_VU_KM2: 0.0,
+            FLOOR_VV_KM2: 0.0,
+            FLOOR_WU_KM2: 0.0,
+            FLOOR_WV_KM2: 0.0,
+            FLOOR_WW_KM2: 0.0,
+            NOISE_ECCENTRICITY_PER_DAY: 0.0,
+            NOISE_INCLINATION_PER_DAY: 0.0,
+            NOISE_MEAN_MOTION_RELATIVE: 0.0,
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: 0.0,
+            NOISE_START_MINUTES: 0.0,
+            NON_GRAVITATIONAL_SHARE: 0.0,
+            NON_GRAVITATIONAL_RATE_PER_DAY: 0.0,
+        }
+    }
+}
+
+pub struct OCMCovariancePropagationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMCovariancePropagationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_FLOOR_UU_KM2(&mut self, FLOOR_UU_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_UU_KM2, FLOOR_UU_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FLOOR_VU_KM2(&mut self, FLOOR_VU_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_VU_KM2, FLOOR_VU_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FLOOR_VV_KM2(&mut self, FLOOR_VV_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_VV_KM2, FLOOR_VV_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FLOOR_WU_KM2(&mut self, FLOOR_WU_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_WU_KM2, FLOOR_WU_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FLOOR_WV_KM2(&mut self, FLOOR_WV_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_WV_KM2, FLOOR_WV_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FLOOR_WW_KM2(&mut self, FLOOR_WW_KM2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_FLOOR_WW_KM2, FLOOR_WW_KM2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NOISE_ECCENTRICITY_PER_DAY(&mut self, NOISE_ECCENTRICITY_PER_DAY: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NOISE_ECCENTRICITY_PER_DAY, NOISE_ECCENTRICITY_PER_DAY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NOISE_INCLINATION_PER_DAY(&mut self, NOISE_INCLINATION_PER_DAY: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NOISE_INCLINATION_PER_DAY, NOISE_INCLINATION_PER_DAY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NOISE_MEAN_MOTION_RELATIVE(&mut self, NOISE_MEAN_MOTION_RELATIVE: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NOISE_MEAN_MOTION_RELATIVE, NOISE_MEAN_MOTION_RELATIVE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NOISE_NON_GRAVITATIONAL_RAD_DAY2(&mut self, NOISE_NON_GRAVITATIONAL_RAD_DAY2: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NOISE_NON_GRAVITATIONAL_RAD_DAY2, NOISE_NON_GRAVITATIONAL_RAD_DAY2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NOISE_START_MINUTES(&mut self, NOISE_START_MINUTES: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NOISE_START_MINUTES, NOISE_START_MINUTES, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NON_GRAVITATIONAL_SHARE(&mut self, NON_GRAVITATIONAL_SHARE: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NON_GRAVITATIONAL_SHARE, NON_GRAVITATIONAL_SHARE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_NON_GRAVITATIONAL_RATE_PER_DAY(&mut self, NON_GRAVITATIONAL_RATE_PER_DAY: f64) {
+        self.fbb_.push_slot::<f64>(OCMCovariancePropagation::VT_NON_GRAVITATIONAL_RATE_PER_DAY, NON_GRAVITATIONAL_RATE_PER_DAY, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMCovariancePropagationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMCovariancePropagationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMCovariancePropagation<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMCovariancePropagation<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMCovariancePropagation");
+        ds.field("FLOOR_UU_KM2", &self.FLOOR_UU_KM2());
+        ds.field("FLOOR_VU_KM2", &self.FLOOR_VU_KM2());
+        ds.field("FLOOR_VV_KM2", &self.FLOOR_VV_KM2());
+        ds.field("FLOOR_WU_KM2", &self.FLOOR_WU_KM2());
+        ds.field("FLOOR_WV_KM2", &self.FLOOR_WV_KM2());
+        ds.field("FLOOR_WW_KM2", &self.FLOOR_WW_KM2());
+        ds.field("NOISE_ECCENTRICITY_PER_DAY", &self.NOISE_ECCENTRICITY_PER_DAY());
+        ds.field("NOISE_INCLINATION_PER_DAY", &self.NOISE_INCLINATION_PER_DAY());
+        ds.field("NOISE_MEAN_MOTION_RELATIVE", &self.NOISE_MEAN_MOTION_RELATIVE());
+        ds.field("NOISE_NON_GRAVITATIONAL_RAD_DAY2", &self.NOISE_NON_GRAVITATIONAL_RAD_DAY2());
+        ds.field("NOISE_START_MINUTES", &self.NOISE_START_MINUTES());
+        ds.field("NON_GRAVITATIONAL_SHARE", &self.NON_GRAVITATIONAL_SHARE());
+        ds.field("NON_GRAVITATIONAL_RATE_PER_DAY", &self.NON_GRAVITATIONAL_RATE_PER_DAY());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMCovariancePropagationT {
+    pub FLOOR_UU_KM2: f64,
+    pub FLOOR_VU_KM2: f64,
+    pub FLOOR_VV_KM2: f64,
+    pub FLOOR_WU_KM2: f64,
+    pub FLOOR_WV_KM2: f64,
+    pub FLOOR_WW_KM2: f64,
+    pub NOISE_ECCENTRICITY_PER_DAY: f64,
+    pub NOISE_INCLINATION_PER_DAY: f64,
+    pub NOISE_MEAN_MOTION_RELATIVE: f64,
+    pub NOISE_NON_GRAVITATIONAL_RAD_DAY2: f64,
+    pub NOISE_START_MINUTES: f64,
+    pub NON_GRAVITATIONAL_SHARE: f64,
+    pub NON_GRAVITATIONAL_RATE_PER_DAY: f64,
+}
+
+impl Default for OCMCovariancePropagationT {
+    fn default() -> Self {
+        Self {
+            FLOOR_UU_KM2: 0.0,
+            FLOOR_VU_KM2: 0.0,
+            FLOOR_VV_KM2: 0.0,
+            FLOOR_WU_KM2: 0.0,
+            FLOOR_WV_KM2: 0.0,
+            FLOOR_WW_KM2: 0.0,
+            NOISE_ECCENTRICITY_PER_DAY: 0.0,
+            NOISE_INCLINATION_PER_DAY: 0.0,
+            NOISE_MEAN_MOTION_RELATIVE: 0.0,
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: 0.0,
+            NOISE_START_MINUTES: 0.0,
+            NON_GRAVITATIONAL_SHARE: 0.0,
+            NON_GRAVITATIONAL_RATE_PER_DAY: 0.0,
+        }
+    }
+}
+
+impl OCMCovariancePropagationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMCovariancePropagation<'b>> {
+        let FLOOR_UU_KM2 = self.FLOOR_UU_KM2;
+        let FLOOR_VU_KM2 = self.FLOOR_VU_KM2;
+        let FLOOR_VV_KM2 = self.FLOOR_VV_KM2;
+        let FLOOR_WU_KM2 = self.FLOOR_WU_KM2;
+        let FLOOR_WV_KM2 = self.FLOOR_WV_KM2;
+        let FLOOR_WW_KM2 = self.FLOOR_WW_KM2;
+        let NOISE_ECCENTRICITY_PER_DAY = self.NOISE_ECCENTRICITY_PER_DAY;
+        let NOISE_INCLINATION_PER_DAY = self.NOISE_INCLINATION_PER_DAY;
+        let NOISE_MEAN_MOTION_RELATIVE = self.NOISE_MEAN_MOTION_RELATIVE;
+        let NOISE_NON_GRAVITATIONAL_RAD_DAY2 = self.NOISE_NON_GRAVITATIONAL_RAD_DAY2;
+        let NOISE_START_MINUTES = self.NOISE_START_MINUTES;
+        let NON_GRAVITATIONAL_SHARE = self.NON_GRAVITATIONAL_SHARE;
+        let NON_GRAVITATIONAL_RATE_PER_DAY = self.NON_GRAVITATIONAL_RATE_PER_DAY;
+        OCMCovariancePropagation::create(_fbb, &OCMCovariancePropagationArgs{
+            FLOOR_UU_KM2,
+            FLOOR_VU_KM2,
+            FLOOR_VV_KM2,
+            FLOOR_WU_KM2,
+            FLOOR_WV_KM2,
+            FLOOR_WW_KM2,
+            NOISE_ECCENTRICITY_PER_DAY,
+            NOISE_INCLINATION_PER_DAY,
+            NOISE_MEAN_MOTION_RELATIVE,
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2,
+            NOISE_START_MINUTES,
+            NON_GRAVITATIONAL_SHARE,
+            NON_GRAVITATIONAL_RATE_PER_DAY,
+        })
+    }
+}
+
+pub enum OCMSeedSetOffset {}
+
+/// An element set a trajectory was computed from (SDS addition: CCSDS 502.0-B-3
+/// TRAJ_BASIS_ID names one determination, a relative trajectory has two).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMSeedSet<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMSeedSet<'a> {
+    type Inner = OCMSeedSet<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMSeedSet<'a> {
+    pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 6;
+    pub const VT_CREATION_DATE: ::flatbuffers::VOffsetT = 8;
+    pub const VT_MESSAGE_ID: ::flatbuffers::VOffsetT = 10;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMSeedSet { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMSeedSetArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMSeedSet<'bldr>> {
+        let mut builder = OCMSeedSetBuilder::new(_fbb);
+        if let Some(x) = args.MESSAGE_ID { builder.add_MESSAGE_ID(x); }
+        if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMSeedSetT {
+        let NORAD_CAT_ID = self.NORAD_CAT_ID();
+        let EPOCH = self.EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let CREATION_DATE = self.CREATION_DATE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        OCMSeedSetT {
+            NORAD_CAT_ID,
+            EPOCH,
+            CREATION_DATE,
+            MESSAGE_ID,
+        }
+    }
+
+    /// NORAD_CAT_ID of the object the set describes.
+    #[inline]
+    pub fn NORAD_CAT_ID(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OCMSeedSet::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+    }
+
+    /// EPOCH of the element set, ISO 8601 UTC.
+    #[inline]
+    pub fn EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMSeedSet::VT_EPOCH, None)}
+    }
+
+    /// CREATION_DATE of the element set: when its originator made it, ISO 8601
+    /// UTC.
+    #[inline]
+    pub fn CREATION_DATE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMSeedSet::VT_CREATION_DATE, None)}
+    }
+
+    /// MESSAGE_ID of the element set; for a Space-Track set its GP_ID.
+    #[inline]
+    pub fn MESSAGE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMSeedSet::VT_MESSAGE_ID, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMSeedSet<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATION_DATE", Self::VT_CREATION_DATE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE_ID", Self::VT_MESSAGE_ID, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMSeedSetArgs<'a> {
+    pub NORAD_CAT_ID: u32,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATION_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for OCMSeedSetArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMSeedSetArgs {
+            NORAD_CAT_ID: 0,
+            EPOCH: None,
+            CREATION_DATE: None,
+            MESSAGE_ID: None,
+        }
+    }
+}
+
+pub struct OCMSeedSetBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMSeedSetBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+        self.fbb_.push_slot::<u32>(OCMSeedSet::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+    }
+
+    #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMSeedSet::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_CREATION_DATE(&mut self, CREATION_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMSeedSet::VT_CREATION_DATE, CREATION_DATE);
+    }
+
+    #[inline]
+    pub fn add_MESSAGE_ID(&mut self, MESSAGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMSeedSet::VT_MESSAGE_ID, MESSAGE_ID);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMSeedSetBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMSeedSetBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMSeedSet<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMSeedSet<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMSeedSet");
+        ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("CREATION_DATE", &self.CREATION_DATE());
+        ds.field("MESSAGE_ID", &self.MESSAGE_ID());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMSeedSetT {
+    pub NORAD_CAT_ID: u32,
+    pub EPOCH: Option<alloc::string::String>,
+    pub CREATION_DATE: Option<alloc::string::String>,
+    pub MESSAGE_ID: Option<alloc::string::String>,
+}
+
+impl Default for OCMSeedSetT {
+    fn default() -> Self {
+        Self {
+            NORAD_CAT_ID: 0,
+            EPOCH: None,
+            CREATION_DATE: None,
+            MESSAGE_ID: None,
+        }
+    }
+}
+
+impl OCMSeedSetT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMSeedSet<'b>> {
+        let NORAD_CAT_ID = self.NORAD_CAT_ID;
+        let EPOCH = self.EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let CREATION_DATE = self.CREATION_DATE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MESSAGE_ID = self.MESSAGE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        OCMSeedSet::create(_fbb, &OCMSeedSetArgs{
+            NORAD_CAT_ID,
+            EPOCH,
+            CREATION_DATE,
+            MESSAGE_ID,
+        })
+    }
+}
+
+pub enum OCMIntegratorOffset {}
+
+/// Settings of the numerical integrator that made a solution, as a legacy SP
+/// Vector/Covariance Message states them (SDS addition: CCSDS 502.0-B-3 has no
+/// integrator keywords). Present only on a message made from such a message;
+/// a reader of any other message treats it as absent.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMIntegrator<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMIntegrator<'a> {
+    type Inner = OCMIntegrator<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMIntegrator<'a> {
+    pub const VT_MODE: ::flatbuffers::VOffsetT = 4;
+    pub const VT_COORDINATE_SYSTEM: ::flatbuffers::VOffsetT = 6;
+    pub const VT_PARTIALS: ::flatbuffers::VOffsetT = 8;
+    pub const VT_STEP_MODE: ::flatbuffers::VOffsetT = 10;
+    pub const VT_FIXED_STEP: ::flatbuffers::VOffsetT = 12;
+    pub const VT_STEP_SIZE_SELECTION: ::flatbuffers::VOffsetT = 14;
+    pub const VT_INITIAL_STEP_SECONDS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_ERROR_CONTROL: ::flatbuffers::VOffsetT = 18;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMIntegrator { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMIntegratorArgs
+    ) -> ::flatbuffers::WIPOffset<OCMIntegrator<'bldr>> {
+        let mut builder = OCMIntegratorBuilder::new(_fbb);
+        builder.add_ERROR_CONTROL(args.ERROR_CONTROL);
+        builder.add_INITIAL_STEP_SECONDS(args.INITIAL_STEP_SECONDS);
+        builder.add_STEP_SIZE_SELECTION(args.STEP_SIZE_SELECTION);
+        builder.add_FIXED_STEP(args.FIXED_STEP);
+        builder.add_STEP_MODE(args.STEP_MODE);
+        builder.add_PARTIALS(args.PARTIALS);
+        builder.add_COORDINATE_SYSTEM(args.COORDINATE_SYSTEM);
+        builder.add_MODE(args.MODE);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMIntegratorT {
+        let MODE = self.MODE();
+        let COORDINATE_SYSTEM = self.COORDINATE_SYSTEM();
+        let PARTIALS = self.PARTIALS();
+        let STEP_MODE = self.STEP_MODE();
+        let FIXED_STEP = self.FIXED_STEP();
+        let STEP_SIZE_SELECTION = self.STEP_SIZE_SELECTION();
+        let INITIAL_STEP_SECONDS = self.INITIAL_STEP_SECONDS();
+        let ERROR_CONTROL = self.ERROR_CONTROL();
+        OCMIntegratorT {
+            MODE,
+            COORDINATE_SYSTEM,
+            PARTIALS,
+            STEP_MODE,
+            FIXED_STEP,
+            STEP_SIZE_SELECTION,
+            INITIAL_STEP_SECONDS,
+            ERROR_CONTROL,
+        }
+    }
+
+    /// INTEGRATOR MODE.
+    #[inline]
+    pub fn MODE(&self) -> ocmIntegratorMode {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmIntegratorMode>(OCMIntegrator::VT_MODE, Some(ocmIntegratorMode::UNSPECIFIED)).unwrap()}
+    }
+
+    /// COORD SYS: the coordinate system the integration ran in. Not
+    /// TRAJ_REF_FRAME, which is the frame of STATE_DATA.
+    #[inline]
+    pub fn COORDINATE_SYSTEM(&self) -> ocmIntegrationFrame {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmIntegrationFrame>(OCMIntegrator::VT_COORDINATE_SYSTEM, Some(ocmIntegrationFrame::UNSPECIFIED)).unwrap()}
+    }
+
+    /// PARTIALS.
+    #[inline]
+    pub fn PARTIALS(&self) -> ocmPartialsMethod {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmPartialsMethod>(OCMIntegrator::VT_PARTIALS, Some(ocmPartialsMethod::UNSPECIFIED)).unwrap()}
+    }
+
+    /// STEP MODE.
+    #[inline]
+    pub fn STEP_MODE(&self) -> ocmStepMode {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmStepMode>(OCMIntegrator::VT_STEP_MODE, Some(ocmStepMode::UNSPECIFIED)).unwrap()}
+    }
+
+    /// FIXED STEP: true for ON.
+    #[inline]
+    pub fn FIXED_STEP(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(OCMIntegrator::VT_FIXED_STEP, Some(false)).unwrap()}
+    }
+
+    /// STEP SIZE SELECTION.
+    #[inline]
+    pub fn STEP_SIZE_SELECTION(&self) -> ocmStepSelection {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmStepSelection>(OCMIntegrator::VT_STEP_SIZE_SELECTION, Some(ocmStepSelection::UNSPECIFIED)).unwrap()}
+    }
+
+    /// INITIAL STEP SIZE, s. NaN when not stated.
+    #[inline]
+    pub fn INITIAL_STEP_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMIntegrator::VT_INITIAL_STEP_SECONDS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ERROR CONTROL, dimensionless, as the SP integrator takes it. NaN when not
+    /// stated.
+    #[inline]
+    pub fn ERROR_CONTROL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMIntegrator::VT_ERROR_CONTROL, Some(f64::NAN)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMIntegrator<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<ocmIntegratorMode>("MODE", Self::VT_MODE, false)?
+            .visit_field::<ocmIntegrationFrame>("COORDINATE_SYSTEM", Self::VT_COORDINATE_SYSTEM, false)?
+            .visit_field::<ocmPartialsMethod>("PARTIALS", Self::VT_PARTIALS, false)?
+            .visit_field::<ocmStepMode>("STEP_MODE", Self::VT_STEP_MODE, false)?
+            .visit_field::<bool>("FIXED_STEP", Self::VT_FIXED_STEP, false)?
+            .visit_field::<ocmStepSelection>("STEP_SIZE_SELECTION", Self::VT_STEP_SIZE_SELECTION, false)?
+            .visit_field::<f64>("INITIAL_STEP_SECONDS", Self::VT_INITIAL_STEP_SECONDS, false)?
+            .visit_field::<f64>("ERROR_CONTROL", Self::VT_ERROR_CONTROL, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMIntegratorArgs {
+    pub MODE: ocmIntegratorMode,
+    pub COORDINATE_SYSTEM: ocmIntegrationFrame,
+    pub PARTIALS: ocmPartialsMethod,
+    pub STEP_MODE: ocmStepMode,
+    pub FIXED_STEP: bool,
+    pub STEP_SIZE_SELECTION: ocmStepSelection,
+    pub INITIAL_STEP_SECONDS: f64,
+    pub ERROR_CONTROL: f64,
+}
+
+impl<'a> Default for OCMIntegratorArgs {
+    #[inline]
+    fn default() -> Self {
+        OCMIntegratorArgs {
+            MODE: ocmIntegratorMode::UNSPECIFIED,
+            COORDINATE_SYSTEM: ocmIntegrationFrame::UNSPECIFIED,
+            PARTIALS: ocmPartialsMethod::UNSPECIFIED,
+            STEP_MODE: ocmStepMode::UNSPECIFIED,
+            FIXED_STEP: false,
+            STEP_SIZE_SELECTION: ocmStepSelection::UNSPECIFIED,
+            INITIAL_STEP_SECONDS: f64::NAN,
+            ERROR_CONTROL: f64::NAN,
+        }
+    }
+}
+
+pub struct OCMIntegratorBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMIntegratorBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_MODE(&mut self, MODE: ocmIntegratorMode) {
+        self.fbb_.push_slot::<ocmIntegratorMode>(OCMIntegrator::VT_MODE, MODE, ocmIntegratorMode::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_COORDINATE_SYSTEM(&mut self, COORDINATE_SYSTEM: ocmIntegrationFrame) {
+        self.fbb_.push_slot::<ocmIntegrationFrame>(OCMIntegrator::VT_COORDINATE_SYSTEM, COORDINATE_SYSTEM, ocmIntegrationFrame::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_PARTIALS(&mut self, PARTIALS: ocmPartialsMethod) {
+        self.fbb_.push_slot::<ocmPartialsMethod>(OCMIntegrator::VT_PARTIALS, PARTIALS, ocmPartialsMethod::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_STEP_MODE(&mut self, STEP_MODE: ocmStepMode) {
+        self.fbb_.push_slot::<ocmStepMode>(OCMIntegrator::VT_STEP_MODE, STEP_MODE, ocmStepMode::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_FIXED_STEP(&mut self, FIXED_STEP: bool) {
+        self.fbb_.push_slot::<bool>(OCMIntegrator::VT_FIXED_STEP, FIXED_STEP, false);
+    }
+
+    #[inline]
+    pub fn add_STEP_SIZE_SELECTION(&mut self, STEP_SIZE_SELECTION: ocmStepSelection) {
+        self.fbb_.push_slot::<ocmStepSelection>(OCMIntegrator::VT_STEP_SIZE_SELECTION, STEP_SIZE_SELECTION, ocmStepSelection::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_INITIAL_STEP_SECONDS(&mut self, INITIAL_STEP_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(OCMIntegrator::VT_INITIAL_STEP_SECONDS, INITIAL_STEP_SECONDS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ERROR_CONTROL(&mut self, ERROR_CONTROL: f64) {
+        self.fbb_.push_slot::<f64>(OCMIntegrator::VT_ERROR_CONTROL, ERROR_CONTROL, f64::NAN);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMIntegratorBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMIntegratorBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMIntegrator<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMIntegrator<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMIntegrator");
+        ds.field("MODE", &self.MODE());
+        ds.field("COORDINATE_SYSTEM", &self.COORDINATE_SYSTEM());
+        ds.field("PARTIALS", &self.PARTIALS());
+        ds.field("STEP_MODE", &self.STEP_MODE());
+        ds.field("FIXED_STEP", &self.FIXED_STEP());
+        ds.field("STEP_SIZE_SELECTION", &self.STEP_SIZE_SELECTION());
+        ds.field("INITIAL_STEP_SECONDS", &self.INITIAL_STEP_SECONDS());
+        ds.field("ERROR_CONTROL", &self.ERROR_CONTROL());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMIntegratorT {
+    pub MODE: ocmIntegratorMode,
+    pub COORDINATE_SYSTEM: ocmIntegrationFrame,
+    pub PARTIALS: ocmPartialsMethod,
+    pub STEP_MODE: ocmStepMode,
+    pub FIXED_STEP: bool,
+    pub STEP_SIZE_SELECTION: ocmStepSelection,
+    pub INITIAL_STEP_SECONDS: f64,
+    pub ERROR_CONTROL: f64,
+}
+
+impl Default for OCMIntegratorT {
+    fn default() -> Self {
+        Self {
+            MODE: ocmIntegratorMode::UNSPECIFIED,
+            COORDINATE_SYSTEM: ocmIntegrationFrame::UNSPECIFIED,
+            PARTIALS: ocmPartialsMethod::UNSPECIFIED,
+            STEP_MODE: ocmStepMode::UNSPECIFIED,
+            FIXED_STEP: false,
+            STEP_SIZE_SELECTION: ocmStepSelection::UNSPECIFIED,
+            INITIAL_STEP_SECONDS: f64::NAN,
+            ERROR_CONTROL: f64::NAN,
+        }
+    }
+}
+
+impl OCMIntegratorT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMIntegrator<'b>> {
+        let MODE = self.MODE;
+        let COORDINATE_SYSTEM = self.COORDINATE_SYSTEM;
+        let PARTIALS = self.PARTIALS;
+        let STEP_MODE = self.STEP_MODE;
+        let FIXED_STEP = self.FIXED_STEP;
+        let STEP_SIZE_SELECTION = self.STEP_SIZE_SELECTION;
+        let INITIAL_STEP_SECONDS = self.INITIAL_STEP_SECONDS;
+        let ERROR_CONTROL = self.ERROR_CONTROL;
+        OCMIntegrator::create(_fbb, &OCMIntegratorArgs{
+            MODE,
+            COORDINATE_SYSTEM,
+            PARTIALS,
+            STEP_MODE,
+            FIXED_STEP,
+            STEP_SIZE_SELECTION,
+            INITIAL_STEP_SECONDS,
+            ERROR_CONTROL,
+        })
+    }
+}
+
+pub enum OCMRelativeGeometryOffset {}
+
+/// Relative-motion geometry of a chaser about a target on the time grid of the
+/// message (SDS addition: CCSDS 502.0-B-3 has no curvilinear or
+/// relative-orbital-element trajectory type). Every vector holds one entry per
+/// time, in order: entry i is at STATE_EPOCHS[i], or at Metadata.START_TIME +
+/// i * STATE_STEP_SIZE. The target is CENTER_NAME and TRAJ_REF_FRAME its RTN
+/// axes. NaN where a quantity is not defined at a time. The first fourteen
+/// vectors are derived from the two element sets (SEED_SETS); the seven SIGMA_*
+/// and BAND3_* vectors are the projection's, NaN in a history segment.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMRelativeGeometry<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMRelativeGeometry<'a> {
+    type Inner = OCMRelativeGeometry<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMRelativeGeometry<'a> {
+    pub const VT_R_KM: ::flatbuffers::VOffsetT = 4;
+    pub const VT_I_KM: ::flatbuffers::VOffsetT = 6;
+    pub const VT_C_KM: ::flatbuffers::VOffsetT = 8;
+    pub const VT_I_UNWRAPPED_KM: ::flatbuffers::VOffsetT = 10;
+    pub const VT_SEPARATION_KM: ::flatbuffers::VOffsetT = 12;
+    pub const VT_RANGE_RATE_KM_S: ::flatbuffers::VOffsetT = 14;
+    pub const VT_PLANE_ANGLE_DEG: ::flatbuffers::VOffsetT = 16;
+    pub const VT_A_CHIEF_KM: ::flatbuffers::VOffsetT = 18;
+    pub const VT_DA: ::flatbuffers::VOffsetT = 20;
+    pub const VT_DLAMBDA: ::flatbuffers::VOffsetT = 22;
+    pub const VT_DEX: ::flatbuffers::VOffsetT = 24;
+    pub const VT_DEY: ::flatbuffers::VOffsetT = 26;
+    pub const VT_DIX: ::flatbuffers::VOffsetT = 28;
+    pub const VT_DIY: ::flatbuffers::VOffsetT = 30;
+    pub const VT_SIGMA_R_KM: ::flatbuffers::VOffsetT = 32;
+    pub const VT_SIGMA_I_KM: ::flatbuffers::VOffsetT = 34;
+    pub const VT_SIGMA_C_KM: ::flatbuffers::VOffsetT = 36;
+    pub const VT_SIGMA_SEPARATION_KM: ::flatbuffers::VOffsetT = 38;
+    pub const VT_BAND3_R_KM: ::flatbuffers::VOffsetT = 40;
+    pub const VT_BAND3_I_KM: ::flatbuffers::VOffsetT = 42;
+    pub const VT_BAND3_C_KM: ::flatbuffers::VOffsetT = 44;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMRelativeGeometry { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMRelativeGeometryArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMRelativeGeometry<'bldr>> {
+        let mut builder = OCMRelativeGeometryBuilder::new(_fbb);
+        if let Some(x) = args.BAND3_C_KM { builder.add_BAND3_C_KM(x); }
+        if let Some(x) = args.BAND3_I_KM { builder.add_BAND3_I_KM(x); }
+        if let Some(x) = args.BAND3_R_KM { builder.add_BAND3_R_KM(x); }
+        if let Some(x) = args.SIGMA_SEPARATION_KM { builder.add_SIGMA_SEPARATION_KM(x); }
+        if let Some(x) = args.SIGMA_C_KM { builder.add_SIGMA_C_KM(x); }
+        if let Some(x) = args.SIGMA_I_KM { builder.add_SIGMA_I_KM(x); }
+        if let Some(x) = args.SIGMA_R_KM { builder.add_SIGMA_R_KM(x); }
+        if let Some(x) = args.DIY { builder.add_DIY(x); }
+        if let Some(x) = args.DIX { builder.add_DIX(x); }
+        if let Some(x) = args.DEY { builder.add_DEY(x); }
+        if let Some(x) = args.DEX { builder.add_DEX(x); }
+        if let Some(x) = args.DLAMBDA { builder.add_DLAMBDA(x); }
+        if let Some(x) = args.DA { builder.add_DA(x); }
+        if let Some(x) = args.A_CHIEF_KM { builder.add_A_CHIEF_KM(x); }
+        if let Some(x) = args.PLANE_ANGLE_DEG { builder.add_PLANE_ANGLE_DEG(x); }
+        if let Some(x) = args.RANGE_RATE_KM_S { builder.add_RANGE_RATE_KM_S(x); }
+        if let Some(x) = args.SEPARATION_KM { builder.add_SEPARATION_KM(x); }
+        if let Some(x) = args.I_UNWRAPPED_KM { builder.add_I_UNWRAPPED_KM(x); }
+        if let Some(x) = args.C_KM { builder.add_C_KM(x); }
+        if let Some(x) = args.I_KM { builder.add_I_KM(x); }
+        if let Some(x) = args.R_KM { builder.add_R_KM(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMRelativeGeometryT {
+        let R_KM = self.R_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let I_KM = self.I_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let C_KM = self.C_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let I_UNWRAPPED_KM = self.I_UNWRAPPED_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let SEPARATION_KM = self.SEPARATION_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let RANGE_RATE_KM_S = self.RANGE_RATE_KM_S().map(|x| {
+            x.into_iter().collect()
+        });
+        let PLANE_ANGLE_DEG = self.PLANE_ANGLE_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let A_CHIEF_KM = self.A_CHIEF_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let DA = self.DA().map(|x| {
+            x.into_iter().collect()
+        });
+        let DLAMBDA = self.DLAMBDA().map(|x| {
+            x.into_iter().collect()
+        });
+        let DEX = self.DEX().map(|x| {
+            x.into_iter().collect()
+        });
+        let DEY = self.DEY().map(|x| {
+            x.into_iter().collect()
+        });
+        let DIX = self.DIX().map(|x| {
+            x.into_iter().collect()
+        });
+        let DIY = self.DIY().map(|x| {
+            x.into_iter().collect()
+        });
+        let SIGMA_R_KM = self.SIGMA_R_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let SIGMA_I_KM = self.SIGMA_I_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let SIGMA_C_KM = self.SIGMA_C_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let SIGMA_SEPARATION_KM = self.SIGMA_SEPARATION_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let BAND3_R_KM = self.BAND3_R_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let BAND3_I_KM = self.BAND3_I_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let BAND3_C_KM = self.BAND3_C_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        OCMRelativeGeometryT {
+            R_KM,
+            I_KM,
+            C_KM,
+            I_UNWRAPPED_KM,
+            SEPARATION_KM,
+            RANGE_RATE_KM_S,
+            PLANE_ANGLE_DEG,
+            A_CHIEF_KM,
+            DA,
+            DLAMBDA,
+            DEX,
+            DEY,
+            DIX,
+            DIY,
+            SIGMA_R_KM,
+            SIGMA_I_KM,
+            SIGMA_C_KM,
+            SIGMA_SEPARATION_KM,
+            BAND3_R_KM,
+            BAND3_I_KM,
+            BAND3_C_KM,
+        }
+    }
+
+    /// Curvilinear radial offset R = |p| - r0, km: p the chaser's geocentric
+    /// position, r0 = |r_target|.
+    #[inline]
+    pub fn R_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_R_KM, None)}
+    }
+
+    /// Curvilinear in-track offset I = r0 atan2(y, r0 + x), km, wrapped to
+    /// +-pi r0; (x, y, z) the chaser's rectilinear RTN offset from the target.
+    #[inline]
+    pub fn I_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_I_KM, None)}
+    }
+
+    /// Curvilinear cross-track offset C = r0 atan2(z, hypot(r0 + x, y)), km.
+    #[inline]
+    pub fn C_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_C_KM, None)}
+    }
+
+    /// I_KM continuous within the message (unwrapped), km.
+    #[inline]
+    pub fn I_UNWRAPPED_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_I_UNWRAPPED_KM, None)}
+    }
+
+    /// Chaser-target distance, km.
+    #[inline]
+    pub fn SEPARATION_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_SEPARATION_KM, None)}
+    }
+
+    /// Rate of the separation, km/s.
+    #[inline]
+    pub fn RANGE_RATE_KM_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_RANGE_RATE_KM_S, None)}
+    }
+
+    /// Angle between the orbit normals (osculating angular momenta) of the chaser
+    /// and the target, deg.
+    #[inline]
+    pub fn PLANE_ANGLE_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_PLANE_ANGLE_DEG, None)}
+    }
+
+    /// Semi-major axis of the chief (the target), from its osculating two-body
+    /// elements, km.
+    #[inline]
+    pub fn A_CHIEF_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_A_CHIEF_KM, None)}
+    }
+
+    /// Quasi-nonsingular relative orbital elements after D'Amico (2010), chief =
+    /// target, from osculating two-body elements: DA = (a_d - a_c) / a_c,
+    /// dimensionless.
+    #[inline]
+    pub fn DA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DA, None)}
+    }
+
+    /// DLAMBDA = du + dRAAN cos i_c, rad.
+    #[inline]
+    pub fn DLAMBDA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DLAMBDA, None)}
+    }
+
+    /// DEX: difference of e cos(w), dimensionless.
+    #[inline]
+    pub fn DEX(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DEX, None)}
+    }
+
+    /// DEY: difference of e sin(w), dimensionless.
+    #[inline]
+    pub fn DEY(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DEY, None)}
+    }
+
+    /// DIX = di, rad.
+    #[inline]
+    pub fn DIX(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DIX, None)}
+    }
+
+    /// DIY = dRAAN sin i_c, rad.
+    #[inline]
+    pub fn DIY(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_DIY, None)}
+    }
+
+    /// 1-sigma of R_KM, I_KM and C_KM: the GP error model's sigma times a
+    /// per-axis factor, the 68.27 % quantile of |error| / model sigma over the
+    /// pair's own relative samples (predictions against the next element sets) in
+    /// the trailing calibration window; km.
+    #[inline]
+    pub fn SIGMA_R_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_SIGMA_R_KM, None)}
+    }
+
+    #[inline]
+    pub fn SIGMA_I_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_SIGMA_I_KM, None)}
+    }
+
+    #[inline]
+    pub fn SIGMA_C_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_SIGMA_C_KM, None)}
+    }
+
+    /// 1-sigma of SEPARATION_KM, km.
+    #[inline]
+    pub fn SIGMA_SEPARATION_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_SIGMA_SEPARATION_KM, None)}
+    }
+
+    /// 3-sigma band half-width of R_KM, I_KM and C_KM from the 99.73 % quantile of
+    /// the same ratio (not 3 SIGMA_* when the errors are not Gaussian), km.
+    #[inline]
+    pub fn BAND3_R_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_BAND3_R_KM, None)}
+    }
+
+    #[inline]
+    pub fn BAND3_I_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_BAND3_I_KM, None)}
+    }
+
+    #[inline]
+    pub fn BAND3_C_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMRelativeGeometry::VT_BAND3_C_KM, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMRelativeGeometry<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("R_KM", Self::VT_R_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("I_KM", Self::VT_I_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("C_KM", Self::VT_C_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("I_UNWRAPPED_KM", Self::VT_I_UNWRAPPED_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SEPARATION_KM", Self::VT_SEPARATION_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("RANGE_RATE_KM_S", Self::VT_RANGE_RATE_KM_S, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("PLANE_ANGLE_DEG", Self::VT_PLANE_ANGLE_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("A_CHIEF_KM", Self::VT_A_CHIEF_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DA", Self::VT_DA, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DLAMBDA", Self::VT_DLAMBDA, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DEX", Self::VT_DEX, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DEY", Self::VT_DEY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DIX", Self::VT_DIX, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DIY", Self::VT_DIY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SIGMA_R_KM", Self::VT_SIGMA_R_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SIGMA_I_KM", Self::VT_SIGMA_I_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SIGMA_C_KM", Self::VT_SIGMA_C_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SIGMA_SEPARATION_KM", Self::VT_SIGMA_SEPARATION_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BAND3_R_KM", Self::VT_BAND3_R_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BAND3_I_KM", Self::VT_BAND3_I_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BAND3_C_KM", Self::VT_BAND3_C_KM, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMRelativeGeometryArgs<'a> {
+    pub R_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub I_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub C_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub I_UNWRAPPED_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SEPARATION_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub RANGE_RATE_KM_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub PLANE_ANGLE_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub A_CHIEF_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DLAMBDA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DEX: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DEY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DIX: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DIY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SIGMA_R_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SIGMA_I_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SIGMA_C_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SIGMA_SEPARATION_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BAND3_R_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BAND3_I_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BAND3_C_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+}
+
+impl<'a> Default for OCMRelativeGeometryArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMRelativeGeometryArgs {
+            R_KM: None,
+            I_KM: None,
+            C_KM: None,
+            I_UNWRAPPED_KM: None,
+            SEPARATION_KM: None,
+            RANGE_RATE_KM_S: None,
+            PLANE_ANGLE_DEG: None,
+            A_CHIEF_KM: None,
+            DA: None,
+            DLAMBDA: None,
+            DEX: None,
+            DEY: None,
+            DIX: None,
+            DIY: None,
+            SIGMA_R_KM: None,
+            SIGMA_I_KM: None,
+            SIGMA_C_KM: None,
+            SIGMA_SEPARATION_KM: None,
+            BAND3_R_KM: None,
+            BAND3_I_KM: None,
+            BAND3_C_KM: None,
+        }
+    }
+}
+
+pub struct OCMRelativeGeometryBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMRelativeGeometryBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_R_KM(&mut self, R_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_R_KM, R_KM);
+    }
+
+    #[inline]
+    pub fn add_I_KM(&mut self, I_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_I_KM, I_KM);
+    }
+
+    #[inline]
+    pub fn add_C_KM(&mut self, C_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_C_KM, C_KM);
+    }
+
+    #[inline]
+    pub fn add_I_UNWRAPPED_KM(&mut self, I_UNWRAPPED_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_I_UNWRAPPED_KM, I_UNWRAPPED_KM);
+    }
+
+    #[inline]
+    pub fn add_SEPARATION_KM(&mut self, SEPARATION_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_SEPARATION_KM, SEPARATION_KM);
+    }
+
+    #[inline]
+    pub fn add_RANGE_RATE_KM_S(&mut self, RANGE_RATE_KM_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_RANGE_RATE_KM_S, RANGE_RATE_KM_S);
+    }
+
+    #[inline]
+    pub fn add_PLANE_ANGLE_DEG(&mut self, PLANE_ANGLE_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_PLANE_ANGLE_DEG, PLANE_ANGLE_DEG);
+    }
+
+    #[inline]
+    pub fn add_A_CHIEF_KM(&mut self, A_CHIEF_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_A_CHIEF_KM, A_CHIEF_KM);
+    }
+
+    #[inline]
+    pub fn add_DA(&mut self, DA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DA, DA);
+    }
+
+    #[inline]
+    pub fn add_DLAMBDA(&mut self, DLAMBDA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DLAMBDA, DLAMBDA);
+    }
+
+    #[inline]
+    pub fn add_DEX(&mut self, DEX: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DEX, DEX);
+    }
+
+    #[inline]
+    pub fn add_DEY(&mut self, DEY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DEY, DEY);
+    }
+
+    #[inline]
+    pub fn add_DIX(&mut self, DIX: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DIX, DIX);
+    }
+
+    #[inline]
+    pub fn add_DIY(&mut self, DIY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_DIY, DIY);
+    }
+
+    #[inline]
+    pub fn add_SIGMA_R_KM(&mut self, SIGMA_R_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_SIGMA_R_KM, SIGMA_R_KM);
+    }
+
+    #[inline]
+    pub fn add_SIGMA_I_KM(&mut self, SIGMA_I_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_SIGMA_I_KM, SIGMA_I_KM);
+    }
+
+    #[inline]
+    pub fn add_SIGMA_C_KM(&mut self, SIGMA_C_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_SIGMA_C_KM, SIGMA_C_KM);
+    }
+
+    #[inline]
+    pub fn add_SIGMA_SEPARATION_KM(&mut self, SIGMA_SEPARATION_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_SIGMA_SEPARATION_KM, SIGMA_SEPARATION_KM);
+    }
+
+    #[inline]
+    pub fn add_BAND3_R_KM(&mut self, BAND3_R_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_BAND3_R_KM, BAND3_R_KM);
+    }
+
+    #[inline]
+    pub fn add_BAND3_I_KM(&mut self, BAND3_I_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_BAND3_I_KM, BAND3_I_KM);
+    }
+
+    #[inline]
+    pub fn add_BAND3_C_KM(&mut self, BAND3_C_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRelativeGeometry::VT_BAND3_C_KM, BAND3_C_KM);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMRelativeGeometryBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMRelativeGeometryBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMRelativeGeometry<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMRelativeGeometry<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMRelativeGeometry");
+        ds.field("R_KM", &self.R_KM());
+        ds.field("I_KM", &self.I_KM());
+        ds.field("C_KM", &self.C_KM());
+        ds.field("I_UNWRAPPED_KM", &self.I_UNWRAPPED_KM());
+        ds.field("SEPARATION_KM", &self.SEPARATION_KM());
+        ds.field("RANGE_RATE_KM_S", &self.RANGE_RATE_KM_S());
+        ds.field("PLANE_ANGLE_DEG", &self.PLANE_ANGLE_DEG());
+        ds.field("A_CHIEF_KM", &self.A_CHIEF_KM());
+        ds.field("DA", &self.DA());
+        ds.field("DLAMBDA", &self.DLAMBDA());
+        ds.field("DEX", &self.DEX());
+        ds.field("DEY", &self.DEY());
+        ds.field("DIX", &self.DIX());
+        ds.field("DIY", &self.DIY());
+        ds.field("SIGMA_R_KM", &self.SIGMA_R_KM());
+        ds.field("SIGMA_I_KM", &self.SIGMA_I_KM());
+        ds.field("SIGMA_C_KM", &self.SIGMA_C_KM());
+        ds.field("SIGMA_SEPARATION_KM", &self.SIGMA_SEPARATION_KM());
+        ds.field("BAND3_R_KM", &self.BAND3_R_KM());
+        ds.field("BAND3_I_KM", &self.BAND3_I_KM());
+        ds.field("BAND3_C_KM", &self.BAND3_C_KM());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMRelativeGeometryT {
+    pub R_KM: Option<alloc::vec::Vec<f64>>,
+    pub I_KM: Option<alloc::vec::Vec<f64>>,
+    pub C_KM: Option<alloc::vec::Vec<f64>>,
+    pub I_UNWRAPPED_KM: Option<alloc::vec::Vec<f64>>,
+    pub SEPARATION_KM: Option<alloc::vec::Vec<f64>>,
+    pub RANGE_RATE_KM_S: Option<alloc::vec::Vec<f64>>,
+    pub PLANE_ANGLE_DEG: Option<alloc::vec::Vec<f64>>,
+    pub A_CHIEF_KM: Option<alloc::vec::Vec<f64>>,
+    pub DA: Option<alloc::vec::Vec<f64>>,
+    pub DLAMBDA: Option<alloc::vec::Vec<f64>>,
+    pub DEX: Option<alloc::vec::Vec<f64>>,
+    pub DEY: Option<alloc::vec::Vec<f64>>,
+    pub DIX: Option<alloc::vec::Vec<f64>>,
+    pub DIY: Option<alloc::vec::Vec<f64>>,
+    pub SIGMA_R_KM: Option<alloc::vec::Vec<f64>>,
+    pub SIGMA_I_KM: Option<alloc::vec::Vec<f64>>,
+    pub SIGMA_C_KM: Option<alloc::vec::Vec<f64>>,
+    pub SIGMA_SEPARATION_KM: Option<alloc::vec::Vec<f64>>,
+    pub BAND3_R_KM: Option<alloc::vec::Vec<f64>>,
+    pub BAND3_I_KM: Option<alloc::vec::Vec<f64>>,
+    pub BAND3_C_KM: Option<alloc::vec::Vec<f64>>,
+}
+
+impl Default for OCMRelativeGeometryT {
+    fn default() -> Self {
+        Self {
+            R_KM: None,
+            I_KM: None,
+            C_KM: None,
+            I_UNWRAPPED_KM: None,
+            SEPARATION_KM: None,
+            RANGE_RATE_KM_S: None,
+            PLANE_ANGLE_DEG: None,
+            A_CHIEF_KM: None,
+            DA: None,
+            DLAMBDA: None,
+            DEX: None,
+            DEY: None,
+            DIX: None,
+            DIY: None,
+            SIGMA_R_KM: None,
+            SIGMA_I_KM: None,
+            SIGMA_C_KM: None,
+            SIGMA_SEPARATION_KM: None,
+            BAND3_R_KM: None,
+            BAND3_I_KM: None,
+            BAND3_C_KM: None,
+        }
+    }
+}
+
+impl OCMRelativeGeometryT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMRelativeGeometry<'b>> {
+        let R_KM = self.R_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let I_KM = self.I_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let C_KM = self.C_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let I_UNWRAPPED_KM = self.I_UNWRAPPED_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SEPARATION_KM = self.SEPARATION_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let RANGE_RATE_KM_S = self.RANGE_RATE_KM_S.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let PLANE_ANGLE_DEG = self.PLANE_ANGLE_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let A_CHIEF_KM = self.A_CHIEF_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DA = self.DA.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DLAMBDA = self.DLAMBDA.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DEX = self.DEX.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DEY = self.DEY.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DIX = self.DIX.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let DIY = self.DIY.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SIGMA_R_KM = self.SIGMA_R_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SIGMA_I_KM = self.SIGMA_I_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SIGMA_C_KM = self.SIGMA_C_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SIGMA_SEPARATION_KM = self.SIGMA_SEPARATION_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let BAND3_R_KM = self.BAND3_R_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let BAND3_I_KM = self.BAND3_I_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let BAND3_C_KM = self.BAND3_C_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        OCMRelativeGeometry::create(_fbb, &OCMRelativeGeometryArgs{
+            R_KM,
+            I_KM,
+            C_KM,
+            I_UNWRAPPED_KM,
+            SEPARATION_KM,
+            RANGE_RATE_KM_S,
+            PLANE_ANGLE_DEG,
+            A_CHIEF_KM,
+            DA,
+            DLAMBDA,
+            DEX,
+            DEY,
+            DIX,
+            DIY,
+            SIGMA_R_KM,
+            SIGMA_I_KM,
+            SIGMA_C_KM,
+            SIGMA_SEPARATION_KM,
+            BAND3_R_KM,
+            BAND3_I_KM,
+            BAND3_C_KM,
+        })
+    }
+}
+
+pub enum OCMRadarInputsOffset {}
+
+/// The side-looking radar a chaser's position is tested against (the inputs
+/// only: wavelength, beamwidths and look angles follow from them).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMRadarInputs<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMRadarInputs<'a> {
+    type Inner = OCMRadarInputs<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMRadarInputs<'a> {
+    pub const VT_SOURCE: ::flatbuffers::VOffsetT = 4;
+    pub const VT_FREQUENCY_GHZ: ::flatbuffers::VOffsetT = 6;
+    pub const VT_ANTENNA_LENGTH_M: ::flatbuffers::VOffsetT = 8;
+    pub const VT_ANTENNA_HEIGHT_M: ::flatbuffers::VOffsetT = 10;
+    pub const VT_INCIDENCE_MIN_DEG: ::flatbuffers::VOffsetT = 12;
+    pub const VT_INCIDENCE_MAX_DEG: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMRadarInputs { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMRadarInputsArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMRadarInputs<'bldr>> {
+        let mut builder = OCMRadarInputsBuilder::new(_fbb);
+        builder.add_INCIDENCE_MAX_DEG(args.INCIDENCE_MAX_DEG);
+        builder.add_INCIDENCE_MIN_DEG(args.INCIDENCE_MIN_DEG);
+        builder.add_ANTENNA_HEIGHT_M(args.ANTENNA_HEIGHT_M);
+        builder.add_ANTENNA_LENGTH_M(args.ANTENNA_LENGTH_M);
+        builder.add_FREQUENCY_GHZ(args.FREQUENCY_GHZ);
+        if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMRadarInputsT {
+        let SOURCE = self.SOURCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let FREQUENCY_GHZ = self.FREQUENCY_GHZ();
+        let ANTENNA_LENGTH_M = self.ANTENNA_LENGTH_M();
+        let ANTENNA_HEIGHT_M = self.ANTENNA_HEIGHT_M();
+        let INCIDENCE_MIN_DEG = self.INCIDENCE_MIN_DEG();
+        let INCIDENCE_MAX_DEG = self.INCIDENCE_MAX_DEG();
+        OCMRadarInputsT {
+            SOURCE,
+            FREQUENCY_GHZ,
+            ANTENNA_LENGTH_M,
+            ANTENNA_HEIGHT_M,
+            INCIDENCE_MIN_DEG,
+            INCIDENCE_MAX_DEG,
+        }
+    }
+
+    /// Citation of the radar's published characteristics.
+    #[inline]
+    pub fn SOURCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCMRadarInputs::VT_SOURCE, None)}
+    }
+
+    /// Carrier frequency, GHz. NaN when not stated.
+    #[inline]
+    pub fn FREQUENCY_GHZ(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMRadarInputs::VT_FREQUENCY_GHZ, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Antenna aperture along track, m. NaN when not stated.
+    #[inline]
+    pub fn ANTENNA_LENGTH_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMRadarInputs::VT_ANTENNA_LENGTH_M, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Antenna aperture across track, m. NaN when not stated.
+    #[inline]
+    pub fn ANTENNA_HEIGHT_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMRadarInputs::VT_ANTENNA_HEIGHT_M, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Incidence-angle band of the swath, deg. NaN when not stated.
+    #[inline]
+    pub fn INCIDENCE_MIN_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMRadarInputs::VT_INCIDENCE_MIN_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn INCIDENCE_MAX_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OCMRadarInputs::VT_INCIDENCE_MAX_DEG, Some(f64::NAN)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMRadarInputs<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
+            .visit_field::<f64>("FREQUENCY_GHZ", Self::VT_FREQUENCY_GHZ, false)?
+            .visit_field::<f64>("ANTENNA_LENGTH_M", Self::VT_ANTENNA_LENGTH_M, false)?
+            .visit_field::<f64>("ANTENNA_HEIGHT_M", Self::VT_ANTENNA_HEIGHT_M, false)?
+            .visit_field::<f64>("INCIDENCE_MIN_DEG", Self::VT_INCIDENCE_MIN_DEG, false)?
+            .visit_field::<f64>("INCIDENCE_MAX_DEG", Self::VT_INCIDENCE_MAX_DEG, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMRadarInputsArgs<'a> {
+    pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FREQUENCY_GHZ: f64,
+    pub ANTENNA_LENGTH_M: f64,
+    pub ANTENNA_HEIGHT_M: f64,
+    pub INCIDENCE_MIN_DEG: f64,
+    pub INCIDENCE_MAX_DEG: f64,
+}
+
+impl<'a> Default for OCMRadarInputsArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMRadarInputsArgs {
+            SOURCE: None,
+            FREQUENCY_GHZ: f64::NAN,
+            ANTENNA_LENGTH_M: f64::NAN,
+            ANTENNA_HEIGHT_M: f64::NAN,
+            INCIDENCE_MIN_DEG: f64::NAN,
+            INCIDENCE_MAX_DEG: f64::NAN,
+        }
+    }
+}
+
+pub struct OCMRadarInputsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMRadarInputsBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMRadarInputs::VT_SOURCE, SOURCE);
+    }
+
+    #[inline]
+    pub fn add_FREQUENCY_GHZ(&mut self, FREQUENCY_GHZ: f64) {
+        self.fbb_.push_slot::<f64>(OCMRadarInputs::VT_FREQUENCY_GHZ, FREQUENCY_GHZ, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ANTENNA_LENGTH_M(&mut self, ANTENNA_LENGTH_M: f64) {
+        self.fbb_.push_slot::<f64>(OCMRadarInputs::VT_ANTENNA_LENGTH_M, ANTENNA_LENGTH_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ANTENNA_HEIGHT_M(&mut self, ANTENNA_HEIGHT_M: f64) {
+        self.fbb_.push_slot::<f64>(OCMRadarInputs::VT_ANTENNA_HEIGHT_M, ANTENNA_HEIGHT_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_INCIDENCE_MIN_DEG(&mut self, INCIDENCE_MIN_DEG: f64) {
+        self.fbb_.push_slot::<f64>(OCMRadarInputs::VT_INCIDENCE_MIN_DEG, INCIDENCE_MIN_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_INCIDENCE_MAX_DEG(&mut self, INCIDENCE_MAX_DEG: f64) {
+        self.fbb_.push_slot::<f64>(OCMRadarInputs::VT_INCIDENCE_MAX_DEG, INCIDENCE_MAX_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMRadarInputsBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMRadarInputsBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMRadarInputs<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMRadarInputs<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMRadarInputs");
+        ds.field("SOURCE", &self.SOURCE());
+        ds.field("FREQUENCY_GHZ", &self.FREQUENCY_GHZ());
+        ds.field("ANTENNA_LENGTH_M", &self.ANTENNA_LENGTH_M());
+        ds.field("ANTENNA_HEIGHT_M", &self.ANTENNA_HEIGHT_M());
+        ds.field("INCIDENCE_MIN_DEG", &self.INCIDENCE_MIN_DEG());
+        ds.field("INCIDENCE_MAX_DEG", &self.INCIDENCE_MAX_DEG());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMRadarInputsT {
+    pub SOURCE: Option<alloc::string::String>,
+    pub FREQUENCY_GHZ: f64,
+    pub ANTENNA_LENGTH_M: f64,
+    pub ANTENNA_HEIGHT_M: f64,
+    pub INCIDENCE_MIN_DEG: f64,
+    pub INCIDENCE_MAX_DEG: f64,
+}
+
+impl Default for OCMRadarInputsT {
+    fn default() -> Self {
+        Self {
+            SOURCE: None,
+            FREQUENCY_GHZ: f64::NAN,
+            ANTENNA_LENGTH_M: f64::NAN,
+            ANTENNA_HEIGHT_M: f64::NAN,
+            INCIDENCE_MIN_DEG: f64::NAN,
+            INCIDENCE_MAX_DEG: f64::NAN,
+        }
+    }
+}
+
+impl OCMRadarInputsT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMRadarInputs<'b>> {
+        let SOURCE = self.SOURCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let FREQUENCY_GHZ = self.FREQUENCY_GHZ;
+        let ANTENNA_LENGTH_M = self.ANTENNA_LENGTH_M;
+        let ANTENNA_HEIGHT_M = self.ANTENNA_HEIGHT_M;
+        let INCIDENCE_MIN_DEG = self.INCIDENCE_MIN_DEG;
+        let INCIDENCE_MAX_DEG = self.INCIDENCE_MAX_DEG;
+        OCMRadarInputs::create(_fbb, &OCMRadarInputsArgs{
+            SOURCE,
+            FREQUENCY_GHZ,
+            ANTENNA_LENGTH_M,
+            ANTENNA_HEIGHT_M,
+            INCIDENCE_MIN_DEG,
+            INCIDENCE_MAX_DEG,
+        })
+    }
+}
+
+pub enum OCMInspectionGeometryOffset {}
+
+/// Inspection geometry of a chaser about a target on the time grid of the
+/// message (SDS addition; CCSDS 502.0-B-3 has none). Every vector holds one
+/// entry per time, in order: entry i is at STATE_EPOCHS[i], or at
+/// Metadata.START_TIME + i * STATE_STEP_SIZE. The target is CENTER_NAME. The
+/// Earth shadow is the conical model of a spherical Earth (6378.137 km) and a
+/// spherical Sun (695700 km); the target's nadir is -r / |r|; the along-track
+/// direction is the Earth-relative velocity perpendicular to r; right is nadir
+/// x along-track.
+#[derive(Copy, Clone, PartialEq)]
+pub struct OCMInspectionGeometry<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OCMInspectionGeometry<'a> {
+    type Inner = OCMInspectionGeometry<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OCMInspectionGeometry<'a> {
+    pub const VT_PHASE_ANGLE_DEG: ::flatbuffers::VOffsetT = 4;
+    pub const VT_TARGET_SUNLIT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_CHASER_SUNLIT: ::flatbuffers::VOffsetT = 8;
+    pub const VT_LINE_OF_SIGHT: ::flatbuffers::VOffsetT = 10;
+    pub const VT_TARGET_LIT_FROM_CHASER: ::flatbuffers::VOffsetT = 12;
+    pub const VT_SUN_FROM_LINE_OF_SIGHT_DEG: ::flatbuffers::VOffsetT = 14;
+    pub const VT_RANGE_KM: ::flatbuffers::VOffsetT = 16;
+    pub const VT_CHASER_OFF_NADIR_DEG: ::flatbuffers::VOffsetT = 18;
+    pub const VT_CHASER_CLOCK_DEG: ::flatbuffers::VOffsetT = 20;
+    pub const VT_IN_SAR_RIGHT: ::flatbuffers::VOffsetT = 22;
+    pub const VT_IN_SAR_LEFT: ::flatbuffers::VOffsetT = 24;
+    pub const VT_RADAR: ::flatbuffers::VOffsetT = 26;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OCMInspectionGeometry { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OCMInspectionGeometryArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OCMInspectionGeometry<'bldr>> {
+        let mut builder = OCMInspectionGeometryBuilder::new(_fbb);
+        if let Some(x) = args.RADAR { builder.add_RADAR(x); }
+        if let Some(x) = args.IN_SAR_LEFT { builder.add_IN_SAR_LEFT(x); }
+        if let Some(x) = args.IN_SAR_RIGHT { builder.add_IN_SAR_RIGHT(x); }
+        if let Some(x) = args.CHASER_CLOCK_DEG { builder.add_CHASER_CLOCK_DEG(x); }
+        if let Some(x) = args.CHASER_OFF_NADIR_DEG { builder.add_CHASER_OFF_NADIR_DEG(x); }
+        if let Some(x) = args.RANGE_KM { builder.add_RANGE_KM(x); }
+        if let Some(x) = args.SUN_FROM_LINE_OF_SIGHT_DEG { builder.add_SUN_FROM_LINE_OF_SIGHT_DEG(x); }
+        if let Some(x) = args.TARGET_LIT_FROM_CHASER { builder.add_TARGET_LIT_FROM_CHASER(x); }
+        if let Some(x) = args.LINE_OF_SIGHT { builder.add_LINE_OF_SIGHT(x); }
+        if let Some(x) = args.CHASER_SUNLIT { builder.add_CHASER_SUNLIT(x); }
+        if let Some(x) = args.TARGET_SUNLIT { builder.add_TARGET_SUNLIT(x); }
+        if let Some(x) = args.PHASE_ANGLE_DEG { builder.add_PHASE_ANGLE_DEG(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OCMInspectionGeometryT {
+        let PHASE_ANGLE_DEG = self.PHASE_ANGLE_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let TARGET_SUNLIT = self.TARGET_SUNLIT().map(|x| {
+            x.into_iter().collect()
+        });
+        let CHASER_SUNLIT = self.CHASER_SUNLIT().map(|x| {
+            x.into_iter().collect()
+        });
+        let LINE_OF_SIGHT = self.LINE_OF_SIGHT().map(|x| {
+            x.into_iter().collect()
+        });
+        let TARGET_LIT_FROM_CHASER = self.TARGET_LIT_FROM_CHASER().map(|x| {
+            x.into_iter().collect()
+        });
+        let SUN_FROM_LINE_OF_SIGHT_DEG = self.SUN_FROM_LINE_OF_SIGHT_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let RANGE_KM = self.RANGE_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let CHASER_OFF_NADIR_DEG = self.CHASER_OFF_NADIR_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let CHASER_CLOCK_DEG = self.CHASER_CLOCK_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let IN_SAR_RIGHT = self.IN_SAR_RIGHT().map(|x| {
+            x.into_iter().collect()
+        });
+        let IN_SAR_LEFT = self.IN_SAR_LEFT().map(|x| {
+            x.into_iter().collect()
+        });
+        let RADAR = self.RADAR().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        OCMInspectionGeometryT {
+            PHASE_ANGLE_DEG,
+            TARGET_SUNLIT,
+            CHASER_SUNLIT,
+            LINE_OF_SIGHT,
+            TARGET_LIT_FROM_CHASER,
+            SUN_FROM_LINE_OF_SIGHT_DEG,
+            RANGE_KM,
+            CHASER_OFF_NADIR_DEG,
+            CHASER_CLOCK_DEG,
+            IN_SAR_RIGHT,
+            IN_SAR_LEFT,
+            RADAR,
+        }
+    }
+
+    /// Angle at the target between the Sun and the chaser, deg.
+    #[inline]
+    pub fn PHASE_ANGLE_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_PHASE_ANGLE_DEG, None)}
+    }
+
+    /// Fraction of the Sun's disk the target sees: 0 umbra, 1 sunlit.
+    #[inline]
+    pub fn TARGET_SUNLIT(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_TARGET_SUNLIT, None)}
+    }
+
+    /// The same for the chaser.
+    #[inline]
+    pub fn CHASER_SUNLIT(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_CHASER_SUNLIT, None)}
+    }
+
+    /// True when the chaser-target segment clears a sphere of 6378.137 km.
+    #[inline]
+    pub fn LINE_OF_SIGHT(&self) -> Option<::flatbuffers::Vector<'a, bool>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, bool>>>(OCMInspectionGeometry::VT_LINE_OF_SIGHT, None)}
+    }
+
+    /// TARGET_SUNLIT times LINE_OF_SIGHT.
+    #[inline]
+    pub fn TARGET_LIT_FROM_CHASER(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_TARGET_LIT_FROM_CHASER, None)}
+    }
+
+    /// Angle at the chaser between the target and the Sun, deg.
+    #[inline]
+    pub fn SUN_FROM_LINE_OF_SIGHT_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_SUN_FROM_LINE_OF_SIGHT_DEG, None)}
+    }
+
+    /// Chaser-target distance, km.
+    #[inline]
+    pub fn RANGE_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_RANGE_KM, None)}
+    }
+
+    /// Angle at the target between its nadir and the chaser, deg.
+    #[inline]
+    pub fn CHASER_OFF_NADIR_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_CHASER_OFF_NADIR_DEG, None)}
+    }
+
+    /// The chaser's clock angle about the target's nadir, deg, from along-track
+    /// toward right (90 right of the track, 270 left).
+    #[inline]
+    pub fn CHASER_CLOCK_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMInspectionGeometry::VT_CHASER_CLOCK_DEG, None)}
+    }
+
+    /// True when the chaser is inside the target radar's field of regard on that
+    /// side: off-nadir between the look angles of the incidence band, within half
+    /// the azimuth beamwidth (0.886 wavelength / aperture length, -3 dB, uniform
+    /// aperture) of the broadside plane. Empty without RADAR.
+    #[inline]
+    pub fn IN_SAR_RIGHT(&self) -> Option<::flatbuffers::Vector<'a, bool>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, bool>>>(OCMInspectionGeometry::VT_IN_SAR_RIGHT, None)}
+    }
+
+    #[inline]
+    pub fn IN_SAR_LEFT(&self) -> Option<::flatbuffers::Vector<'a, bool>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, bool>>>(OCMInspectionGeometry::VT_IN_SAR_LEFT, None)}
+    }
+
+    /// The radar. Absent when no radar was given.
+    #[inline]
+    pub fn RADAR(&self) -> Option<OCMRadarInputs<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMRadarInputs>>(OCMInspectionGeometry::VT_RADAR, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OCMInspectionGeometry<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("PHASE_ANGLE_DEG", Self::VT_PHASE_ANGLE_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("TARGET_SUNLIT", Self::VT_TARGET_SUNLIT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CHASER_SUNLIT", Self::VT_CHASER_SUNLIT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, bool>>>("LINE_OF_SIGHT", Self::VT_LINE_OF_SIGHT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("TARGET_LIT_FROM_CHASER", Self::VT_TARGET_LIT_FROM_CHASER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SUN_FROM_LINE_OF_SIGHT_DEG", Self::VT_SUN_FROM_LINE_OF_SIGHT_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("RANGE_KM", Self::VT_RANGE_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CHASER_OFF_NADIR_DEG", Self::VT_CHASER_OFF_NADIR_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CHASER_CLOCK_DEG", Self::VT_CHASER_CLOCK_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, bool>>>("IN_SAR_RIGHT", Self::VT_IN_SAR_RIGHT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, bool>>>("IN_SAR_LEFT", Self::VT_IN_SAR_LEFT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMRadarInputs>>("RADAR", Self::VT_RADAR, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OCMInspectionGeometryArgs<'a> {
+    pub PHASE_ANGLE_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub TARGET_SUNLIT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CHASER_SUNLIT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub LINE_OF_SIGHT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, bool>>>,
+    pub TARGET_LIT_FROM_CHASER: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SUN_FROM_LINE_OF_SIGHT_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub RANGE_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CHASER_OFF_NADIR_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CHASER_CLOCK_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub IN_SAR_RIGHT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, bool>>>,
+    pub IN_SAR_LEFT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, bool>>>,
+    pub RADAR: Option<::flatbuffers::WIPOffset<OCMRadarInputs<'a>>>,
+}
+
+impl<'a> Default for OCMInspectionGeometryArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OCMInspectionGeometryArgs {
+            PHASE_ANGLE_DEG: None,
+            TARGET_SUNLIT: None,
+            CHASER_SUNLIT: None,
+            LINE_OF_SIGHT: None,
+            TARGET_LIT_FROM_CHASER: None,
+            SUN_FROM_LINE_OF_SIGHT_DEG: None,
+            RANGE_KM: None,
+            CHASER_OFF_NADIR_DEG: None,
+            CHASER_CLOCK_DEG: None,
+            IN_SAR_RIGHT: None,
+            IN_SAR_LEFT: None,
+            RADAR: None,
+        }
+    }
+}
+
+pub struct OCMInspectionGeometryBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMInspectionGeometryBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PHASE_ANGLE_DEG(&mut self, PHASE_ANGLE_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_PHASE_ANGLE_DEG, PHASE_ANGLE_DEG);
+    }
+
+    #[inline]
+    pub fn add_TARGET_SUNLIT(&mut self, TARGET_SUNLIT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_TARGET_SUNLIT, TARGET_SUNLIT);
+    }
+
+    #[inline]
+    pub fn add_CHASER_SUNLIT(&mut self, CHASER_SUNLIT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_CHASER_SUNLIT, CHASER_SUNLIT);
+    }
+
+    #[inline]
+    pub fn add_LINE_OF_SIGHT(&mut self, LINE_OF_SIGHT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , bool>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_LINE_OF_SIGHT, LINE_OF_SIGHT);
+    }
+
+    #[inline]
+    pub fn add_TARGET_LIT_FROM_CHASER(&mut self, TARGET_LIT_FROM_CHASER: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_TARGET_LIT_FROM_CHASER, TARGET_LIT_FROM_CHASER);
+    }
+
+    #[inline]
+    pub fn add_SUN_FROM_LINE_OF_SIGHT_DEG(&mut self, SUN_FROM_LINE_OF_SIGHT_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_SUN_FROM_LINE_OF_SIGHT_DEG, SUN_FROM_LINE_OF_SIGHT_DEG);
+    }
+
+    #[inline]
+    pub fn add_RANGE_KM(&mut self, RANGE_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_RANGE_KM, RANGE_KM);
+    }
+
+    #[inline]
+    pub fn add_CHASER_OFF_NADIR_DEG(&mut self, CHASER_OFF_NADIR_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_CHASER_OFF_NADIR_DEG, CHASER_OFF_NADIR_DEG);
+    }
+
+    #[inline]
+    pub fn add_CHASER_CLOCK_DEG(&mut self, CHASER_CLOCK_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_CHASER_CLOCK_DEG, CHASER_CLOCK_DEG);
+    }
+
+    #[inline]
+    pub fn add_IN_SAR_RIGHT(&mut self, IN_SAR_RIGHT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , bool>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_IN_SAR_RIGHT, IN_SAR_RIGHT);
+    }
+
+    #[inline]
+    pub fn add_IN_SAR_LEFT(&mut self, IN_SAR_LEFT: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , bool>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMInspectionGeometry::VT_IN_SAR_LEFT, IN_SAR_LEFT);
+    }
+
+    #[inline]
+    pub fn add_RADAR(&mut self, RADAR: ::flatbuffers::WIPOffset<OCMRadarInputs<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMRadarInputs>>(OCMInspectionGeometry::VT_RADAR, RADAR);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMInspectionGeometryBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OCMInspectionGeometryBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OCMInspectionGeometry<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OCMInspectionGeometry<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OCMInspectionGeometry");
+        ds.field("PHASE_ANGLE_DEG", &self.PHASE_ANGLE_DEG());
+        ds.field("TARGET_SUNLIT", &self.TARGET_SUNLIT());
+        ds.field("CHASER_SUNLIT", &self.CHASER_SUNLIT());
+        ds.field("LINE_OF_SIGHT", &self.LINE_OF_SIGHT());
+        ds.field("TARGET_LIT_FROM_CHASER", &self.TARGET_LIT_FROM_CHASER());
+        ds.field("SUN_FROM_LINE_OF_SIGHT_DEG", &self.SUN_FROM_LINE_OF_SIGHT_DEG());
+        ds.field("RANGE_KM", &self.RANGE_KM());
+        ds.field("CHASER_OFF_NADIR_DEG", &self.CHASER_OFF_NADIR_DEG());
+        ds.field("CHASER_CLOCK_DEG", &self.CHASER_CLOCK_DEG());
+        ds.field("IN_SAR_RIGHT", &self.IN_SAR_RIGHT());
+        ds.field("IN_SAR_LEFT", &self.IN_SAR_LEFT());
+        ds.field("RADAR", &self.RADAR());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OCMInspectionGeometryT {
+    pub PHASE_ANGLE_DEG: Option<alloc::vec::Vec<f64>>,
+    pub TARGET_SUNLIT: Option<alloc::vec::Vec<f64>>,
+    pub CHASER_SUNLIT: Option<alloc::vec::Vec<f64>>,
+    pub LINE_OF_SIGHT: Option<alloc::vec::Vec<bool>>,
+    pub TARGET_LIT_FROM_CHASER: Option<alloc::vec::Vec<f64>>,
+    pub SUN_FROM_LINE_OF_SIGHT_DEG: Option<alloc::vec::Vec<f64>>,
+    pub RANGE_KM: Option<alloc::vec::Vec<f64>>,
+    pub CHASER_OFF_NADIR_DEG: Option<alloc::vec::Vec<f64>>,
+    pub CHASER_CLOCK_DEG: Option<alloc::vec::Vec<f64>>,
+    pub IN_SAR_RIGHT: Option<alloc::vec::Vec<bool>>,
+    pub IN_SAR_LEFT: Option<alloc::vec::Vec<bool>>,
+    pub RADAR: Option<alloc::boxed::Box<OCMRadarInputsT>>,
+}
+
+impl Default for OCMInspectionGeometryT {
+    fn default() -> Self {
+        Self {
+            PHASE_ANGLE_DEG: None,
+            TARGET_SUNLIT: None,
+            CHASER_SUNLIT: None,
+            LINE_OF_SIGHT: None,
+            TARGET_LIT_FROM_CHASER: None,
+            SUN_FROM_LINE_OF_SIGHT_DEG: None,
+            RANGE_KM: None,
+            CHASER_OFF_NADIR_DEG: None,
+            CHASER_CLOCK_DEG: None,
+            IN_SAR_RIGHT: None,
+            IN_SAR_LEFT: None,
+            RADAR: None,
+        }
+    }
+}
+
+impl OCMInspectionGeometryT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OCMInspectionGeometry<'b>> {
+        let PHASE_ANGLE_DEG = self.PHASE_ANGLE_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TARGET_SUNLIT = self.TARGET_SUNLIT.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let CHASER_SUNLIT = self.CHASER_SUNLIT.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let LINE_OF_SIGHT = self.LINE_OF_SIGHT.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TARGET_LIT_FROM_CHASER = self.TARGET_LIT_FROM_CHASER.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SUN_FROM_LINE_OF_SIGHT_DEG = self.SUN_FROM_LINE_OF_SIGHT_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let RANGE_KM = self.RANGE_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let CHASER_OFF_NADIR_DEG = self.CHASER_OFF_NADIR_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let CHASER_CLOCK_DEG = self.CHASER_CLOCK_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let IN_SAR_RIGHT = self.IN_SAR_RIGHT.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let IN_SAR_LEFT = self.IN_SAR_LEFT.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let RADAR = self.RADAR.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        OCMInspectionGeometry::create(_fbb, &OCMInspectionGeometryArgs{
+            PHASE_ANGLE_DEG,
+            TARGET_SUNLIT,
+            CHASER_SUNLIT,
+            LINE_OF_SIGHT,
+            TARGET_LIT_FROM_CHASER,
+            SUN_FROM_LINE_OF_SIGHT_DEG,
+            RANGE_KM,
+            CHASER_OFF_NADIR_DEG,
+            CHASER_CLOCK_DEG,
+            IN_SAR_RIGHT,
+            IN_SAR_LEFT,
+            RADAR,
         })
     }
 }
@@ -6777,6 +11676,7 @@ impl<'a> OrbitDetermination<'a> {
     pub const VT_SENSORS_N: ::flatbuffers::VOffsetT = 92;
     pub const VT_SENSORS: ::flatbuffers::VOffsetT = 94;
     pub const VT_COMMENT: ::flatbuffers::VOffsetT = 96;
+    pub const VT_FIT_STATISTICS: ::flatbuffers::VOffsetT = 98;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6805,6 +11705,7 @@ impl<'a> OrbitDetermination<'a> {
         builder.add_SEDR(args.SEDR);
         builder.add_OD_BATCH_BASELINE_RMS(args.OD_BATCH_BASELINE_RMS);
         builder.add_OD_RESIDUAL_RMS(args.OD_RESIDUAL_RMS);
+        if let Some(x) = args.FIT_STATISTICS { builder.add_FIT_STATISTICS(x); }
         if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
         if let Some(x) = args.SENSORS { builder.add_SENSORS(x); }
         builder.add_SENSORS_N(args.SENSORS_N);
@@ -6933,6 +11834,9 @@ impl<'a> OrbitDetermination<'a> {
         let COMMENT = self.COMMENT().map(|x| {
             x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
         });
+        let FIT_STATISTICS = self.FIT_STATISTICS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         OrbitDeterminationT {
             OD_ID,
             OD_PREV_ID,
@@ -6981,6 +11885,7 @@ impl<'a> OrbitDetermination<'a> {
             SENSORS_N,
             SENSORS,
             COMMENT,
+            FIT_STATISTICS,
         }
     }
 
@@ -7146,7 +12051,9 @@ impl<'a> OrbitDetermination<'a> {
         unsafe { self._tab.get::<estimatorCategory>(OrbitDetermination::VT_OD_ESTIMATOR, Some(estimatorCategory::Unknown)).unwrap()}
     }
 
-    /// RMS of post-fit residuals for this solution.
+    /// RMS of post-fit residuals for this solution. In the unit of the residuals the
+    /// observation types state: arcsec for RADEC angles. A position RMS in km is
+    /// OCMFitStatistics.FIT_RMS_KM.
     #[inline]
     pub fn OD_RESIDUAL_RMS(&self) -> f64 {
         // Safety:
@@ -7412,6 +12319,15 @@ impl<'a> OrbitDetermination<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OrbitDetermination::VT_COMMENT, None)}
     }
+
+    /// Position statistics of a fit to a reference ephemeris.
+    #[inline]
+    pub fn FIT_STATISTICS(&self) -> Option<OCMFitStatistics<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMFitStatistics>>(OrbitDetermination::VT_FIT_STATISTICS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
@@ -7467,6 +12383,7 @@ impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
             .visit_field::<u32>("SENSORS_N", Self::VT_SENSORS_N, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSORS", Self::VT_SENSORS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("COMMENT", Self::VT_COMMENT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMFitStatistics>>("FIT_STATISTICS", Self::VT_FIT_STATISTICS, false)?
             .finish();
         Ok(())
     }
@@ -7520,6 +12437,7 @@ pub struct OrbitDeterminationArgs<'a> {
     pub SENSORS_N: u32,
     pub SENSORS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub COMMENT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub FIT_STATISTICS: Option<::flatbuffers::WIPOffset<OCMFitStatistics<'a>>>,
 }
 
 impl<'a> Default for OrbitDeterminationArgs<'a> {
@@ -7573,6 +12491,7 @@ impl<'a> Default for OrbitDeterminationArgs<'a> {
             SENSORS_N: 0,
             SENSORS: None,
             COMMENT: None,
+            FIT_STATISTICS: None,
         }
     }
 }
@@ -7819,6 +12738,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a,
     }
 
     #[inline]
+    pub fn add_FIT_STATISTICS(&mut self, FIT_STATISTICS: ::flatbuffers::WIPOffset<OCMFitStatistics<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMFitStatistics>>(OrbitDetermination::VT_FIT_STATISTICS, FIT_STATISTICS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OrbitDeterminationBuilder {
@@ -7884,6 +12808,7 @@ impl ::core::fmt::Debug for OrbitDetermination<'_> {
         ds.field("SENSORS_N", &self.SENSORS_N());
         ds.field("SENSORS", &self.SENSORS());
         ds.field("COMMENT", &self.COMMENT());
+        ds.field("FIT_STATISTICS", &self.FIT_STATISTICS());
         ds.finish()
     }
 }
@@ -7938,6 +12863,7 @@ pub struct OrbitDeterminationT {
     pub SENSORS_N: u32,
     pub SENSORS: Option<alloc::string::String>,
     pub COMMENT: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub FIT_STATISTICS: Option<alloc::boxed::Box<OCMFitStatisticsT>>,
 }
 
 impl Default for OrbitDeterminationT {
@@ -7990,6 +12916,7 @@ impl Default for OrbitDeterminationT {
             SENSORS_N: 0,
             SENSORS: None,
             COMMENT: None,
+            FIT_STATISTICS: None,
         }
     }
 }
@@ -8092,6 +13019,9 @@ impl OrbitDeterminationT {
         let COMMENT = self.COMMENT.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
         });
+        let FIT_STATISTICS = self.FIT_STATISTICS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
             OD_ID,
             OD_PREV_ID,
@@ -8140,6 +13070,7 @@ impl OrbitDeterminationT {
             SENSORS_N,
             SENSORS,
             COMMENT,
+            FIT_STATISTICS,
         })
     }
 }
@@ -9649,6 +14580,14 @@ impl<'a> OCM<'a> {
     pub const VT_COVARIANCE_BLOCKS: ::flatbuffers::VOffsetT = 64;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 66;
     pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 68;
+    pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 70;
+    pub const VT_COV_PROPAGATION: ::flatbuffers::VOffsetT = 72;
+    pub const VT_COV_PARAMETER_KINDS: ::flatbuffers::VOffsetT = 74;
+    pub const VT_TRAJ_BASIS: ::flatbuffers::VOffsetT = 76;
+    pub const VT_SEED_SETS: ::flatbuffers::VOffsetT = 78;
+    pub const VT_INTEGRATOR: ::flatbuffers::VOffsetT = 80;
+    pub const VT_RPO_GEOMETRY: ::flatbuffers::VOffsetT = 82;
+    pub const VT_RPO_INSPECTION: ::flatbuffers::VOffsetT = 84;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -9662,6 +14601,13 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.RPO_INSPECTION { builder.add_RPO_INSPECTION(x); }
+        if let Some(x) = args.RPO_GEOMETRY { builder.add_RPO_GEOMETRY(x); }
+        if let Some(x) = args.INTEGRATOR { builder.add_INTEGRATOR(x); }
+        if let Some(x) = args.SEED_SETS { builder.add_SEED_SETS(x); }
+        if let Some(x) = args.COV_PARAMETER_KINDS { builder.add_COV_PARAMETER_KINDS(x); }
+        if let Some(x) = args.COV_PROPAGATION { builder.add_COV_PROPAGATION(x); }
+        if let Some(x) = args.MEAN_ELEMENTS { builder.add_MEAN_ELEMENTS(x); }
         if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.COVARIANCE_BLOCKS { builder.add_COVARIANCE_BLOCKS(x); }
@@ -9689,6 +14635,7 @@ impl<'a> OCM<'a> {
         if let Some(x) = args.TRAJ_TYPE_DESCRIPTION { builder.add_TRAJ_TYPE_DESCRIPTION(x); }
         if let Some(x) = args.METADATA { builder.add_METADATA(x); }
         if let Some(x) = args.HEADER { builder.add_HEADER(x); }
+        builder.add_TRAJ_BASIS(args.TRAJ_BASIS);
         builder.add_COV_SIZE(args.COV_SIZE);
         builder.add_COV_ORDERING(args.COV_ORDERING);
         builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
@@ -9783,6 +14730,28 @@ impl<'a> OCM<'a> {
         let COV_REALISM = self.COV_REALISM().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let MEAN_ELEMENTS = self.MEAN_ELEMENTS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let COV_PROPAGATION = self.COV_PROPAGATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let COV_PARAMETER_KINDS = self.COV_PARAMETER_KINDS().map(|x| {
+            x.into_iter().collect()
+        });
+        let TRAJ_BASIS = self.TRAJ_BASIS();
+        let SEED_SETS = self.SEED_SETS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let INTEGRATOR = self.INTEGRATOR().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let RPO_GEOMETRY = self.RPO_GEOMETRY().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let RPO_INSPECTION = self.RPO_INSPECTION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -9817,6 +14786,14 @@ impl<'a> OCM<'a> {
             COVARIANCE_BLOCKS,
             PROVENANCE,
             COV_REALISM,
+            MEAN_ELEMENTS,
+            COV_PROPAGATION,
+            COV_PARAMETER_KINDS,
+            TRAJ_BASIS,
+            SEED_SETS,
+            INTEGRATOR,
+            RPO_GEOMETRY,
+            RPO_INSPECTION,
         }
     }
 
@@ -9886,6 +14863,7 @@ impl<'a> OCM<'a> {
     /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+    /// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
     #[inline]
     pub fn STATE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
         // Safety:
@@ -9967,7 +14945,8 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OrbitDetermination>>(OCM::VT_ORBIT_DETERMINATION, None)}
     }
 
-    /// User-defined parameters and supplemental comments.
+    /// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+    /// SDN readers never read it.
     #[inline]
     pub fn USER_DEFINED_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<UserDefinedParameters<'a>>>> {
         // Safety:
@@ -9985,8 +14964,8 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_CENTER_NAME, None)}
     }
 
-    /// Reference frame of STATE_DATA and the polynomial records
-    /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    /// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+    /// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
     #[inline]
     pub fn TRAJ_REF_FRAME(&self) -> Option<RFM<'a>> {
         // Safety:
@@ -10155,6 +15134,82 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR>>>>(OCM::VT_COV_REALISM, None)}
     }
+
+    /// The mean element set this message carries, under the theory it names. STATE_DATA is
+    /// empty when this is present; no state travels beside a set.
+    #[inline]
+    pub fn MEAN_ELEMENTS(&self) -> Option<OCMMeanElements<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMMeanElements>>(OCM::VT_MEAN_ELEMENTS, None)}
+    }
+
+    /// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+    #[inline]
+    pub fn COV_PROPAGATION(&self) -> Option<OCMCovariancePropagation<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMCovariancePropagation>>(OCM::VT_COV_PROPAGATION, None)}
+    }
+
+    /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+    /// every reader keys on these, never on the COV_PARAMETERS strings.
+    #[inline]
+    pub fn COV_PARAMETER_KINDS(&self) -> Option<::flatbuffers::Vector<'a, prwDynamicParameter>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>(OCM::VT_COV_PARAMETER_KINDS, None)}
+    }
+
+    /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+    /// (CCSDS 502.0-B-3 TRAJ_BASIS).
+    #[inline]
+    pub fn TRAJ_BASIS(&self) -> ocmTrajectoryBasis {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<ocmTrajectoryBasis>(OCM::VT_TRAJ_BASIS, Some(ocmTrajectoryBasis::UNSPECIFIED)).unwrap()}
+    }
+
+    /// The element sets the trajectory was computed from, one per object whose
+    /// elements it used.
+    #[inline]
+    pub fn SEED_SETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMSeedSet<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMSeedSet>>>>(OCM::VT_SEED_SETS, None)}
+    }
+
+    /// Integrator settings of a solution made from a legacy VCM.
+    #[inline]
+    pub fn INTEGRATOR(&self) -> Option<OCMIntegrator<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMIntegrator>>(OCM::VT_INTEGRATOR, None)}
+    }
+
+    /// Relative-motion geometry; STATE_DATA is empty when this is present.
+    #[inline]
+    pub fn RPO_GEOMETRY(&self) -> Option<OCMRelativeGeometry<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMRelativeGeometry>>(OCM::VT_RPO_GEOMETRY, None)}
+    }
+
+    /// Inspection geometry; STATE_DATA is empty when this is present.
+    #[inline]
+    pub fn RPO_INSPECTION(&self) -> Option<OCMInspectionGeometry<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMInspectionGeometry>>(OCM::VT_RPO_INSPECTION, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -10196,6 +15251,14 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock>>>>("COVARIANCE_BLOCKS", Self::VT_COVARIANCE_BLOCKS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CVR>>>>("COV_REALISM", Self::VT_COV_REALISM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMMeanElements>>("MEAN_ELEMENTS", Self::VT_MEAN_ELEMENTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMCovariancePropagation>>("COV_PROPAGATION", Self::VT_COV_PROPAGATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, prwDynamicParameter>>>("COV_PARAMETER_KINDS", Self::VT_COV_PARAMETER_KINDS, false)?
+            .visit_field::<ocmTrajectoryBasis>("TRAJ_BASIS", Self::VT_TRAJ_BASIS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OCMSeedSet>>>>("SEED_SETS", Self::VT_SEED_SETS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMIntegrator>>("INTEGRATOR", Self::VT_INTEGRATOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMRelativeGeometry>>("RPO_GEOMETRY", Self::VT_RPO_GEOMETRY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OCMInspectionGeometry>>("RPO_INSPECTION", Self::VT_RPO_INSPECTION, false)?
             .finish();
         Ok(())
     }
@@ -10235,6 +15298,14 @@ pub struct OCMArgs<'a> {
     pub COVARIANCE_BLOCKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMCovarianceBlock<'a>>>>>,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
     pub COV_REALISM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>>>,
+    pub MEAN_ELEMENTS: Option<::flatbuffers::WIPOffset<OCMMeanElements<'a>>>,
+    pub COV_PROPAGATION: Option<::flatbuffers::WIPOffset<OCMCovariancePropagation<'a>>>,
+    pub COV_PARAMETER_KINDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>,
+    pub TRAJ_BASIS: ocmTrajectoryBasis,
+    pub SEED_SETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMSeedSet<'a>>>>>,
+    pub INTEGRATOR: Option<::flatbuffers::WIPOffset<OCMIntegrator<'a>>>,
+    pub RPO_GEOMETRY: Option<::flatbuffers::WIPOffset<OCMRelativeGeometry<'a>>>,
+    pub RPO_INSPECTION: Option<::flatbuffers::WIPOffset<OCMInspectionGeometry<'a>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -10274,6 +15345,14 @@ impl<'a> Default for OCMArgs<'a> {
             COVARIANCE_BLOCKS: None,
             PROVENANCE: None,
             COV_REALISM: None,
+            MEAN_ELEMENTS: None,
+            COV_PROPAGATION: None,
+            COV_PARAMETER_KINDS: None,
+            TRAJ_BASIS: ocmTrajectoryBasis::UNSPECIFIED,
+            SEED_SETS: None,
+            INTEGRATOR: None,
+            RPO_GEOMETRY: None,
+            RPO_INSPECTION: None,
         }
     }
 }
@@ -10450,6 +15529,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_MEAN_ELEMENTS(&mut self, MEAN_ELEMENTS: ::flatbuffers::WIPOffset<OCMMeanElements<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMMeanElements>>(OCM::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
+    }
+
+    #[inline]
+    pub fn add_COV_PROPAGATION(&mut self, COV_PROPAGATION: ::flatbuffers::WIPOffset<OCMCovariancePropagation<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMCovariancePropagation>>(OCM::VT_COV_PROPAGATION, COV_PROPAGATION);
+    }
+
+    #[inline]
+    pub fn add_COV_PARAMETER_KINDS(&mut self, COV_PARAMETER_KINDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , prwDynamicParameter>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_COV_PARAMETER_KINDS, COV_PARAMETER_KINDS);
+    }
+
+    #[inline]
+    pub fn add_TRAJ_BASIS(&mut self, TRAJ_BASIS: ocmTrajectoryBasis) {
+        self.fbb_.push_slot::<ocmTrajectoryBasis>(OCM::VT_TRAJ_BASIS, TRAJ_BASIS, ocmTrajectoryBasis::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_SEED_SETS(&mut self, SEED_SETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OCMSeedSet<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCM::VT_SEED_SETS, SEED_SETS);
+    }
+
+    #[inline]
+    pub fn add_INTEGRATOR(&mut self, INTEGRATOR: ::flatbuffers::WIPOffset<OCMIntegrator<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMIntegrator>>(OCM::VT_INTEGRATOR, INTEGRATOR);
+    }
+
+    #[inline]
+    pub fn add_RPO_GEOMETRY(&mut self, RPO_GEOMETRY: ::flatbuffers::WIPOffset<OCMRelativeGeometry<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMRelativeGeometry>>(OCM::VT_RPO_GEOMETRY, RPO_GEOMETRY);
+    }
+
+    #[inline]
+    pub fn add_RPO_INSPECTION(&mut self, RPO_INSPECTION: ::flatbuffers::WIPOffset<OCMInspectionGeometry<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OCMInspectionGeometry>>(OCM::VT_RPO_INSPECTION, RPO_INSPECTION);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -10501,6 +15620,14 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("COVARIANCE_BLOCKS", &self.COVARIANCE_BLOCKS());
         ds.field("PROVENANCE", &self.PROVENANCE());
         ds.field("COV_REALISM", &self.COV_REALISM());
+        ds.field("MEAN_ELEMENTS", &self.MEAN_ELEMENTS());
+        ds.field("COV_PROPAGATION", &self.COV_PROPAGATION());
+        ds.field("COV_PARAMETER_KINDS", &self.COV_PARAMETER_KINDS());
+        ds.field("TRAJ_BASIS", &self.TRAJ_BASIS());
+        ds.field("SEED_SETS", &self.SEED_SETS());
+        ds.field("INTEGRATOR", &self.INTEGRATOR());
+        ds.field("RPO_GEOMETRY", &self.RPO_GEOMETRY());
+        ds.field("RPO_INSPECTION", &self.RPO_INSPECTION());
         ds.finish()
     }
 }
@@ -10541,6 +15668,14 @@ pub struct OCMT {
     pub COVARIANCE_BLOCKS: Option<alloc::vec::Vec<OCMCovarianceBlockT>>,
     pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
     pub COV_REALISM: Option<alloc::vec::Vec<CVRT>>,
+    pub MEAN_ELEMENTS: Option<alloc::boxed::Box<OCMMeanElementsT>>,
+    pub COV_PROPAGATION: Option<alloc::boxed::Box<OCMCovariancePropagationT>>,
+    pub COV_PARAMETER_KINDS: Option<alloc::vec::Vec<prwDynamicParameter>>,
+    pub TRAJ_BASIS: ocmTrajectoryBasis,
+    pub SEED_SETS: Option<alloc::vec::Vec<OCMSeedSetT>>,
+    pub INTEGRATOR: Option<alloc::boxed::Box<OCMIntegratorT>>,
+    pub RPO_GEOMETRY: Option<alloc::boxed::Box<OCMRelativeGeometryT>>,
+    pub RPO_INSPECTION: Option<alloc::boxed::Box<OCMInspectionGeometryT>>,
 }
 
 impl Default for OCMT {
@@ -10579,6 +15714,14 @@ impl Default for OCMT {
             COVARIANCE_BLOCKS: None,
             PROVENANCE: None,
             COV_REALISM: None,
+            MEAN_ELEMENTS: None,
+            COV_PROPAGATION: None,
+            COV_PARAMETER_KINDS: None,
+            TRAJ_BASIS: ocmTrajectoryBasis::UNSPECIFIED,
+            SEED_SETS: None,
+            INTEGRATOR: None,
+            RPO_GEOMETRY: None,
+            RPO_INSPECTION: None,
         }
     }
 }
@@ -10673,6 +15816,28 @@ impl OCMT {
         let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let MEAN_ELEMENTS = self.MEAN_ELEMENTS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let COV_PROPAGATION = self.COV_PROPAGATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let COV_PARAMETER_KINDS = self.COV_PARAMETER_KINDS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TRAJ_BASIS = self.TRAJ_BASIS;
+        let SEED_SETS = self.SEED_SETS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let INTEGRATOR = self.INTEGRATOR.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let RPO_GEOMETRY = self.RPO_GEOMETRY.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let RPO_INSPECTION = self.RPO_INSPECTION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -10707,6 +15872,14 @@ impl OCMT {
             COVARIANCE_BLOCKS,
             PROVENANCE,
             COV_REALISM,
+            MEAN_ELEMENTS,
+            COV_PROPAGATION,
+            COV_PARAMETER_KINDS,
+            TRAJ_BASIS,
+            SEED_SETS,
+            INTEGRATOR,
+            RPO_GEOMETRY,
+            RPO_INSPECTION,
         })
     }
 }

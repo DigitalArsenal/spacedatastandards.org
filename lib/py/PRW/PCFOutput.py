@@ -55,8 +55,49 @@ class PCFOutput(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 500000
 
+    # Output epochs, ISO 8601 UTC, ascending; when present they are the
+    # states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+    # Default empty.
+    # PCFOutput
+    def EPOCHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PCFOutput
+    def EPOCHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PCFOutput
+    def EPOCHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # First output epoch, ISO 8601 UTC. Default empty: the element set's
+    # epoch.
+    # PCFOutput
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+    # START_TIME plus one day.
+    # PCFOutput
+    def STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def PCFOutputStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(6)
 
 def Start(builder):
     PCFOutputStart(builder)
@@ -79,12 +120,46 @@ def PCFOutputAddMAXIMUM_STATES(builder, MAXIMUM_STATES):
 def AddMAXIMUM_STATES(builder, MAXIMUM_STATES):
     PCFOutputAddMAXIMUM_STATES(builder, MAXIMUM_STATES)
 
+def PCFOutputAddEPOCHS(builder, EPOCHS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCHS), 0)
+
+def AddEPOCHS(builder, EPOCHS):
+    PCFOutputAddEPOCHS(builder, EPOCHS)
+
+def PCFOutputStartEPOCHSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEPOCHSVector(builder, numElems):
+    return PCFOutputStartEPOCHSVector(builder, numElems)
+
+def PCFOutputCreateEPOCHSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEPOCHSVector(builder, data):
+    return PCFOutputCreateEPOCHSVector(builder, data)
+
+def PCFOutputAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    PCFOutputAddSTART_TIME(builder, START_TIME)
+
+def PCFOutputAddSTOP_TIME(builder, STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+
+def AddSTOP_TIME(builder, STOP_TIME):
+    PCFOutputAddSTOP_TIME(builder, STOP_TIME)
+
 def PCFOutputEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PCFOutputEnd(builder)
 
+try:
+    from typing import List
+except:
+    pass
 
 class PCFOutputT(object):
 
@@ -94,10 +169,16 @@ class PCFOutputT(object):
         FRAME = 0,
         STEP_SECONDS = 60.0,
         MAXIMUM_STATES = 500000,
+        EPOCHS = None,
+        START_TIME = None,
+        STOP_TIME = None,
     ):
         self.FRAME = FRAME  # type: int
         self.STEP_SECONDS = STEP_SECONDS  # type: float
         self.MAXIMUM_STATES = MAXIMUM_STATES  # type: int
+        self.EPOCHS = EPOCHS  # type: Optional[List[Optional[str]]]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -123,12 +204,36 @@ class PCFOutputT(object):
         self.FRAME = PCFOutput.FRAME()
         self.STEP_SECONDS = PCFOutput.STEP_SECONDS()
         self.MAXIMUM_STATES = PCFOutput.MAXIMUM_STATES()
+        if not PCFOutput.EPOCHSIsNone():
+            self.EPOCHS = []
+            for i in range(PCFOutput.EPOCHSLength()):
+                self.EPOCHS.append(PCFOutput.EPOCHS(i))
+        self.START_TIME = PCFOutput.START_TIME()
+        self.STOP_TIME = PCFOutput.STOP_TIME()
 
     # PCFOutputT
     def Pack(self, builder):
+        if self.EPOCHS is not None:
+            EPOCHSlist = []
+            for i in range(len(self.EPOCHS)):
+                EPOCHSlist.append(builder.CreateString(self.EPOCHS[i]))
+            PCFOutputStartEPOCHSVector(builder, len(self.EPOCHS))
+            for i in reversed(range(len(self.EPOCHS))):
+                builder.PrependUOffsetTRelative(EPOCHSlist[i])
+            EPOCHS = builder.EndVector()
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.STOP_TIME is not None:
+            STOP_TIME = builder.CreateString(self.STOP_TIME)
         PCFOutputStart(builder)
         PCFOutputAddFRAME(builder, self.FRAME)
         PCFOutputAddSTEP_SECONDS(builder, self.STEP_SECONDS)
         PCFOutputAddMAXIMUM_STATES(builder, self.MAXIMUM_STATES)
+        if self.EPOCHS is not None:
+            PCFOutputAddEPOCHS(builder, EPOCHS)
+        if self.START_TIME is not None:
+            PCFOutputAddSTART_TIME(builder, START_TIME)
+        if self.STOP_TIME is not None:
+            PCFOutputAddSTOP_TIME(builder, STOP_TIME)
         PCFOutput = PCFOutputEnd(builder)
         return PCFOutput

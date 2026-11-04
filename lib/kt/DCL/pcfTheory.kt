@@ -32,5 +32,10 @@ class pcfTheory private constructor() {
          * Two-body (Keplerian) motion about the central body.
          */
         const val KEPLER: UByte = 5u
+        /**
+         * SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+         * 3 stays unused.
+         */
+        const val AP: UByte = 6u
     }
 }

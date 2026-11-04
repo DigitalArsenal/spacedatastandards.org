@@ -45,8 +45,8 @@ public final class CATProduct extends com.google.flatbuffers.Table {
   public ByteBuffer SOURCE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer SOURCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-   * epoch.
+   * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+   * MEAN_ELEMENTS.EPOCH or first state epoch.
    */
   public String EPOCH() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }

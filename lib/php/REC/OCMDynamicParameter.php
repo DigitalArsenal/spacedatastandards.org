@@ -43,8 +43,8 @@ class OCMDynamicParameter extends Table
     }
 
     /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-    /// are the producer's, as in USER_DEFINED_PARAMETERS.
+    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+    /// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
     public function getNAME()
     {
         $o = $this->__offset(4);
@@ -79,26 +79,37 @@ class OCMDynamicParameter extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// The parameter, typed: every reader keys on this, never on NAME.
+    /**
+     * @return byte
+     */
+    public function getPARAMETER()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwDynamicParameter::UNSPECIFIED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCMDynamicParameter(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCMDynamicParameter
      */
-    public static function createOCMDynamicParameter(FlatBufferBuilder $builder, $NAME, $VALUE, $UNITS, $SOLVED_FOR)
+    public static function createOCMDynamicParameter(FlatBufferBuilder $builder, $NAME, $VALUE, $UNITS, $SOLVED_FOR, $PARAMETER)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
         self::addNAME($builder, $NAME);
         self::addVALUE($builder, $VALUE);
         self::addUNITS($builder, $UNITS);
         self::addSOLVED_FOR($builder, $SOLVED_FOR);
+        self::addPARAMETER($builder, $PARAMETER);
         $o = $builder->endObject();
         return $o;
     }
@@ -141,6 +152,16 @@ class OCMDynamicParameter extends Table
     public static function addSOLVED_FOR(FlatBufferBuilder $builder, $SOLVED_FOR)
     {
         $builder->addBoolX(3, $SOLVED_FOR, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPARAMETER(FlatBufferBuilder $builder, $PARAMETER)
+    {
+        $builder->addByteX(4, $PARAMETER, 0);
     }
 
     /**

@@ -131,7 +131,7 @@
     },
     "pcfTheory" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "SGP4", "SGP4XP", "FFM", "KEPLER"]
+      "enum": ["UNSPECIFIED", "SGP4", "SGP4XP", "FFM", "KEPLER", "AP"]
     },
     "pcfEpochSelection" : {
       "type" : "string",
@@ -147,7 +147,7 @@
     },
     "pcfWeatherSource" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "CONSTANT", "RECORDS"]
+      "enum": ["UNSPECIFIED", "CONSTANT", "RECORDS", "THEORY_FLUX_MODEL", "NONE"]
     },
     "pcfDensityCorrection" : {
       "type" : "string",
@@ -191,7 +191,7 @@
     },
     "pcfAtmosphereFamily" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL"]
+      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL", "JACCHIA70"]
     },
     "pcfSolidTideModel" : {
       "type" : "string",
@@ -1789,6 +1789,10 @@
         "SRP_PRIOR_FORM" : {
                 "$ref" : "#/definitions/pcfPriorForm",
                 "description" : "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              },
+        "WEATHER_HORIZON_DAYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
               }
       },
       "additionalProperties" : false
@@ -1881,6 +1885,18 @@
         "MAXIMUM_STATES" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Most states one request may produce. Default 500000."
+              },
+        "EPOCHS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Output epochs, ISO 8601 UTC, ascending; when present they are the\nstates written and START_TIME, STOP_TIME and STEP_SECONDS are not read.\nDefault empty."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "First output epoch, ISO 8601 UTC. Default empty: the element set's\nepoch."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:\nSTART_TIME plus one day."
               }
       },
       "additionalProperties" : false

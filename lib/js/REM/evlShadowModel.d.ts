@@ -1,0 +1,20 @@
+/**
+ * Geometry used to decide whether the target is illuminated. Append new
+ * values only.
+ */
+export declare enum evlShadowModel {
+    UNSPECIFIED = 0,
+    /**
+     * The occulting body casts a cylinder; no penumbra exists.
+     */
+    CYLINDRICAL = 1,
+    /**
+     * A single cone; umbra and penumbra are distinguished.
+     */
+    CONICAL = 2,
+    /**
+     * Umbra and penumbra cones evaluated separately, admitting antumbra.
+     */
+    DUAL_CONE = 3
+}
+//# sourceMappingURL=evlShadowModel.d.ts.map

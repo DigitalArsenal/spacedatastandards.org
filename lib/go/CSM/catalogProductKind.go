@@ -10,12 +10,15 @@ type catalogProductKind int8
 const (
 	/// Not stated
 	catalogProductKindUnspecified     catalogProductKind = 0
-	/// $OMM with MEAN_ELEMENT_THEORY SGP4
+	/// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+	/// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
 	catalogProductKindSgp4Elements    catalogProductKind = 1
-	/// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+	/// As Sgp4Elements, under SGP4XP
 	catalogProductKindSgp4XpElements  catalogProductKind = 2
 	/// $OCM: a state and its covariance
 	catalogProductKindStateCovariance catalogProductKind = 3
+	/// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+	catalogProductKindApElements      catalogProductKind = 4
 )
 
 var EnumNamescatalogProductKind = map[catalogProductKind]string{
@@ -23,6 +26,7 @@ var EnumNamescatalogProductKind = map[catalogProductKind]string{
 	catalogProductKindSgp4Elements:    "Sgp4Elements",
 	catalogProductKindSgp4XpElements:  "Sgp4XpElements",
 	catalogProductKindStateCovariance: "StateCovariance",
+	catalogProductKindApElements:      "ApElements",
 }
 
 var EnumValuescatalogProductKind = map[string]catalogProductKind{
@@ -30,6 +34,7 @@ var EnumValuescatalogProductKind = map[string]catalogProductKind{
 	"Sgp4Elements":    catalogProductKindSgp4Elements,
 	"Sgp4XpElements":  catalogProductKindSgp4XpElements,
 	"StateCovariance": catalogProductKindStateCovariance,
+	"ApElements":      catalogProductKindApElements,
 }
 
 func (v catalogProductKind) String() string {

@@ -234,22 +234,37 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfPriorForm::GAUSSIAN_SIGNED;
     }
 
+    /// Days past the element set's epoch day through which the fit writes the
+    /// daily space weather into the record it emits (OCM
+    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+    /// arc's last day and the epoch's day plus this count; rows supplied with
+    /// the request must reach it, or the fit is refused by name. Default 30.
+    /**
+     * @return ushort
+     */
+    public function getWEATHER_HORIZON_DAYS()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 30;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCFFitPolicy(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFFitPolicy
      */
-    public static function createPCFFitPolicy(FlatBufferBuilder $builder, $DEFAULT_SPAN_HOURS, $MINIMUM_SPAN_HOURS, $MAXIMUM_SPAN_HOURS, $CANDIDATE_SPANS_HOURS, $TAIL_HOURS, $EXTENSION_MARGIN, $HOLDOUT_HOURS, $HAS_HOLDOUT_HOURS, $ECCENTRICITY_THRESHOLD, $ECCENTRIC_DEFAULT_SPAN_HOURS, $ECCENTRIC_EXTENSION_MARGIN, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, $IMPLAUSIBLE_RMS_KM, $DRAG_PRIOR, $SRP_PRIOR, $DRAG_PRIOR_FORM, $SRP_PRIOR_FORM)
+    public static function createPCFFitPolicy(FlatBufferBuilder $builder, $DEFAULT_SPAN_HOURS, $MINIMUM_SPAN_HOURS, $MAXIMUM_SPAN_HOURS, $CANDIDATE_SPANS_HOURS, $TAIL_HOURS, $EXTENSION_MARGIN, $HOLDOUT_HOURS, $HAS_HOLDOUT_HOURS, $ECCENTRICITY_THRESHOLD, $ECCENTRIC_DEFAULT_SPAN_HOURS, $ECCENTRIC_EXTENSION_MARGIN, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, $IMPLAUSIBLE_RMS_KM, $DRAG_PRIOR, $SRP_PRIOR, $DRAG_PRIOR_FORM, $SRP_PRIOR_FORM, $WEATHER_HORIZON_DAYS)
     {
-        $builder->startObject(17);
+        $builder->startObject(18);
         self::addDEFAULT_SPAN_HOURS($builder, $DEFAULT_SPAN_HOURS);
         self::addMINIMUM_SPAN_HOURS($builder, $MINIMUM_SPAN_HOURS);
         self::addMAXIMUM_SPAN_HOURS($builder, $MAXIMUM_SPAN_HOURS);
@@ -267,6 +282,7 @@ class PCFFitPolicy extends Table
         self::addSRP_PRIOR($builder, $SRP_PRIOR);
         self::addDRAG_PRIOR_FORM($builder, $DRAG_PRIOR_FORM);
         self::addSRP_PRIOR_FORM($builder, $SRP_PRIOR_FORM);
+        self::addWEATHER_HORIZON_DAYS($builder, $WEATHER_HORIZON_DAYS);
         $o = $builder->endObject();
         return $o;
     }
@@ -463,6 +479,16 @@ class PCFFitPolicy extends Table
     public static function addSRP_PRIOR_FORM(FlatBufferBuilder $builder, $SRP_PRIOR_FORM)
     {
         $builder->addByteX(16, $SRP_PRIOR_FORM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addWEATHER_HORIZON_DAYS(FlatBufferBuilder $builder, $WEATHER_HORIZON_DAYS)
+    {
+        $builder->addUshortX(17, $WEATHER_HORIZON_DAYS, 30);
     }
 
     /**

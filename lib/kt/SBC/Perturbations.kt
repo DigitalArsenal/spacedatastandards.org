@@ -452,6 +452,141 @@ class Perturbations : Table() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
+    /**
+     * Highest degree of the tesseral and sectorial terms (order 1 and above) of
+     * the gravity field the record was computed with (SDS addition; the $PCF
+     * FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+     * theory: 0 is the theory's own terms. For a numerical solution the nn of a
+     * legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+     * either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+     * order pair cannot state a tesseral cap below a zonal one.
+     */
+    val maximumTesseralDegree : UShort
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Highest degree of the zonal terms (order 0) of the gravity field the
+     * record was computed with (SDS addition). For a mean-element set the tail
+     * J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+     * For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+     * otherwise not stated.
+     */
+    val maximumZonalDegree : UShort
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Where the space weather behind the drag density comes from. RECORDS: the
+     * daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+     * flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+     * in an element-set record.
+     */
+    val weatherSource : UByte
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Correction applied to the atmosphere model's density.
+     */
+    val densityCorrection : UByte
+        get() {
+            val o = __offset(86)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+     * DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+     * DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+     */
+    val densityCorrectionCid : String?
+        get() {
+            val o = __offset(88)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val densityCorrectionCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun densityCorrectionCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * The daily space weather the drag density reads (SDS addition; CCSDS
+     * 502.0-B-3 names only the source, epoch and interpolation as text and
+     * fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+     * UTC day, DATE ascending, no gap, from the day before the first day the
+     * record is flown or was fitted through its last day. The record is flown
+     * to the end of the last row's day and no further. Each row carries DATE,
+     * F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+     * PRD, PRM predicted); other SPW fields unwritten.
+     */
+    fun spaceWeather(j: Int) : SPW? = spaceWeather(SPW(), j)
+    fun spaceWeather(obj: SPW, j: Int) : SPW? {
+        val o = __offset(90)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val spaceWeatherLength : Int
+        get() {
+            val o = __offset(90); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+     * set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+     * milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+     * Empty when DENSITY_CORRECTION is NONE.
+     */
+    fun densityCorrectionNodeTimesMs(j: Int) : Long {
+        val o = __offset(92)
+        return if (o != 0) {
+            bb.getLong(__vector(o) + j * 8)
+        } else {
+            0
+        }
+    }
+    val densityCorrectionNodeTimesMsLength : Int
+        get() {
+            val o = __offset(92); return if (o != 0) __vector_len(o) else 0
+        }
+    val densityCorrectionNodeTimesMsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 8)
+    fun densityCorrectionNodeTimesMsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 8)
+    /**
+     * One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+     * entry, dimensionless, as that $DCL's
+     * CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+     * held at the end values outside them.
+     */
+    fun densityCorrectionLogDensityScaleDimensionless(j: Int) : Double {
+        val o = __offset(94)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val densityCorrectionLogDensityScaleDimensionlessLength : Int
+        get() {
+            val o = __offset(94); return if (o != 0) __vector_len(o) else 0
+        }
+    val densityCorrectionLogDensityScaleDimensionlessAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 8)
+    fun densityCorrectionLogDensityScaleDimensionlessInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 8)
+    /**
+     * Number of terms of the nutation series REDUCTION_THEORY names that the
+     * force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+     * 4, 50 or 106). 0 when the series is not truncated or the count is not
+     * stated.
+     */
+    val reductionTheoryTerms : UShort
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPerturbations(_bb: ByteBuffer): Perturbations = getRootAsPerturbations(_bb, Perturbations())
@@ -459,8 +594,8 @@ class Perturbations : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double, fixedGeomagAp: Double, atmosphericModelNameOffset: Int, equatorialRadius: Double, centralBodyRotation: Double, oblateFlattening: Double, reductionTheoryOffset: Int, albedoGridSize: UInt, shadowModelOffset: Int, shadowBodiesOffset: Int, swDataSourceOffset: Int, swDataEpochOffset: Int, swInterpMethodOffset: Int, fixedGeomagDst: Double, fixedM10P7: Double, fixedM10P7Mean: Double, fixedS10P7: Double, fixedS10P7Mean: Double, fixedY10P7: Double, fixedY10P7Mean: Double) : Int {
-            builder.startTable(38)
+        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double, fixedGeomagAp: Double, atmosphericModelNameOffset: Int, equatorialRadius: Double, centralBodyRotation: Double, oblateFlattening: Double, reductionTheoryOffset: Int, albedoGridSize: UInt, shadowModelOffset: Int, shadowBodiesOffset: Int, swDataSourceOffset: Int, swDataEpochOffset: Int, swInterpMethodOffset: Int, fixedGeomagDst: Double, fixedM10P7: Double, fixedM10P7Mean: Double, fixedS10P7: Double, fixedS10P7Mean: Double, fixedY10P7: Double, fixedY10P7Mean: Double, maximumTesseralDegree: UShort, maximumZonalDegree: UShort, weatherSource: UByte, densityCorrection: UByte, densityCorrectionCidOffset: Int, spaceWeatherOffset: Int, densityCorrectionNodeTimesMsOffset: Int, densityCorrectionLogDensityScaleDimensionlessOffset: Int, reductionTheoryTerms: UShort) : Int {
+            builder.startTable(47)
             addFIXEDY10P7MEAN(builder, fixedY10P7Mean)
             addFIXEDY10P7(builder, fixedY10P7)
             addFIXEDS10P7MEAN(builder, fixedS10P7Mean)
@@ -476,6 +611,10 @@ class Perturbations : Table() {
             addFIXEDF10P7(builder, fixedF10P7)
             addFIXEDGEOMAGKP(builder, fixedGeomagKp)
             addGM(builder, gm)
+            addDENSITYCORRECTIONLOGDENSITYSCALEDIMENSIONLESS(builder, densityCorrectionLogDensityScaleDimensionlessOffset)
+            addDENSITYCORRECTIONNODETIMESMS(builder, densityCorrectionNodeTimesMsOffset)
+            addSPACEWEATHER(builder, spaceWeatherOffset)
+            addDENSITYCORRECTIONCID(builder, densityCorrectionCidOffset)
             addSWINTERPMETHOD(builder, swInterpMethodOffset)
             addSWDATAEPOCH(builder, swDataEpochOffset)
             addSWDATASOURCE(builder, swDataSourceOffset)
@@ -499,9 +638,14 @@ class Perturbations : Table() {
             addGRAVITYMODEL(builder, gravityModelOffset)
             addATMOSPHERICMODEL(builder, atmosphericModelOffset)
             addCOMMENT(builder, commentOffset)
+            addREDUCTIONTHEORYTERMS(builder, reductionTheoryTerms)
+            addMAXIMUMZONALDEGREE(builder, maximumZonalDegree)
+            addMAXIMUMTESSERALDEGREE(builder, maximumTesseralDegree)
+            addDENSITYCORRECTION(builder, densityCorrection)
+            addWEATHERSOURCE(builder, weatherSource)
             return endPerturbations(builder)
         }
-        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(38)
+        fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(47)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -556,6 +700,39 @@ class Perturbations : Table() {
         fun addFIXEDS10P7MEAN(builder: FlatBufferBuilder, fixedS10P7Mean: Double) = builder.addDouble(35, fixedS10P7Mean, Double.NaN)
         fun addFIXEDY10P7(builder: FlatBufferBuilder, fixedY10P7: Double) = builder.addDouble(36, fixedY10P7, Double.NaN)
         fun addFIXEDY10P7MEAN(builder: FlatBufferBuilder, fixedY10P7Mean: Double) = builder.addDouble(37, fixedY10P7Mean, Double.NaN)
+        fun addMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, maximumTesseralDegree: UShort) = builder.addShort(38, maximumTesseralDegree.toShort(), 0)
+        fun addMAXIMUMZONALDEGREE(builder: FlatBufferBuilder, maximumZonalDegree: UShort) = builder.addShort(39, maximumZonalDegree.toShort(), 0)
+        fun addWEATHERSOURCE(builder: FlatBufferBuilder, weatherSource: UByte) = builder.addByte(40, weatherSource.toByte(), 0)
+        fun addDENSITYCORRECTION(builder: FlatBufferBuilder, densityCorrection: UByte) = builder.addByte(41, densityCorrection.toByte(), 0)
+        fun addDENSITYCORRECTIONCID(builder: FlatBufferBuilder, densityCorrectionCid: Int) = builder.addOffset(42, densityCorrectionCid, 0)
+        fun addSPACEWEATHER(builder: FlatBufferBuilder, spaceWeather: Int) = builder.addOffset(43, spaceWeather, 0)
+        fun createSpaceWeatherVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSpaceWeatherVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addDENSITYCORRECTIONNODETIMESMS(builder: FlatBufferBuilder, densityCorrectionNodeTimesMs: Int) = builder.addOffset(44, densityCorrectionNodeTimesMs, 0)
+        fun createDensityCorrectionNodeTimesMsVector(builder: FlatBufferBuilder, data: LongArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addLong(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDensityCorrectionNodeTimesMsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDENSITYCORRECTIONLOGDENSITYSCALEDIMENSIONLESS(builder: FlatBufferBuilder, densityCorrectionLogDensityScaleDimensionless: Int) = builder.addOffset(45, densityCorrectionLogDensityScaleDimensionless, 0)
+        fun createDensityCorrectionLogDensityScaleDimensionlessVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDensityCorrectionLogDensityScaleDimensionlessVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addREDUCTIONTHEORYTERMS(builder: FlatBufferBuilder, reductionTheoryTerms: UShort) = builder.addShort(46, reductionTheoryTerms.toShort(), 0)
         fun endPerturbations(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

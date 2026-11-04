@@ -83,7 +83,7 @@
     },
     "meanElementSource" : {
       "type" : "string",
-      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM", "AP", "UNSPECIFIED"]
     },
     "covarianceCalibration" : {
       "type" : "string",
@@ -1655,6 +1655,30 @@
         "SHRINKAGE_WEIGHT" : {
                 "type" : "number",
                 "description" : "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+              },
+        "TRUTH_EPOCHS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated."
+              },
+        "COVERAGE_1_SIGMA_AXIS1" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured."
+              },
+        "COVERAGE_1_SIGMA_AXIS2" : {
+                "type" : "number"
+              },
+        "COVERAGE_1_SIGMA_AXIS3" : {
+                "type" : "number"
+              },
+        "COVERAGE_3_SIGMA_AXIS1" : {
+                "type" : "number",
+                "description" : "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973."
+              },
+        "COVERAGE_3_SIGMA_AXIS2" : {
+                "type" : "number"
+              },
+        "COVERAGE_3_SIGMA_AXIS3" : {
+                "type" : "number"
               }
       },
       "additionalProperties" : false
@@ -1694,6 +1718,26 @@
         "LINEAGE" : {
                 "type" : "string",
                 "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
               }
       },
       "additionalProperties" : false

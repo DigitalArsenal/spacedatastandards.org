@@ -102,8 +102,53 @@ class PVN(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Replayable URL or provider query identifying the source material as it
+    # was retrieved (the SOURCE_URL of $CMR and $AVL).
+    # PVN
+    def SOURCE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source revision, edition or upstream update marker verbatim: for a file
+    # its originator stamps, the stamp.
+    # PVN
+    def SOURCE_VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+    # PVN
+    def RETRIEVED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+    # hexadecimal characters. Empty when the source cannot expose replayable
+    # bytes.
+    # PVN
+    def SOURCE_SHA256(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+    # the source was fetched by range. 0 when not stated.
+    # PVN
+    def SOURCE_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
 def PVNStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(13)
 
 def Start(builder):
     PVNStart(builder)
@@ -156,6 +201,36 @@ def PVNAddLINEAGE(builder, LINEAGE):
 def AddLINEAGE(builder, LINEAGE):
     PVNAddLINEAGE(builder, LINEAGE)
 
+def PVNAddSOURCE_URL(builder, SOURCE_URL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_URL), 0)
+
+def AddSOURCE_URL(builder, SOURCE_URL):
+    PVNAddSOURCE_URL(builder, SOURCE_URL)
+
+def PVNAddSOURCE_VERSION(builder, SOURCE_VERSION):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_VERSION), 0)
+
+def AddSOURCE_VERSION(builder, SOURCE_VERSION):
+    PVNAddSOURCE_VERSION(builder, SOURCE_VERSION)
+
+def PVNAddRETRIEVED_AT(builder, RETRIEVED_AT):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RETRIEVED_AT), 0)
+
+def AddRETRIEVED_AT(builder, RETRIEVED_AT):
+    PVNAddRETRIEVED_AT(builder, RETRIEVED_AT)
+
+def PVNAddSOURCE_SHA256(builder, SOURCE_SHA256):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_SHA256), 0)
+
+def AddSOURCE_SHA256(builder, SOURCE_SHA256):
+    PVNAddSOURCE_SHA256(builder, SOURCE_SHA256)
+
+def PVNAddSOURCE_BYTES(builder, SOURCE_BYTES):
+    builder.PrependUint64Slot(12, SOURCE_BYTES, 0)
+
+def AddSOURCE_BYTES(builder, SOURCE_BYTES):
+    PVNAddSOURCE_BYTES(builder, SOURCE_BYTES)
+
 def PVNEnd(builder):
     return builder.EndObject()
 
@@ -176,6 +251,11 @@ class PVNT(object):
         LICENSE_CLASS = 0,
         LICENSE_ID = None,
         LINEAGE = None,
+        SOURCE_URL = None,
+        SOURCE_VERSION = None,
+        RETRIEVED_AT = None,
+        SOURCE_SHA256 = None,
+        SOURCE_BYTES = 0,
     ):
         self.SOURCE_ID = SOURCE_ID  # type: Optional[str]
         self.SOURCE_KIND = SOURCE_KIND  # type: int
@@ -185,6 +265,11 @@ class PVNT(object):
         self.LICENSE_CLASS = LICENSE_CLASS  # type: int
         self.LICENSE_ID = LICENSE_ID  # type: Optional[str]
         self.LINEAGE = LINEAGE  # type: Optional[str]
+        self.SOURCE_URL = SOURCE_URL  # type: Optional[str]
+        self.SOURCE_VERSION = SOURCE_VERSION  # type: Optional[str]
+        self.RETRIEVED_AT = RETRIEVED_AT  # type: Optional[str]
+        self.SOURCE_SHA256 = SOURCE_SHA256  # type: Optional[str]
+        self.SOURCE_BYTES = SOURCE_BYTES  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -215,6 +300,11 @@ class PVNT(object):
         self.LICENSE_CLASS = PVN.LICENSE_CLASS()
         self.LICENSE_ID = PVN.LICENSE_ID()
         self.LINEAGE = PVN.LINEAGE()
+        self.SOURCE_URL = PVN.SOURCE_URL()
+        self.SOURCE_VERSION = PVN.SOURCE_VERSION()
+        self.RETRIEVED_AT = PVN.RETRIEVED_AT()
+        self.SOURCE_SHA256 = PVN.SOURCE_SHA256()
+        self.SOURCE_BYTES = PVN.SOURCE_BYTES()
 
     # PVNT
     def Pack(self, builder):
@@ -230,6 +320,14 @@ class PVNT(object):
             LICENSE_ID = builder.CreateString(self.LICENSE_ID)
         if self.LINEAGE is not None:
             LINEAGE = builder.CreateString(self.LINEAGE)
+        if self.SOURCE_URL is not None:
+            SOURCE_URL = builder.CreateString(self.SOURCE_URL)
+        if self.SOURCE_VERSION is not None:
+            SOURCE_VERSION = builder.CreateString(self.SOURCE_VERSION)
+        if self.RETRIEVED_AT is not None:
+            RETRIEVED_AT = builder.CreateString(self.RETRIEVED_AT)
+        if self.SOURCE_SHA256 is not None:
+            SOURCE_SHA256 = builder.CreateString(self.SOURCE_SHA256)
         PVNStart(builder)
         if self.SOURCE_ID is not None:
             PVNAddSOURCE_ID(builder, SOURCE_ID)
@@ -245,5 +343,14 @@ class PVNT(object):
             PVNAddLICENSE_ID(builder, LICENSE_ID)
         if self.LINEAGE is not None:
             PVNAddLINEAGE(builder, LINEAGE)
+        if self.SOURCE_URL is not None:
+            PVNAddSOURCE_URL(builder, SOURCE_URL)
+        if self.SOURCE_VERSION is not None:
+            PVNAddSOURCE_VERSION(builder, SOURCE_VERSION)
+        if self.RETRIEVED_AT is not None:
+            PVNAddRETRIEVED_AT(builder, RETRIEVED_AT)
+        if self.SOURCE_SHA256 is not None:
+            PVNAddSOURCE_SHA256(builder, SOURCE_SHA256)
+        PVNAddSOURCE_BYTES(builder, self.SOURCE_BYTES)
         PVN = PVNEnd(builder)
         return PVN

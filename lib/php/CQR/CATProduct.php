@@ -66,8 +66,8 @@ class CATProduct extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-    /// epoch.
+    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+    /// MEAN_ELEMENTS.EPOCH or first state epoch.
     public function getEPOCH()
     {
         $o = $this->__offset(10);

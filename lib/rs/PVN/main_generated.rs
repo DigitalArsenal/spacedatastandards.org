@@ -256,6 +256,11 @@ impl<'a> PVN<'a> {
     pub const VT_LICENSE_CLASS: ::flatbuffers::VOffsetT = 14;
     pub const VT_LICENSE_ID: ::flatbuffers::VOffsetT = 16;
     pub const VT_LINEAGE: ::flatbuffers::VOffsetT = 18;
+    pub const VT_SOURCE_URL: ::flatbuffers::VOffsetT = 20;
+    pub const VT_SOURCE_VERSION: ::flatbuffers::VOffsetT = 22;
+    pub const VT_RETRIEVED_AT: ::flatbuffers::VOffsetT = 24;
+    pub const VT_SOURCE_SHA256: ::flatbuffers::VOffsetT = 26;
+    pub const VT_SOURCE_BYTES: ::flatbuffers::VOffsetT = 28;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -268,6 +273,11 @@ impl<'a> PVN<'a> {
         args: &'args PVNArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PVN<'bldr>> {
         let mut builder = PVNBuilder::new(_fbb);
+        builder.add_SOURCE_BYTES(args.SOURCE_BYTES);
+        if let Some(x) = args.SOURCE_SHA256 { builder.add_SOURCE_SHA256(x); }
+        if let Some(x) = args.RETRIEVED_AT { builder.add_RETRIEVED_AT(x); }
+        if let Some(x) = args.SOURCE_VERSION { builder.add_SOURCE_VERSION(x); }
+        if let Some(x) = args.SOURCE_URL { builder.add_SOURCE_URL(x); }
         if let Some(x) = args.LINEAGE { builder.add_LINEAGE(x); }
         if let Some(x) = args.LICENSE_ID { builder.add_LICENSE_ID(x); }
         if let Some(x) = args.PRODUCER { builder.add_PRODUCER(x); }
@@ -300,6 +310,19 @@ impl<'a> PVN<'a> {
         let LINEAGE = self.LINEAGE().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let SOURCE_URL = self.SOURCE_URL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOURCE_VERSION = self.SOURCE_VERSION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let RETRIEVED_AT = self.RETRIEVED_AT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOURCE_SHA256 = self.SOURCE_SHA256().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SOURCE_BYTES = self.SOURCE_BYTES();
         PVNT {
             SOURCE_ID,
             SOURCE_KIND,
@@ -309,6 +332,11 @@ impl<'a> PVN<'a> {
             LICENSE_CLASS,
             LICENSE_ID,
             LINEAGE,
+            SOURCE_URL,
+            SOURCE_VERSION,
+            RETRIEVED_AT,
+            SOURCE_SHA256,
+            SOURCE_BYTES,
         }
     }
 
@@ -392,6 +420,56 @@ impl<'a> PVN<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_LINEAGE, None)}
     }
+
+    /// Replayable URL or provider query identifying the source material as it
+    /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+    #[inline]
+    pub fn SOURCE_URL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_SOURCE_URL, None)}
+    }
+
+    /// Source revision, edition or upstream update marker verbatim: for a file
+    /// its originator stamps, the stamp.
+    #[inline]
+    pub fn SOURCE_VERSION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_SOURCE_VERSION, None)}
+    }
+
+    /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+    #[inline]
+    pub fn RETRIEVED_AT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_RETRIEVED_AT, None)}
+    }
+
+    /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+    /// hexadecimal characters. Empty when the source cannot expose replayable
+    /// bytes.
+    #[inline]
+    pub fn SOURCE_SHA256(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_SOURCE_SHA256, None)}
+    }
+
+    /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+    /// the source was fetched by range. 0 when not stated.
+    #[inline]
+    pub fn SOURCE_BYTES(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(PVN::VT_SOURCE_BYTES, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PVN<'_> {
@@ -408,6 +486,11 @@ impl ::flatbuffers::Verifiable for PVN<'_> {
             .visit_field::<pvnLicenseClass>("LICENSE_CLASS", Self::VT_LICENSE_CLASS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_ID", Self::VT_LICENSE_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINEAGE", Self::VT_LINEAGE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_URL", Self::VT_SOURCE_URL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_VERSION", Self::VT_SOURCE_VERSION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RETRIEVED_AT", Self::VT_RETRIEVED_AT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_SHA256", Self::VT_SOURCE_SHA256, false)?
+            .visit_field::<u64>("SOURCE_BYTES", Self::VT_SOURCE_BYTES, false)?
             .finish();
         Ok(())
     }
@@ -422,6 +505,11 @@ pub struct PVNArgs<'a> {
     pub LICENSE_CLASS: pvnLicenseClass,
     pub LICENSE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINEAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RETRIEVED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_BYTES: u64,
 }
 
 impl<'a> Default for PVNArgs<'a> {
@@ -436,6 +524,11 @@ impl<'a> Default for PVNArgs<'a> {
             LICENSE_CLASS: pvnLicenseClass::Unspecified,
             LICENSE_ID: None,
             LINEAGE: None,
+            SOURCE_URL: None,
+            SOURCE_VERSION: None,
+            RETRIEVED_AT: None,
+            SOURCE_SHA256: None,
+            SOURCE_BYTES: 0,
         }
     }
 }
@@ -487,6 +580,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PVNBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_SOURCE_URL(&mut self, SOURCE_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PVN::VT_SOURCE_URL, SOURCE_URL);
+    }
+
+    #[inline]
+    pub fn add_SOURCE_VERSION(&mut self, SOURCE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PVN::VT_SOURCE_VERSION, SOURCE_VERSION);
+    }
+
+    #[inline]
+    pub fn add_RETRIEVED_AT(&mut self, RETRIEVED_AT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PVN::VT_RETRIEVED_AT, RETRIEVED_AT);
+    }
+
+    #[inline]
+    pub fn add_SOURCE_SHA256(&mut self, SOURCE_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PVN::VT_SOURCE_SHA256, SOURCE_SHA256);
+    }
+
+    #[inline]
+    pub fn add_SOURCE_BYTES(&mut self, SOURCE_BYTES: u64) {
+        self.fbb_.push_slot::<u64>(PVN::VT_SOURCE_BYTES, SOURCE_BYTES, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PVNBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PVNBuilder {
@@ -513,6 +631,11 @@ impl ::core::fmt::Debug for PVN<'_> {
         ds.field("LICENSE_CLASS", &self.LICENSE_CLASS());
         ds.field("LICENSE_ID", &self.LICENSE_ID());
         ds.field("LINEAGE", &self.LINEAGE());
+        ds.field("SOURCE_URL", &self.SOURCE_URL());
+        ds.field("SOURCE_VERSION", &self.SOURCE_VERSION());
+        ds.field("RETRIEVED_AT", &self.RETRIEVED_AT());
+        ds.field("SOURCE_SHA256", &self.SOURCE_SHA256());
+        ds.field("SOURCE_BYTES", &self.SOURCE_BYTES());
         ds.finish()
     }
 }
@@ -528,6 +651,11 @@ pub struct PVNT {
     pub LICENSE_CLASS: pvnLicenseClass,
     pub LICENSE_ID: Option<alloc::string::String>,
     pub LINEAGE: Option<alloc::string::String>,
+    pub SOURCE_URL: Option<alloc::string::String>,
+    pub SOURCE_VERSION: Option<alloc::string::String>,
+    pub RETRIEVED_AT: Option<alloc::string::String>,
+    pub SOURCE_SHA256: Option<alloc::string::String>,
+    pub SOURCE_BYTES: u64,
 }
 
 impl Default for PVNT {
@@ -541,6 +669,11 @@ impl Default for PVNT {
             LICENSE_CLASS: pvnLicenseClass::Unspecified,
             LICENSE_ID: None,
             LINEAGE: None,
+            SOURCE_URL: None,
+            SOURCE_VERSION: None,
+            RETRIEVED_AT: None,
+            SOURCE_SHA256: None,
+            SOURCE_BYTES: 0,
         }
     }
 }
@@ -570,6 +703,19 @@ impl PVNT {
         let LINEAGE = self.LINEAGE.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let SOURCE_URL = self.SOURCE_URL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOURCE_VERSION = self.SOURCE_VERSION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let RETRIEVED_AT = self.RETRIEVED_AT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOURCE_SHA256 = self.SOURCE_SHA256.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SOURCE_BYTES = self.SOURCE_BYTES;
         PVN::create(_fbb, &PVNArgs{
             SOURCE_ID,
             SOURCE_KIND,
@@ -579,6 +725,11 @@ impl PVNT {
             LICENSE_CLASS,
             LICENSE_ID,
             LINEAGE,
+            SOURCE_URL,
+            SOURCE_VERSION,
+            RETRIEVED_AT,
+            SOURCE_SHA256,
+            SOURCE_BYTES,
         })
     }
 }

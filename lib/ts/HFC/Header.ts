@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ocmMessageStatus } from './ocmMessageStatus.js';
 
 
 export class Header implements flatbuffers.IUnpackableObject<HeaderT> {
@@ -89,8 +90,26 @@ MESSAGE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Whether the message is real, test or exercise data.
+ */
+MESSAGE_STATUS():ocmMessageStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : ocmMessageStatus.UNSPECIFIED;
+}
+
+/**
+ * Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+ */
+EXERCISE_NAME():string|null
+EXERCISE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EXERCISE_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startHeader(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(8);
 }
 
 static addCcsdsOcmVers(builder:flatbuffers.Builder, CCSDS_OCM_VERSOffset:flatbuffers.Offset) {
@@ -129,12 +148,20 @@ static addMessageId(builder:flatbuffers.Builder, MESSAGE_IDOffset:flatbuffers.Of
   builder.addFieldOffset(5, MESSAGE_IDOffset, 0);
 }
 
+static addMessageStatus(builder:flatbuffers.Builder, MESSAGE_STATUS:ocmMessageStatus) {
+  builder.addFieldInt8(6, MESSAGE_STATUS, ocmMessageStatus.UNSPECIFIED);
+}
+
+static addExerciseName(builder:flatbuffers.Builder, EXERCISE_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, EXERCISE_NAMEOffset, 0);
+}
+
 static endHeader(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createHeader(builder:flatbuffers.Builder, CCSDS_OCM_VERSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createHeader(builder:flatbuffers.Builder, CCSDS_OCM_VERSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, CLASSIFICATIONOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, MESSAGE_IDOffset:flatbuffers.Offset, MESSAGE_STATUS:ocmMessageStatus, EXERCISE_NAMEOffset:flatbuffers.Offset):flatbuffers.Offset {
   Header.startHeader(builder);
   Header.addCcsdsOcmVers(builder, CCSDS_OCM_VERSOffset);
   Header.addComment(builder, COMMENTOffset);
@@ -142,6 +169,8 @@ static createHeader(builder:flatbuffers.Builder, CCSDS_OCM_VERSOffset:flatbuffer
   Header.addCreationDate(builder, CREATION_DATEOffset);
   Header.addOriginator(builder, ORIGINATOROffset);
   Header.addMessageId(builder, MESSAGE_IDOffset);
+  Header.addMessageStatus(builder, MESSAGE_STATUS);
+  Header.addExerciseName(builder, EXERCISE_NAMEOffset);
   return Header.endHeader(builder);
 }
 
@@ -152,7 +181,9 @@ unpack(): HeaderT {
     this.CLASSIFICATION(),
     this.CREATION_DATE(),
     this.ORIGINATOR(),
-    this.MESSAGE_ID()
+    this.MESSAGE_ID(),
+    this.MESSAGE_STATUS(),
+    this.EXERCISE_NAME()
   );
 }
 
@@ -164,6 +195,8 @@ unpackTo(_o: HeaderT): void {
   _o.CREATION_DATE = this.CREATION_DATE();
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.MESSAGE_ID = this.MESSAGE_ID();
+  _o.MESSAGE_STATUS = this.MESSAGE_STATUS();
+  _o.EXERCISE_NAME = this.EXERCISE_NAME();
 }
 }
 
@@ -174,7 +207,9 @@ constructor(
   public CLASSIFICATION: string|Uint8Array|null = null,
   public CREATION_DATE: string|Uint8Array|null = null,
   public ORIGINATOR: string|Uint8Array|null = null,
-  public MESSAGE_ID: string|Uint8Array|null = null
+  public MESSAGE_ID: string|Uint8Array|null = null,
+  public MESSAGE_STATUS: ocmMessageStatus = ocmMessageStatus.UNSPECIFIED,
+  public EXERCISE_NAME: string|Uint8Array|null = null
 ){}
 
 
@@ -185,6 +220,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CREATION_DATE = (this.CREATION_DATE !== null ? builder.createString(this.CREATION_DATE!) : 0);
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
   const MESSAGE_ID = (this.MESSAGE_ID !== null ? builder.createString(this.MESSAGE_ID!) : 0);
+  const EXERCISE_NAME = (this.EXERCISE_NAME !== null ? builder.createString(this.EXERCISE_NAME!) : 0);
 
   return Header.createHeader(builder,
     CCSDS_OCM_VERS,
@@ -192,7 +228,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CLASSIFICATION,
     CREATION_DATE,
     ORIGINATOR,
-    MESSAGE_ID
+    MESSAGE_ID,
+    this.MESSAGE_STATUS,
+    EXERCISE_NAME
   );
 }
 }

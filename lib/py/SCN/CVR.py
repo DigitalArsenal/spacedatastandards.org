@@ -203,8 +203,64 @@ class CVR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
+    # Distinct truth epochs among the SAMPLES: predictions that share one truth
+    # state count once here. 0 when not stated.
+    # CVR
+    def TRUTH_EPOCHS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Share of the held-out samples whose error lies inside the 1-sigma band of
+    # the first, second and third axis of the covariance's frame (radial,
+    # in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+    # nominal 0.6827 for Gaussian errors. NaN when not measured.
+    # CVR
+    def COVERAGE_1_SIGMA_AXIS1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # CVR
+    def COVERAGE_1_SIGMA_AXIS2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # CVR
+    def COVERAGE_1_SIGMA_AXIS3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+    # CVR
+    def COVERAGE_3_SIGMA_AXIS1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # CVR
+    def COVERAGE_3_SIGMA_AXIS2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # CVR
+    def COVERAGE_3_SIGMA_AXIS3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
 def CVRStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(25)
 
 def Start(builder):
     CVRStart(builder)
@@ -317,6 +373,48 @@ def CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT):
 def AddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT):
     CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT)
 
+def CVRAddTRUTH_EPOCHS(builder, TRUTH_EPOCHS):
+    builder.PrependUint32Slot(18, TRUTH_EPOCHS, 0)
+
+def AddTRUTH_EPOCHS(builder, TRUTH_EPOCHS):
+    CVRAddTRUTH_EPOCHS(builder, TRUTH_EPOCHS)
+
+def CVRAddCOVERAGE_1_SIGMA_AXIS1(builder, COVERAGE_1_SIGMA_AXIS1):
+    builder.PrependFloat64Slot(19, COVERAGE_1_SIGMA_AXIS1, float('nan'))
+
+def AddCOVERAGE_1_SIGMA_AXIS1(builder, COVERAGE_1_SIGMA_AXIS1):
+    CVRAddCOVERAGE_1_SIGMA_AXIS1(builder, COVERAGE_1_SIGMA_AXIS1)
+
+def CVRAddCOVERAGE_1_SIGMA_AXIS2(builder, COVERAGE_1_SIGMA_AXIS2):
+    builder.PrependFloat64Slot(20, COVERAGE_1_SIGMA_AXIS2, float('nan'))
+
+def AddCOVERAGE_1_SIGMA_AXIS2(builder, COVERAGE_1_SIGMA_AXIS2):
+    CVRAddCOVERAGE_1_SIGMA_AXIS2(builder, COVERAGE_1_SIGMA_AXIS2)
+
+def CVRAddCOVERAGE_1_SIGMA_AXIS3(builder, COVERAGE_1_SIGMA_AXIS3):
+    builder.PrependFloat64Slot(21, COVERAGE_1_SIGMA_AXIS3, float('nan'))
+
+def AddCOVERAGE_1_SIGMA_AXIS3(builder, COVERAGE_1_SIGMA_AXIS3):
+    CVRAddCOVERAGE_1_SIGMA_AXIS3(builder, COVERAGE_1_SIGMA_AXIS3)
+
+def CVRAddCOVERAGE_3_SIGMA_AXIS1(builder, COVERAGE_3_SIGMA_AXIS1):
+    builder.PrependFloat64Slot(22, COVERAGE_3_SIGMA_AXIS1, float('nan'))
+
+def AddCOVERAGE_3_SIGMA_AXIS1(builder, COVERAGE_3_SIGMA_AXIS1):
+    CVRAddCOVERAGE_3_SIGMA_AXIS1(builder, COVERAGE_3_SIGMA_AXIS1)
+
+def CVRAddCOVERAGE_3_SIGMA_AXIS2(builder, COVERAGE_3_SIGMA_AXIS2):
+    builder.PrependFloat64Slot(23, COVERAGE_3_SIGMA_AXIS2, float('nan'))
+
+def AddCOVERAGE_3_SIGMA_AXIS2(builder, COVERAGE_3_SIGMA_AXIS2):
+    CVRAddCOVERAGE_3_SIGMA_AXIS2(builder, COVERAGE_3_SIGMA_AXIS2)
+
+def CVRAddCOVERAGE_3_SIGMA_AXIS3(builder, COVERAGE_3_SIGMA_AXIS3):
+    builder.PrependFloat64Slot(24, COVERAGE_3_SIGMA_AXIS3, float('nan'))
+
+def AddCOVERAGE_3_SIGMA_AXIS3(builder, COVERAGE_3_SIGMA_AXIS3):
+    CVRAddCOVERAGE_3_SIGMA_AXIS3(builder, COVERAGE_3_SIGMA_AXIS3)
+
 def CVREnd(builder):
     return builder.EndObject()
 
@@ -347,6 +445,13 @@ class CVRT(object):
         HISTORY_SETS = 0,
         HISTORY_WINDOW = None,
         SHRINKAGE_WEIGHT = float('nan'),
+        TRUTH_EPOCHS = 0,
+        COVERAGE_1_SIGMA_AXIS1 = float('nan'),
+        COVERAGE_1_SIGMA_AXIS2 = float('nan'),
+        COVERAGE_1_SIGMA_AXIS3 = float('nan'),
+        COVERAGE_3_SIGMA_AXIS1 = float('nan'),
+        COVERAGE_3_SIGMA_AXIS2 = float('nan'),
+        COVERAGE_3_SIGMA_AXIS3 = float('nan'),
     ):
         self.RULE = RULE  # type: int
         self.MODEL_ID = MODEL_ID  # type: Optional[str]
@@ -366,6 +471,13 @@ class CVRT(object):
         self.HISTORY_SETS = HISTORY_SETS  # type: int
         self.HISTORY_WINDOW = HISTORY_WINDOW  # type: Optional[str]
         self.SHRINKAGE_WEIGHT = SHRINKAGE_WEIGHT  # type: float
+        self.TRUTH_EPOCHS = TRUTH_EPOCHS  # type: int
+        self.COVERAGE_1_SIGMA_AXIS1 = COVERAGE_1_SIGMA_AXIS1  # type: float
+        self.COVERAGE_1_SIGMA_AXIS2 = COVERAGE_1_SIGMA_AXIS2  # type: float
+        self.COVERAGE_1_SIGMA_AXIS3 = COVERAGE_1_SIGMA_AXIS3  # type: float
+        self.COVERAGE_3_SIGMA_AXIS1 = COVERAGE_3_SIGMA_AXIS1  # type: float
+        self.COVERAGE_3_SIGMA_AXIS2 = COVERAGE_3_SIGMA_AXIS2  # type: float
+        self.COVERAGE_3_SIGMA_AXIS3 = COVERAGE_3_SIGMA_AXIS3  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -406,6 +518,13 @@ class CVRT(object):
         self.HISTORY_SETS = CVR.HISTORY_SETS()
         self.HISTORY_WINDOW = CVR.HISTORY_WINDOW()
         self.SHRINKAGE_WEIGHT = CVR.SHRINKAGE_WEIGHT()
+        self.TRUTH_EPOCHS = CVR.TRUTH_EPOCHS()
+        self.COVERAGE_1_SIGMA_AXIS1 = CVR.COVERAGE_1_SIGMA_AXIS1()
+        self.COVERAGE_1_SIGMA_AXIS2 = CVR.COVERAGE_1_SIGMA_AXIS2()
+        self.COVERAGE_1_SIGMA_AXIS3 = CVR.COVERAGE_1_SIGMA_AXIS3()
+        self.COVERAGE_3_SIGMA_AXIS1 = CVR.COVERAGE_3_SIGMA_AXIS1()
+        self.COVERAGE_3_SIGMA_AXIS2 = CVR.COVERAGE_3_SIGMA_AXIS2()
+        self.COVERAGE_3_SIGMA_AXIS3 = CVR.COVERAGE_3_SIGMA_AXIS3()
 
     # CVRT
     def Pack(self, builder):
@@ -446,5 +565,12 @@ class CVRT(object):
         if self.HISTORY_WINDOW is not None:
             CVRAddHISTORY_WINDOW(builder, HISTORY_WINDOW)
         CVRAddSHRINKAGE_WEIGHT(builder, self.SHRINKAGE_WEIGHT)
+        CVRAddTRUTH_EPOCHS(builder, self.TRUTH_EPOCHS)
+        CVRAddCOVERAGE_1_SIGMA_AXIS1(builder, self.COVERAGE_1_SIGMA_AXIS1)
+        CVRAddCOVERAGE_1_SIGMA_AXIS2(builder, self.COVERAGE_1_SIGMA_AXIS2)
+        CVRAddCOVERAGE_1_SIGMA_AXIS3(builder, self.COVERAGE_1_SIGMA_AXIS3)
+        CVRAddCOVERAGE_3_SIGMA_AXIS1(builder, self.COVERAGE_3_SIGMA_AXIS1)
+        CVRAddCOVERAGE_3_SIGMA_AXIS2(builder, self.COVERAGE_3_SIGMA_AXIS2)
+        CVRAddCOVERAGE_3_SIGMA_AXIS3(builder, self.COVERAGE_3_SIGMA_AXIS3)
         CVR = CVREnd(builder)
         return CVR

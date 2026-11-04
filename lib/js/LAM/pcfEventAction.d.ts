@@ -1,0 +1,19 @@
+/**
+ * What the integrator does at a located event. Append new values only.
+ */
+export declare enum pcfEventAction {
+    /**
+     * The event is located and counted; it is not reported.
+     */
+    CONTINUE = 0,
+    /**
+     * The event is located, counted and reported; propagation continues.
+     */
+    RECORD = 1,
+    /**
+     * The event is reported and the propagation ends there: the final sample is the
+     * state at the OCCURRENCE-th qualifying crossing.
+     */
+    STOP = 2
+}
+//# sourceMappingURL=pcfEventAction.d.ts.map

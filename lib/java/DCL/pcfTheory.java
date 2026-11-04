@@ -32,8 +32,13 @@ public final class pcfTheory {
    * Two-body (Keplerian) motion about the central body.
    */
   public static final int KEPLER = 5;
+  /**
+   * SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+   * 3 stays unused.
+   */
+  public static final int AP = 6;
 
-  public static final String[] names = { "UNSPECIFIED", "SGP4", "SGP4XP", "", "FFM", "KEPLER", };
+  public static final String[] names = { "UNSPECIFIED", "SGP4", "SGP4XP", "", "FFM", "KEPLER", "AP", };
 
   public static String name(int e) { return names[e]; }
 }

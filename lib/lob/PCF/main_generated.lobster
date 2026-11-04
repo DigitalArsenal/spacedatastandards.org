@@ -24,6 +24,9 @@ enum pcfTheory:
     pcfTheory_FFM = 4
     /// Two-body (Keplerian) motion about the central body.
     pcfTheory_KEPLER = 5
+    /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+    /// 3 stays unused.
+    pcfTheory_AP = 6
 
 /// How a propagator learns the space weather beyond the daily rows it was
 /// given. Append new values only.
@@ -63,8 +66,14 @@ enum pcfWeatherSource:
     /// PCFSpaceWeather, held for the whole arc.
     pcfWeatherSource_CONSTANT = 1
     /// Daily rows supplied with the request ($SPW rows; the JB2008 indices
-    /// for the JB2008 atmosphere).
+    /// for the JB2008 atmosphere). In an $OCM element set, the rows of
+    /// PERTURBATIONS.SPACE_WEATHER.
     pcfWeatherSource_RECORDS = 2
+    /// The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+    /// mean-element theory's built-in solar and geomagnetic activity).
+    pcfWeatherSource_THEORY_FLUX_MODEL = 3
+    /// No drag weather: the theory's own drag term (SGP4's BSTAR).
+    pcfWeatherSource_NONE = 4
 
 /// Correction applied to the atmosphere model's density. Append new values
 /// only.
@@ -288,6 +297,10 @@ enum pcfAtmosphereFamily:
     /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
     /// with Mars.
     pcfAtmosphereFamily_MARS_EXPONENTIAL = 7
+    /// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+    /// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+    /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+    pcfAtmosphereFamily_JACCHIA70 = 8
 
 /// Solid Earth tide model for the central body's field. NONE leaves the
 /// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
@@ -488,13 +501,21 @@ class PCFFitPolicy : flatbuffers.handle
     /// ln AGOM.
     def SRP_PRIOR_FORM() -> pcfPriorForm:
         return pcfPriorForm(flatbuffers.field_uint8(buf_, pos_, 36, 0))
+    /// Days past the element set's epoch day through which the fit writes the
+    /// daily space weather into the record it emits (OCM
+    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+    /// arc's last day and the epoch's day plus this count; rows supplied with
+    /// the request must reach it, or the fit is refused by name. Default 30.
+    def WEATHER_HORIZON_DAYS() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 38, 30)
 
 def GetRootAsPCFFitPolicy(buf:string): return PCFFitPolicy { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFFitPolicyBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(18)
         return this
     def add_DEFAULT_SPAN_HOURS(DEFAULT_SPAN_HOURS:float):
         b_.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
@@ -546,6 +567,9 @@ struct PCFFitPolicyBuilder:
         return this
     def add_SRP_PRIOR_FORM(SRP_PRIOR_FORM:pcfPriorForm):
         b_.PrependUint8Slot(16, SRP_PRIOR_FORM, 0)
+        return this
+    def add_WEATHER_HORIZON_DAYS(WEATHER_HORIZON_DAYS:int):
+        b_.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 30)
         return this
     def end():
         return b_.EndObject()
@@ -703,13 +727,28 @@ class PCFOutput : flatbuffers.handle
     /// Most states one request may produce. Default 500000.
     def MAXIMUM_STATES() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 8, 500000)
+    /// Output epochs, ISO 8601 UTC, ascending; when present they are the
+    /// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+    /// Default empty.
+    def EPOCHS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 4)
+    def EPOCHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// First output epoch, ISO 8601 UTC. Default empty: the element set's
+    /// epoch.
+    def START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+    /// START_TIME plus one day.
+    def STOP_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
 
 def GetRootAsPCFOutput(buf:string): return PCFOutput { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFOutputBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(6)
         return this
     def add_FRAME(FRAME:pcfOutputFrame):
         b_.PrependUint8Slot(0, FRAME, 0)
@@ -720,8 +759,24 @@ struct PCFOutputBuilder:
     def add_MAXIMUM_STATES(MAXIMUM_STATES:int):
         b_.PrependUint32Slot(2, MAXIMUM_STATES, 500000)
         return this
+    def add_EPOCHS(EPOCHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, EPOCHS)
+        return this
+    def add_START_TIME(START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, START_TIME)
+        return this
+    def add_STOP_TIME(STOP_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, STOP_TIME)
+        return this
     def end():
         return b_.EndObject()
+
+def PCFOutputStartEPOCHSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PCFOutputCreateEPOCHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.
 /// The TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).

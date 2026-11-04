@@ -236,39 +236,44 @@ inline const char *EnumNamemassCategory(massCategory e) {
 enum catalogProductKind : int8_t {
   /// Not stated
   catalogProductKind_Unspecified = 0,
-  /// $OMM with MEAN_ELEMENT_THEORY SGP4
+  /// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+  /// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
   catalogProductKind_Sgp4Elements = 1,
-  /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  /// As Sgp4Elements, under SGP4XP
   catalogProductKind_Sgp4XpElements = 2,
   /// $OCM: a state and its covariance
   catalogProductKind_StateCovariance = 3,
+  /// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+  catalogProductKind_ApElements = 4,
   catalogProductKind_MIN = catalogProductKind_Unspecified,
-  catalogProductKind_MAX = catalogProductKind_StateCovariance
+  catalogProductKind_MAX = catalogProductKind_ApElements
 };
 
-inline const catalogProductKind (&EnumValuescatalogProductKind())[4] {
+inline const catalogProductKind (&EnumValuescatalogProductKind())[5] {
   static const catalogProductKind values[] = {
     catalogProductKind_Unspecified,
     catalogProductKind_Sgp4Elements,
     catalogProductKind_Sgp4XpElements,
-    catalogProductKind_StateCovariance
+    catalogProductKind_StateCovariance,
+    catalogProductKind_ApElements
   };
   return values;
 }
 
 inline const char * const *EnumNamescatalogProductKind() {
-  static const char * const names[5] = {
+  static const char * const names[6] = {
     "Unspecified",
     "Sgp4Elements",
     "Sgp4XpElements",
     "StateCovariance",
+    "ApElements",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamecatalogProductKind(catalogProductKind e) {
-  if (::flatbuffers::IsOutRange(e, catalogProductKind_Unspecified, catalogProductKind_StateCovariance)) return "";
+  if (::flatbuffers::IsOutRange(e, catalogProductKind_Unspecified, catalogProductKind_ApElements)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamescatalogProductKind()[index];
 }
@@ -297,8 +302,8 @@ struct CATProduct FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SOURCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_ID);
   }
-  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-  /// epoch.
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+  /// MEAN_ELEMENTS.EPOCH or first state epoch.
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }

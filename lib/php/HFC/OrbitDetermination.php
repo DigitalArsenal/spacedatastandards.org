@@ -201,7 +201,9 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \estimatorCategory::Unknown;
     }
 
-    /// RMS of post-fit residuals for this solution.
+    /// RMS of post-fit residuals for this solution. In the unit of the residuals the
+    /// observation types state: arcsec for RADEC angles. A position RMS in km is
+    /// OCMFitStatistics.FIT_RMS_KM.
     /**
      * @return double
      */
@@ -525,22 +527,30 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Position statistics of a fit to a reference ephemeris.
+    public function getFIT_STATISTICS()
+    {
+        $obj = new OCMFitStatistics();
+        $o = $this->__offset(98);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOrbitDetermination(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(47);
+        $builder->StartObject(48);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OrbitDetermination
      */
-    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS, $OD_DYNAMIC_PARAMETERS, $DAYS_SINCE_FIRST_OBS, $DAYS_SINCE_LAST_OBS, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $TRACKS_AVAILABLE, $MAXIMUM_OBS_GAP, $OD_EPOCH_EIGMAJ, $OD_EPOCH_EIGINT, $OD_EPOCH_EIGMIN, $OD_MAX_PRED_EIGMAJ, $OD_MIN_PRED_EIGMIN, $OD_CONFIDENCE, $GDOP, $SOLVE_N, $SOLVE_STATES, $CONSIDER_N, $CONSIDER_PARAMS, $SENSORS_N, $SENSORS, $COMMENT)
+    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS, $SEDR, $WEIGHTED_RMS, $OD_DYNAMIC_PARAMETERS, $DAYS_SINCE_FIRST_OBS, $DAYS_SINCE_LAST_OBS, $RECOMMENDED_OD_SPAN, $ACTUAL_OD_SPAN, $OBS_AVAILABLE, $TRACKS_AVAILABLE, $MAXIMUM_OBS_GAP, $OD_EPOCH_EIGMAJ, $OD_EPOCH_EIGINT, $OD_EPOCH_EIGMIN, $OD_MAX_PRED_EIGMAJ, $OD_MIN_PRED_EIGMIN, $OD_CONFIDENCE, $GDOP, $SOLVE_N, $SOLVE_STATES, $CONSIDER_N, $CONSIDER_PARAMS, $SENSORS_N, $SENSORS, $COMMENT, $FIT_STATISTICS)
     {
-        $builder->startObject(47);
+        $builder->startObject(48);
         self::addOD_ID($builder, $OD_ID);
         self::addOD_PREV_ID($builder, $OD_PREV_ID);
         self::addOD_ALGORITHM($builder, $OD_ALGORITHM);
@@ -588,6 +598,7 @@ class OrbitDetermination extends Table
         self::addSENSORS_N($builder, $SENSORS_N);
         self::addSENSORS($builder, $SENSORS);
         self::addCOMMENT($builder, $COMMENT);
+        self::addFIT_STATISTICS($builder, $FIT_STATISTICS);
         $o = $builder->endObject();
         return $o;
     }
@@ -1204,6 +1215,16 @@ class OrbitDetermination extends Table
     public static function startCOMMENTVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFIT_STATISTICS(FlatBufferBuilder $builder, $FIT_STATISTICS)
+    {
+        $builder->addOffsetX(47, $FIT_STATISTICS, 0);
     }
 
     /**

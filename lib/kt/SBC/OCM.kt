@@ -104,6 +104,7 @@ class OCM : Table() {
      * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
      * Length must be divisible by STATE_VECTOR_SIZE.
      * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+     * Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
      */
     fun stateData(j: Int) : Double {
         val o = __offset(16)
@@ -231,7 +232,8 @@ class OCM : Table() {
         }
     }
     /**
-     * User-defined parameters and supplemental comments.
+     * CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+     * SDN readers never read it.
      */
     fun userDefinedParameters(j: Int) : UserDefinedParameters? = userDefinedParameters(UserDefinedParameters(), j)
     fun userDefinedParameters(obj: UserDefinedParameters, j: Int) : UserDefinedParameters? {
@@ -261,8 +263,8 @@ class OCM : Table() {
     val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
-     * Reference frame of STATE_DATA and the polynomial records
-     * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+     * Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+     * frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
      */
     val trajRefFrame : RFM? get() = trajRefFrame(RFM())
     fun trajRefFrame(obj: RFM) : RFM? {
@@ -495,6 +497,111 @@ class OCM : Table() {
         get() {
             val o = __offset(68); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * The mean element set this message carries, under the theory it names. STATE_DATA is
+     * empty when this is present; no state travels beside a set.
+     */
+    val meanElements : OCMMeanElements? get() = meanElements(OCMMeanElements())
+    fun meanElements(obj: OCMMeanElements) : OCMMeanElements? {
+        val o = __offset(70)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+     */
+    val covPropagation : OCMCovariancePropagation? get() = covPropagation(OCMCovariancePropagation())
+    fun covPropagation(obj: OCMCovariancePropagation) : OCMCovariancePropagation? {
+        val o = __offset(72)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+     * every reader keys on these, never on the COV_PARAMETERS strings.
+     */
+    fun covParameterKinds(j: Int) : UByte {
+        val o = __offset(74)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val covParameterKindsLength : Int
+        get() {
+            val o = __offset(74); return if (o != 0) __vector_len(o) else 0
+        }
+    val covParameterKindsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun covParameterKindsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+     * (CCSDS 502.0-B-3 TRAJ_BASIS).
+     */
+    val trajBasis : UByte
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The element sets the trajectory was computed from, one per object whose
+     * elements it used.
+     */
+    fun seedSets(j: Int) : OCMSeedSet? = seedSets(OCMSeedSet(), j)
+    fun seedSets(obj: OCMSeedSet, j: Int) : OCMSeedSet? {
+        val o = __offset(78)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val seedSetsLength : Int
+        get() {
+            val o = __offset(78); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Integrator settings of a solution made from a legacy VCM.
+     */
+    val integrator : OCMIntegrator? get() = integrator(OCMIntegrator())
+    fun integrator(obj: OCMIntegrator) : OCMIntegrator? {
+        val o = __offset(80)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Relative-motion geometry; STATE_DATA is empty when this is present.
+     */
+    val rpoGeometry : OCMRelativeGeometry? get() = rpoGeometry(OCMRelativeGeometry())
+    fun rpoGeometry(obj: OCMRelativeGeometry) : OCMRelativeGeometry? {
+        val o = __offset(82)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Inspection geometry; STATE_DATA is empty when this is present.
+     */
+    val rpoInspection : OCMInspectionGeometry? get() = rpoInspection(OCMInspectionGeometry())
+    fun rpoInspection(obj: OCMInspectionGeometry) : OCMInspectionGeometry? {
+        val o = __offset(84)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -503,9 +610,16 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
-            builder.startTable(33)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int, meanElementsOffset: Int, covPropagationOffset: Int, covParameterKindsOffset: Int, trajBasis: UByte, seedSetsOffset: Int, integratorOffset: Int, rpoGeometryOffset: Int, rpoInspectionOffset: Int) : Int {
+            builder.startTable(41)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addRPOINSPECTION(builder, rpoInspectionOffset)
+            addRPOGEOMETRY(builder, rpoGeometryOffset)
+            addINTEGRATOR(builder, integratorOffset)
+            addSEEDSETS(builder, seedSetsOffset)
+            addCOVPARAMETERKINDS(builder, covParameterKindsOffset)
+            addCOVPROPAGATION(builder, covPropagationOffset)
+            addMEANELEMENTS(builder, meanElementsOffset)
             addCOVREALISM(builder, covRealismOffset)
             addPROVENANCE(builder, provenanceOffset)
             addCOVARIANCEBLOCKS(builder, covarianceBlocksOffset)
@@ -533,6 +647,7 @@ class OCM : Table() {
             addTRAJTYPEDESCRIPTION(builder, trajTypeDescriptionOffset)
             addMETADATA(builder, metadataOffset)
             addHEADER(builder, headerOffset)
+            addTRAJBASIS(builder, trajBasis)
             addCOVSIZE(builder, covSize)
             addCOVORDERING(builder, covOrdering)
             addCOVCALIBRATION(builder, covCalibration)
@@ -540,7 +655,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(33)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(41)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -670,6 +785,31 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startCovRealismVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMEANELEMENTS(builder: FlatBufferBuilder, meanElements: Int) = builder.addOffset(33, meanElements, 0)
+        fun addCOVPROPAGATION(builder: FlatBufferBuilder, covPropagation: Int) = builder.addOffset(34, covPropagation, 0)
+        fun addCOVPARAMETERKINDS(builder: FlatBufferBuilder, covParameterKinds: Int) = builder.addOffset(35, covParameterKinds, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCovParameterKindsVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCovParameterKindsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addTRAJBASIS(builder: FlatBufferBuilder, trajBasis: UByte) = builder.addByte(36, trajBasis.toByte(), 0)
+        fun addSEEDSETS(builder: FlatBufferBuilder, seedSets: Int) = builder.addOffset(37, seedSets, 0)
+        fun createSeedSetsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSeedSetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(38, integrator, 0)
+        fun addRPOGEOMETRY(builder: FlatBufferBuilder, rpoGeometry: Int) = builder.addOffset(39, rpoGeometry, 0)
+        fun addRPOINSPECTION(builder: FlatBufferBuilder, rpoInspection: Int) = builder.addOffset(40, rpoInspection, 0)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

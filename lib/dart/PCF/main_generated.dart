@@ -18,7 +18,8 @@ enum pcfTheory {
   SGP4(1),
   SGP4XP(2),
   FFM(4),
-  KEPLER(5);
+  KEPLER(5),
+  AP(6);
 
   final int value;
   const pcfTheory(this.value);
@@ -30,6 +31,7 @@ enum pcfTheory {
       case 2: return pcfTheory.SGP4XP;
       case 4: return pcfTheory.FFM;
       case 5: return pcfTheory.KEPLER;
+      case 6: return pcfTheory.AP;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -38,7 +40,7 @@ enum pcfTheory {
       value == null ? null : pcfTheory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<pcfTheory> reader = _pcfTheoryReader();
 }
 
@@ -168,7 +170,9 @@ class _pcfWeatherExtensionReader extends fb.Reader<pcfWeatherExtension> {
 enum pcfWeatherSource {
   UNSPECIFIED(0),
   CONSTANT(1),
-  RECORDS(2);
+  RECORDS(2),
+  THEORY_FLUX_MODEL(3),
+  NONE(4);
 
   final int value;
   const pcfWeatherSource(this.value);
@@ -178,6 +182,8 @@ enum pcfWeatherSource {
       case 0: return pcfWeatherSource.UNSPECIFIED;
       case 1: return pcfWeatherSource.CONSTANT;
       case 2: return pcfWeatherSource.RECORDS;
+      case 3: return pcfWeatherSource.THEORY_FLUX_MODEL;
+      case 4: return pcfWeatherSource.NONE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -186,7 +192,7 @@ enum pcfWeatherSource {
       value == null ? null : pcfWeatherSource.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 4;
   static const fb.Reader<pcfWeatherSource> reader = _pcfWeatherSourceReader();
 }
 
@@ -672,7 +678,8 @@ enum pcfAtmosphereFamily {
   HARRIS_PRIESTER(4),
   JACCHIA_ROBERTS(5),
   JB2008(6),
-  MARS_EXPONENTIAL(7);
+  MARS_EXPONENTIAL(7),
+  JACCHIA70(8);
 
   final int value;
   const pcfAtmosphereFamily(this.value);
@@ -687,6 +694,7 @@ enum pcfAtmosphereFamily {
       case 5: return pcfAtmosphereFamily.JACCHIA_ROBERTS;
       case 6: return pcfAtmosphereFamily.JB2008;
       case 7: return pcfAtmosphereFamily.MARS_EXPONENTIAL;
+      case 8: return pcfAtmosphereFamily.JACCHIA70;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -695,7 +703,7 @@ enum pcfAtmosphereFamily {
       value == null ? null : pcfAtmosphereFamily.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 8;
   static const fb.Reader<pcfAtmosphereFamily> reader = _pcfAtmosphereFamilyReader();
 }
 
@@ -1164,10 +1172,18 @@ class PCFFitPolicy {
   ///  ln AGOM.
   pcfPriorForm get SRP_PRIOR_FORM => pcfPriorForm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 36, 0));
   pcfPriorForm get srpPriorForm => SRP_PRIOR_FORM;
+  ///  Days past the element set's epoch day through which the fit writes the
+  ///  daily space weather into the record it emits (OCM
+  ///  PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+  ///  (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+  ///  arc's last day and the epoch's day plus this count; rows supplied with
+  ///  the request must reach it, or the fit is refused by name. Default 30.
+  int get WEATHER_HORIZON_DAYS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 38, 30);
+  int get weatherHorizonDays => WEATHER_HORIZON_DAYS;
 
   @override
   String toString() {
-    return 'PCFFitPolicy{defaultSpanHours: ${defaultSpanHours}, minimumSpanHours: ${minimumSpanHours}, maximumSpanHours: ${maximumSpanHours}, candidateSpansHours: ${candidateSpansHours}, tailHours: ${tailHours}, extensionMargin: ${extensionMargin}, holdoutHours: ${holdoutHours}, hasHoldoutHours: ${hasHoldoutHours}, eccentricityThreshold: ${eccentricityThreshold}, eccentricDefaultSpanHours: ${eccentricDefaultSpanHours}, eccentricExtensionMargin: ${eccentricExtensionMargin}, eccentricMaximumPeriodHours: ${eccentricMaximumPeriodHours}, implausibleRmsKm: ${implausibleRmsKm}, dragPrior: ${dragPrior}, srpPrior: ${srpPrior}, dragPriorForm: ${dragPriorForm}, srpPriorForm: ${srpPriorForm}}';
+    return 'PCFFitPolicy{defaultSpanHours: ${defaultSpanHours}, minimumSpanHours: ${minimumSpanHours}, maximumSpanHours: ${maximumSpanHours}, candidateSpansHours: ${candidateSpansHours}, tailHours: ${tailHours}, extensionMargin: ${extensionMargin}, holdoutHours: ${holdoutHours}, hasHoldoutHours: ${hasHoldoutHours}, eccentricityThreshold: ${eccentricityThreshold}, eccentricDefaultSpanHours: ${eccentricDefaultSpanHours}, eccentricExtensionMargin: ${eccentricExtensionMargin}, eccentricMaximumPeriodHours: ${eccentricMaximumPeriodHours}, implausibleRmsKm: ${implausibleRmsKm}, dragPrior: ${dragPrior}, srpPrior: ${srpPrior}, dragPriorForm: ${dragPriorForm}, srpPriorForm: ${srpPriorForm}, weatherHorizonDays: ${weatherHorizonDays}}';
   }
 }
 
@@ -1185,7 +1201,7 @@ class PCFFitPolicyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(18);
   }
 
   int addDefaultSpanHours(double? DEFAULT_SPAN_HOURS) {
@@ -1256,6 +1272,10 @@ class PCFFitPolicyBuilder {
     fbBuilder.addUint8(16, SRP_PRIOR_FORM?.value);
     return fbBuilder.offset;
   }
+  int addWeatherHorizonDays(int? WEATHER_HORIZON_DAYS) {
+    fbBuilder.addUint16(17, WEATHER_HORIZON_DAYS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1280,6 +1300,7 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
   final PCFGaussianPriorObjectBuilder? _SRP_PRIOR;
   final pcfPriorForm? _DRAG_PRIOR_FORM;
   final pcfPriorForm? _SRP_PRIOR_FORM;
+  final int? _WEATHER_HORIZON_DAYS;
 
   PCFFitPolicyObjectBuilder({
     double? DEFAULT_SPAN_HOURS,
@@ -1316,6 +1337,8 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
     pcfPriorForm? dragPriorForm,
     pcfPriorForm? SRP_PRIOR_FORM,
     pcfPriorForm? srpPriorForm,
+    int? WEATHER_HORIZON_DAYS,
+    int? weatherHorizonDays,
   })
       : _DEFAULT_SPAN_HOURS = defaultSpanHours ?? DEFAULT_SPAN_HOURS,
         _MINIMUM_SPAN_HOURS = minimumSpanHours ?? MINIMUM_SPAN_HOURS,
@@ -1333,7 +1356,8 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
         _DRAG_PRIOR = dragPrior ?? DRAG_PRIOR,
         _SRP_PRIOR = srpPrior ?? SRP_PRIOR,
         _DRAG_PRIOR_FORM = dragPriorForm ?? DRAG_PRIOR_FORM,
-        _SRP_PRIOR_FORM = srpPriorForm ?? SRP_PRIOR_FORM;
+        _SRP_PRIOR_FORM = srpPriorForm ?? SRP_PRIOR_FORM,
+        _WEATHER_HORIZON_DAYS = weatherHorizonDays ?? WEATHER_HORIZON_DAYS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1342,7 +1366,7 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_CANDIDATE_SPANS_HOURS!);
     final int? DRAG_PRIOROffset = _DRAG_PRIOR?.getOrCreateOffset(fbBuilder);
     final int? SRP_PRIOROffset = _SRP_PRIOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(18);
     fbBuilder.addFloat64(0, _DEFAULT_SPAN_HOURS);
     fbBuilder.addFloat64(1, _MINIMUM_SPAN_HOURS);
     fbBuilder.addFloat64(2, _MAXIMUM_SPAN_HOURS);
@@ -1360,6 +1384,7 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, SRP_PRIOROffset);
     fbBuilder.addUint8(15, _DRAG_PRIOR_FORM?.value);
     fbBuilder.addUint8(16, _SRP_PRIOR_FORM?.value);
+    fbBuilder.addUint16(17, _WEATHER_HORIZON_DAYS);
     return fbBuilder.endTable();
   }
 
@@ -1732,10 +1757,22 @@ class PCFOutput {
   ///  Most states one request may produce. Default 500000.
   int get MAXIMUM_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 500000);
   int get maximumStates => MAXIMUM_STATES;
+  ///  Output epochs, ISO 8601 UTC, ascending; when present they are the
+  ///  states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+  ///  Default empty.
+  List<String>? get EPOCHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  First output epoch, ISO 8601 UTC. Default empty: the element set's
+  ///  epoch.
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get startTime => START_TIME;
+  ///  Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+  ///  START_TIME plus one day.
+  String? get STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get stopTime => STOP_TIME;
 
   @override
   String toString() {
-    return 'PCFOutput{FRAME: ${FRAME}, stepSeconds: ${stepSeconds}, maximumStates: ${maximumStates}}';
+    return 'PCFOutput{FRAME: ${FRAME}, stepSeconds: ${stepSeconds}, maximumStates: ${maximumStates}, EPOCHS: ${EPOCHS}, startTime: ${startTime}, stopTime: ${stopTime}}';
   }
 }
 
@@ -1753,7 +1790,7 @@ class PCFOutputBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(6);
   }
 
   int addFrame(pcfOutputFrame? FRAME) {
@@ -1768,6 +1805,18 @@ class PCFOutputBuilder {
     fbBuilder.addUint32(2, MAXIMUM_STATES);
     return fbBuilder.offset;
   }
+  int addEpochsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1778,6 +1827,9 @@ class PCFOutputObjectBuilder extends fb.ObjectBuilder {
   final pcfOutputFrame? _FRAME;
   final double? _STEP_SECONDS;
   final int? _MAXIMUM_STATES;
+  final List<String>? _EPOCHS;
+  final String? _START_TIME;
+  final String? _STOP_TIME;
 
   PCFOutputObjectBuilder({
     pcfOutputFrame? FRAME,
@@ -1785,18 +1837,35 @@ class PCFOutputObjectBuilder extends fb.ObjectBuilder {
     double? stepSeconds,
     int? MAXIMUM_STATES,
     int? maximumStates,
+    List<String>? EPOCHS,
+    String? START_TIME,
+    String? startTime,
+    String? STOP_TIME,
+    String? stopTime,
   })
       : _FRAME = FRAME,
         _STEP_SECONDS = stepSeconds ?? STEP_SECONDS,
-        _MAXIMUM_STATES = maximumStates ?? MAXIMUM_STATES;
+        _MAXIMUM_STATES = maximumStates ?? MAXIMUM_STATES,
+        _EPOCHS = EPOCHS,
+        _START_TIME = startTime ?? START_TIME,
+        _STOP_TIME = stopTime ?? STOP_TIME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
+    final int? EPOCHSOffset = _EPOCHS == null ? null
+        : fbBuilder.writeList(_EPOCHS!.map(fbBuilder.writeString).toList());
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? STOP_TIMEOffset = _STOP_TIME == null ? null
+        : fbBuilder.writeString(_STOP_TIME!);
+    fbBuilder.startTable(6);
     fbBuilder.addUint8(0, _FRAME?.value);
     fbBuilder.addFloat64(1, _STEP_SECONDS);
     fbBuilder.addUint32(2, _MAXIMUM_STATES);
+    fbBuilder.addOffset(3, EPOCHSOffset);
+    fbBuilder.addOffset(4, START_TIMEOffset);
+    fbBuilder.addOffset(5, STOP_TIMEOffset);
     return fbBuilder.endTable();
   }
 

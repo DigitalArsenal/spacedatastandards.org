@@ -304,6 +304,13 @@ public final class Metadata extends com.google.flatbuffers.Table {
   public String CELESTIAL_SOURCE() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CELESTIAL_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
   public ByteBuffer CELESTIAL_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  /**
+   * NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+   * NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+   * strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+   * the object has no NORAD number.
+   */
+  public long NORAD_CAT_ID() { int o = __offset(100); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createMetadata(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -353,14 +360,16 @@ public final class Metadata extends com.google.flatbuffers.Table {
       double UT1MUTC_AT_TZERO,
       int EOP_SOURCEOffset,
       int INTERP_METHOD_EOPOffset,
-      int CELESTIAL_SOURCEOffset) {
-    builder.startTable(48);
+      int CELESTIAL_SOURCEOffset,
+      long NORAD_CAT_ID) {
+    builder.startTable(49);
     Metadata.addUt1MutcAtTzero(builder, UT1MUTC_AT_TZERO);
     Metadata.addNextLeapTaimutc(builder, NEXT_LEAP_TAIMUTC);
     Metadata.addTaimutcAtTzero(builder, TAIMUTC_AT_TZERO);
     Metadata.addTimeSpan(builder, TIME_SPAN);
     Metadata.addSclkSecPerSiSec(builder, SCLK_SEC_PER_SI_SEC);
     Metadata.addSclkOffsetAtEpoch(builder, SCLK_OFFSET_AT_EPOCH);
+    Metadata.addNoradCatId(builder, NORAD_CAT_ID);
     Metadata.addCelestialSource(builder, CELESTIAL_SOURCEOffset);
     Metadata.addInterpMethodEop(builder, INTERP_METHOD_EOPOffset);
     Metadata.addEopSource(builder, EOP_SOURCEOffset);
@@ -406,7 +415,7 @@ public final class Metadata extends com.google.flatbuffers.Table {
     return Metadata.endMetadata(builder);
   }
 
-  public static void startMetadata(FlatBufferBuilder builder) { builder.startTable(48); }
+  public static void startMetadata(FlatBufferBuilder builder) { builder.startTable(49); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -463,6 +472,7 @@ public final class Metadata extends com.google.flatbuffers.Table {
   public static void addEopSource(FlatBufferBuilder builder, int EOP_SOURCEOffset) { builder.addOffset(45, EOP_SOURCEOffset, 0); }
   public static void addInterpMethodEop(FlatBufferBuilder builder, int INTERP_METHOD_EOPOffset) { builder.addOffset(46, INTERP_METHOD_EOPOffset, 0); }
   public static void addCelestialSource(FlatBufferBuilder builder, int CELESTIAL_SOURCEOffset) { builder.addOffset(47, CELESTIAL_SOURCEOffset, 0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(48, (int) NORAD_CAT_ID, (int) 0L); }
   public static int endMetadata(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

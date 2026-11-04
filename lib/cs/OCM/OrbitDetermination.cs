@@ -132,7 +132,9 @@ public struct OrbitDetermination : IFlatbufferObject
   public byte[] GetOD_RESIDUALSArray() { return __p.__vector_as_array<byte>(36); }
   /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
   public estimatorCategory OD_ESTIMATOR { get { int o = __p.__offset(38); return o != 0 ? (estimatorCategory)__p.bb.GetSbyte(o + __p.bb_pos) : estimatorCategory.Unknown; } }
-  /// RMS of post-fit residuals for this solution.
+  /// RMS of post-fit residuals for this solution. In the unit of the residuals the
+  /// observation types state: arcsec for RADEC angles. A position RMS in km is
+  /// OCMFitStatistics.FIT_RMS_KM.
   public double OD_RESIDUAL_RMS { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Post-fit residual series, one entry per accepted observation.
   public double OD_RESIDUALS_SERIES(int j) { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
@@ -236,6 +238,8 @@ public struct OrbitDetermination : IFlatbufferObject
   /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
   public string COMMENT(int j) { int o = __p.__offset(96); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int COMMENTLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Position statistics of a fit to a reference ephemeris.
+  public OCMFitStatistics? FIT_STATISTICS { get { int o = __p.__offset(98); return o != 0 ? (OCMFitStatistics?)(new OCMFitStatistics()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<OrbitDetermination> CreateOrbitDetermination(FlatBufferBuilder builder,
       StringOffset OD_IDOffset = default(StringOffset),
@@ -284,8 +288,9 @@ public struct OrbitDetermination : IFlatbufferObject
       StringOffset CONSIDER_PARAMSOffset = default(StringOffset),
       uint SENSORS_N = 0,
       StringOffset SENSORSOffset = default(StringOffset),
-      VectorOffset COMMENTOffset = default(VectorOffset)) {
-    builder.StartTable(47);
+      VectorOffset COMMENTOffset = default(VectorOffset),
+      Offset<OCMFitStatistics> FIT_STATISTICSOffset = default(Offset<OCMFitStatistics>)) {
+    builder.StartTable(48);
     OrbitDetermination.AddGDOP(builder, GDOP);
     OrbitDetermination.AddOD_CONFIDENCE(builder, OD_CONFIDENCE);
     OrbitDetermination.AddOD_MIN_PRED_EIGMIN(builder, OD_MIN_PRED_EIGMIN);
@@ -302,6 +307,7 @@ public struct OrbitDetermination : IFlatbufferObject
     OrbitDetermination.AddSEDR(builder, SEDR);
     OrbitDetermination.AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.AddFIT_STATISTICS(builder, FIT_STATISTICSOffset);
     OrbitDetermination.AddCOMMENT(builder, COMMENTOffset);
     OrbitDetermination.AddSENSORS(builder, SENSORSOffset);
     OrbitDetermination.AddSENSORS_N(builder, SENSORS_N);
@@ -336,7 +342,7 @@ public struct OrbitDetermination : IFlatbufferObject
     return OrbitDetermination.EndOrbitDetermination(builder);
   }
 
-  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(47); }
+  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(48); }
   public static void AddOD_ID(FlatBufferBuilder builder, StringOffset OD_IDOffset) { builder.AddOffset(0, OD_IDOffset.Value, 0); }
   public static void AddOD_PREV_ID(FlatBufferBuilder builder, StringOffset OD_PREV_IDOffset) { builder.AddOffset(1, OD_PREV_IDOffset.Value, 0); }
   public static void AddOD_ALGORITHM(FlatBufferBuilder builder, StringOffset OD_ALGORITHMOffset) { builder.AddOffset(2, OD_ALGORITHMOffset.Value, 0); }
@@ -414,6 +420,7 @@ public struct OrbitDetermination : IFlatbufferObject
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOMMENTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFIT_STATISTICS(FlatBufferBuilder builder, Offset<OCMFitStatistics> FIT_STATISTICSOffset) { builder.AddOffset(47, FIT_STATISTICSOffset.Value, 0); }
   public static Offset<OrbitDetermination> EndOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitDetermination>(o);
@@ -477,6 +484,7 @@ public struct OrbitDetermination : IFlatbufferObject
     _o.SENSORS = this.SENSORS;
     _o.COMMENT = new List<string>();
     for (var _j = 0; _j < this.COMMENTLength; ++_j) {_o.COMMENT.Add(this.COMMENT(_j));}
+    _o.FIT_STATISTICS = this.FIT_STATISTICS.HasValue ? this.FIT_STATISTICS.Value.UnPack() : null;
   }
   public static Offset<OrbitDetermination> Pack(FlatBufferBuilder builder, OrbitDeterminationT _o) {
     if (_o == null) return default(Offset<OrbitDetermination>);
@@ -531,6 +539,7 @@ public struct OrbitDetermination : IFlatbufferObject
       for (var _j = 0; _j < __COMMENT.Length; ++_j) { __COMMENT[_j] = builder.CreateString(_o.COMMENT[_j]); }
       _COMMENT = CreateCOMMENTVector(builder, __COMMENT);
     }
+    var _FIT_STATISTICS = _o.FIT_STATISTICS == null ? default(Offset<OCMFitStatistics>) : OCMFitStatistics.Pack(builder, _o.FIT_STATISTICS);
     return CreateOrbitDetermination(
       builder,
       _OD_ID,
@@ -579,7 +588,8 @@ public struct OrbitDetermination : IFlatbufferObject
       _CONSIDER_PARAMS,
       _o.SENSORS_N,
       _SENSORS,
-      _COMMENT);
+      _COMMENT,
+      _FIT_STATISTICS);
   }
 }
 
@@ -632,6 +642,7 @@ public class OrbitDeterminationT
   public uint SENSORS_N { get; set; }
   public string SENSORS { get; set; }
   public List<string> COMMENT { get; set; }
+  public OCMFitStatisticsT FIT_STATISTICS { get; set; }
 
   public OrbitDeterminationT() {
     this.OD_ID = null;
@@ -681,6 +692,7 @@ public class OrbitDeterminationT
     this.SENSORS_N = 0;
     this.SENSORS = null;
     this.COMMENT = null;
+    this.FIT_STATISTICS = null;
   }
 }
 
@@ -737,6 +749,7 @@ static public class OrbitDeterminationVerify
       && verifier.VerifyField(tablePos, 92 /*SENSORS_N*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 94 /*SENSORS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 96 /*COMMENT*/, false)
+      && verifier.VerifyTable(tablePos, 98 /*FIT_STATISTICS*/, OCMFitStatisticsVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

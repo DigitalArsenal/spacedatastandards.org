@@ -199,6 +199,19 @@ class PCFFitPolicy : Table() {
             val o = __offset(36)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Days past the element set's epoch day through which the fit writes the
+     * daily space weather into the record it emits (OCM
+     * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+     * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+     * arc's last day and the epoch's day plus this count; rows supplied with
+     * the request must reach it, or the fit is refused by name. Default 30.
+     */
+    val weatherHorizonDays : UShort
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 30u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFFitPolicy(_bb: ByteBuffer): PCFFitPolicy = getRootAsPCFFitPolicy(_bb, PCFFitPolicy())
@@ -206,8 +219,8 @@ class PCFFitPolicy : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFFitPolicy(builder: FlatBufferBuilder, defaultSpanHours: Double, minimumSpanHours: Double, maximumSpanHours: Double, candidateSpansHoursOffset: Int, tailHours: Double, extensionMargin: Double, holdoutHours: Double, hasHoldoutHours: Boolean, eccentricityThreshold: Double, eccentricDefaultSpanHours: Double, eccentricExtensionMargin: Double, eccentricMaximumPeriodHours: Double, implausibleRmsKm: Double, dragPriorOffset: Int, srpPriorOffset: Int, dragPriorForm: UByte, srpPriorForm: UByte) : Int {
-            builder.startTable(17)
+        fun createPCFFitPolicy(builder: FlatBufferBuilder, defaultSpanHours: Double, minimumSpanHours: Double, maximumSpanHours: Double, candidateSpansHoursOffset: Int, tailHours: Double, extensionMargin: Double, holdoutHours: Double, hasHoldoutHours: Boolean, eccentricityThreshold: Double, eccentricDefaultSpanHours: Double, eccentricExtensionMargin: Double, eccentricMaximumPeriodHours: Double, implausibleRmsKm: Double, dragPriorOffset: Int, srpPriorOffset: Int, dragPriorForm: UByte, srpPriorForm: UByte, weatherHorizonDays: UShort) : Int {
+            builder.startTable(18)
             addIMPLAUSIBLERMSKM(builder, implausibleRmsKm)
             addECCENTRICMAXIMUMPERIODHOURS(builder, eccentricMaximumPeriodHours)
             addECCENTRICEXTENSIONMARGIN(builder, eccentricExtensionMargin)
@@ -222,12 +235,13 @@ class PCFFitPolicy : Table() {
             addSRPPRIOR(builder, srpPriorOffset)
             addDRAGPRIOR(builder, dragPriorOffset)
             addCANDIDATESPANSHOURS(builder, candidateSpansHoursOffset)
+            addWEATHERHORIZONDAYS(builder, weatherHorizonDays)
             addSRPPRIORFORM(builder, srpPriorForm)
             addDRAGPRIORFORM(builder, dragPriorForm)
             addHASHOLDOUTHOURS(builder, hasHoldoutHours)
             return endPCFFitPolicy(builder)
         }
-        fun startPCFFitPolicy(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startPCFFitPolicy(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addDEFAULTSPANHOURS(builder: FlatBufferBuilder, defaultSpanHours: Double) = builder.addDouble(0, defaultSpanHours, 48.0)
         fun addMINIMUMSPANHOURS(builder: FlatBufferBuilder, minimumSpanHours: Double) = builder.addDouble(1, minimumSpanHours, 24.0)
         fun addMAXIMUMSPANHOURS(builder: FlatBufferBuilder, maximumSpanHours: Double) = builder.addDouble(2, maximumSpanHours, 120.0)
@@ -253,6 +267,7 @@ class PCFFitPolicy : Table() {
         fun addSRPPRIOR(builder: FlatBufferBuilder, srpPrior: Int) = builder.addOffset(14, srpPrior, 0)
         fun addDRAGPRIORFORM(builder: FlatBufferBuilder, dragPriorForm: UByte) = builder.addByte(15, dragPriorForm.toByte(), 0)
         fun addSRPPRIORFORM(builder: FlatBufferBuilder, srpPriorForm: UByte) = builder.addByte(16, srpPriorForm.toByte(), 0)
+        fun addWEATHERHORIZONDAYS(builder: FlatBufferBuilder, weatherHorizonDays: UShort) = builder.addShort(17, weatherHorizonDays.toShort(), 30)
         fun endPCFFitPolicy(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -55,6 +55,53 @@ class PCFOutput : Table() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 500000u
         }
+    /**
+     * Output epochs, ISO 8601 UTC, ascending; when present they are the
+     * states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+     * Default empty.
+     */
+    fun epochs(j: Int) : String? {
+        val o = __offset(10)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val epochsLength : Int
+        get() {
+            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * First output epoch, ISO 8601 UTC. Default empty: the element set's
+     * epoch.
+     */
+    val startTime : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+     * START_TIME plus one day.
+     */
+    val stopTime : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFOutput(_bb: ByteBuffer): PCFOutput = getRootAsPCFOutput(_bb, PCFOutput())
@@ -62,17 +109,31 @@ class PCFOutput : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFOutput(builder: FlatBufferBuilder, frame: UByte, stepSeconds: Double, maximumStates: UInt) : Int {
-            builder.startTable(3)
+        fun createPCFOutput(builder: FlatBufferBuilder, frame: UByte, stepSeconds: Double, maximumStates: UInt, epochsOffset: Int, startTimeOffset: Int, stopTimeOffset: Int) : Int {
+            builder.startTable(6)
             addSTEPSECONDS(builder, stepSeconds)
+            addSTOPTIME(builder, stopTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addEPOCHS(builder, epochsOffset)
             addMAXIMUMSTATES(builder, maximumStates)
             addFRAME(builder, frame)
             return endPCFOutput(builder)
         }
-        fun startPCFOutput(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startPCFOutput(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addFRAME(builder: FlatBufferBuilder, frame: UByte) = builder.addByte(0, frame.toByte(), 0)
         fun addSTEPSECONDS(builder: FlatBufferBuilder, stepSeconds: Double) = builder.addDouble(1, stepSeconds, 60.0)
         fun addMAXIMUMSTATES(builder: FlatBufferBuilder, maximumStates: UInt) = builder.addInt(2, maximumStates.toInt(), 500000)
+        fun addEPOCHS(builder: FlatBufferBuilder, epochs: Int) = builder.addOffset(3, epochs, 0)
+        fun createEpochsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEpochsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(4, startTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(5, stopTime, 0)
         fun endPCFOutput(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

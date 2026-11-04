@@ -461,8 +461,40 @@ func (rcv *PCFFitPolicy) MutateSrpPriorForm(n pcfPriorForm) bool {
 	return rcv.MutateSRP_PRIOR_FORM(n)
 }
 
+/// Days past the element set's epoch day through which the fit writes the
+/// daily space weather into the record it emits (OCM
+/// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+/// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+/// arc's last day and the epoch's day plus this count; rows supplied with
+/// the request must reach it, or the fit is refused by name. Default 30.
+func (rcv *PCFFitPolicy) WEATHER_HORIZON_DAYS() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 30
+}
+
+func (rcv *PCFFitPolicy) WeatherHorizonDays() uint16 {
+	return rcv.WEATHER_HORIZON_DAYS()
+}
+
+/// Days past the element set's epoch day through which the fit writes the
+/// daily space weather into the record it emits (OCM
+/// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+/// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+/// arc's last day and the epoch's day plus this count; rows supplied with
+/// the request must reach it, or the fit is refused by name. Default 30.
+func (rcv *PCFFitPolicy) MutateWEATHER_HORIZON_DAYS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(38, n)
+}
+
+func (rcv *PCFFitPolicy) MutateWeatherHorizonDays(n uint16) bool {
+	return rcv.MutateWEATHER_HORIZON_DAYS(n)
+}
+
 func PCFFitPolicyStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(18)
 }
 func PCFFitPolicyAddDEFAULT_SPAN_HOURS(builder *flatbuffers.Builder, DEFAULT_SPAN_HOURS float64) {
 	builder.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
@@ -571,6 +603,12 @@ func PCFFitPolicyAddSRP_PRIOR_FORM(builder *flatbuffers.Builder, SRP_PRIOR_FORM 
 }
 func PCFFitPolicyAddSrpPriorForm(builder *flatbuffers.Builder, SRP_PRIOR_FORM pcfPriorForm) {
 	PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM)
+}
+func PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder *flatbuffers.Builder, WEATHER_HORIZON_DAYS uint16) {
+	builder.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 30)
+}
+func PCFFitPolicyAddWeatherHorizonDays(builder *flatbuffers.Builder, WEATHER_HORIZON_DAYS uint16) {
+	PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS)
 }
 func PCFFitPolicyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

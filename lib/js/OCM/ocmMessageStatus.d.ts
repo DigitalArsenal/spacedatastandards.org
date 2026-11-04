@@ -1,0 +1,24 @@
+/**
+ * Whether a message is real, test or exercise data (the Real/Test/Exercise
+ * indicator of the legacy SP Vector/Covariance Message). Append new values
+ * only.
+ */
+export declare enum ocmMessageStatus {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Real data.
+     */
+    REAL = 1,
+    /**
+     * Test data.
+     */
+    TEST = 2,
+    /**
+     * Exercise data; the exercise is named in EXERCISE_NAME.
+     */
+    EXERCISE = 3
+}
+//# sourceMappingURL=ocmMessageStatus.d.ts.map

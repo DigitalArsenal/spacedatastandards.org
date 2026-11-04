@@ -8,12 +8,21 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 import '../ATM/main_generated.dart';
 import '../CAT/main_generated.dart';
 import '../CVR/main_generated.dart';
+import '../EOP/main_generated.dart';
+import '../EVL/main_generated.dart';
+import '../FRM/main_generated.dart';
 import '../IDM/main_generated.dart';
 import '../LCC/main_generated.dart';
+import '../MET/main_generated.dart';
+import '../NCD/main_generated.dart';
+import '../PCE/main_generated.dart';
+import '../PCF/main_generated.dart';
 import '../PLD/main_generated.dart';
 import '../PPE/main_generated.dart';
+import '../PRW/main_generated.dart';
 import '../PVN/main_generated.dart';
 import '../RFM/main_generated.dart';
+import '../SPW/main_generated.dart';
 import '../TIM/main_generated.dart';
 
 ///  Trajectory state representation type.
@@ -67,6 +76,285 @@ class _trajectoryTypeReader extends fb.Reader<trajectoryType> {
   @override
   trajectoryType read(fb.BufferContext bc, int offset) =>
       trajectoryType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Whether a message is real, test or exercise data (the Real/Test/Exercise
+///  indicator of the legacy SP Vector/Covariance Message). Append new values
+///  only.
+enum ocmMessageStatus {
+  UNSPECIFIED(0),
+  REAL(1),
+  TEST(2),
+  EXERCISE(3);
+
+  final int value;
+  const ocmMessageStatus(this.value);
+
+  factory ocmMessageStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmMessageStatus.UNSPECIFIED;
+      case 1: return ocmMessageStatus.REAL;
+      case 2: return ocmMessageStatus.TEST;
+      case 3: return ocmMessageStatus.EXERCISE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmMessageStatus? _createOrNull(int? value) =>
+      value == null ? null : ocmMessageStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<ocmMessageStatus> reader = _ocmMessageStatusReader();
+}
+
+class _ocmMessageStatusReader extends fb.Reader<ocmMessageStatus> {
+  const _ocmMessageStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmMessageStatus read(fb.BufferContext bc, int offset) =>
+      ocmMessageStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Basis of a trajectory (CCSDS 502.0-B-3 TRAJ_BASIS, a closed set). Append new
+///  values only.
+enum ocmTrajectoryBasis {
+  UNSPECIFIED(0),
+  PREDICTED(1),
+  DETERMINED(2),
+  TELEMETRY(3),
+  SIMULATED(4),
+  OTHER(5);
+
+  final int value;
+  const ocmTrajectoryBasis(this.value);
+
+  factory ocmTrajectoryBasis.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmTrajectoryBasis.UNSPECIFIED;
+      case 1: return ocmTrajectoryBasis.PREDICTED;
+      case 2: return ocmTrajectoryBasis.DETERMINED;
+      case 3: return ocmTrajectoryBasis.TELEMETRY;
+      case 4: return ocmTrajectoryBasis.SIMULATED;
+      case 5: return ocmTrajectoryBasis.OTHER;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmTrajectoryBasis? _createOrNull(int? value) =>
+      value == null ? null : ocmTrajectoryBasis.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<ocmTrajectoryBasis> reader = _ocmTrajectoryBasisReader();
+}
+
+class _ocmTrajectoryBasisReader extends fb.Reader<ocmTrajectoryBasis> {
+  const _ocmTrajectoryBasisReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmTrajectoryBasis read(fb.BufferContext bc, int offset) =>
+      ocmTrajectoryBasis.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Integrator mode of the legacy SP system that made a solution (INTEGRATOR
+///  MODE of the SP Vector/Covariance Message). Append new values only.
+enum ocmIntegratorMode {
+  UNSPECIFIED(0),
+  SPADOC(1),
+  ASW(2);
+
+  final int value;
+  const ocmIntegratorMode(this.value);
+
+  factory ocmIntegratorMode.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmIntegratorMode.UNSPECIFIED;
+      case 1: return ocmIntegratorMode.SPADOC;
+      case 2: return ocmIntegratorMode.ASW;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmIntegratorMode? _createOrNull(int? value) =>
+      value == null ? null : ocmIntegratorMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<ocmIntegratorMode> reader = _ocmIntegratorModeReader();
+}
+
+class _ocmIntegratorModeReader extends fb.Reader<ocmIntegratorMode> {
+  const _ocmIntegratorModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmIntegratorMode read(fb.BufferContext bc, int offset) =>
+      ocmIntegratorMode.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Coordinate system a numerical integrator integrates in (COORD SYS of the SP
+///  Vector/Covariance Message). Append new values only.
+enum ocmIntegrationFrame {
+  UNSPECIFIED(0),
+  J2000(1),
+  EPOCH(2);
+
+  final int value;
+  const ocmIntegrationFrame(this.value);
+
+  factory ocmIntegrationFrame.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmIntegrationFrame.UNSPECIFIED;
+      case 1: return ocmIntegrationFrame.J2000;
+      case 2: return ocmIntegrationFrame.EPOCH;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmIntegrationFrame? _createOrNull(int? value) =>
+      value == null ? null : ocmIntegrationFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<ocmIntegrationFrame> reader = _ocmIntegrationFrameReader();
+}
+
+class _ocmIntegrationFrameReader extends fb.Reader<ocmIntegrationFrame> {
+  const _ocmIntegrationFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmIntegrationFrame read(fb.BufferContext bc, int offset) =>
+      ocmIntegrationFrame.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  How the partial derivatives of the dynamics are computed (PARTIALS of the SP
+///  Vector/Covariance Message). Append new values only.
+enum ocmPartialsMethod {
+  UNSPECIFIED(0),
+  ANALYTIC(1),
+  FULL_NUMERICAL(2),
+  FAST_NUMERICAL(3);
+
+  final int value;
+  const ocmPartialsMethod(this.value);
+
+  factory ocmPartialsMethod.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmPartialsMethod.UNSPECIFIED;
+      case 1: return ocmPartialsMethod.ANALYTIC;
+      case 2: return ocmPartialsMethod.FULL_NUMERICAL;
+      case 3: return ocmPartialsMethod.FAST_NUMERICAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmPartialsMethod? _createOrNull(int? value) =>
+      value == null ? null : ocmPartialsMethod.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<ocmPartialsMethod> reader = _ocmPartialsMethodReader();
+}
+
+class _ocmPartialsMethodReader extends fb.Reader<ocmPartialsMethod> {
+  const _ocmPartialsMethodReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmPartialsMethod read(fb.BufferContext bc, int offset) =>
+      ocmPartialsMethod.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Integrator step mode (STEP MODE of the SP Vector/Covariance Message). Append
+///  new values only.
+enum ocmStepMode {
+  UNSPECIFIED(0),
+  AUTO(1),
+  TIME(2),
+  S(3);
+
+  final int value;
+  const ocmStepMode(this.value);
+
+  factory ocmStepMode.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmStepMode.UNSPECIFIED;
+      case 1: return ocmStepMode.AUTO;
+      case 2: return ocmStepMode.TIME;
+      case 3: return ocmStepMode.S;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmStepMode? _createOrNull(int? value) =>
+      value == null ? null : ocmStepMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<ocmStepMode> reader = _ocmStepModeReader();
+}
+
+class _ocmStepModeReader extends fb.Reader<ocmStepMode> {
+  const _ocmStepModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmStepMode read(fb.BufferContext bc, int offset) =>
+      ocmStepMode.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  How the initial integration step is selected (STEP SIZE SELECTION of the SP
+///  Vector/Covariance Message). Append new values only.
+enum ocmStepSelection {
+  UNSPECIFIED(0),
+  AUTO(1),
+  MANUAL(2);
+
+  final int value;
+  const ocmStepSelection(this.value);
+
+  factory ocmStepSelection.fromValue(int value) {
+    switch (value) {
+      case 0: return ocmStepSelection.UNSPECIFIED;
+      case 1: return ocmStepSelection.AUTO;
+      case 2: return ocmStepSelection.MANUAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ocmStepSelection? _createOrNull(int? value) =>
+      value == null ? null : ocmStepSelection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<ocmStepSelection> reader = _ocmStepSelectionReader();
+}
+
+class _ocmStepSelectionReader extends fb.Reader<ocmStepSelection> {
+  const _ocmStepSelectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ocmStepSelection read(fb.BufferContext bc, int offset) =>
+      ocmStepSelection.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  Estimator class that produced an orbit-determination solution
@@ -179,10 +467,16 @@ class Header {
   ///  Free-text field containing an ID that uniquely identifies a message from this originator.
   String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get messageId => MESSAGE_ID;
+  ///  Whether the message is real, test or exercise data.
+  ocmMessageStatus get MESSAGE_STATUS => ocmMessageStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ocmMessageStatus get messageStatus => MESSAGE_STATUS;
+  ///  Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+  String? get EXERCISE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get exerciseName => EXERCISE_NAME;
 
   @override
   String toString() {
-    return 'Header{ccsdsOcmVers: ${ccsdsOcmVers}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, messageId: ${messageId}}';
+    return 'Header{ccsdsOcmVers: ${ccsdsOcmVers}, COMMENT: ${COMMENT}, CLASSIFICATION: ${CLASSIFICATION}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, messageId: ${messageId}, messageStatus: ${messageStatus}, exerciseName: ${exerciseName}}';
   }
 }
 
@@ -200,7 +494,7 @@ class HeaderBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(8);
   }
 
   int addCcsdsOcmVersOffset(int? offset) {
@@ -227,6 +521,14 @@ class HeaderBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addMessageStatus(ocmMessageStatus? MESSAGE_STATUS) {
+    fbBuilder.addUint8(6, MESSAGE_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addExerciseNameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -240,6 +542,8 @@ class HeaderObjectBuilder extends fb.ObjectBuilder {
   final String? _CREATION_DATE;
   final String? _ORIGINATOR;
   final String? _MESSAGE_ID;
+  final ocmMessageStatus? _MESSAGE_STATUS;
+  final String? _EXERCISE_NAME;
 
   HeaderObjectBuilder({
     String? CCSDS_OCM_VERS,
@@ -251,13 +555,19 @@ class HeaderObjectBuilder extends fb.ObjectBuilder {
     String? ORIGINATOR,
     String? MESSAGE_ID,
     String? messageId,
+    ocmMessageStatus? MESSAGE_STATUS,
+    ocmMessageStatus? messageStatus,
+    String? EXERCISE_NAME,
+    String? exerciseName,
   })
       : _CCSDS_OCM_VERS = ccsdsOcmVers ?? CCSDS_OCM_VERS,
         _COMMENT = COMMENT,
         _CLASSIFICATION = CLASSIFICATION,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
         _ORIGINATOR = ORIGINATOR,
-        _MESSAGE_ID = messageId ?? MESSAGE_ID;
+        _MESSAGE_ID = messageId ?? MESSAGE_ID,
+        _MESSAGE_STATUS = messageStatus ?? MESSAGE_STATUS,
+        _EXERCISE_NAME = exerciseName ?? EXERCISE_NAME;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -274,13 +584,17 @@ class HeaderObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORIGINATOR!);
     final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
         : fbBuilder.writeString(_MESSAGE_ID!);
-    fbBuilder.startTable(6);
+    final int? EXERCISE_NAMEOffset = _EXERCISE_NAME == null ? null
+        : fbBuilder.writeString(_EXERCISE_NAME!);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, CCSDS_OCM_VERSOffset);
     fbBuilder.addOffset(1, COMMENTOffset);
     fbBuilder.addOffset(2, CLASSIFICATIONOffset);
     fbBuilder.addOffset(3, CREATION_DATEOffset);
     fbBuilder.addOffset(4, ORIGINATOROffset);
     fbBuilder.addOffset(5, MESSAGE_IDOffset);
+    fbBuilder.addUint8(6, _MESSAGE_STATUS?.value);
+    fbBuilder.addOffset(7, EXERCISE_NAMEOffset);
     return fbBuilder.endTable();
   }
 
@@ -443,10 +757,16 @@ class Metadata {
   ///  Source and version of celestial body ephemeris data used.
   String? get CELESTIAL_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
   String? get celestialSource => CELESTIAL_SOURCE;
+  ///  NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+  ///  NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+  ///  strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+  ///  the object has no NORAD number.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 100, 0);
+  int get noradCatId => NORAD_CAT_ID;
 
   @override
   String toString() {
-    return 'Metadata{COMMENT: ${COMMENT}, objectName: ${objectName}, internationalDesignator: ${internationalDesignator}, catalogName: ${catalogName}, objectDesignator: ${objectDesignator}, alternateNames: ${alternateNames}, originatorPoc: ${originatorPoc}, originatorPosition: ${originatorPosition}, originatorPhone: ${originatorPhone}, originatorEmail: ${originatorEmail}, originatorAddress: ${originatorAddress}, techOrg: ${techOrg}, techPoc: ${techPoc}, techPosition: ${techPosition}, techPhone: ${techPhone}, techEmail: ${techEmail}, techAddress: ${techAddress}, previousMessageId: ${previousMessageId}, nextMessageId: ${nextMessageId}, admMsgLink: ${admMsgLink}, cdmMsgLink: ${cdmMsgLink}, prmMsgLink: ${prmMsgLink}, rdmMsgLink: ${rdmMsgLink}, tdmMsgLink: ${tdmMsgLink}, OPERATOR: ${OPERATOR}, OWNER: ${OWNER}, COUNTRY: ${COUNTRY}, CONSTELLATION: ${CONSTELLATION}, objectType: ${objectType}, timeSystem: ${timeSystem}, epochTzero: ${epochTzero}, opsStatus: ${opsStatus}, orbitCategory: ${orbitCategory}, ocmDataElements: ${ocmDataElements}, sclkOffsetAtEpoch: ${sclkOffsetAtEpoch}, sclkSecPerSiSec: ${sclkSecPerSiSec}, previousMessageEpoch: ${previousMessageEpoch}, nextMessageEpoch: ${nextMessageEpoch}, startTime: ${startTime}, stopTime: ${stopTime}, timeSpan: ${timeSpan}, taimutcAtTzero: ${taimutcAtTzero}, nextLeapEpoch: ${nextLeapEpoch}, nextLeapTaimutc: ${nextLeapTaimutc}, ut1mutcAtTzero: ${ut1mutcAtTzero}, eopSource: ${eopSource}, interpMethodEop: ${interpMethodEop}, celestialSource: ${celestialSource}}';
+    return 'Metadata{COMMENT: ${COMMENT}, objectName: ${objectName}, internationalDesignator: ${internationalDesignator}, catalogName: ${catalogName}, objectDesignator: ${objectDesignator}, alternateNames: ${alternateNames}, originatorPoc: ${originatorPoc}, originatorPosition: ${originatorPosition}, originatorPhone: ${originatorPhone}, originatorEmail: ${originatorEmail}, originatorAddress: ${originatorAddress}, techOrg: ${techOrg}, techPoc: ${techPoc}, techPosition: ${techPosition}, techPhone: ${techPhone}, techEmail: ${techEmail}, techAddress: ${techAddress}, previousMessageId: ${previousMessageId}, nextMessageId: ${nextMessageId}, admMsgLink: ${admMsgLink}, cdmMsgLink: ${cdmMsgLink}, prmMsgLink: ${prmMsgLink}, rdmMsgLink: ${rdmMsgLink}, tdmMsgLink: ${tdmMsgLink}, OPERATOR: ${OPERATOR}, OWNER: ${OWNER}, COUNTRY: ${COUNTRY}, CONSTELLATION: ${CONSTELLATION}, objectType: ${objectType}, timeSystem: ${timeSystem}, epochTzero: ${epochTzero}, opsStatus: ${opsStatus}, orbitCategory: ${orbitCategory}, ocmDataElements: ${ocmDataElements}, sclkOffsetAtEpoch: ${sclkOffsetAtEpoch}, sclkSecPerSiSec: ${sclkSecPerSiSec}, previousMessageEpoch: ${previousMessageEpoch}, nextMessageEpoch: ${nextMessageEpoch}, startTime: ${startTime}, stopTime: ${stopTime}, timeSpan: ${timeSpan}, taimutcAtTzero: ${taimutcAtTzero}, nextLeapEpoch: ${nextLeapEpoch}, nextLeapTaimutc: ${nextLeapTaimutc}, ut1mutcAtTzero: ${ut1mutcAtTzero}, eopSource: ${eopSource}, interpMethodEop: ${interpMethodEop}, celestialSource: ${celestialSource}, noradCatId: ${noradCatId}}';
   }
 }
 
@@ -464,7 +784,7 @@ class MetadataBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(48);
+    fbBuilder.startTable(49);
   }
 
   int addCommentOffset(int? offset) {
@@ -659,6 +979,10 @@ class MetadataBuilder {
     fbBuilder.addOffset(47, offset);
     return fbBuilder.offset;
   }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(48, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -714,6 +1038,7 @@ class MetadataObjectBuilder extends fb.ObjectBuilder {
   final String? _EOP_SOURCE;
   final String? _INTERP_METHOD_EOP;
   final String? _CELESTIAL_SOURCE;
+  final int? _NORAD_CAT_ID;
 
   MetadataObjectBuilder({
     List<String>? COMMENT,
@@ -807,6 +1132,8 @@ class MetadataObjectBuilder extends fb.ObjectBuilder {
     String? interpMethodEop,
     String? CELESTIAL_SOURCE,
     String? celestialSource,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
   })
       : _COMMENT = COMMENT,
         _OBJECT_NAME = objectName ?? OBJECT_NAME,
@@ -855,7 +1182,8 @@ class MetadataObjectBuilder extends fb.ObjectBuilder {
         _UT1MUTC_AT_TZERO = ut1mutcAtTzero ?? UT1MUTC_AT_TZERO,
         _EOP_SOURCE = eopSource ?? EOP_SOURCE,
         _INTERP_METHOD_EOP = interpMethodEop ?? INTERP_METHOD_EOP,
-        _CELESTIAL_SOURCE = celestialSource ?? CELESTIAL_SOURCE;
+        _CELESTIAL_SOURCE = celestialSource ?? CELESTIAL_SOURCE,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -944,7 +1272,7 @@ class MetadataObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_INTERP_METHOD_EOP!);
     final int? CELESTIAL_SOURCEOffset = _CELESTIAL_SOURCE == null ? null
         : fbBuilder.writeString(_CELESTIAL_SOURCE!);
-    fbBuilder.startTable(48);
+    fbBuilder.startTable(49);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECT_NAMEOffset);
     fbBuilder.addOffset(2, INTERNATIONAL_DESIGNATOROffset);
@@ -993,6 +1321,7 @@ class MetadataObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(45, EOP_SOURCEOffset);
     fbBuilder.addOffset(46, INTERP_METHOD_EOPOffset);
     fbBuilder.addOffset(47, CELESTIAL_SOURCEOffset);
+    fbBuilder.addUint32(48, _NORAD_CAT_ID);
     return fbBuilder.endTable();
   }
 
@@ -2001,10 +2330,68 @@ class Perturbations {
   ///  FIXED_Y10P7_MEAN, NaN when not stated.
   double get FIXED_Y10P7_MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, double.nan);
   double get fixedY10p7Mean => FIXED_Y10P7_MEAN;
+  ///  Highest degree of the tesseral and sectorial terms (order 1 and above) of
+  ///  the gravity field the record was computed with (SDS addition; the $PCF
+  ///  FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+  ///  theory: 0 is the theory's own terms. For a numerical solution the nn of a
+  ///  legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+  ///  either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+  ///  order pair cannot state a tesseral cap below a zonal one.
+  int get MAXIMUM_TESSERAL_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 80, 0);
+  int get maximumTesseralDegree => MAXIMUM_TESSERAL_DEGREE;
+  ///  Highest degree of the zonal terms (order 0) of the gravity field the
+  ///  record was computed with (SDS addition). For a mean-element set the tail
+  ///  J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+  ///  For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+  ///  otherwise not stated.
+  int get MAXIMUM_ZONAL_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 82, 0);
+  int get maximumZonalDegree => MAXIMUM_ZONAL_DEGREE;
+  ///  Where the space weather behind the drag density comes from. RECORDS: the
+  ///  daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+  ///  flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+  ///  in an element-set record.
+  pcfWeatherSource get WEATHER_SOURCE => pcfWeatherSource.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 84, 0));
+  pcfWeatherSource get weatherSource => WEATHER_SOURCE;
+  ///  Correction applied to the atmosphere model's density.
+  pcfDensityCorrection get DENSITY_CORRECTION => pcfDensityCorrection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 86, 0));
+  pcfDensityCorrection get densityCorrection => DENSITY_CORRECTION;
+  ///  CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+  ///  DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+  ///  DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+  String? get DENSITY_CORRECTION_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get densityCorrectionCid => DENSITY_CORRECTION_CID;
+  ///  The daily space weather the drag density reads (SDS addition; CCSDS
+  ///  502.0-B-3 names only the source, epoch and interpolation as text and
+  ///  fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+  ///  UTC day, DATE ascending, no gap, from the day before the first day the
+  ///  record is flown or was fitted through its last day. The record is flown
+  ///  to the end of the last row's day and no further. Each row carries DATE,
+  ///  F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+  ///  PRD, PRM predicted); other SPW fields unwritten.
+  List<SPW>? get SPACE_WEATHER => const fb.ListReader<SPW>(SPW.reader).vTableGetNullable(_bc, _bcOffset, 90);
+  List<SPW>? get spaceWeather => SPACE_WEATHER;
+  ///  DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+  ///  set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+  ///  milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+  ///  Empty when DENSITY_CORRECTION is NONE.
+  List<int>? get DENSITY_CORRECTION_NODE_TIMES_MS => const fb.ListReader<int>(fb.Int64Reader()).vTableGetNullable(_bc, _bcOffset, 92);
+  List<int>? get densityCorrectionNodeTimesMs => DENSITY_CORRECTION_NODE_TIMES_MS;
+  ///  One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+  ///  entry, dimensionless, as that $DCL's
+  ///  CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+  ///  held at the end values outside them.
+  List<double>? get DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 94);
+  List<double>? get densityCorrectionLogDensityScaleDimensionless => DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS;
+  ///  Number of terms of the nutation series REDUCTION_THEORY names that the
+  ///  force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+  ///  4, 50 or 106). 0 when the series is not truncated or the count is not
+  ///  stated.
+  int get REDUCTION_THEORY_TERMS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  int get reductionTheoryTerms => REDUCTION_THEORY_TERMS;
 
   @override
   String toString() {
-    return 'Perturbations{COMMENT: ${COMMENT}, atmosphericModel: ${atmosphericModel}, gravityModel: ${gravityModel}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, GM: ${GM}, nBodyPerturbations: ${nBodyPerturbations}, oceanTidesModel: ${oceanTidesModel}, solidTidesModel: ${solidTidesModel}, atmosphericTidesModel: ${atmosphericTidesModel}, geopotentialModel: ${geopotentialModel}, solarRadPressure: ${solarRadPressure}, ALBEDO: ${ALBEDO}, THERMAL: ${THERMAL}, RELATIVITY: ${RELATIVITY}, atmosphericDrag: ${atmosphericDrag}, fixedGeomagKp: ${fixedGeomagKp}, fixedF10p7: ${fixedF10p7}, fixedF10p7Mean: ${fixedF10p7Mean}, fixedGeomagAp: ${fixedGeomagAp}, atmosphericModelName: ${atmosphericModelName}, equatorialRadius: ${equatorialRadius}, centralBodyRotation: ${centralBodyRotation}, oblateFlattening: ${oblateFlattening}, reductionTheory: ${reductionTheory}, albedoGridSize: ${albedoGridSize}, shadowModel: ${shadowModel}, shadowBodies: ${shadowBodies}, swDataSource: ${swDataSource}, swDataEpoch: ${swDataEpoch}, swInterpMethod: ${swInterpMethod}, fixedGeomagDst: ${fixedGeomagDst}, fixedM10p7: ${fixedM10p7}, fixedM10p7Mean: ${fixedM10p7Mean}, fixedS10p7: ${fixedS10p7}, fixedS10p7Mean: ${fixedS10p7Mean}, fixedY10p7: ${fixedY10p7}, fixedY10p7Mean: ${fixedY10p7Mean}}';
+    return 'Perturbations{COMMENT: ${COMMENT}, atmosphericModel: ${atmosphericModel}, gravityModel: ${gravityModel}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, GM: ${GM}, nBodyPerturbations: ${nBodyPerturbations}, oceanTidesModel: ${oceanTidesModel}, solidTidesModel: ${solidTidesModel}, atmosphericTidesModel: ${atmosphericTidesModel}, geopotentialModel: ${geopotentialModel}, solarRadPressure: ${solarRadPressure}, ALBEDO: ${ALBEDO}, THERMAL: ${THERMAL}, RELATIVITY: ${RELATIVITY}, atmosphericDrag: ${atmosphericDrag}, fixedGeomagKp: ${fixedGeomagKp}, fixedF10p7: ${fixedF10p7}, fixedF10p7Mean: ${fixedF10p7Mean}, fixedGeomagAp: ${fixedGeomagAp}, atmosphericModelName: ${atmosphericModelName}, equatorialRadius: ${equatorialRadius}, centralBodyRotation: ${centralBodyRotation}, oblateFlattening: ${oblateFlattening}, reductionTheory: ${reductionTheory}, albedoGridSize: ${albedoGridSize}, shadowModel: ${shadowModel}, shadowBodies: ${shadowBodies}, swDataSource: ${swDataSource}, swDataEpoch: ${swDataEpoch}, swInterpMethod: ${swInterpMethod}, fixedGeomagDst: ${fixedGeomagDst}, fixedM10p7: ${fixedM10p7}, fixedM10p7Mean: ${fixedM10p7Mean}, fixedS10p7: ${fixedS10p7}, fixedS10p7Mean: ${fixedS10p7Mean}, fixedY10p7: ${fixedY10p7}, fixedY10p7Mean: ${fixedY10p7Mean}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, weatherSource: ${weatherSource}, densityCorrection: ${densityCorrection}, densityCorrectionCid: ${densityCorrectionCid}, spaceWeather: ${spaceWeather}, densityCorrectionNodeTimesMs: ${densityCorrectionNodeTimesMs}, densityCorrectionLogDensityScaleDimensionless: ${densityCorrectionLogDensityScaleDimensionless}, reductionTheoryTerms: ${reductionTheoryTerms}}';
   }
 }
 
@@ -2022,7 +2409,7 @@ class PerturbationsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(38);
+    fbBuilder.startTable(47);
   }
 
   int addCommentOffset(int? offset) {
@@ -2177,6 +2564,42 @@ class PerturbationsBuilder {
     fbBuilder.addFloat64(37, FIXED_Y10P7_MEAN);
     return fbBuilder.offset;
   }
+  int addMaximumTesseralDegree(int? MAXIMUM_TESSERAL_DEGREE) {
+    fbBuilder.addUint16(38, MAXIMUM_TESSERAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addMaximumZonalDegree(int? MAXIMUM_ZONAL_DEGREE) {
+    fbBuilder.addUint16(39, MAXIMUM_ZONAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addWeatherSource(pcfWeatherSource? WEATHER_SOURCE) {
+    fbBuilder.addUint8(40, WEATHER_SOURCE?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrection(pcfDensityCorrection? DENSITY_CORRECTION) {
+    fbBuilder.addUint8(41, DENSITY_CORRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrectionCidOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addSpaceWeatherOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrectionNodeTimesMsOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrectionLogDensityScaleDimensionlessOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addReductionTheoryTerms(int? REDUCTION_THEORY_TERMS) {
+    fbBuilder.addUint16(46, REDUCTION_THEORY_TERMS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2222,6 +2645,15 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
   final double? _FIXED_S10P7_MEAN;
   final double? _FIXED_Y10P7;
   final double? _FIXED_Y10P7_MEAN;
+  final int? _MAXIMUM_TESSERAL_DEGREE;
+  final int? _MAXIMUM_ZONAL_DEGREE;
+  final pcfWeatherSource? _WEATHER_SOURCE;
+  final pcfDensityCorrection? _DENSITY_CORRECTION;
+  final String? _DENSITY_CORRECTION_CID;
+  final List<SPWObjectBuilder>? _SPACE_WEATHER;
+  final List<int>? _DENSITY_CORRECTION_NODE_TIMES_MS;
+  final List<double>? _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS;
+  final int? _REDUCTION_THEORY_TERMS;
 
   PerturbationsObjectBuilder({
     List<String>? COMMENT,
@@ -2295,6 +2727,24 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
     double? fixedY10p7,
     double? FIXED_Y10P7_MEAN,
     double? fixedY10p7Mean,
+    int? MAXIMUM_TESSERAL_DEGREE,
+    int? maximumTesseralDegree,
+    int? MAXIMUM_ZONAL_DEGREE,
+    int? maximumZonalDegree,
+    pcfWeatherSource? WEATHER_SOURCE,
+    pcfWeatherSource? weatherSource,
+    pcfDensityCorrection? DENSITY_CORRECTION,
+    pcfDensityCorrection? densityCorrection,
+    String? DENSITY_CORRECTION_CID,
+    String? densityCorrectionCid,
+    List<SPWObjectBuilder>? SPACE_WEATHER,
+    List<SPWObjectBuilder>? spaceWeather,
+    List<int>? DENSITY_CORRECTION_NODE_TIMES_MS,
+    List<int>? densityCorrectionNodeTimesMs,
+    List<double>? DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS,
+    List<double>? densityCorrectionLogDensityScaleDimensionless,
+    int? REDUCTION_THEORY_TERMS,
+    int? reductionTheoryTerms,
   })
       : _COMMENT = COMMENT,
         _ATMOSPHERIC_MODEL = atmosphericModel ?? ATMOSPHERIC_MODEL,
@@ -2333,7 +2783,16 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
         _FIXED_S10P7 = fixedS10p7 ?? FIXED_S10P7,
         _FIXED_S10P7_MEAN = fixedS10p7Mean ?? FIXED_S10P7_MEAN,
         _FIXED_Y10P7 = fixedY10p7 ?? FIXED_Y10P7,
-        _FIXED_Y10P7_MEAN = fixedY10p7Mean ?? FIXED_Y10P7_MEAN;
+        _FIXED_Y10P7_MEAN = fixedY10p7Mean ?? FIXED_Y10P7_MEAN,
+        _MAXIMUM_TESSERAL_DEGREE = maximumTesseralDegree ?? MAXIMUM_TESSERAL_DEGREE,
+        _MAXIMUM_ZONAL_DEGREE = maximumZonalDegree ?? MAXIMUM_ZONAL_DEGREE,
+        _WEATHER_SOURCE = weatherSource ?? WEATHER_SOURCE,
+        _DENSITY_CORRECTION = densityCorrection ?? DENSITY_CORRECTION,
+        _DENSITY_CORRECTION_CID = densityCorrectionCid ?? DENSITY_CORRECTION_CID,
+        _SPACE_WEATHER = spaceWeather ?? SPACE_WEATHER,
+        _DENSITY_CORRECTION_NODE_TIMES_MS = densityCorrectionNodeTimesMs ?? DENSITY_CORRECTION_NODE_TIMES_MS,
+        _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = densityCorrectionLogDensityScaleDimensionless ?? DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS,
+        _REDUCTION_THEORY_TERMS = reductionTheoryTerms ?? REDUCTION_THEORY_TERMS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2377,7 +2836,15 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SW_DATA_EPOCH!);
     final int? SW_INTERP_METHODOffset = _SW_INTERP_METHOD == null ? null
         : fbBuilder.writeString(_SW_INTERP_METHOD!);
-    fbBuilder.startTable(38);
+    final int? DENSITY_CORRECTION_CIDOffset = _DENSITY_CORRECTION_CID == null ? null
+        : fbBuilder.writeString(_DENSITY_CORRECTION_CID!);
+    final int? SPACE_WEATHEROffset = _SPACE_WEATHER == null ? null
+        : fbBuilder.writeList(_SPACE_WEATHER!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? DENSITY_CORRECTION_NODE_TIMES_MSOffset = _DENSITY_CORRECTION_NODE_TIMES_MS == null ? null
+        : fbBuilder.writeListInt64(_DENSITY_CORRECTION_NODE_TIMES_MS!);
+    final int? DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset = _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS == null ? null
+        : fbBuilder.writeListFloat64(_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS!);
+    fbBuilder.startTable(47);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, ATMOSPHERIC_MODELOffset);
     fbBuilder.addOffset(2, GRAVITY_MODELOffset);
@@ -2416,6 +2883,15 @@ class PerturbationsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(35, _FIXED_S10P7_MEAN);
     fbBuilder.addFloat64(36, _FIXED_Y10P7);
     fbBuilder.addFloat64(37, _FIXED_Y10P7_MEAN);
+    fbBuilder.addUint16(38, _MAXIMUM_TESSERAL_DEGREE);
+    fbBuilder.addUint16(39, _MAXIMUM_ZONAL_DEGREE);
+    fbBuilder.addUint8(40, _WEATHER_SOURCE?.value);
+    fbBuilder.addUint8(41, _DENSITY_CORRECTION?.value);
+    fbBuilder.addOffset(42, DENSITY_CORRECTION_CIDOffset);
+    fbBuilder.addOffset(43, SPACE_WEATHEROffset);
+    fbBuilder.addOffset(44, DENSITY_CORRECTION_NODE_TIMES_MSOffset);
+    fbBuilder.addOffset(45, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
+    fbBuilder.addUint16(46, _REDUCTION_THEORY_TERMS);
     return fbBuilder.endTable();
   }
 
@@ -2552,10 +3028,15 @@ class Maneuver {
   double get dcPaStartAngle => DC_PA_START_ANGLE;
   double get DC_PA_STOP_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, double.nan);
   double get dcPaStopAngle => DC_PA_STOP_ANGLE;
+  ///  NORAD_CAT_ID of the object that maneuvered, for a message whose
+  ///  maneuvers belong to more than one object (a relative-motion message's
+  ///  chaser and target). 0 when the message's own object maneuvered.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 78, 0);
+  int get noradCatId => NORAD_CAT_ID;
 
   @override
   String toString() {
-    return 'Maneuver{manId: ${manId}, manBasis: ${manBasis}, manDeviceId: ${manDeviceId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manRefFrame: ${manRefFrame}, manFrameEpoch: ${manFrameEpoch}, manType: ${manType}, manEpochStart: ${manEpochStart}, manDuration: ${manDuration}, manUnits: ${manUnits}, DATA: ${DATA}, manComment: ${manComment}, manComposition: ${manComposition}, manNextId: ${manNextId}, manBasisId: ${manBasisId}, manPrevEpoch: ${manPrevEpoch}, manNextEpoch: ${manNextEpoch}, manPredSource: ${manPredSource}, gravAssistName: ${gravAssistName}, dcType: ${dcType}, dcWinOpen: ${dcWinOpen}, dcWinClose: ${dcWinClose}, dcMinCycles: ${dcMinCycles}, dcMaxCycles: ${dcMaxCycles}, hasDcMinCycles: ${hasDcMinCycles}, hasDcMaxCycles: ${hasDcMaxCycles}, dcExecStart: ${dcExecStart}, dcExecStop: ${dcExecStop}, dcRefTime: ${dcRefTime}, dcTimePulseDuration: ${dcTimePulseDuration}, dcTimePulsePeriod: ${dcTimePulsePeriod}, dcRefDir: ${dcRefDir}, dcBodyFrame: ${dcBodyFrame}, dcBodyTrigger: ${dcBodyTrigger}, dcPaStartAngle: ${dcPaStartAngle}, dcPaStopAngle: ${dcPaStopAngle}}';
+    return 'Maneuver{manId: ${manId}, manBasis: ${manBasis}, manDeviceId: ${manDeviceId}, manPrevId: ${manPrevId}, manPurpose: ${manPurpose}, manRefFrame: ${manRefFrame}, manFrameEpoch: ${manFrameEpoch}, manType: ${manType}, manEpochStart: ${manEpochStart}, manDuration: ${manDuration}, manUnits: ${manUnits}, DATA: ${DATA}, manComment: ${manComment}, manComposition: ${manComposition}, manNextId: ${manNextId}, manBasisId: ${manBasisId}, manPrevEpoch: ${manPrevEpoch}, manNextEpoch: ${manNextEpoch}, manPredSource: ${manPredSource}, gravAssistName: ${gravAssistName}, dcType: ${dcType}, dcWinOpen: ${dcWinOpen}, dcWinClose: ${dcWinClose}, dcMinCycles: ${dcMinCycles}, dcMaxCycles: ${dcMaxCycles}, hasDcMinCycles: ${hasDcMinCycles}, hasDcMaxCycles: ${hasDcMaxCycles}, dcExecStart: ${dcExecStart}, dcExecStop: ${dcExecStop}, dcRefTime: ${dcRefTime}, dcTimePulseDuration: ${dcTimePulseDuration}, dcTimePulsePeriod: ${dcTimePulsePeriod}, dcRefDir: ${dcRefDir}, dcBodyFrame: ${dcBodyFrame}, dcBodyTrigger: ${dcBodyTrigger}, dcPaStartAngle: ${dcPaStartAngle}, dcPaStopAngle: ${dcPaStopAngle}, noradCatId: ${noradCatId}}';
   }
 }
 
@@ -2573,7 +3054,7 @@ class ManeuverBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(37);
+    fbBuilder.startTable(38);
   }
 
   int addManIdOffset(int? offset) {
@@ -2724,6 +3205,10 @@ class ManeuverBuilder {
     fbBuilder.addFloat64(36, DC_PA_STOP_ANGLE);
     return fbBuilder.offset;
   }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(37, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2768,6 +3253,7 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _DC_BODY_TRIGGER;
   final double? _DC_PA_START_ANGLE;
   final double? _DC_PA_STOP_ANGLE;
+  final int? _NORAD_CAT_ID;
 
   ManeuverObjectBuilder({
     String? MAN_ID,
@@ -2843,6 +3329,8 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
     double? dcPaStartAngle,
     double? DC_PA_STOP_ANGLE,
     double? dcPaStopAngle,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
   })
       : _MAN_ID = manId ?? MAN_ID,
         _MAN_BASIS = manBasis ?? MAN_BASIS,
@@ -2880,7 +3368,8 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
         _DC_BODY_FRAME = dcBodyFrame ?? DC_BODY_FRAME,
         _DC_BODY_TRIGGER = dcBodyTrigger ?? DC_BODY_TRIGGER,
         _DC_PA_START_ANGLE = dcPaStartAngle ?? DC_PA_START_ANGLE,
-        _DC_PA_STOP_ANGLE = dcPaStopAngle ?? DC_PA_STOP_ANGLE;
+        _DC_PA_STOP_ANGLE = dcPaStopAngle ?? DC_PA_STOP_ANGLE,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2941,7 +3430,7 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DC_BODY_FRAME!);
     final int? DC_BODY_TRIGGEROffset = _DC_BODY_TRIGGER == null ? null
         : fbBuilder.writeListFloat64(_DC_BODY_TRIGGER!);
-    fbBuilder.startTable(37);
+    fbBuilder.startTable(38);
     fbBuilder.addOffset(0, MAN_IDOffset);
     fbBuilder.addOffset(1, MAN_BASISOffset);
     fbBuilder.addOffset(2, MAN_DEVICE_IDOffset);
@@ -2979,6 +3468,7 @@ class ManeuverObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(34, DC_BODY_TRIGGEROffset);
     fbBuilder.addFloat64(35, _DC_PA_START_ANGLE);
     fbBuilder.addFloat64(36, _DC_PA_STOP_ANGLE);
+    fbBuilder.addUint32(37, _NORAD_CAT_ID);
     return fbBuilder.endTable();
   }
 
@@ -3005,8 +3495,8 @@ class OCMDynamicParameter {
   final int _bcOffset;
 
   ///  Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-  ///  are the producer's, as in USER_DEFINED_PARAMETERS.
+  ///  SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+  ///  label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Value at the solution epoch, in UNITS.
   double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
@@ -3016,10 +3506,12 @@ class OCMDynamicParameter {
   ///  True when the orbit determination solved for the parameter, false when VALUE was held.
   bool get SOLVED_FOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
   bool get solvedFor => SOLVED_FOR;
+  ///  The parameter, typed: every reader keys on this, never on NAME.
+  prwDynamicParameter get PARAMETER => prwDynamicParameter.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
 
   @override
   String toString() {
-    return 'OCMDynamicParameter{NAME: ${NAME}, VALUE: ${VALUE}, UNITS: ${UNITS}, solvedFor: ${solvedFor}}';
+    return 'OCMDynamicParameter{NAME: ${NAME}, VALUE: ${VALUE}, UNITS: ${UNITS}, solvedFor: ${solvedFor}, PARAMETER: ${PARAMETER}}';
   }
 }
 
@@ -3037,7 +3529,7 @@ class OCMDynamicParameterBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addNameOffset(int? offset) {
@@ -3056,6 +3548,10 @@ class OCMDynamicParameterBuilder {
     fbBuilder.addBool(3, SOLVED_FOR);
     return fbBuilder.offset;
   }
+  int addParameter(prwDynamicParameter? PARAMETER) {
+    fbBuilder.addUint8(4, PARAMETER?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3067,6 +3563,7 @@ class OCMDynamicParameterObjectBuilder extends fb.ObjectBuilder {
   final double? _VALUE;
   final String? _UNITS;
   final bool? _SOLVED_FOR;
+  final prwDynamicParameter? _PARAMETER;
 
   OCMDynamicParameterObjectBuilder({
     String? NAME,
@@ -3074,11 +3571,13 @@ class OCMDynamicParameterObjectBuilder extends fb.ObjectBuilder {
     String? UNITS,
     bool? SOLVED_FOR,
     bool? solvedFor,
+    prwDynamicParameter? PARAMETER,
   })
       : _NAME = NAME,
         _VALUE = VALUE,
         _UNITS = UNITS,
-        _SOLVED_FOR = solvedFor ?? SOLVED_FOR;
+        _SOLVED_FOR = solvedFor ?? SOLVED_FOR,
+        _PARAMETER = PARAMETER;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3087,11 +3586,1805 @@ class OCMDynamicParameterObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_NAME!);
     final int? UNITSOffset = _UNITS == null ? null
         : fbBuilder.writeString(_UNITS!);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addFloat64(1, _VALUE);
     fbBuilder.addOffset(2, UNITSOffset);
     fbBuilder.addBool(3, _SOLVED_FOR);
+    fbBuilder.addUint8(4, _PARAMETER?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One day of held-out prediction error after the end of a fit arc.
+class OCMHeldOutDay {
+  OCMHeldOutDay._(this._bc, this._bcOffset);
+  factory OCMHeldOutDay(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMHeldOutDay> reader = _OCMHeldOutDayReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The day after the end of the fit arc, from 1.
+  int get DAY => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  Reference states in the day.
+  int get STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Position RMS over the day, km.
+  double get RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get rmsKm => RMS_KM;
+
+  @override
+  String toString() {
+    return 'OCMHeldOutDay{DAY: ${DAY}, STATES: ${STATES}, rmsKm: ${rmsKm}}';
+  }
+}
+
+class _OCMHeldOutDayReader extends fb.TableReader<OCMHeldOutDay> {
+  const _OCMHeldOutDayReader();
+
+  @override
+  OCMHeldOutDay createObject(fb.BufferContext bc, int offset) =>
+    OCMHeldOutDay._(bc, offset);
+}
+
+class OCMHeldOutDayBuilder {
+  OCMHeldOutDayBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addDay(int? DAY) {
+    fbBuilder.addUint16(0, DAY);
+    return fbBuilder.offset;
+  }
+  int addStates(int? STATES) {
+    fbBuilder.addUint32(1, STATES);
+    return fbBuilder.offset;
+  }
+  int addRmsKm(double? RMS_KM) {
+    fbBuilder.addFloat64(2, RMS_KM);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMHeldOutDayObjectBuilder extends fb.ObjectBuilder {
+  final int? _DAY;
+  final int? _STATES;
+  final double? _RMS_KM;
+
+  OCMHeldOutDayObjectBuilder({
+    int? DAY,
+    int? STATES,
+    double? RMS_KM,
+    double? rmsKm,
+  })
+      : _DAY = DAY,
+        _STATES = STATES,
+        _RMS_KM = rmsKm ?? RMS_KM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addUint16(0, _DAY);
+    fbBuilder.addUint32(1, _STATES);
+    fbBuilder.addFloat64(2, _RMS_KM);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
+///  CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
+class OCMFitStatistics {
+  OCMFitStatistics._(this._bc, this._bcOffset);
+  factory OCMFitStatistics(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMFitStatistics> reader = _OCMFitStatisticsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Reference states fitted.
+  int get FIT_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get fitStates => FIT_STATES;
+  ///  Position RMS over the fit arc, km.
+  double get FIT_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, double.nan);
+  double get fitRmsKm => FIT_RMS_KM;
+  ///  Largest position error over the fit arc, km.
+  double get FIT_MAX_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get fitMaxKm => FIT_MAX_KM;
+  ///  RMS of each position error component in the model's radial, in-track and cross-track
+  ///  axes, km.
+  double get FIT_RADIAL_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, double.nan);
+  double get fitRadialRmsKm => FIT_RADIAL_RMS_KM;
+  double get FIT_IN_TRACK_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get fitInTrackRmsKm => FIT_IN_TRACK_RMS_KM;
+  double get FIT_CROSS_TRACK_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get fitCrossTrackRmsKm => FIT_CROSS_TRACK_RMS_KM;
+  ///  Iterations the fit took.
+  int get ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  True when the fit converged.
+  bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  End of the held-out window (ISO 8601 UTC); empty without one.
+  String? get HELD_OUT_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get heldOutStop => HELD_OUT_STOP;
+  ///  Held-out reference states, their position RMS and largest error, km.
+  int get HELD_OUT_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get heldOutStates => HELD_OUT_STATES;
+  double get HELD_OUT_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
+  double get heldOutRmsKm => HELD_OUT_RMS_KM;
+  double get HELD_OUT_MAX_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, double.nan);
+  double get heldOutMaxKm => HELD_OUT_MAX_KM;
+  ///  The held-out error by day after the fit arc.
+  List<OCMHeldOutDay>? get HELD_OUT_DAYS => const fb.ListReader<OCMHeldOutDay>(OCMHeldOutDay.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  List<OCMHeldOutDay>? get heldOutDays => HELD_OUT_DAYS;
+  ///  CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  String? get PCF_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get pcfCid => PCF_CID;
+  ///  First epoch of the fit arc (ISO 8601 UTC).
+  String? get FIT_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get fitStart => FIT_START;
+  ///  Last epoch of the fit arc (ISO 8601 UTC).
+  String? get FIT_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get fitStop => FIT_STOP;
+
+  @override
+  String toString() {
+    return 'OCMFitStatistics{fitStates: ${fitStates}, fitRmsKm: ${fitRmsKm}, fitMaxKm: ${fitMaxKm}, fitRadialRmsKm: ${fitRadialRmsKm}, fitInTrackRmsKm: ${fitInTrackRmsKm}, fitCrossTrackRmsKm: ${fitCrossTrackRmsKm}, ITERATIONS: ${ITERATIONS}, CONVERGED: ${CONVERGED}, heldOutStop: ${heldOutStop}, heldOutStates: ${heldOutStates}, heldOutRmsKm: ${heldOutRmsKm}, heldOutMaxKm: ${heldOutMaxKm}, heldOutDays: ${heldOutDays}, pcfCid: ${pcfCid}, fitStart: ${fitStart}, fitStop: ${fitStop}}';
+  }
+}
+
+class _OCMFitStatisticsReader extends fb.TableReader<OCMFitStatistics> {
+  const _OCMFitStatisticsReader();
+
+  @override
+  OCMFitStatistics createObject(fb.BufferContext bc, int offset) =>
+    OCMFitStatistics._(bc, offset);
+}
+
+class OCMFitStatisticsBuilder {
+  OCMFitStatisticsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(16);
+  }
+
+  int addFitStates(int? FIT_STATES) {
+    fbBuilder.addUint32(0, FIT_STATES);
+    return fbBuilder.offset;
+  }
+  int addFitRmsKm(double? FIT_RMS_KM) {
+    fbBuilder.addFloat64(1, FIT_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addFitMaxKm(double? FIT_MAX_KM) {
+    fbBuilder.addFloat64(2, FIT_MAX_KM);
+    return fbBuilder.offset;
+  }
+  int addFitRadialRmsKm(double? FIT_RADIAL_RMS_KM) {
+    fbBuilder.addFloat64(3, FIT_RADIAL_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addFitInTrackRmsKm(double? FIT_IN_TRACK_RMS_KM) {
+    fbBuilder.addFloat64(4, FIT_IN_TRACK_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addFitCrossTrackRmsKm(double? FIT_CROSS_TRACK_RMS_KM) {
+    fbBuilder.addFloat64(5, FIT_CROSS_TRACK_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addIterations(int? ITERATIONS) {
+    fbBuilder.addUint32(6, ITERATIONS);
+    return fbBuilder.offset;
+  }
+  int addConverged(bool? CONVERGED) {
+    fbBuilder.addBool(7, CONVERGED);
+    return fbBuilder.offset;
+  }
+  int addHeldOutStopOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addHeldOutStates(int? HELD_OUT_STATES) {
+    fbBuilder.addUint32(9, HELD_OUT_STATES);
+    return fbBuilder.offset;
+  }
+  int addHeldOutRmsKm(double? HELD_OUT_RMS_KM) {
+    fbBuilder.addFloat64(10, HELD_OUT_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addHeldOutMaxKm(double? HELD_OUT_MAX_KM) {
+    fbBuilder.addFloat64(11, HELD_OUT_MAX_KM);
+    return fbBuilder.offset;
+  }
+  int addHeldOutDaysOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addPcfCidOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addFitStartOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addFitStopOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMFitStatisticsObjectBuilder extends fb.ObjectBuilder {
+  final int? _FIT_STATES;
+  final double? _FIT_RMS_KM;
+  final double? _FIT_MAX_KM;
+  final double? _FIT_RADIAL_RMS_KM;
+  final double? _FIT_IN_TRACK_RMS_KM;
+  final double? _FIT_CROSS_TRACK_RMS_KM;
+  final int? _ITERATIONS;
+  final bool? _CONVERGED;
+  final String? _HELD_OUT_STOP;
+  final int? _HELD_OUT_STATES;
+  final double? _HELD_OUT_RMS_KM;
+  final double? _HELD_OUT_MAX_KM;
+  final List<OCMHeldOutDayObjectBuilder>? _HELD_OUT_DAYS;
+  final String? _PCF_CID;
+  final String? _FIT_START;
+  final String? _FIT_STOP;
+
+  OCMFitStatisticsObjectBuilder({
+    int? FIT_STATES,
+    int? fitStates,
+    double? FIT_RMS_KM,
+    double? fitRmsKm,
+    double? FIT_MAX_KM,
+    double? fitMaxKm,
+    double? FIT_RADIAL_RMS_KM,
+    double? fitRadialRmsKm,
+    double? FIT_IN_TRACK_RMS_KM,
+    double? fitInTrackRmsKm,
+    double? FIT_CROSS_TRACK_RMS_KM,
+    double? fitCrossTrackRmsKm,
+    int? ITERATIONS,
+    bool? CONVERGED,
+    String? HELD_OUT_STOP,
+    String? heldOutStop,
+    int? HELD_OUT_STATES,
+    int? heldOutStates,
+    double? HELD_OUT_RMS_KM,
+    double? heldOutRmsKm,
+    double? HELD_OUT_MAX_KM,
+    double? heldOutMaxKm,
+    List<OCMHeldOutDayObjectBuilder>? HELD_OUT_DAYS,
+    List<OCMHeldOutDayObjectBuilder>? heldOutDays,
+    String? PCF_CID,
+    String? pcfCid,
+    String? FIT_START,
+    String? fitStart,
+    String? FIT_STOP,
+    String? fitStop,
+  })
+      : _FIT_STATES = fitStates ?? FIT_STATES,
+        _FIT_RMS_KM = fitRmsKm ?? FIT_RMS_KM,
+        _FIT_MAX_KM = fitMaxKm ?? FIT_MAX_KM,
+        _FIT_RADIAL_RMS_KM = fitRadialRmsKm ?? FIT_RADIAL_RMS_KM,
+        _FIT_IN_TRACK_RMS_KM = fitInTrackRmsKm ?? FIT_IN_TRACK_RMS_KM,
+        _FIT_CROSS_TRACK_RMS_KM = fitCrossTrackRmsKm ?? FIT_CROSS_TRACK_RMS_KM,
+        _ITERATIONS = ITERATIONS,
+        _CONVERGED = CONVERGED,
+        _HELD_OUT_STOP = heldOutStop ?? HELD_OUT_STOP,
+        _HELD_OUT_STATES = heldOutStates ?? HELD_OUT_STATES,
+        _HELD_OUT_RMS_KM = heldOutRmsKm ?? HELD_OUT_RMS_KM,
+        _HELD_OUT_MAX_KM = heldOutMaxKm ?? HELD_OUT_MAX_KM,
+        _HELD_OUT_DAYS = heldOutDays ?? HELD_OUT_DAYS,
+        _PCF_CID = pcfCid ?? PCF_CID,
+        _FIT_START = fitStart ?? FIT_START,
+        _FIT_STOP = fitStop ?? FIT_STOP;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HELD_OUT_STOPOffset = _HELD_OUT_STOP == null ? null
+        : fbBuilder.writeString(_HELD_OUT_STOP!);
+    final int? HELD_OUT_DAYSOffset = _HELD_OUT_DAYS == null ? null
+        : fbBuilder.writeList(_HELD_OUT_DAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PCF_CIDOffset = _PCF_CID == null ? null
+        : fbBuilder.writeString(_PCF_CID!);
+    final int? FIT_STARTOffset = _FIT_START == null ? null
+        : fbBuilder.writeString(_FIT_START!);
+    final int? FIT_STOPOffset = _FIT_STOP == null ? null
+        : fbBuilder.writeString(_FIT_STOP!);
+    fbBuilder.startTable(16);
+    fbBuilder.addUint32(0, _FIT_STATES);
+    fbBuilder.addFloat64(1, _FIT_RMS_KM);
+    fbBuilder.addFloat64(2, _FIT_MAX_KM);
+    fbBuilder.addFloat64(3, _FIT_RADIAL_RMS_KM);
+    fbBuilder.addFloat64(4, _FIT_IN_TRACK_RMS_KM);
+    fbBuilder.addFloat64(5, _FIT_CROSS_TRACK_RMS_KM);
+    fbBuilder.addUint32(6, _ITERATIONS);
+    fbBuilder.addBool(7, _CONVERGED);
+    fbBuilder.addOffset(8, HELD_OUT_STOPOffset);
+    fbBuilder.addUint32(9, _HELD_OUT_STATES);
+    fbBuilder.addFloat64(10, _HELD_OUT_RMS_KM);
+    fbBuilder.addFloat64(11, _HELD_OUT_MAX_KM);
+    fbBuilder.addOffset(12, HELD_OUT_DAYSOffset);
+    fbBuilder.addOffset(13, PCF_CIDOffset);
+    fbBuilder.addOffset(14, FIT_STARTOffset);
+    fbBuilder.addOffset(15, FIT_STOPOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A mean element set under a named theory, with the elements exactly as the theory defines
+///  them. SDS addition: CCSDS 502.0-B-3 OCM carries no mean-motion element set. Epoch in
+///  METADATA.TIME_SYSTEM; frame is TRAJ_REF_FRAME about CENTER_NAME (EARTH).
+class OCMMeanElements {
+  OCMMeanElements._(this._bc, this._bcOffset);
+  factory OCMMeanElements(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMMeanElements> reader = _OCMMeanElementsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The theory the set is defined under and flies on, written explicitly, SGP4 (0)
+  ///  included. A reader refuses UNSPECIFIED.
+  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 6));
+  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  ///  EPOCH of the elements (ISO 8601 UTC).
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  MEAN_MOTION in rev/day as the theory defines it: Kozai for SGP4, Brouwer for SGP4-XP
+  ///  and AP. Never derived from a semi-major axis.
+  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get meanMotion => MEAN_MOTION;
+  ///  ECCENTRICITY (unitless).
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  INCLINATION, deg.
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  RA_OF_ASC_NODE, deg.
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get raOfAscNode => RA_OF_ASC_NODE;
+  ///  ARG_OF_PERICENTER, deg.
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get argOfPericenter => ARG_OF_PERICENTER;
+  ///  MEAN_ANOMALY, deg.
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get meanAnomaly => MEAN_ANOMALY;
+  ///  BSTAR in 1/Earth radii. SGP4 only; 0 for SGP4-XP and AP.
+  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  MEAN_MOTION_DOT in rev/day**2. SGP4 only.
+  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get meanMotionDot => MEAN_MOTION_DOT;
+  ///  MEAN_MOTION_DDOT in rev/day**3. SGP4 only.
+  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get meanMotionDdot => MEAN_MOTION_DDOT;
+  ///  BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+  double get BTERM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  AGOM, the SGP4-XP radiation term Cr*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+  double get AGOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+
+  @override
+  String toString() {
+    return 'OCMMeanElements{meanElementTheory: ${meanElementTheory}, EPOCH: ${EPOCH}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, BTERM: ${BTERM}, AGOM: ${AGOM}}';
+  }
+}
+
+class _OCMMeanElementsReader extends fb.TableReader<OCMMeanElements> {
+  const _OCMMeanElementsReader();
+
+  @override
+  OCMMeanElements createObject(fb.BufferContext bc, int offset) =>
+    OCMMeanElements._(bc, offset);
+}
+
+class OCMMeanElementsBuilder {
+  OCMMeanElementsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
+    fbBuilder.addInt8(0, MEAN_ELEMENT_THEORY?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMeanMotion(double? MEAN_MOTION) {
+    fbBuilder.addFloat64(2, MEAN_MOTION);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(3, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(4, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNode(double? RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(5, RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(6, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addMeanAnomaly(double? MEAN_ANOMALY) {
+    fbBuilder.addFloat64(7, MEAN_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addBstar(double? BSTAR) {
+    fbBuilder.addFloat64(8, BSTAR);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDot(double? MEAN_MOTION_DOT) {
+    fbBuilder.addFloat64(9, MEAN_MOTION_DOT);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
+    fbBuilder.addFloat64(10, MEAN_MOTION_DDOT);
+    return fbBuilder.offset;
+  }
+  int addBterm(double? BTERM) {
+    fbBuilder.addFloat64(11, BTERM);
+    return fbBuilder.offset;
+  }
+  int addAgom(double? AGOM) {
+    fbBuilder.addFloat64(12, AGOM);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMMeanElementsObjectBuilder extends fb.ObjectBuilder {
+  final meanElementSource? _MEAN_ELEMENT_THEORY;
+  final String? _EPOCH;
+  final double? _MEAN_MOTION;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RA_OF_ASC_NODE;
+  final double? _ARG_OF_PERICENTER;
+  final double? _MEAN_ANOMALY;
+  final double? _BSTAR;
+  final double? _MEAN_MOTION_DOT;
+  final double? _MEAN_MOTION_DDOT;
+  final double? _BTERM;
+  final double? _AGOM;
+
+  OCMMeanElementsObjectBuilder({
+    meanElementSource? MEAN_ELEMENT_THEORY,
+    meanElementSource? meanElementTheory,
+    String? EPOCH,
+    double? MEAN_MOTION,
+    double? meanMotion,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RA_OF_ASC_NODE,
+    double? raOfAscNode,
+    double? ARG_OF_PERICENTER,
+    double? argOfPericenter,
+    double? MEAN_ANOMALY,
+    double? meanAnomaly,
+    double? BSTAR,
+    double? MEAN_MOTION_DOT,
+    double? meanMotionDot,
+    double? MEAN_MOTION_DDOT,
+    double? meanMotionDdot,
+    double? BTERM,
+    double? AGOM,
+  })
+      : _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
+        _EPOCH = EPOCH,
+        _MEAN_MOTION = meanMotion ?? MEAN_MOTION,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RA_OF_ASC_NODE = raOfAscNode ?? RA_OF_ASC_NODE,
+        _ARG_OF_PERICENTER = argOfPericenter ?? ARG_OF_PERICENTER,
+        _MEAN_ANOMALY = meanAnomaly ?? MEAN_ANOMALY,
+        _BSTAR = BSTAR,
+        _MEAN_MOTION_DOT = meanMotionDot ?? MEAN_MOTION_DOT,
+        _MEAN_MOTION_DDOT = meanMotionDdot ?? MEAN_MOTION_DDOT,
+        _BTERM = BTERM,
+        _AGOM = AGOM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(13);
+    fbBuilder.addInt8(0, _MEAN_ELEMENT_THEORY?.value);
+    fbBuilder.addOffset(1, EPOCHOffset);
+    fbBuilder.addFloat64(2, _MEAN_MOTION);
+    fbBuilder.addFloat64(3, _ECCENTRICITY);
+    fbBuilder.addFloat64(4, _INCLINATION);
+    fbBuilder.addFloat64(5, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(6, _ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(7, _MEAN_ANOMALY);
+    fbBuilder.addFloat64(8, _BSTAR);
+    fbBuilder.addFloat64(9, _MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(10, _MEAN_MOTION_DDOT);
+    fbBuilder.addFloat64(11, _BTERM);
+    fbBuilder.addFloat64(12, _AGOM);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  What propagates the covariance of a mean element set beyond its epoch value.
+///  SDS addition (no CCSDS counterpart; OD_PROCESS_NOISE is free text).
+class OCMCovariancePropagation {
+  OCMCovariancePropagation._(this._bc, this._bcOffset);
+  factory OCMCovariancePropagation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMCovariancePropagation> reader = _OCMCovariancePropagationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Theory floor, the fit's residual covariance in the UVW axes of the state at each time
+  ///  (U radial, V in-track, W along r x v), km**2: the uu, vu, vv, wu, wv and ww entries.
+  ///  Included in the state block of COVARIANCE_DATA at epoch; subtracted when read, added at
+  ///  every time.
+  double get FLOOR_UU_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get floorUuKm2 => FLOOR_UU_KM2;
+  double get FLOOR_VU_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get floorVuKm2 => FLOOR_VU_KM2;
+  double get FLOOR_VV_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get floorVvKm2 => FLOOR_VV_KM2;
+  double get FLOOR_WU_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get floorWuKm2 => FLOOR_WU_KM2;
+  double get FLOOR_WV_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get floorWvKm2 => FLOOR_WV_KM2;
+  double get FLOOR_WW_KM2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get floorWwKm2 => FLOOR_WW_KM2;
+  ///  Rate errors of the mean elements from NOISE_START_MINUTES on: eccentricity vector and
+  ///  inclination vector, 1/day.
+  double get NOISE_ECCENTRICITY_PER_DAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get noiseEccentricityPerDay => NOISE_ECCENTRICITY_PER_DAY;
+  double get NOISE_INCLINATION_PER_DAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get noiseInclinationPerDay => NOISE_INCLINATION_PER_DAY;
+  ///  Relative mean-motion error, dimensionless.
+  double get NOISE_MEAN_MOTION_RELATIVE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get noiseMeanMotionRelative => NOISE_MEAN_MOTION_RELATIVE;
+  ///  Non-gravitational mean-motion rate error, rad/day**2: the value that flies.
+  double get NOISE_NON_GRAVITATIONAL_RAD_DAY2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get noiseNonGravitationalRadDay2 => NOISE_NON_GRAVITATIONAL_RAD_DAY2;
+  ///  Start of the rate errors: end of the fit arc, minutes from the set's epoch (signed).
+  double get NOISE_START_MINUTES => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get noiseStartMinutes => NOISE_START_MINUTES;
+  ///  Share c of the non-gravitational mean-motion rate that is error, dimensionless, and the
+  ///  rate itself as n-dot_ng / n, 1/day. NOISE_NON_GRAVITATIONAL_RAD_DAY2 = c |n-dot_ng|.
+  double get NON_GRAVITATIONAL_SHARE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get nonGravitationalShare => NON_GRAVITATIONAL_SHARE;
+  double get NON_GRAVITATIONAL_RATE_PER_DAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get nonGravitationalRatePerDay => NON_GRAVITATIONAL_RATE_PER_DAY;
+
+  @override
+  String toString() {
+    return 'OCMCovariancePropagation{floorUuKm2: ${floorUuKm2}, floorVuKm2: ${floorVuKm2}, floorVvKm2: ${floorVvKm2}, floorWuKm2: ${floorWuKm2}, floorWvKm2: ${floorWvKm2}, floorWwKm2: ${floorWwKm2}, noiseEccentricityPerDay: ${noiseEccentricityPerDay}, noiseInclinationPerDay: ${noiseInclinationPerDay}, noiseMeanMotionRelative: ${noiseMeanMotionRelative}, noiseNonGravitationalRadDay2: ${noiseNonGravitationalRadDay2}, noiseStartMinutes: ${noiseStartMinutes}, nonGravitationalShare: ${nonGravitationalShare}, nonGravitationalRatePerDay: ${nonGravitationalRatePerDay}}';
+  }
+}
+
+class _OCMCovariancePropagationReader extends fb.TableReader<OCMCovariancePropagation> {
+  const _OCMCovariancePropagationReader();
+
+  @override
+  OCMCovariancePropagation createObject(fb.BufferContext bc, int offset) =>
+    OCMCovariancePropagation._(bc, offset);
+}
+
+class OCMCovariancePropagationBuilder {
+  OCMCovariancePropagationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addFloorUuKm2(double? FLOOR_UU_KM2) {
+    fbBuilder.addFloat64(0, FLOOR_UU_KM2);
+    return fbBuilder.offset;
+  }
+  int addFloorVuKm2(double? FLOOR_VU_KM2) {
+    fbBuilder.addFloat64(1, FLOOR_VU_KM2);
+    return fbBuilder.offset;
+  }
+  int addFloorVvKm2(double? FLOOR_VV_KM2) {
+    fbBuilder.addFloat64(2, FLOOR_VV_KM2);
+    return fbBuilder.offset;
+  }
+  int addFloorWuKm2(double? FLOOR_WU_KM2) {
+    fbBuilder.addFloat64(3, FLOOR_WU_KM2);
+    return fbBuilder.offset;
+  }
+  int addFloorWvKm2(double? FLOOR_WV_KM2) {
+    fbBuilder.addFloat64(4, FLOOR_WV_KM2);
+    return fbBuilder.offset;
+  }
+  int addFloorWwKm2(double? FLOOR_WW_KM2) {
+    fbBuilder.addFloat64(5, FLOOR_WW_KM2);
+    return fbBuilder.offset;
+  }
+  int addNoiseEccentricityPerDay(double? NOISE_ECCENTRICITY_PER_DAY) {
+    fbBuilder.addFloat64(6, NOISE_ECCENTRICITY_PER_DAY);
+    return fbBuilder.offset;
+  }
+  int addNoiseInclinationPerDay(double? NOISE_INCLINATION_PER_DAY) {
+    fbBuilder.addFloat64(7, NOISE_INCLINATION_PER_DAY);
+    return fbBuilder.offset;
+  }
+  int addNoiseMeanMotionRelative(double? NOISE_MEAN_MOTION_RELATIVE) {
+    fbBuilder.addFloat64(8, NOISE_MEAN_MOTION_RELATIVE);
+    return fbBuilder.offset;
+  }
+  int addNoiseNonGravitationalRadDay2(double? NOISE_NON_GRAVITATIONAL_RAD_DAY2) {
+    fbBuilder.addFloat64(9, NOISE_NON_GRAVITATIONAL_RAD_DAY2);
+    return fbBuilder.offset;
+  }
+  int addNoiseStartMinutes(double? NOISE_START_MINUTES) {
+    fbBuilder.addFloat64(10, NOISE_START_MINUTES);
+    return fbBuilder.offset;
+  }
+  int addNonGravitationalShare(double? NON_GRAVITATIONAL_SHARE) {
+    fbBuilder.addFloat64(11, NON_GRAVITATIONAL_SHARE);
+    return fbBuilder.offset;
+  }
+  int addNonGravitationalRatePerDay(double? NON_GRAVITATIONAL_RATE_PER_DAY) {
+    fbBuilder.addFloat64(12, NON_GRAVITATIONAL_RATE_PER_DAY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMCovariancePropagationObjectBuilder extends fb.ObjectBuilder {
+  final double? _FLOOR_UU_KM2;
+  final double? _FLOOR_VU_KM2;
+  final double? _FLOOR_VV_KM2;
+  final double? _FLOOR_WU_KM2;
+  final double? _FLOOR_WV_KM2;
+  final double? _FLOOR_WW_KM2;
+  final double? _NOISE_ECCENTRICITY_PER_DAY;
+  final double? _NOISE_INCLINATION_PER_DAY;
+  final double? _NOISE_MEAN_MOTION_RELATIVE;
+  final double? _NOISE_NON_GRAVITATIONAL_RAD_DAY2;
+  final double? _NOISE_START_MINUTES;
+  final double? _NON_GRAVITATIONAL_SHARE;
+  final double? _NON_GRAVITATIONAL_RATE_PER_DAY;
+
+  OCMCovariancePropagationObjectBuilder({
+    double? FLOOR_UU_KM2,
+    double? floorUuKm2,
+    double? FLOOR_VU_KM2,
+    double? floorVuKm2,
+    double? FLOOR_VV_KM2,
+    double? floorVvKm2,
+    double? FLOOR_WU_KM2,
+    double? floorWuKm2,
+    double? FLOOR_WV_KM2,
+    double? floorWvKm2,
+    double? FLOOR_WW_KM2,
+    double? floorWwKm2,
+    double? NOISE_ECCENTRICITY_PER_DAY,
+    double? noiseEccentricityPerDay,
+    double? NOISE_INCLINATION_PER_DAY,
+    double? noiseInclinationPerDay,
+    double? NOISE_MEAN_MOTION_RELATIVE,
+    double? noiseMeanMotionRelative,
+    double? NOISE_NON_GRAVITATIONAL_RAD_DAY2,
+    double? noiseNonGravitationalRadDay2,
+    double? NOISE_START_MINUTES,
+    double? noiseStartMinutes,
+    double? NON_GRAVITATIONAL_SHARE,
+    double? nonGravitationalShare,
+    double? NON_GRAVITATIONAL_RATE_PER_DAY,
+    double? nonGravitationalRatePerDay,
+  })
+      : _FLOOR_UU_KM2 = floorUuKm2 ?? FLOOR_UU_KM2,
+        _FLOOR_VU_KM2 = floorVuKm2 ?? FLOOR_VU_KM2,
+        _FLOOR_VV_KM2 = floorVvKm2 ?? FLOOR_VV_KM2,
+        _FLOOR_WU_KM2 = floorWuKm2 ?? FLOOR_WU_KM2,
+        _FLOOR_WV_KM2 = floorWvKm2 ?? FLOOR_WV_KM2,
+        _FLOOR_WW_KM2 = floorWwKm2 ?? FLOOR_WW_KM2,
+        _NOISE_ECCENTRICITY_PER_DAY = noiseEccentricityPerDay ?? NOISE_ECCENTRICITY_PER_DAY,
+        _NOISE_INCLINATION_PER_DAY = noiseInclinationPerDay ?? NOISE_INCLINATION_PER_DAY,
+        _NOISE_MEAN_MOTION_RELATIVE = noiseMeanMotionRelative ?? NOISE_MEAN_MOTION_RELATIVE,
+        _NOISE_NON_GRAVITATIONAL_RAD_DAY2 = noiseNonGravitationalRadDay2 ?? NOISE_NON_GRAVITATIONAL_RAD_DAY2,
+        _NOISE_START_MINUTES = noiseStartMinutes ?? NOISE_START_MINUTES,
+        _NON_GRAVITATIONAL_SHARE = nonGravitationalShare ?? NON_GRAVITATIONAL_SHARE,
+        _NON_GRAVITATIONAL_RATE_PER_DAY = nonGravitationalRatePerDay ?? NON_GRAVITATIONAL_RATE_PER_DAY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(13);
+    fbBuilder.addFloat64(0, _FLOOR_UU_KM2);
+    fbBuilder.addFloat64(1, _FLOOR_VU_KM2);
+    fbBuilder.addFloat64(2, _FLOOR_VV_KM2);
+    fbBuilder.addFloat64(3, _FLOOR_WU_KM2);
+    fbBuilder.addFloat64(4, _FLOOR_WV_KM2);
+    fbBuilder.addFloat64(5, _FLOOR_WW_KM2);
+    fbBuilder.addFloat64(6, _NOISE_ECCENTRICITY_PER_DAY);
+    fbBuilder.addFloat64(7, _NOISE_INCLINATION_PER_DAY);
+    fbBuilder.addFloat64(8, _NOISE_MEAN_MOTION_RELATIVE);
+    fbBuilder.addFloat64(9, _NOISE_NON_GRAVITATIONAL_RAD_DAY2);
+    fbBuilder.addFloat64(10, _NOISE_START_MINUTES);
+    fbBuilder.addFloat64(11, _NON_GRAVITATIONAL_SHARE);
+    fbBuilder.addFloat64(12, _NON_GRAVITATIONAL_RATE_PER_DAY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  An element set a trajectory was computed from (SDS addition: CCSDS 502.0-B-3
+///  TRAJ_BASIS_ID names one determination, a relative trajectory has two).
+class OCMSeedSet {
+  OCMSeedSet._(this._bc, this._bcOffset);
+  factory OCMSeedSet(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMSeedSet> reader = _OCMSeedSetReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  NORAD_CAT_ID of the object the set describes.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  EPOCH of the element set, ISO 8601 UTC.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  CREATION_DATE of the element set: when its originator made it, ISO 8601
+  ///  UTC.
+  String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get creationDate => CREATION_DATE;
+  ///  MESSAGE_ID of the element set; for a Space-Track set its GP_ID.
+  String? get MESSAGE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get messageId => MESSAGE_ID;
+
+  @override
+  String toString() {
+    return 'OCMSeedSet{noradCatId: ${noradCatId}, EPOCH: ${EPOCH}, creationDate: ${creationDate}, messageId: ${messageId}}';
+  }
+}
+
+class _OCMSeedSetReader extends fb.TableReader<OCMSeedSet> {
+  const _OCMSeedSetReader();
+
+  @override
+  OCMSeedSet createObject(fb.BufferContext bc, int offset) =>
+    OCMSeedSet._(bc, offset);
+}
+
+class OCMSeedSetBuilder {
+  OCMSeedSetBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(0, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCreationDateOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMSeedSetObjectBuilder extends fb.ObjectBuilder {
+  final int? _NORAD_CAT_ID;
+  final String? _EPOCH;
+  final String? _CREATION_DATE;
+  final String? _MESSAGE_ID;
+
+  OCMSeedSetObjectBuilder({
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? EPOCH,
+    String? CREATION_DATE,
+    String? creationDate,
+    String? MESSAGE_ID,
+    String? messageId,
+  })
+      : _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _EPOCH = EPOCH,
+        _CREATION_DATE = creationDate ?? CREATION_DATE,
+        _MESSAGE_ID = messageId ?? MESSAGE_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? CREATION_DATEOffset = _CREATION_DATE == null ? null
+        : fbBuilder.writeString(_CREATION_DATE!);
+    final int? MESSAGE_IDOffset = _MESSAGE_ID == null ? null
+        : fbBuilder.writeString(_MESSAGE_ID!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint32(0, _NORAD_CAT_ID);
+    fbBuilder.addOffset(1, EPOCHOffset);
+    fbBuilder.addOffset(2, CREATION_DATEOffset);
+    fbBuilder.addOffset(3, MESSAGE_IDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Settings of the numerical integrator that made a solution, as a legacy SP
+///  Vector/Covariance Message states them (SDS addition: CCSDS 502.0-B-3 has no
+///  integrator keywords). Present only on a message made from such a message;
+///  a reader of any other message treats it as absent.
+class OCMIntegrator {
+  OCMIntegrator._(this._bc, this._bcOffset);
+  factory OCMIntegrator(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMIntegrator> reader = _OCMIntegratorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  INTEGRATOR MODE.
+  ocmIntegratorMode get MODE => ocmIntegratorMode.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  COORD SYS: the coordinate system the integration ran in. Not
+  ///  TRAJ_REF_FRAME, which is the frame of STATE_DATA.
+  ocmIntegrationFrame get COORDINATE_SYSTEM => ocmIntegrationFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ocmIntegrationFrame get coordinateSystem => COORDINATE_SYSTEM;
+  ///  PARTIALS.
+  ocmPartialsMethod get PARTIALS => ocmPartialsMethod.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  STEP MODE.
+  ocmStepMode get STEP_MODE => ocmStepMode.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ocmStepMode get stepMode => STEP_MODE;
+  ///  FIXED STEP: true for ON.
+  bool get FIXED_STEP => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get fixedStep => FIXED_STEP;
+  ///  STEP SIZE SELECTION.
+  ocmStepSelection get STEP_SIZE_SELECTION => ocmStepSelection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ocmStepSelection get stepSizeSelection => STEP_SIZE_SELECTION;
+  ///  INITIAL STEP SIZE, s. NaN when not stated.
+  double get INITIAL_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
+  double get initialStepSeconds => INITIAL_STEP_SECONDS;
+  ///  ERROR CONTROL, dimensionless, as the SP integrator takes it. NaN when not
+  ///  stated.
+  double get ERROR_CONTROL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, double.nan);
+  double get errorControl => ERROR_CONTROL;
+
+  @override
+  String toString() {
+    return 'OCMIntegrator{MODE: ${MODE}, coordinateSystem: ${coordinateSystem}, PARTIALS: ${PARTIALS}, stepMode: ${stepMode}, fixedStep: ${fixedStep}, stepSizeSelection: ${stepSizeSelection}, initialStepSeconds: ${initialStepSeconds}, errorControl: ${errorControl}}';
+  }
+}
+
+class _OCMIntegratorReader extends fb.TableReader<OCMIntegrator> {
+  const _OCMIntegratorReader();
+
+  @override
+  OCMIntegrator createObject(fb.BufferContext bc, int offset) =>
+    OCMIntegrator._(bc, offset);
+}
+
+class OCMIntegratorBuilder {
+  OCMIntegratorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addMode(ocmIntegratorMode? MODE) {
+    fbBuilder.addUint8(0, MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addCoordinateSystem(ocmIntegrationFrame? COORDINATE_SYSTEM) {
+    fbBuilder.addUint8(1, COORDINATE_SYSTEM?.value);
+    return fbBuilder.offset;
+  }
+  int addPartials(ocmPartialsMethod? PARTIALS) {
+    fbBuilder.addUint8(2, PARTIALS?.value);
+    return fbBuilder.offset;
+  }
+  int addStepMode(ocmStepMode? STEP_MODE) {
+    fbBuilder.addUint8(3, STEP_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addFixedStep(bool? FIXED_STEP) {
+    fbBuilder.addBool(4, FIXED_STEP);
+    return fbBuilder.offset;
+  }
+  int addStepSizeSelection(ocmStepSelection? STEP_SIZE_SELECTION) {
+    fbBuilder.addUint8(5, STEP_SIZE_SELECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addInitialStepSeconds(double? INITIAL_STEP_SECONDS) {
+    fbBuilder.addFloat64(6, INITIAL_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addErrorControl(double? ERROR_CONTROL) {
+    fbBuilder.addFloat64(7, ERROR_CONTROL);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMIntegratorObjectBuilder extends fb.ObjectBuilder {
+  final ocmIntegratorMode? _MODE;
+  final ocmIntegrationFrame? _COORDINATE_SYSTEM;
+  final ocmPartialsMethod? _PARTIALS;
+  final ocmStepMode? _STEP_MODE;
+  final bool? _FIXED_STEP;
+  final ocmStepSelection? _STEP_SIZE_SELECTION;
+  final double? _INITIAL_STEP_SECONDS;
+  final double? _ERROR_CONTROL;
+
+  OCMIntegratorObjectBuilder({
+    ocmIntegratorMode? MODE,
+    ocmIntegrationFrame? COORDINATE_SYSTEM,
+    ocmIntegrationFrame? coordinateSystem,
+    ocmPartialsMethod? PARTIALS,
+    ocmStepMode? STEP_MODE,
+    ocmStepMode? stepMode,
+    bool? FIXED_STEP,
+    bool? fixedStep,
+    ocmStepSelection? STEP_SIZE_SELECTION,
+    ocmStepSelection? stepSizeSelection,
+    double? INITIAL_STEP_SECONDS,
+    double? initialStepSeconds,
+    double? ERROR_CONTROL,
+    double? errorControl,
+  })
+      : _MODE = MODE,
+        _COORDINATE_SYSTEM = coordinateSystem ?? COORDINATE_SYSTEM,
+        _PARTIALS = PARTIALS,
+        _STEP_MODE = stepMode ?? STEP_MODE,
+        _FIXED_STEP = fixedStep ?? FIXED_STEP,
+        _STEP_SIZE_SELECTION = stepSizeSelection ?? STEP_SIZE_SELECTION,
+        _INITIAL_STEP_SECONDS = initialStepSeconds ?? INITIAL_STEP_SECONDS,
+        _ERROR_CONTROL = errorControl ?? ERROR_CONTROL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(8);
+    fbBuilder.addUint8(0, _MODE?.value);
+    fbBuilder.addUint8(1, _COORDINATE_SYSTEM?.value);
+    fbBuilder.addUint8(2, _PARTIALS?.value);
+    fbBuilder.addUint8(3, _STEP_MODE?.value);
+    fbBuilder.addBool(4, _FIXED_STEP);
+    fbBuilder.addUint8(5, _STEP_SIZE_SELECTION?.value);
+    fbBuilder.addFloat64(6, _INITIAL_STEP_SECONDS);
+    fbBuilder.addFloat64(7, _ERROR_CONTROL);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Relative-motion geometry of a chaser about a target on the time grid of the
+///  message (SDS addition: CCSDS 502.0-B-3 has no curvilinear or
+///  relative-orbital-element trajectory type). Every vector holds one entry per
+///  time, in order: entry i is at STATE_EPOCHS[i], or at Metadata.START_TIME +
+///  i * STATE_STEP_SIZE. The target is CENTER_NAME and TRAJ_REF_FRAME its RTN
+///  axes. NaN where a quantity is not defined at a time. The first fourteen
+///  vectors are derived from the two element sets (SEED_SETS); the seven SIGMA_*
+///  and BAND3_* vectors are the projection's, NaN in a history segment.
+class OCMRelativeGeometry {
+  OCMRelativeGeometry._(this._bc, this._bcOffset);
+  factory OCMRelativeGeometry(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMRelativeGeometry> reader = _OCMRelativeGeometryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Curvilinear radial offset R = |p| - r0, km: p the chaser's geocentric
+  ///  position, r0 = |r_target|.
+  List<double>? get R_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 4);
+  List<double>? get rKm => R_KM;
+  ///  Curvilinear in-track offset I = r0 atan2(y, r0 + x), km, wrapped to
+  ///  +-pi r0; (x, y, z) the chaser's rectilinear RTN offset from the target.
+  List<double>? get I_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<double>? get iKm => I_KM;
+  ///  Curvilinear cross-track offset C = r0 atan2(z, hypot(r0 + x, y)), km.
+  List<double>? get C_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<double>? get cKm => C_KM;
+  ///  I_KM continuous within the message (unwrapped), km.
+  List<double>? get I_UNWRAPPED_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get iUnwrappedKm => I_UNWRAPPED_KM;
+  ///  Chaser-target distance, km.
+  List<double>? get SEPARATION_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get separationKm => SEPARATION_KM;
+  ///  Rate of the separation, km/s.
+  List<double>? get RANGE_RATE_KM_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<double>? get rangeRateKmS => RANGE_RATE_KM_S;
+  ///  Angle between the orbit normals (osculating angular momenta) of the chaser
+  ///  and the target, deg.
+  List<double>? get PLANE_ANGLE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get planeAngleDeg => PLANE_ANGLE_DEG;
+  ///  Semi-major axis of the chief (the target), from its osculating two-body
+  ///  elements, km.
+  List<double>? get A_CHIEF_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get aChiefKm => A_CHIEF_KM;
+  ///  Quasi-nonsingular relative orbital elements after D'Amico (2010), chief =
+  ///  target, from osculating two-body elements: DA = (a_d - a_c) / a_c,
+  ///  dimensionless.
+  List<double>? get DA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  DLAMBDA = du + dRAAN cos i_c, rad.
+  List<double>? get DLAMBDA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  DEX: difference of e cos(w), dimensionless.
+  List<double>? get DEX => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  DEY: difference of e sin(w), dimensionless.
+  List<double>? get DEY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  DIX = di, rad.
+  List<double>? get DIX => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  DIY = dRAAN sin i_c, rad.
+  List<double>? get DIY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  1-sigma of R_KM, I_KM and C_KM: the GP error model's sigma times a
+  ///  per-axis factor, the 68.27 % quantile of |error| / model sigma over the
+  ///  pair's own relative samples (predictions against the next element sets) in
+  ///  the trailing calibration window; km.
+  List<double>? get SIGMA_R_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 32);
+  List<double>? get sigmaRKm => SIGMA_R_KM;
+  List<double>? get SIGMA_I_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<double>? get sigmaIKm => SIGMA_I_KM;
+  List<double>? get SIGMA_C_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get sigmaCKm => SIGMA_C_KM;
+  ///  1-sigma of SEPARATION_KM, km.
+  List<double>? get SIGMA_SEPARATION_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<double>? get sigmaSeparationKm => SIGMA_SEPARATION_KM;
+  ///  3-sigma band half-width of R_KM, I_KM and C_KM from the 99.73 % quantile of
+  ///  the same ratio (not 3 SIGMA_* when the errors are not Gaussian), km.
+  List<double>? get BAND3_R_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 40);
+  List<double>? get band3RKm => BAND3_R_KM;
+  List<double>? get BAND3_I_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<double>? get band3IKm => BAND3_I_KM;
+  List<double>? get BAND3_C_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<double>? get band3CKm => BAND3_C_KM;
+
+  @override
+  String toString() {
+    return 'OCMRelativeGeometry{rKm: ${rKm}, iKm: ${iKm}, cKm: ${cKm}, iUnwrappedKm: ${iUnwrappedKm}, separationKm: ${separationKm}, rangeRateKmS: ${rangeRateKmS}, planeAngleDeg: ${planeAngleDeg}, aChiefKm: ${aChiefKm}, DA: ${DA}, DLAMBDA: ${DLAMBDA}, DEX: ${DEX}, DEY: ${DEY}, DIX: ${DIX}, DIY: ${DIY}, sigmaRKm: ${sigmaRKm}, sigmaIKm: ${sigmaIKm}, sigmaCKm: ${sigmaCKm}, sigmaSeparationKm: ${sigmaSeparationKm}, band3RKm: ${band3RKm}, band3IKm: ${band3IKm}, band3CKm: ${band3CKm}}';
+  }
+}
+
+class _OCMRelativeGeometryReader extends fb.TableReader<OCMRelativeGeometry> {
+  const _OCMRelativeGeometryReader();
+
+  @override
+  OCMRelativeGeometry createObject(fb.BufferContext bc, int offset) =>
+    OCMRelativeGeometry._(bc, offset);
+}
+
+class OCMRelativeGeometryBuilder {
+  OCMRelativeGeometryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(21);
+  }
+
+  int addRKmOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addIKmOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCKmOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addIUnwrappedKmOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSeparationKmOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeRateKmSOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPlaneAngleDegOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addAChiefKmOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDaOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDlambdaOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addDexOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addDeyOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addDixOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDiyOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmaRKmOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmaIKmOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmaCKmOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSigmaSeparationKmOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addBand3RKmOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addBand3IKmOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addBand3CKmOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMRelativeGeometryObjectBuilder extends fb.ObjectBuilder {
+  final List<double>? _R_KM;
+  final List<double>? _I_KM;
+  final List<double>? _C_KM;
+  final List<double>? _I_UNWRAPPED_KM;
+  final List<double>? _SEPARATION_KM;
+  final List<double>? _RANGE_RATE_KM_S;
+  final List<double>? _PLANE_ANGLE_DEG;
+  final List<double>? _A_CHIEF_KM;
+  final List<double>? _DA;
+  final List<double>? _DLAMBDA;
+  final List<double>? _DEX;
+  final List<double>? _DEY;
+  final List<double>? _DIX;
+  final List<double>? _DIY;
+  final List<double>? _SIGMA_R_KM;
+  final List<double>? _SIGMA_I_KM;
+  final List<double>? _SIGMA_C_KM;
+  final List<double>? _SIGMA_SEPARATION_KM;
+  final List<double>? _BAND3_R_KM;
+  final List<double>? _BAND3_I_KM;
+  final List<double>? _BAND3_C_KM;
+
+  OCMRelativeGeometryObjectBuilder({
+    List<double>? R_KM,
+    List<double>? rKm,
+    List<double>? I_KM,
+    List<double>? iKm,
+    List<double>? C_KM,
+    List<double>? cKm,
+    List<double>? I_UNWRAPPED_KM,
+    List<double>? iUnwrappedKm,
+    List<double>? SEPARATION_KM,
+    List<double>? separationKm,
+    List<double>? RANGE_RATE_KM_S,
+    List<double>? rangeRateKmS,
+    List<double>? PLANE_ANGLE_DEG,
+    List<double>? planeAngleDeg,
+    List<double>? A_CHIEF_KM,
+    List<double>? aChiefKm,
+    List<double>? DA,
+    List<double>? DLAMBDA,
+    List<double>? DEX,
+    List<double>? DEY,
+    List<double>? DIX,
+    List<double>? DIY,
+    List<double>? SIGMA_R_KM,
+    List<double>? sigmaRKm,
+    List<double>? SIGMA_I_KM,
+    List<double>? sigmaIKm,
+    List<double>? SIGMA_C_KM,
+    List<double>? sigmaCKm,
+    List<double>? SIGMA_SEPARATION_KM,
+    List<double>? sigmaSeparationKm,
+    List<double>? BAND3_R_KM,
+    List<double>? band3RKm,
+    List<double>? BAND3_I_KM,
+    List<double>? band3IKm,
+    List<double>? BAND3_C_KM,
+    List<double>? band3CKm,
+  })
+      : _R_KM = rKm ?? R_KM,
+        _I_KM = iKm ?? I_KM,
+        _C_KM = cKm ?? C_KM,
+        _I_UNWRAPPED_KM = iUnwrappedKm ?? I_UNWRAPPED_KM,
+        _SEPARATION_KM = separationKm ?? SEPARATION_KM,
+        _RANGE_RATE_KM_S = rangeRateKmS ?? RANGE_RATE_KM_S,
+        _PLANE_ANGLE_DEG = planeAngleDeg ?? PLANE_ANGLE_DEG,
+        _A_CHIEF_KM = aChiefKm ?? A_CHIEF_KM,
+        _DA = DA,
+        _DLAMBDA = DLAMBDA,
+        _DEX = DEX,
+        _DEY = DEY,
+        _DIX = DIX,
+        _DIY = DIY,
+        _SIGMA_R_KM = sigmaRKm ?? SIGMA_R_KM,
+        _SIGMA_I_KM = sigmaIKm ?? SIGMA_I_KM,
+        _SIGMA_C_KM = sigmaCKm ?? SIGMA_C_KM,
+        _SIGMA_SEPARATION_KM = sigmaSeparationKm ?? SIGMA_SEPARATION_KM,
+        _BAND3_R_KM = band3RKm ?? BAND3_R_KM,
+        _BAND3_I_KM = band3IKm ?? BAND3_I_KM,
+        _BAND3_C_KM = band3CKm ?? BAND3_C_KM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? R_KMOffset = _R_KM == null ? null
+        : fbBuilder.writeListFloat64(_R_KM!);
+    final int? I_KMOffset = _I_KM == null ? null
+        : fbBuilder.writeListFloat64(_I_KM!);
+    final int? C_KMOffset = _C_KM == null ? null
+        : fbBuilder.writeListFloat64(_C_KM!);
+    final int? I_UNWRAPPED_KMOffset = _I_UNWRAPPED_KM == null ? null
+        : fbBuilder.writeListFloat64(_I_UNWRAPPED_KM!);
+    final int? SEPARATION_KMOffset = _SEPARATION_KM == null ? null
+        : fbBuilder.writeListFloat64(_SEPARATION_KM!);
+    final int? RANGE_RATE_KM_SOffset = _RANGE_RATE_KM_S == null ? null
+        : fbBuilder.writeListFloat64(_RANGE_RATE_KM_S!);
+    final int? PLANE_ANGLE_DEGOffset = _PLANE_ANGLE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_PLANE_ANGLE_DEG!);
+    final int? A_CHIEF_KMOffset = _A_CHIEF_KM == null ? null
+        : fbBuilder.writeListFloat64(_A_CHIEF_KM!);
+    final int? DAOffset = _DA == null ? null
+        : fbBuilder.writeListFloat64(_DA!);
+    final int? DLAMBDAOffset = _DLAMBDA == null ? null
+        : fbBuilder.writeListFloat64(_DLAMBDA!);
+    final int? DEXOffset = _DEX == null ? null
+        : fbBuilder.writeListFloat64(_DEX!);
+    final int? DEYOffset = _DEY == null ? null
+        : fbBuilder.writeListFloat64(_DEY!);
+    final int? DIXOffset = _DIX == null ? null
+        : fbBuilder.writeListFloat64(_DIX!);
+    final int? DIYOffset = _DIY == null ? null
+        : fbBuilder.writeListFloat64(_DIY!);
+    final int? SIGMA_R_KMOffset = _SIGMA_R_KM == null ? null
+        : fbBuilder.writeListFloat64(_SIGMA_R_KM!);
+    final int? SIGMA_I_KMOffset = _SIGMA_I_KM == null ? null
+        : fbBuilder.writeListFloat64(_SIGMA_I_KM!);
+    final int? SIGMA_C_KMOffset = _SIGMA_C_KM == null ? null
+        : fbBuilder.writeListFloat64(_SIGMA_C_KM!);
+    final int? SIGMA_SEPARATION_KMOffset = _SIGMA_SEPARATION_KM == null ? null
+        : fbBuilder.writeListFloat64(_SIGMA_SEPARATION_KM!);
+    final int? BAND3_R_KMOffset = _BAND3_R_KM == null ? null
+        : fbBuilder.writeListFloat64(_BAND3_R_KM!);
+    final int? BAND3_I_KMOffset = _BAND3_I_KM == null ? null
+        : fbBuilder.writeListFloat64(_BAND3_I_KM!);
+    final int? BAND3_C_KMOffset = _BAND3_C_KM == null ? null
+        : fbBuilder.writeListFloat64(_BAND3_C_KM!);
+    fbBuilder.startTable(21);
+    fbBuilder.addOffset(0, R_KMOffset);
+    fbBuilder.addOffset(1, I_KMOffset);
+    fbBuilder.addOffset(2, C_KMOffset);
+    fbBuilder.addOffset(3, I_UNWRAPPED_KMOffset);
+    fbBuilder.addOffset(4, SEPARATION_KMOffset);
+    fbBuilder.addOffset(5, RANGE_RATE_KM_SOffset);
+    fbBuilder.addOffset(6, PLANE_ANGLE_DEGOffset);
+    fbBuilder.addOffset(7, A_CHIEF_KMOffset);
+    fbBuilder.addOffset(8, DAOffset);
+    fbBuilder.addOffset(9, DLAMBDAOffset);
+    fbBuilder.addOffset(10, DEXOffset);
+    fbBuilder.addOffset(11, DEYOffset);
+    fbBuilder.addOffset(12, DIXOffset);
+    fbBuilder.addOffset(13, DIYOffset);
+    fbBuilder.addOffset(14, SIGMA_R_KMOffset);
+    fbBuilder.addOffset(15, SIGMA_I_KMOffset);
+    fbBuilder.addOffset(16, SIGMA_C_KMOffset);
+    fbBuilder.addOffset(17, SIGMA_SEPARATION_KMOffset);
+    fbBuilder.addOffset(18, BAND3_R_KMOffset);
+    fbBuilder.addOffset(19, BAND3_I_KMOffset);
+    fbBuilder.addOffset(20, BAND3_C_KMOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The side-looking radar a chaser's position is tested against (the inputs
+///  only: wavelength, beamwidths and look angles follow from them).
+class OCMRadarInputs {
+  OCMRadarInputs._(this._bc, this._bcOffset);
+  factory OCMRadarInputs(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMRadarInputs> reader = _OCMRadarInputsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Citation of the radar's published characteristics.
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Carrier frequency, GHz. NaN when not stated.
+  double get FREQUENCY_GHZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, double.nan);
+  double get frequencyGhz => FREQUENCY_GHZ;
+  ///  Antenna aperture along track, m. NaN when not stated.
+  double get ANTENNA_LENGTH_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get antennaLengthM => ANTENNA_LENGTH_M;
+  ///  Antenna aperture across track, m. NaN when not stated.
+  double get ANTENNA_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, double.nan);
+  double get antennaHeightM => ANTENNA_HEIGHT_M;
+  ///  Incidence-angle band of the swath, deg. NaN when not stated.
+  double get INCIDENCE_MIN_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get incidenceMinDeg => INCIDENCE_MIN_DEG;
+  double get INCIDENCE_MAX_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get incidenceMaxDeg => INCIDENCE_MAX_DEG;
+
+  @override
+  String toString() {
+    return 'OCMRadarInputs{SOURCE: ${SOURCE}, frequencyGhz: ${frequencyGhz}, antennaLengthM: ${antennaLengthM}, antennaHeightM: ${antennaHeightM}, incidenceMinDeg: ${incidenceMinDeg}, incidenceMaxDeg: ${incidenceMaxDeg}}';
+  }
+}
+
+class _OCMRadarInputsReader extends fb.TableReader<OCMRadarInputs> {
+  const _OCMRadarInputsReader();
+
+  @override
+  OCMRadarInputs createObject(fb.BufferContext bc, int offset) =>
+    OCMRadarInputs._(bc, offset);
+}
+
+class OCMRadarInputsBuilder {
+  OCMRadarInputsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFrequencyGhz(double? FREQUENCY_GHZ) {
+    fbBuilder.addFloat64(1, FREQUENCY_GHZ);
+    return fbBuilder.offset;
+  }
+  int addAntennaLengthM(double? ANTENNA_LENGTH_M) {
+    fbBuilder.addFloat64(2, ANTENNA_LENGTH_M);
+    return fbBuilder.offset;
+  }
+  int addAntennaHeightM(double? ANTENNA_HEIGHT_M) {
+    fbBuilder.addFloat64(3, ANTENNA_HEIGHT_M);
+    return fbBuilder.offset;
+  }
+  int addIncidenceMinDeg(double? INCIDENCE_MIN_DEG) {
+    fbBuilder.addFloat64(4, INCIDENCE_MIN_DEG);
+    return fbBuilder.offset;
+  }
+  int addIncidenceMaxDeg(double? INCIDENCE_MAX_DEG) {
+    fbBuilder.addFloat64(5, INCIDENCE_MAX_DEG);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMRadarInputsObjectBuilder extends fb.ObjectBuilder {
+  final String? _SOURCE;
+  final double? _FREQUENCY_GHZ;
+  final double? _ANTENNA_LENGTH_M;
+  final double? _ANTENNA_HEIGHT_M;
+  final double? _INCIDENCE_MIN_DEG;
+  final double? _INCIDENCE_MAX_DEG;
+
+  OCMRadarInputsObjectBuilder({
+    String? SOURCE,
+    double? FREQUENCY_GHZ,
+    double? frequencyGhz,
+    double? ANTENNA_LENGTH_M,
+    double? antennaLengthM,
+    double? ANTENNA_HEIGHT_M,
+    double? antennaHeightM,
+    double? INCIDENCE_MIN_DEG,
+    double? incidenceMinDeg,
+    double? INCIDENCE_MAX_DEG,
+    double? incidenceMaxDeg,
+  })
+      : _SOURCE = SOURCE,
+        _FREQUENCY_GHZ = frequencyGhz ?? FREQUENCY_GHZ,
+        _ANTENNA_LENGTH_M = antennaLengthM ?? ANTENNA_LENGTH_M,
+        _ANTENNA_HEIGHT_M = antennaHeightM ?? ANTENNA_HEIGHT_M,
+        _INCIDENCE_MIN_DEG = incidenceMinDeg ?? INCIDENCE_MIN_DEG,
+        _INCIDENCE_MAX_DEG = incidenceMaxDeg ?? INCIDENCE_MAX_DEG;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, SOURCEOffset);
+    fbBuilder.addFloat64(1, _FREQUENCY_GHZ);
+    fbBuilder.addFloat64(2, _ANTENNA_LENGTH_M);
+    fbBuilder.addFloat64(3, _ANTENNA_HEIGHT_M);
+    fbBuilder.addFloat64(4, _INCIDENCE_MIN_DEG);
+    fbBuilder.addFloat64(5, _INCIDENCE_MAX_DEG);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Inspection geometry of a chaser about a target on the time grid of the
+///  message (SDS addition; CCSDS 502.0-B-3 has none). Every vector holds one
+///  entry per time, in order: entry i is at STATE_EPOCHS[i], or at
+///  Metadata.START_TIME + i * STATE_STEP_SIZE. The target is CENTER_NAME. The
+///  Earth shadow is the conical model of a spherical Earth (6378.137 km) and a
+///  spherical Sun (695700 km); the target's nadir is -r / |r|; the along-track
+///  direction is the Earth-relative velocity perpendicular to r; right is nadir
+///  x along-track.
+class OCMInspectionGeometry {
+  OCMInspectionGeometry._(this._bc, this._bcOffset);
+  factory OCMInspectionGeometry(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OCMInspectionGeometry> reader = _OCMInspectionGeometryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Angle at the target between the Sun and the chaser, deg.
+  List<double>? get PHASE_ANGLE_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 4);
+  List<double>? get phaseAngleDeg => PHASE_ANGLE_DEG;
+  ///  Fraction of the Sun's disk the target sees: 0 umbra, 1 sunlit.
+  List<double>? get TARGET_SUNLIT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<double>? get targetSunlit => TARGET_SUNLIT;
+  ///  The same for the chaser.
+  List<double>? get CHASER_SUNLIT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  List<double>? get chaserSunlit => CHASER_SUNLIT;
+  ///  True when the chaser-target segment clears a sphere of 6378.137 km.
+  List<bool>? get LINE_OF_SIGHT => const fb.ListReader<bool>(fb.BoolReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<bool>? get lineOfSight => LINE_OF_SIGHT;
+  ///  TARGET_SUNLIT times LINE_OF_SIGHT.
+  List<double>? get TARGET_LIT_FROM_CHASER => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get targetLitFromChaser => TARGET_LIT_FROM_CHASER;
+  ///  Angle at the chaser between the target and the Sun, deg.
+  List<double>? get SUN_FROM_LINE_OF_SIGHT_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<double>? get sunFromLineOfSightDeg => SUN_FROM_LINE_OF_SIGHT_DEG;
+  ///  Chaser-target distance, km.
+  List<double>? get RANGE_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+  List<double>? get rangeKm => RANGE_KM;
+  ///  Angle at the target between its nadir and the chaser, deg.
+  List<double>? get CHASER_OFF_NADIR_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get chaserOffNadirDeg => CHASER_OFF_NADIR_DEG;
+  ///  The chaser's clock angle about the target's nadir, deg, from along-track
+  ///  toward right (90 right of the track, 270 left).
+  List<double>? get CHASER_CLOCK_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get chaserClockDeg => CHASER_CLOCK_DEG;
+  ///  True when the chaser is inside the target radar's field of regard on that
+  ///  side: off-nadir between the look angles of the incidence band, within half
+  ///  the azimuth beamwidth (0.886 wavelength / aperture length, -3 dB, uniform
+  ///  aperture) of the broadside plane. Empty without RADAR.
+  List<bool>? get IN_SAR_RIGHT => const fb.ListReader<bool>(fb.BoolReader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<bool>? get inSarRight => IN_SAR_RIGHT;
+  List<bool>? get IN_SAR_LEFT => const fb.ListReader<bool>(fb.BoolReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<bool>? get inSarLeft => IN_SAR_LEFT;
+  ///  The radar. Absent when no radar was given.
+  OCMRadarInputs? get RADAR => OCMRadarInputs.reader.vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'OCMInspectionGeometry{phaseAngleDeg: ${phaseAngleDeg}, targetSunlit: ${targetSunlit}, chaserSunlit: ${chaserSunlit}, lineOfSight: ${lineOfSight}, targetLitFromChaser: ${targetLitFromChaser}, sunFromLineOfSightDeg: ${sunFromLineOfSightDeg}, rangeKm: ${rangeKm}, chaserOffNadirDeg: ${chaserOffNadirDeg}, chaserClockDeg: ${chaserClockDeg}, inSarRight: ${inSarRight}, inSarLeft: ${inSarLeft}, RADAR: ${RADAR}}';
+  }
+}
+
+class _OCMInspectionGeometryReader extends fb.TableReader<OCMInspectionGeometry> {
+  const _OCMInspectionGeometryReader();
+
+  @override
+  OCMInspectionGeometry createObject(fb.BufferContext bc, int offset) =>
+    OCMInspectionGeometry._(bc, offset);
+}
+
+class OCMInspectionGeometryBuilder {
+  OCMInspectionGeometryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addPhaseAngleDegOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetSunlitOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addChaserSunlitOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addLineOfSightOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetLitFromChaserOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSunFromLineOfSightDegOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRangeKmOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addChaserOffNadirDegOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addChaserClockDegOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addInSarRightOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addInSarLeftOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addRadarOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OCMInspectionGeometryObjectBuilder extends fb.ObjectBuilder {
+  final List<double>? _PHASE_ANGLE_DEG;
+  final List<double>? _TARGET_SUNLIT;
+  final List<double>? _CHASER_SUNLIT;
+  final List<bool>? _LINE_OF_SIGHT;
+  final List<double>? _TARGET_LIT_FROM_CHASER;
+  final List<double>? _SUN_FROM_LINE_OF_SIGHT_DEG;
+  final List<double>? _RANGE_KM;
+  final List<double>? _CHASER_OFF_NADIR_DEG;
+  final List<double>? _CHASER_CLOCK_DEG;
+  final List<bool>? _IN_SAR_RIGHT;
+  final List<bool>? _IN_SAR_LEFT;
+  final OCMRadarInputsObjectBuilder? _RADAR;
+
+  OCMInspectionGeometryObjectBuilder({
+    List<double>? PHASE_ANGLE_DEG,
+    List<double>? phaseAngleDeg,
+    List<double>? TARGET_SUNLIT,
+    List<double>? targetSunlit,
+    List<double>? CHASER_SUNLIT,
+    List<double>? chaserSunlit,
+    List<bool>? LINE_OF_SIGHT,
+    List<bool>? lineOfSight,
+    List<double>? TARGET_LIT_FROM_CHASER,
+    List<double>? targetLitFromChaser,
+    List<double>? SUN_FROM_LINE_OF_SIGHT_DEG,
+    List<double>? sunFromLineOfSightDeg,
+    List<double>? RANGE_KM,
+    List<double>? rangeKm,
+    List<double>? CHASER_OFF_NADIR_DEG,
+    List<double>? chaserOffNadirDeg,
+    List<double>? CHASER_CLOCK_DEG,
+    List<double>? chaserClockDeg,
+    List<bool>? IN_SAR_RIGHT,
+    List<bool>? inSarRight,
+    List<bool>? IN_SAR_LEFT,
+    List<bool>? inSarLeft,
+    OCMRadarInputsObjectBuilder? RADAR,
+  })
+      : _PHASE_ANGLE_DEG = phaseAngleDeg ?? PHASE_ANGLE_DEG,
+        _TARGET_SUNLIT = targetSunlit ?? TARGET_SUNLIT,
+        _CHASER_SUNLIT = chaserSunlit ?? CHASER_SUNLIT,
+        _LINE_OF_SIGHT = lineOfSight ?? LINE_OF_SIGHT,
+        _TARGET_LIT_FROM_CHASER = targetLitFromChaser ?? TARGET_LIT_FROM_CHASER,
+        _SUN_FROM_LINE_OF_SIGHT_DEG = sunFromLineOfSightDeg ?? SUN_FROM_LINE_OF_SIGHT_DEG,
+        _RANGE_KM = rangeKm ?? RANGE_KM,
+        _CHASER_OFF_NADIR_DEG = chaserOffNadirDeg ?? CHASER_OFF_NADIR_DEG,
+        _CHASER_CLOCK_DEG = chaserClockDeg ?? CHASER_CLOCK_DEG,
+        _IN_SAR_RIGHT = inSarRight ?? IN_SAR_RIGHT,
+        _IN_SAR_LEFT = inSarLeft ?? IN_SAR_LEFT,
+        _RADAR = RADAR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PHASE_ANGLE_DEGOffset = _PHASE_ANGLE_DEG == null ? null
+        : fbBuilder.writeListFloat64(_PHASE_ANGLE_DEG!);
+    final int? TARGET_SUNLITOffset = _TARGET_SUNLIT == null ? null
+        : fbBuilder.writeListFloat64(_TARGET_SUNLIT!);
+    final int? CHASER_SUNLITOffset = _CHASER_SUNLIT == null ? null
+        : fbBuilder.writeListFloat64(_CHASER_SUNLIT!);
+    final int? LINE_OF_SIGHTOffset = _LINE_OF_SIGHT == null ? null
+        : fbBuilder.writeListBool(_LINE_OF_SIGHT!);
+    final int? TARGET_LIT_FROM_CHASEROffset = _TARGET_LIT_FROM_CHASER == null ? null
+        : fbBuilder.writeListFloat64(_TARGET_LIT_FROM_CHASER!);
+    final int? SUN_FROM_LINE_OF_SIGHT_DEGOffset = _SUN_FROM_LINE_OF_SIGHT_DEG == null ? null
+        : fbBuilder.writeListFloat64(_SUN_FROM_LINE_OF_SIGHT_DEG!);
+    final int? RANGE_KMOffset = _RANGE_KM == null ? null
+        : fbBuilder.writeListFloat64(_RANGE_KM!);
+    final int? CHASER_OFF_NADIR_DEGOffset = _CHASER_OFF_NADIR_DEG == null ? null
+        : fbBuilder.writeListFloat64(_CHASER_OFF_NADIR_DEG!);
+    final int? CHASER_CLOCK_DEGOffset = _CHASER_CLOCK_DEG == null ? null
+        : fbBuilder.writeListFloat64(_CHASER_CLOCK_DEG!);
+    final int? IN_SAR_RIGHTOffset = _IN_SAR_RIGHT == null ? null
+        : fbBuilder.writeListBool(_IN_SAR_RIGHT!);
+    final int? IN_SAR_LEFTOffset = _IN_SAR_LEFT == null ? null
+        : fbBuilder.writeListBool(_IN_SAR_LEFT!);
+    final int? RADAROffset = _RADAR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, PHASE_ANGLE_DEGOffset);
+    fbBuilder.addOffset(1, TARGET_SUNLITOffset);
+    fbBuilder.addOffset(2, CHASER_SUNLITOffset);
+    fbBuilder.addOffset(3, LINE_OF_SIGHTOffset);
+    fbBuilder.addOffset(4, TARGET_LIT_FROM_CHASEROffset);
+    fbBuilder.addOffset(5, SUN_FROM_LINE_OF_SIGHT_DEGOffset);
+    fbBuilder.addOffset(6, RANGE_KMOffset);
+    fbBuilder.addOffset(7, CHASER_OFF_NADIR_DEGOffset);
+    fbBuilder.addOffset(8, CHASER_CLOCK_DEGOffset);
+    fbBuilder.addOffset(9, IN_SAR_RIGHTOffset);
+    fbBuilder.addOffset(10, IN_SAR_LEFTOffset);
+    fbBuilder.addOffset(11, RADAROffset);
     return fbBuilder.endTable();
   }
 
@@ -3169,7 +5462,9 @@ class OrbitDetermination {
   ///  Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
   estimatorCategory get OD_ESTIMATOR => estimatorCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
   estimatorCategory get odEstimator => OD_ESTIMATOR;
-  ///  RMS of post-fit residuals for this solution.
+  ///  RMS of post-fit residuals for this solution. In the unit of the residuals the
+  ///  observation types state: arcsec for RADEC angles. A position RMS in km is
+  ///  OCMFitStatistics.FIT_RMS_KM.
   double get OD_RESIDUAL_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
   double get odResidualRms => OD_RESIDUAL_RMS;
   ///  Post-fit residual series, one entry per accepted observation.
@@ -3258,10 +5553,13 @@ class OrbitDetermination {
   String? get SENSORS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
   ///  COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
   List<String>? get COMMENT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 96);
+  ///  Position statistics of a fit to a reference ephemeris.
+  OCMFitStatistics? get FIT_STATISTICS => OCMFitStatistics.reader.vTableGetNullable(_bc, _bcOffset, 98);
+  OCMFitStatistics? get fitStatistics => FIT_STATISTICS;
 
   @override
   String toString() {
-    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}, odDynamicParameters: ${odDynamicParameters}, daysSinceFirstObs: ${daysSinceFirstObs}, daysSinceLastObs: ${daysSinceLastObs}, recommendedOdSpan: ${recommendedOdSpan}, actualOdSpan: ${actualOdSpan}, obsAvailable: ${obsAvailable}, tracksAvailable: ${tracksAvailable}, maximumObsGap: ${maximumObsGap}, odEpochEigmaj: ${odEpochEigmaj}, odEpochEigint: ${odEpochEigint}, odEpochEigmin: ${odEpochEigmin}, odMaxPredEigmaj: ${odMaxPredEigmaj}, odMinPredEigmin: ${odMinPredEigmin}, odConfidence: ${odConfidence}, GDOP: ${GDOP}, solveN: ${solveN}, solveStates: ${solveStates}, considerN: ${considerN}, considerParams: ${considerParams}, sensorsN: ${sensorsN}, SENSORS: ${SENSORS}, COMMENT: ${COMMENT}}';
+    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}, SEDR: ${SEDR}, weightedRms: ${weightedRms}, odDynamicParameters: ${odDynamicParameters}, daysSinceFirstObs: ${daysSinceFirstObs}, daysSinceLastObs: ${daysSinceLastObs}, recommendedOdSpan: ${recommendedOdSpan}, actualOdSpan: ${actualOdSpan}, obsAvailable: ${obsAvailable}, tracksAvailable: ${tracksAvailable}, maximumObsGap: ${maximumObsGap}, odEpochEigmaj: ${odEpochEigmaj}, odEpochEigint: ${odEpochEigint}, odEpochEigmin: ${odEpochEigmin}, odMaxPredEigmaj: ${odMaxPredEigmaj}, odMinPredEigmin: ${odMinPredEigmin}, odConfidence: ${odConfidence}, GDOP: ${GDOP}, solveN: ${solveN}, solveStates: ${solveStates}, considerN: ${considerN}, considerParams: ${considerParams}, sensorsN: ${sensorsN}, SENSORS: ${SENSORS}, COMMENT: ${COMMENT}, fitStatistics: ${fitStatistics}}';
   }
 }
 
@@ -3279,7 +5577,7 @@ class OrbitDeterminationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(47);
+    fbBuilder.startTable(48);
   }
 
   int addOdIdOffset(int? offset) {
@@ -3470,6 +5768,10 @@ class OrbitDeterminationBuilder {
     fbBuilder.addOffset(46, offset);
     return fbBuilder.offset;
   }
+  int addFitStatisticsOffset(int? offset) {
+    fbBuilder.addOffset(47, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3524,6 +5826,7 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
   final int? _SENSORS_N;
   final String? _SENSORS;
   final List<String>? _COMMENT;
+  final OCMFitStatisticsObjectBuilder? _FIT_STATISTICS;
 
   OrbitDeterminationObjectBuilder({
     String? OD_ID,
@@ -3616,6 +5919,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     int? sensorsN,
     String? SENSORS,
     List<String>? COMMENT,
+    OCMFitStatisticsObjectBuilder? FIT_STATISTICS,
+    OCMFitStatisticsObjectBuilder? fitStatistics,
   })
       : _OD_ID = odId ?? OD_ID,
         _OD_PREV_ID = odPrevId ?? OD_PREV_ID,
@@ -3663,7 +5968,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         _CONSIDER_PARAMS = considerParams ?? CONSIDER_PARAMS,
         _SENSORS_N = sensorsN ?? SENSORS_N,
         _SENSORS = SENSORS,
-        _COMMENT = COMMENT;
+        _COMMENT = COMMENT,
+        _FIT_STATISTICS = fitStatistics ?? FIT_STATISTICS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3714,7 +6020,8 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SENSORS!);
     final int? COMMENTOffset = _COMMENT == null ? null
         : fbBuilder.writeList(_COMMENT!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(47);
+    final int? FIT_STATISTICSOffset = _FIT_STATISTICS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(48);
     fbBuilder.addOffset(0, OD_IDOffset);
     fbBuilder.addOffset(1, OD_PREV_IDOffset);
     fbBuilder.addOffset(2, OD_ALGORITHMOffset);
@@ -3762,6 +6069,7 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(44, _SENSORS_N);
     fbBuilder.addOffset(45, SENSORSOffset);
     fbBuilder.addOffset(46, COMMENTOffset);
+    fbBuilder.addOffset(47, FIT_STATISTICSOffset);
     return fbBuilder.endTable();
   }
 
@@ -4515,6 +6823,7 @@ class OCM {
   ///  Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   ///  Length must be divisible by STATE_VECTOR_SIZE.
   ///  Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+  ///  Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
   List<double>? get STATE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
   List<double>? get stateData => STATE_DATA;
   ///  Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
@@ -4547,14 +6856,15 @@ class OCM {
   ///  Orbit determination data.
   OrbitDetermination? get ORBIT_DETERMINATION => OrbitDetermination.reader.vTableGetNullable(_bc, _bcOffset, 30);
   OrbitDetermination? get orbitDetermination => ORBIT_DETERMINATION;
-  ///  User-defined parameters and supplemental comments.
+  ///  CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+  ///  SDN readers never read it.
   List<UserDefinedParameters>? get USER_DEFINED_PARAMETERS => const fb.ListReader<UserDefinedParameters>(UserDefinedParameters.reader).vTableGetNullable(_bc, _bcOffset, 32);
   List<UserDefinedParameters>? get userDefinedParameters => USER_DEFINED_PARAMETERS;
   ///  Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   String? get centerName => CENTER_NAME;
-  ///  Reference frame of STATE_DATA and the polynomial records
-  ///  (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  ///  Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+  ///  frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
   RFM? get TRAJ_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 36);
   RFM? get trajRefFrame => TRAJ_REF_FRAME;
   ///  Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
@@ -4621,10 +6931,37 @@ class OCM {
   ///  STATE_DATA epochs, or one entry for every epoch.
   List<CVR>? get COV_REALISM => const fb.ListReader<CVR>(CVR.reader).vTableGetNullable(_bc, _bcOffset, 68);
   List<CVR>? get covRealism => COV_REALISM;
+  ///  The mean element set this message carries, under the theory it names. STATE_DATA is
+  ///  empty when this is present; no state travels beside a set.
+  OCMMeanElements? get MEAN_ELEMENTS => OCMMeanElements.reader.vTableGetNullable(_bc, _bcOffset, 70);
+  OCMMeanElements? get meanElements => MEAN_ELEMENTS;
+  ///  What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+  OCMCovariancePropagation? get COV_PROPAGATION => OCMCovariancePropagation.reader.vTableGetNullable(_bc, _bcOffset, 72);
+  OCMCovariancePropagation? get covPropagation => COV_PROPAGATION;
+  ///  The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+  ///  every reader keys on these, never on the COV_PARAMETERS strings.
+  List<prwDynamicParameter>? get COV_PARAMETER_KINDS => const fb.ListReader<prwDynamicParameter>(prwDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 74);
+  List<prwDynamicParameter>? get covParameterKinds => COV_PARAMETER_KINDS;
+  ///  Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+  ///  (CCSDS 502.0-B-3 TRAJ_BASIS).
+  ocmTrajectoryBasis get TRAJ_BASIS => ocmTrajectoryBasis.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 76, 0));
+  ocmTrajectoryBasis get trajBasis => TRAJ_BASIS;
+  ///  The element sets the trajectory was computed from, one per object whose
+  ///  elements it used.
+  List<OCMSeedSet>? get SEED_SETS => const fb.ListReader<OCMSeedSet>(OCMSeedSet.reader).vTableGetNullable(_bc, _bcOffset, 78);
+  List<OCMSeedSet>? get seedSets => SEED_SETS;
+  ///  Integrator settings of a solution made from a legacy VCM.
+  OCMIntegrator? get INTEGRATOR => OCMIntegrator.reader.vTableGetNullable(_bc, _bcOffset, 80);
+  ///  Relative-motion geometry; STATE_DATA is empty when this is present.
+  OCMRelativeGeometry? get RPO_GEOMETRY => OCMRelativeGeometry.reader.vTableGetNullable(_bc, _bcOffset, 82);
+  OCMRelativeGeometry? get rpoGeometry => RPO_GEOMETRY;
+  ///  Inspection geometry; STATE_DATA is empty when this is present.
+  OCMInspectionGeometry? get RPO_INSPECTION => OCMInspectionGeometry.reader.vTableGetNullable(_bc, _bcOffset, 84);
+  OCMInspectionGeometry? get rpoInspection => RPO_INSPECTION;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}, trajectoryBlocks: ${trajectoryBlocks}, covarianceBlocks: ${covarianceBlocks}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}, trajectoryBlocks: ${trajectoryBlocks}, covarianceBlocks: ${covarianceBlocks}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}, meanElements: ${meanElements}, covPropagation: ${covPropagation}, covParameterKinds: ${covParameterKinds}, trajBasis: ${trajBasis}, seedSets: ${seedSets}, INTEGRATOR: ${INTEGRATOR}, rpoGeometry: ${rpoGeometry}, rpoInspection: ${rpoInspection}}';
   }
 }
 
@@ -4642,7 +6979,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(33);
+    fbBuilder.startTable(41);
   }
 
   int addHeaderOffset(int? offset) {
@@ -4777,6 +7114,38 @@ class OCMBuilder {
     fbBuilder.addOffset(32, offset);
     return fbBuilder.offset;
   }
+  int addMeanElementsOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addCovPropagationOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addCovParameterKindsOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajBasis(ocmTrajectoryBasis? TRAJ_BASIS) {
+    fbBuilder.addUint8(36, TRAJ_BASIS?.value);
+    return fbBuilder.offset;
+  }
+  int addSeedSetsOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addIntegratorOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addRpoGeometryOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addRpoInspectionOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -4817,6 +7186,14 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final List<OCMCovarianceBlockObjectBuilder>? _COVARIANCE_BLOCKS;
   final PVNObjectBuilder? _PROVENANCE;
   final List<CVRObjectBuilder>? _COV_REALISM;
+  final OCMMeanElementsObjectBuilder? _MEAN_ELEMENTS;
+  final OCMCovariancePropagationObjectBuilder? _COV_PROPAGATION;
+  final List<prwDynamicParameter>? _COV_PARAMETER_KINDS;
+  final ocmTrajectoryBasis? _TRAJ_BASIS;
+  final List<OCMSeedSetObjectBuilder>? _SEED_SETS;
+  final OCMIntegratorObjectBuilder? _INTEGRATOR;
+  final OCMRelativeGeometryObjectBuilder? _RPO_GEOMETRY;
+  final OCMInspectionGeometryObjectBuilder? _RPO_INSPECTION;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -4881,6 +7258,21 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     PVNObjectBuilder? PROVENANCE,
     List<CVRObjectBuilder>? COV_REALISM,
     List<CVRObjectBuilder>? covRealism,
+    OCMMeanElementsObjectBuilder? MEAN_ELEMENTS,
+    OCMMeanElementsObjectBuilder? meanElements,
+    OCMCovariancePropagationObjectBuilder? COV_PROPAGATION,
+    OCMCovariancePropagationObjectBuilder? covPropagation,
+    List<prwDynamicParameter>? COV_PARAMETER_KINDS,
+    List<prwDynamicParameter>? covParameterKinds,
+    ocmTrajectoryBasis? TRAJ_BASIS,
+    ocmTrajectoryBasis? trajBasis,
+    List<OCMSeedSetObjectBuilder>? SEED_SETS,
+    List<OCMSeedSetObjectBuilder>? seedSets,
+    OCMIntegratorObjectBuilder? INTEGRATOR,
+    OCMRelativeGeometryObjectBuilder? RPO_GEOMETRY,
+    OCMRelativeGeometryObjectBuilder? rpoGeometry,
+    OCMInspectionGeometryObjectBuilder? RPO_INSPECTION,
+    OCMInspectionGeometryObjectBuilder? rpoInspection,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -4914,7 +7306,15 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _TRAJECTORY_BLOCKS = trajectoryBlocks ?? TRAJECTORY_BLOCKS,
         _COVARIANCE_BLOCKS = covarianceBlocks ?? COVARIANCE_BLOCKS,
         _PROVENANCE = PROVENANCE,
-        _COV_REALISM = covRealism ?? COV_REALISM;
+        _COV_REALISM = covRealism ?? COV_REALISM,
+        _MEAN_ELEMENTS = meanElements ?? MEAN_ELEMENTS,
+        _COV_PROPAGATION = covPropagation ?? COV_PROPAGATION,
+        _COV_PARAMETER_KINDS = covParameterKinds ?? COV_PARAMETER_KINDS,
+        _TRAJ_BASIS = trajBasis ?? TRAJ_BASIS,
+        _SEED_SETS = seedSets ?? SEED_SETS,
+        _INTEGRATOR = INTEGRATOR,
+        _RPO_GEOMETRY = rpoGeometry ?? RPO_GEOMETRY,
+        _RPO_INSPECTION = rpoInspection ?? RPO_INSPECTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4963,7 +7363,16 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
     final int? COV_REALISMOffset = _COV_REALISM == null ? null
         : fbBuilder.writeList(_COV_REALISM!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(33);
+    final int? MEAN_ELEMENTSOffset = _MEAN_ELEMENTS?.getOrCreateOffset(fbBuilder);
+    final int? COV_PROPAGATIONOffset = _COV_PROPAGATION?.getOrCreateOffset(fbBuilder);
+    final int? COV_PARAMETER_KINDSOffset = _COV_PARAMETER_KINDS == null ? null
+        : fbBuilder.writeListUint8(_COV_PARAMETER_KINDS!.map((f) => f.value).toList());
+    final int? SEED_SETSOffset = _SEED_SETS == null ? null
+        : fbBuilder.writeList(_SEED_SETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? INTEGRATOROffset = _INTEGRATOR?.getOrCreateOffset(fbBuilder);
+    final int? RPO_GEOMETRYOffset = _RPO_GEOMETRY?.getOrCreateOffset(fbBuilder);
+    final int? RPO_INSPECTIONOffset = _RPO_INSPECTION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(41);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -4997,6 +7406,14 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(30, COVARIANCE_BLOCKSOffset);
     fbBuilder.addOffset(31, PROVENANCEOffset);
     fbBuilder.addOffset(32, COV_REALISMOffset);
+    fbBuilder.addOffset(33, MEAN_ELEMENTSOffset);
+    fbBuilder.addOffset(34, COV_PROPAGATIONOffset);
+    fbBuilder.addOffset(35, COV_PARAMETER_KINDSOffset);
+    fbBuilder.addUint8(36, _TRAJ_BASIS?.value);
+    fbBuilder.addOffset(37, SEED_SETSOffset);
+    fbBuilder.addOffset(38, INTEGRATOROffset);
+    fbBuilder.addOffset(39, RPO_GEOMETRYOffset);
+    fbBuilder.addOffset(40, RPO_INSPECTIONOffset);
     return fbBuilder.endTable();
   }
 

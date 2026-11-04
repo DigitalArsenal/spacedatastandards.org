@@ -192,8 +192,21 @@ SRP_PRIOR_FORM():pcfPriorForm {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfPriorForm.GAUSSIAN_SIGNED;
 }
 
+/**
+ * Days past the element set's epoch day through which the fit writes the
+ * daily space weather into the record it emits (OCM
+ * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+ * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+ * arc's last day and the epoch's day plus this count; rows supplied with
+ * the request must reach it, or the fit is refused by name. Default 30.
+ */
+WEATHER_HORIZON_DAYS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 30;
+}
+
 static startPCFFitPolicy(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(18);
 }
 
 static addDefaultSpanHours(builder:flatbuffers.Builder, DEFAULT_SPAN_HOURS:number) {
@@ -281,6 +294,10 @@ static addSrpPriorForm(builder:flatbuffers.Builder, SRP_PRIOR_FORM:pcfPriorForm)
   builder.addFieldInt8(16, SRP_PRIOR_FORM, pcfPriorForm.GAUSSIAN_SIGNED);
 }
 
+static addWeatherHorizonDays(builder:flatbuffers.Builder, WEATHER_HORIZON_DAYS:number) {
+  builder.addFieldInt16(17, WEATHER_HORIZON_DAYS, 30);
+}
+
 static endPCFFitPolicy(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -305,7 +322,8 @@ unpack(): PCFFitPolicyT {
     (this.DRAG_PRIOR() !== null ? this.DRAG_PRIOR()!.unpack() : null),
     (this.SRP_PRIOR() !== null ? this.SRP_PRIOR()!.unpack() : null),
     this.DRAG_PRIOR_FORM(),
-    this.SRP_PRIOR_FORM()
+    this.SRP_PRIOR_FORM(),
+    this.WEATHER_HORIZON_DAYS()
   );
 }
 
@@ -328,6 +346,7 @@ unpackTo(_o: PCFFitPolicyT): void {
   _o.SRP_PRIOR = (this.SRP_PRIOR() !== null ? this.SRP_PRIOR()!.unpack() : null);
   _o.DRAG_PRIOR_FORM = this.DRAG_PRIOR_FORM();
   _o.SRP_PRIOR_FORM = this.SRP_PRIOR_FORM();
+  _o.WEATHER_HORIZON_DAYS = this.WEATHER_HORIZON_DAYS();
 }
 }
 
@@ -349,7 +368,8 @@ constructor(
   public DRAG_PRIOR: PCFGaussianPriorT|null = null,
   public SRP_PRIOR: PCFGaussianPriorT|null = null,
   public DRAG_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED,
-  public SRP_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED
+  public SRP_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED,
+  public WEATHER_HORIZON_DAYS: number = 30
 ){}
 
 
@@ -376,6 +396,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PCFFitPolicy.addSrpPrior(builder, SRP_PRIOR);
   PCFFitPolicy.addDragPriorForm(builder, this.DRAG_PRIOR_FORM);
   PCFFitPolicy.addSrpPriorForm(builder, this.SRP_PRIOR_FORM);
+  PCFFitPolicy.addWeatherHorizonDays(builder, this.WEATHER_HORIZON_DAYS);
 
   return PCFFitPolicy.endPCFFitPolicy(builder);
 }

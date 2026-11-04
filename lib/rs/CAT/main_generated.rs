@@ -557,15 +557,16 @@ impl ::flatbuffers::SimpleToVerifyInSlice for massCategory {}
 pub const ENUM_MIN_CATALOG_PRODUCT_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_CATALOG_PRODUCT_KIND: i8 = 3;
+pub const ENUM_MAX_CATALOG_PRODUCT_KIND: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_CATALOG_PRODUCT_KIND: [catalogProductKind; 4] = [
+pub const ENUM_VALUES_CATALOG_PRODUCT_KIND: [catalogProductKind; 5] = [
     catalogProductKind::Unspecified,
     catalogProductKind::Sgp4Elements,
     catalogProductKind::Sgp4XpElements,
     catalogProductKind::StateCovariance,
+    catalogProductKind::ApElements,
 ];
 
 /// What a product the catalog selected for an object is.
@@ -577,20 +578,24 @@ pub struct catalogProductKind(pub i8);
 impl catalogProductKind {
     /// Not stated
     pub const Unspecified: Self = Self(0);
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4
+    /// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+    /// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
     pub const Sgp4Elements: Self = Self(1);
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+    /// As Sgp4Elements, under SGP4XP
     pub const Sgp4XpElements: Self = Self(2);
     /// $OCM: a state and its covariance
     pub const StateCovariance: Self = Self(3);
+    /// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+    pub const ApElements: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Sgp4Elements,
         Self::Sgp4XpElements,
         Self::StateCovariance,
+        Self::ApElements,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -600,6 +605,7 @@ impl catalogProductKind {
             Self::Sgp4Elements => Some("Sgp4Elements"),
             Self::Sgp4XpElements => Some("Sgp4XpElements"),
             Self::StateCovariance => Some("StateCovariance"),
+            Self::ApElements => Some("ApElements"),
             _ => None,
         }
     }
@@ -759,8 +765,8 @@ impl<'a> CATProduct<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATProduct::VT_SOURCE_ID, None)}
     }
 
-    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-    /// epoch.
+    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+    /// MEAN_ELEMENTS.EPOCH or first state epoch.
     #[inline]
     pub fn EPOCH(&self) -> Option<&'a str> {
         // Safety:

@@ -25,8 +25,8 @@ export declare class CATProduct implements flatbuffers.IUnpackableObject<CATProd
     SOURCE_ID(): string | null;
     SOURCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-     * epoch.
+     * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+     * MEAN_ELEMENTS.EPOCH or first state epoch.
      */
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

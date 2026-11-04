@@ -5,6 +5,9 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { ATM, ATMT } from './ATM.js';
+import { SPW, SPWT } from './SPW.js';
+import { pcfDensityCorrection } from './pcfDensityCorrection.js';
+import { pcfWeatherSource } from './pcfWeatherSource.js';
 
 
 export class Perturbations implements flatbuffers.IUnpackableObject<PerturbationsT> {
@@ -379,8 +382,133 @@ FIXED_Y10P7_MEAN():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
+/**
+ * Highest degree of the tesseral and sectorial terms (order 1 and above) of
+ * the gravity field the record was computed with (SDS addition; the $PCF
+ * FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+ * theory: 0 is the theory's own terms. For a numerical solution the nn of a
+ * legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+ * either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+ * order pair cannot state a tesseral cap below a zonal one.
+ */
+MAXIMUM_TESSERAL_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Highest degree of the zonal terms (order 0) of the gravity field the
+ * record was computed with (SDS addition). For a mean-element set the tail
+ * J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+ * For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+ * otherwise not stated.
+ */
+MAXIMUM_ZONAL_DEGREE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Where the space weather behind the drag density comes from. RECORDS: the
+ * daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+ * flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+ * in an element-set record.
+ */
+WEATHER_SOURCE():pcfWeatherSource {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfWeatherSource.UNSPECIFIED;
+}
+
+/**
+ * Correction applied to the atmosphere model's density.
+ */
+DENSITY_CORRECTION():pcfDensityCorrection {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfDensityCorrection.NONE;
+}
+
+/**
+ * CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+ * DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+ * DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+ */
+DENSITY_CORRECTION_CID():string|null
+DENSITY_CORRECTION_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DENSITY_CORRECTION_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * The daily space weather the drag density reads (SDS addition; CCSDS
+ * 502.0-B-3 names only the source, epoch and interpolation as text and
+ * fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+ * UTC day, DATE ascending, no gap, from the day before the first day the
+ * record is flown or was fitted through its last day. The record is flown
+ * to the end of the last row's day and no further. Each row carries DATE,
+ * F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+ * PRD, PRM predicted); other SPW fields unwritten.
+ */
+SPACE_WEATHER(index: number, obj?:SPW):SPW|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? (obj || new SPW()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+spaceWeatherLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+ * set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+ * milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+ * Empty when DENSITY_CORRECTION is NONE.
+ */
+DENSITY_CORRECTION_NODE_TIMES_MS(index: number):bigint|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readInt64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : BigInt(0);
+}
+
+densityCorrectionNodeTimesMsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+ * entry, dimensionless, as that $DCL's
+ * CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+ * held at the end values outside them.
+ */
+DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+densityCorrectionLogDensityScaleDimensionlessLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+densityCorrectionLogDensityScaleDimensionlessArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Number of terms of the nutation series REDUCTION_THEORY names that the
+ * force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+ * 4, 50 or 106). 0 when the series is not truncated or the count is not
+ * stated.
+ */
+REDUCTION_THEORY_TERMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
 static startPerturbations(builder:flatbuffers.Builder) {
-  builder.startObject(38);
+  builder.startObject(47);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -559,6 +687,83 @@ static addFixedY10P7Mean(builder:flatbuffers.Builder, FIXED_Y10P7_MEAN:number) {
   builder.addFieldFloat64(37, FIXED_Y10P7_MEAN, NaN);
 }
 
+static addMaximumTesseralDegree(builder:flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE:number) {
+  builder.addFieldInt16(38, MAXIMUM_TESSERAL_DEGREE, 0);
+}
+
+static addMaximumZonalDegree(builder:flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE:number) {
+  builder.addFieldInt16(39, MAXIMUM_ZONAL_DEGREE, 0);
+}
+
+static addWeatherSource(builder:flatbuffers.Builder, WEATHER_SOURCE:pcfWeatherSource) {
+  builder.addFieldInt8(40, WEATHER_SOURCE, pcfWeatherSource.UNSPECIFIED);
+}
+
+static addDensityCorrection(builder:flatbuffers.Builder, DENSITY_CORRECTION:pcfDensityCorrection) {
+  builder.addFieldInt8(41, DENSITY_CORRECTION, pcfDensityCorrection.NONE);
+}
+
+static addDensityCorrectionCid(builder:flatbuffers.Builder, DENSITY_CORRECTION_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, DENSITY_CORRECTION_CIDOffset, 0);
+}
+
+static addSpaceWeather(builder:flatbuffers.Builder, SPACE_WEATHEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, SPACE_WEATHEROffset, 0);
+}
+
+static createSpaceWeatherVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSpaceWeatherVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addDensityCorrectionNodeTimesMs(builder:flatbuffers.Builder, DENSITY_CORRECTION_NODE_TIMES_MSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, DENSITY_CORRECTION_NODE_TIMES_MSOffset, 0);
+}
+
+static createDensityCorrectionNodeTimesMsVector(builder:flatbuffers.Builder, data:bigint[]):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDensityCorrectionNodeTimesMsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addDensityCorrectionLogDensityScaleDimensionless(builder:flatbuffers.Builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset, 0);
+}
+
+static createDensityCorrectionLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDensityCorrectionLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDensityCorrectionLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDensityCorrectionLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addReductionTheoryTerms(builder:flatbuffers.Builder, REDUCTION_THEORY_TERMS:number) {
+  builder.addFieldInt16(46, REDUCTION_THEORY_TERMS, 0);
+}
+
 static endPerturbations(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -604,7 +809,16 @@ unpack(): PerturbationsT {
     this.FIXED_S10P7(),
     this.FIXED_S10P7_MEAN(),
     this.FIXED_Y10P7(),
-    this.FIXED_Y10P7_MEAN()
+    this.FIXED_Y10P7_MEAN(),
+    this.MAXIMUM_TESSERAL_DEGREE(),
+    this.MAXIMUM_ZONAL_DEGREE(),
+    this.WEATHER_SOURCE(),
+    this.DENSITY_CORRECTION(),
+    this.DENSITY_CORRECTION_CID(),
+    this.bb!.createObjList<SPW, SPWT>(this.SPACE_WEATHER.bind(this), this.spaceWeatherLength()),
+    this.bb!.createScalarList<bigint>(this.DENSITY_CORRECTION_NODE_TIMES_MS.bind(this), this.densityCorrectionNodeTimesMsLength()),
+    this.bb!.createScalarList<number>(this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.bind(this), this.densityCorrectionLogDensityScaleDimensionlessLength()),
+    this.REDUCTION_THEORY_TERMS()
   );
 }
 
@@ -648,6 +862,15 @@ unpackTo(_o: PerturbationsT): void {
   _o.FIXED_S10P7_MEAN = this.FIXED_S10P7_MEAN();
   _o.FIXED_Y10P7 = this.FIXED_Y10P7();
   _o.FIXED_Y10P7_MEAN = this.FIXED_Y10P7_MEAN();
+  _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE();
+  _o.MAXIMUM_ZONAL_DEGREE = this.MAXIMUM_ZONAL_DEGREE();
+  _o.WEATHER_SOURCE = this.WEATHER_SOURCE();
+  _o.DENSITY_CORRECTION = this.DENSITY_CORRECTION();
+  _o.DENSITY_CORRECTION_CID = this.DENSITY_CORRECTION_CID();
+  _o.SPACE_WEATHER = this.bb!.createObjList<SPW, SPWT>(this.SPACE_WEATHER.bind(this), this.spaceWeatherLength());
+  _o.DENSITY_CORRECTION_NODE_TIMES_MS = this.bb!.createScalarList<bigint>(this.DENSITY_CORRECTION_NODE_TIMES_MS.bind(this), this.densityCorrectionNodeTimesMsLength());
+  _o.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = this.bb!.createScalarList<number>(this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.bind(this), this.densityCorrectionLogDensityScaleDimensionlessLength());
+  _o.REDUCTION_THEORY_TERMS = this.REDUCTION_THEORY_TERMS();
 }
 }
 
@@ -690,7 +913,16 @@ constructor(
   public FIXED_S10P7: number = NaN,
   public FIXED_S10P7_MEAN: number = NaN,
   public FIXED_Y10P7: number = NaN,
-  public FIXED_Y10P7_MEAN: number = NaN
+  public FIXED_Y10P7_MEAN: number = NaN,
+  public MAXIMUM_TESSERAL_DEGREE: number = 0,
+  public MAXIMUM_ZONAL_DEGREE: number = 0,
+  public WEATHER_SOURCE: pcfWeatherSource = pcfWeatherSource.UNSPECIFIED,
+  public DENSITY_CORRECTION: pcfDensityCorrection = pcfDensityCorrection.NONE,
+  public DENSITY_CORRECTION_CID: string|Uint8Array|null = null,
+  public SPACE_WEATHER: (SPWT)[] = [],
+  public DENSITY_CORRECTION_NODE_TIMES_MS: (bigint)[] = [],
+  public DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: (number)[] = [],
+  public REDUCTION_THEORY_TERMS: number = 0
 ){}
 
 
@@ -715,6 +947,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SW_DATA_SOURCE = (this.SW_DATA_SOURCE !== null ? builder.createString(this.SW_DATA_SOURCE!) : 0);
   const SW_DATA_EPOCH = (this.SW_DATA_EPOCH !== null ? builder.createString(this.SW_DATA_EPOCH!) : 0);
   const SW_INTERP_METHOD = (this.SW_INTERP_METHOD !== null ? builder.createString(this.SW_INTERP_METHOD!) : 0);
+  const DENSITY_CORRECTION_CID = (this.DENSITY_CORRECTION_CID !== null ? builder.createString(this.DENSITY_CORRECTION_CID!) : 0);
+  const SPACE_WEATHER = Perturbations.createSpaceWeatherVector(builder, builder.createObjectOffsetList(this.SPACE_WEATHER));
+  const DENSITY_CORRECTION_NODE_TIMES_MS = Perturbations.createDensityCorrectionNodeTimesMsVector(builder, this.DENSITY_CORRECTION_NODE_TIMES_MS);
+  const DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = Perturbations.createDensityCorrectionLogDensityScaleDimensionlessVector(builder, this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS);
 
   Perturbations.startPerturbations(builder);
   Perturbations.addComment(builder, COMMENT);
@@ -755,6 +991,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   Perturbations.addFixedS10P7Mean(builder, this.FIXED_S10P7_MEAN);
   Perturbations.addFixedY10P7(builder, this.FIXED_Y10P7);
   Perturbations.addFixedY10P7Mean(builder, this.FIXED_Y10P7_MEAN);
+  Perturbations.addMaximumTesseralDegree(builder, this.MAXIMUM_TESSERAL_DEGREE);
+  Perturbations.addMaximumZonalDegree(builder, this.MAXIMUM_ZONAL_DEGREE);
+  Perturbations.addWeatherSource(builder, this.WEATHER_SOURCE);
+  Perturbations.addDensityCorrection(builder, this.DENSITY_CORRECTION);
+  Perturbations.addDensityCorrectionCid(builder, DENSITY_CORRECTION_CID);
+  Perturbations.addSpaceWeather(builder, SPACE_WEATHER);
+  Perturbations.addDensityCorrectionNodeTimesMs(builder, DENSITY_CORRECTION_NODE_TIMES_MS);
+  Perturbations.addDensityCorrectionLogDensityScaleDimensionless(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS);
+  Perturbations.addReductionTheoryTerms(builder, this.REDUCTION_THEORY_TERMS);
 
   return Perturbations.endPerturbations(builder);
 }

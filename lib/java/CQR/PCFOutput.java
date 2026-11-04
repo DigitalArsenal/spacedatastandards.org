@@ -41,22 +41,56 @@ public final class PCFOutput extends com.google.flatbuffers.Table {
    * Most states one request may produce. Default 500000.
    */
   public long MAXIMUM_STATES() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 500000L; }
+  /**
+   * Output epochs, ISO 8601 UTC, ascending; when present they are the
+   * states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+   * Default empty.
+   */
+  public String EPOCHS(int j) { int o = __offset(10); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int EPOCHSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector epochsVector() { return epochsVector(new StringVector()); }
+  public StringVector epochsVector(StringVector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * First output epoch, ISO 8601 UTC. Default empty: the element set's
+   * epoch.
+   */
+  public String START_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+   * START_TIME plus one day.
+   */
+  public String STOP_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
 
   public static int createPCFOutput(FlatBufferBuilder builder,
       int FRAME,
       double STEP_SECONDS,
-      long MAXIMUM_STATES) {
-    builder.startTable(3);
+      long MAXIMUM_STATES,
+      int EPOCHSOffset,
+      int START_TIMEOffset,
+      int STOP_TIMEOffset) {
+    builder.startTable(6);
     PCFOutput.addStepSeconds(builder, STEP_SECONDS);
+    PCFOutput.addStopTime(builder, STOP_TIMEOffset);
+    PCFOutput.addStartTime(builder, START_TIMEOffset);
+    PCFOutput.addEpochs(builder, EPOCHSOffset);
     PCFOutput.addMaximumStates(builder, MAXIMUM_STATES);
     PCFOutput.addFrame(builder, FRAME);
     return PCFOutput.endPCFOutput(builder);
   }
 
-  public static void startPCFOutput(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startPCFOutput(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addFrame(FlatBufferBuilder builder, int FRAME) { builder.addByte(0, (byte) FRAME, (byte) 0); }
   public static void addStepSeconds(FlatBufferBuilder builder, double STEP_SECONDS) { builder.addDouble(1, STEP_SECONDS, 60.0); }
   public static void addMaximumStates(FlatBufferBuilder builder, long MAXIMUM_STATES) { builder.addInt(2, (int) MAXIMUM_STATES, (int) 500000L); }
+  public static void addEpochs(FlatBufferBuilder builder, int EPOCHSOffset) { builder.addOffset(3, EPOCHSOffset, 0); }
+  public static int createEpochsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(4, START_TIMEOffset, 0); }
+  public static void addStopTime(FlatBufferBuilder builder, int STOP_TIMEOffset) { builder.addOffset(5, STOP_TIMEOffset, 0); }
   public static int endPCFOutput(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

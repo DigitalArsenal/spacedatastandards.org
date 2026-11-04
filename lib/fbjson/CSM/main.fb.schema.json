@@ -1197,7 +1197,8 @@
         "Unspecified",
         "Sgp4Elements",
         "Sgp4XpElements",
-        "StateCovariance"
+        "StateCovariance",
+        "ApElements"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -1208,15 +1209,19 @@
         },
         "Sgp4Elements": {
           "value": 1,
-          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+          "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
         },
         "Sgp4XpElements": {
           "value": 2,
-          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+          "description": "As Sgp4Elements, under SGP4XP"
         },
         "StateCovariance": {
           "value": 3,
           "description": "$OCM: a state and its covariance"
+        },
+        "ApElements": {
+          "value": 4,
+          "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
         }
       }
     },
@@ -2329,15 +2334,19 @@
             },
             "Sgp4Elements": {
               "value": 1,
-              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+              "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
             },
             "Sgp4XpElements": {
               "value": 2,
-              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+              "description": "As Sgp4Elements, under SGP4XP"
             },
             "StateCovariance": {
               "value": 3,
               "description": "$OCM: a state and its covariance"
+            },
+            "ApElements": {
+              "value": 4,
+              "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -2354,7 +2363,7 @@
         },
         "EPOCH": {
           "type": "string",
-          "description": "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+          "description": "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's\nMEAN_ELEMENTS.EPOCH or first state epoch.",
           "x-flatbuffer-type": "string"
         },
         "SELECTION_REASON": {

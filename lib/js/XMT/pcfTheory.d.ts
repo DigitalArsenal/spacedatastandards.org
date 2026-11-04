@@ -27,6 +27,11 @@ export declare enum pcfTheory {
     /**
      * Two-body (Keplerian) motion about the central body.
      */
-    KEPLER = 5
+    KEPLER = 5,
+    /**
+     * SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+     * 3 stays unused.
+     */
+    AP = 6
 }
 //# sourceMappingURL=pcfTheory.d.ts.map

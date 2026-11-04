@@ -89,6 +89,13 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let HISTORY_SETS: VOffset = 34
     static let HISTORY_WINDOW: VOffset = 36
     static let SHRINKAGE_WEIGHT: VOffset = 38
+    static let TRUTH_EPOCHS: VOffset = 40
+    static let COVERAGE_1_SIGMA_AXIS1: VOffset = 42
+    static let COVERAGE_1_SIGMA_AXIS2: VOffset = 44
+    static let COVERAGE_1_SIGMA_AXIS3: VOffset = 46
+    static let COVERAGE_3_SIGMA_AXIS1: VOffset = 48
+    static let COVERAGE_3_SIGMA_AXIS2: VOffset = 50
+    static let COVERAGE_3_SIGMA_AXIS3: VOffset = 52
   }
 
   ///  The rule that produced the covariance. In a CCSDS covariance block,
@@ -163,7 +170,21 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  This is not SCALE_FACTOR, which multiplies a covariance. History-only
   ///  evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
   public var SHRINKAGE_WEIGHT: Double { let o = _accessor.offset(VT.SHRINKAGE_WEIGHT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCVR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  ///  Distinct truth epochs among the SAMPLES: predictions that share one truth
+  ///  state count once here. 0 when not stated.
+  public var TRUTH_EPOCHS: UInt32 { let o = _accessor.offset(VT.TRUTH_EPOCHS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Share of the held-out samples whose error lies inside the 1-sigma band of
+  ///  the first, second and third axis of the covariance's frame (radial,
+  ///  in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+  ///  nominal 0.6827 for Gaussian errors. NaN when not measured.
+  public var COVERAGE_1_SIGMA_AXIS1: Double { let o = _accessor.offset(VT.COVERAGE_1_SIGMA_AXIS1); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVERAGE_1_SIGMA_AXIS2: Double { let o = _accessor.offset(VT.COVERAGE_1_SIGMA_AXIS2); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVERAGE_1_SIGMA_AXIS3: Double { let o = _accessor.offset(VT.COVERAGE_1_SIGMA_AXIS3); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+  public var COVERAGE_3_SIGMA_AXIS1: Double { let o = _accessor.offset(VT.COVERAGE_3_SIGMA_AXIS1); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVERAGE_3_SIGMA_AXIS2: Double { let o = _accessor.offset(VT.COVERAGE_3_SIGMA_AXIS2); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVERAGE_3_SIGMA_AXIS3: Double { let o = _accessor.offset(VT.COVERAGE_3_SIGMA_AXIS3); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCVR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
   public static func add(RULE: covarianceRule, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RULE.rawValue, def: 0, at: VT.RULE) }
   public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
   public static func add(REGIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGIME, at: VT.REGIME) }
@@ -182,6 +203,13 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(HISTORY_SETS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORY_SETS, def: 0, at: VT.HISTORY_SETS) }
   public static func add(HISTORY_WINDOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HISTORY_WINDOW, at: VT.HISTORY_WINDOW) }
   public static func add(SHRINKAGE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHRINKAGE_WEIGHT, def: .nan, at: VT.SHRINKAGE_WEIGHT) }
+  public static func add(TRUTH_EPOCHS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRUTH_EPOCHS, def: 0, at: VT.TRUTH_EPOCHS) }
+  public static func add(COVERAGE_1_SIGMA_AXIS1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_1_SIGMA_AXIS1, def: .nan, at: VT.COVERAGE_1_SIGMA_AXIS1) }
+  public static func add(COVERAGE_1_SIGMA_AXIS2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_1_SIGMA_AXIS2, def: .nan, at: VT.COVERAGE_1_SIGMA_AXIS2) }
+  public static func add(COVERAGE_1_SIGMA_AXIS3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_1_SIGMA_AXIS3, def: .nan, at: VT.COVERAGE_1_SIGMA_AXIS3) }
+  public static func add(COVERAGE_3_SIGMA_AXIS1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_3_SIGMA_AXIS1, def: .nan, at: VT.COVERAGE_3_SIGMA_AXIS1) }
+  public static func add(COVERAGE_3_SIGMA_AXIS2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_3_SIGMA_AXIS2, def: .nan, at: VT.COVERAGE_3_SIGMA_AXIS2) }
+  public static func add(COVERAGE_3_SIGMA_AXIS3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_3_SIGMA_AXIS3, def: .nan, at: VT.COVERAGE_3_SIGMA_AXIS3) }
   public static func endCVR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCVR(
     _ fbb: inout FlatBufferBuilder,
@@ -202,7 +230,14 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     HISTORY_SAMPLES: UInt32 = 0,
     HISTORY_SETS: UInt32 = 0,
     HISTORY_WINDOWOffset HISTORY_WINDOW: Offset = Offset(),
-    SHRINKAGE_WEIGHT: Double = .nan
+    SHRINKAGE_WEIGHT: Double = .nan,
+    TRUTH_EPOCHS: UInt32 = 0,
+    COVERAGE_1_SIGMA_AXIS1: Double = .nan,
+    COVERAGE_1_SIGMA_AXIS2: Double = .nan,
+    COVERAGE_1_SIGMA_AXIS3: Double = .nan,
+    COVERAGE_3_SIGMA_AXIS1: Double = .nan,
+    COVERAGE_3_SIGMA_AXIS2: Double = .nan,
+    COVERAGE_3_SIGMA_AXIS3: Double = .nan
   ) -> Offset {
     let __start = CVR.startCVR(&fbb)
     CVR.add(RULE: RULE, &fbb)
@@ -223,6 +258,13 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CVR.add(HISTORY_SETS: HISTORY_SETS, &fbb)
     CVR.add(HISTORY_WINDOW: HISTORY_WINDOW, &fbb)
     CVR.add(SHRINKAGE_WEIGHT: SHRINKAGE_WEIGHT, &fbb)
+    CVR.add(TRUTH_EPOCHS: TRUTH_EPOCHS, &fbb)
+    CVR.add(COVERAGE_1_SIGMA_AXIS1: COVERAGE_1_SIGMA_AXIS1, &fbb)
+    CVR.add(COVERAGE_1_SIGMA_AXIS2: COVERAGE_1_SIGMA_AXIS2, &fbb)
+    CVR.add(COVERAGE_1_SIGMA_AXIS3: COVERAGE_1_SIGMA_AXIS3, &fbb)
+    CVR.add(COVERAGE_3_SIGMA_AXIS1: COVERAGE_3_SIGMA_AXIS1, &fbb)
+    CVR.add(COVERAGE_3_SIGMA_AXIS2: COVERAGE_3_SIGMA_AXIS2, &fbb)
+    CVR.add(COVERAGE_3_SIGMA_AXIS3: COVERAGE_3_SIGMA_AXIS3, &fbb)
     return CVR.endCVR(&fbb, start: __start)
   }
 
@@ -246,6 +288,13 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.HISTORY_SETS, fieldName: "HISTORY_SETS", required: false, type: UInt32.self)
     try _v.visit(field: VT.HISTORY_WINDOW, fieldName: "HISTORY_WINDOW", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SHRINKAGE_WEIGHT, fieldName: "SHRINKAGE_WEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.TRUTH_EPOCHS, fieldName: "TRUTH_EPOCHS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COVERAGE_1_SIGMA_AXIS1, fieldName: "COVERAGE_1_SIGMA_AXIS1", required: false, type: Double.self)
+    try _v.visit(field: VT.COVERAGE_1_SIGMA_AXIS2, fieldName: "COVERAGE_1_SIGMA_AXIS2", required: false, type: Double.self)
+    try _v.visit(field: VT.COVERAGE_1_SIGMA_AXIS3, fieldName: "COVERAGE_1_SIGMA_AXIS3", required: false, type: Double.self)
+    try _v.visit(field: VT.COVERAGE_3_SIGMA_AXIS1, fieldName: "COVERAGE_3_SIGMA_AXIS1", required: false, type: Double.self)
+    try _v.visit(field: VT.COVERAGE_3_SIGMA_AXIS2, fieldName: "COVERAGE_3_SIGMA_AXIS2", required: false, type: Double.self)
+    try _v.visit(field: VT.COVERAGE_3_SIGMA_AXIS3, fieldName: "COVERAGE_3_SIGMA_AXIS3", required: false, type: Double.self)
     _v.finish()
   }
 }

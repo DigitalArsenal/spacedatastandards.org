@@ -32,8 +32,8 @@ class OCMDynamicParameter : Table() {
     }
     /**
      * Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-     * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-     * are the producer's, as in USER_DEFINED_PARAMETERS.
+     * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+     * label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
      */
     val name : String?
         get() {
@@ -77,6 +77,14 @@ class OCMDynamicParameter : Table() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * The parameter, typed: every reader keys on this, never on NAME.
+     */
+    val parameter : UByte
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCMDynamicParameter(_bb: ByteBuffer): OCMDynamicParameter = getRootAsOCMDynamicParameter(_bb, OCMDynamicParameter())
@@ -84,19 +92,21 @@ class OCMDynamicParameter : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOCMDynamicParameter(builder: FlatBufferBuilder, nameOffset: Int, value: Double, unitsOffset: Int, solvedFor: Boolean) : Int {
-            builder.startTable(4)
+        fun createOCMDynamicParameter(builder: FlatBufferBuilder, nameOffset: Int, value: Double, unitsOffset: Int, solvedFor: Boolean, parameter: UByte) : Int {
+            builder.startTable(5)
             addVALUE(builder, value)
             addUNITS(builder, unitsOffset)
             addNAME(builder, nameOffset)
+            addPARAMETER(builder, parameter)
             addSOLVEDFOR(builder, solvedFor)
             return endOCMDynamicParameter(builder)
         }
-        fun startOCMDynamicParameter(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startOCMDynamicParameter(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
         fun addVALUE(builder: FlatBufferBuilder, value: Double) = builder.addDouble(1, value, 0.0)
         fun addUNITS(builder: FlatBufferBuilder, units: Int) = builder.addOffset(2, units, 0)
         fun addSOLVEDFOR(builder: FlatBufferBuilder, solvedFor: Boolean) = builder.addBoolean(3, solvedFor, false)
+        fun addPARAMETER(builder: FlatBufferBuilder, parameter: UByte) = builder.addByte(4, parameter.toByte(), 0)
         fun endOCMDynamicParameter(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -30,8 +30,8 @@ public final class OCMDynamicParameter extends com.google.flatbuffers.Table {
 
   /**
    * Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-   * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-   * are the producer's, as in USER_DEFINED_PARAMETERS.
+   * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+   * label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
    */
   public String NAME() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -51,25 +51,32 @@ public final class OCMDynamicParameter extends com.google.flatbuffers.Table {
    * True when the orbit determination solved for the parameter, false when VALUE was held.
    */
   public boolean SOLVED_FOR() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * The parameter, typed: every reader keys on this, never on NAME.
+   */
+  public int PARAMETER() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createOCMDynamicParameter(FlatBufferBuilder builder,
       int NAMEOffset,
       double VALUE,
       int UNITSOffset,
-      boolean SOLVED_FOR) {
-    builder.startTable(4);
+      boolean SOLVED_FOR,
+      int PARAMETER) {
+    builder.startTable(5);
     OCMDynamicParameter.addValue(builder, VALUE);
     OCMDynamicParameter.addUnits(builder, UNITSOffset);
     OCMDynamicParameter.addName(builder, NAMEOffset);
+    OCMDynamicParameter.addParameter(builder, PARAMETER);
     OCMDynamicParameter.addSolvedFor(builder, SOLVED_FOR);
     return OCMDynamicParameter.endOCMDynamicParameter(builder);
   }
 
-  public static void startOCMDynamicParameter(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startOCMDynamicParameter(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addValue(FlatBufferBuilder builder, double VALUE) { builder.addDouble(1, VALUE, 0.0); }
   public static void addUnits(FlatBufferBuilder builder, int UNITSOffset) { builder.addOffset(2, UNITSOffset, 0); }
   public static void addSolvedFor(FlatBufferBuilder builder, boolean SOLVED_FOR) { builder.addBoolean(3, SOLVED_FOR, false); }
+  public static void addParameter(FlatBufferBuilder builder, int PARAMETER) { builder.addByte(4, (byte) PARAMETER, (byte) 0); }
   public static int endOCMDynamicParameter(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

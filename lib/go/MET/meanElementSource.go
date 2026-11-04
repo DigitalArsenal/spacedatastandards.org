@@ -8,28 +8,39 @@ type meanElementSource int8
 
 const (
 	/// Simplified General Perturbation Model 4
-	meanElementSourceSGP4   meanElementSource = 0
+	meanElementSourceSGP4        meanElementSource = 0
 	/// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
 	/// as published in the 2022 astrodynamics conference literature.
-	meanElementSourceSGP4XP meanElementSource = 1
+	meanElementSourceSGP4XP      meanElementSource = 1
 	/// Draper Semi-analytical Satellite Theory
-	meanElementSourceDSST   meanElementSource = 2
+	meanElementSourceDSST        meanElementSource = 2
 	/// Universal Semianalytical Method
-	meanElementSourceUSM    meanElementSource = 3
+	meanElementSourceUSM         meanElementSource = 3
+	/// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+	/// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+	/// unused: it was a cut value of an earlier theory.
+	meanElementSourceAP          meanElementSource = 5
+	/// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+	/// set is always written.
+	meanElementSourceUNSPECIFIED meanElementSource = 6
 )
 
 var EnumNamesmeanElementSource = map[meanElementSource]string{
-	meanElementSourceSGP4:   "SGP4",
-	meanElementSourceSGP4XP: "SGP4XP",
-	meanElementSourceDSST:   "DSST",
-	meanElementSourceUSM:    "USM",
+	meanElementSourceSGP4:        "SGP4",
+	meanElementSourceSGP4XP:      "SGP4XP",
+	meanElementSourceDSST:        "DSST",
+	meanElementSourceUSM:         "USM",
+	meanElementSourceAP:          "AP",
+	meanElementSourceUNSPECIFIED: "UNSPECIFIED",
 }
 
 var EnumValuesmeanElementSource = map[string]meanElementSource{
-	"SGP4":   meanElementSourceSGP4,
-	"SGP4XP": meanElementSourceSGP4XP,
-	"DSST":   meanElementSourceDSST,
-	"USM":    meanElementSourceUSM,
+	"SGP4":        meanElementSourceSGP4,
+	"SGP4XP":      meanElementSourceSGP4XP,
+	"DSST":        meanElementSourceDSST,
+	"USM":         meanElementSourceUSM,
+	"AP":          meanElementSourceAP,
+	"UNSPECIFIED": meanElementSourceUNSPECIFIED,
 }
 
 func (v meanElementSource) String() string {

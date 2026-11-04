@@ -389,22 +389,170 @@ class Perturbations extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
+    /// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+    /// the gravity field the record was computed with (SDS addition; the $PCF
+    /// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+    /// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+    /// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+    /// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+    /// order pair cannot state a tesseral cap below a zonal one.
+    /**
+     * @return ushort
+     */
+    public function getMAXIMUM_TESSERAL_DEGREE()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Highest degree of the zonal terms (order 0) of the gravity field the
+    /// record was computed with (SDS addition). For a mean-element set the tail
+    /// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+    /// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+    /// otherwise not stated.
+    /**
+     * @return ushort
+     */
+    public function getMAXIMUM_ZONAL_DEGREE()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Where the space weather behind the drag density comes from. RECORDS: the
+    /// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+    /// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+    /// in an element-set record.
+    /**
+     * @return byte
+     */
+    public function getWEATHER_SOURCE()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfWeatherSource::UNSPECIFIED;
+    }
+
+    /// Correction applied to the atmosphere model's density.
+    /**
+     * @return byte
+     */
+    public function getDENSITY_CORRECTION()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfDensityCorrection::NONE;
+    }
+
+    /// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+    /// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+    /// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+    public function getDENSITY_CORRECTION_CID()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The daily space weather the drag density reads (SDS addition; CCSDS
+    /// 502.0-B-3 names only the source, epoch and interpolation as text and
+    /// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+    /// UTC day, DATE ascending, no gap, from the day before the first day the
+    /// record is flown or was fitted through its last day. The record is flown
+    /// to the end of the last row's day and no further. Each row carries DATE,
+    /// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+    /// PRD, PRM predicted); other SPW fields unwritten.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSPACE_WEATHER($j)
+    {
+        $o = $this->__offset(90);
+        $obj = new SPW();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSPACE_WEATHERLength()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+    /// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+    /// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+    /// Empty when DENSITY_CORRECTION is NONE.
+    /**
+     * @param int offset
+     * @return long
+     */
+    public function getDENSITY_CORRECTION_NODE_TIMES_MS($j)
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getLong($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDENSITY_CORRECTION_NODE_TIMES_MSLength()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+    /// entry, dimensionless, as that $DCL's
+    /// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+    /// held at the end values outside them.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS($j)
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Number of terms of the nutation series REDUCTION_THEORY names that the
+    /// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+    /// 4, 50 or 106). 0 when the series is not truncated or the count is not
+    /// stated.
+    /**
+     * @return ushort
+     */
+    public function getREDUCTION_THEORY_TERMS()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPerturbations(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(38);
+        $builder->StartObject(47);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Perturbations
      */
-    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN, $FIXED_GEOMAG_AP, $ATMOSPHERIC_MODEL_NAME, $EQUATORIAL_RADIUS, $CENTRAL_BODY_ROTATION, $OBLATE_FLATTENING, $REDUCTION_THEORY, $ALBEDO_GRID_SIZE, $SHADOW_MODEL, $SHADOW_BODIES, $SW_DATA_SOURCE, $SW_DATA_EPOCH, $SW_INTERP_METHOD, $FIXED_GEOMAG_DST, $FIXED_M10P7, $FIXED_M10P7_MEAN, $FIXED_S10P7, $FIXED_S10P7_MEAN, $FIXED_Y10P7, $FIXED_Y10P7_MEAN)
+    public static function createPerturbations(FlatBufferBuilder $builder, $COMMENT, $ATMOSPHERIC_MODEL, $GRAVITY_MODEL, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM, $N_BODY_PERTURBATIONS, $OCEAN_TIDES_MODEL, $SOLID_TIDES_MODEL, $ATMOSPHERIC_TIDES_MODEL, $GEOPOTENTIAL_MODEL, $SOLAR_RAD_PRESSURE, $ALBEDO, $THERMAL, $RELATIVITY, $ATMOSPHERIC_DRAG, $FIXED_GEOMAG_KP, $FIXED_F10P7, $FIXED_F10P7_MEAN, $FIXED_GEOMAG_AP, $ATMOSPHERIC_MODEL_NAME, $EQUATORIAL_RADIUS, $CENTRAL_BODY_ROTATION, $OBLATE_FLATTENING, $REDUCTION_THEORY, $ALBEDO_GRID_SIZE, $SHADOW_MODEL, $SHADOW_BODIES, $SW_DATA_SOURCE, $SW_DATA_EPOCH, $SW_INTERP_METHOD, $FIXED_GEOMAG_DST, $FIXED_M10P7, $FIXED_M10P7_MEAN, $FIXED_S10P7, $FIXED_S10P7_MEAN, $FIXED_Y10P7, $FIXED_Y10P7_MEAN, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $WEATHER_SOURCE, $DENSITY_CORRECTION, $DENSITY_CORRECTION_CID, $SPACE_WEATHER, $DENSITY_CORRECTION_NODE_TIMES_MS, $DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS, $REDUCTION_THEORY_TERMS)
     {
-        $builder->startObject(38);
+        $builder->startObject(47);
         self::addCOMMENT($builder, $COMMENT);
         self::addATMOSPHERIC_MODEL($builder, $ATMOSPHERIC_MODEL);
         self::addGRAVITY_MODEL($builder, $GRAVITY_MODEL);
@@ -443,6 +591,15 @@ class Perturbations extends Table
         self::addFIXED_S10P7_MEAN($builder, $FIXED_S10P7_MEAN);
         self::addFIXED_Y10P7($builder, $FIXED_Y10P7);
         self::addFIXED_Y10P7_MEAN($builder, $FIXED_Y10P7_MEAN);
+        self::addMAXIMUM_TESSERAL_DEGREE($builder, $MAXIMUM_TESSERAL_DEGREE);
+        self::addMAXIMUM_ZONAL_DEGREE($builder, $MAXIMUM_ZONAL_DEGREE);
+        self::addWEATHER_SOURCE($builder, $WEATHER_SOURCE);
+        self::addDENSITY_CORRECTION($builder, $DENSITY_CORRECTION);
+        self::addDENSITY_CORRECTION_CID($builder, $DENSITY_CORRECTION_CID);
+        self::addSPACE_WEATHER($builder, $SPACE_WEATHER);
+        self::addDENSITY_CORRECTION_NODE_TIMES_MS($builder, $DENSITY_CORRECTION_NODE_TIMES_MS);
+        self::addDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS($builder, $DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS);
+        self::addREDUCTION_THEORY_TERMS($builder, $REDUCTION_THEORY_TERMS);
         $o = $builder->endObject();
         return $o;
     }
@@ -873,6 +1030,168 @@ class Perturbations extends Table
     public static function addFIXED_Y10P7_MEAN(FlatBufferBuilder $builder, $FIXED_Y10P7_MEAN)
     {
         $builder->addDoubleX(37, $FIXED_Y10P7_MEAN, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder $builder, $MAXIMUM_TESSERAL_DEGREE)
+    {
+        $builder->addUshortX(38, $MAXIMUM_TESSERAL_DEGREE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addMAXIMUM_ZONAL_DEGREE(FlatBufferBuilder $builder, $MAXIMUM_ZONAL_DEGREE)
+    {
+        $builder->addUshortX(39, $MAXIMUM_ZONAL_DEGREE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addWEATHER_SOURCE(FlatBufferBuilder $builder, $WEATHER_SOURCE)
+    {
+        $builder->addByteX(40, $WEATHER_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addDENSITY_CORRECTION(FlatBufferBuilder $builder, $DENSITY_CORRECTION)
+    {
+        $builder->addByteX(41, $DENSITY_CORRECTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDENSITY_CORRECTION_CID(FlatBufferBuilder $builder, $DENSITY_CORRECTION_CID)
+    {
+        $builder->addOffsetX(42, $DENSITY_CORRECTION_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSPACE_WEATHER(FlatBufferBuilder $builder, $SPACE_WEATHER)
+    {
+        $builder->addOffsetX(43, $SPACE_WEATHER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSPACE_WEATHERVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSPACE_WEATHERVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDENSITY_CORRECTION_NODE_TIMES_MS(FlatBufferBuilder $builder, $DENSITY_CORRECTION_NODE_TIMES_MS)
+    {
+        $builder->addOffsetX(44, $DENSITY_CORRECTION_NODE_TIMES_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDENSITY_CORRECTION_NODE_TIMES_MSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putLong($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDENSITY_CORRECTION_NODE_TIMES_MSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(FlatBufferBuilder $builder, $DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+    {
+        $builder->addOffsetX(45, $DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addREDUCTION_THEORY_TERMS(FlatBufferBuilder $builder, $REDUCTION_THEORY_TERMS)
+    {
+        $builder->addUshortX(46, $REDUCTION_THEORY_TERMS, 0);
     }
 
     /**

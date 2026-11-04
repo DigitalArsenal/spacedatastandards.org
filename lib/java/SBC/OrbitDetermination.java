@@ -129,7 +129,9 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
    */
   public byte OD_ESTIMATOR() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * RMS of post-fit residuals for this solution.
+   * RMS of post-fit residuals for this solution. In the unit of the residuals the
+   * observation types state: arcsec for RADEC angles. A position RMS in km is
+   * OCMFitStatistics.FIT_RMS_KM.
    */
   public double OD_RESIDUAL_RMS() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -275,6 +277,11 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public int COMMENTLength() { int o = __offset(96); return o != 0 ? __vector_len(o) : 0; }
   public StringVector commentVector() { return commentVector(new StringVector()); }
   public StringVector commentVector(StringVector obj) { int o = __offset(96); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Position statistics of a fit to a reference ephemeris.
+   */
+  public OCMFitStatistics FIT_STATISTICS() { return FIT_STATISTICS(new OCMFitStatistics()); }
+  public OCMFitStatistics FIT_STATISTICS(OCMFitStatistics obj) { int o = __offset(98); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createOrbitDetermination(FlatBufferBuilder builder,
       int OD_IDOffset,
@@ -323,8 +330,9 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
       int CONSIDER_PARAMSOffset,
       long SENSORS_N,
       int SENSORSOffset,
-      int COMMENTOffset) {
-    builder.startTable(47);
+      int COMMENTOffset,
+      int FIT_STATISTICSOffset) {
+    builder.startTable(48);
     OrbitDetermination.addGdop(builder, GDOP);
     OrbitDetermination.addOdConfidence(builder, OD_CONFIDENCE);
     OrbitDetermination.addOdMinPredEigmin(builder, OD_MIN_PRED_EIGMIN);
@@ -341,6 +349,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     OrbitDetermination.addSedr(builder, SEDR);
     OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
     OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.addFitStatistics(builder, FIT_STATISTICSOffset);
     OrbitDetermination.addComment(builder, COMMENTOffset);
     OrbitDetermination.addSensors(builder, SENSORSOffset);
     OrbitDetermination.addSensorsN(builder, SENSORS_N);
@@ -375,7 +384,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     return OrbitDetermination.endOrbitDetermination(builder);
   }
 
-  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(47); }
+  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(48); }
   public static void addOdId(FlatBufferBuilder builder, int OD_IDOffset) { builder.addOffset(0, OD_IDOffset, 0); }
   public static void addOdPrevId(FlatBufferBuilder builder, int OD_PREV_IDOffset) { builder.addOffset(1, OD_PREV_IDOffset, 0); }
   public static void addOdAlgorithm(FlatBufferBuilder builder, int OD_ALGORITHMOffset) { builder.addOffset(2, OD_ALGORITHMOffset, 0); }
@@ -435,6 +444,7 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(46, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFitStatistics(FlatBufferBuilder builder, int FIT_STATISTICSOffset) { builder.addOffset(47, FIT_STATISTICSOffset, 0); }
   public static int endOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

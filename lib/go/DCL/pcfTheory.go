@@ -24,6 +24,9 @@ const (
 	pcfTheoryFFM         pcfTheory = 4
 	/// Two-body (Keplerian) motion about the central body.
 	pcfTheoryKEPLER      pcfTheory = 5
+	/// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+	/// 3 stays unused.
+	pcfTheoryAP          pcfTheory = 6
 )
 
 var EnumNamespcfTheory = map[pcfTheory]string{
@@ -32,6 +35,7 @@ var EnumNamespcfTheory = map[pcfTheory]string{
 	pcfTheorySGP4XP:      "SGP4XP",
 	pcfTheoryFFM:         "FFM",
 	pcfTheoryKEPLER:      "KEPLER",
+	pcfTheoryAP:          "AP",
 }
 
 var EnumValuespcfTheory = map[string]pcfTheory{
@@ -40,6 +44,7 @@ var EnumValuespcfTheory = map[string]pcfTheory{
 	"SGP4XP":      pcfTheorySGP4XP,
 	"FFM":         pcfTheoryFFM,
 	"KEPLER":      pcfTheoryKEPLER,
+	"AP":          pcfTheoryAP,
 }
 
 func (v pcfTheory) String() string {

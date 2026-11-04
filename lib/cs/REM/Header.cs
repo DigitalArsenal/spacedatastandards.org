@@ -59,6 +59,16 @@ public struct Header : IFlatbufferObject
   public ArraySegment<byte>? GetMESSAGE_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetMESSAGE_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// Whether the message is real, test or exercise data.
+  public ocmMessageStatus MESSAGE_STATUS { get { int o = __p.__offset(16); return o != 0 ? (ocmMessageStatus)__p.bb.Get(o + __p.bb_pos) : ocmMessageStatus.UNSPECIFIED; } }
+  /// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+  public string EXERCISE_NAME { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEXERCISE_NAMEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetEXERCISE_NAMEBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetEXERCISE_NAMEArray() { return __p.__vector_as_array<byte>(18); }
 
   public static Offset<Header> CreateHeader(FlatBufferBuilder builder,
       StringOffset CCSDS_OCM_VERSOffset = default(StringOffset),
@@ -66,18 +76,22 @@ public struct Header : IFlatbufferObject
       StringOffset CLASSIFICATIONOffset = default(StringOffset),
       StringOffset CREATION_DATEOffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
-      StringOffset MESSAGE_IDOffset = default(StringOffset)) {
-    builder.StartTable(6);
+      StringOffset MESSAGE_IDOffset = default(StringOffset),
+      ocmMessageStatus MESSAGE_STATUS = ocmMessageStatus.UNSPECIFIED,
+      StringOffset EXERCISE_NAMEOffset = default(StringOffset)) {
+    builder.StartTable(8);
+    Header.AddEXERCISE_NAME(builder, EXERCISE_NAMEOffset);
     Header.AddMESSAGE_ID(builder, MESSAGE_IDOffset);
     Header.AddORIGINATOR(builder, ORIGINATOROffset);
     Header.AddCREATION_DATE(builder, CREATION_DATEOffset);
     Header.AddCLASSIFICATION(builder, CLASSIFICATIONOffset);
     Header.AddCOMMENT(builder, COMMENTOffset);
     Header.AddCCSDS_OCM_VERS(builder, CCSDS_OCM_VERSOffset);
+    Header.AddMESSAGE_STATUS(builder, MESSAGE_STATUS);
     return Header.EndHeader(builder);
   }
 
-  public static void StartHeader(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartHeader(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddCCSDS_OCM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_OCM_VERSOffset) { builder.AddOffset(0, CCSDS_OCM_VERSOffset.Value, 0); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(1, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -89,6 +103,8 @@ public struct Header : IFlatbufferObject
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(3, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(4, ORIGINATOROffset.Value, 0); }
   public static void AddMESSAGE_ID(FlatBufferBuilder builder, StringOffset MESSAGE_IDOffset) { builder.AddOffset(5, MESSAGE_IDOffset.Value, 0); }
+  public static void AddMESSAGE_STATUS(FlatBufferBuilder builder, ocmMessageStatus MESSAGE_STATUS) { builder.AddByte(6, (byte)MESSAGE_STATUS, 0); }
+  public static void AddEXERCISE_NAME(FlatBufferBuilder builder, StringOffset EXERCISE_NAMEOffset) { builder.AddOffset(7, EXERCISE_NAMEOffset.Value, 0); }
   public static Offset<Header> EndHeader(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Header>(o);
@@ -106,6 +122,8 @@ public struct Header : IFlatbufferObject
     _o.CREATION_DATE = this.CREATION_DATE;
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.MESSAGE_ID = this.MESSAGE_ID;
+    _o.MESSAGE_STATUS = this.MESSAGE_STATUS;
+    _o.EXERCISE_NAME = this.EXERCISE_NAME;
   }
   public static Offset<Header> Pack(FlatBufferBuilder builder, HeaderT _o) {
     if (_o == null) return default(Offset<Header>);
@@ -120,6 +138,7 @@ public struct Header : IFlatbufferObject
     var _CREATION_DATE = _o.CREATION_DATE == null ? default(StringOffset) : builder.CreateString(_o.CREATION_DATE);
     var _ORIGINATOR = _o.ORIGINATOR == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR);
     var _MESSAGE_ID = _o.MESSAGE_ID == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_ID);
+    var _EXERCISE_NAME = _o.EXERCISE_NAME == null ? default(StringOffset) : builder.CreateString(_o.EXERCISE_NAME);
     return CreateHeader(
       builder,
       _CCSDS_OCM_VERS,
@@ -127,7 +146,9 @@ public struct Header : IFlatbufferObject
       _CLASSIFICATION,
       _CREATION_DATE,
       _ORIGINATOR,
-      _MESSAGE_ID);
+      _MESSAGE_ID,
+      _o.MESSAGE_STATUS,
+      _EXERCISE_NAME);
   }
 }
 
@@ -139,6 +160,8 @@ public class HeaderT
   public string CREATION_DATE { get; set; }
   public string ORIGINATOR { get; set; }
   public string MESSAGE_ID { get; set; }
+  public ocmMessageStatus MESSAGE_STATUS { get; set; }
+  public string EXERCISE_NAME { get; set; }
 
   public HeaderT() {
     this.CCSDS_OCM_VERS = null;
@@ -147,6 +170,8 @@ public class HeaderT
     this.CREATION_DATE = null;
     this.ORIGINATOR = null;
     this.MESSAGE_ID = null;
+    this.MESSAGE_STATUS = ocmMessageStatus.UNSPECIFIED;
+    this.EXERCISE_NAME = null;
   }
 }
 
@@ -162,6 +187,8 @@ static public class HeaderVerify
       && verifier.VerifyString(tablePos, 10 /*CREATION_DATE*/, false)
       && verifier.VerifyString(tablePos, 12 /*ORIGINATOR*/, false)
       && verifier.VerifyString(tablePos, 14 /*MESSAGE_ID*/, false)
+      && verifier.VerifyField(tablePos, 16 /*MESSAGE_STATUS*/, 1 /*ocmMessageStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*EXERCISE_NAME*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

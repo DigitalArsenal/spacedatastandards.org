@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { OCMDynamicParameter, OCMDynamicParameterT } from './OCMDynamicParameter.js';
+import { OCMFitStatistics, OCMFitStatisticsT } from './OCMFitStatistics.js';
 import { estimatorCategory } from './estimatorCategory.js';
 
 
@@ -211,7 +212,9 @@ OD_ESTIMATOR():estimatorCategory {
 }
 
 /**
- * RMS of post-fit residuals for this solution.
+ * RMS of post-fit residuals for this solution. In the unit of the residuals the
+ * observation types state: arcsec for RADEC angles. A position RMS in km is
+ * OCMFitStatistics.FIT_RMS_KM.
  */
 OD_RESIDUAL_RMS():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
@@ -488,8 +491,16 @@ commentLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Position statistics of a fit to a reference ephemeris.
+ */
+FIT_STATISTICS(obj?:OCMFitStatistics):OCMFitStatistics|null {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? (obj || new OCMFitStatistics()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startOrbitDetermination(builder:flatbuffers.Builder) {
-  builder.startObject(47);
+  builder.startObject(48);
 }
 
 static addOdId(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset) {
@@ -762,62 +773,15 @@ static startCommentVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addFitStatistics(builder:flatbuffers.Builder, FIT_STATISTICSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(47, FIT_STATISTICSOffset, 0);
+}
+
 static endOrbitDetermination(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number, SEDR:number, WEIGHTED_RMS:number, OD_DYNAMIC_PARAMETERSOffset:flatbuffers.Offset, DAYS_SINCE_FIRST_OBS:number, DAYS_SINCE_LAST_OBS:number, RECOMMENDED_OD_SPAN:number, ACTUAL_OD_SPAN:number, OBS_AVAILABLE:number, TRACKS_AVAILABLE:number, MAXIMUM_OBS_GAP:number, OD_EPOCH_EIGMAJ:number, OD_EPOCH_EIGINT:number, OD_EPOCH_EIGMIN:number, OD_MAX_PRED_EIGMAJ:number, OD_MIN_PRED_EIGMIN:number, OD_CONFIDENCE:number, GDOP:number, SOLVE_N:number, SOLVE_STATESOffset:flatbuffers.Offset, CONSIDER_N:number, CONSIDER_PARAMSOffset:flatbuffers.Offset, SENSORS_N:number, SENSORSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset):flatbuffers.Offset {
-  OrbitDetermination.startOrbitDetermination(builder);
-  OrbitDetermination.addOdId(builder, OD_IDOffset);
-  OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
-  OrbitDetermination.addOdAlgorithm(builder, OD_ALGORITHMOffset);
-  OrbitDetermination.addOdMethod(builder, OD_METHODOffset);
-  OrbitDetermination.addOdEpoch(builder, OD_EPOCHOffset);
-  OrbitDetermination.addOdTimeTag(builder, OD_TIME_TAGOffset);
-  OrbitDetermination.addOdProcessNoise(builder, OD_PROCESS_NOISEOffset);
-  OrbitDetermination.addOdCovReduction(builder, OD_COV_REDUCTIONOffset);
-  OrbitDetermination.addOdNoiseModels(builder, OD_NOISE_MODELSOffset);
-  OrbitDetermination.addOdObservationsType(builder, OD_OBSERVATIONS_TYPEOffset);
-  OrbitDetermination.addOdObservationsUsed(builder, OD_OBSERVATIONS_USED);
-  OrbitDetermination.addOdTracksUsed(builder, OD_TRACKS_USED);
-  OrbitDetermination.addOdDataWeighting(builder, OD_DATA_WEIGHTINGOffset);
-  OrbitDetermination.addOdConvergenceCriteria(builder, OD_CONVERGENCE_CRITERIAOffset);
-  OrbitDetermination.addOdEstParameters(builder, OD_EST_PARAMETERSOffset);
-  OrbitDetermination.addOdAprioriData(builder, OD_APRIORI_DATAOffset);
-  OrbitDetermination.addOdResiduals(builder, OD_RESIDUALSOffset);
-  OrbitDetermination.addOdEstimator(builder, OD_ESTIMATOR);
-  OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
-  OrbitDetermination.addOdResidualsSeries(builder, OD_RESIDUALS_SERIESOffset);
-  OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
-  OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
-  OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
-  OrbitDetermination.addSedr(builder, SEDR);
-  OrbitDetermination.addWeightedRms(builder, WEIGHTED_RMS);
-  OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERSOffset);
-  OrbitDetermination.addDaysSinceFirstObs(builder, DAYS_SINCE_FIRST_OBS);
-  OrbitDetermination.addDaysSinceLastObs(builder, DAYS_SINCE_LAST_OBS);
-  OrbitDetermination.addRecommendedOdSpan(builder, RECOMMENDED_OD_SPAN);
-  OrbitDetermination.addActualOdSpan(builder, ACTUAL_OD_SPAN);
-  OrbitDetermination.addObsAvailable(builder, OBS_AVAILABLE);
-  OrbitDetermination.addTracksAvailable(builder, TRACKS_AVAILABLE);
-  OrbitDetermination.addMaximumObsGap(builder, MAXIMUM_OBS_GAP);
-  OrbitDetermination.addOdEpochEigmaj(builder, OD_EPOCH_EIGMAJ);
-  OrbitDetermination.addOdEpochEigint(builder, OD_EPOCH_EIGINT);
-  OrbitDetermination.addOdEpochEigmin(builder, OD_EPOCH_EIGMIN);
-  OrbitDetermination.addOdMaxPredEigmaj(builder, OD_MAX_PRED_EIGMAJ);
-  OrbitDetermination.addOdMinPredEigmin(builder, OD_MIN_PRED_EIGMIN);
-  OrbitDetermination.addOdConfidence(builder, OD_CONFIDENCE);
-  OrbitDetermination.addGdop(builder, GDOP);
-  OrbitDetermination.addSolveN(builder, SOLVE_N);
-  OrbitDetermination.addSolveStates(builder, SOLVE_STATESOffset);
-  OrbitDetermination.addConsiderN(builder, CONSIDER_N);
-  OrbitDetermination.addConsiderParams(builder, CONSIDER_PARAMSOffset);
-  OrbitDetermination.addSensorsN(builder, SENSORS_N);
-  OrbitDetermination.addSensors(builder, SENSORSOffset);
-  OrbitDetermination.addComment(builder, COMMENTOffset);
-  return OrbitDetermination.endOrbitDetermination(builder);
-}
 
 unpack(): OrbitDeterminationT {
   return new OrbitDeterminationT(
@@ -867,7 +831,8 @@ unpack(): OrbitDeterminationT {
     this.CONSIDER_PARAMS(),
     this.SENSORS_N(),
     this.SENSORS(),
-    this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength())
+    this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength()),
+    (this.FIT_STATISTICS() !== null ? this.FIT_STATISTICS()!.unpack() : null)
   );
 }
 
@@ -920,6 +885,7 @@ unpackTo(_o: OrbitDeterminationT): void {
   _o.SENSORS_N = this.SENSORS_N();
   _o.SENSORS = this.SENSORS();
   _o.COMMENT = this.bb!.createScalarList<string>(this.COMMENT.bind(this), this.commentLength());
+  _o.FIT_STATISTICS = (this.FIT_STATISTICS() !== null ? this.FIT_STATISTICS()!.unpack() : null);
 }
 }
 
@@ -971,7 +937,8 @@ constructor(
   public CONSIDER_PARAMS: string|Uint8Array|null = null,
   public SENSORS_N: number = 0,
   public SENSORS: string|Uint8Array|null = null,
-  public COMMENT: (string)[] = []
+  public COMMENT: (string)[] = [],
+  public FIT_STATISTICS: OCMFitStatisticsT|null = null
 ){}
 
 
@@ -999,55 +966,58 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONSIDER_PARAMS = (this.CONSIDER_PARAMS !== null ? builder.createString(this.CONSIDER_PARAMS!) : 0);
   const SENSORS = (this.SENSORS !== null ? builder.createString(this.SENSORS!) : 0);
   const COMMENT = OrbitDetermination.createCommentVector(builder, builder.createObjectOffsetList(this.COMMENT));
+  const FIT_STATISTICS = (this.FIT_STATISTICS !== null ? this.FIT_STATISTICS!.pack(builder) : 0);
 
-  return OrbitDetermination.createOrbitDetermination(builder,
-    OD_ID,
-    OD_PREV_ID,
-    OD_ALGORITHM,
-    OD_METHOD,
-    OD_EPOCH,
-    OD_TIME_TAG,
-    OD_PROCESS_NOISE,
-    OD_COV_REDUCTION,
-    OD_NOISE_MODELS,
-    OD_OBSERVATIONS_TYPE,
-    this.OD_OBSERVATIONS_USED,
-    this.OD_TRACKS_USED,
-    OD_DATA_WEIGHTING,
-    OD_CONVERGENCE_CRITERIA,
-    OD_EST_PARAMETERS,
-    OD_APRIORI_DATA,
-    OD_RESIDUALS,
-    this.OD_ESTIMATOR,
-    this.OD_RESIDUAL_RMS,
-    OD_RESIDUALS_SERIES,
-    OD_RESIDUAL_EPOCHS,
-    OD_BATCH_BASELINE_ID,
-    this.OD_BATCH_BASELINE_RMS,
-    this.SEDR,
-    this.WEIGHTED_RMS,
-    OD_DYNAMIC_PARAMETERS,
-    this.DAYS_SINCE_FIRST_OBS,
-    this.DAYS_SINCE_LAST_OBS,
-    this.RECOMMENDED_OD_SPAN,
-    this.ACTUAL_OD_SPAN,
-    this.OBS_AVAILABLE,
-    this.TRACKS_AVAILABLE,
-    this.MAXIMUM_OBS_GAP,
-    this.OD_EPOCH_EIGMAJ,
-    this.OD_EPOCH_EIGINT,
-    this.OD_EPOCH_EIGMIN,
-    this.OD_MAX_PRED_EIGMAJ,
-    this.OD_MIN_PRED_EIGMIN,
-    this.OD_CONFIDENCE,
-    this.GDOP,
-    this.SOLVE_N,
-    SOLVE_STATES,
-    this.CONSIDER_N,
-    CONSIDER_PARAMS,
-    this.SENSORS_N,
-    SENSORS,
-    COMMENT
-  );
+  OrbitDetermination.startOrbitDetermination(builder);
+  OrbitDetermination.addOdId(builder, OD_ID);
+  OrbitDetermination.addOdPrevId(builder, OD_PREV_ID);
+  OrbitDetermination.addOdAlgorithm(builder, OD_ALGORITHM);
+  OrbitDetermination.addOdMethod(builder, OD_METHOD);
+  OrbitDetermination.addOdEpoch(builder, OD_EPOCH);
+  OrbitDetermination.addOdTimeTag(builder, OD_TIME_TAG);
+  OrbitDetermination.addOdProcessNoise(builder, OD_PROCESS_NOISE);
+  OrbitDetermination.addOdCovReduction(builder, OD_COV_REDUCTION);
+  OrbitDetermination.addOdNoiseModels(builder, OD_NOISE_MODELS);
+  OrbitDetermination.addOdObservationsType(builder, OD_OBSERVATIONS_TYPE);
+  OrbitDetermination.addOdObservationsUsed(builder, this.OD_OBSERVATIONS_USED);
+  OrbitDetermination.addOdTracksUsed(builder, this.OD_TRACKS_USED);
+  OrbitDetermination.addOdDataWeighting(builder, OD_DATA_WEIGHTING);
+  OrbitDetermination.addOdConvergenceCriteria(builder, OD_CONVERGENCE_CRITERIA);
+  OrbitDetermination.addOdEstParameters(builder, OD_EST_PARAMETERS);
+  OrbitDetermination.addOdAprioriData(builder, OD_APRIORI_DATA);
+  OrbitDetermination.addOdResiduals(builder, OD_RESIDUALS);
+  OrbitDetermination.addOdEstimator(builder, this.OD_ESTIMATOR);
+  OrbitDetermination.addOdResidualRms(builder, this.OD_RESIDUAL_RMS);
+  OrbitDetermination.addOdResidualsSeries(builder, OD_RESIDUALS_SERIES);
+  OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHS);
+  OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_ID);
+  OrbitDetermination.addOdBatchBaselineRms(builder, this.OD_BATCH_BASELINE_RMS);
+  OrbitDetermination.addSedr(builder, this.SEDR);
+  OrbitDetermination.addWeightedRms(builder, this.WEIGHTED_RMS);
+  OrbitDetermination.addOdDynamicParameters(builder, OD_DYNAMIC_PARAMETERS);
+  OrbitDetermination.addDaysSinceFirstObs(builder, this.DAYS_SINCE_FIRST_OBS);
+  OrbitDetermination.addDaysSinceLastObs(builder, this.DAYS_SINCE_LAST_OBS);
+  OrbitDetermination.addRecommendedOdSpan(builder, this.RECOMMENDED_OD_SPAN);
+  OrbitDetermination.addActualOdSpan(builder, this.ACTUAL_OD_SPAN);
+  OrbitDetermination.addObsAvailable(builder, this.OBS_AVAILABLE);
+  OrbitDetermination.addTracksAvailable(builder, this.TRACKS_AVAILABLE);
+  OrbitDetermination.addMaximumObsGap(builder, this.MAXIMUM_OBS_GAP);
+  OrbitDetermination.addOdEpochEigmaj(builder, this.OD_EPOCH_EIGMAJ);
+  OrbitDetermination.addOdEpochEigint(builder, this.OD_EPOCH_EIGINT);
+  OrbitDetermination.addOdEpochEigmin(builder, this.OD_EPOCH_EIGMIN);
+  OrbitDetermination.addOdMaxPredEigmaj(builder, this.OD_MAX_PRED_EIGMAJ);
+  OrbitDetermination.addOdMinPredEigmin(builder, this.OD_MIN_PRED_EIGMIN);
+  OrbitDetermination.addOdConfidence(builder, this.OD_CONFIDENCE);
+  OrbitDetermination.addGdop(builder, this.GDOP);
+  OrbitDetermination.addSolveN(builder, this.SOLVE_N);
+  OrbitDetermination.addSolveStates(builder, SOLVE_STATES);
+  OrbitDetermination.addConsiderN(builder, this.CONSIDER_N);
+  OrbitDetermination.addConsiderParams(builder, CONSIDER_PARAMS);
+  OrbitDetermination.addSensorsN(builder, this.SENSORS_N);
+  OrbitDetermination.addSensors(builder, SENSORS);
+  OrbitDetermination.addComment(builder, COMMENT);
+  OrbitDetermination.addFitStatistics(builder, FIT_STATISTICS);
+
+  return OrbitDetermination.endOrbitDetermination(builder);
 }
 }

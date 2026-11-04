@@ -243,6 +243,10 @@ public struct Maneuver : IFlatbufferObject
   /// CCSDS 502.0-B-3 Table 6-7.
   public double DC_PA_START_ANGLE { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   public double DC_PA_STOP_ANGLE { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// NORAD_CAT_ID of the object that maneuvered, for a message whose
+  /// maneuvers belong to more than one object (a relative-motion message's
+  /// chaser and target). 0 when the message's own object maneuvered.
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<Maneuver> CreateManeuver(FlatBufferBuilder builder,
       StringOffset MAN_IDOffset = default(StringOffset),
@@ -281,13 +285,15 @@ public struct Maneuver : IFlatbufferObject
       StringOffset DC_BODY_FRAMEOffset = default(StringOffset),
       VectorOffset DC_BODY_TRIGGEROffset = default(VectorOffset),
       double DC_PA_START_ANGLE = Double.NaN,
-      double DC_PA_STOP_ANGLE = Double.NaN) {
-    builder.StartTable(37);
+      double DC_PA_STOP_ANGLE = Double.NaN,
+      uint NORAD_CAT_ID = 0) {
+    builder.StartTable(38);
     Maneuver.AddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE);
     Maneuver.AddDC_PA_START_ANGLE(builder, DC_PA_START_ANGLE);
     Maneuver.AddDC_TIME_PULSE_PERIOD(builder, DC_TIME_PULSE_PERIOD);
     Maneuver.AddDC_TIME_PULSE_DURATION(builder, DC_TIME_PULSE_DURATION);
     Maneuver.AddMAN_DURATION(builder, MAN_DURATION);
+    Maneuver.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     Maneuver.AddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGEROffset);
     Maneuver.AddDC_BODY_FRAME(builder, DC_BODY_FRAMEOffset);
     Maneuver.AddDC_REF_DIR(builder, DC_REF_DIROffset);
@@ -323,7 +329,7 @@ public struct Maneuver : IFlatbufferObject
     return Maneuver.EndManeuver(builder);
   }
 
-  public static void StartManeuver(FlatBufferBuilder builder) { builder.StartTable(37); }
+  public static void StartManeuver(FlatBufferBuilder builder) { builder.StartTable(38); }
   public static void AddMAN_ID(FlatBufferBuilder builder, StringOffset MAN_IDOffset) { builder.AddOffset(0, MAN_IDOffset.Value, 0); }
   public static void AddMAN_BASIS(FlatBufferBuilder builder, StringOffset MAN_BASISOffset) { builder.AddOffset(1, MAN_BASISOffset.Value, 0); }
   public static void AddMAN_DEVICE_ID(FlatBufferBuilder builder, StringOffset MAN_DEVICE_IDOffset) { builder.AddOffset(2, MAN_DEVICE_IDOffset.Value, 0); }
@@ -391,6 +397,7 @@ public struct Maneuver : IFlatbufferObject
   public static void StartDC_BODY_TRIGGERVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddDC_PA_START_ANGLE(FlatBufferBuilder builder, double DC_PA_START_ANGLE) { builder.AddDouble(35, DC_PA_START_ANGLE, Double.NaN); }
   public static void AddDC_PA_STOP_ANGLE(FlatBufferBuilder builder, double DC_PA_STOP_ANGLE) { builder.AddDouble(36, DC_PA_STOP_ANGLE, Double.NaN); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(37, NORAD_CAT_ID, 0); }
   public static Offset<Maneuver> EndManeuver(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Maneuver>(o);
@@ -444,6 +451,7 @@ public struct Maneuver : IFlatbufferObject
     for (var _j = 0; _j < this.DC_BODY_TRIGGERLength; ++_j) {_o.DC_BODY_TRIGGER.Add(this.DC_BODY_TRIGGER(_j));}
     _o.DC_PA_START_ANGLE = this.DC_PA_START_ANGLE;
     _o.DC_PA_STOP_ANGLE = this.DC_PA_STOP_ANGLE;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
   }
   public static Offset<Maneuver> Pack(FlatBufferBuilder builder, ManeuverT _o) {
     if (_o == null) return default(Offset<Maneuver>);
@@ -541,7 +549,8 @@ public struct Maneuver : IFlatbufferObject
       _DC_BODY_FRAME,
       _DC_BODY_TRIGGER,
       _o.DC_PA_START_ANGLE,
-      _o.DC_PA_STOP_ANGLE);
+      _o.DC_PA_STOP_ANGLE,
+      _o.NORAD_CAT_ID);
   }
 }
 
@@ -584,6 +593,7 @@ public class ManeuverT
   public List<double> DC_BODY_TRIGGER { get; set; }
   public double DC_PA_START_ANGLE { get; set; }
   public double DC_PA_STOP_ANGLE { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
 
   public ManeuverT() {
     this.MAN_ID = null;
@@ -623,6 +633,7 @@ public class ManeuverT
     this.DC_BODY_TRIGGER = null;
     this.DC_PA_START_ANGLE = Double.NaN;
     this.DC_PA_STOP_ANGLE = Double.NaN;
+    this.NORAD_CAT_ID = 0;
   }
 }
 
@@ -669,6 +680,7 @@ static public class ManeuverVerify
       && verifier.VerifyVectorOfData(tablePos, 72 /*DC_BODY_TRIGGER*/, 8 /*double*/, false)
       && verifier.VerifyField(tablePos, 74 /*DC_PA_START_ANGLE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 76 /*DC_PA_STOP_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

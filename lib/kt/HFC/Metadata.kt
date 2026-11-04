@@ -666,6 +666,17 @@ class Metadata : Table() {
         }
     val celestialSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
     fun celestialSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
+    /**
+     * NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+     * NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+     * strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+     * the object has no NORAD number.
+     */
+    val noradCatId : UInt
+        get() {
+            val o = __offset(100)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMetadata(_bb: ByteBuffer): Metadata = getRootAsMetadata(_bb, Metadata())
@@ -673,14 +684,15 @@ class Metadata : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetadata(builder: FlatBufferBuilder, commentOffset: Int, objectNameOffset: Int, internationalDesignatorOffset: Int, catalogNameOffset: Int, objectDesignatorOffset: Int, alternateNamesOffset: Int, originatorPocOffset: Int, originatorPositionOffset: Int, originatorPhoneOffset: Int, originatorEmailOffset: Int, originatorAddressOffset: Int, techOrgOffset: Int, techPocOffset: Int, techPositionOffset: Int, techPhoneOffset: Int, techEmailOffset: Int, techAddressOffset: Int, previousMessageIdOffset: Int, nextMessageIdOffset: Int, admMsgLinkOffset: Int, cdmMsgLinkOffset: Int, prmMsgLinkOffset: Int, rdmMsgLinkOffset: Int, tdmMsgLinkOffset: Int, operatorOffset: Int, ownerOffset: Int, countryOffset: Int, constellationOffset: Int, objectTypeOffset: Int, timeSystemOffset: Int, epochTzeroOffset: Int, opsStatusOffset: Int, orbitCategoryOffset: Int, ocmDataElementsOffset: Int, sclkOffsetAtEpoch: Double, sclkSecPerSiSec: Double, previousMessageEpochOffset: Int, nextMessageEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, timeSpan: Double, taimutcAtTzero: Double, nextLeapEpochOffset: Int, nextLeapTaimutc: Double, ut1MutcAtTzero: Double, eopSourceOffset: Int, interpMethodEopOffset: Int, celestialSourceOffset: Int) : Int {
-            builder.startTable(48)
+        fun createMetadata(builder: FlatBufferBuilder, commentOffset: Int, objectNameOffset: Int, internationalDesignatorOffset: Int, catalogNameOffset: Int, objectDesignatorOffset: Int, alternateNamesOffset: Int, originatorPocOffset: Int, originatorPositionOffset: Int, originatorPhoneOffset: Int, originatorEmailOffset: Int, originatorAddressOffset: Int, techOrgOffset: Int, techPocOffset: Int, techPositionOffset: Int, techPhoneOffset: Int, techEmailOffset: Int, techAddressOffset: Int, previousMessageIdOffset: Int, nextMessageIdOffset: Int, admMsgLinkOffset: Int, cdmMsgLinkOffset: Int, prmMsgLinkOffset: Int, rdmMsgLinkOffset: Int, tdmMsgLinkOffset: Int, operatorOffset: Int, ownerOffset: Int, countryOffset: Int, constellationOffset: Int, objectTypeOffset: Int, timeSystemOffset: Int, epochTzeroOffset: Int, opsStatusOffset: Int, orbitCategoryOffset: Int, ocmDataElementsOffset: Int, sclkOffsetAtEpoch: Double, sclkSecPerSiSec: Double, previousMessageEpochOffset: Int, nextMessageEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, timeSpan: Double, taimutcAtTzero: Double, nextLeapEpochOffset: Int, nextLeapTaimutc: Double, ut1MutcAtTzero: Double, eopSourceOffset: Int, interpMethodEopOffset: Int, celestialSourceOffset: Int, noradCatId: UInt) : Int {
+            builder.startTable(49)
             addUT1MUTCATTZERO(builder, ut1MutcAtTzero)
             addNEXTLEAPTAIMUTC(builder, nextLeapTaimutc)
             addTAIMUTCATTZERO(builder, taimutcAtTzero)
             addTIMESPAN(builder, timeSpan)
             addSCLKSECPERSISEC(builder, sclkSecPerSiSec)
             addSCLKOFFSETATEPOCH(builder, sclkOffsetAtEpoch)
+            addNORADCATID(builder, noradCatId)
             addCELESTIALSOURCE(builder, celestialSourceOffset)
             addINTERPMETHODEOP(builder, interpMethodEopOffset)
             addEOPSOURCE(builder, eopSourceOffset)
@@ -725,7 +737,7 @@ class Metadata : Table() {
             addCOMMENT(builder, commentOffset)
             return endMetadata(builder)
         }
-        fun startMetadata(builder: FlatBufferBuilder) = builder.startTable(48)
+        fun startMetadata(builder: FlatBufferBuilder) = builder.startTable(49)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -806,6 +818,7 @@ class Metadata : Table() {
         fun addEOPSOURCE(builder: FlatBufferBuilder, eopSource: Int) = builder.addOffset(45, eopSource, 0)
         fun addINTERPMETHODEOP(builder: FlatBufferBuilder, interpMethodEop: Int) = builder.addOffset(46, interpMethodEop, 0)
         fun addCELESTIALSOURCE(builder: FlatBufferBuilder, celestialSource: Int) = builder.addOffset(47, celestialSource, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(48, noradCatId.toInt(), 0)
         fun endMetadata(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

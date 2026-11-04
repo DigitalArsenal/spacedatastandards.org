@@ -210,7 +210,8 @@ enum catalogProductKind {
   Unspecified(0),
   Sgp4Elements(1),
   Sgp4XpElements(2),
-  StateCovariance(3);
+  StateCovariance(3),
+  ApElements(4);
 
   final int value;
   const catalogProductKind(this.value);
@@ -221,6 +222,7 @@ enum catalogProductKind {
       case 1: return catalogProductKind.Sgp4Elements;
       case 2: return catalogProductKind.Sgp4XpElements;
       case 3: return catalogProductKind.StateCovariance;
+      case 4: return catalogProductKind.ApElements;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -229,7 +231,7 @@ enum catalogProductKind {
       value == null ? null : catalogProductKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 4;
   static const fb.Reader<catalogProductKind> reader = _catalogProductKindReader();
 }
 
@@ -266,8 +268,8 @@ class CATProduct {
   ///  The product's source: its PROVENANCE SOURCE_ID.
   String? get SOURCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get sourceId => SOURCE_ID;
-  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-  ///  epoch.
+  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+  ///  MEAN_ELEMENTS.EPOCH or first state epoch.
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Why the catalog selected this product over the other candidates of its
   ///  KIND, as the selecting integrator states it (for example, the lowest

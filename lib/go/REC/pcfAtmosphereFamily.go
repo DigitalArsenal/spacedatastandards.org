@@ -28,6 +28,10 @@ const (
 	/// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
 	/// with Mars.
 	pcfAtmosphereFamilyMARS_EXPONENTIAL pcfAtmosphereFamily = 7
+	/// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+	/// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+	/// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+	pcfAtmosphereFamilyJACCHIA70        pcfAtmosphereFamily = 8
 )
 
 var EnumNamespcfAtmosphereFamily = map[pcfAtmosphereFamily]string{
@@ -39,6 +43,7 @@ var EnumNamespcfAtmosphereFamily = map[pcfAtmosphereFamily]string{
 	pcfAtmosphereFamilyJACCHIA_ROBERTS:  "JACCHIA_ROBERTS",
 	pcfAtmosphereFamilyJB2008:           "JB2008",
 	pcfAtmosphereFamilyMARS_EXPONENTIAL: "MARS_EXPONENTIAL",
+	pcfAtmosphereFamilyJACCHIA70:        "JACCHIA70",
 }
 
 var EnumValuespcfAtmosphereFamily = map[string]pcfAtmosphereFamily{
@@ -50,6 +55,7 @@ var EnumValuespcfAtmosphereFamily = map[string]pcfAtmosphereFamily{
 	"JACCHIA_ROBERTS":  pcfAtmosphereFamilyJACCHIA_ROBERTS,
 	"JB2008":           pcfAtmosphereFamilyJB2008,
 	"MARS_EXPONENTIAL": pcfAtmosphereFamilyMARS_EXPONENTIAL,
+	"JACCHIA70":        pcfAtmosphereFamilyJACCHIA70,
 }
 
 func (v pcfAtmosphereFamily) String() string {

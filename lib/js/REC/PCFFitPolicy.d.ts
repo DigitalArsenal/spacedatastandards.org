@@ -97,6 +97,15 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
      * ln AGOM.
      */
     SRP_PRIOR_FORM(): pcfPriorForm;
+    /**
+     * Days past the element set's epoch day through which the fit writes the
+     * daily space weather into the record it emits (OCM
+     * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+     * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+     * arc's last day and the epoch's day plus this count; rows supplied with
+     * the request must reach it, or the fit is refused by name. Default 30.
+     */
+    WEATHER_HORIZON_DAYS(): number;
     static startPCFFitPolicy(builder: flatbuffers.Builder): void;
     static addDefaultSpanHours(builder: flatbuffers.Builder, DEFAULT_SPAN_HOURS: number): void;
     static addMinimumSpanHours(builder: flatbuffers.Builder, MINIMUM_SPAN_HOURS: number): void;
@@ -121,6 +130,7 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
     static addSrpPrior(builder: flatbuffers.Builder, SRP_PRIOROffset: flatbuffers.Offset): void;
     static addDragPriorForm(builder: flatbuffers.Builder, DRAG_PRIOR_FORM: pcfPriorForm): void;
     static addSrpPriorForm(builder: flatbuffers.Builder, SRP_PRIOR_FORM: pcfPriorForm): void;
+    static addWeatherHorizonDays(builder: flatbuffers.Builder, WEATHER_HORIZON_DAYS: number): void;
     static endPCFFitPolicy(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PCFFitPolicyT;
     unpackTo(_o: PCFFitPolicyT): void;
@@ -143,7 +153,8 @@ export declare class PCFFitPolicyT implements flatbuffers.IGeneratedObject {
     SRP_PRIOR: PCFGaussianPriorT | null;
     DRAG_PRIOR_FORM: pcfPriorForm;
     SRP_PRIOR_FORM: pcfPriorForm;
-    constructor(DEFAULT_SPAN_HOURS?: number, MINIMUM_SPAN_HOURS?: number, MAXIMUM_SPAN_HOURS?: number, CANDIDATE_SPANS_HOURS?: (number)[], TAIL_HOURS?: number, EXTENSION_MARGIN?: number, HOLDOUT_HOURS?: number, HAS_HOLDOUT_HOURS?: boolean, ECCENTRICITY_THRESHOLD?: number, ECCENTRIC_DEFAULT_SPAN_HOURS?: number, ECCENTRIC_EXTENSION_MARGIN?: number, ECCENTRIC_MAXIMUM_PERIOD_HOURS?: number, IMPLAUSIBLE_RMS_KM?: number, DRAG_PRIOR?: PCFGaussianPriorT | null, SRP_PRIOR?: PCFGaussianPriorT | null, DRAG_PRIOR_FORM?: pcfPriorForm, SRP_PRIOR_FORM?: pcfPriorForm);
+    WEATHER_HORIZON_DAYS: number;
+    constructor(DEFAULT_SPAN_HOURS?: number, MINIMUM_SPAN_HOURS?: number, MAXIMUM_SPAN_HOURS?: number, CANDIDATE_SPANS_HOURS?: (number)[], TAIL_HOURS?: number, EXTENSION_MARGIN?: number, HOLDOUT_HOURS?: number, HAS_HOLDOUT_HOURS?: boolean, ECCENTRICITY_THRESHOLD?: number, ECCENTRIC_DEFAULT_SPAN_HOURS?: number, ECCENTRIC_EXTENSION_MARGIN?: number, ECCENTRIC_MAXIMUM_PERIOD_HOURS?: number, IMPLAUSIBLE_RMS_KM?: number, DRAG_PRIOR?: PCFGaussianPriorT | null, SRP_PRIOR?: PCFGaussianPriorT | null, DRAG_PRIOR_FORM?: pcfPriorForm, SRP_PRIOR_FORM?: pcfPriorForm, WEATHER_HORIZON_DAYS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCFFitPolicy.d.ts.map

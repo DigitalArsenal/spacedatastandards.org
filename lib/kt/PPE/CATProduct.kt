@@ -67,8 +67,8 @@ class CATProduct : Table() {
     val sourceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun sourceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-     * epoch.
+     * Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+     * MEAN_ELEMENTS.EPOCH or first state epoch.
      */
     val epoch : String?
         get() {

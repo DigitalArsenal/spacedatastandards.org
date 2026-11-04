@@ -239,6 +239,54 @@ class CVR : Table() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
+    /**
+     * Distinct truth epochs among the SAMPLES: predictions that share one truth
+     * state count once here. 0 when not stated.
+     */
+    val truthEpochs : UInt
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Share of the held-out samples whose error lies inside the 1-sigma band of
+     * the first, second and third axis of the covariance's frame (radial,
+     * in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+     * nominal 0.6827 for Gaussian errors. NaN when not measured.
+     */
+    val coverage1SigmaAxis1 : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val coverage1SigmaAxis2 : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val coverage1SigmaAxis3 : Double
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+     */
+    val coverage3SigmaAxis1 : Double
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val coverage3SigmaAxis2 : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    val coverage3SigmaAxis3 : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCVR(_bb: ByteBuffer): CVR = getRootAsCVR(_bb, CVR())
@@ -247,14 +295,21 @@ class CVR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CVRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CVR")
-        fun createCVR(builder: FlatBufferBuilder, rule: Byte, modelIdOffset: Int, regimeOffset: Int, ageDays: Double, horizonDays: Double, measuredLineageOffset: Int, testWindowOffset: Int, meanD2Over3: Double, coverage95: Double, samples: UInt, objects: UInt, scaleFactor: Double, calibration: Byte, evidenceOffset: Int, historySamples: UInt, historySets: UInt, historyWindowOffset: Int, shrinkageWeight: Double) : Int {
-            builder.startTable(18)
+        fun createCVR(builder: FlatBufferBuilder, rule: Byte, modelIdOffset: Int, regimeOffset: Int, ageDays: Double, horizonDays: Double, measuredLineageOffset: Int, testWindowOffset: Int, meanD2Over3: Double, coverage95: Double, samples: UInt, objects: UInt, scaleFactor: Double, calibration: Byte, evidenceOffset: Int, historySamples: UInt, historySets: UInt, historyWindowOffset: Int, shrinkageWeight: Double, truthEpochs: UInt, coverage1SigmaAxis1: Double, coverage1SigmaAxis2: Double, coverage1SigmaAxis3: Double, coverage3SigmaAxis1: Double, coverage3SigmaAxis2: Double, coverage3SigmaAxis3: Double) : Int {
+            builder.startTable(25)
+            addCOVERAGE3SIGMAAXIS3(builder, coverage3SigmaAxis3)
+            addCOVERAGE3SIGMAAXIS2(builder, coverage3SigmaAxis2)
+            addCOVERAGE3SIGMAAXIS1(builder, coverage3SigmaAxis1)
+            addCOVERAGE1SIGMAAXIS3(builder, coverage1SigmaAxis3)
+            addCOVERAGE1SIGMAAXIS2(builder, coverage1SigmaAxis2)
+            addCOVERAGE1SIGMAAXIS1(builder, coverage1SigmaAxis1)
             addSHRINKAGEWEIGHT(builder, shrinkageWeight)
             addSCALEFACTOR(builder, scaleFactor)
             addCOVERAGE95(builder, coverage95)
             addMEAND2OVER3(builder, meanD2Over3)
             addHORIZONDAYS(builder, horizonDays)
             addAGEDAYS(builder, ageDays)
+            addTRUTHEPOCHS(builder, truthEpochs)
             addHISTORYWINDOW(builder, historyWindowOffset)
             addHISTORYSETS(builder, historySets)
             addHISTORYSAMPLES(builder, historySamples)
@@ -269,7 +324,7 @@ class CVR : Table() {
             addRULE(builder, rule)
             return endCVR(builder)
         }
-        fun startCVR(builder: FlatBufferBuilder) = builder.startTable(18)
+        fun startCVR(builder: FlatBufferBuilder) = builder.startTable(25)
         fun addRULE(builder: FlatBufferBuilder, rule: Byte) = builder.addByte(0, rule, 0)
         fun addMODELID(builder: FlatBufferBuilder, modelId: Int) = builder.addOffset(1, modelId, 0)
         fun addREGIME(builder: FlatBufferBuilder, regime: Int) = builder.addOffset(2, regime, 0)
@@ -288,6 +343,13 @@ class CVR : Table() {
         fun addHISTORYSETS(builder: FlatBufferBuilder, historySets: UInt) = builder.addInt(15, historySets.toInt(), 0)
         fun addHISTORYWINDOW(builder: FlatBufferBuilder, historyWindow: Int) = builder.addOffset(16, historyWindow, 0)
         fun addSHRINKAGEWEIGHT(builder: FlatBufferBuilder, shrinkageWeight: Double) = builder.addDouble(17, shrinkageWeight, Double.NaN)
+        fun addTRUTHEPOCHS(builder: FlatBufferBuilder, truthEpochs: UInt) = builder.addInt(18, truthEpochs.toInt(), 0)
+        fun addCOVERAGE1SIGMAAXIS1(builder: FlatBufferBuilder, coverage1SigmaAxis1: Double) = builder.addDouble(19, coverage1SigmaAxis1, Double.NaN)
+        fun addCOVERAGE1SIGMAAXIS2(builder: FlatBufferBuilder, coverage1SigmaAxis2: Double) = builder.addDouble(20, coverage1SigmaAxis2, Double.NaN)
+        fun addCOVERAGE1SIGMAAXIS3(builder: FlatBufferBuilder, coverage1SigmaAxis3: Double) = builder.addDouble(21, coverage1SigmaAxis3, Double.NaN)
+        fun addCOVERAGE3SIGMAAXIS1(builder: FlatBufferBuilder, coverage3SigmaAxis1: Double) = builder.addDouble(22, coverage3SigmaAxis1, Double.NaN)
+        fun addCOVERAGE3SIGMAAXIS2(builder: FlatBufferBuilder, coverage3SigmaAxis2: Double) = builder.addDouble(23, coverage3SigmaAxis2, Double.NaN)
+        fun addCOVERAGE3SIGMAAXIS3(builder: FlatBufferBuilder, coverage3SigmaAxis3: Double) = builder.addDouble(24, coverage3SigmaAxis3, Double.NaN)
         fun endCVR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -263,7 +263,9 @@ class OrbitDetermination : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * RMS of post-fit residuals for this solution.
+     * RMS of post-fit residuals for this solution. In the unit of the residuals the
+     * observation types state: arcsec for RADEC angles. A position RMS in km is
+     * OCMFitStatistics.FIT_RMS_KM.
      */
     val odResidualRms : Double
         get() {
@@ -557,6 +559,18 @@ class OrbitDetermination : Table() {
         get() {
             val o = __offset(96); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Position statistics of a fit to a reference ephemeris.
+     */
+    val fitStatistics : OCMFitStatistics? get() = fitStatistics(OCMFitStatistics())
+    fun fitStatistics(obj: OCMFitStatistics) : OCMFitStatistics? {
+        val o = __offset(98)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOrbitDetermination(_bb: ByteBuffer): OrbitDetermination = getRootAsOrbitDetermination(_bb, OrbitDetermination())
@@ -564,8 +578,8 @@ class OrbitDetermination : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double, odDynamicParametersOffset: Int, daysSinceFirstObs: Double, daysSinceLastObs: Double, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, tracksAvailable: UInt, maximumObsGap: Double, odEpochEigmaj: Double, odEpochEigint: Double, odEpochEigmin: Double, odMaxPredEigmaj: Double, odMinPredEigmin: Double, odConfidence: Double, gdop: Double, solveN: UInt, solveStatesOffset: Int, considerN: UInt, considerParamsOffset: Int, sensorsN: UInt, sensorsOffset: Int, commentOffset: Int) : Int {
-            builder.startTable(47)
+        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double, sedr: Double, weightedRms: Double, odDynamicParametersOffset: Int, daysSinceFirstObs: Double, daysSinceLastObs: Double, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, tracksAvailable: UInt, maximumObsGap: Double, odEpochEigmaj: Double, odEpochEigint: Double, odEpochEigmin: Double, odMaxPredEigmaj: Double, odMinPredEigmin: Double, odConfidence: Double, gdop: Double, solveN: UInt, solveStatesOffset: Int, considerN: UInt, considerParamsOffset: Int, sensorsN: UInt, sensorsOffset: Int, commentOffset: Int, fitStatisticsOffset: Int) : Int {
+            builder.startTable(48)
             addGDOP(builder, gdop)
             addODCONFIDENCE(builder, odConfidence)
             addODMINPREDEIGMIN(builder, odMinPredEigmin)
@@ -582,6 +596,7 @@ class OrbitDetermination : Table() {
             addSEDR(builder, sedr)
             addODBATCHBASELINERMS(builder, odBatchBaselineRms)
             addODRESIDUALRMS(builder, odResidualRms)
+            addFITSTATISTICS(builder, fitStatisticsOffset)
             addCOMMENT(builder, commentOffset)
             addSENSORS(builder, sensorsOffset)
             addSENSORSN(builder, sensorsN)
@@ -615,7 +630,7 @@ class OrbitDetermination : Table() {
             addODESTIMATOR(builder, odEstimator)
             return endOrbitDetermination(builder)
         }
-        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(47)
+        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(48)
         fun addODID(builder: FlatBufferBuilder, odId: Int) = builder.addOffset(0, odId, 0)
         fun addODPREVID(builder: FlatBufferBuilder, odPrevId: Int) = builder.addOffset(1, odPrevId, 0)
         fun addODALGORITHM(builder: FlatBufferBuilder, odAlgorithm: Int) = builder.addOffset(2, odAlgorithm, 0)
@@ -711,6 +726,7 @@ class OrbitDetermination : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFITSTATISTICS(builder: FlatBufferBuilder, fitStatistics: Int) = builder.addOffset(47, fitStatistics, 0)
         fun endOrbitDetermination(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

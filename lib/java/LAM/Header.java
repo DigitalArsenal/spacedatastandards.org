@@ -61,6 +61,16 @@ public final class Header extends com.google.flatbuffers.Table {
   public String MESSAGE_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MESSAGE_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer MESSAGE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Whether the message is real, test or exercise data.
+   */
+  public int MESSAGE_STATUS() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+   */
+  public String EXERCISE_NAME() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EXERCISE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer EXERCISE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
 
   public static int createHeader(FlatBufferBuilder builder,
       int CCSDS_OCM_VERSOffset,
@@ -68,18 +78,22 @@ public final class Header extends com.google.flatbuffers.Table {
       int CLASSIFICATIONOffset,
       int CREATION_DATEOffset,
       int ORIGINATOROffset,
-      int MESSAGE_IDOffset) {
-    builder.startTable(6);
+      int MESSAGE_IDOffset,
+      int MESSAGE_STATUS,
+      int EXERCISE_NAMEOffset) {
+    builder.startTable(8);
+    Header.addExerciseName(builder, EXERCISE_NAMEOffset);
     Header.addMessageId(builder, MESSAGE_IDOffset);
     Header.addOriginator(builder, ORIGINATOROffset);
     Header.addCreationDate(builder, CREATION_DATEOffset);
     Header.addClassification(builder, CLASSIFICATIONOffset);
     Header.addComment(builder, COMMENTOffset);
     Header.addCcsdsOcmVers(builder, CCSDS_OCM_VERSOffset);
+    Header.addMessageStatus(builder, MESSAGE_STATUS);
     return Header.endHeader(builder);
   }
 
-  public static void startHeader(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startHeader(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addCcsdsOcmVers(FlatBufferBuilder builder, int CCSDS_OCM_VERSOffset) { builder.addOffset(0, CCSDS_OCM_VERSOffset, 0); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(1, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -88,6 +102,8 @@ public final class Header extends com.google.flatbuffers.Table {
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(3, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(4, ORIGINATOROffset, 0); }
   public static void addMessageId(FlatBufferBuilder builder, int MESSAGE_IDOffset) { builder.addOffset(5, MESSAGE_IDOffset, 0); }
+  public static void addMessageStatus(FlatBufferBuilder builder, int MESSAGE_STATUS) { builder.addByte(6, (byte) MESSAGE_STATUS, (byte) 0); }
+  public static void addExerciseName(FlatBufferBuilder builder, int EXERCISE_NAMEOffset) { builder.addOffset(7, EXERCISE_NAMEOffset, 0); }
   public static int endHeader(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

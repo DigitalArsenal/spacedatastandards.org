@@ -464,8 +464,19 @@ class Metadata(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+    # NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+    # strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+    # the object has no NORAD number.
+    # Metadata
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
 def MetadataStart(builder):
-    builder.StartObject(48)
+    builder.StartObject(49)
 
 def Start(builder):
     MetadataStart(builder)
@@ -806,6 +817,12 @@ def MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE):
 def AddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE):
     MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
 
+def MetadataAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(48, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    MetadataAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
 def MetadataEnd(builder):
     return builder.EndObject()
 
@@ -870,6 +887,7 @@ class MetadataT(object):
         EOP_SOURCE = None,
         INTERP_METHOD_EOP = None,
         CELESTIAL_SOURCE = None,
+        NORAD_CAT_ID = 0,
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
@@ -919,6 +937,7 @@ class MetadataT(object):
         self.EOP_SOURCE = EOP_SOURCE  # type: Optional[str]
         self.INTERP_METHOD_EOP = INTERP_METHOD_EOP  # type: Optional[str]
         self.CELESTIAL_SOURCE = CELESTIAL_SOURCE  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1001,6 +1020,7 @@ class MetadataT(object):
         self.EOP_SOURCE = Metadata.EOP_SOURCE()
         self.INTERP_METHOD_EOP = Metadata.INTERP_METHOD_EOP()
         self.CELESTIAL_SOURCE = Metadata.CELESTIAL_SOURCE()
+        self.NORAD_CAT_ID = Metadata.NORAD_CAT_ID()
 
     # MetadataT
     def Pack(self, builder):
@@ -1203,5 +1223,6 @@ class MetadataT(object):
             MetadataAddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP)
         if self.CELESTIAL_SOURCE is not None:
             MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
+        MetadataAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
         Metadata = MetadataEnd(builder)
         return Metadata

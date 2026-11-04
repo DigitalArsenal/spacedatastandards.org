@@ -72,36 +72,41 @@ enum pcfTheory : uint8_t {
   pcfTheory_FFM = 4,
   /// Two-body (Keplerian) motion about the central body.
   pcfTheory_KEPLER = 5,
+  /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+  /// 3 stays unused.
+  pcfTheory_AP = 6,
   pcfTheory_MIN = pcfTheory_UNSPECIFIED,
-  pcfTheory_MAX = pcfTheory_KEPLER
+  pcfTheory_MAX = pcfTheory_AP
 };
 
-inline const pcfTheory (&EnumValuespcfTheory())[5] {
+inline const pcfTheory (&EnumValuespcfTheory())[6] {
   static const pcfTheory values[] = {
     pcfTheory_UNSPECIFIED,
     pcfTheory_SGP4,
     pcfTheory_SGP4XP,
     pcfTheory_FFM,
-    pcfTheory_KEPLER
+    pcfTheory_KEPLER,
+    pcfTheory_AP
   };
   return values;
 }
 
 inline const char * const *EnumNamespcfTheory() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "UNSPECIFIED",
     "SGP4",
     "SGP4XP",
     "",
     "FFM",
     "KEPLER",
+    "AP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepcfTheory(pcfTheory e) {
-  if (::flatbuffers::IsOutRange(e, pcfTheory_UNSPECIFIED, pcfTheory_KEPLER)) return "";
+  if (::flatbuffers::IsOutRange(e, pcfTheory_UNSPECIFIED, pcfTheory_AP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfTheory()[index];
 }
@@ -226,33 +231,43 @@ enum pcfWeatherSource : uint8_t {
   /// PCFSpaceWeather, held for the whole arc.
   pcfWeatherSource_CONSTANT = 1,
   /// Daily rows supplied with the request ($SPW rows; the JB2008 indices
-  /// for the JB2008 atmosphere).
+  /// for the JB2008 atmosphere). In an $OCM element set, the rows of
+  /// PERTURBATIONS.SPACE_WEATHER.
   pcfWeatherSource_RECORDS = 2,
+  /// The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+  /// mean-element theory's built-in solar and geomagnetic activity).
+  pcfWeatherSource_THEORY_FLUX_MODEL = 3,
+  /// No drag weather: the theory's own drag term (SGP4's BSTAR).
+  pcfWeatherSource_NONE = 4,
   pcfWeatherSource_MIN = pcfWeatherSource_UNSPECIFIED,
-  pcfWeatherSource_MAX = pcfWeatherSource_RECORDS
+  pcfWeatherSource_MAX = pcfWeatherSource_NONE
 };
 
-inline const pcfWeatherSource (&EnumValuespcfWeatherSource())[3] {
+inline const pcfWeatherSource (&EnumValuespcfWeatherSource())[5] {
   static const pcfWeatherSource values[] = {
     pcfWeatherSource_UNSPECIFIED,
     pcfWeatherSource_CONSTANT,
-    pcfWeatherSource_RECORDS
+    pcfWeatherSource_RECORDS,
+    pcfWeatherSource_THEORY_FLUX_MODEL,
+    pcfWeatherSource_NONE
   };
   return values;
 }
 
 inline const char * const *EnumNamespcfWeatherSource() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
     "UNSPECIFIED",
     "CONSTANT",
     "RECORDS",
+    "THEORY_FLUX_MODEL",
+    "NONE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepcfWeatherSource(pcfWeatherSource e) {
-  if (::flatbuffers::IsOutRange(e, pcfWeatherSource_UNSPECIFIED, pcfWeatherSource_RECORDS)) return "";
+  if (::flatbuffers::IsOutRange(e, pcfWeatherSource_UNSPECIFIED, pcfWeatherSource_NONE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfWeatherSource()[index];
 }
@@ -841,11 +856,15 @@ enum pcfAtmosphereFamily : uint8_t {
   /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
   /// with Mars.
   pcfAtmosphereFamily_MARS_EXPONENTIAL = 7,
+  /// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+  /// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+  /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+  pcfAtmosphereFamily_JACCHIA70 = 8,
   pcfAtmosphereFamily_MIN = pcfAtmosphereFamily_UNSPECIFIED,
-  pcfAtmosphereFamily_MAX = pcfAtmosphereFamily_MARS_EXPONENTIAL
+  pcfAtmosphereFamily_MAX = pcfAtmosphereFamily_JACCHIA70
 };
 
-inline const pcfAtmosphereFamily (&EnumValuespcfAtmosphereFamily())[8] {
+inline const pcfAtmosphereFamily (&EnumValuespcfAtmosphereFamily())[9] {
   static const pcfAtmosphereFamily values[] = {
     pcfAtmosphereFamily_UNSPECIFIED,
     pcfAtmosphereFamily_NRLMSISE00,
@@ -854,13 +873,14 @@ inline const pcfAtmosphereFamily (&EnumValuespcfAtmosphereFamily())[8] {
     pcfAtmosphereFamily_HARRIS_PRIESTER,
     pcfAtmosphereFamily_JACCHIA_ROBERTS,
     pcfAtmosphereFamily_JB2008,
-    pcfAtmosphereFamily_MARS_EXPONENTIAL
+    pcfAtmosphereFamily_MARS_EXPONENTIAL,
+    pcfAtmosphereFamily_JACCHIA70
   };
   return values;
 }
 
 inline const char * const *EnumNamespcfAtmosphereFamily() {
-  static const char * const names[9] = {
+  static const char * const names[10] = {
     "UNSPECIFIED",
     "NRLMSISE00",
     "EXPONENTIAL",
@@ -869,13 +889,14 @@ inline const char * const *EnumNamespcfAtmosphereFamily() {
     "JACCHIA_ROBERTS",
     "JB2008",
     "MARS_EXPONENTIAL",
+    "JACCHIA70",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepcfAtmosphereFamily(pcfAtmosphereFamily e) {
-  if (::flatbuffers::IsOutRange(e, pcfAtmosphereFamily_UNSPECIFIED, pcfAtmosphereFamily_MARS_EXPONENTIAL)) return "";
+  if (::flatbuffers::IsOutRange(e, pcfAtmosphereFamily_UNSPECIFIED, pcfAtmosphereFamily_JACCHIA70)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfAtmosphereFamily()[index];
 }
@@ -1227,7 +1248,8 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DRAG_PRIOR = 30,
     VT_SRP_PRIOR = 32,
     VT_DRAG_PRIOR_FORM = 34,
-    VT_SRP_PRIOR_FORM = 36
+    VT_SRP_PRIOR_FORM = 36,
+    VT_WEATHER_HORIZON_DAYS = 38
   };
   /// Fit span used when the span rule is not run, hours. Default 48.
   double DEFAULT_SPAN_HOURS() const {
@@ -1313,6 +1335,15 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   pcfPriorForm SRP_PRIOR_FORM() const {
     return static_cast<pcfPriorForm>(GetField<uint8_t>(VT_SRP_PRIOR_FORM, 0));
   }
+  /// Days past the element set's epoch day through which the fit writes the
+  /// daily space weather into the record it emits (OCM
+  /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+  /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+  /// arc's last day and the epoch's day plus this count; rows supplied with
+  /// the request must reach it, or the fit is refused by name. Default 30.
+  uint16_t WEATHER_HORIZON_DAYS() const {
+    return GetField<uint16_t>(VT_WEATHER_HORIZON_DAYS, 30);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1336,6 +1367,7 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(SRP_PRIOR()) &&
            VerifyField<uint8_t>(verifier, VT_DRAG_PRIOR_FORM, 1) &&
            VerifyField<uint8_t>(verifier, VT_SRP_PRIOR_FORM, 1) &&
+           VerifyField<uint16_t>(verifier, VT_WEATHER_HORIZON_DAYS, 2) &&
            verifier.EndTable();
   }
 };
@@ -1395,6 +1427,9 @@ struct PCFFitPolicyBuilder {
   void add_SRP_PRIOR_FORM(pcfPriorForm SRP_PRIOR_FORM) {
     fbb_.AddElement<uint8_t>(PCFFitPolicy::VT_SRP_PRIOR_FORM, static_cast<uint8_t>(SRP_PRIOR_FORM), 0);
   }
+  void add_WEATHER_HORIZON_DAYS(uint16_t WEATHER_HORIZON_DAYS) {
+    fbb_.AddElement<uint16_t>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 30);
+  }
   explicit PCFFitPolicyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1424,7 +1459,8 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
     ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
     pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
-    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED) {
+    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
+    uint16_t WEATHER_HORIZON_DAYS = 30) {
   PCFFitPolicyBuilder builder_(_fbb);
   builder_.add_IMPLAUSIBLE_RMS_KM(IMPLAUSIBLE_RMS_KM);
   builder_.add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(ECCENTRIC_MAXIMUM_PERIOD_HOURS);
@@ -1440,6 +1476,7 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
   builder_.add_SRP_PRIOR(SRP_PRIOR);
   builder_.add_DRAG_PRIOR(DRAG_PRIOR);
   builder_.add_CANDIDATE_SPANS_HOURS(CANDIDATE_SPANS_HOURS);
+  builder_.add_WEATHER_HORIZON_DAYS(WEATHER_HORIZON_DAYS);
   builder_.add_SRP_PRIOR_FORM(SRP_PRIOR_FORM);
   builder_.add_DRAG_PRIOR_FORM(DRAG_PRIOR_FORM);
   builder_.add_HAS_HOLDOUT_HOURS(HAS_HOLDOUT_HOURS);
@@ -1464,7 +1501,8 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
     ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
     pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
-    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED) {
+    pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
+    uint16_t WEATHER_HORIZON_DAYS = 30) {
   auto CANDIDATE_SPANS_HOURS__ = CANDIDATE_SPANS_HOURS ? _fbb.CreateVector<double>(*CANDIDATE_SPANS_HOURS) : 0;
   return CreatePCFFitPolicy(
       _fbb,
@@ -1484,7 +1522,8 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
       DRAG_PRIOR,
       SRP_PRIOR,
       DRAG_PRIOR_FORM,
-      SRP_PRIOR_FORM);
+      SRP_PRIOR_FORM,
+      WEATHER_HORIZON_DAYS);
 }
 
 /// One term of an expression program.
@@ -1779,7 +1818,10 @@ struct PCFOutput FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_FRAME = 4,
     VT_STEP_SECONDS = 6,
-    VT_MAXIMUM_STATES = 8
+    VT_MAXIMUM_STATES = 8,
+    VT_EPOCHS = 10,
+    VT_START_TIME = 12,
+    VT_STOP_TIME = 14
   };
   /// Frame of the output states. Default UNSPECIFIED (the grid template's
   /// frame, TEME without one).
@@ -1795,12 +1837,35 @@ struct PCFOutput FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t MAXIMUM_STATES() const {
     return GetField<uint32_t>(VT_MAXIMUM_STATES, 500000);
   }
+  /// Output epochs, ISO 8601 UTC, ascending; when present they are the
+  /// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+  /// Default empty.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *EPOCHS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_EPOCHS);
+  }
+  /// First output epoch, ISO 8601 UTC. Default empty: the element set's
+  /// epoch.
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  /// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+  /// START_TIME plus one day.
+  const ::flatbuffers::String *STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_FRAME, 1) &&
            VerifyField<double>(verifier, VT_STEP_SECONDS, 8) &&
            VerifyField<uint32_t>(verifier, VT_MAXIMUM_STATES, 4) &&
+           VerifyOffset(verifier, VT_EPOCHS) &&
+           verifier.VerifyVector(EPOCHS()) &&
+           verifier.VerifyVectorOfStrings(EPOCHS()) &&
+           VerifyOffset(verifier, VT_START_TIME) &&
+           verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_STOP_TIME) &&
+           verifier.VerifyString(STOP_TIME()) &&
            verifier.EndTable();
   }
 };
@@ -1818,6 +1883,15 @@ struct PCFOutputBuilder {
   void add_MAXIMUM_STATES(uint32_t MAXIMUM_STATES) {
     fbb_.AddElement<uint32_t>(PCFOutput::VT_MAXIMUM_STATES, MAXIMUM_STATES, 500000);
   }
+  void add_EPOCHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> EPOCHS) {
+    fbb_.AddOffset(PCFOutput::VT_EPOCHS, EPOCHS);
+  }
+  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
+    fbb_.AddOffset(PCFOutput::VT_START_TIME, START_TIME);
+  }
+  void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
+    fbb_.AddOffset(PCFOutput::VT_STOP_TIME, STOP_TIME);
+  }
   explicit PCFOutputBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1833,12 +1907,39 @@ inline ::flatbuffers::Offset<PCFOutput> CreatePCFOutput(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     pcfOutputFrame FRAME = pcfOutputFrame_UNSPECIFIED,
     double STEP_SECONDS = 60.0,
-    uint32_t MAXIMUM_STATES = 500000) {
+    uint32_t MAXIMUM_STATES = 500000,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> EPOCHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0) {
   PCFOutputBuilder builder_(_fbb);
   builder_.add_STEP_SECONDS(STEP_SECONDS);
+  builder_.add_STOP_TIME(STOP_TIME);
+  builder_.add_START_TIME(START_TIME);
+  builder_.add_EPOCHS(EPOCHS);
   builder_.add_MAXIMUM_STATES(MAXIMUM_STATES);
   builder_.add_FRAME(FRAME);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PCFOutput> CreatePCFOutputDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    pcfOutputFrame FRAME = pcfOutputFrame_UNSPECIFIED,
+    double STEP_SECONDS = 60.0,
+    uint32_t MAXIMUM_STATES = 500000,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *EPOCHS = nullptr,
+    const char *START_TIME = nullptr,
+    const char *STOP_TIME = nullptr) {
+  auto EPOCHS__ = EPOCHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*EPOCHS) : 0;
+  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
+  return CreatePCFOutput(
+      _fbb,
+      FRAME,
+      STEP_SECONDS,
+      MAXIMUM_STATES,
+      EPOCHS__,
+      START_TIME__,
+      STOP_TIME__);
 }
 
 /// Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.

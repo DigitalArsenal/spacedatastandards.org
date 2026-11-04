@@ -180,10 +180,31 @@ class CVR {
   ///  evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
   double get SHRINKAGE_WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, double.nan);
   double get shrinkageWeight => SHRINKAGE_WEIGHT;
+  ///  Distinct truth epochs among the SAMPLES: predictions that share one truth
+  ///  state count once here. 0 when not stated.
+  int get TRUTH_EPOCHS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  int get truthEpochs => TRUTH_EPOCHS;
+  ///  Share of the held-out samples whose error lies inside the 1-sigma band of
+  ///  the first, second and third axis of the covariance's frame (radial,
+  ///  in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+  ///  nominal 0.6827 for Gaussian errors. NaN when not measured.
+  double get COVERAGE_1_SIGMA_AXIS1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, double.nan);
+  double get coverage1SigmaAxis1 => COVERAGE_1_SIGMA_AXIS1;
+  double get COVERAGE_1_SIGMA_AXIS2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, double.nan);
+  double get coverage1SigmaAxis2 => COVERAGE_1_SIGMA_AXIS2;
+  double get COVERAGE_1_SIGMA_AXIS3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, double.nan);
+  double get coverage1SigmaAxis3 => COVERAGE_1_SIGMA_AXIS3;
+  ///  As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+  double get COVERAGE_3_SIGMA_AXIS1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, double.nan);
+  double get coverage3SigmaAxis1 => COVERAGE_3_SIGMA_AXIS1;
+  double get COVERAGE_3_SIGMA_AXIS2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, double.nan);
+  double get coverage3SigmaAxis2 => COVERAGE_3_SIGMA_AXIS2;
+  double get COVERAGE_3_SIGMA_AXIS3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, double.nan);
+  double get coverage3SigmaAxis3 => COVERAGE_3_SIGMA_AXIS3;
 
   @override
   String toString() {
-    return 'CVR{RULE: ${RULE}, modelId: ${modelId}, REGIME: ${REGIME}, ageDays: ${ageDays}, horizonDays: ${horizonDays}, measuredLineage: ${measuredLineage}, testWindow: ${testWindow}, meanD2Over3: ${meanD2Over3}, coverage95: ${coverage95}, SAMPLES: ${SAMPLES}, OBJECTS: ${OBJECTS}, scaleFactor: ${scaleFactor}, CALIBRATION: ${CALIBRATION}, EVIDENCE: ${EVIDENCE}, historySamples: ${historySamples}, historySets: ${historySets}, historyWindow: ${historyWindow}, shrinkageWeight: ${shrinkageWeight}}';
+    return 'CVR{RULE: ${RULE}, modelId: ${modelId}, REGIME: ${REGIME}, ageDays: ${ageDays}, horizonDays: ${horizonDays}, measuredLineage: ${measuredLineage}, testWindow: ${testWindow}, meanD2Over3: ${meanD2Over3}, coverage95: ${coverage95}, SAMPLES: ${SAMPLES}, OBJECTS: ${OBJECTS}, scaleFactor: ${scaleFactor}, CALIBRATION: ${CALIBRATION}, EVIDENCE: ${EVIDENCE}, historySamples: ${historySamples}, historySets: ${historySets}, historyWindow: ${historyWindow}, shrinkageWeight: ${shrinkageWeight}, truthEpochs: ${truthEpochs}, coverage1SigmaAxis1: ${coverage1SigmaAxis1}, coverage1SigmaAxis2: ${coverage1SigmaAxis2}, coverage1SigmaAxis3: ${coverage1SigmaAxis3}, coverage3SigmaAxis1: ${coverage3SigmaAxis1}, coverage3SigmaAxis2: ${coverage3SigmaAxis2}, coverage3SigmaAxis3: ${coverage3SigmaAxis3}}';
   }
 }
 
@@ -201,7 +222,7 @@ class CVRBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(25);
   }
 
   int addRule(covarianceRule? RULE) {
@@ -276,6 +297,34 @@ class CVRBuilder {
     fbBuilder.addFloat64(17, SHRINKAGE_WEIGHT);
     return fbBuilder.offset;
   }
+  int addTruthEpochs(int? TRUTH_EPOCHS) {
+    fbBuilder.addUint32(18, TRUTH_EPOCHS);
+    return fbBuilder.offset;
+  }
+  int addCoverage1SigmaAxis1(double? COVERAGE_1_SIGMA_AXIS1) {
+    fbBuilder.addFloat64(19, COVERAGE_1_SIGMA_AXIS1);
+    return fbBuilder.offset;
+  }
+  int addCoverage1SigmaAxis2(double? COVERAGE_1_SIGMA_AXIS2) {
+    fbBuilder.addFloat64(20, COVERAGE_1_SIGMA_AXIS2);
+    return fbBuilder.offset;
+  }
+  int addCoverage1SigmaAxis3(double? COVERAGE_1_SIGMA_AXIS3) {
+    fbBuilder.addFloat64(21, COVERAGE_1_SIGMA_AXIS3);
+    return fbBuilder.offset;
+  }
+  int addCoverage3SigmaAxis1(double? COVERAGE_3_SIGMA_AXIS1) {
+    fbBuilder.addFloat64(22, COVERAGE_3_SIGMA_AXIS1);
+    return fbBuilder.offset;
+  }
+  int addCoverage3SigmaAxis2(double? COVERAGE_3_SIGMA_AXIS2) {
+    fbBuilder.addFloat64(23, COVERAGE_3_SIGMA_AXIS2);
+    return fbBuilder.offset;
+  }
+  int addCoverage3SigmaAxis3(double? COVERAGE_3_SIGMA_AXIS3) {
+    fbBuilder.addFloat64(24, COVERAGE_3_SIGMA_AXIS3);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -301,6 +350,13 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
   final int? _HISTORY_SETS;
   final String? _HISTORY_WINDOW;
   final double? _SHRINKAGE_WEIGHT;
+  final int? _TRUTH_EPOCHS;
+  final double? _COVERAGE_1_SIGMA_AXIS1;
+  final double? _COVERAGE_1_SIGMA_AXIS2;
+  final double? _COVERAGE_1_SIGMA_AXIS3;
+  final double? _COVERAGE_3_SIGMA_AXIS1;
+  final double? _COVERAGE_3_SIGMA_AXIS2;
+  final double? _COVERAGE_3_SIGMA_AXIS3;
 
   CVRObjectBuilder({
     covarianceRule? RULE,
@@ -333,6 +389,20 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
     String? historyWindow,
     double? SHRINKAGE_WEIGHT,
     double? shrinkageWeight,
+    int? TRUTH_EPOCHS,
+    int? truthEpochs,
+    double? COVERAGE_1_SIGMA_AXIS1,
+    double? coverage1SigmaAxis1,
+    double? COVERAGE_1_SIGMA_AXIS2,
+    double? coverage1SigmaAxis2,
+    double? COVERAGE_1_SIGMA_AXIS3,
+    double? coverage1SigmaAxis3,
+    double? COVERAGE_3_SIGMA_AXIS1,
+    double? coverage3SigmaAxis1,
+    double? COVERAGE_3_SIGMA_AXIS2,
+    double? coverage3SigmaAxis2,
+    double? COVERAGE_3_SIGMA_AXIS3,
+    double? coverage3SigmaAxis3,
   })
       : _RULE = RULE,
         _MODEL_ID = modelId ?? MODEL_ID,
@@ -351,7 +421,14 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
         _HISTORY_SAMPLES = historySamples ?? HISTORY_SAMPLES,
         _HISTORY_SETS = historySets ?? HISTORY_SETS,
         _HISTORY_WINDOW = historyWindow ?? HISTORY_WINDOW,
-        _SHRINKAGE_WEIGHT = shrinkageWeight ?? SHRINKAGE_WEIGHT;
+        _SHRINKAGE_WEIGHT = shrinkageWeight ?? SHRINKAGE_WEIGHT,
+        _TRUTH_EPOCHS = truthEpochs ?? TRUTH_EPOCHS,
+        _COVERAGE_1_SIGMA_AXIS1 = coverage1SigmaAxis1 ?? COVERAGE_1_SIGMA_AXIS1,
+        _COVERAGE_1_SIGMA_AXIS2 = coverage1SigmaAxis2 ?? COVERAGE_1_SIGMA_AXIS2,
+        _COVERAGE_1_SIGMA_AXIS3 = coverage1SigmaAxis3 ?? COVERAGE_1_SIGMA_AXIS3,
+        _COVERAGE_3_SIGMA_AXIS1 = coverage3SigmaAxis1 ?? COVERAGE_3_SIGMA_AXIS1,
+        _COVERAGE_3_SIGMA_AXIS2 = coverage3SigmaAxis2 ?? COVERAGE_3_SIGMA_AXIS2,
+        _COVERAGE_3_SIGMA_AXIS3 = coverage3SigmaAxis3 ?? COVERAGE_3_SIGMA_AXIS3;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -368,7 +445,7 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EVIDENCE!);
     final int? HISTORY_WINDOWOffset = _HISTORY_WINDOW == null ? null
         : fbBuilder.writeString(_HISTORY_WINDOW!);
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(25);
     fbBuilder.addInt8(0, _RULE?.value);
     fbBuilder.addOffset(1, MODEL_IDOffset);
     fbBuilder.addOffset(2, REGIMEOffset);
@@ -387,6 +464,13 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(15, _HISTORY_SETS);
     fbBuilder.addOffset(16, HISTORY_WINDOWOffset);
     fbBuilder.addFloat64(17, _SHRINKAGE_WEIGHT);
+    fbBuilder.addUint32(18, _TRUTH_EPOCHS);
+    fbBuilder.addFloat64(19, _COVERAGE_1_SIGMA_AXIS1);
+    fbBuilder.addFloat64(20, _COVERAGE_1_SIGMA_AXIS2);
+    fbBuilder.addFloat64(21, _COVERAGE_1_SIGMA_AXIS3);
+    fbBuilder.addFloat64(22, _COVERAGE_3_SIGMA_AXIS1);
+    fbBuilder.addFloat64(23, _COVERAGE_3_SIGMA_AXIS2);
+    fbBuilder.addFloat64(24, _COVERAGE_3_SIGMA_AXIS3);
     return fbBuilder.endTable();
   }
 

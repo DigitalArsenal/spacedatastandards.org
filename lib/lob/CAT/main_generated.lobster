@@ -62,12 +62,15 @@ enum massCategory:
 enum catalogProductKind:
     /// Not stated
     catalogProductKind_Unspecified = 0
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4
+    /// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+    /// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
     catalogProductKind_Sgp4Elements = 1
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+    /// As Sgp4Elements, under SGP4XP
     catalogProductKind_Sgp4XpElements = 2
     /// $OCM: a state and its covariance
     catalogProductKind_StateCovariance = 3
+    /// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+    catalogProductKind_ApElements = 4
 
 class CATProduct
 
@@ -85,8 +88,8 @@ class CATProduct : flatbuffers.handle
     /// The product's source: its PROVENANCE SOURCE_ID.
     def SOURCE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-    /// epoch.
+    /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+    /// MEAN_ELEMENTS.EPOCH or first state epoch.
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Why the catalog selected this product over the other candidates of its

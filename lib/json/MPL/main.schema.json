@@ -95,7 +95,7 @@
     },
     "catalogProductKind" : {
       "type" : "string",
-      "enum": ["Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance"]
+      "enum": ["Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance", "ApElements"]
     },
     "pvnSourceKind" : {
       "type" : "string",
@@ -864,7 +864,7 @@
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+                "description" : "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's\nMEAN_ELEMENTS.EPOCH or first state epoch."
               },
         "SELECTION_REASON" : {
                 "type" : "string",
@@ -1031,6 +1031,26 @@
         "LINEAGE" : {
                 "type" : "string",
                 "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
               }
       },
       "additionalProperties" : false

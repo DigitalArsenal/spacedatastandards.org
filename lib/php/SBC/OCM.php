@@ -106,6 +106,7 @@ class OCM extends Table
     /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+    /// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
     /**
      * @param int offset
      * @return double
@@ -239,7 +240,8 @@ class OCM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// User-defined parameters and supplemental comments.
+    /// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+    /// SDN readers never read it.
     /**
      * @returnVectorOffset
      */
@@ -266,8 +268,8 @@ class OCM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Reference frame of STATE_DATA and the polynomial records
-    /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    /// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+    /// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
     public function getTRAJ_REF_FRAME()
     {
         $obj = new RFM();
@@ -496,22 +498,124 @@ class OCM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// The mean element set this message carries, under the theory it names. STATE_DATA is
+    /// empty when this is present; no state travels beside a set.
+    public function getMEAN_ELEMENTS()
+    {
+        $obj = new OCMMeanElements();
+        $o = $this->__offset(70);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+    public function getCOV_PROPAGATION()
+    {
+        $obj = new OCMCovariancePropagation();
+        $o = $this->__offset(72);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+    /// every reader keys on these, never on the COV_PARAMETERS strings.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCOV_PARAMETER_KINDS($j)
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \prwDynamicParameter::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_PARAMETER_KINDSLength()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCOV_PARAMETER_KINDSBytes()
+    {
+        return $this->__vector_as_bytes(74);
+    }
+
+    /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+    /// (CCSDS 502.0-B-3 TRAJ_BASIS).
+    /**
+     * @return byte
+     */
+    public function getTRAJ_BASIS()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \ocmTrajectoryBasis::UNSPECIFIED;
+    }
+
+    /// The element sets the trajectory was computed from, one per object whose
+    /// elements it used.
+    /**
+     * @returnVectorOffset
+     */
+    public function getSEED_SETS($j)
+    {
+        $o = $this->__offset(78);
+        $obj = new OCMSeedSet();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSEED_SETSLength()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Integrator settings of a solution made from a legacy VCM.
+    public function getINTEGRATOR()
+    {
+        $obj = new OCMIntegrator();
+        $o = $this->__offset(80);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Relative-motion geometry; STATE_DATA is empty when this is present.
+    public function getRPO_GEOMETRY()
+    {
+        $obj = new OCMRelativeGeometry();
+        $o = $this->__offset(82);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Inspection geometry; STATE_DATA is empty when this is present.
+    public function getRPO_INSPECTION()
+    {
+        $obj = new OCMInspectionGeometry();
+        $o = $this->__offset(84);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(33);
+        $builder->StartObject(41);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS, $PROVENANCE, $COV_REALISM)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS, $PROVENANCE, $COV_REALISM, $MEAN_ELEMENTS, $COV_PROPAGATION, $COV_PARAMETER_KINDS, $TRAJ_BASIS, $SEED_SETS, $INTEGRATOR, $RPO_GEOMETRY, $RPO_INSPECTION)
     {
-        $builder->startObject(33);
+        $builder->startObject(41);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -545,6 +649,14 @@ class OCM extends Table
         self::addCOVARIANCE_BLOCKS($builder, $COVARIANCE_BLOCKS);
         self::addPROVENANCE($builder, $PROVENANCE);
         self::addCOV_REALISM($builder, $COV_REALISM);
+        self::addMEAN_ELEMENTS($builder, $MEAN_ELEMENTS);
+        self::addCOV_PROPAGATION($builder, $COV_PROPAGATION);
+        self::addCOV_PARAMETER_KINDS($builder, $COV_PARAMETER_KINDS);
+        self::addTRAJ_BASIS($builder, $TRAJ_BASIS);
+        self::addSEED_SETS($builder, $SEED_SETS);
+        self::addINTEGRATOR($builder, $INTEGRATOR);
+        self::addRPO_GEOMETRY($builder, $RPO_GEOMETRY);
+        self::addRPO_INSPECTION($builder, $RPO_INSPECTION);
         $o = $builder->endObject();
         return $o;
     }
@@ -1165,6 +1277,134 @@ class OCM extends Table
     public static function startCOV_REALISMVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMEAN_ELEMENTS(FlatBufferBuilder $builder, $MEAN_ELEMENTS)
+    {
+        $builder->addOffsetX(33, $MEAN_ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_PROPAGATION(FlatBufferBuilder $builder, $COV_PROPAGATION)
+    {
+        $builder->addOffsetX(34, $COV_PROPAGATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_PARAMETER_KINDS(FlatBufferBuilder $builder, $COV_PARAMETER_KINDS)
+    {
+        $builder->addOffsetX(35, $COV_PARAMETER_KINDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_PARAMETER_KINDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_PARAMETER_KINDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addTRAJ_BASIS(FlatBufferBuilder $builder, $TRAJ_BASIS)
+    {
+        $builder->addByteX(36, $TRAJ_BASIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSEED_SETS(FlatBufferBuilder $builder, $SEED_SETS)
+    {
+        $builder->addOffsetX(37, $SEED_SETS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSEED_SETSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSEED_SETSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINTEGRATOR(FlatBufferBuilder $builder, $INTEGRATOR)
+    {
+        $builder->addOffsetX(38, $INTEGRATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRPO_GEOMETRY(FlatBufferBuilder $builder, $RPO_GEOMETRY)
+    {
+        $builder->addOffsetX(39, $RPO_GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRPO_INSPECTION(FlatBufferBuilder $builder, $RPO_INSPECTION)
+    {
+        $builder->addOffsetX(40, $RPO_INSPECTION, 0);
     }
 
     /**

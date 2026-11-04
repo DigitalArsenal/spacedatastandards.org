@@ -95,28 +95,47 @@ class Header extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Whether the message is real, test or exercise data.
+    /**
+     * @return byte
+     */
+    public function getMESSAGE_STATUS()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \ocmMessageStatus::UNSPECIFIED;
+    }
+
+    /// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+    public function getEXERCISE_NAME()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startHeader(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Header
      */
-    public static function createHeader(FlatBufferBuilder $builder, $CCSDS_OCM_VERS, $COMMENT, $CLASSIFICATION, $CREATION_DATE, $ORIGINATOR, $MESSAGE_ID)
+    public static function createHeader(FlatBufferBuilder $builder, $CCSDS_OCM_VERS, $COMMENT, $CLASSIFICATION, $CREATION_DATE, $ORIGINATOR, $MESSAGE_ID, $MESSAGE_STATUS, $EXERCISE_NAME)
     {
-        $builder->startObject(6);
+        $builder->startObject(8);
         self::addCCSDS_OCM_VERS($builder, $CCSDS_OCM_VERS);
         self::addCOMMENT($builder, $COMMENT);
         self::addCLASSIFICATION($builder, $CLASSIFICATION);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addMESSAGE_ID($builder, $MESSAGE_ID);
+        self::addMESSAGE_STATUS($builder, $MESSAGE_STATUS);
+        self::addEXERCISE_NAME($builder, $EXERCISE_NAME);
         $o = $builder->endObject();
         return $o;
     }
@@ -203,6 +222,26 @@ class Header extends Table
     public static function addMESSAGE_ID(FlatBufferBuilder $builder, $MESSAGE_ID)
     {
         $builder->addOffsetX(5, $MESSAGE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addMESSAGE_STATUS(FlatBufferBuilder $builder, $MESSAGE_STATUS)
+    {
+        $builder->addByteX(6, $MESSAGE_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEXERCISE_NAME(FlatBufferBuilder $builder, $EXERCISE_NAME)
+    {
+        $builder->addOffsetX(7, $EXERCISE_NAME, 0);
     }
 
     /**

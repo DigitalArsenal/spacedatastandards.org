@@ -21,8 +21,15 @@ public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verif
   case dsst = 2
   ///  Universal Semianalytical Method
   case usm = 3
+  ///  SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+  ///  atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+  ///  unused: it was a cut value of an earlier theory.
+  case ap = 5
+  ///  Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+  ///  set is always written.
+  case unspecified = 6
 
-  public static var max: meanElementSource { return .usm }
+  public static var max: meanElementSource { return .unspecified }
   public static var min: meanElementSource { return .sgp4 }
 }
 

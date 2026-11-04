@@ -20,6 +20,9 @@ class pcfTheory
     const FFM = 4;
     /// Two-body (Keplerian) motion about the central body.
     const KEPLER = 5;
+    /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+    /// 3 stays unused.
+    const AP = 6;
 
     private static $names = array(
         pcfTheory::UNSPECIFIED=>"UNSPECIFIED",
@@ -27,6 +30,7 @@ class pcfTheory
         pcfTheory::SGP4XP=>"SGP4XP",
         pcfTheory::FFM=>"FFM",
         pcfTheory::KEPLER=>"KEPLER",
+        pcfTheory::AP=>"AP",
     );
 
     public static function Name($e)

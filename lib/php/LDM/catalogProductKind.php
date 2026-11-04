@@ -6,18 +6,22 @@ class catalogProductKind
 {
     /// Not stated
     const Unspecified = 0;
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4
+    /// An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+    /// MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
     const Sgp4Elements = 1;
-    /// $OMM with MEAN_ELEMENT_THEORY SGP4XP
+    /// As Sgp4Elements, under SGP4XP
     const Sgp4XpElements = 2;
     /// $OCM: a state and its covariance
     const StateCovariance = 3;
+    /// An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+    const ApElements = 4;
 
     private static $names = array(
         catalogProductKind::Unspecified=>"Unspecified",
         catalogProductKind::Sgp4Elements=>"Sgp4Elements",
         catalogProductKind::Sgp4XpElements=>"Sgp4XpElements",
         catalogProductKind::StateCovariance=>"StateCovariance",
+        catalogProductKind::ApElements=>"ApElements",
     );
 
     public static function Name($e)

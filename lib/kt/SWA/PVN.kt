@@ -138,6 +138,75 @@ class PVN : Table() {
         }
     val lineageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
     fun lineageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Replayable URL or provider query identifying the source material as it
+     * was retrieved (the SOURCE_URL of $CMR and $AVL).
+     */
+    val sourceUrl : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun sourceUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Source revision, edition or upstream update marker verbatim: for a file
+     * its originator stamps, the stamp.
+     */
+    val sourceVersion : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun sourceVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+     */
+    val retrievedAt : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val retrievedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun retrievedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+     * hexadecimal characters. Empty when the source cannot expose replayable
+     * bytes.
+     */
+    val sourceSha256 : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourceSha256AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun sourceSha256InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+     * the source was fetched by range. 0 when not stated.
+     */
+    val sourceBytes : ULong
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPVN(_bb: ByteBuffer): PVN = getRootAsPVN(_bb, PVN())
@@ -146,8 +215,13 @@ class PVN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PVNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PVN")
-        fun createPVN(builder: FlatBufferBuilder, sourceIdOffset: Int, sourceKind: Byte, originatorOffset: Int, providerIdOffset: Int, producerOffset: Int, licenseClass: Byte, licenseIdOffset: Int, lineageOffset: Int) : Int {
-            builder.startTable(8)
+        fun createPVN(builder: FlatBufferBuilder, sourceIdOffset: Int, sourceKind: Byte, originatorOffset: Int, providerIdOffset: Int, producerOffset: Int, licenseClass: Byte, licenseIdOffset: Int, lineageOffset: Int, sourceUrlOffset: Int, sourceVersionOffset: Int, retrievedAtOffset: Int, sourceSha256Offset: Int, sourceBytes: ULong) : Int {
+            builder.startTable(13)
+            addSOURCEBYTES(builder, sourceBytes)
+            addSOURCESHA256(builder, sourceSha256Offset)
+            addRETRIEVEDAT(builder, retrievedAtOffset)
+            addSOURCEVERSION(builder, sourceVersionOffset)
+            addSOURCEURL(builder, sourceUrlOffset)
             addLINEAGE(builder, lineageOffset)
             addLICENSEID(builder, licenseIdOffset)
             addPRODUCER(builder, producerOffset)
@@ -158,7 +232,7 @@ class PVN : Table() {
             addSOURCEKIND(builder, sourceKind)
             return endPVN(builder)
         }
-        fun startPVN(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startPVN(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addSOURCEID(builder: FlatBufferBuilder, sourceId: Int) = builder.addOffset(0, sourceId, 0)
         fun addSOURCEKIND(builder: FlatBufferBuilder, sourceKind: Byte) = builder.addByte(1, sourceKind, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -167,6 +241,11 @@ class PVN : Table() {
         fun addLICENSECLASS(builder: FlatBufferBuilder, licenseClass: Byte) = builder.addByte(5, licenseClass, 0)
         fun addLICENSEID(builder: FlatBufferBuilder, licenseId: Int) = builder.addOffset(6, licenseId, 0)
         fun addLINEAGE(builder: FlatBufferBuilder, lineage: Int) = builder.addOffset(7, lineage, 0)
+        fun addSOURCEURL(builder: FlatBufferBuilder, sourceUrl: Int) = builder.addOffset(8, sourceUrl, 0)
+        fun addSOURCEVERSION(builder: FlatBufferBuilder, sourceVersion: Int) = builder.addOffset(9, sourceVersion, 0)
+        fun addRETRIEVEDAT(builder: FlatBufferBuilder, retrievedAt: Int) = builder.addOffset(10, retrievedAt, 0)
+        fun addSOURCESHA256(builder: FlatBufferBuilder, sourceSha256: Int) = builder.addOffset(11, sourceSha256, 0)
+        fun addSOURCEBYTES(builder: FlatBufferBuilder, sourceBytes: ULong) = builder.addLong(12, sourceBytes.toLong(), 0)
         fun endPVN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

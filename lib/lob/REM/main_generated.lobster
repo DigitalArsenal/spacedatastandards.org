@@ -3,16 +3,25 @@ import flatbuffers
 import ATM.main_generated
 import CAT.main_generated
 import CVR.main_generated
+import EOP.main_generated
+import EVL.main_generated
+import FRM.main_generated
 import HFC.main_generated
 import IDM.main_generated
 import LCC.main_generated
+import MET.main_generated
+import NCD.main_generated
 import OCM.main_generated
 import OEM.main_generated
+import PCE.main_generated
+import PCF.main_generated
 import PLD.main_generated
 import PPE.main_generated
+import PRW.main_generated
 import PVN.main_generated
 import RDM.main_generated
 import RFM.main_generated
+import SPW.main_generated
 import TIM.main_generated
 
 /// Reentry evaluation outcome.

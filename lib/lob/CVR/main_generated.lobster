@@ -123,13 +123,34 @@ class CVR : flatbuffers.handle
     /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
     def SHRINKAGE_WEIGHT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, nan)
+    /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+    /// state count once here. 0 when not stated.
+    def TRUTH_EPOCHS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 40, 0)
+    /// Share of the held-out samples whose error lies inside the 1-sigma band of
+    /// the first, second and third axis of the covariance's frame (radial,
+    /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+    /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+    def COVERAGE_1_SIGMA_AXIS1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, nan)
+    def COVERAGE_1_SIGMA_AXIS2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 44, nan)
+    def COVERAGE_1_SIGMA_AXIS3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 46, nan)
+    /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+    def COVERAGE_3_SIGMA_AXIS1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, nan)
+    def COVERAGE_3_SIGMA_AXIS2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, nan)
+    def COVERAGE_3_SIGMA_AXIS3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 52, nan)
 
 def GetRootAsCVR(buf:string): return CVR { buf, flatbuffers.indirect(buf, 0) }
 
 struct CVRBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(25)
         return this
     def add_RULE(RULE:covarianceRule):
         b_.PrependInt8Slot(0, RULE, 0)
@@ -184,6 +205,27 @@ struct CVRBuilder:
         return this
     def add_SHRINKAGE_WEIGHT(SHRINKAGE_WEIGHT:float):
         b_.PrependFloat64Slot(17, SHRINKAGE_WEIGHT, nan)
+        return this
+    def add_TRUTH_EPOCHS(TRUTH_EPOCHS:int):
+        b_.PrependUint32Slot(18, TRUTH_EPOCHS, 0)
+        return this
+    def add_COVERAGE_1_SIGMA_AXIS1(COVERAGE_1_SIGMA_AXIS1:float):
+        b_.PrependFloat64Slot(19, COVERAGE_1_SIGMA_AXIS1, nan)
+        return this
+    def add_COVERAGE_1_SIGMA_AXIS2(COVERAGE_1_SIGMA_AXIS2:float):
+        b_.PrependFloat64Slot(20, COVERAGE_1_SIGMA_AXIS2, nan)
+        return this
+    def add_COVERAGE_1_SIGMA_AXIS3(COVERAGE_1_SIGMA_AXIS3:float):
+        b_.PrependFloat64Slot(21, COVERAGE_1_SIGMA_AXIS3, nan)
+        return this
+    def add_COVERAGE_3_SIGMA_AXIS1(COVERAGE_3_SIGMA_AXIS1:float):
+        b_.PrependFloat64Slot(22, COVERAGE_3_SIGMA_AXIS1, nan)
+        return this
+    def add_COVERAGE_3_SIGMA_AXIS2(COVERAGE_3_SIGMA_AXIS2:float):
+        b_.PrependFloat64Slot(23, COVERAGE_3_SIGMA_AXIS2, nan)
+        return this
+    def add_COVERAGE_3_SIGMA_AXIS3(COVERAGE_3_SIGMA_AXIS3:float):
+        b_.PrependFloat64Slot(24, COVERAGE_3_SIGMA_AXIS3, nan)
         return this
     def end():
         return b_.EndObject()

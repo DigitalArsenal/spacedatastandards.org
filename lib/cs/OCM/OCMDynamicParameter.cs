@@ -19,8 +19,8 @@ public struct OCMDynamicParameter : IFlatbufferObject
   public OCMDynamicParameter __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-  /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-  /// are the producer's, as in USER_DEFINED_PARAMETERS.
+  /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+  /// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
   public string NAME { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -41,25 +41,30 @@ public struct OCMDynamicParameter : IFlatbufferObject
   public byte[] GetUNITSArray() { return __p.__vector_as_array<byte>(8); }
   /// True when the orbit determination solved for the parameter, false when VALUE was held.
   public bool SOLVED_FOR { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// The parameter, typed: every reader keys on this, never on NAME.
+  public prwDynamicParameter PARAMETER { get { int o = __p.__offset(12); return o != 0 ? (prwDynamicParameter)__p.bb.Get(o + __p.bb_pos) : prwDynamicParameter.UNSPECIFIED; } }
 
   public static Offset<OCMDynamicParameter> CreateOCMDynamicParameter(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
       double VALUE = 0.0,
       StringOffset UNITSOffset = default(StringOffset),
-      bool SOLVED_FOR = false) {
-    builder.StartTable(4);
+      bool SOLVED_FOR = false,
+      prwDynamicParameter PARAMETER = prwDynamicParameter.UNSPECIFIED) {
+    builder.StartTable(5);
     OCMDynamicParameter.AddVALUE(builder, VALUE);
     OCMDynamicParameter.AddUNITS(builder, UNITSOffset);
     OCMDynamicParameter.AddNAME(builder, NAMEOffset);
+    OCMDynamicParameter.AddPARAMETER(builder, PARAMETER);
     OCMDynamicParameter.AddSOLVED_FOR(builder, SOLVED_FOR);
     return OCMDynamicParameter.EndOCMDynamicParameter(builder);
   }
 
-  public static void StartOCMDynamicParameter(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartOCMDynamicParameter(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddVALUE(FlatBufferBuilder builder, double VALUE) { builder.AddDouble(1, VALUE, 0.0); }
   public static void AddUNITS(FlatBufferBuilder builder, StringOffset UNITSOffset) { builder.AddOffset(2, UNITSOffset.Value, 0); }
   public static void AddSOLVED_FOR(FlatBufferBuilder builder, bool SOLVED_FOR) { builder.AddBool(3, SOLVED_FOR, false); }
+  public static void AddPARAMETER(FlatBufferBuilder builder, prwDynamicParameter PARAMETER) { builder.AddByte(4, (byte)PARAMETER, 0); }
   public static Offset<OCMDynamicParameter> EndOCMDynamicParameter(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCMDynamicParameter>(o);
@@ -74,6 +79,7 @@ public struct OCMDynamicParameter : IFlatbufferObject
     _o.VALUE = this.VALUE;
     _o.UNITS = this.UNITS;
     _o.SOLVED_FOR = this.SOLVED_FOR;
+    _o.PARAMETER = this.PARAMETER;
   }
   public static Offset<OCMDynamicParameter> Pack(FlatBufferBuilder builder, OCMDynamicParameterT _o) {
     if (_o == null) return default(Offset<OCMDynamicParameter>);
@@ -84,7 +90,8 @@ public struct OCMDynamicParameter : IFlatbufferObject
       _NAME,
       _o.VALUE,
       _UNITS,
-      _o.SOLVED_FOR);
+      _o.SOLVED_FOR,
+      _o.PARAMETER);
   }
 }
 
@@ -94,12 +101,14 @@ public class OCMDynamicParameterT
   public double VALUE { get; set; }
   public string UNITS { get; set; }
   public bool SOLVED_FOR { get; set; }
+  public prwDynamicParameter PARAMETER { get; set; }
 
   public OCMDynamicParameterT() {
     this.NAME = null;
     this.VALUE = 0.0;
     this.UNITS = null;
     this.SOLVED_FOR = false;
+    this.PARAMETER = prwDynamicParameter.UNSPECIFIED;
   }
 }
 
@@ -113,6 +122,7 @@ static public class OCMDynamicParameterVerify
       && verifier.VerifyField(tablePos, 6 /*VALUE*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 8 /*UNITS*/, false)
       && verifier.VerifyField(tablePos, 10 /*SOLVED_FOR*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*PARAMETER*/, 1 /*prwDynamicParameter*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

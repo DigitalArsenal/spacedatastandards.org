@@ -94,8 +94,8 @@ func (rcv *CATProduct) SourceId() []byte {
 }
 
 /// The product's source: its PROVENANCE SOURCE_ID.
-/// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-/// epoch.
+/// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+/// MEAN_ELEMENTS.EPOCH or first state epoch.
 func (rcv *CATProduct) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -108,8 +108,8 @@ func (rcv *CATProduct) Epoch() []byte {
 	return rcv.EPOCH()
 }
 
-/// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-/// epoch.
+/// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+/// MEAN_ELEMENTS.EPOCH or first state epoch.
 /// Why the catalog selected this product over the other candidates of its
 /// KIND, as the selecting integrator states it (for example, the lowest
 /// measured median error for the object's orbit regime and prediction

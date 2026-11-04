@@ -11,13 +11,21 @@ class pcfWeatherSource
     /// PCFSpaceWeather, held for the whole arc.
     const CONSTANT = 1;
     /// Daily rows supplied with the request ($SPW rows; the JB2008 indices
-    /// for the JB2008 atmosphere).
+    /// for the JB2008 atmosphere). In an $OCM element set, the rows of
+    /// PERTURBATIONS.SPACE_WEATHER.
     const RECORDS = 2;
+    /// The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+    /// mean-element theory's built-in solar and geomagnetic activity).
+    const THEORY_FLUX_MODEL = 3;
+    /// No drag weather: the theory's own drag term (SGP4's BSTAR).
+    const NONE = 4;
 
     private static $names = array(
         pcfWeatherSource::UNSPECIFIED=>"UNSPECIFIED",
         pcfWeatherSource::CONSTANT=>"CONSTANT",
         pcfWeatherSource::RECORDS=>"RECORDS",
+        pcfWeatherSource::THEORY_FLUX_MODEL=>"THEORY_FLUX_MODEL",
+        pcfWeatherSource::NONE=>"NONE",
     );
 
     public static function Name($e)

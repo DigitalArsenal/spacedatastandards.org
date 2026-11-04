@@ -18,11 +18,21 @@ public final class pcfWeatherSource {
   public static final int CONSTANT = 1;
   /**
    * Daily rows supplied with the request ($SPW rows; the JB2008 indices
-   * for the JB2008 atmosphere).
+   * for the JB2008 atmosphere). In an $OCM element set, the rows of
+   * PERTURBATIONS.SPACE_WEATHER.
    */
   public static final int RECORDS = 2;
+  /**
+   * The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+   * mean-element theory's built-in solar and geomagnetic activity).
+   */
+  public static final int THEORY_FLUX_MODEL = 3;
+  /**
+   * No drag weather: the theory's own drag term (SGP4's BSTAR).
+   */
+  public static final int NONE = 4;
 
-  public static final String[] names = { "UNSPECIFIED", "CONSTANT", "RECORDS", };
+  public static final String[] names = { "UNSPECIFIED", "CONSTANT", "RECORDS", "THEORY_FLUX_MODEL", "NONE", };
 
   public static String name(int e) { return names[e]; }
 }

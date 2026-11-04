@@ -219,8 +219,56 @@ SHRINKAGE_WEIGHT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
+/**
+ * Distinct truth epochs among the SAMPLES: predictions that share one truth
+ * state count once here. 0 when not stated.
+ */
+TRUTH_EPOCHS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Share of the held-out samples whose error lies inside the 1-sigma band of
+ * the first, second and third axis of the covariance's frame (radial,
+ * in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+ * nominal 0.6827 for Gaussian errors. NaN when not measured.
+ */
+COVERAGE_1_SIGMA_AXIS1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+COVERAGE_1_SIGMA_AXIS2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+COVERAGE_1_SIGMA_AXIS3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+ */
+COVERAGE_3_SIGMA_AXIS1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+COVERAGE_3_SIGMA_AXIS2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+COVERAGE_3_SIGMA_AXIS3():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
 static startCVR(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(25);
 }
 
 static addRule(builder:flatbuffers.Builder, RULE:covarianceRule) {
@@ -295,6 +343,34 @@ static addShrinkageWeight(builder:flatbuffers.Builder, SHRINKAGE_WEIGHT:number) 
   builder.addFieldFloat64(17, SHRINKAGE_WEIGHT, NaN);
 }
 
+static addTruthEpochs(builder:flatbuffers.Builder, TRUTH_EPOCHS:number) {
+  builder.addFieldInt32(18, TRUTH_EPOCHS, 0);
+}
+
+static addCoverage1SigmaAxis1(builder:flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS1:number) {
+  builder.addFieldFloat64(19, COVERAGE_1_SIGMA_AXIS1, NaN);
+}
+
+static addCoverage1SigmaAxis2(builder:flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS2:number) {
+  builder.addFieldFloat64(20, COVERAGE_1_SIGMA_AXIS2, NaN);
+}
+
+static addCoverage1SigmaAxis3(builder:flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS3:number) {
+  builder.addFieldFloat64(21, COVERAGE_1_SIGMA_AXIS3, NaN);
+}
+
+static addCoverage3SigmaAxis1(builder:flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS1:number) {
+  builder.addFieldFloat64(22, COVERAGE_3_SIGMA_AXIS1, NaN);
+}
+
+static addCoverage3SigmaAxis2(builder:flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS2:number) {
+  builder.addFieldFloat64(23, COVERAGE_3_SIGMA_AXIS2, NaN);
+}
+
+static addCoverage3SigmaAxis3(builder:flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS3:number) {
+  builder.addFieldFloat64(24, COVERAGE_3_SIGMA_AXIS3, NaN);
+}
+
 static endCVR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -308,7 +384,7 @@ static finishSizePrefixedCVRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CVR', true);
 }
 
-static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffset:flatbuffers.Offset, REGIMEOffset:flatbuffers.Offset, AGE_DAYS:number, HORIZON_DAYS:number, MEASURED_LINEAGEOffset:flatbuffers.Offset, TEST_WINDOWOffset:flatbuffers.Offset, MEAN_D2_OVER_3:number, COVERAGE_95:number, SAMPLES:number, OBJECTS:number, SCALE_FACTOR:number, CALIBRATION:covarianceCalibration, EVIDENCEOffset:flatbuffers.Offset, HISTORY_SAMPLES:number, HISTORY_SETS:number, HISTORY_WINDOWOffset:flatbuffers.Offset, SHRINKAGE_WEIGHT:number):flatbuffers.Offset {
+static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffset:flatbuffers.Offset, REGIMEOffset:flatbuffers.Offset, AGE_DAYS:number, HORIZON_DAYS:number, MEASURED_LINEAGEOffset:flatbuffers.Offset, TEST_WINDOWOffset:flatbuffers.Offset, MEAN_D2_OVER_3:number, COVERAGE_95:number, SAMPLES:number, OBJECTS:number, SCALE_FACTOR:number, CALIBRATION:covarianceCalibration, EVIDENCEOffset:flatbuffers.Offset, HISTORY_SAMPLES:number, HISTORY_SETS:number, HISTORY_WINDOWOffset:flatbuffers.Offset, SHRINKAGE_WEIGHT:number, TRUTH_EPOCHS:number, COVERAGE_1_SIGMA_AXIS1:number, COVERAGE_1_SIGMA_AXIS2:number, COVERAGE_1_SIGMA_AXIS3:number, COVERAGE_3_SIGMA_AXIS1:number, COVERAGE_3_SIGMA_AXIS2:number, COVERAGE_3_SIGMA_AXIS3:number):flatbuffers.Offset {
   CVR.startCVR(builder);
   CVR.addRule(builder, RULE);
   CVR.addModelId(builder, MODEL_IDOffset);
@@ -328,6 +404,13 @@ static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffse
   CVR.addHistorySets(builder, HISTORY_SETS);
   CVR.addHistoryWindow(builder, HISTORY_WINDOWOffset);
   CVR.addShrinkageWeight(builder, SHRINKAGE_WEIGHT);
+  CVR.addTruthEpochs(builder, TRUTH_EPOCHS);
+  CVR.addCoverage1SigmaAxis1(builder, COVERAGE_1_SIGMA_AXIS1);
+  CVR.addCoverage1SigmaAxis2(builder, COVERAGE_1_SIGMA_AXIS2);
+  CVR.addCoverage1SigmaAxis3(builder, COVERAGE_1_SIGMA_AXIS3);
+  CVR.addCoverage3SigmaAxis1(builder, COVERAGE_3_SIGMA_AXIS1);
+  CVR.addCoverage3SigmaAxis2(builder, COVERAGE_3_SIGMA_AXIS2);
+  CVR.addCoverage3SigmaAxis3(builder, COVERAGE_3_SIGMA_AXIS3);
   return CVR.endCVR(builder);
 }
 
@@ -350,7 +433,14 @@ unpack(): CVRT {
     this.HISTORY_SAMPLES(),
     this.HISTORY_SETS(),
     this.HISTORY_WINDOW(),
-    this.SHRINKAGE_WEIGHT()
+    this.SHRINKAGE_WEIGHT(),
+    this.TRUTH_EPOCHS(),
+    this.COVERAGE_1_SIGMA_AXIS1(),
+    this.COVERAGE_1_SIGMA_AXIS2(),
+    this.COVERAGE_1_SIGMA_AXIS3(),
+    this.COVERAGE_3_SIGMA_AXIS1(),
+    this.COVERAGE_3_SIGMA_AXIS2(),
+    this.COVERAGE_3_SIGMA_AXIS3()
   );
 }
 
@@ -374,6 +464,13 @@ unpackTo(_o: CVRT): void {
   _o.HISTORY_SETS = this.HISTORY_SETS();
   _o.HISTORY_WINDOW = this.HISTORY_WINDOW();
   _o.SHRINKAGE_WEIGHT = this.SHRINKAGE_WEIGHT();
+  _o.TRUTH_EPOCHS = this.TRUTH_EPOCHS();
+  _o.COVERAGE_1_SIGMA_AXIS1 = this.COVERAGE_1_SIGMA_AXIS1();
+  _o.COVERAGE_1_SIGMA_AXIS2 = this.COVERAGE_1_SIGMA_AXIS2();
+  _o.COVERAGE_1_SIGMA_AXIS3 = this.COVERAGE_1_SIGMA_AXIS3();
+  _o.COVERAGE_3_SIGMA_AXIS1 = this.COVERAGE_3_SIGMA_AXIS1();
+  _o.COVERAGE_3_SIGMA_AXIS2 = this.COVERAGE_3_SIGMA_AXIS2();
+  _o.COVERAGE_3_SIGMA_AXIS3 = this.COVERAGE_3_SIGMA_AXIS3();
 }
 }
 
@@ -396,7 +493,14 @@ constructor(
   public HISTORY_SAMPLES: number = 0,
   public HISTORY_SETS: number = 0,
   public HISTORY_WINDOW: string|Uint8Array|null = null,
-  public SHRINKAGE_WEIGHT: number = NaN
+  public SHRINKAGE_WEIGHT: number = NaN,
+  public TRUTH_EPOCHS: number = 0,
+  public COVERAGE_1_SIGMA_AXIS1: number = NaN,
+  public COVERAGE_1_SIGMA_AXIS2: number = NaN,
+  public COVERAGE_1_SIGMA_AXIS3: number = NaN,
+  public COVERAGE_3_SIGMA_AXIS1: number = NaN,
+  public COVERAGE_3_SIGMA_AXIS2: number = NaN,
+  public COVERAGE_3_SIGMA_AXIS3: number = NaN
 ){}
 
 
@@ -426,7 +530,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.HISTORY_SAMPLES,
     this.HISTORY_SETS,
     HISTORY_WINDOW,
-    this.SHRINKAGE_WEIGHT
+    this.SHRINKAGE_WEIGHT,
+    this.TRUTH_EPOCHS,
+    this.COVERAGE_1_SIGMA_AXIS1,
+    this.COVERAGE_1_SIGMA_AXIS2,
+    this.COVERAGE_1_SIGMA_AXIS3,
+    this.COVERAGE_3_SIGMA_AXIS1,
+    this.COVERAGE_3_SIGMA_AXIS2,
+    this.COVERAGE_3_SIGMA_AXIS3
   );
 }
 }

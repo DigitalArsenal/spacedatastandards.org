@@ -446,22 +446,35 @@ class Metadata extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+    /// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+    /// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+    /// the object has no NORAD number.
+    /**
+     * @return uint
+     */
+    public function getNORAD_CAT_ID()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMetadata(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(48);
+        $builder->StartObject(49);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Metadata
      */
-    public static function createMetadata(FlatBufferBuilder $builder, $COMMENT, $OBJECT_NAME, $INTERNATIONAL_DESIGNATOR, $CATALOG_NAME, $OBJECT_DESIGNATOR, $ALTERNATE_NAMES, $ORIGINATOR_POC, $ORIGINATOR_POSITION, $ORIGINATOR_PHONE, $ORIGINATOR_EMAIL, $ORIGINATOR_ADDRESS, $TECH_ORG, $TECH_POC, $TECH_POSITION, $TECH_PHONE, $TECH_EMAIL, $TECH_ADDRESS, $PREVIOUS_MESSAGE_ID, $NEXT_MESSAGE_ID, $ADM_MSG_LINK, $CDM_MSG_LINK, $PRM_MSG_LINK, $RDM_MSG_LINK, $TDM_MSG_LINK, $OPERATOR, $OWNER, $COUNTRY, $CONSTELLATION, $OBJECT_TYPE, $TIME_SYSTEM, $EPOCH_TZERO, $OPS_STATUS, $ORBIT_CATEGORY, $OCM_DATA_ELEMENTS, $SCLK_OFFSET_AT_EPOCH, $SCLK_SEC_PER_SI_SEC, $PREVIOUS_MESSAGE_EPOCH, $NEXT_MESSAGE_EPOCH, $START_TIME, $STOP_TIME, $TIME_SPAN, $TAIMUTC_AT_TZERO, $NEXT_LEAP_EPOCH, $NEXT_LEAP_TAIMUTC, $UT1MUTC_AT_TZERO, $EOP_SOURCE, $INTERP_METHOD_EOP, $CELESTIAL_SOURCE)
+    public static function createMetadata(FlatBufferBuilder $builder, $COMMENT, $OBJECT_NAME, $INTERNATIONAL_DESIGNATOR, $CATALOG_NAME, $OBJECT_DESIGNATOR, $ALTERNATE_NAMES, $ORIGINATOR_POC, $ORIGINATOR_POSITION, $ORIGINATOR_PHONE, $ORIGINATOR_EMAIL, $ORIGINATOR_ADDRESS, $TECH_ORG, $TECH_POC, $TECH_POSITION, $TECH_PHONE, $TECH_EMAIL, $TECH_ADDRESS, $PREVIOUS_MESSAGE_ID, $NEXT_MESSAGE_ID, $ADM_MSG_LINK, $CDM_MSG_LINK, $PRM_MSG_LINK, $RDM_MSG_LINK, $TDM_MSG_LINK, $OPERATOR, $OWNER, $COUNTRY, $CONSTELLATION, $OBJECT_TYPE, $TIME_SYSTEM, $EPOCH_TZERO, $OPS_STATUS, $ORBIT_CATEGORY, $OCM_DATA_ELEMENTS, $SCLK_OFFSET_AT_EPOCH, $SCLK_SEC_PER_SI_SEC, $PREVIOUS_MESSAGE_EPOCH, $NEXT_MESSAGE_EPOCH, $START_TIME, $STOP_TIME, $TIME_SPAN, $TAIMUTC_AT_TZERO, $NEXT_LEAP_EPOCH, $NEXT_LEAP_TAIMUTC, $UT1MUTC_AT_TZERO, $EOP_SOURCE, $INTERP_METHOD_EOP, $CELESTIAL_SOURCE, $NORAD_CAT_ID)
     {
-        $builder->startObject(48);
+        $builder->startObject(49);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addINTERNATIONAL_DESIGNATOR($builder, $INTERNATIONAL_DESIGNATOR);
@@ -510,6 +523,7 @@ class Metadata extends Table
         self::addEOP_SOURCE($builder, $EOP_SOURCE);
         self::addINTERP_METHOD_EOP($builder, $INTERP_METHOD_EOP);
         self::addCELESTIAL_SOURCE($builder, $CELESTIAL_SOURCE);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -1088,6 +1102,16 @@ class Metadata extends Table
     public static function addCELESTIAL_SOURCE(FlatBufferBuilder $builder, $CELESTIAL_SOURCE)
     {
         $builder->addOffsetX(47, $CELESTIAL_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
+    {
+        $builder->addUintX(48, $NORAD_CAT_ID, 0);
     }
 
     /**

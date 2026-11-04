@@ -219,6 +219,89 @@ public final class Perturbations extends com.google.flatbuffers.Table {
    * FIXED_Y10P7_MEAN, NaN when not stated.
    */
   public double FIXED_Y10P7_MEAN() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Highest degree of the tesseral and sectorial terms (order 1 and above) of
+   * the gravity field the record was computed with (SDS addition; the $PCF
+   * FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+   * theory: 0 is the theory's own terms. For a numerical solution the nn of a
+   * legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+   * either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+   * order pair cannot state a tesseral cap below a zonal one.
+   */
+  public int MAXIMUM_TESSERAL_DEGREE() { int o = __offset(80); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Highest degree of the zonal terms (order 0) of the gravity field the
+   * record was computed with (SDS addition). For a mean-element set the tail
+   * J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+   * For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+   * otherwise not stated.
+   */
+  public int MAXIMUM_ZONAL_DEGREE() { int o = __offset(82); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Where the space weather behind the drag density comes from. RECORDS: the
+   * daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+   * flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+   * in an element-set record.
+   */
+  public int WEATHER_SOURCE() { int o = __offset(84); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Correction applied to the atmosphere model's density.
+   */
+  public int DENSITY_CORRECTION() { int o = __offset(86); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+   * DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+   * DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+   */
+  public String DENSITY_CORRECTION_CID() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DENSITY_CORRECTION_CIDAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer DENSITY_CORRECTION_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * The daily space weather the drag density reads (SDS addition; CCSDS
+   * 502.0-B-3 names only the source, epoch and interpolation as text and
+   * fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+   * UTC day, DATE ascending, no gap, from the day before the first day the
+   * record is flown or was fitted through its last day. The record is flown
+   * to the end of the last row's day and no further. Each row carries DATE,
+   * F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+   * PRD, PRM predicted); other SPW fields unwritten.
+   */
+  public SPW SPACE_WEATHER(int j) { return SPACE_WEATHER(new SPW(), j); }
+  public SPW SPACE_WEATHER(SPW obj, int j) { int o = __offset(90); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SPACE_WEATHERLength() { int o = __offset(90); return o != 0 ? __vector_len(o) : 0; }
+  public SPW.Vector spaceWeatherVector() { return spaceWeatherVector(new SPW.Vector()); }
+  public SPW.Vector spaceWeatherVector(SPW.Vector obj) { int o = __offset(90); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+   * set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+   * milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+   * Empty when DENSITY_CORRECTION is NONE.
+   */
+  public long DENSITY_CORRECTION_NODE_TIMES_MS(int j) { int o = __offset(92); return o != 0 ? bb.getLong(__vector(o) + j * 8) : 0; }
+  public int DENSITY_CORRECTION_NODE_TIMES_MSLength() { int o = __offset(92); return o != 0 ? __vector_len(o) : 0; }
+  public LongVector densityCorrectionNodeTimesMsVector() { return densityCorrectionNodeTimesMsVector(new LongVector()); }
+  public LongVector densityCorrectionNodeTimesMsVector(LongVector obj) { int o = __offset(92); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DENSITY_CORRECTION_NODE_TIMES_MSAsByteBuffer() { return __vector_as_bytebuffer(92, 8); }
+  public ByteBuffer DENSITY_CORRECTION_NODE_TIMES_MSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 8); }
+  /**
+   * One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+   * entry, dimensionless, as that $DCL's
+   * CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+   * held at the end values outside them.
+   */
+  public double DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(int j) { int o = __offset(94); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength() { int o = __offset(94); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector densityCorrectionLogDensityScaleDimensionlessVector() { return densityCorrectionLogDensityScaleDimensionlessVector(new DoubleVector()); }
+  public DoubleVector densityCorrectionLogDensityScaleDimensionlessVector(DoubleVector obj) { int o = __offset(94); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSAsByteBuffer() { return __vector_as_bytebuffer(94, 8); }
+  public ByteBuffer DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 8); }
+  /**
+   * Number of terms of the nutation series REDUCTION_THEORY names that the
+   * force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+   * 4, 50 or 106). 0 when the series is not truncated or the count is not
+   * stated.
+   */
+  public int REDUCTION_THEORY_TERMS() { int o = __offset(96); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createPerturbations(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -258,8 +341,17 @@ public final class Perturbations extends com.google.flatbuffers.Table {
       double FIXED_S10P7,
       double FIXED_S10P7_MEAN,
       double FIXED_Y10P7,
-      double FIXED_Y10P7_MEAN) {
-    builder.startTable(38);
+      double FIXED_Y10P7_MEAN,
+      int MAXIMUM_TESSERAL_DEGREE,
+      int MAXIMUM_ZONAL_DEGREE,
+      int WEATHER_SOURCE,
+      int DENSITY_CORRECTION,
+      int DENSITY_CORRECTION_CIDOffset,
+      int SPACE_WEATHEROffset,
+      int DENSITY_CORRECTION_NODE_TIMES_MSOffset,
+      int DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset,
+      int REDUCTION_THEORY_TERMS) {
+    builder.startTable(47);
     Perturbations.addFixedY10P7Mean(builder, FIXED_Y10P7_MEAN);
     Perturbations.addFixedY10P7(builder, FIXED_Y10P7);
     Perturbations.addFixedS10P7Mean(builder, FIXED_S10P7_MEAN);
@@ -275,6 +367,10 @@ public final class Perturbations extends com.google.flatbuffers.Table {
     Perturbations.addFixedF10P7(builder, FIXED_F10P7);
     Perturbations.addFixedGeomagKp(builder, FIXED_GEOMAG_KP);
     Perturbations.addGm(builder, GM);
+    Perturbations.addDensityCorrectionLogDensityScaleDimensionless(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
+    Perturbations.addDensityCorrectionNodeTimesMs(builder, DENSITY_CORRECTION_NODE_TIMES_MSOffset);
+    Perturbations.addSpaceWeather(builder, SPACE_WEATHEROffset);
+    Perturbations.addDensityCorrectionCid(builder, DENSITY_CORRECTION_CIDOffset);
     Perturbations.addSwInterpMethod(builder, SW_INTERP_METHODOffset);
     Perturbations.addSwDataEpoch(builder, SW_DATA_EPOCHOffset);
     Perturbations.addSwDataSource(builder, SW_DATA_SOURCEOffset);
@@ -298,10 +394,15 @@ public final class Perturbations extends com.google.flatbuffers.Table {
     Perturbations.addGravityModel(builder, GRAVITY_MODELOffset);
     Perturbations.addAtmosphericModel(builder, ATMOSPHERIC_MODELOffset);
     Perturbations.addComment(builder, COMMENTOffset);
+    Perturbations.addReductionTheoryTerms(builder, REDUCTION_THEORY_TERMS);
+    Perturbations.addMaximumZonalDegree(builder, MAXIMUM_ZONAL_DEGREE);
+    Perturbations.addMaximumTesseralDegree(builder, MAXIMUM_TESSERAL_DEGREE);
+    Perturbations.addDensityCorrection(builder, DENSITY_CORRECTION);
+    Perturbations.addWeatherSource(builder, WEATHER_SOURCE);
     return Perturbations.endPerturbations(builder);
   }
 
-  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(38); }
+  public static void startPerturbations(FlatBufferBuilder builder) { builder.startTable(47); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -344,6 +445,21 @@ public final class Perturbations extends com.google.flatbuffers.Table {
   public static void addFixedS10P7Mean(FlatBufferBuilder builder, double FIXED_S10P7_MEAN) { builder.addDouble(35, FIXED_S10P7_MEAN, Double.NaN); }
   public static void addFixedY10P7(FlatBufferBuilder builder, double FIXED_Y10P7) { builder.addDouble(36, FIXED_Y10P7, Double.NaN); }
   public static void addFixedY10P7Mean(FlatBufferBuilder builder, double FIXED_Y10P7_MEAN) { builder.addDouble(37, FIXED_Y10P7_MEAN, Double.NaN); }
+  public static void addMaximumTesseralDegree(FlatBufferBuilder builder, int MAXIMUM_TESSERAL_DEGREE) { builder.addShort(38, (short) MAXIMUM_TESSERAL_DEGREE, (short) 0); }
+  public static void addMaximumZonalDegree(FlatBufferBuilder builder, int MAXIMUM_ZONAL_DEGREE) { builder.addShort(39, (short) MAXIMUM_ZONAL_DEGREE, (short) 0); }
+  public static void addWeatherSource(FlatBufferBuilder builder, int WEATHER_SOURCE) { builder.addByte(40, (byte) WEATHER_SOURCE, (byte) 0); }
+  public static void addDensityCorrection(FlatBufferBuilder builder, int DENSITY_CORRECTION) { builder.addByte(41, (byte) DENSITY_CORRECTION, (byte) 0); }
+  public static void addDensityCorrectionCid(FlatBufferBuilder builder, int DENSITY_CORRECTION_CIDOffset) { builder.addOffset(42, DENSITY_CORRECTION_CIDOffset, 0); }
+  public static void addSpaceWeather(FlatBufferBuilder builder, int SPACE_WEATHEROffset) { builder.addOffset(43, SPACE_WEATHEROffset, 0); }
+  public static int createSpaceWeatherVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSpaceWeatherVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addDensityCorrectionNodeTimesMs(FlatBufferBuilder builder, int DENSITY_CORRECTION_NODE_TIMES_MSOffset) { builder.addOffset(44, DENSITY_CORRECTION_NODE_TIMES_MSOffset, 0); }
+  public static int createDensityCorrectionNodeTimesMsVector(FlatBufferBuilder builder, long[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addLong(data[i]); return builder.endVector(); }
+  public static void startDensityCorrectionNodeTimesMsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDensityCorrectionLogDensityScaleDimensionless(FlatBufferBuilder builder, int DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset) { builder.addOffset(45, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset, 0); }
+  public static int createDensityCorrectionLogDensityScaleDimensionlessVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDensityCorrectionLogDensityScaleDimensionlessVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addReductionTheoryTerms(FlatBufferBuilder builder, int REDUCTION_THEORY_TERMS) { builder.addShort(46, (short) REDUCTION_THEORY_TERMS, (short) 0); }
   public static int endPerturbations(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

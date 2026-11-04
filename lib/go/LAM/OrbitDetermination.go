@@ -344,7 +344,9 @@ func (rcv *OrbitDetermination) MutateOdEstimator(n estimatorCategory) bool {
 	return rcv.MutateOD_ESTIMATOR(n)
 }
 
-/// RMS of post-fit residuals for this solution.
+/// RMS of post-fit residuals for this solution. In the unit of the residuals the
+/// observation types state: arcsec for RADEC angles. A position RMS in km is
+/// OCMFitStatistics.FIT_RMS_KM.
 func (rcv *OrbitDetermination) OD_RESIDUAL_RMS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -357,7 +359,9 @@ func (rcv *OrbitDetermination) OdResidualRms() float64 {
 	return rcv.OD_RESIDUAL_RMS()
 }
 
-/// RMS of post-fit residuals for this solution.
+/// RMS of post-fit residuals for this solution. In the unit of the residuals the
+/// observation types state: arcsec for RADEC angles. A position RMS in km is
+/// OCMFitStatistics.FIT_RMS_KM.
 func (rcv *OrbitDetermination) MutateOD_RESIDUAL_RMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
@@ -1014,8 +1018,27 @@ func (rcv *OrbitDetermination) CommentLength() int {
 }
 
 /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+/// Position statistics of a fit to a reference ephemeris.
+func (rcv *OrbitDetermination) FIT_STATISTICS(obj *OCMFitStatistics) *OCMFitStatistics {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMFitStatistics)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) FitStatistics(obj *OCMFitStatistics) *OCMFitStatistics {
+	return rcv.FIT_STATISTICS(obj)
+}
+
+/// Position statistics of a fit to a reference ephemeris.
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(47)
+	builder.StartObject(48)
 }
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
@@ -1334,6 +1357,12 @@ func OrbitDeterminationStartCOMMENTVector(builder *flatbuffers.Builder, numElems
 }
 func OrbitDeterminationStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OrbitDeterminationStartCOMMENTVector(builder, numElems)
+}
+func OrbitDeterminationAddFIT_STATISTICS(builder *flatbuffers.Builder, FIT_STATISTICS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(FIT_STATISTICS), 0)
+}
+func OrbitDeterminationAddFitStatistics(builder *flatbuffers.Builder, FIT_STATISTICS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddFIT_STATISTICS(builder, FIT_STATISTICS)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

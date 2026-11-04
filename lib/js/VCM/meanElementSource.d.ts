@@ -15,6 +15,17 @@ export declare enum meanElementSource {
     /**
      * Universal Semianalytical Method
      */
-    USM = 3
+    USM = 3,
+    /**
+     * SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+     * atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+     * unused: it was a cut value of an earlier theory.
+     */
+    AP = 5,
+    /**
+     * Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+     * set is always written.
+     */
+    UNSPECIFIED = 6
 }
 //# sourceMappingURL=meanElementSource.d.ts.map

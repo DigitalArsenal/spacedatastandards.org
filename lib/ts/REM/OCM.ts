@@ -9,6 +9,12 @@ import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
 import { OCMCovarianceBlock, OCMCovarianceBlockT } from './OCMCovarianceBlock.js';
+import { OCMCovariancePropagation, OCMCovariancePropagationT } from './OCMCovariancePropagation.js';
+import { OCMInspectionGeometry, OCMInspectionGeometryT } from './OCMInspectionGeometry.js';
+import { OCMIntegrator, OCMIntegratorT } from './OCMIntegrator.js';
+import { OCMMeanElements, OCMMeanElementsT } from './OCMMeanElements.js';
+import { OCMRelativeGeometry, OCMRelativeGeometryT } from './OCMRelativeGeometry.js';
+import { OCMSeedSet, OCMSeedSetT } from './OCMSeedSet.js';
 import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
@@ -20,6 +26,8 @@ import { RFM, RFMT } from './RFM.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
 import { covarianceCalibration } from './covarianceCalibration.js';
 import { covarianceOrdering } from './covarianceOrdering.js';
+import { ocmTrajectoryBasis } from './ocmTrajectoryBasis.js';
+import { prwDynamicParameter } from './prwDynamicParameter.js';
 import { trajectoryType } from './trajectoryType.js';
 
 
@@ -111,6 +119,7 @@ STATE_VECTOR_SIZE():number {
  * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
  * Length must be divisible by STATE_VECTOR_SIZE.
  * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+ * Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
  */
 STATE_DATA(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -219,7 +228,8 @@ ORBIT_DETERMINATION(obj?:OrbitDetermination):OrbitDetermination|null {
 }
 
 /**
- * User-defined parameters and supplemental comments.
+ * CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+ * SDN readers never read it.
  */
 USER_DEFINED_PARAMETERS(index: number, obj?:UserDefinedParameters):UserDefinedParameters|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
@@ -242,8 +252,8 @@ CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Reference frame of STATE_DATA and the polynomial records
- * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+ * Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+ * frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
  */
 TRAJ_REF_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
@@ -439,8 +449,91 @@ covRealismLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * The mean element set this message carries, under the theory it names. STATE_DATA is
+ * empty when this is present; no state travels beside a set.
+ */
+MEAN_ELEMENTS(obj?:OCMMeanElements):OCMMeanElements|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? (obj || new OCMMeanElements()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+ */
+COV_PROPAGATION(obj?:OCMCovariancePropagation):OCMCovariancePropagation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? (obj || new OCMCovariancePropagation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+ * every reader keys on these, never on the COV_PARAMETERS strings.
+ */
+COV_PARAMETER_KINDS(index: number):prwDynamicParameter|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+covParameterKindsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covParameterKindsArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+ * (CCSDS 502.0-B-3 TRAJ_BASIS).
+ */
+TRAJ_BASIS():ocmTrajectoryBasis {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : ocmTrajectoryBasis.UNSPECIFIED;
+}
+
+/**
+ * The element sets the trajectory was computed from, one per object whose
+ * elements it used.
+ */
+SEED_SETS(index: number, obj?:OCMSeedSet):OCMSeedSet|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? (obj || new OCMSeedSet()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+seedSetsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Integrator settings of a solution made from a legacy VCM.
+ */
+INTEGRATOR(obj?:OCMIntegrator):OCMIntegrator|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? (obj || new OCMIntegrator()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Relative-motion geometry; STATE_DATA is empty when this is present.
+ */
+RPO_GEOMETRY(obj?:OCMRelativeGeometry):OCMRelativeGeometry|null {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? (obj || new OCMRelativeGeometry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Inspection geometry; STATE_DATA is empty when this is present.
+ */
+RPO_INSPECTION(obj?:OCMInspectionGeometry):OCMInspectionGeometry|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? (obj || new OCMInspectionGeometry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(33);
+  builder.startObject(41);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -729,6 +822,62 @@ static startCovRealismVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addMeanElements(builder:flatbuffers.Builder, MEAN_ELEMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, MEAN_ELEMENTSOffset, 0);
+}
+
+static addCovPropagation(builder:flatbuffers.Builder, COV_PROPAGATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, COV_PROPAGATIONOffset, 0);
+}
+
+static addCovParameterKinds(builder:flatbuffers.Builder, COV_PARAMETER_KINDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, COV_PARAMETER_KINDSOffset, 0);
+}
+
+static createCovParameterKindsVector(builder:flatbuffers.Builder, data:prwDynamicParameter[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovParameterKindsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addTrajBasis(builder:flatbuffers.Builder, TRAJ_BASIS:ocmTrajectoryBasis) {
+  builder.addFieldInt8(36, TRAJ_BASIS, ocmTrajectoryBasis.UNSPECIFIED);
+}
+
+static addSeedSets(builder:flatbuffers.Builder, SEED_SETSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, SEED_SETSOffset, 0);
+}
+
+static createSeedSetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSeedSetsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addIntegrator(builder:flatbuffers.Builder, INTEGRATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, INTEGRATOROffset, 0);
+}
+
+static addRpoGeometry(builder:flatbuffers.Builder, RPO_GEOMETRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, RPO_GEOMETRYOffset, 0);
+}
+
+static addRpoInspection(builder:flatbuffers.Builder, RPO_INSPECTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, RPO_INSPECTIONOffset, 0);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -777,7 +926,15 @@ unpack(): OCMT {
     this.bb!.createObjList<OCMTrajectoryBlock, OCMTrajectoryBlockT>(this.TRAJECTORY_BLOCKS.bind(this), this.trajectoryBlocksLength()),
     this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength()),
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
-    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength())
+    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength()),
+    (this.MEAN_ELEMENTS() !== null ? this.MEAN_ELEMENTS()!.unpack() : null),
+    (this.COV_PROPAGATION() !== null ? this.COV_PROPAGATION()!.unpack() : null),
+    this.bb!.createScalarList<prwDynamicParameter>(this.COV_PARAMETER_KINDS.bind(this), this.covParameterKindsLength()),
+    this.TRAJ_BASIS(),
+    this.bb!.createObjList<OCMSeedSet, OCMSeedSetT>(this.SEED_SETS.bind(this), this.seedSetsLength()),
+    (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null),
+    (this.RPO_GEOMETRY() !== null ? this.RPO_GEOMETRY()!.unpack() : null),
+    (this.RPO_INSPECTION() !== null ? this.RPO_INSPECTION()!.unpack() : null)
   );
 }
 
@@ -816,6 +973,14 @@ unpackTo(_o: OCMT): void {
   _o.COVARIANCE_BLOCKS = this.bb!.createObjList<OCMCovarianceBlock, OCMCovarianceBlockT>(this.COVARIANCE_BLOCKS.bind(this), this.covarianceBlocksLength());
   _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
   _o.COV_REALISM = this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength());
+  _o.MEAN_ELEMENTS = (this.MEAN_ELEMENTS() !== null ? this.MEAN_ELEMENTS()!.unpack() : null);
+  _o.COV_PROPAGATION = (this.COV_PROPAGATION() !== null ? this.COV_PROPAGATION()!.unpack() : null);
+  _o.COV_PARAMETER_KINDS = this.bb!.createScalarList<prwDynamicParameter>(this.COV_PARAMETER_KINDS.bind(this), this.covParameterKindsLength());
+  _o.TRAJ_BASIS = this.TRAJ_BASIS();
+  _o.SEED_SETS = this.bb!.createObjList<OCMSeedSet, OCMSeedSetT>(this.SEED_SETS.bind(this), this.seedSetsLength());
+  _o.INTEGRATOR = (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null);
+  _o.RPO_GEOMETRY = (this.RPO_GEOMETRY() !== null ? this.RPO_GEOMETRY()!.unpack() : null);
+  _o.RPO_INSPECTION = (this.RPO_INSPECTION() !== null ? this.RPO_INSPECTION()!.unpack() : null);
 }
 }
 
@@ -853,7 +1018,15 @@ constructor(
   public TRAJECTORY_BLOCKS: (OCMTrajectoryBlockT)[] = [],
   public COVARIANCE_BLOCKS: (OCMCovarianceBlockT)[] = [],
   public PROVENANCE: PVNT|null = null,
-  public COV_REALISM: (CVRT)[] = []
+  public COV_REALISM: (CVRT)[] = [],
+  public MEAN_ELEMENTS: OCMMeanElementsT|null = null,
+  public COV_PROPAGATION: OCMCovariancePropagationT|null = null,
+  public COV_PARAMETER_KINDS: (prwDynamicParameter)[] = [],
+  public TRAJ_BASIS: ocmTrajectoryBasis = ocmTrajectoryBasis.UNSPECIFIED,
+  public SEED_SETS: (OCMSeedSetT)[] = [],
+  public INTEGRATOR: OCMIntegratorT|null = null,
+  public RPO_GEOMETRY: OCMRelativeGeometryT|null = null,
+  public RPO_INSPECTION: OCMInspectionGeometryT|null = null
 ){}
 
 
@@ -884,6 +1057,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COVARIANCE_BLOCKS = OCM.createCovarianceBlocksVector(builder, builder.createObjectOffsetList(this.COVARIANCE_BLOCKS));
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const COV_REALISM = OCM.createCovRealismVector(builder, builder.createObjectOffsetList(this.COV_REALISM));
+  const MEAN_ELEMENTS = (this.MEAN_ELEMENTS !== null ? this.MEAN_ELEMENTS!.pack(builder) : 0);
+  const COV_PROPAGATION = (this.COV_PROPAGATION !== null ? this.COV_PROPAGATION!.pack(builder) : 0);
+  const COV_PARAMETER_KINDS = OCM.createCovParameterKindsVector(builder, this.COV_PARAMETER_KINDS);
+  const SEED_SETS = OCM.createSeedSetsVector(builder, builder.createObjectOffsetList(this.SEED_SETS));
+  const INTEGRATOR = (this.INTEGRATOR !== null ? this.INTEGRATOR!.pack(builder) : 0);
+  const RPO_GEOMETRY = (this.RPO_GEOMETRY !== null ? this.RPO_GEOMETRY!.pack(builder) : 0);
+  const RPO_INSPECTION = (this.RPO_INSPECTION !== null ? this.RPO_INSPECTION!.pack(builder) : 0);
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -919,6 +1099,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKS);
   OCM.addProvenance(builder, PROVENANCE);
   OCM.addCovRealism(builder, COV_REALISM);
+  OCM.addMeanElements(builder, MEAN_ELEMENTS);
+  OCM.addCovPropagation(builder, COV_PROPAGATION);
+  OCM.addCovParameterKinds(builder, COV_PARAMETER_KINDS);
+  OCM.addTrajBasis(builder, this.TRAJ_BASIS);
+  OCM.addSeedSets(builder, SEED_SETS);
+  OCM.addIntegrator(builder, INTEGRATOR);
+  OCM.addRpoGeometry(builder, RPO_GEOMETRY);
+  OCM.addRpoInspection(builder, RPO_INSPECTION);
 
   return OCM.endOCM(builder);
 }

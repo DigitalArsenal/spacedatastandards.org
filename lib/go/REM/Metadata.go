@@ -813,8 +813,36 @@ func (rcv *Metadata) CelestialSource() []byte {
 }
 
 /// Source and version of celestial body ephemeris data used.
+/// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+/// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+/// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+/// the object has no NORAD number.
+func (rcv *Metadata) NORAD_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Metadata) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
+/// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+/// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+/// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+/// the object has no NORAD number.
+func (rcv *Metadata) MutateNORAD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(100, n)
+}
+
+func (rcv *Metadata) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
+}
+
 func MetadataStart(builder *flatbuffers.Builder) {
-	builder.StartObject(48)
+	builder.StartObject(49)
 }
 func MetadataAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -1127,6 +1155,12 @@ func MetadataAddCELESTIAL_SOURCE(builder *flatbuffers.Builder, CELESTIAL_SOURCE 
 }
 func MetadataAddCelestialSource(builder *flatbuffers.Builder, CELESTIAL_SOURCE flatbuffers.UOffsetT) {
 	MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
+}
+func MetadataAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(48, NORAD_CAT_ID, 0)
+}
+func MetadataAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	MetadataAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
 func MetadataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -30,8 +30,14 @@ public final class pcfAtmosphereFamily {
    * with Mars.
    */
   public static final int MARS_EXPONENTIAL = 7;
+  /**
+   * Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+   * and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+   * element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+   */
+  public static final int JACCHIA70 = 8;
 
-  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL", };
+  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL", "JACCHIA70", };
 
   public static String name(int e) { return names[e]; }
 }

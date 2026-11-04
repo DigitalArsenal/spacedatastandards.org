@@ -49,6 +49,7 @@ public struct OCM : IFlatbufferObject
   /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
   /// Length must be divisible by STATE_VECTOR_SIZE.
   /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+  /// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
   public double STATE_DATA(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int STATE_DATALength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -91,7 +92,8 @@ public struct OCM : IFlatbufferObject
   public Perturbations? PERTURBATIONS { get { int o = __p.__offset(28); return o != 0 ? (Perturbations?)(new Perturbations()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Orbit determination data.
   public OrbitDetermination? ORBIT_DETERMINATION { get { int o = __p.__offset(30); return o != 0 ? (OrbitDetermination?)(new OrbitDetermination()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// User-defined parameters and supplemental comments.
+  /// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+  /// SDN readers never read it.
   public UserDefinedParameters? USER_DEFINED_PARAMETERS(int j) { int o = __p.__offset(32); return o != 0 ? (UserDefinedParameters?)(new UserDefinedParameters()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int USER_DEFINED_PARAMETERSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
@@ -102,8 +104,8 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(34); }
-  /// Reference frame of STATE_DATA and the polynomial records
-  /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  /// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+  /// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
   public RFM? TRAJ_REF_FRAME { get { int o = __p.__offset(36); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
   /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
@@ -184,6 +186,34 @@ public struct OCM : IFlatbufferObject
   /// STATE_DATA epochs, or one entry for every epoch.
   public CVR? COV_REALISM(int j) { int o = __p.__offset(68); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COV_REALISMLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The mean element set this message carries, under the theory it names. STATE_DATA is
+  /// empty when this is present; no state travels beside a set.
+  public OCMMeanElements? MEAN_ELEMENTS { get { int o = __p.__offset(70); return o != 0 ? (OCMMeanElements?)(new OCMMeanElements()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+  public OCMCovariancePropagation? COV_PROPAGATION { get { int o = __p.__offset(72); return o != 0 ? (OCMCovariancePropagation?)(new OCMCovariancePropagation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+  /// every reader keys on these, never on the COV_PARAMETERS strings.
+  public prwDynamicParameter COV_PARAMETER_KINDS(int j) { int o = __p.__offset(74); return o != 0 ? (prwDynamicParameter)__p.bb.Get(__p.__vector(o) + j * 1) : (prwDynamicParameter)0; }
+  public int COV_PARAMETER_KINDSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<prwDynamicParameter> GetCOV_PARAMETER_KINDSBytes() { return __p.__vector_as_span<prwDynamicParameter>(74, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_PARAMETER_KINDSBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public prwDynamicParameter[] GetCOV_PARAMETER_KINDSArray() { int o = __p.__offset(74); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); prwDynamicParameter[] a = new prwDynamicParameter[l]; for (int i = 0; i < l; i++) { a[i] = (prwDynamicParameter)__p.bb.Get(p + i * 1); } return a; }
+  /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+  /// (CCSDS 502.0-B-3 TRAJ_BASIS).
+  public ocmTrajectoryBasis TRAJ_BASIS { get { int o = __p.__offset(76); return o != 0 ? (ocmTrajectoryBasis)__p.bb.Get(o + __p.bb_pos) : ocmTrajectoryBasis.UNSPECIFIED; } }
+  /// The element sets the trajectory was computed from, one per object whose
+  /// elements it used.
+  public OCMSeedSet? SEED_SETS(int j) { int o = __p.__offset(78); return o != 0 ? (OCMSeedSet?)(new OCMSeedSet()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SEED_SETSLength { get { int o = __p.__offset(78); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Integrator settings of a solution made from a legacy VCM.
+  public OCMIntegrator? INTEGRATOR { get { int o = __p.__offset(80); return o != 0 ? (OCMIntegrator?)(new OCMIntegrator()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Relative-motion geometry; STATE_DATA is empty when this is present.
+  public OCMRelativeGeometry? RPO_GEOMETRY { get { int o = __p.__offset(82); return o != 0 ? (OCMRelativeGeometry?)(new OCMRelativeGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Inspection geometry; STATE_DATA is empty when this is present.
+  public OCMInspectionGeometry? RPO_INSPECTION { get { int o = __p.__offset(84); return o != 0 ? (OCMInspectionGeometry?)(new OCMInspectionGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -218,9 +248,24 @@ public struct OCM : IFlatbufferObject
       VectorOffset TRAJECTORY_BLOCKSOffset = default(VectorOffset),
       VectorOffset COVARIANCE_BLOCKSOffset = default(VectorOffset),
       Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
-      VectorOffset COV_REALISMOffset = default(VectorOffset)) {
-    builder.StartTable(33);
+      VectorOffset COV_REALISMOffset = default(VectorOffset),
+      Offset<OCMMeanElements> MEAN_ELEMENTSOffset = default(Offset<OCMMeanElements>),
+      Offset<OCMCovariancePropagation> COV_PROPAGATIONOffset = default(Offset<OCMCovariancePropagation>),
+      VectorOffset COV_PARAMETER_KINDSOffset = default(VectorOffset),
+      ocmTrajectoryBasis TRAJ_BASIS = ocmTrajectoryBasis.UNSPECIFIED,
+      VectorOffset SEED_SETSOffset = default(VectorOffset),
+      Offset<OCMIntegrator> INTEGRATOROffset = default(Offset<OCMIntegrator>),
+      Offset<OCMRelativeGeometry> RPO_GEOMETRYOffset = default(Offset<OCMRelativeGeometry>),
+      Offset<OCMInspectionGeometry> RPO_INSPECTIONOffset = default(Offset<OCMInspectionGeometry>)) {
+    builder.StartTable(41);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddRPO_INSPECTION(builder, RPO_INSPECTIONOffset);
+    OCM.AddRPO_GEOMETRY(builder, RPO_GEOMETRYOffset);
+    OCM.AddINTEGRATOR(builder, INTEGRATOROffset);
+    OCM.AddSEED_SETS(builder, SEED_SETSOffset);
+    OCM.AddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDSOffset);
+    OCM.AddCOV_PROPAGATION(builder, COV_PROPAGATIONOffset);
+    OCM.AddMEAN_ELEMENTS(builder, MEAN_ELEMENTSOffset);
     OCM.AddCOV_REALISM(builder, COV_REALISMOffset);
     OCM.AddPROVENANCE(builder, PROVENANCEOffset);
     OCM.AddCOVARIANCE_BLOCKS(builder, COVARIANCE_BLOCKSOffset);
@@ -248,6 +293,7 @@ public struct OCM : IFlatbufferObject
     OCM.AddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.AddMETADATA(builder, METADATAOffset);
     OCM.AddHEADER(builder, HEADEROffset);
+    OCM.AddTRAJ_BASIS(builder, TRAJ_BASIS);
     OCM.AddCOV_SIZE(builder, COV_SIZE);
     OCM.AddCOV_ORDERING(builder, COV_ORDERING);
     OCM.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
@@ -256,7 +302,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(33); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(41); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -350,6 +396,24 @@ public struct OCM : IFlatbufferObject
   public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CVR>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CVR>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOV_REALISMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMEAN_ELEMENTS(FlatBufferBuilder builder, Offset<OCMMeanElements> MEAN_ELEMENTSOffset) { builder.AddOffset(33, MEAN_ELEMENTSOffset.Value, 0); }
+  public static void AddCOV_PROPAGATION(FlatBufferBuilder builder, Offset<OCMCovariancePropagation> COV_PROPAGATIONOffset) { builder.AddOffset(34, COV_PROPAGATIONOffset.Value, 0); }
+  public static void AddCOV_PARAMETER_KINDS(FlatBufferBuilder builder, VectorOffset COV_PARAMETER_KINDSOffset) { builder.AddOffset(35, COV_PARAMETER_KINDSOffset.Value, 0); }
+  public static VectorOffset CreateCOV_PARAMETER_KINDSVector(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETER_KINDSVectorBlock(FlatBufferBuilder builder, prwDynamicParameter[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETER_KINDSVectorBlock(FlatBufferBuilder builder, ArraySegment<prwDynamicParameter> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_PARAMETER_KINDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<prwDynamicParameter>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_PARAMETER_KINDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddTRAJ_BASIS(FlatBufferBuilder builder, ocmTrajectoryBasis TRAJ_BASIS) { builder.AddByte(36, (byte)TRAJ_BASIS, 0); }
+  public static void AddSEED_SETS(FlatBufferBuilder builder, VectorOffset SEED_SETSOffset) { builder.AddOffset(37, SEED_SETSOffset.Value, 0); }
+  public static VectorOffset CreateSEED_SETSVector(FlatBufferBuilder builder, Offset<OCMSeedSet>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSEED_SETSVectorBlock(FlatBufferBuilder builder, Offset<OCMSeedSet>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEED_SETSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OCMSeedSet>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEED_SETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OCMSeedSet>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEED_SETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<OCMIntegrator> INTEGRATOROffset) { builder.AddOffset(38, INTEGRATOROffset.Value, 0); }
+  public static void AddRPO_GEOMETRY(FlatBufferBuilder builder, Offset<OCMRelativeGeometry> RPO_GEOMETRYOffset) { builder.AddOffset(39, RPO_GEOMETRYOffset.Value, 0); }
+  public static void AddRPO_INSPECTION(FlatBufferBuilder builder, Offset<OCMInspectionGeometry> RPO_INSPECTIONOffset) { builder.AddOffset(40, RPO_INSPECTIONOffset.Value, 0); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -407,6 +471,16 @@ public struct OCM : IFlatbufferObject
     _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
     _o.COV_REALISM = new List<CVRT>();
     for (var _j = 0; _j < this.COV_REALISMLength; ++_j) {_o.COV_REALISM.Add(this.COV_REALISM(_j).HasValue ? this.COV_REALISM(_j).Value.UnPack() : null);}
+    _o.MEAN_ELEMENTS = this.MEAN_ELEMENTS.HasValue ? this.MEAN_ELEMENTS.Value.UnPack() : null;
+    _o.COV_PROPAGATION = this.COV_PROPAGATION.HasValue ? this.COV_PROPAGATION.Value.UnPack() : null;
+    _o.COV_PARAMETER_KINDS = new List<prwDynamicParameter>();
+    for (var _j = 0; _j < this.COV_PARAMETER_KINDSLength; ++_j) {_o.COV_PARAMETER_KINDS.Add(this.COV_PARAMETER_KINDS(_j));}
+    _o.TRAJ_BASIS = this.TRAJ_BASIS;
+    _o.SEED_SETS = new List<OCMSeedSetT>();
+    for (var _j = 0; _j < this.SEED_SETSLength; ++_j) {_o.SEED_SETS.Add(this.SEED_SETS(_j).HasValue ? this.SEED_SETS(_j).Value.UnPack() : null);}
+    _o.INTEGRATOR = this.INTEGRATOR.HasValue ? this.INTEGRATOR.Value.UnPack() : null;
+    _o.RPO_GEOMETRY = this.RPO_GEOMETRY.HasValue ? this.RPO_GEOMETRY.Value.UnPack() : null;
+    _o.RPO_INSPECTION = this.RPO_INSPECTION.HasValue ? this.RPO_INSPECTION.Value.UnPack() : null;
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -494,6 +568,22 @@ public struct OCM : IFlatbufferObject
       for (var _j = 0; _j < __COV_REALISM.Length; ++_j) { __COV_REALISM[_j] = CVR.Pack(builder, _o.COV_REALISM[_j]); }
       _COV_REALISM = CreateCOV_REALISMVector(builder, __COV_REALISM);
     }
+    var _MEAN_ELEMENTS = _o.MEAN_ELEMENTS == null ? default(Offset<OCMMeanElements>) : OCMMeanElements.Pack(builder, _o.MEAN_ELEMENTS);
+    var _COV_PROPAGATION = _o.COV_PROPAGATION == null ? default(Offset<OCMCovariancePropagation>) : OCMCovariancePropagation.Pack(builder, _o.COV_PROPAGATION);
+    var _COV_PARAMETER_KINDS = default(VectorOffset);
+    if (_o.COV_PARAMETER_KINDS != null) {
+      var __COV_PARAMETER_KINDS = _o.COV_PARAMETER_KINDS.ToArray();
+      _COV_PARAMETER_KINDS = CreateCOV_PARAMETER_KINDSVector(builder, __COV_PARAMETER_KINDS);
+    }
+    var _SEED_SETS = default(VectorOffset);
+    if (_o.SEED_SETS != null) {
+      var __SEED_SETS = new Offset<OCMSeedSet>[_o.SEED_SETS.Count];
+      for (var _j = 0; _j < __SEED_SETS.Length; ++_j) { __SEED_SETS[_j] = OCMSeedSet.Pack(builder, _o.SEED_SETS[_j]); }
+      _SEED_SETS = CreateSEED_SETSVector(builder, __SEED_SETS);
+    }
+    var _INTEGRATOR = _o.INTEGRATOR == null ? default(Offset<OCMIntegrator>) : OCMIntegrator.Pack(builder, _o.INTEGRATOR);
+    var _RPO_GEOMETRY = _o.RPO_GEOMETRY == null ? default(Offset<OCMRelativeGeometry>) : OCMRelativeGeometry.Pack(builder, _o.RPO_GEOMETRY);
+    var _RPO_INSPECTION = _o.RPO_INSPECTION == null ? default(Offset<OCMInspectionGeometry>) : OCMInspectionGeometry.Pack(builder, _o.RPO_INSPECTION);
     return CreateOCM(
       builder,
       _HEADER,
@@ -528,7 +618,15 @@ public struct OCM : IFlatbufferObject
       _TRAJECTORY_BLOCKS,
       _COVARIANCE_BLOCKS,
       _PROVENANCE,
-      _COV_REALISM);
+      _COV_REALISM,
+      _MEAN_ELEMENTS,
+      _COV_PROPAGATION,
+      _COV_PARAMETER_KINDS,
+      _o.TRAJ_BASIS,
+      _SEED_SETS,
+      _INTEGRATOR,
+      _RPO_GEOMETRY,
+      _RPO_INSPECTION);
   }
 }
 
@@ -567,6 +665,14 @@ public class OCMT
   public List<OCMCovarianceBlockT> COVARIANCE_BLOCKS { get; set; }
   public PVNT PROVENANCE { get; set; }
   public List<CVRT> COV_REALISM { get; set; }
+  public OCMMeanElementsT MEAN_ELEMENTS { get; set; }
+  public OCMCovariancePropagationT COV_PROPAGATION { get; set; }
+  public List<prwDynamicParameter> COV_PARAMETER_KINDS { get; set; }
+  public ocmTrajectoryBasis TRAJ_BASIS { get; set; }
+  public List<OCMSeedSetT> SEED_SETS { get; set; }
+  public OCMIntegratorT INTEGRATOR { get; set; }
+  public OCMRelativeGeometryT RPO_GEOMETRY { get; set; }
+  public OCMInspectionGeometryT RPO_INSPECTION { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -602,6 +708,14 @@ public class OCMT
     this.COVARIANCE_BLOCKS = null;
     this.PROVENANCE = null;
     this.COV_REALISM = null;
+    this.MEAN_ELEMENTS = null;
+    this.COV_PROPAGATION = null;
+    this.COV_PARAMETER_KINDS = null;
+    this.TRAJ_BASIS = ocmTrajectoryBasis.UNSPECIFIED;
+    this.SEED_SETS = null;
+    this.INTEGRATOR = null;
+    this.RPO_GEOMETRY = null;
+    this.RPO_INSPECTION = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -652,6 +766,14 @@ static public class OCMVerify
       && verifier.VerifyVectorOfTables(tablePos, 64 /*COVARIANCE_BLOCKS*/, OCMCovarianceBlockVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 66 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 68 /*COV_REALISM*/, CVRVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 70 /*MEAN_ELEMENTS*/, OCMMeanElementsVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 72 /*COV_PROPAGATION*/, OCMCovariancePropagationVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 74 /*COV_PARAMETER_KINDS*/, 1 /*prwDynamicParameter*/, false)
+      && verifier.VerifyField(tablePos, 76 /*TRAJ_BASIS*/, 1 /*ocmTrajectoryBasis*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 78 /*SEED_SETS*/, OCMSeedSetVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 80 /*INTEGRATOR*/, OCMIntegratorVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 82 /*RPO_GEOMETRY*/, OCMRelativeGeometryVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 84 /*RPO_INSPECTION*/, OCMInspectionGeometryVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -121,6 +121,20 @@ public struct CVR : IFlatbufferObject
   /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
   /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
   public double SHRINKAGE_WEIGHT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+  /// state count once here. 0 when not stated.
+  public uint TRUTH_EPOCHS { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Share of the held-out samples whose error lies inside the 1-sigma band of
+  /// the first, second and third axis of the covariance's frame (radial,
+  /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+  /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+  public double COVERAGE_1_SIGMA_AXIS1 { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double COVERAGE_1_SIGMA_AXIS2 { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double COVERAGE_1_SIGMA_AXIS3 { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+  public double COVERAGE_3_SIGMA_AXIS1 { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double COVERAGE_3_SIGMA_AXIS2 { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double COVERAGE_3_SIGMA_AXIS3 { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
 
   public static Offset<CVR> CreateCVR(FlatBufferBuilder builder,
       covarianceRule RULE = covarianceRule.Unspecified,
@@ -140,14 +154,28 @@ public struct CVR : IFlatbufferObject
       uint HISTORY_SAMPLES = 0,
       uint HISTORY_SETS = 0,
       StringOffset HISTORY_WINDOWOffset = default(StringOffset),
-      double SHRINKAGE_WEIGHT = Double.NaN) {
-    builder.StartTable(18);
+      double SHRINKAGE_WEIGHT = Double.NaN,
+      uint TRUTH_EPOCHS = 0,
+      double COVERAGE_1_SIGMA_AXIS1 = Double.NaN,
+      double COVERAGE_1_SIGMA_AXIS2 = Double.NaN,
+      double COVERAGE_1_SIGMA_AXIS3 = Double.NaN,
+      double COVERAGE_3_SIGMA_AXIS1 = Double.NaN,
+      double COVERAGE_3_SIGMA_AXIS2 = Double.NaN,
+      double COVERAGE_3_SIGMA_AXIS3 = Double.NaN) {
+    builder.StartTable(25);
+    CVR.AddCOVERAGE_3_SIGMA_AXIS3(builder, COVERAGE_3_SIGMA_AXIS3);
+    CVR.AddCOVERAGE_3_SIGMA_AXIS2(builder, COVERAGE_3_SIGMA_AXIS2);
+    CVR.AddCOVERAGE_3_SIGMA_AXIS1(builder, COVERAGE_3_SIGMA_AXIS1);
+    CVR.AddCOVERAGE_1_SIGMA_AXIS3(builder, COVERAGE_1_SIGMA_AXIS3);
+    CVR.AddCOVERAGE_1_SIGMA_AXIS2(builder, COVERAGE_1_SIGMA_AXIS2);
+    CVR.AddCOVERAGE_1_SIGMA_AXIS1(builder, COVERAGE_1_SIGMA_AXIS1);
     CVR.AddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT);
     CVR.AddSCALE_FACTOR(builder, SCALE_FACTOR);
     CVR.AddCOVERAGE_95(builder, COVERAGE_95);
     CVR.AddMEAN_D2_OVER_3(builder, MEAN_D2_OVER_3);
     CVR.AddHORIZON_DAYS(builder, HORIZON_DAYS);
     CVR.AddAGE_DAYS(builder, AGE_DAYS);
+    CVR.AddTRUTH_EPOCHS(builder, TRUTH_EPOCHS);
     CVR.AddHISTORY_WINDOW(builder, HISTORY_WINDOWOffset);
     CVR.AddHISTORY_SETS(builder, HISTORY_SETS);
     CVR.AddHISTORY_SAMPLES(builder, HISTORY_SAMPLES);
@@ -163,7 +191,7 @@ public struct CVR : IFlatbufferObject
     return CVR.EndCVR(builder);
   }
 
-  public static void StartCVR(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartCVR(FlatBufferBuilder builder) { builder.StartTable(25); }
   public static void AddRULE(FlatBufferBuilder builder, covarianceRule RULE) { builder.AddSbyte(0, (sbyte)RULE, 0); }
   public static void AddMODEL_ID(FlatBufferBuilder builder, StringOffset MODEL_IDOffset) { builder.AddOffset(1, MODEL_IDOffset.Value, 0); }
   public static void AddREGIME(FlatBufferBuilder builder, StringOffset REGIMEOffset) { builder.AddOffset(2, REGIMEOffset.Value, 0); }
@@ -182,6 +210,13 @@ public struct CVR : IFlatbufferObject
   public static void AddHISTORY_SETS(FlatBufferBuilder builder, uint HISTORY_SETS) { builder.AddUint(15, HISTORY_SETS, 0); }
   public static void AddHISTORY_WINDOW(FlatBufferBuilder builder, StringOffset HISTORY_WINDOWOffset) { builder.AddOffset(16, HISTORY_WINDOWOffset.Value, 0); }
   public static void AddSHRINKAGE_WEIGHT(FlatBufferBuilder builder, double SHRINKAGE_WEIGHT) { builder.AddDouble(17, SHRINKAGE_WEIGHT, Double.NaN); }
+  public static void AddTRUTH_EPOCHS(FlatBufferBuilder builder, uint TRUTH_EPOCHS) { builder.AddUint(18, TRUTH_EPOCHS, 0); }
+  public static void AddCOVERAGE_1_SIGMA_AXIS1(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS1) { builder.AddDouble(19, COVERAGE_1_SIGMA_AXIS1, Double.NaN); }
+  public static void AddCOVERAGE_1_SIGMA_AXIS2(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS2) { builder.AddDouble(20, COVERAGE_1_SIGMA_AXIS2, Double.NaN); }
+  public static void AddCOVERAGE_1_SIGMA_AXIS3(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS3) { builder.AddDouble(21, COVERAGE_1_SIGMA_AXIS3, Double.NaN); }
+  public static void AddCOVERAGE_3_SIGMA_AXIS1(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS1) { builder.AddDouble(22, COVERAGE_3_SIGMA_AXIS1, Double.NaN); }
+  public static void AddCOVERAGE_3_SIGMA_AXIS2(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS2) { builder.AddDouble(23, COVERAGE_3_SIGMA_AXIS2, Double.NaN); }
+  public static void AddCOVERAGE_3_SIGMA_AXIS3(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS3) { builder.AddDouble(24, COVERAGE_3_SIGMA_AXIS3, Double.NaN); }
   public static Offset<CVR> EndCVR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CVR>(o);
@@ -212,6 +247,13 @@ public struct CVR : IFlatbufferObject
     _o.HISTORY_SETS = this.HISTORY_SETS;
     _o.HISTORY_WINDOW = this.HISTORY_WINDOW;
     _o.SHRINKAGE_WEIGHT = this.SHRINKAGE_WEIGHT;
+    _o.TRUTH_EPOCHS = this.TRUTH_EPOCHS;
+    _o.COVERAGE_1_SIGMA_AXIS1 = this.COVERAGE_1_SIGMA_AXIS1;
+    _o.COVERAGE_1_SIGMA_AXIS2 = this.COVERAGE_1_SIGMA_AXIS2;
+    _o.COVERAGE_1_SIGMA_AXIS3 = this.COVERAGE_1_SIGMA_AXIS3;
+    _o.COVERAGE_3_SIGMA_AXIS1 = this.COVERAGE_3_SIGMA_AXIS1;
+    _o.COVERAGE_3_SIGMA_AXIS2 = this.COVERAGE_3_SIGMA_AXIS2;
+    _o.COVERAGE_3_SIGMA_AXIS3 = this.COVERAGE_3_SIGMA_AXIS3;
   }
   public static Offset<CVR> Pack(FlatBufferBuilder builder, CVRT _o) {
     if (_o == null) return default(Offset<CVR>);
@@ -240,7 +282,14 @@ public struct CVR : IFlatbufferObject
       _o.HISTORY_SAMPLES,
       _o.HISTORY_SETS,
       _HISTORY_WINDOW,
-      _o.SHRINKAGE_WEIGHT);
+      _o.SHRINKAGE_WEIGHT,
+      _o.TRUTH_EPOCHS,
+      _o.COVERAGE_1_SIGMA_AXIS1,
+      _o.COVERAGE_1_SIGMA_AXIS2,
+      _o.COVERAGE_1_SIGMA_AXIS3,
+      _o.COVERAGE_3_SIGMA_AXIS1,
+      _o.COVERAGE_3_SIGMA_AXIS2,
+      _o.COVERAGE_3_SIGMA_AXIS3);
   }
 }
 
@@ -264,6 +313,13 @@ public class CVRT
   public uint HISTORY_SETS { get; set; }
   public string HISTORY_WINDOW { get; set; }
   public double SHRINKAGE_WEIGHT { get; set; }
+  public uint TRUTH_EPOCHS { get; set; }
+  public double COVERAGE_1_SIGMA_AXIS1 { get; set; }
+  public double COVERAGE_1_SIGMA_AXIS2 { get; set; }
+  public double COVERAGE_1_SIGMA_AXIS3 { get; set; }
+  public double COVERAGE_3_SIGMA_AXIS1 { get; set; }
+  public double COVERAGE_3_SIGMA_AXIS2 { get; set; }
+  public double COVERAGE_3_SIGMA_AXIS3 { get; set; }
 
   public CVRT() {
     this.RULE = covarianceRule.Unspecified;
@@ -284,6 +340,13 @@ public class CVRT
     this.HISTORY_SETS = 0;
     this.HISTORY_WINDOW = null;
     this.SHRINKAGE_WEIGHT = Double.NaN;
+    this.TRUTH_EPOCHS = 0;
+    this.COVERAGE_1_SIGMA_AXIS1 = Double.NaN;
+    this.COVERAGE_1_SIGMA_AXIS2 = Double.NaN;
+    this.COVERAGE_1_SIGMA_AXIS3 = Double.NaN;
+    this.COVERAGE_3_SIGMA_AXIS1 = Double.NaN;
+    this.COVERAGE_3_SIGMA_AXIS2 = Double.NaN;
+    this.COVERAGE_3_SIGMA_AXIS3 = Double.NaN;
   }
   public static CVRT DeserializeFromBinary(byte[] fbBuffer) {
     return CVR.GetRootAsCVR(new ByteBuffer(fbBuffer)).UnPack();
@@ -319,6 +382,13 @@ static public class CVRVerify
       && verifier.VerifyField(tablePos, 34 /*HISTORY_SETS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 36 /*HISTORY_WINDOW*/, false)
       && verifier.VerifyField(tablePos, 38 /*SHRINKAGE_WEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*TRUTH_EPOCHS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 42 /*COVERAGE_1_SIGMA_AXIS1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*COVERAGE_1_SIGMA_AXIS2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*COVERAGE_1_SIGMA_AXIS3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*COVERAGE_3_SIGMA_AXIS1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*COVERAGE_3_SIGMA_AXIS2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*COVERAGE_3_SIGMA_AXIS3*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

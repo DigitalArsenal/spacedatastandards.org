@@ -407,22 +407,34 @@ class Maneuver extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
+    /// NORAD_CAT_ID of the object that maneuvered, for a message whose
+    /// maneuvers belong to more than one object (a relative-motion message's
+    /// chaser and target). 0 when the message's own object maneuvered.
+    /**
+     * @return uint
+     */
+    public function getNORAD_CAT_ID()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startManeuver(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(37);
+        $builder->StartObject(38);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return Maneuver
      */
-    public static function createManeuver(FlatBufferBuilder $builder, $MAN_ID, $MAN_BASIS, $MAN_DEVICE_ID, $MAN_PREV_ID, $MAN_PURPOSE, $MAN_REF_FRAME, $MAN_FRAME_EPOCH, $MAN_TYPE, $MAN_EPOCH_START, $MAN_DURATION, $MAN_UNITS, $DATA, $MAN_COMMENT, $MAN_COMPOSITION, $MAN_NEXT_ID, $MAN_BASIS_ID, $MAN_PREV_EPOCH, $MAN_NEXT_EPOCH, $MAN_PRED_SOURCE, $GRAV_ASSIST_NAME, $DC_TYPE, $DC_WIN_OPEN, $DC_WIN_CLOSE, $DC_MIN_CYCLES, $DC_MAX_CYCLES, $HAS_DC_MIN_CYCLES, $HAS_DC_MAX_CYCLES, $DC_EXEC_START, $DC_EXEC_STOP, $DC_REF_TIME, $DC_TIME_PULSE_DURATION, $DC_TIME_PULSE_PERIOD, $DC_REF_DIR, $DC_BODY_FRAME, $DC_BODY_TRIGGER, $DC_PA_START_ANGLE, $DC_PA_STOP_ANGLE)
+    public static function createManeuver(FlatBufferBuilder $builder, $MAN_ID, $MAN_BASIS, $MAN_DEVICE_ID, $MAN_PREV_ID, $MAN_PURPOSE, $MAN_REF_FRAME, $MAN_FRAME_EPOCH, $MAN_TYPE, $MAN_EPOCH_START, $MAN_DURATION, $MAN_UNITS, $DATA, $MAN_COMMENT, $MAN_COMPOSITION, $MAN_NEXT_ID, $MAN_BASIS_ID, $MAN_PREV_EPOCH, $MAN_NEXT_EPOCH, $MAN_PRED_SOURCE, $GRAV_ASSIST_NAME, $DC_TYPE, $DC_WIN_OPEN, $DC_WIN_CLOSE, $DC_MIN_CYCLES, $DC_MAX_CYCLES, $HAS_DC_MIN_CYCLES, $HAS_DC_MAX_CYCLES, $DC_EXEC_START, $DC_EXEC_STOP, $DC_REF_TIME, $DC_TIME_PULSE_DURATION, $DC_TIME_PULSE_PERIOD, $DC_REF_DIR, $DC_BODY_FRAME, $DC_BODY_TRIGGER, $DC_PA_START_ANGLE, $DC_PA_STOP_ANGLE, $NORAD_CAT_ID)
     {
-        $builder->startObject(37);
+        $builder->startObject(38);
         self::addMAN_ID($builder, $MAN_ID);
         self::addMAN_BASIS($builder, $MAN_BASIS);
         self::addMAN_DEVICE_ID($builder, $MAN_DEVICE_ID);
@@ -460,6 +472,7 @@ class Maneuver extends Table
         self::addDC_BODY_TRIGGER($builder, $DC_BODY_TRIGGER);
         self::addDC_PA_START_ANGLE($builder, $DC_PA_START_ANGLE);
         self::addDC_PA_STOP_ANGLE($builder, $DC_PA_STOP_ANGLE);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -976,6 +989,16 @@ class Maneuver extends Table
     public static function addDC_PA_STOP_ANGLE(FlatBufferBuilder $builder, $DC_PA_STOP_ANGLE)
     {
         $builder->addDoubleX(36, $DC_PA_STOP_ANGLE, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
+    {
+        $builder->addUintX(37, $NORAD_CAT_ID, 0);
     }
 
     /**

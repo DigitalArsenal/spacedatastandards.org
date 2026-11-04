@@ -118,8 +118,61 @@ LINEAGE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Replayable URL or provider query identifying the source material as it
+ * was retrieved (the SOURCE_URL of $CMR and $AVL).
+ */
+SOURCE_URL():string|null
+SOURCE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Source revision, edition or upstream update marker verbatim: for a file
+ * its originator stamps, the stamp.
+ */
+SOURCE_VERSION():string|null
+SOURCE_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_VERSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+ */
+RETRIEVED_AT():string|null
+RETRIEVED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RETRIEVED_AT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+ * hexadecimal characters. Empty when the source cannot expose replayable
+ * bytes.
+ */
+SOURCE_SHA256():string|null
+SOURCE_SHA256(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_SHA256(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+ * the source was fetched by range. 0 when not stated.
+ */
+SOURCE_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startPVN(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(13);
 }
 
 static addSourceId(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset) {
@@ -154,6 +207,26 @@ static addLineage(builder:flatbuffers.Builder, LINEAGEOffset:flatbuffers.Offset)
   builder.addFieldOffset(7, LINEAGEOffset, 0);
 }
 
+static addSourceUrl(builder:flatbuffers.Builder, SOURCE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, SOURCE_URLOffset, 0);
+}
+
+static addSourceVersion(builder:flatbuffers.Builder, SOURCE_VERSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, SOURCE_VERSIONOffset, 0);
+}
+
+static addRetrievedAt(builder:flatbuffers.Builder, RETRIEVED_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, RETRIEVED_ATOffset, 0);
+}
+
+static addSourceSha256(builder:flatbuffers.Builder, SOURCE_SHA256Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, SOURCE_SHA256Offset, 0);
+}
+
+static addSourceBytes(builder:flatbuffers.Builder, SOURCE_BYTES:bigint) {
+  builder.addFieldInt64(12, SOURCE_BYTES, BigInt('0'));
+}
+
 static endPVN(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -167,7 +240,7 @@ static finishSizePrefixedPVNBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PVN', true);
 }
 
-static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_KIND:pvnSourceKind, ORIGINATOROffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, PRODUCEROffset:flatbuffers.Offset, LICENSE_CLASS:pvnLicenseClass, LICENSE_IDOffset:flatbuffers.Offset, LINEAGEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_KIND:pvnSourceKind, ORIGINATOROffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, PRODUCEROffset:flatbuffers.Offset, LICENSE_CLASS:pvnLicenseClass, LICENSE_IDOffset:flatbuffers.Offset, LINEAGEOffset:flatbuffers.Offset, SOURCE_URLOffset:flatbuffers.Offset, SOURCE_VERSIONOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset, SOURCE_SHA256Offset:flatbuffers.Offset, SOURCE_BYTES:bigint):flatbuffers.Offset {
   PVN.startPVN(builder);
   PVN.addSourceId(builder, SOURCE_IDOffset);
   PVN.addSourceKind(builder, SOURCE_KIND);
@@ -177,6 +250,11 @@ static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset
   PVN.addLicenseClass(builder, LICENSE_CLASS);
   PVN.addLicenseId(builder, LICENSE_IDOffset);
   PVN.addLineage(builder, LINEAGEOffset);
+  PVN.addSourceUrl(builder, SOURCE_URLOffset);
+  PVN.addSourceVersion(builder, SOURCE_VERSIONOffset);
+  PVN.addRetrievedAt(builder, RETRIEVED_ATOffset);
+  PVN.addSourceSha256(builder, SOURCE_SHA256Offset);
+  PVN.addSourceBytes(builder, SOURCE_BYTES);
   return PVN.endPVN(builder);
 }
 
@@ -189,7 +267,12 @@ unpack(): PVNT {
     this.PRODUCER(),
     this.LICENSE_CLASS(),
     this.LICENSE_ID(),
-    this.LINEAGE()
+    this.LINEAGE(),
+    this.SOURCE_URL(),
+    this.SOURCE_VERSION(),
+    this.RETRIEVED_AT(),
+    this.SOURCE_SHA256(),
+    this.SOURCE_BYTES()
   );
 }
 
@@ -203,6 +286,11 @@ unpackTo(_o: PVNT): void {
   _o.LICENSE_CLASS = this.LICENSE_CLASS();
   _o.LICENSE_ID = this.LICENSE_ID();
   _o.LINEAGE = this.LINEAGE();
+  _o.SOURCE_URL = this.SOURCE_URL();
+  _o.SOURCE_VERSION = this.SOURCE_VERSION();
+  _o.RETRIEVED_AT = this.RETRIEVED_AT();
+  _o.SOURCE_SHA256 = this.SOURCE_SHA256();
+  _o.SOURCE_BYTES = this.SOURCE_BYTES();
 }
 }
 
@@ -215,7 +303,12 @@ constructor(
   public PRODUCER: string|Uint8Array|null = null,
   public LICENSE_CLASS: pvnLicenseClass = pvnLicenseClass.Unspecified,
   public LICENSE_ID: string|Uint8Array|null = null,
-  public LINEAGE: string|Uint8Array|null = null
+  public LINEAGE: string|Uint8Array|null = null,
+  public SOURCE_URL: string|Uint8Array|null = null,
+  public SOURCE_VERSION: string|Uint8Array|null = null,
+  public RETRIEVED_AT: string|Uint8Array|null = null,
+  public SOURCE_SHA256: string|Uint8Array|null = null,
+  public SOURCE_BYTES: bigint = BigInt('0')
 ){}
 
 
@@ -226,6 +319,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PRODUCER = (this.PRODUCER !== null ? builder.createString(this.PRODUCER!) : 0);
   const LICENSE_ID = (this.LICENSE_ID !== null ? builder.createString(this.LICENSE_ID!) : 0);
   const LINEAGE = (this.LINEAGE !== null ? builder.createString(this.LINEAGE!) : 0);
+  const SOURCE_URL = (this.SOURCE_URL !== null ? builder.createString(this.SOURCE_URL!) : 0);
+  const SOURCE_VERSION = (this.SOURCE_VERSION !== null ? builder.createString(this.SOURCE_VERSION!) : 0);
+  const RETRIEVED_AT = (this.RETRIEVED_AT !== null ? builder.createString(this.RETRIEVED_AT!) : 0);
+  const SOURCE_SHA256 = (this.SOURCE_SHA256 !== null ? builder.createString(this.SOURCE_SHA256!) : 0);
 
   return PVN.createPVN(builder,
     SOURCE_ID,
@@ -235,7 +332,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PRODUCER,
     this.LICENSE_CLASS,
     LICENSE_ID,
-    LINEAGE
+    LINEAGE,
+    SOURCE_URL,
+    SOURCE_VERSION,
+    RETRIEVED_AT,
+    SOURCE_SHA256,
+    this.SOURCE_BYTES
   );
 }
 }

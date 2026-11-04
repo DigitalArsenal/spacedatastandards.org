@@ -11,16 +11,17 @@ extern crate alloc;
 pub const ENUM_MIN_PCF_THEORY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_THEORY: u8 = 5;
+pub const ENUM_MAX_PCF_THEORY: u8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_THEORY: [pcfTheory; 5] = [
+pub const ENUM_VALUES_PCF_THEORY: [pcfTheory; 6] = [
     pcfTheory::UNSPECIFIED,
     pcfTheory::SGP4,
     pcfTheory::SGP4XP,
     pcfTheory::FFM,
     pcfTheory::KEPLER,
+    pcfTheory::AP,
 ];
 
 /// The orbit theory that computes the states. Append new values only; never
@@ -46,15 +47,19 @@ impl pcfTheory {
     pub const FFM: Self = Self(4);
     /// Two-body (Keplerian) motion about the central body.
     pub const KEPLER: Self = Self(5);
+    /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+    /// 3 stays unused.
+    pub const AP: Self = Self(6);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 5;
+    pub const ENUM_MAX: u8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::SGP4,
         Self::SGP4XP,
         Self::FFM,
         Self::KEPLER,
+        Self::AP,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -65,6 +70,7 @@ impl pcfTheory {
             Self::SGP4XP => Some("SGP4XP"),
             Self::FFM => Some("FFM"),
             Self::KEPLER => Some("KEPLER"),
+            Self::AP => Some("AP"),
             _ => None,
         }
     }
@@ -438,14 +444,16 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfWeatherExtension {}
 pub const ENUM_MIN_PCF_WEATHER_SOURCE: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_WEATHER_SOURCE: u8 = 2;
+pub const ENUM_MAX_PCF_WEATHER_SOURCE: u8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_WEATHER_SOURCE: [pcfWeatherSource; 3] = [
+pub const ENUM_VALUES_PCF_WEATHER_SOURCE: [pcfWeatherSource; 5] = [
     pcfWeatherSource::UNSPECIFIED,
     pcfWeatherSource::CONSTANT,
     pcfWeatherSource::RECORDS,
+    pcfWeatherSource::THEORY_FLUX_MODEL,
+    pcfWeatherSource::NONE,
 ];
 
 /// Where the space weather of a propagation comes from. Append new values
@@ -462,15 +470,23 @@ impl pcfWeatherSource {
     /// PCFSpaceWeather, held for the whole arc.
     pub const CONSTANT: Self = Self(1);
     /// Daily rows supplied with the request ($SPW rows; the JB2008 indices
-    /// for the JB2008 atmosphere).
+    /// for the JB2008 atmosphere). In an $OCM element set, the rows of
+    /// PERTURBATIONS.SPACE_WEATHER.
     pub const RECORDS: Self = Self(2);
+    /// The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+    /// mean-element theory's built-in solar and geomagnetic activity).
+    pub const THEORY_FLUX_MODEL: Self = Self(3);
+    /// No drag weather: the theory's own drag term (SGP4's BSTAR).
+    pub const NONE: Self = Self(4);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_MAX: u8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::CONSTANT,
         Self::RECORDS,
+        Self::THEORY_FLUX_MODEL,
+        Self::NONE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -479,6 +495,8 @@ impl pcfWeatherSource {
             Self::UNSPECIFIED => Some("UNSPECIFIED"),
             Self::CONSTANT => Some("CONSTANT"),
             Self::RECORDS => Some("RECORDS"),
+            Self::THEORY_FLUX_MODEL => Some("THEORY_FLUX_MODEL"),
+            Self::NONE => Some("NONE"),
             _ => None,
         }
     }
@@ -1807,11 +1825,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfGravitySelection {}
 pub const ENUM_MIN_PCF_ATMOSPHERE_FAMILY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_ATMOSPHERE_FAMILY: u8 = 7;
+pub const ENUM_MAX_PCF_ATMOSPHERE_FAMILY: u8 = 8;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 8] = [
+pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 9] = [
     pcfAtmosphereFamily::UNSPECIFIED,
     pcfAtmosphereFamily::NRLMSISE00,
     pcfAtmosphereFamily::EXPONENTIAL,
@@ -1820,6 +1838,7 @@ pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 8] = [
     pcfAtmosphereFamily::JACCHIA_ROBERTS,
     pcfAtmosphereFamily::JB2008,
     pcfAtmosphereFamily::MARS_EXPONENTIAL,
+    pcfAtmosphereFamily::JACCHIA70,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -1849,9 +1868,13 @@ impl pcfAtmosphereFamily {
     /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
     /// with Mars.
     pub const MARS_EXPONENTIAL: Self = Self(7);
+    /// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+    /// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+    /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+    pub const JACCHIA70: Self = Self(8);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 7;
+    pub const ENUM_MAX: u8 = 8;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::NRLMSISE00,
@@ -1861,6 +1884,7 @@ impl pcfAtmosphereFamily {
         Self::JACCHIA_ROBERTS,
         Self::JB2008,
         Self::MARS_EXPONENTIAL,
+        Self::JACCHIA70,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1874,6 +1898,7 @@ impl pcfAtmosphereFamily {
             Self::JACCHIA_ROBERTS => Some("JACCHIA_ROBERTS"),
             Self::JB2008 => Some("JB2008"),
             Self::MARS_EXPONENTIAL => Some("MARS_EXPONENTIAL"),
+            Self::JACCHIA70 => Some("JACCHIA70"),
             _ => None,
         }
     }
@@ -2880,6 +2905,7 @@ impl<'a> PCFFitPolicy<'a> {
     pub const VT_SRP_PRIOR: ::flatbuffers::VOffsetT = 32;
     pub const VT_DRAG_PRIOR_FORM: ::flatbuffers::VOffsetT = 34;
     pub const VT_SRP_PRIOR_FORM: ::flatbuffers::VOffsetT = 36;
+    pub const VT_WEATHER_HORIZON_DAYS: ::flatbuffers::VOffsetT = 38;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2906,6 +2932,7 @@ impl<'a> PCFFitPolicy<'a> {
         if let Some(x) = args.SRP_PRIOR { builder.add_SRP_PRIOR(x); }
         if let Some(x) = args.DRAG_PRIOR { builder.add_DRAG_PRIOR(x); }
         if let Some(x) = args.CANDIDATE_SPANS_HOURS { builder.add_CANDIDATE_SPANS_HOURS(x); }
+        builder.add_WEATHER_HORIZON_DAYS(args.WEATHER_HORIZON_DAYS);
         builder.add_SRP_PRIOR_FORM(args.SRP_PRIOR_FORM);
         builder.add_DRAG_PRIOR_FORM(args.DRAG_PRIOR_FORM);
         builder.add_HAS_HOLDOUT_HOURS(args.HAS_HOLDOUT_HOURS);
@@ -2936,6 +2963,7 @@ impl<'a> PCFFitPolicy<'a> {
         });
         let DRAG_PRIOR_FORM = self.DRAG_PRIOR_FORM();
         let SRP_PRIOR_FORM = self.SRP_PRIOR_FORM();
+        let WEATHER_HORIZON_DAYS = self.WEATHER_HORIZON_DAYS();
         PCFFitPolicyT {
             DEFAULT_SPAN_HOURS,
             MINIMUM_SPAN_HOURS,
@@ -2954,6 +2982,7 @@ impl<'a> PCFFitPolicy<'a> {
             SRP_PRIOR,
             DRAG_PRIOR_FORM,
             SRP_PRIOR_FORM,
+            WEATHER_HORIZON_DAYS,
         }
     }
 
@@ -3125,6 +3154,20 @@ impl<'a> PCFFitPolicy<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<pcfPriorForm>(PCFFitPolicy::VT_SRP_PRIOR_FORM, Some(pcfPriorForm::GAUSSIAN_SIGNED)).unwrap()}
     }
+
+    /// Days past the element set's epoch day through which the fit writes the
+    /// daily space weather into the record it emits (OCM
+    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+    /// arc's last day and the epoch's day plus this count; rows supplied with
+    /// the request must reach it, or the fit is refused by name. Default 30.
+    #[inline]
+    pub fn WEATHER_HORIZON_DAYS(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, Some(30)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFFitPolicy<'_> {
@@ -3150,6 +3193,7 @@ impl ::flatbuffers::Verifiable for PCFFitPolicy<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>("SRP_PRIOR", Self::VT_SRP_PRIOR, false)?
             .visit_field::<pcfPriorForm>("DRAG_PRIOR_FORM", Self::VT_DRAG_PRIOR_FORM, false)?
             .visit_field::<pcfPriorForm>("SRP_PRIOR_FORM", Self::VT_SRP_PRIOR_FORM, false)?
+            .visit_field::<u16>("WEATHER_HORIZON_DAYS", Self::VT_WEATHER_HORIZON_DAYS, false)?
             .finish();
         Ok(())
     }
@@ -3173,6 +3217,7 @@ pub struct PCFFitPolicyArgs<'a> {
     pub SRP_PRIOR: Option<::flatbuffers::WIPOffset<PCFGaussianPrior<'a>>>,
     pub DRAG_PRIOR_FORM: pcfPriorForm,
     pub SRP_PRIOR_FORM: pcfPriorForm,
+    pub WEATHER_HORIZON_DAYS: u16,
 }
 
 impl<'a> Default for PCFFitPolicyArgs<'a> {
@@ -3196,6 +3241,7 @@ impl<'a> Default for PCFFitPolicyArgs<'a> {
             SRP_PRIOR: None,
             DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
             SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
+            WEATHER_HORIZON_DAYS: 30,
         }
     }
 }
@@ -3292,6 +3338,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A
     }
 
     #[inline]
+    pub fn add_WEATHER_HORIZON_DAYS(&mut self, WEATHER_HORIZON_DAYS: u16) {
+        self.fbb_.push_slot::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 30);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFFitPolicyBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFFitPolicyBuilder {
@@ -3327,6 +3378,7 @@ impl ::core::fmt::Debug for PCFFitPolicy<'_> {
         ds.field("SRP_PRIOR", &self.SRP_PRIOR());
         ds.field("DRAG_PRIOR_FORM", &self.DRAG_PRIOR_FORM());
         ds.field("SRP_PRIOR_FORM", &self.SRP_PRIOR_FORM());
+        ds.field("WEATHER_HORIZON_DAYS", &self.WEATHER_HORIZON_DAYS());
         ds.finish()
     }
 }
@@ -3351,6 +3403,7 @@ pub struct PCFFitPolicyT {
     pub SRP_PRIOR: Option<alloc::boxed::Box<PCFGaussianPriorT>>,
     pub DRAG_PRIOR_FORM: pcfPriorForm,
     pub SRP_PRIOR_FORM: pcfPriorForm,
+    pub WEATHER_HORIZON_DAYS: u16,
 }
 
 impl Default for PCFFitPolicyT {
@@ -3373,6 +3426,7 @@ impl Default for PCFFitPolicyT {
             SRP_PRIOR: None,
             DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
             SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
+            WEATHER_HORIZON_DAYS: 30,
         }
     }
 }
@@ -3405,6 +3459,7 @@ impl PCFFitPolicyT {
         });
         let DRAG_PRIOR_FORM = self.DRAG_PRIOR_FORM;
         let SRP_PRIOR_FORM = self.SRP_PRIOR_FORM;
+        let WEATHER_HORIZON_DAYS = self.WEATHER_HORIZON_DAYS;
         PCFFitPolicy::create(_fbb, &PCFFitPolicyArgs{
             DEFAULT_SPAN_HOURS,
             MINIMUM_SPAN_HOURS,
@@ -3423,6 +3478,7 @@ impl PCFFitPolicyT {
             SRP_PRIOR,
             DRAG_PRIOR_FORM,
             SRP_PRIOR_FORM,
+            WEATHER_HORIZON_DAYS,
         })
     }
 }
@@ -4143,6 +4199,9 @@ impl<'a> PCFOutput<'a> {
     pub const VT_FRAME: ::flatbuffers::VOffsetT = 4;
     pub const VT_STEP_SECONDS: ::flatbuffers::VOffsetT = 6;
     pub const VT_MAXIMUM_STATES: ::flatbuffers::VOffsetT = 8;
+    pub const VT_EPOCHS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_START_TIME: ::flatbuffers::VOffsetT = 12;
+    pub const VT_STOP_TIME: ::flatbuffers::VOffsetT = 14;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4152,10 +4211,13 @@ impl<'a> PCFOutput<'a> {
     #[allow(unused_mut)]
     pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
         _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFOutputArgs
+        args: &'args PCFOutputArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PCFOutput<'bldr>> {
         let mut builder = PCFOutputBuilder::new(_fbb);
         builder.add_STEP_SECONDS(args.STEP_SECONDS);
+        if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
+        if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+        if let Some(x) = args.EPOCHS { builder.add_EPOCHS(x); }
         builder.add_MAXIMUM_STATES(args.MAXIMUM_STATES);
         builder.add_FRAME(args.FRAME);
         builder.finish()
@@ -4165,10 +4227,22 @@ impl<'a> PCFOutput<'a> {
         let FRAME = self.FRAME();
         let STEP_SECONDS = self.STEP_SECONDS();
         let MAXIMUM_STATES = self.MAXIMUM_STATES();
+        let EPOCHS = self.EPOCHS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let START_TIME = self.START_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let STOP_TIME = self.STOP_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         PCFOutputT {
             FRAME,
             STEP_SECONDS,
             MAXIMUM_STATES,
+            EPOCHS,
+            START_TIME,
+            STOP_TIME,
         }
     }
 
@@ -4200,6 +4274,37 @@ impl<'a> PCFOutput<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<u32>(PCFOutput::VT_MAXIMUM_STATES, Some(500000)).unwrap()}
     }
+
+    /// Output epochs, ISO 8601 UTC, ascending; when present they are the
+    /// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+    /// Default empty.
+    #[inline]
+    pub fn EPOCHS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PCFOutput::VT_EPOCHS, None)}
+    }
+
+    /// First output epoch, ISO 8601 UTC. Default empty: the element set's
+    /// epoch.
+    #[inline]
+    pub fn START_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PCFOutput::VT_START_TIME, None)}
+    }
+
+    /// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+    /// START_TIME plus one day.
+    #[inline]
+    pub fn STOP_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PCFOutput::VT_STOP_TIME, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFOutput<'_> {
@@ -4211,24 +4316,33 @@ impl ::flatbuffers::Verifiable for PCFOutput<'_> {
             .visit_field::<pcfOutputFrame>("FRAME", Self::VT_FRAME, false)?
             .visit_field::<f64>("STEP_SECONDS", Self::VT_STEP_SECONDS, false)?
             .visit_field::<u32>("MAXIMUM_STATES", Self::VT_MAXIMUM_STATES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("EPOCHS", Self::VT_EPOCHS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_TIME", Self::VT_STOP_TIME, false)?
             .finish();
         Ok(())
     }
 }
 
-pub struct PCFOutputArgs {
+pub struct PCFOutputArgs<'a> {
     pub FRAME: pcfOutputFrame,
     pub STEP_SECONDS: f64,
     pub MAXIMUM_STATES: u32,
+    pub EPOCHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
-impl<'a> Default for PCFOutputArgs {
+impl<'a> Default for PCFOutputArgs<'a> {
     #[inline]
     fn default() -> Self {
         PCFOutputArgs {
             FRAME: pcfOutputFrame::UNSPECIFIED,
             STEP_SECONDS: 60.0,
             MAXIMUM_STATES: 500000,
+            EPOCHS: None,
+            START_TIME: None,
+            STOP_TIME: None,
         }
     }
 }
@@ -4255,6 +4369,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFOutputBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_EPOCHS(&mut self, EPOCHS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFOutput::VT_EPOCHS, EPOCHS);
+    }
+
+    #[inline]
+    pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFOutput::VT_START_TIME, START_TIME);
+    }
+
+    #[inline]
+    pub fn add_STOP_TIME(&mut self, STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFOutput::VT_STOP_TIME, STOP_TIME);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFOutputBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFOutputBuilder {
@@ -4276,6 +4405,9 @@ impl ::core::fmt::Debug for PCFOutput<'_> {
         ds.field("FRAME", &self.FRAME());
         ds.field("STEP_SECONDS", &self.STEP_SECONDS());
         ds.field("MAXIMUM_STATES", &self.MAXIMUM_STATES());
+        ds.field("EPOCHS", &self.EPOCHS());
+        ds.field("START_TIME", &self.START_TIME());
+        ds.field("STOP_TIME", &self.STOP_TIME());
         ds.finish()
     }
 }
@@ -4286,6 +4418,9 @@ pub struct PCFOutputT {
     pub FRAME: pcfOutputFrame,
     pub STEP_SECONDS: f64,
     pub MAXIMUM_STATES: u32,
+    pub EPOCHS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub START_TIME: Option<alloc::string::String>,
+    pub STOP_TIME: Option<alloc::string::String>,
 }
 
 impl Default for PCFOutputT {
@@ -4294,6 +4429,9 @@ impl Default for PCFOutputT {
             FRAME: pcfOutputFrame::UNSPECIFIED,
             STEP_SECONDS: 60.0,
             MAXIMUM_STATES: 500000,
+            EPOCHS: None,
+            START_TIME: None,
+            STOP_TIME: None,
         }
     }
 }
@@ -4306,10 +4444,22 @@ impl PCFOutputT {
         let FRAME = self.FRAME;
         let STEP_SECONDS = self.STEP_SECONDS;
         let MAXIMUM_STATES = self.MAXIMUM_STATES;
+        let EPOCHS = self.EPOCHS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let START_TIME = self.START_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let STOP_TIME = self.STOP_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         PCFOutput::create(_fbb, &PCFOutputArgs{
             FRAME,
             STEP_SECONDS,
             MAXIMUM_STATES,
+            EPOCHS,
+            START_TIME,
+            STOP_TIME,
         })
     }
 }

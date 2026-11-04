@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { prwDynamicParameter } from './prwDynamicParameter.js';
 
 
 /**
@@ -30,8 +31,8 @@ static getSizePrefixedRootAsOCMDynamicParameter(bb:flatbuffers.ByteBuffer, obj?:
 
 /**
  * Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
- * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
- * are the producer's, as in USER_DEFINED_PARAMETERS.
+ * SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+ * label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
  */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -67,8 +68,16 @@ SOLVED_FOR():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * The parameter, typed: every reader keys on this, never on NAME.
+ */
+PARAMETER():prwDynamicParameter {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwDynamicParameter.UNSPECIFIED;
+}
+
 static startOCMDynamicParameter(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -87,17 +96,22 @@ static addSolvedFor(builder:flatbuffers.Builder, SOLVED_FOR:boolean) {
   builder.addFieldInt8(3, +SOLVED_FOR, +false);
 }
 
+static addParameter(builder:flatbuffers.Builder, PARAMETER:prwDynamicParameter) {
+  builder.addFieldInt8(4, PARAMETER, prwDynamicParameter.UNSPECIFIED);
+}
+
 static endOCMDynamicParameter(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOCMDynamicParameter(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, VALUE:number, UNITSOffset:flatbuffers.Offset, SOLVED_FOR:boolean):flatbuffers.Offset {
+static createOCMDynamicParameter(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, VALUE:number, UNITSOffset:flatbuffers.Offset, SOLVED_FOR:boolean, PARAMETER:prwDynamicParameter):flatbuffers.Offset {
   OCMDynamicParameter.startOCMDynamicParameter(builder);
   OCMDynamicParameter.addName(builder, NAMEOffset);
   OCMDynamicParameter.addValue(builder, VALUE);
   OCMDynamicParameter.addUnits(builder, UNITSOffset);
   OCMDynamicParameter.addSolvedFor(builder, SOLVED_FOR);
+  OCMDynamicParameter.addParameter(builder, PARAMETER);
   return OCMDynamicParameter.endOCMDynamicParameter(builder);
 }
 
@@ -106,7 +120,8 @@ unpack(): OCMDynamicParameterT {
     this.NAME(),
     this.VALUE(),
     this.UNITS(),
-    this.SOLVED_FOR()
+    this.SOLVED_FOR(),
+    this.PARAMETER()
   );
 }
 
@@ -116,6 +131,7 @@ unpackTo(_o: OCMDynamicParameterT): void {
   _o.VALUE = this.VALUE();
   _o.UNITS = this.UNITS();
   _o.SOLVED_FOR = this.SOLVED_FOR();
+  _o.PARAMETER = this.PARAMETER();
 }
 }
 
@@ -124,7 +140,8 @@ constructor(
   public NAME: string|Uint8Array|null = null,
   public VALUE: number = 0.0,
   public UNITS: string|Uint8Array|null = null,
-  public SOLVED_FOR: boolean = false
+  public SOLVED_FOR: boolean = false,
+  public PARAMETER: prwDynamicParameter = prwDynamicParameter.UNSPECIFIED
 ){}
 
 
@@ -136,7 +153,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     NAME,
     this.VALUE,
     UNITS,
-    this.SOLVED_FOR
+    this.SOLVED_FOR,
+    this.PARAMETER
   );
 }
 }

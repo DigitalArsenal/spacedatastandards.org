@@ -463,8 +463,162 @@ func (rcv *CVR) MutateShrinkageWeight(n float64) bool {
 	return rcv.MutateSHRINKAGE_WEIGHT(n)
 }
 
+/// Distinct truth epochs among the SAMPLES: predictions that share one truth
+/// state count once here. 0 when not stated.
+func (rcv *CVR) TRUTH_EPOCHS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *CVR) TruthEpochs() uint32 {
+	return rcv.TRUTH_EPOCHS()
+}
+
+/// Distinct truth epochs among the SAMPLES: predictions that share one truth
+/// state count once here. 0 when not stated.
+func (rcv *CVR) MutateTRUTH_EPOCHS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(40, n)
+}
+
+func (rcv *CVR) MutateTruthEpochs(n uint32) bool {
+	return rcv.MutateTRUTH_EPOCHS(n)
+}
+
+/// Share of the held-out samples whose error lies inside the 1-sigma band of
+/// the first, second and third axis of the covariance's frame (radial,
+/// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+/// nominal 0.6827 for Gaussian errors. NaN when not measured.
+func (rcv *CVR) COVERAGE_1_SIGMA_AXIS1() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage1SigmaAxis1() float64 {
+	return rcv.COVERAGE_1_SIGMA_AXIS1()
+}
+
+/// Share of the held-out samples whose error lies inside the 1-sigma band of
+/// the first, second and third axis of the covariance's frame (radial,
+/// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+/// nominal 0.6827 for Gaussian errors. NaN when not measured.
+func (rcv *CVR) MutateCOVERAGE_1_SIGMA_AXIS1(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *CVR) MutateCoverage1SigmaAxis1(n float64) bool {
+	return rcv.MutateCOVERAGE_1_SIGMA_AXIS1(n)
+}
+
+func (rcv *CVR) COVERAGE_1_SIGMA_AXIS2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage1SigmaAxis2() float64 {
+	return rcv.COVERAGE_1_SIGMA_AXIS2()
+}
+
+func (rcv *CVR) MutateCOVERAGE_1_SIGMA_AXIS2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *CVR) MutateCoverage1SigmaAxis2(n float64) bool {
+	return rcv.MutateCOVERAGE_1_SIGMA_AXIS2(n)
+}
+
+func (rcv *CVR) COVERAGE_1_SIGMA_AXIS3() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage1SigmaAxis3() float64 {
+	return rcv.COVERAGE_1_SIGMA_AXIS3()
+}
+
+func (rcv *CVR) MutateCOVERAGE_1_SIGMA_AXIS3(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *CVR) MutateCoverage1SigmaAxis3(n float64) bool {
+	return rcv.MutateCOVERAGE_1_SIGMA_AXIS3(n)
+}
+
+/// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+func (rcv *CVR) COVERAGE_3_SIGMA_AXIS1() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage3SigmaAxis1() float64 {
+	return rcv.COVERAGE_3_SIGMA_AXIS1()
+}
+
+/// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+func (rcv *CVR) MutateCOVERAGE_3_SIGMA_AXIS1(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *CVR) MutateCoverage3SigmaAxis1(n float64) bool {
+	return rcv.MutateCOVERAGE_3_SIGMA_AXIS1(n)
+}
+
+func (rcv *CVR) COVERAGE_3_SIGMA_AXIS2() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage3SigmaAxis2() float64 {
+	return rcv.COVERAGE_3_SIGMA_AXIS2()
+}
+
+func (rcv *CVR) MutateCOVERAGE_3_SIGMA_AXIS2(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *CVR) MutateCoverage3SigmaAxis2(n float64) bool {
+	return rcv.MutateCOVERAGE_3_SIGMA_AXIS2(n)
+}
+
+func (rcv *CVR) COVERAGE_3_SIGMA_AXIS3() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) Coverage3SigmaAxis3() float64 {
+	return rcv.COVERAGE_3_SIGMA_AXIS3()
+}
+
+func (rcv *CVR) MutateCOVERAGE_3_SIGMA_AXIS3(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *CVR) MutateCoverage3SigmaAxis3(n float64) bool {
+	return rcv.MutateCOVERAGE_3_SIGMA_AXIS3(n)
+}
+
 func CVRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(25)
 }
 func CVRAddRULE(builder *flatbuffers.Builder, RULE covarianceRule) {
 	builder.PrependInt8Slot(0, int8(RULE), 0)
@@ -573,6 +727,48 @@ func CVRAddSHRINKAGE_WEIGHT(builder *flatbuffers.Builder, SHRINKAGE_WEIGHT float
 }
 func CVRAddShrinkageWeight(builder *flatbuffers.Builder, SHRINKAGE_WEIGHT float64) {
 	CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT)
+}
+func CVRAddTRUTH_EPOCHS(builder *flatbuffers.Builder, TRUTH_EPOCHS uint32) {
+	builder.PrependUint32Slot(18, TRUTH_EPOCHS, 0)
+}
+func CVRAddTruthEpochs(builder *flatbuffers.Builder, TRUTH_EPOCHS uint32) {
+	CVRAddTRUTH_EPOCHS(builder, TRUTH_EPOCHS)
+}
+func CVRAddCOVERAGE_1_SIGMA_AXIS1(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS1 float64) {
+	builder.PrependFloat64Slot(19, COVERAGE_1_SIGMA_AXIS1, float64(math.NaN()))
+}
+func CVRAddCoverage1SigmaAxis1(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS1 float64) {
+	CVRAddCOVERAGE_1_SIGMA_AXIS1(builder, COVERAGE_1_SIGMA_AXIS1)
+}
+func CVRAddCOVERAGE_1_SIGMA_AXIS2(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS2 float64) {
+	builder.PrependFloat64Slot(20, COVERAGE_1_SIGMA_AXIS2, float64(math.NaN()))
+}
+func CVRAddCoverage1SigmaAxis2(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS2 float64) {
+	CVRAddCOVERAGE_1_SIGMA_AXIS2(builder, COVERAGE_1_SIGMA_AXIS2)
+}
+func CVRAddCOVERAGE_1_SIGMA_AXIS3(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS3 float64) {
+	builder.PrependFloat64Slot(21, COVERAGE_1_SIGMA_AXIS3, float64(math.NaN()))
+}
+func CVRAddCoverage1SigmaAxis3(builder *flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS3 float64) {
+	CVRAddCOVERAGE_1_SIGMA_AXIS3(builder, COVERAGE_1_SIGMA_AXIS3)
+}
+func CVRAddCOVERAGE_3_SIGMA_AXIS1(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS1 float64) {
+	builder.PrependFloat64Slot(22, COVERAGE_3_SIGMA_AXIS1, float64(math.NaN()))
+}
+func CVRAddCoverage3SigmaAxis1(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS1 float64) {
+	CVRAddCOVERAGE_3_SIGMA_AXIS1(builder, COVERAGE_3_SIGMA_AXIS1)
+}
+func CVRAddCOVERAGE_3_SIGMA_AXIS2(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS2 float64) {
+	builder.PrependFloat64Slot(23, COVERAGE_3_SIGMA_AXIS2, float64(math.NaN()))
+}
+func CVRAddCoverage3SigmaAxis2(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS2 float64) {
+	CVRAddCOVERAGE_3_SIGMA_AXIS2(builder, COVERAGE_3_SIGMA_AXIS2)
+}
+func CVRAddCOVERAGE_3_SIGMA_AXIS3(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS3 float64) {
+	builder.PrependFloat64Slot(24, COVERAGE_3_SIGMA_AXIS3, float64(math.NaN()))
+}
+func CVRAddCoverage3SigmaAxis3(builder *flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS3 float64) {
+	CVRAddCOVERAGE_3_SIGMA_AXIS3(builder, COVERAGE_3_SIGMA_AXIS3)
 }
 func CVREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

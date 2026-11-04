@@ -131,10 +131,30 @@ class PVN {
   ///  republish one upstream share its lineage, so their products are not
   ///  independent of each other.
   String? get LINEAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Replayable URL or provider query identifying the source material as it
+  ///  was retrieved (the SOURCE_URL of $CMR and $AVL).
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get sourceUrl => SOURCE_URL;
+  ///  Source revision, edition or upstream update marker verbatim: for a file
+  ///  its originator stamps, the stamp.
+  String? get SOURCE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get sourceVersion => SOURCE_VERSION;
+  ///  RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get retrievedAt => RETRIEVED_AT;
+  ///  SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+  ///  hexadecimal characters. Empty when the source cannot expose replayable
+  ///  bytes.
+  String? get SOURCE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get sourceSha256 => SOURCE_SHA256;
+  ///  Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+  ///  the source was fetched by range. 0 when not stated.
+  int get SOURCE_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get sourceBytes => SOURCE_BYTES;
 
   @override
   String toString() {
-    return 'PVN{sourceId: ${sourceId}, sourceKind: ${sourceKind}, ORIGINATOR: ${ORIGINATOR}, providerId: ${providerId}, PRODUCER: ${PRODUCER}, licenseClass: ${licenseClass}, licenseId: ${licenseId}, LINEAGE: ${LINEAGE}}';
+    return 'PVN{sourceId: ${sourceId}, sourceKind: ${sourceKind}, ORIGINATOR: ${ORIGINATOR}, providerId: ${providerId}, PRODUCER: ${PRODUCER}, licenseClass: ${licenseClass}, licenseId: ${licenseId}, LINEAGE: ${LINEAGE}, sourceUrl: ${sourceUrl}, sourceVersion: ${sourceVersion}, retrievedAt: ${retrievedAt}, sourceSha256: ${sourceSha256}, sourceBytes: ${sourceBytes}}';
   }
 }
 
@@ -152,7 +172,7 @@ class PVNBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(13);
   }
 
   int addSourceIdOffset(int? offset) {
@@ -187,6 +207,26 @@ class PVNBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceVersionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceSha256Offset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceBytes(int? SOURCE_BYTES) {
+    fbBuilder.addUint64(12, SOURCE_BYTES);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -202,6 +242,11 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
   final pvnLicenseClass? _LICENSE_CLASS;
   final String? _LICENSE_ID;
   final String? _LINEAGE;
+  final String? _SOURCE_URL;
+  final String? _SOURCE_VERSION;
+  final String? _RETRIEVED_AT;
+  final String? _SOURCE_SHA256;
+  final int? _SOURCE_BYTES;
 
   PVNObjectBuilder({
     String? SOURCE_ID,
@@ -217,6 +262,16 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
     String? LICENSE_ID,
     String? licenseId,
     String? LINEAGE,
+    String? SOURCE_URL,
+    String? sourceUrl,
+    String? SOURCE_VERSION,
+    String? sourceVersion,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
+    String? SOURCE_SHA256,
+    String? sourceSha256,
+    int? SOURCE_BYTES,
+    int? sourceBytes,
   })
       : _SOURCE_ID = sourceId ?? SOURCE_ID,
         _SOURCE_KIND = sourceKind ?? SOURCE_KIND,
@@ -225,7 +280,12 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
         _PRODUCER = PRODUCER,
         _LICENSE_CLASS = licenseClass ?? LICENSE_CLASS,
         _LICENSE_ID = licenseId ?? LICENSE_ID,
-        _LINEAGE = LINEAGE;
+        _LINEAGE = LINEAGE,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _SOURCE_VERSION = sourceVersion ?? SOURCE_VERSION,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
+        _SOURCE_SHA256 = sourceSha256 ?? SOURCE_SHA256,
+        _SOURCE_BYTES = sourceBytes ?? SOURCE_BYTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -242,7 +302,15 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LICENSE_ID!);
     final int? LINEAGEOffset = _LINEAGE == null ? null
         : fbBuilder.writeString(_LINEAGE!);
-    fbBuilder.startTable(8);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
+    final int? SOURCE_VERSIONOffset = _SOURCE_VERSION == null ? null
+        : fbBuilder.writeString(_SOURCE_VERSION!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    final int? SOURCE_SHA256Offset = _SOURCE_SHA256 == null ? null
+        : fbBuilder.writeString(_SOURCE_SHA256!);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, SOURCE_IDOffset);
     fbBuilder.addInt8(1, _SOURCE_KIND?.value);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -251,6 +319,11 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(5, _LICENSE_CLASS?.value);
     fbBuilder.addOffset(6, LICENSE_IDOffset);
     fbBuilder.addOffset(7, LINEAGEOffset);
+    fbBuilder.addOffset(8, SOURCE_URLOffset);
+    fbBuilder.addOffset(9, SOURCE_VERSIONOffset);
+    fbBuilder.addOffset(10, RETRIEVED_ATOffset);
+    fbBuilder.addOffset(11, SOURCE_SHA256Offset);
+    fbBuilder.addUint64(12, _SOURCE_BYTES);
     return fbBuilder.endTable();
   }
 

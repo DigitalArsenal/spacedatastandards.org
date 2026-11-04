@@ -30,5 +30,11 @@ class pcfAtmosphereFamily private constructor() {
          * with Mars.
          */
         const val MARS_EXPONENTIAL: UByte = 7u
+        /**
+         * Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+         * and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+         * element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+         */
+        const val JACCHIA70: UByte = 8u
     }
 }

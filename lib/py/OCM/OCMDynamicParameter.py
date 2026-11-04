@@ -31,8 +31,8 @@ class OCMDynamicParameter(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-    # SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-    # are the producer's, as in USER_DEFINED_PARAMETERS.
+    # SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+    # label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
     # OCMDynamicParameter
     def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -65,8 +65,16 @@ class OCMDynamicParameter(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # The parameter, typed: every reader keys on this, never on NAME.
+    # OCMDynamicParameter
+    def PARAMETER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def OCMDynamicParameterStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     OCMDynamicParameterStart(builder)
@@ -95,6 +103,12 @@ def OCMDynamicParameterAddSOLVED_FOR(builder, SOLVED_FOR):
 def AddSOLVED_FOR(builder, SOLVED_FOR):
     OCMDynamicParameterAddSOLVED_FOR(builder, SOLVED_FOR)
 
+def OCMDynamicParameterAddPARAMETER(builder, PARAMETER):
+    builder.PrependUint8Slot(4, PARAMETER, 0)
+
+def AddPARAMETER(builder, PARAMETER):
+    OCMDynamicParameterAddPARAMETER(builder, PARAMETER)
+
 def OCMDynamicParameterEnd(builder):
     return builder.EndObject()
 
@@ -111,11 +125,13 @@ class OCMDynamicParameterT(object):
         VALUE = 0.0,
         UNITS = None,
         SOLVED_FOR = False,
+        PARAMETER = 0,
     ):
         self.NAME = NAME  # type: Optional[str]
         self.VALUE = VALUE  # type: float
         self.UNITS = UNITS  # type: Optional[str]
         self.SOLVED_FOR = SOLVED_FOR  # type: bool
+        self.PARAMETER = PARAMETER  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -142,6 +158,7 @@ class OCMDynamicParameterT(object):
         self.VALUE = OCMDynamicParameter.VALUE()
         self.UNITS = OCMDynamicParameter.UNITS()
         self.SOLVED_FOR = OCMDynamicParameter.SOLVED_FOR()
+        self.PARAMETER = OCMDynamicParameter.PARAMETER()
 
     # OCMDynamicParameterT
     def Pack(self, builder):
@@ -156,5 +173,6 @@ class OCMDynamicParameterT(object):
         if self.UNITS is not None:
             OCMDynamicParameterAddUNITS(builder, UNITS)
         OCMDynamicParameterAddSOLVED_FOR(builder, self.SOLVED_FOR)
+        OCMDynamicParameterAddPARAMETER(builder, self.PARAMETER)
         OCMDynamicParameter = OCMDynamicParameterEnd(builder)
         return OCMDynamicParameter

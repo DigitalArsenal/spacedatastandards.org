@@ -119,6 +119,26 @@ export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
      * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
      */
     SHRINKAGE_WEIGHT(): number;
+    /**
+     * Distinct truth epochs among the SAMPLES: predictions that share one truth
+     * state count once here. 0 when not stated.
+     */
+    TRUTH_EPOCHS(): number;
+    /**
+     * Share of the held-out samples whose error lies inside the 1-sigma band of
+     * the first, second and third axis of the covariance's frame (radial,
+     * in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+     * nominal 0.6827 for Gaussian errors. NaN when not measured.
+     */
+    COVERAGE_1_SIGMA_AXIS1(): number;
+    COVERAGE_1_SIGMA_AXIS2(): number;
+    COVERAGE_1_SIGMA_AXIS3(): number;
+    /**
+     * As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+     */
+    COVERAGE_3_SIGMA_AXIS1(): number;
+    COVERAGE_3_SIGMA_AXIS2(): number;
+    COVERAGE_3_SIGMA_AXIS3(): number;
     static startCVR(builder: flatbuffers.Builder): void;
     static addRule(builder: flatbuffers.Builder, RULE: covarianceRule): void;
     static addModelId(builder: flatbuffers.Builder, MODEL_IDOffset: flatbuffers.Offset): void;
@@ -138,10 +158,17 @@ export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
     static addHistorySets(builder: flatbuffers.Builder, HISTORY_SETS: number): void;
     static addHistoryWindow(builder: flatbuffers.Builder, HISTORY_WINDOWOffset: flatbuffers.Offset): void;
     static addShrinkageWeight(builder: flatbuffers.Builder, SHRINKAGE_WEIGHT: number): void;
+    static addTruthEpochs(builder: flatbuffers.Builder, TRUTH_EPOCHS: number): void;
+    static addCoverage1SigmaAxis1(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS1: number): void;
+    static addCoverage1SigmaAxis2(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS2: number): void;
+    static addCoverage1SigmaAxis3(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS3: number): void;
+    static addCoverage3SigmaAxis1(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS1: number): void;
+    static addCoverage3SigmaAxis2(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS2: number): void;
+    static addCoverage3SigmaAxis3(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS3: number): void;
     static endCVR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCVR(builder: flatbuffers.Builder, RULE: covarianceRule, MODEL_IDOffset: flatbuffers.Offset, REGIMEOffset: flatbuffers.Offset, AGE_DAYS: number, HORIZON_DAYS: number, MEASURED_LINEAGEOffset: flatbuffers.Offset, TEST_WINDOWOffset: flatbuffers.Offset, MEAN_D2_OVER_3: number, COVERAGE_95: number, SAMPLES: number, OBJECTS: number, SCALE_FACTOR: number, CALIBRATION: covarianceCalibration, EVIDENCEOffset: flatbuffers.Offset, HISTORY_SAMPLES: number, HISTORY_SETS: number, HISTORY_WINDOWOffset: flatbuffers.Offset, SHRINKAGE_WEIGHT: number): flatbuffers.Offset;
+    static createCVR(builder: flatbuffers.Builder, RULE: covarianceRule, MODEL_IDOffset: flatbuffers.Offset, REGIMEOffset: flatbuffers.Offset, AGE_DAYS: number, HORIZON_DAYS: number, MEASURED_LINEAGEOffset: flatbuffers.Offset, TEST_WINDOWOffset: flatbuffers.Offset, MEAN_D2_OVER_3: number, COVERAGE_95: number, SAMPLES: number, OBJECTS: number, SCALE_FACTOR: number, CALIBRATION: covarianceCalibration, EVIDENCEOffset: flatbuffers.Offset, HISTORY_SAMPLES: number, HISTORY_SETS: number, HISTORY_WINDOWOffset: flatbuffers.Offset, SHRINKAGE_WEIGHT: number, TRUTH_EPOCHS: number, COVERAGE_1_SIGMA_AXIS1: number, COVERAGE_1_SIGMA_AXIS2: number, COVERAGE_1_SIGMA_AXIS3: number, COVERAGE_3_SIGMA_AXIS1: number, COVERAGE_3_SIGMA_AXIS2: number, COVERAGE_3_SIGMA_AXIS3: number): flatbuffers.Offset;
     unpack(): CVRT;
     unpackTo(_o: CVRT): void;
 }
@@ -164,7 +191,14 @@ export declare class CVRT implements flatbuffers.IGeneratedObject {
     HISTORY_SETS: number;
     HISTORY_WINDOW: string | Uint8Array | null;
     SHRINKAGE_WEIGHT: number;
-    constructor(RULE?: covarianceRule, MODEL_ID?: string | Uint8Array | null, REGIME?: string | Uint8Array | null, AGE_DAYS?: number, HORIZON_DAYS?: number, MEASURED_LINEAGE?: string | Uint8Array | null, TEST_WINDOW?: string | Uint8Array | null, MEAN_D2_OVER_3?: number, COVERAGE_95?: number, SAMPLES?: number, OBJECTS?: number, SCALE_FACTOR?: number, CALIBRATION?: covarianceCalibration, EVIDENCE?: string | Uint8Array | null, HISTORY_SAMPLES?: number, HISTORY_SETS?: number, HISTORY_WINDOW?: string | Uint8Array | null, SHRINKAGE_WEIGHT?: number);
+    TRUTH_EPOCHS: number;
+    COVERAGE_1_SIGMA_AXIS1: number;
+    COVERAGE_1_SIGMA_AXIS2: number;
+    COVERAGE_1_SIGMA_AXIS3: number;
+    COVERAGE_3_SIGMA_AXIS1: number;
+    COVERAGE_3_SIGMA_AXIS2: number;
+    COVERAGE_3_SIGMA_AXIS3: number;
+    constructor(RULE?: covarianceRule, MODEL_ID?: string | Uint8Array | null, REGIME?: string | Uint8Array | null, AGE_DAYS?: number, HORIZON_DAYS?: number, MEASURED_LINEAGE?: string | Uint8Array | null, TEST_WINDOW?: string | Uint8Array | null, MEAN_D2_OVER_3?: number, COVERAGE_95?: number, SAMPLES?: number, OBJECTS?: number, SCALE_FACTOR?: number, CALIBRATION?: covarianceCalibration, EVIDENCE?: string | Uint8Array | null, HISTORY_SAMPLES?: number, HISTORY_SETS?: number, HISTORY_WINDOW?: string | Uint8Array | null, SHRINKAGE_WEIGHT?: number, TRUTH_EPOCHS?: number, COVERAGE_1_SIGMA_AXIS1?: number, COVERAGE_1_SIGMA_AXIS2?: number, COVERAGE_1_SIGMA_AXIS3?: number, COVERAGE_3_SIGMA_AXIS1?: number, COVERAGE_3_SIGMA_AXIS2?: number, COVERAGE_3_SIGMA_AXIS3?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CVR.d.ts.map

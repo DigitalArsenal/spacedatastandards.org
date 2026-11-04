@@ -1,5 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { ATM, ATMT } from './ATM.js';
+import { SPW, SPWT } from './SPW.js';
+import { pcfDensityCorrection } from './pcfDensityCorrection.js';
+import { pcfWeatherSource } from './pcfWeatherSource.js';
 export declare class Perturbations implements flatbuffers.IUnpackableObject<PerturbationsT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -181,6 +184,78 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
      * FIXED_Y10P7_MEAN, NaN when not stated.
      */
     FIXED_Y10P7_MEAN(): number;
+    /**
+     * Highest degree of the tesseral and sectorial terms (order 1 and above) of
+     * the gravity field the record was computed with (SDS addition; the $PCF
+     * FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+     * theory: 0 is the theory's own terms. For a numerical solution the nn of a
+     * legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+     * either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+     * order pair cannot state a tesseral cap below a zonal one.
+     */
+    MAXIMUM_TESSERAL_DEGREE(): number;
+    /**
+     * Highest degree of the zonal terms (order 0) of the gravity field the
+     * record was computed with (SDS addition). For a mean-element set the tail
+     * J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+     * For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+     * otherwise not stated.
+     */
+    MAXIMUM_ZONAL_DEGREE(): number;
+    /**
+     * Where the space weather behind the drag density comes from. RECORDS: the
+     * daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+     * flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+     * in an element-set record.
+     */
+    WEATHER_SOURCE(): pcfWeatherSource;
+    /**
+     * Correction applied to the atmosphere model's density.
+     */
+    DENSITY_CORRECTION(): pcfDensityCorrection;
+    /**
+     * CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+     * DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+     * DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+     */
+    DENSITY_CORRECTION_CID(): string | null;
+    DENSITY_CORRECTION_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The daily space weather the drag density reads (SDS addition; CCSDS
+     * 502.0-B-3 names only the source, epoch and interpolation as text and
+     * fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+     * UTC day, DATE ascending, no gap, from the day before the first day the
+     * record is flown or was fitted through its last day. The record is flown
+     * to the end of the last row's day and no further. Each row carries DATE,
+     * F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+     * PRD, PRM predicted); other SPW fields unwritten.
+     */
+    SPACE_WEATHER(index: number, obj?: SPW): SPW | null;
+    spaceWeatherLength(): number;
+    /**
+     * DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+     * set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+     * milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+     * Empty when DENSITY_CORRECTION is NONE.
+     */
+    DENSITY_CORRECTION_NODE_TIMES_MS(index: number): bigint | null;
+    densityCorrectionNodeTimesMsLength(): number;
+    /**
+     * One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+     * entry, dimensionless, as that $DCL's
+     * CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+     * held at the end values outside them.
+     */
+    DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(index: number): number | null;
+    densityCorrectionLogDensityScaleDimensionlessLength(): number;
+    densityCorrectionLogDensityScaleDimensionlessArray(): Float64Array | null;
+    /**
+     * Number of terms of the nutation series REDUCTION_THEORY names that the
+     * force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+     * 4, 50 or 106). 0 when the series is not truncated or the count is not
+     * stated.
+     */
+    REDUCTION_THEORY_TERMS(): number;
     static startPerturbations(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -224,6 +299,25 @@ export declare class Perturbations implements flatbuffers.IUnpackableObject<Pert
     static addFixedS10P7Mean(builder: flatbuffers.Builder, FIXED_S10P7_MEAN: number): void;
     static addFixedY10P7(builder: flatbuffers.Builder, FIXED_Y10P7: number): void;
     static addFixedY10P7Mean(builder: flatbuffers.Builder, FIXED_Y10P7_MEAN: number): void;
+    static addMaximumTesseralDegree(builder: flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE: number): void;
+    static addMaximumZonalDegree(builder: flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE: number): void;
+    static addWeatherSource(builder: flatbuffers.Builder, WEATHER_SOURCE: pcfWeatherSource): void;
+    static addDensityCorrection(builder: flatbuffers.Builder, DENSITY_CORRECTION: pcfDensityCorrection): void;
+    static addDensityCorrectionCid(builder: flatbuffers.Builder, DENSITY_CORRECTION_CIDOffset: flatbuffers.Offset): void;
+    static addSpaceWeather(builder: flatbuffers.Builder, SPACE_WEATHEROffset: flatbuffers.Offset): void;
+    static createSpaceWeatherVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startSpaceWeatherVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDensityCorrectionNodeTimesMs(builder: flatbuffers.Builder, DENSITY_CORRECTION_NODE_TIMES_MSOffset: flatbuffers.Offset): void;
+    static createDensityCorrectionNodeTimesMsVector(builder: flatbuffers.Builder, data: bigint[]): flatbuffers.Offset;
+    static startDensityCorrectionNodeTimesMsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDensityCorrectionLogDensityScaleDimensionless(builder: flatbuffers.Builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset: flatbuffers.Offset): void;
+    static createDensityCorrectionLogDensityScaleDimensionlessVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createDensityCorrectionLogDensityScaleDimensionlessVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startDensityCorrectionLogDensityScaleDimensionlessVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addReductionTheoryTerms(builder: flatbuffers.Builder, REDUCTION_THEORY_TERMS: number): void;
     static endPerturbations(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PerturbationsT;
     unpackTo(_o: PerturbationsT): void;
@@ -267,7 +361,16 @@ export declare class PerturbationsT implements flatbuffers.IGeneratedObject {
     FIXED_S10P7_MEAN: number;
     FIXED_Y10P7: number;
     FIXED_Y10P7_MEAN: number;
-    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number, FIXED_GEOMAG_AP?: number, ATMOSPHERIC_MODEL_NAME?: string | Uint8Array | null, EQUATORIAL_RADIUS?: number, CENTRAL_BODY_ROTATION?: number, OBLATE_FLATTENING?: number, REDUCTION_THEORY?: string | Uint8Array | null, ALBEDO_GRID_SIZE?: number, SHADOW_MODEL?: string | Uint8Array | null, SHADOW_BODIES?: string | Uint8Array | null, SW_DATA_SOURCE?: string | Uint8Array | null, SW_DATA_EPOCH?: string | Uint8Array | null, SW_INTERP_METHOD?: string | Uint8Array | null, FIXED_GEOMAG_DST?: number, FIXED_M10P7?: number, FIXED_M10P7_MEAN?: number, FIXED_S10P7?: number, FIXED_S10P7_MEAN?: number, FIXED_Y10P7?: number, FIXED_Y10P7_MEAN?: number);
+    MAXIMUM_TESSERAL_DEGREE: number;
+    MAXIMUM_ZONAL_DEGREE: number;
+    WEATHER_SOURCE: pcfWeatherSource;
+    DENSITY_CORRECTION: pcfDensityCorrection;
+    DENSITY_CORRECTION_CID: string | Uint8Array | null;
+    SPACE_WEATHER: (SPWT)[];
+    DENSITY_CORRECTION_NODE_TIMES_MS: (bigint)[];
+    DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: (number)[];
+    REDUCTION_THEORY_TERMS: number;
+    constructor(COMMENT?: (string)[], ATMOSPHERIC_MODEL?: ATMT | null, GRAVITY_MODEL?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM?: number, N_BODY_PERTURBATIONS?: (string)[], OCEAN_TIDES_MODEL?: string | Uint8Array | null, SOLID_TIDES_MODEL?: string | Uint8Array | null, ATMOSPHERIC_TIDES_MODEL?: string | Uint8Array | null, GEOPOTENTIAL_MODEL?: string | Uint8Array | null, SOLAR_RAD_PRESSURE?: string | Uint8Array | null, ALBEDO?: string | Uint8Array | null, THERMAL?: string | Uint8Array | null, RELATIVITY?: string | Uint8Array | null, ATMOSPHERIC_DRAG?: string | Uint8Array | null, FIXED_GEOMAG_KP?: number, FIXED_F10P7?: number, FIXED_F10P7_MEAN?: number, FIXED_GEOMAG_AP?: number, ATMOSPHERIC_MODEL_NAME?: string | Uint8Array | null, EQUATORIAL_RADIUS?: number, CENTRAL_BODY_ROTATION?: number, OBLATE_FLATTENING?: number, REDUCTION_THEORY?: string | Uint8Array | null, ALBEDO_GRID_SIZE?: number, SHADOW_MODEL?: string | Uint8Array | null, SHADOW_BODIES?: string | Uint8Array | null, SW_DATA_SOURCE?: string | Uint8Array | null, SW_DATA_EPOCH?: string | Uint8Array | null, SW_INTERP_METHOD?: string | Uint8Array | null, FIXED_GEOMAG_DST?: number, FIXED_M10P7?: number, FIXED_M10P7_MEAN?: number, FIXED_S10P7?: number, FIXED_S10P7_MEAN?: number, FIXED_Y10P7?: number, FIXED_Y10P7_MEAN?: number, MAXIMUM_TESSERAL_DEGREE?: number, MAXIMUM_ZONAL_DEGREE?: number, WEATHER_SOURCE?: pcfWeatherSource, DENSITY_CORRECTION?: pcfDensityCorrection, DENSITY_CORRECTION_CID?: string | Uint8Array | null, SPACE_WEATHER?: (SPWT)[], DENSITY_CORRECTION_NODE_TIMES_MS?: (bigint)[], DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS?: (number)[], REDUCTION_THEORY_TERMS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Perturbations.d.ts.map

@@ -191,6 +191,7 @@ func (rcv *OCM) MutateStateVectorSize(n byte) bool {
 /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
 /// Length must be divisible by STATE_VECTOR_SIZE.
 /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+/// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
 func (rcv *OCM) STATE_DATA(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -221,6 +222,7 @@ func (rcv *OCM) StateDataLength() int {
 /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
 /// Length must be divisible by STATE_VECTOR_SIZE.
 /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+/// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
 func (rcv *OCM) MutateSTATE_DATA(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -450,7 +452,8 @@ func (rcv *OCM) OrbitDetermination(obj *OrbitDetermination) *OrbitDetermination 
 }
 
 /// Orbit determination data.
-/// User-defined parameters and supplemental comments.
+/// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+/// SDN readers never read it.
 func (rcv *OCM) USER_DEFINED_PARAMETERS(obj *UserDefinedParameters, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -482,7 +485,8 @@ func (rcv *OCM) UserDefinedParametersLength() int {
 	return rcv.USER_DEFINED_PARAMETERSLength()
 }
 
-/// User-defined parameters and supplemental comments.
+/// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+/// SDN readers never read it.
 /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
 func (rcv *OCM) CENTER_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
@@ -497,8 +501,8 @@ func (rcv *OCM) CenterName() []byte {
 }
 
 /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
-/// Reference frame of STATE_DATA and the polynomial records
-/// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+/// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+/// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
 func (rcv *OCM) TRAJ_REF_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -516,8 +520,8 @@ func (rcv *OCM) TrajRefFrame(obj *RFM) *RFM {
 	return rcv.TRAJ_REF_FRAME(obj)
 }
 
-/// Reference frame of STATE_DATA and the polynomial records
-/// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+/// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+/// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
 /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
 /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
 func (rcv *OCM) TRAJ_FRAME_EPOCH() []byte {
@@ -914,8 +918,218 @@ func (rcv *OCM) CovRealismLength() int {
 
 /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
 /// STATE_DATA epochs, or one entry for every epoch.
+/// The mean element set this message carries, under the theory it names. STATE_DATA is
+/// empty when this is present; no state travels beside a set.
+func (rcv *OCM) MEAN_ELEMENTS(obj *OCMMeanElements) *OCMMeanElements {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMMeanElements)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) MeanElements(obj *OCMMeanElements) *OCMMeanElements {
+	return rcv.MEAN_ELEMENTS(obj)
+}
+
+/// The mean element set this message carries, under the theory it names. STATE_DATA is
+/// empty when this is present; no state travels beside a set.
+/// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+func (rcv *OCM) COV_PROPAGATION(obj *OCMCovariancePropagation) *OCMCovariancePropagation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMCovariancePropagation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) CovPropagation(obj *OCMCovariancePropagation) *OCMCovariancePropagation {
+	return rcv.COV_PROPAGATION(obj)
+}
+
+/// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+/// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+/// every reader keys on these, never on the COV_PARAMETERS strings.
+func (rcv *OCM) COV_PARAMETER_KINDS(j int) prwDynamicParameter {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return prwDynamicParameter(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *OCM) CovParameterKinds(j int) prwDynamicParameter {
+	return rcv.COV_PARAMETER_KINDS(j)
+}
+
+func (rcv *OCM) COV_PARAMETER_KINDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) CovParameterKindsLength() int {
+	return rcv.COV_PARAMETER_KINDSLength()
+}
+
+func (rcv *OCM) COV_PARAMETER_KINDSBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OCM) CovParameterKindsBytes() []byte {
+	return rcv.COV_PARAMETER_KINDSBytes()
+}
+
+/// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+/// every reader keys on these, never on the COV_PARAMETERS strings.
+func (rcv *OCM) MutateCOV_PARAMETER_KINDS(j int, n prwDynamicParameter) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *OCM) MutateCovParameterKinds(j int, n prwDynamicParameter) bool {
+	return rcv.MutateCOV_PARAMETER_KINDS(j, n)
+}
+
+/// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+/// (CCSDS 502.0-B-3 TRAJ_BASIS).
+func (rcv *OCM) TRAJ_BASIS() ocmTrajectoryBasis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return ocmTrajectoryBasis(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *OCM) TrajBasis() ocmTrajectoryBasis {
+	return rcv.TRAJ_BASIS()
+}
+
+/// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+/// (CCSDS 502.0-B-3 TRAJ_BASIS).
+func (rcv *OCM) MutateTRAJ_BASIS(n ocmTrajectoryBasis) bool {
+	return rcv._tab.MutateByteSlot(76, byte(n))
+}
+
+func (rcv *OCM) MutateTrajBasis(n ocmTrajectoryBasis) bool {
+	return rcv.MutateTRAJ_BASIS(n)
+}
+
+/// The element sets the trajectory was computed from, one per object whose
+/// elements it used.
+func (rcv *OCM) SEED_SETS(obj *OCMSeedSet, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(OCMSeedSet)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *OCM) SeedSets(obj *OCMSeedSet, j int) bool {
+	return rcv.SEED_SETS(obj, j)
+}
+
+func (rcv *OCM) SEED_SETSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCM) SeedSetsLength() int {
+	return rcv.SEED_SETSLength()
+}
+
+/// The element sets the trajectory was computed from, one per object whose
+/// elements it used.
+/// Integrator settings of a solution made from a legacy VCM.
+func (rcv *OCM) INTEGRATOR(obj *OCMIntegrator) *OCMIntegrator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMIntegrator)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) Integrator(obj *OCMIntegrator) *OCMIntegrator {
+	return rcv.INTEGRATOR(obj)
+}
+
+/// Integrator settings of a solution made from a legacy VCM.
+/// Relative-motion geometry; STATE_DATA is empty when this is present.
+func (rcv *OCM) RPO_GEOMETRY(obj *OCMRelativeGeometry) *OCMRelativeGeometry {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMRelativeGeometry)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) RpoGeometry(obj *OCMRelativeGeometry) *OCMRelativeGeometry {
+	return rcv.RPO_GEOMETRY(obj)
+}
+
+/// Relative-motion geometry; STATE_DATA is empty when this is present.
+/// Inspection geometry; STATE_DATA is empty when this is present.
+func (rcv *OCM) RPO_INSPECTION(obj *OCMInspectionGeometry) *OCMInspectionGeometry {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OCMInspectionGeometry)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) RpoInspection(obj *OCMInspectionGeometry) *OCMInspectionGeometry {
+	return rcv.RPO_INSPECTION(obj)
+}
+
+/// Inspection geometry; STATE_DATA is empty when this is present.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(33)
+	builder.StartObject(41)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -1186,6 +1400,66 @@ func OCMStartCOV_REALISMVector(builder *flatbuffers.Builder, numElems int) flatb
 }
 func OCMStartCovRealismVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMStartCOV_REALISMVector(builder, numElems)
+}
+func OCMAddMEAN_ELEMENTS(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
+}
+func OCMAddMeanElements(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
+	OCMAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
+}
+func OCMAddCOV_PROPAGATION(builder *flatbuffers.Builder, COV_PROPAGATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(COV_PROPAGATION), 0)
+}
+func OCMAddCovPropagation(builder *flatbuffers.Builder, COV_PROPAGATION flatbuffers.UOffsetT) {
+	OCMAddCOV_PROPAGATION(builder, COV_PROPAGATION)
+}
+func OCMAddCOV_PARAMETER_KINDS(builder *flatbuffers.Builder, COV_PARAMETER_KINDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(COV_PARAMETER_KINDS), 0)
+}
+func OCMAddCovParameterKinds(builder *flatbuffers.Builder, COV_PARAMETER_KINDS flatbuffers.UOffsetT) {
+	OCMAddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDS)
+}
+func OCMStartCOV_PARAMETER_KINDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func OCMStartCovParameterKindsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartCOV_PARAMETER_KINDSVector(builder, numElems)
+}
+func OCMAddTRAJ_BASIS(builder *flatbuffers.Builder, TRAJ_BASIS ocmTrajectoryBasis) {
+	builder.PrependByteSlot(36, byte(TRAJ_BASIS), 0)
+}
+func OCMAddTrajBasis(builder *flatbuffers.Builder, TRAJ_BASIS ocmTrajectoryBasis) {
+	OCMAddTRAJ_BASIS(builder, TRAJ_BASIS)
+}
+func OCMAddSEED_SETS(builder *flatbuffers.Builder, SEED_SETS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(SEED_SETS), 0)
+}
+func OCMAddSeedSets(builder *flatbuffers.Builder, SEED_SETS flatbuffers.UOffsetT) {
+	OCMAddSEED_SETS(builder, SEED_SETS)
+}
+func OCMStartSEED_SETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func OCMStartSeedSetsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMStartSEED_SETSVector(builder, numElems)
+}
+func OCMAddINTEGRATOR(builder *flatbuffers.Builder, INTEGRATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(INTEGRATOR), 0)
+}
+func OCMAddIntegrator(builder *flatbuffers.Builder, INTEGRATOR flatbuffers.UOffsetT) {
+	OCMAddINTEGRATOR(builder, INTEGRATOR)
+}
+func OCMAddRPO_GEOMETRY(builder *flatbuffers.Builder, RPO_GEOMETRY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(RPO_GEOMETRY), 0)
+}
+func OCMAddRpoGeometry(builder *flatbuffers.Builder, RPO_GEOMETRY flatbuffers.UOffsetT) {
+	OCMAddRPO_GEOMETRY(builder, RPO_GEOMETRY)
+}
+func OCMAddRPO_INSPECTION(builder *flatbuffers.Builder, RPO_INSPECTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(RPO_INSPECTION), 0)
+}
+func OCMAddRpoInspection(builder *flatbuffers.Builder, RPO_INSPECTION flatbuffers.UOffsetT) {
+	OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

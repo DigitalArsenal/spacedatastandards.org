@@ -24,6 +24,10 @@ class pcfAtmosphereFamily
     /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
     /// with Mars.
     const MARS_EXPONENTIAL = 7;
+    /// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+    /// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+    /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+    const JACCHIA70 = 8;
 
     private static $names = array(
         pcfAtmosphereFamily::UNSPECIFIED=>"UNSPECIFIED",
@@ -34,6 +38,7 @@ class pcfAtmosphereFamily
         pcfAtmosphereFamily::JACCHIA_ROBERTS=>"JACCHIA_ROBERTS",
         pcfAtmosphereFamily::JB2008=>"JB2008",
         pcfAtmosphereFamily::MARS_EXPONENTIAL=>"MARS_EXPONENTIAL",
+        pcfAtmosphereFamily::JACCHIA70=>"JACCHIA70",
     );
 
     public static function Name($e)

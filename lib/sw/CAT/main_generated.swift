@@ -109,14 +109,17 @@ public enum catalogProductKind: Int8, FlatbuffersVectorInitializable, Enum, Veri
   public var value: Int8 { return self.rawValue }
   ///  Not stated
   case unspecified = 0
-  ///  $OMM with MEAN_ELEMENT_THEORY SGP4
+  ///  An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+  ///  MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
   case sgp4elements = 1
-  ///  $OMM with MEAN_ELEMENT_THEORY SGP4XP
+  ///  As Sgp4Elements, under SGP4XP
   case sgp4xpelements = 2
   ///  $OCM: a state and its covariance
   case statecovariance = 3
+  ///  An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+  case apelements = 4
 
-  public static var max: catalogProductKind { return .statecovariance }
+  public static var max: catalogProductKind { return .apelements }
   public static var min: catalogProductKind { return .unspecified }
 }
 
@@ -151,8 +154,8 @@ public struct CATProduct: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   ///  The product's source: its PROVENANCE SOURCE_ID.
   public var SOURCE_ID: String? { let o = _accessor.offset(VT.SOURCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_ID) }
-  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-  ///  epoch.
+  ///  Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+  ///  MEAN_ELEMENTS.EPOCH or first state epoch.
   public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
   ///  Why the catalog selected this product over the other candidates of its

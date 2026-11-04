@@ -3762,7 +3762,8 @@
         "Unspecified",
         "Sgp4Elements",
         "Sgp4XpElements",
-        "StateCovariance"
+        "StateCovariance",
+        "ApElements"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -3773,15 +3774,19 @@
         },
         "Sgp4Elements": {
           "value": 1,
-          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+          "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
         },
         "Sgp4XpElements": {
           "value": 2,
-          "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+          "description": "As Sgp4Elements, under SGP4XP"
         },
         "StateCovariance": {
           "value": 3,
           "description": "$OCM: a state and its covariance"
+        },
+        "ApElements": {
+          "value": 4,
+          "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
         }
       }
     },
@@ -4489,7 +4494,8 @@
         "SGP4",
         "SGP4XP",
         "FFM",
-        "KEPLER"
+        "KEPLER",
+        "AP"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -4513,6 +4519,10 @@
         "KEPLER": {
           "value": 5,
           "description": "Two-body (Keplerian) motion about the central body."
+        },
+        "AP": {
+          "value": 6,
+          "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
         }
       }
     },
@@ -4588,7 +4598,9 @@
       "enum": [
         "UNSPECIFIED",
         "CONSTANT",
-        "RECORDS"
+        "RECORDS",
+        "THEORY_FLUX_MODEL",
+        "NONE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -4603,7 +4615,15 @@
         },
         "RECORDS": {
           "value": 2,
-          "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere)."
+          "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere). In an $OCM element set, the rows of PERTURBATIONS.SPACE_WEATHER."
+        },
+        "THEORY_FLUX_MODEL": {
+          "value": 3,
+          "description": "The theory's own generic flux model: no rows, no PCFSpaceWeather (a mean-element theory's built-in solar and geomagnetic activity)."
+        },
+        "NONE": {
+          "value": 4,
+          "description": "No drag weather: the theory's own drag term (SGP4's BSTAR)."
         }
       }
     },
@@ -5033,7 +5053,8 @@
         "HARRIS_PRIESTER",
         "JACCHIA_ROBERTS",
         "JB2008",
-        "MARS_EXPONENTIAL"
+        "MARS_EXPONENTIAL",
+        "JACCHIA70"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -5055,6 +5076,10 @@
         "MARS_EXPONENTIAL": {
           "value": 7,
           "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
+        },
+        "JACCHIA70": {
+          "value": 8,
+          "description": "Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM element set's PERTURBATIONS.ATMOSPHERIC_MODEL."
         }
       }
     },
@@ -11817,6 +11842,33 @@
           "type": "string",
           "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
           "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL).",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_VERSION": {
+          "type": "string",
+          "description": "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond time the source material was retrieved.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
+          "x-flatbuffer-type": "uint64"
         }
       },
       "additionalProperties": false
@@ -12930,15 +12982,19 @@
             },
             "Sgp4Elements": {
               "value": 1,
-              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4"
+              "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
             },
             "Sgp4XpElements": {
               "value": 2,
-              "description": "$OMM with MEAN_ELEMENT_THEORY SGP4XP"
+              "description": "As Sgp4Elements, under SGP4XP"
             },
             "StateCovariance": {
               "value": 3,
               "description": "$OCM: a state and its covariance"
+            },
+            "ApElements": {
+              "value": 4,
+              "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
             }
           },
           "x-flatbuffer-default": "Unspecified"
@@ -12955,7 +13011,7 @@
         },
         "EPOCH": {
           "type": "string",
-          "description": "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch.",
+          "description": "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's\nMEAN_ELEMENTS.EPOCH or first state epoch.",
           "x-flatbuffer-type": "string"
         },
         "SELECTION_REASON": {
@@ -17044,6 +17100,14 @@
             }
           },
           "x-flatbuffer-default": "GAUSSIAN_SIGNED"
+        },
+        "WEATHER_HORIZON_DAYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "30"
         }
       },
       "additionalProperties": false
@@ -18043,6 +18107,24 @@
           "description": "Most states one request may produce. Default 500000.",
           "x-flatbuffer-type": "uint",
           "x-flatbuffer-default": "500000"
+        },
+        "EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Output epochs, ISO 8601 UTC, ascending; when present they are the\nstates written and START_TIME, STOP_TIME and STEP_SECONDS are not read.\nDefault empty.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "First output epoch, ISO 8601 UTC. Default empty: the element set's\nepoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "description": "Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:\nSTART_TIME plus one day.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -18445,6 +18527,10 @@
             "MARS_EXPONENTIAL": {
               "value": 7,
               "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
+            },
+            "JACCHIA70": {
+              "value": 8,
+              "description": "Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM element set's PERTURBATIONS.ATMOSPHERIC_MODEL."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -18674,7 +18760,15 @@
             },
             "RECORDS": {
               "value": 2,
-              "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere)."
+              "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere). In an $OCM element set, the rows of PERTURBATIONS.SPACE_WEATHER."
+            },
+            "THEORY_FLUX_MODEL": {
+              "value": 3,
+              "description": "The theory's own generic flux model: no rows, no PCFSpaceWeather (a mean-element theory's built-in solar and geomagnetic activity)."
+            },
+            "NONE": {
+              "value": 4,
+              "description": "No drag weather: the theory's own drag term (SGP4's BSTAR)."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -18880,6 +18974,10 @@
             "KEPLER": {
               "value": 5,
               "description": "Two-body (Keplerian) motion about the central body."
+            },
+            "AP": {
+              "value": 6,
+              "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -20495,6 +20593,10 @@
             "MARS_EXPONENTIAL": {
               "value": 7,
               "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
+            },
+            "JACCHIA70": {
+              "value": 8,
+              "description": "Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM element set's PERTURBATIONS.ATMOSPHERIC_MODEL."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -20605,6 +20707,10 @@
             "MARS_EXPONENTIAL": {
               "value": 7,
               "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
+            },
+            "JACCHIA70": {
+              "value": 8,
+              "description": "Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM element set's PERTURBATIONS.ATMOSPHERIC_MODEL."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

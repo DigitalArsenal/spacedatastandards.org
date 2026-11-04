@@ -89,8 +89,24 @@ class Header(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Whether the message is real, test or exercise data.
+    # Header
+    def MESSAGE_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+    # Header
+    def EXERCISE_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def HeaderStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(8)
 
 def Start(builder):
     HeaderStart(builder)
@@ -143,6 +159,18 @@ def HeaderAddMESSAGE_ID(builder, MESSAGE_ID):
 def AddMESSAGE_ID(builder, MESSAGE_ID):
     HeaderAddMESSAGE_ID(builder, MESSAGE_ID)
 
+def HeaderAddMESSAGE_STATUS(builder, MESSAGE_STATUS):
+    builder.PrependUint8Slot(6, MESSAGE_STATUS, 0)
+
+def AddMESSAGE_STATUS(builder, MESSAGE_STATUS):
+    HeaderAddMESSAGE_STATUS(builder, MESSAGE_STATUS)
+
+def HeaderAddEXERCISE_NAME(builder, EXERCISE_NAME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EXERCISE_NAME), 0)
+
+def AddEXERCISE_NAME(builder, EXERCISE_NAME):
+    HeaderAddEXERCISE_NAME(builder, EXERCISE_NAME)
+
 def HeaderEnd(builder):
     return builder.EndObject()
 
@@ -165,6 +193,8 @@ class HeaderT(object):
         CREATION_DATE = None,
         ORIGINATOR = None,
         MESSAGE_ID = None,
+        MESSAGE_STATUS = 0,
+        EXERCISE_NAME = None,
     ):
         self.CCSDS_OCM_VERS = CCSDS_OCM_VERS  # type: Optional[str]
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
@@ -172,6 +202,8 @@ class HeaderT(object):
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
         self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
         self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.MESSAGE_STATUS = MESSAGE_STATUS  # type: int
+        self.EXERCISE_NAME = EXERCISE_NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -203,6 +235,8 @@ class HeaderT(object):
         self.CREATION_DATE = Header.CREATION_DATE()
         self.ORIGINATOR = Header.ORIGINATOR()
         self.MESSAGE_ID = Header.MESSAGE_ID()
+        self.MESSAGE_STATUS = Header.MESSAGE_STATUS()
+        self.EXERCISE_NAME = Header.EXERCISE_NAME()
 
     # HeaderT
     def Pack(self, builder):
@@ -224,6 +258,8 @@ class HeaderT(object):
             ORIGINATOR = builder.CreateString(self.ORIGINATOR)
         if self.MESSAGE_ID is not None:
             MESSAGE_ID = builder.CreateString(self.MESSAGE_ID)
+        if self.EXERCISE_NAME is not None:
+            EXERCISE_NAME = builder.CreateString(self.EXERCISE_NAME)
         HeaderStart(builder)
         if self.CCSDS_OCM_VERS is not None:
             HeaderAddCCSDS_OCM_VERS(builder, CCSDS_OCM_VERS)
@@ -237,5 +273,8 @@ class HeaderT(object):
             HeaderAddORIGINATOR(builder, ORIGINATOR)
         if self.MESSAGE_ID is not None:
             HeaderAddMESSAGE_ID(builder, MESSAGE_ID)
+        HeaderAddMESSAGE_STATUS(builder, self.MESSAGE_STATUS)
+        if self.EXERCISE_NAME is not None:
+            HeaderAddEXERCISE_NAME(builder, EXERCISE_NAME)
         Header = HeaderEnd(builder)
         return Header

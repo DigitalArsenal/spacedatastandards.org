@@ -97,6 +97,7 @@ class OCM(object):
     # Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     # Length must be divisible by STATE_VECTOR_SIZE.
     # Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+    # Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
     # OCM
     def STATE_DATA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -276,7 +277,8 @@ class OCM(object):
             return obj
         return None
 
-    # User-defined parameters and supplemental comments.
+    # CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+    # SDN readers never read it.
     # OCM
     def USER_DEFINED_PARAMETERS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -310,8 +312,8 @@ class OCM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Reference frame of STATE_DATA and the polynomial records
-    # (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    # Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+    # frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
     # OCM
     def TRAJ_REF_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -569,8 +571,134 @@ class OCM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         return o == 0
 
+    # The mean element set this message carries, under the theory it names. STATE_DATA is
+    # empty when this is present; no state travels beside a set.
+    # OCM
+    def MEAN_ELEMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMMeanElements import OCMMeanElements
+            obj = OCMMeanElements()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+    # OCM
+    def COV_PROPAGATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMCovariancePropagation import OCMCovariancePropagation
+            obj = OCMCovariancePropagation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+    # every reader keys on these, never on the COV_PARAMETERS strings.
+    # OCM
+    def COV_PARAMETER_KINDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # OCM
+    def COV_PARAMETER_KINDSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # OCM
+    def COV_PARAMETER_KINDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COV_PARAMETER_KINDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        return o == 0
+
+    # Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+    # (CCSDS 502.0-B-3 TRAJ_BASIS).
+    # OCM
+    def TRAJ_BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # The element sets the trajectory was computed from, one per object whose
+    # elements it used.
+    # OCM
+    def SEED_SETS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from OCMSeedSet import OCMSeedSet
+            obj = OCMSeedSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def SEED_SETSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def SEED_SETSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        return o == 0
+
+    # Integrator settings of a solution made from a legacy VCM.
+    # OCM
+    def INTEGRATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMIntegrator import OCMIntegrator
+            obj = OCMIntegrator()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Relative-motion geometry; STATE_DATA is empty when this is present.
+    # OCM
+    def RPO_GEOMETRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMRelativeGeometry import OCMRelativeGeometry
+            obj = OCMRelativeGeometry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Inspection geometry; STATE_DATA is empty when this is present.
+    # OCM
+    def RPO_INSPECTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMInspectionGeometry import OCMInspectionGeometry
+            obj = OCMInspectionGeometry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def OCMStart(builder):
-    builder.StartObject(33)
+    builder.StartObject(41)
 
 def Start(builder):
     OCMStart(builder)
@@ -925,6 +1053,82 @@ def OCMCreateCOV_REALISMVector(builder, data):
 def CreateCOV_REALISMVector(builder, data):
     return OCMCreateCOV_REALISMVector(builder, data)
 
+def OCMAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENTS), 0)
+
+def AddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
+    OCMAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
+
+def OCMAddCOV_PROPAGATION(builder, COV_PROPAGATION):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(COV_PROPAGATION), 0)
+
+def AddCOV_PROPAGATION(builder, COV_PROPAGATION):
+    OCMAddCOV_PROPAGATION(builder, COV_PROPAGATION)
+
+def OCMAddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDS):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(COV_PARAMETER_KINDS), 0)
+
+def AddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDS):
+    OCMAddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDS)
+
+def OCMStartCOV_PARAMETER_KINDSVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCOV_PARAMETER_KINDSVector(builder, numElems):
+    return OCMStartCOV_PARAMETER_KINDSVector(builder, numElems)
+
+def OCMCreateCOV_PARAMETER_KINDSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCOV_PARAMETER_KINDSVector(builder, data):
+    return OCMCreateCOV_PARAMETER_KINDSVector(builder, data)
+
+def OCMAddTRAJ_BASIS(builder, TRAJ_BASIS):
+    builder.PrependUint8Slot(36, TRAJ_BASIS, 0)
+
+def AddTRAJ_BASIS(builder, TRAJ_BASIS):
+    OCMAddTRAJ_BASIS(builder, TRAJ_BASIS)
+
+def OCMAddSEED_SETS(builder, SEED_SETS):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(SEED_SETS), 0)
+
+def AddSEED_SETS(builder, SEED_SETS):
+    OCMAddSEED_SETS(builder, SEED_SETS)
+
+def OCMStartSEED_SETSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSEED_SETSVector(builder, numElems):
+    return OCMStartSEED_SETSVector(builder, numElems)
+
+def OCMCreateSEED_SETSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSEED_SETSVector(builder, data):
+    return OCMCreateSEED_SETSVector(builder, data)
+
+def OCMAddINTEGRATOR(builder, INTEGRATOR):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATOR), 0)
+
+def AddINTEGRATOR(builder, INTEGRATOR):
+    OCMAddINTEGRATOR(builder, INTEGRATOR)
+
+def OCMAddRPO_GEOMETRY(builder, RPO_GEOMETRY):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(RPO_GEOMETRY), 0)
+
+def AddRPO_GEOMETRY(builder, RPO_GEOMETRY):
+    OCMAddRPO_GEOMETRY(builder, RPO_GEOMETRY)
+
+def OCMAddRPO_INSPECTION(builder, RPO_INSPECTION):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(RPO_INSPECTION), 0)
+
+def AddRPO_INSPECTION(builder, RPO_INSPECTION):
+    OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -936,6 +1140,12 @@ import Header
 import Maneuver
 import Metadata
 import OCMCovarianceBlock
+import OCMCovariancePropagation
+import OCMInspectionGeometry
+import OCMIntegrator
+import OCMMeanElements
+import OCMRelativeGeometry
+import OCMSeedSet
 import OCMTrajectoryBlock
 import OrbitDetermination
 import PPEOrbitalElementRecord
@@ -988,6 +1198,14 @@ class OCMT(object):
         COVARIANCE_BLOCKS = None,
         PROVENANCE = None,
         COV_REALISM = None,
+        MEAN_ELEMENTS = None,
+        COV_PROPAGATION = None,
+        COV_PARAMETER_KINDS = None,
+        TRAJ_BASIS = 0,
+        SEED_SETS = None,
+        INTEGRATOR = None,
+        RPO_GEOMETRY = None,
+        RPO_INSPECTION = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -1022,6 +1240,14 @@ class OCMT(object):
         self.COVARIANCE_BLOCKS = COVARIANCE_BLOCKS  # type: Optional[List[OCMCovarianceBlock.OCMCovarianceBlockT]]
         self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
         self.COV_REALISM = COV_REALISM  # type: Optional[List[CVR.CVRT]]
+        self.MEAN_ELEMENTS = MEAN_ELEMENTS  # type: Optional[OCMMeanElements.OCMMeanElementsT]
+        self.COV_PROPAGATION = COV_PROPAGATION  # type: Optional[OCMCovariancePropagation.OCMCovariancePropagationT]
+        self.COV_PARAMETER_KINDS = COV_PARAMETER_KINDS  # type: Optional[List[int]]
+        self.TRAJ_BASIS = TRAJ_BASIS  # type: int
+        self.SEED_SETS = SEED_SETS  # type: Optional[List[OCMSeedSet.OCMSeedSetT]]
+        self.INTEGRATOR = INTEGRATOR  # type: Optional[OCMIntegrator.OCMIntegratorT]
+        self.RPO_GEOMETRY = RPO_GEOMETRY  # type: Optional[OCMRelativeGeometry.OCMRelativeGeometryT]
+        self.RPO_INSPECTION = RPO_INSPECTION  # type: Optional[OCMInspectionGeometry.OCMInspectionGeometryT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1155,6 +1381,32 @@ class OCMT(object):
                 else:
                     cVR_ = CVR.CVRT.InitFromObj(OCM.COV_REALISM(i))
                     self.COV_REALISM.append(cVR_)
+        if OCM.MEAN_ELEMENTS() is not None:
+            self.MEAN_ELEMENTS = OCMMeanElements.OCMMeanElementsT.InitFromObj(OCM.MEAN_ELEMENTS())
+        if OCM.COV_PROPAGATION() is not None:
+            self.COV_PROPAGATION = OCMCovariancePropagation.OCMCovariancePropagationT.InitFromObj(OCM.COV_PROPAGATION())
+        if not OCM.COV_PARAMETER_KINDSIsNone():
+            if np is None:
+                self.COV_PARAMETER_KINDS = []
+                for i in range(OCM.COV_PARAMETER_KINDSLength()):
+                    self.COV_PARAMETER_KINDS.append(OCM.COV_PARAMETER_KINDS(i))
+            else:
+                self.COV_PARAMETER_KINDS = OCM.COV_PARAMETER_KINDSAsNumpy()
+        self.TRAJ_BASIS = OCM.TRAJ_BASIS()
+        if not OCM.SEED_SETSIsNone():
+            self.SEED_SETS = []
+            for i in range(OCM.SEED_SETSLength()):
+                if OCM.SEED_SETS(i) is None:
+                    self.SEED_SETS.append(None)
+                else:
+                    oCMSeedSet_ = OCMSeedSet.OCMSeedSetT.InitFromObj(OCM.SEED_SETS(i))
+                    self.SEED_SETS.append(oCMSeedSet_)
+        if OCM.INTEGRATOR() is not None:
+            self.INTEGRATOR = OCMIntegrator.OCMIntegratorT.InitFromObj(OCM.INTEGRATOR())
+        if OCM.RPO_GEOMETRY() is not None:
+            self.RPO_GEOMETRY = OCMRelativeGeometry.OCMRelativeGeometryT.InitFromObj(OCM.RPO_GEOMETRY())
+        if OCM.RPO_INSPECTION() is not None:
+            self.RPO_INSPECTION = OCMInspectionGeometry.OCMInspectionGeometryT.InitFromObj(OCM.RPO_INSPECTION())
 
     # OCMT
     def Pack(self, builder):
@@ -1282,6 +1534,32 @@ class OCMT(object):
             for i in reversed(range(len(self.COV_REALISM))):
                 builder.PrependUOffsetTRelative(COV_REALISMlist[i])
             COV_REALISM = builder.EndVector()
+        if self.MEAN_ELEMENTS is not None:
+            MEAN_ELEMENTS = self.MEAN_ELEMENTS.Pack(builder)
+        if self.COV_PROPAGATION is not None:
+            COV_PROPAGATION = self.COV_PROPAGATION.Pack(builder)
+        if self.COV_PARAMETER_KINDS is not None:
+            if np is not None and type(self.COV_PARAMETER_KINDS) is np.ndarray:
+                COV_PARAMETER_KINDS = builder.CreateNumpyVector(self.COV_PARAMETER_KINDS)
+            else:
+                OCMStartCOV_PARAMETER_KINDSVector(builder, len(self.COV_PARAMETER_KINDS))
+                for i in reversed(range(len(self.COV_PARAMETER_KINDS))):
+                    builder.PrependUint8(self.COV_PARAMETER_KINDS[i])
+                COV_PARAMETER_KINDS = builder.EndVector()
+        if self.SEED_SETS is not None:
+            SEED_SETSlist = []
+            for i in range(len(self.SEED_SETS)):
+                SEED_SETSlist.append(self.SEED_SETS[i].Pack(builder))
+            OCMStartSEED_SETSVector(builder, len(self.SEED_SETS))
+            for i in reversed(range(len(self.SEED_SETS))):
+                builder.PrependUOffsetTRelative(SEED_SETSlist[i])
+            SEED_SETS = builder.EndVector()
+        if self.INTEGRATOR is not None:
+            INTEGRATOR = self.INTEGRATOR.Pack(builder)
+        if self.RPO_GEOMETRY is not None:
+            RPO_GEOMETRY = self.RPO_GEOMETRY.Pack(builder)
+        if self.RPO_INSPECTION is not None:
+            RPO_INSPECTION = self.RPO_INSPECTION.Pack(builder)
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -1342,5 +1620,20 @@ class OCMT(object):
             OCMAddPROVENANCE(builder, PROVENANCE)
         if self.COV_REALISM is not None:
             OCMAddCOV_REALISM(builder, COV_REALISM)
+        if self.MEAN_ELEMENTS is not None:
+            OCMAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
+        if self.COV_PROPAGATION is not None:
+            OCMAddCOV_PROPAGATION(builder, COV_PROPAGATION)
+        if self.COV_PARAMETER_KINDS is not None:
+            OCMAddCOV_PARAMETER_KINDS(builder, COV_PARAMETER_KINDS)
+        OCMAddTRAJ_BASIS(builder, self.TRAJ_BASIS)
+        if self.SEED_SETS is not None:
+            OCMAddSEED_SETS(builder, SEED_SETS)
+        if self.INTEGRATOR is not None:
+            OCMAddINTEGRATOR(builder, INTEGRATOR)
+        if self.RPO_GEOMETRY is not None:
+            OCMAddRPO_GEOMETRY(builder, RPO_GEOMETRY)
+        if self.RPO_INSPECTION is not None:
+            OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
         OCM = OCMEnd(builder)
         return OCM

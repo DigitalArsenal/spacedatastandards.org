@@ -80,6 +80,45 @@ public struct PVN : IFlatbufferObject
   public ArraySegment<byte>? GetLINEAGEBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetLINEAGEArray() { return __p.__vector_as_array<byte>(18); }
+  /// Replayable URL or provider query identifying the source material as it
+  /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+  public string SOURCE_URL { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_URLBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_URLBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetSOURCE_URLArray() { return __p.__vector_as_array<byte>(20); }
+  /// Source revision, edition or upstream update marker verbatim: for a file
+  /// its originator stamps, the stamp.
+  public string SOURCE_VERSION { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_VERSIONBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_VERSIONBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetSOURCE_VERSIONArray() { return __p.__vector_as_array<byte>(22); }
+  /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+  public string RETRIEVED_AT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRETRIEVED_ATBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetRETRIEVED_ATBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetRETRIEVED_ATArray() { return __p.__vector_as_array<byte>(24); }
+  /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+  /// hexadecimal characters. Empty when the source cannot expose replayable
+  /// bytes.
+  public string SOURCE_SHA256 { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_SHA256Bytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_SHA256Bytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetSOURCE_SHA256Array() { return __p.__vector_as_array<byte>(26); }
+  /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+  /// the source was fetched by range. 0 when not stated.
+  public ulong SOURCE_BYTES { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<PVN> CreatePVN(FlatBufferBuilder builder,
       StringOffset SOURCE_IDOffset = default(StringOffset),
@@ -89,8 +128,18 @@ public struct PVN : IFlatbufferObject
       StringOffset PRODUCEROffset = default(StringOffset),
       pvnLicenseClass LICENSE_CLASS = pvnLicenseClass.Unspecified,
       StringOffset LICENSE_IDOffset = default(StringOffset),
-      StringOffset LINEAGEOffset = default(StringOffset)) {
-    builder.StartTable(8);
+      StringOffset LINEAGEOffset = default(StringOffset),
+      StringOffset SOURCE_URLOffset = default(StringOffset),
+      StringOffset SOURCE_VERSIONOffset = default(StringOffset),
+      StringOffset RETRIEVED_ATOffset = default(StringOffset),
+      StringOffset SOURCE_SHA256Offset = default(StringOffset),
+      ulong SOURCE_BYTES = 0) {
+    builder.StartTable(13);
+    PVN.AddSOURCE_BYTES(builder, SOURCE_BYTES);
+    PVN.AddSOURCE_SHA256(builder, SOURCE_SHA256Offset);
+    PVN.AddRETRIEVED_AT(builder, RETRIEVED_ATOffset);
+    PVN.AddSOURCE_VERSION(builder, SOURCE_VERSIONOffset);
+    PVN.AddSOURCE_URL(builder, SOURCE_URLOffset);
     PVN.AddLINEAGE(builder, LINEAGEOffset);
     PVN.AddLICENSE_ID(builder, LICENSE_IDOffset);
     PVN.AddPRODUCER(builder, PRODUCEROffset);
@@ -102,7 +151,7 @@ public struct PVN : IFlatbufferObject
     return PVN.EndPVN(builder);
   }
 
-  public static void StartPVN(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartPVN(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddSOURCE_ID(FlatBufferBuilder builder, StringOffset SOURCE_IDOffset) { builder.AddOffset(0, SOURCE_IDOffset.Value, 0); }
   public static void AddSOURCE_KIND(FlatBufferBuilder builder, pvnSourceKind SOURCE_KIND) { builder.AddSbyte(1, (sbyte)SOURCE_KIND, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -111,6 +160,11 @@ public struct PVN : IFlatbufferObject
   public static void AddLICENSE_CLASS(FlatBufferBuilder builder, pvnLicenseClass LICENSE_CLASS) { builder.AddSbyte(5, (sbyte)LICENSE_CLASS, 0); }
   public static void AddLICENSE_ID(FlatBufferBuilder builder, StringOffset LICENSE_IDOffset) { builder.AddOffset(6, LICENSE_IDOffset.Value, 0); }
   public static void AddLINEAGE(FlatBufferBuilder builder, StringOffset LINEAGEOffset) { builder.AddOffset(7, LINEAGEOffset.Value, 0); }
+  public static void AddSOURCE_URL(FlatBufferBuilder builder, StringOffset SOURCE_URLOffset) { builder.AddOffset(8, SOURCE_URLOffset.Value, 0); }
+  public static void AddSOURCE_VERSION(FlatBufferBuilder builder, StringOffset SOURCE_VERSIONOffset) { builder.AddOffset(9, SOURCE_VERSIONOffset.Value, 0); }
+  public static void AddRETRIEVED_AT(FlatBufferBuilder builder, StringOffset RETRIEVED_ATOffset) { builder.AddOffset(10, RETRIEVED_ATOffset.Value, 0); }
+  public static void AddSOURCE_SHA256(FlatBufferBuilder builder, StringOffset SOURCE_SHA256Offset) { builder.AddOffset(11, SOURCE_SHA256Offset.Value, 0); }
+  public static void AddSOURCE_BYTES(FlatBufferBuilder builder, ulong SOURCE_BYTES) { builder.AddUlong(12, SOURCE_BYTES, 0); }
   public static Offset<PVN> EndPVN(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PVN>(o);
@@ -131,6 +185,11 @@ public struct PVN : IFlatbufferObject
     _o.LICENSE_CLASS = this.LICENSE_CLASS;
     _o.LICENSE_ID = this.LICENSE_ID;
     _o.LINEAGE = this.LINEAGE;
+    _o.SOURCE_URL = this.SOURCE_URL;
+    _o.SOURCE_VERSION = this.SOURCE_VERSION;
+    _o.RETRIEVED_AT = this.RETRIEVED_AT;
+    _o.SOURCE_SHA256 = this.SOURCE_SHA256;
+    _o.SOURCE_BYTES = this.SOURCE_BYTES;
   }
   public static Offset<PVN> Pack(FlatBufferBuilder builder, PVNT _o) {
     if (_o == null) return default(Offset<PVN>);
@@ -140,6 +199,10 @@ public struct PVN : IFlatbufferObject
     var _PRODUCER = _o.PRODUCER == null ? default(StringOffset) : builder.CreateString(_o.PRODUCER);
     var _LICENSE_ID = _o.LICENSE_ID == null ? default(StringOffset) : builder.CreateString(_o.LICENSE_ID);
     var _LINEAGE = _o.LINEAGE == null ? default(StringOffset) : builder.CreateString(_o.LINEAGE);
+    var _SOURCE_URL = _o.SOURCE_URL == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_URL);
+    var _SOURCE_VERSION = _o.SOURCE_VERSION == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_VERSION);
+    var _RETRIEVED_AT = _o.RETRIEVED_AT == null ? default(StringOffset) : builder.CreateString(_o.RETRIEVED_AT);
+    var _SOURCE_SHA256 = _o.SOURCE_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_SHA256);
     return CreatePVN(
       builder,
       _SOURCE_ID,
@@ -149,7 +212,12 @@ public struct PVN : IFlatbufferObject
       _PRODUCER,
       _o.LICENSE_CLASS,
       _LICENSE_ID,
-      _LINEAGE);
+      _LINEAGE,
+      _SOURCE_URL,
+      _SOURCE_VERSION,
+      _RETRIEVED_AT,
+      _SOURCE_SHA256,
+      _o.SOURCE_BYTES);
   }
 }
 
@@ -163,6 +231,11 @@ public class PVNT
   public pvnLicenseClass LICENSE_CLASS { get; set; }
   public string LICENSE_ID { get; set; }
   public string LINEAGE { get; set; }
+  public string SOURCE_URL { get; set; }
+  public string SOURCE_VERSION { get; set; }
+  public string RETRIEVED_AT { get; set; }
+  public string SOURCE_SHA256 { get; set; }
+  public ulong SOURCE_BYTES { get; set; }
 
   public PVNT() {
     this.SOURCE_ID = null;
@@ -173,6 +246,11 @@ public class PVNT
     this.LICENSE_CLASS = pvnLicenseClass.Unspecified;
     this.LICENSE_ID = null;
     this.LINEAGE = null;
+    this.SOURCE_URL = null;
+    this.SOURCE_VERSION = null;
+    this.RETRIEVED_AT = null;
+    this.SOURCE_SHA256 = null;
+    this.SOURCE_BYTES = 0;
   }
   public static PVNT DeserializeFromBinary(byte[] fbBuffer) {
     return PVN.GetRootAsPVN(new ByteBuffer(fbBuffer)).UnPack();
@@ -198,6 +276,11 @@ static public class PVNVerify
       && verifier.VerifyField(tablePos, 14 /*LICENSE_CLASS*/, 1 /*pvnLicenseClass*/, 1, false)
       && verifier.VerifyString(tablePos, 16 /*LICENSE_ID*/, false)
       && verifier.VerifyString(tablePos, 18 /*LINEAGE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*SOURCE_URL*/, false)
+      && verifier.VerifyString(tablePos, 22 /*SOURCE_VERSION*/, false)
+      && verifier.VerifyString(tablePos, 24 /*RETRIEVED_AT*/, false)
+      && verifier.VerifyString(tablePos, 26 /*SOURCE_SHA256*/, false)
+      && verifier.VerifyField(tablePos, 28 /*SOURCE_BYTES*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

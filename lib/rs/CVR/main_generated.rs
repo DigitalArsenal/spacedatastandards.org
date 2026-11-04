@@ -269,6 +269,13 @@ impl<'a> CVR<'a> {
     pub const VT_HISTORY_SETS: ::flatbuffers::VOffsetT = 34;
     pub const VT_HISTORY_WINDOW: ::flatbuffers::VOffsetT = 36;
     pub const VT_SHRINKAGE_WEIGHT: ::flatbuffers::VOffsetT = 38;
+    pub const VT_TRUTH_EPOCHS: ::flatbuffers::VOffsetT = 40;
+    pub const VT_COVERAGE_1_SIGMA_AXIS1: ::flatbuffers::VOffsetT = 42;
+    pub const VT_COVERAGE_1_SIGMA_AXIS2: ::flatbuffers::VOffsetT = 44;
+    pub const VT_COVERAGE_1_SIGMA_AXIS3: ::flatbuffers::VOffsetT = 46;
+    pub const VT_COVERAGE_3_SIGMA_AXIS1: ::flatbuffers::VOffsetT = 48;
+    pub const VT_COVERAGE_3_SIGMA_AXIS2: ::flatbuffers::VOffsetT = 50;
+    pub const VT_COVERAGE_3_SIGMA_AXIS3: ::flatbuffers::VOffsetT = 52;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -281,12 +288,19 @@ impl<'a> CVR<'a> {
         args: &'args CVRArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CVR<'bldr>> {
         let mut builder = CVRBuilder::new(_fbb);
+        builder.add_COVERAGE_3_SIGMA_AXIS3(args.COVERAGE_3_SIGMA_AXIS3);
+        builder.add_COVERAGE_3_SIGMA_AXIS2(args.COVERAGE_3_SIGMA_AXIS2);
+        builder.add_COVERAGE_3_SIGMA_AXIS1(args.COVERAGE_3_SIGMA_AXIS1);
+        builder.add_COVERAGE_1_SIGMA_AXIS3(args.COVERAGE_1_SIGMA_AXIS3);
+        builder.add_COVERAGE_1_SIGMA_AXIS2(args.COVERAGE_1_SIGMA_AXIS2);
+        builder.add_COVERAGE_1_SIGMA_AXIS1(args.COVERAGE_1_SIGMA_AXIS1);
         builder.add_SHRINKAGE_WEIGHT(args.SHRINKAGE_WEIGHT);
         builder.add_SCALE_FACTOR(args.SCALE_FACTOR);
         builder.add_COVERAGE_95(args.COVERAGE_95);
         builder.add_MEAN_D2_OVER_3(args.MEAN_D2_OVER_3);
         builder.add_HORIZON_DAYS(args.HORIZON_DAYS);
         builder.add_AGE_DAYS(args.AGE_DAYS);
+        builder.add_TRUTH_EPOCHS(args.TRUTH_EPOCHS);
         if let Some(x) = args.HISTORY_WINDOW { builder.add_HISTORY_WINDOW(x); }
         builder.add_HISTORY_SETS(args.HISTORY_SETS);
         builder.add_HISTORY_SAMPLES(args.HISTORY_SAMPLES);
@@ -333,6 +347,13 @@ impl<'a> CVR<'a> {
             alloc::string::ToString::to_string(x)
         });
         let SHRINKAGE_WEIGHT = self.SHRINKAGE_WEIGHT();
+        let TRUTH_EPOCHS = self.TRUTH_EPOCHS();
+        let COVERAGE_1_SIGMA_AXIS1 = self.COVERAGE_1_SIGMA_AXIS1();
+        let COVERAGE_1_SIGMA_AXIS2 = self.COVERAGE_1_SIGMA_AXIS2();
+        let COVERAGE_1_SIGMA_AXIS3 = self.COVERAGE_1_SIGMA_AXIS3();
+        let COVERAGE_3_SIGMA_AXIS1 = self.COVERAGE_3_SIGMA_AXIS1();
+        let COVERAGE_3_SIGMA_AXIS2 = self.COVERAGE_3_SIGMA_AXIS2();
+        let COVERAGE_3_SIGMA_AXIS3 = self.COVERAGE_3_SIGMA_AXIS3();
         CVRT {
             RULE,
             MODEL_ID,
@@ -352,6 +373,13 @@ impl<'a> CVR<'a> {
             HISTORY_SETS,
             HISTORY_WINDOW,
             SHRINKAGE_WEIGHT,
+            TRUTH_EPOCHS,
+            COVERAGE_1_SIGMA_AXIS1,
+            COVERAGE_1_SIGMA_AXIS2,
+            COVERAGE_1_SIGMA_AXIS3,
+            COVERAGE_3_SIGMA_AXIS1,
+            COVERAGE_3_SIGMA_AXIS2,
+            COVERAGE_3_SIGMA_AXIS3,
         }
     }
 
@@ -546,6 +574,69 @@ impl<'a> CVR<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(CVR::VT_SHRINKAGE_WEIGHT, Some(f64::NAN)).unwrap()}
     }
+
+    /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+    /// state count once here. 0 when not stated.
+    #[inline]
+    pub fn TRUTH_EPOCHS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(CVR::VT_TRUTH_EPOCHS, Some(0)).unwrap()}
+    }
+
+    /// Share of the held-out samples whose error lies inside the 1-sigma band of
+    /// the first, second and third axis of the covariance's frame (radial,
+    /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+    /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+    #[inline]
+    pub fn COVERAGE_1_SIGMA_AXIS1(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS1, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn COVERAGE_1_SIGMA_AXIS2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS2, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn COVERAGE_1_SIGMA_AXIS3(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS3, Some(f64::NAN)).unwrap()}
+    }
+
+    /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+    #[inline]
+    pub fn COVERAGE_3_SIGMA_AXIS1(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS1, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn COVERAGE_3_SIGMA_AXIS2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS2, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn COVERAGE_3_SIGMA_AXIS3(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS3, Some(f64::NAN)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CVR<'_> {
@@ -572,6 +663,13 @@ impl ::flatbuffers::Verifiable for CVR<'_> {
             .visit_field::<u32>("HISTORY_SETS", Self::VT_HISTORY_SETS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("HISTORY_WINDOW", Self::VT_HISTORY_WINDOW, false)?
             .visit_field::<f64>("SHRINKAGE_WEIGHT", Self::VT_SHRINKAGE_WEIGHT, false)?
+            .visit_field::<u32>("TRUTH_EPOCHS", Self::VT_TRUTH_EPOCHS, false)?
+            .visit_field::<f64>("COVERAGE_1_SIGMA_AXIS1", Self::VT_COVERAGE_1_SIGMA_AXIS1, false)?
+            .visit_field::<f64>("COVERAGE_1_SIGMA_AXIS2", Self::VT_COVERAGE_1_SIGMA_AXIS2, false)?
+            .visit_field::<f64>("COVERAGE_1_SIGMA_AXIS3", Self::VT_COVERAGE_1_SIGMA_AXIS3, false)?
+            .visit_field::<f64>("COVERAGE_3_SIGMA_AXIS1", Self::VT_COVERAGE_3_SIGMA_AXIS1, false)?
+            .visit_field::<f64>("COVERAGE_3_SIGMA_AXIS2", Self::VT_COVERAGE_3_SIGMA_AXIS2, false)?
+            .visit_field::<f64>("COVERAGE_3_SIGMA_AXIS3", Self::VT_COVERAGE_3_SIGMA_AXIS3, false)?
             .finish();
         Ok(())
     }
@@ -596,6 +694,13 @@ pub struct CVRArgs<'a> {
     pub HISTORY_SETS: u32,
     pub HISTORY_WINDOW: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SHRINKAGE_WEIGHT: f64,
+    pub TRUTH_EPOCHS: u32,
+    pub COVERAGE_1_SIGMA_AXIS1: f64,
+    pub COVERAGE_1_SIGMA_AXIS2: f64,
+    pub COVERAGE_1_SIGMA_AXIS3: f64,
+    pub COVERAGE_3_SIGMA_AXIS1: f64,
+    pub COVERAGE_3_SIGMA_AXIS2: f64,
+    pub COVERAGE_3_SIGMA_AXIS3: f64,
 }
 
 impl<'a> Default for CVRArgs<'a> {
@@ -620,6 +725,13 @@ impl<'a> Default for CVRArgs<'a> {
             HISTORY_SETS: 0,
             HISTORY_WINDOW: None,
             SHRINKAGE_WEIGHT: f64::NAN,
+            TRUTH_EPOCHS: 0,
+            COVERAGE_1_SIGMA_AXIS1: f64::NAN,
+            COVERAGE_1_SIGMA_AXIS2: f64::NAN,
+            COVERAGE_1_SIGMA_AXIS3: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS1: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS2: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS3: f64::NAN,
         }
     }
 }
@@ -721,6 +833,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CVRBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_TRUTH_EPOCHS(&mut self, TRUTH_EPOCHS: u32) {
+        self.fbb_.push_slot::<u32>(CVR::VT_TRUTH_EPOCHS, TRUTH_EPOCHS, 0);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_1_SIGMA_AXIS1(&mut self, COVERAGE_1_SIGMA_AXIS1: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS1, COVERAGE_1_SIGMA_AXIS1, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_1_SIGMA_AXIS2(&mut self, COVERAGE_1_SIGMA_AXIS2: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS2, COVERAGE_1_SIGMA_AXIS2, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_1_SIGMA_AXIS3(&mut self, COVERAGE_1_SIGMA_AXIS3: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_1_SIGMA_AXIS3, COVERAGE_1_SIGMA_AXIS3, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_3_SIGMA_AXIS1(&mut self, COVERAGE_3_SIGMA_AXIS1: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS1, COVERAGE_3_SIGMA_AXIS1, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_3_SIGMA_AXIS2(&mut self, COVERAGE_3_SIGMA_AXIS2: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS2, COVERAGE_3_SIGMA_AXIS2, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVERAGE_3_SIGMA_AXIS3(&mut self, COVERAGE_3_SIGMA_AXIS3: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_COVERAGE_3_SIGMA_AXIS3, COVERAGE_3_SIGMA_AXIS3, f64::NAN);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CVRBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CVRBuilder {
@@ -757,6 +904,13 @@ impl ::core::fmt::Debug for CVR<'_> {
         ds.field("HISTORY_SETS", &self.HISTORY_SETS());
         ds.field("HISTORY_WINDOW", &self.HISTORY_WINDOW());
         ds.field("SHRINKAGE_WEIGHT", &self.SHRINKAGE_WEIGHT());
+        ds.field("TRUTH_EPOCHS", &self.TRUTH_EPOCHS());
+        ds.field("COVERAGE_1_SIGMA_AXIS1", &self.COVERAGE_1_SIGMA_AXIS1());
+        ds.field("COVERAGE_1_SIGMA_AXIS2", &self.COVERAGE_1_SIGMA_AXIS2());
+        ds.field("COVERAGE_1_SIGMA_AXIS3", &self.COVERAGE_1_SIGMA_AXIS3());
+        ds.field("COVERAGE_3_SIGMA_AXIS1", &self.COVERAGE_3_SIGMA_AXIS1());
+        ds.field("COVERAGE_3_SIGMA_AXIS2", &self.COVERAGE_3_SIGMA_AXIS2());
+        ds.field("COVERAGE_3_SIGMA_AXIS3", &self.COVERAGE_3_SIGMA_AXIS3());
         ds.finish()
     }
 }
@@ -782,6 +936,13 @@ pub struct CVRT {
     pub HISTORY_SETS: u32,
     pub HISTORY_WINDOW: Option<alloc::string::String>,
     pub SHRINKAGE_WEIGHT: f64,
+    pub TRUTH_EPOCHS: u32,
+    pub COVERAGE_1_SIGMA_AXIS1: f64,
+    pub COVERAGE_1_SIGMA_AXIS2: f64,
+    pub COVERAGE_1_SIGMA_AXIS3: f64,
+    pub COVERAGE_3_SIGMA_AXIS1: f64,
+    pub COVERAGE_3_SIGMA_AXIS2: f64,
+    pub COVERAGE_3_SIGMA_AXIS3: f64,
 }
 
 impl Default for CVRT {
@@ -805,6 +966,13 @@ impl Default for CVRT {
             HISTORY_SETS: 0,
             HISTORY_WINDOW: None,
             SHRINKAGE_WEIGHT: f64::NAN,
+            TRUTH_EPOCHS: 0,
+            COVERAGE_1_SIGMA_AXIS1: f64::NAN,
+            COVERAGE_1_SIGMA_AXIS2: f64::NAN,
+            COVERAGE_1_SIGMA_AXIS3: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS1: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS2: f64::NAN,
+            COVERAGE_3_SIGMA_AXIS3: f64::NAN,
         }
     }
 }
@@ -844,6 +1012,13 @@ impl CVRT {
             _fbb.create_string(x)
         });
         let SHRINKAGE_WEIGHT = self.SHRINKAGE_WEIGHT;
+        let TRUTH_EPOCHS = self.TRUTH_EPOCHS;
+        let COVERAGE_1_SIGMA_AXIS1 = self.COVERAGE_1_SIGMA_AXIS1;
+        let COVERAGE_1_SIGMA_AXIS2 = self.COVERAGE_1_SIGMA_AXIS2;
+        let COVERAGE_1_SIGMA_AXIS3 = self.COVERAGE_1_SIGMA_AXIS3;
+        let COVERAGE_3_SIGMA_AXIS1 = self.COVERAGE_3_SIGMA_AXIS1;
+        let COVERAGE_3_SIGMA_AXIS2 = self.COVERAGE_3_SIGMA_AXIS2;
+        let COVERAGE_3_SIGMA_AXIS3 = self.COVERAGE_3_SIGMA_AXIS3;
         CVR::create(_fbb, &CVRArgs{
             RULE,
             MODEL_ID,
@@ -863,6 +1038,13 @@ impl CVRT {
             HISTORY_SETS,
             HISTORY_WINDOW,
             SHRINKAGE_WEIGHT,
+            TRUTH_EPOCHS,
+            COVERAGE_1_SIGMA_AXIS1,
+            COVERAGE_1_SIGMA_AXIS2,
+            COVERAGE_1_SIGMA_AXIS3,
+            COVERAGE_3_SIGMA_AXIS1,
+            COVERAGE_3_SIGMA_AXIS2,
+            COVERAGE_3_SIGMA_AXIS3,
         })
     }
 }

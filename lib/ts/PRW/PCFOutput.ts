@@ -54,8 +54,47 @@ MAXIMUM_STATES():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 500000;
 }
 
+/**
+ * Output epochs, ISO 8601 UTC, ascending; when present they are the
+ * states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+ * Default empty.
+ */
+EPOCHS(index: number):string
+EPOCHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+EPOCHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+epochsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * First output epoch, ISO 8601 UTC. Default empty: the element set's
+ * epoch.
+ */
+START_TIME():string|null
+START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+ * START_TIME plus one day.
+ */
+STOP_TIME():string|null
+STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startPCFOutput(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(6);
 }
 
 static addFrame(builder:flatbuffers.Builder, FRAME:pcfOutputFrame) {
@@ -70,16 +109,43 @@ static addMaximumStates(builder:flatbuffers.Builder, MAXIMUM_STATES:number) {
   builder.addFieldInt32(2, MAXIMUM_STATES, 500000);
 }
 
+static addEpochs(builder:flatbuffers.Builder, EPOCHSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, EPOCHSOffset, 0);
+}
+
+static createEpochsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEpochsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, START_TIMEOffset, 0);
+}
+
+static addStopTime(builder:flatbuffers.Builder, STOP_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, STOP_TIMEOffset, 0);
+}
+
 static endPCFOutput(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPCFOutput(builder:flatbuffers.Builder, FRAME:pcfOutputFrame, STEP_SECONDS:number, MAXIMUM_STATES:number):flatbuffers.Offset {
+static createPCFOutput(builder:flatbuffers.Builder, FRAME:pcfOutputFrame, STEP_SECONDS:number, MAXIMUM_STATES:number, EPOCHSOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset):flatbuffers.Offset {
   PCFOutput.startPCFOutput(builder);
   PCFOutput.addFrame(builder, FRAME);
   PCFOutput.addStepSeconds(builder, STEP_SECONDS);
   PCFOutput.addMaximumStates(builder, MAXIMUM_STATES);
+  PCFOutput.addEpochs(builder, EPOCHSOffset);
+  PCFOutput.addStartTime(builder, START_TIMEOffset);
+  PCFOutput.addStopTime(builder, STOP_TIMEOffset);
   return PCFOutput.endPCFOutput(builder);
 }
 
@@ -87,7 +153,10 @@ unpack(): PCFOutputT {
   return new PCFOutputT(
     this.FRAME(),
     this.STEP_SECONDS(),
-    this.MAXIMUM_STATES()
+    this.MAXIMUM_STATES(),
+    this.bb!.createScalarList<string>(this.EPOCHS.bind(this), this.epochsLength()),
+    this.START_TIME(),
+    this.STOP_TIME()
   );
 }
 
@@ -96,6 +165,9 @@ unpackTo(_o: PCFOutputT): void {
   _o.FRAME = this.FRAME();
   _o.STEP_SECONDS = this.STEP_SECONDS();
   _o.MAXIMUM_STATES = this.MAXIMUM_STATES();
+  _o.EPOCHS = this.bb!.createScalarList<string>(this.EPOCHS.bind(this), this.epochsLength());
+  _o.START_TIME = this.START_TIME();
+  _o.STOP_TIME = this.STOP_TIME();
 }
 }
 
@@ -103,15 +175,25 @@ export class PCFOutputT implements flatbuffers.IGeneratedObject {
 constructor(
   public FRAME: pcfOutputFrame = pcfOutputFrame.UNSPECIFIED,
   public STEP_SECONDS: number = 60.0,
-  public MAXIMUM_STATES: number = 500000
+  public MAXIMUM_STATES: number = 500000,
+  public EPOCHS: (string)[] = [],
+  public START_TIME: string|Uint8Array|null = null,
+  public STOP_TIME: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
+  const EPOCHS = PCFOutput.createEpochsVector(builder, builder.createObjectOffsetList(this.EPOCHS));
+  const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
+  const STOP_TIME = (this.STOP_TIME !== null ? builder.createString(this.STOP_TIME!) : 0);
+
   return PCFOutput.createPCFOutput(builder,
     this.FRAME,
     this.STEP_SECONDS,
-    this.MAXIMUM_STATES
+    this.MAXIMUM_STATES,
+    EPOCHS,
+    START_TIME,
+    STOP_TIME
   );
 }
 }

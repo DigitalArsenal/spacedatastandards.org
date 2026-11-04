@@ -43,7 +43,7 @@
     },
     "catalogProductKind" : {
       "type" : "string",
-      "enum": ["Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance"]
+      "enum": ["Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance", "ApElements"]
     },
     "FrequencyRange" : {
       "type" : "object",
@@ -297,7 +297,7 @@
               },
         "EPOCH" : {
                 "type" : "string",
-                "description" : "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+                "description" : "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's\nMEAN_ELEMENTS.EPOCH or first state epoch."
               },
         "SELECTION_REASON" : {
                 "type" : "string",

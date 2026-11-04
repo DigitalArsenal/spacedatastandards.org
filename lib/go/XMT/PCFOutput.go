@@ -112,8 +112,71 @@ func (rcv *PCFOutput) MutateMaximumStates(n uint32) bool {
 	return rcv.MutateMAXIMUM_STATES(n)
 }
 
+/// Output epochs, ISO 8601 UTC, ascending; when present they are the
+/// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+/// Default empty.
+func (rcv *PCFOutput) EPOCHS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *PCFOutput) Epochs(j int) []byte {
+	return rcv.EPOCHS(j)
+}
+
+func (rcv *PCFOutput) EPOCHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PCFOutput) EpochsLength() int {
+	return rcv.EPOCHSLength()
+}
+
+/// Output epochs, ISO 8601 UTC, ascending; when present they are the
+/// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+/// Default empty.
+/// First output epoch, ISO 8601 UTC. Default empty: the element set's
+/// epoch.
+func (rcv *PCFOutput) START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PCFOutput) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
+/// First output epoch, ISO 8601 UTC. Default empty: the element set's
+/// epoch.
+/// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+/// START_TIME plus one day.
+func (rcv *PCFOutput) STOP_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PCFOutput) StopTime() []byte {
+	return rcv.STOP_TIME()
+}
+
+/// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+/// START_TIME plus one day.
 func PCFOutputStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(6)
 }
 func PCFOutputAddFRAME(builder *flatbuffers.Builder, FRAME pcfOutputFrame) {
 	builder.PrependByteSlot(0, byte(FRAME), 0)
@@ -132,6 +195,30 @@ func PCFOutputAddMAXIMUM_STATES(builder *flatbuffers.Builder, MAXIMUM_STATES uin
 }
 func PCFOutputAddMaximumStates(builder *flatbuffers.Builder, MAXIMUM_STATES uint32) {
 	PCFOutputAddMAXIMUM_STATES(builder, MAXIMUM_STATES)
+}
+func PCFOutputAddEPOCHS(builder *flatbuffers.Builder, EPOCHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EPOCHS), 0)
+}
+func PCFOutputAddEpochs(builder *flatbuffers.Builder, EPOCHS flatbuffers.UOffsetT) {
+	PCFOutputAddEPOCHS(builder, EPOCHS)
+}
+func PCFOutputStartEPOCHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PCFOutputStartEpochsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PCFOutputStartEPOCHSVector(builder, numElems)
+}
+func PCFOutputAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func PCFOutputAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	PCFOutputAddSTART_TIME(builder, START_TIME)
+}
+func PCFOutputAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(STOP_TIME), 0)
+}
+func PCFOutputAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	PCFOutputAddSTOP_TIME(builder, STOP_TIME)
 }
 func PCFOutputEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

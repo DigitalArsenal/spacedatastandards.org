@@ -36,8 +36,8 @@ public struct CATProduct : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSOURCE_IDArray() { return __p.__vector_as_array<byte>(8); }
-  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-  /// epoch.
+  /// Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+  /// MEAN_ELEMENTS.EPOCH or first state epoch.
   public string EPOCH { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(10, 1); }

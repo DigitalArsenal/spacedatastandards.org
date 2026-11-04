@@ -18,8 +18,18 @@ class pcfWeatherSource private constructor() {
         const val CONSTANT: UByte = 1u
         /**
          * Daily rows supplied with the request ($SPW rows; the JB2008 indices
-         * for the JB2008 atmosphere).
+         * for the JB2008 atmosphere). In an $OCM element set, the rows of
+         * PERTURBATIONS.SPACE_WEATHER.
          */
         const val RECORDS: UByte = 2u
+        /**
+         * The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+         * mean-element theory's built-in solar and geomagnetic activity).
+         */
+        const val THEORY_FLUX_MODEL: UByte = 3u
+        /**
+         * No drag weather: the theory's own drag term (SGP4's BSTAR).
+         */
+        const val NONE: UByte = 4u
     }
 }

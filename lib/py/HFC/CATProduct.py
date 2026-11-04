@@ -54,8 +54,8 @@ class CATProduct(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state
-    # epoch.
+    # Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's
+    # MEAN_ELEMENTS.EPOCH or first state epoch.
     # CATProduct
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

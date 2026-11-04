@@ -11,6 +11,13 @@ enum meanElementSource:
     meanElementSource_DSST = 2
     /// Universal Semianalytical Method
     meanElementSource_USM = 3
+    /// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+    /// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+    /// unused: it was a cut value of an earlier theory.
+    meanElementSource_AP = 5
+    /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+    /// set is always written.
+    meanElementSource_UNSPECIFIED = 6
 
 class MET
 

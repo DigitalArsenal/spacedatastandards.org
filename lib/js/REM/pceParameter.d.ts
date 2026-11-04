@@ -1,0 +1,377 @@
+/**
+ * The ratified roster of named calculation parameters.
+ *
+ * A member's NAME is the machine key; there is deliberately no second text
+ * spelling of it on the wire, so a catalog and a request can never disagree
+ * about what was asked for. Values are allocated in family blocks and a new
+ * member is added at the END of its family's reserved range: an existing
+ * member's value is NEVER changed, because it is written into every stored
+ * catalog, request, report and event sample. A parameter outside this roster
+ * is carried as PROVIDER_DEFINED with PROVIDER_DEFINED_NAME set.
+ *
+ * Angles are radians, lengths metres, durations seconds, masses kilograms.
+ * Declaring a member here is not a claim that any provider computes it;
+ * PCEParameterDescriptor.AVAILABILITY carries that fact per publisher.
+ */
+export declare enum pceParameter {
+    UNSPECIFIED = 0,
+    POSITION_X = 1,
+    POSITION_Y = 2,
+    POSITION_Z = 3,
+    VELOCITY_X = 4,
+    VELOCITY_Y = 5,
+    VELOCITY_Z = 6,
+    POSITION_MAGNITUDE = 7,
+    VELOCITY_MAGNITUDE = 8,
+    /**
+     * Right ascension of the position vector.
+     */
+    RIGHT_ASCENSION = 9,
+    /**
+     * Declination of the position vector.
+     */
+    DECLINATION = 10,
+    /**
+     * Right ascension of the velocity vector.
+     */
+    VELOCITY_RIGHT_ASCENSION = 11,
+    /**
+     * Declination of the velocity vector.
+     */
+    VELOCITY_DECLINATION = 12,
+    /**
+     * Angle between the velocity vector and the local horizontal plane.
+     */
+    FLIGHT_PATH_ANGLE = 13,
+    /**
+     * Azimuth of the velocity vector, measured from local north.
+     */
+    AZIMUTH_ANGLE = 14,
+    /**
+     * Flight path angle measured from the local horizontal.
+     */
+    HORIZONTAL_FLIGHT_PATH_ANGLE = 15,
+    /**
+     * Component of velocity along the position unit vector. Its zero crossing
+     * IS the apsis condition; a stop at apoapsis is this parameter with goal
+     * 0 and direction DECREASING.
+     */
+    RADIAL_VELOCITY = 16,
+    ANGULAR_MOMENTUM_MAGNITUDE = 17,
+    ANGULAR_MOMENTUM_X = 18,
+    ANGULAR_MOMENTUM_Y = 19,
+    ANGULAR_MOMENTUM_Z = 20,
+    SEMI_MAJOR_AXIS = 30,
+    ECCENTRICITY = 31,
+    INCLINATION = 32,
+    RIGHT_ASCENSION_OF_ASCENDING_NODE = 33,
+    ARGUMENT_OF_PERIAPSIS = 34,
+    TRUE_ANOMALY = 35,
+    MEAN_ANOMALY = 36,
+    ECCENTRIC_ANOMALY = 37,
+    HYPERBOLIC_ANOMALY = 38,
+    RADIUS_OF_PERIAPSIS = 39,
+    RADIUS_OF_APOAPSIS = 40,
+    ALTITUDE_OF_PERIAPSIS = 41,
+    ALTITUDE_OF_APOAPSIS = 42,
+    SEMILATUS_RECTUM = 43,
+    ORBIT_PERIOD = 44,
+    MEAN_MOTION = 45,
+    /**
+     * Specific orbital energy.
+     */
+    SPECIFIC_ORBITAL_ENERGY = 46,
+    /**
+     * Twice the specific orbital energy; the square of the hyperbolic excess
+     * speed on an escape trajectory.
+     */
+    CHARACTERISTIC_ENERGY = 47,
+    VELOCITY_AT_PERIAPSIS = 48,
+    VELOCITY_AT_APOAPSIS = 49,
+    /**
+     * Argument of periapsis plus true anomaly.
+     */
+    ARGUMENT_OF_LATITUDE = 50,
+    TRUE_LONGITUDE = 51,
+    MEAN_LONGITUDE = 52,
+    /**
+     * Angle between the orbit plane and the direction to the illuminating body.
+     */
+    BETA_ANGLE = 53,
+    ECCENTRICITY_VECTOR_X = 54,
+    ECCENTRICITY_VECTOR_Y = 55,
+    ECCENTRICITY_VECTOR_Z = 56,
+    SEMI_MINOR_AXIS = 57,
+    EQUINOCTIAL_H = 70,
+    EQUINOCTIAL_K = 71,
+    EQUINOCTIAL_P = 72,
+    EQUINOCTIAL_Q = 73,
+    EQUINOCTIAL_MEAN_LONGITUDE = 74,
+    MODIFIED_EQUINOCTIAL_F = 75,
+    MODIFIED_EQUINOCTIAL_G = 76,
+    MODIFIED_EQUINOCTIAL_H = 77,
+    MODIFIED_EQUINOCTIAL_K = 78,
+    MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE = 79,
+    MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM = 80,
+    ALTERNATE_EQUINOCTIAL_P = 81,
+    ALTERNATE_EQUINOCTIAL_Q = 82,
+    ALTERNATE_EQUINOCTIAL_MEAN_MOTION = 83,
+    DELAUNAY_MEAN_ANOMALY = 90,
+    DELAUNAY_ARGUMENT_OF_PERIAPSIS = 91,
+    DELAUNAY_ASCENDING_NODE = 92,
+    DELAUNAY_ACTION_TOTAL = 93,
+    DELAUNAY_ACTION_ANGULAR_MOMENTUM = 94,
+    DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM = 95,
+    GEODETIC_LATITUDE = 100,
+    GEODETIC_LONGITUDE = 101,
+    GEODETIC_ALTITUDE = 102,
+    GEOCENTRIC_LATITUDE = 103,
+    PLANETODETIC_RADIUS_MAGNITUDE = 104,
+    PLANETODETIC_VELOCITY_MAGNITUDE = 105,
+    PLANETODETIC_AZIMUTH = 106,
+    PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE = 107,
+    /**
+     * Local sidereal time at the sub-object meridian.
+     */
+    LOCAL_SIDEREAL_TIME = 108,
+    /**
+     * Hour angle of the body prime meridian.
+     */
+    PRIME_MERIDIAN_HOUR_ANGLE = 109,
+    B_DOT_T = 120,
+    B_DOT_R = 121,
+    B_VECTOR_MAGNITUDE = 122,
+    B_VECTOR_ANGLE = 123,
+    /**
+     * Declination of the departure asymptote.
+     */
+    DECLINATION_OF_DEPARTURE_ASYMPTOTE = 124,
+    /**
+     * Right ascension of the departure asymptote.
+     */
+    RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE = 125,
+    INCOMING_RADIUS_OF_PERIAPSIS = 126,
+    INCOMING_CHARACTERISTIC_ENERGY = 127,
+    INCOMING_ASYMPTOTE_RIGHT_ASCENSION = 128,
+    INCOMING_ASYMPTOTE_DECLINATION = 129,
+    INCOMING_B_VECTOR_AZIMUTH = 130,
+    OUTGOING_RADIUS_OF_PERIAPSIS = 131,
+    OUTGOING_CHARACTERISTIC_ENERGY = 132,
+    OUTGOING_ASYMPTOTE_RIGHT_ASCENSION = 133,
+    OUTGOING_ASYMPTOTE_DECLINATION = 134,
+    OUTGOING_B_VECTOR_AZIMUTH = 135,
+    HYPERBOLIC_EXCESS_VELOCITY = 136,
+    BROUWER_SHORT_SEMI_MAJOR_AXIS = 140,
+    BROUWER_SHORT_ECCENTRICITY = 141,
+    BROUWER_SHORT_INCLINATION = 142,
+    BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE = 143,
+    BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS = 144,
+    BROUWER_SHORT_MEAN_ANOMALY = 145,
+    BROUWER_LONG_SEMI_MAJOR_AXIS = 146,
+    BROUWER_LONG_ECCENTRICITY = 147,
+    BROUWER_LONG_INCLINATION = 148,
+    BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE = 149,
+    BROUWER_LONG_ARGUMENT_OF_PERIAPSIS = 150,
+    BROUWER_LONG_MEAN_ANOMALY = 151,
+    /**
+     * Six by six orbit state transition matrix, row-major.
+     */
+    ORBIT_STATE_TRANSITION_MATRIX = 160,
+    /**
+     * Position-to-position three by three block.
+     */
+    ORBIT_STATE_TRANSITION_MATRIX_A = 161,
+    /**
+     * Velocity-to-position three by three block.
+     */
+    ORBIT_STATE_TRANSITION_MATRIX_B = 162,
+    /**
+     * Position-to-velocity three by three block.
+     */
+    ORBIT_STATE_TRANSITION_MATRIX_C = 163,
+    /**
+     * Velocity-to-velocity three by three block.
+     */
+    ORBIT_STATE_TRANSITION_MATRIX_D = 164,
+    /**
+     * Six by six orbit error covariance, row-major, in the request's
+     * coordinate system.
+     */
+    ORBIT_ERROR_COVARIANCE_MATRIX = 165,
+    /**
+     * Each EPOCH_ member is the owner epoch expressed in one time system.
+     * GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day
+     * count. The time system is named by the $TIM timingStandard member.
+     */
+    EPOCH_A1_GREGORIAN = 180,
+    EPOCH_A1_MODIFIED_JULIAN = 181,
+    EPOCH_TAI_GREGORIAN = 182,
+    EPOCH_TAI_MODIFIED_JULIAN = 183,
+    EPOCH_TT_GREGORIAN = 184,
+    EPOCH_TT_MODIFIED_JULIAN = 185,
+    EPOCH_TDB_GREGORIAN = 186,
+    EPOCH_TDB_MODIFIED_JULIAN = 187,
+    EPOCH_UTC_GREGORIAN = 188,
+    EPOCH_UTC_MODIFIED_JULIAN = 189,
+    EPOCH_UT1_GREGORIAN = 190,
+    EPOCH_UT1_MODIFIED_JULIAN = 191,
+    EPOCH_GPS_GREGORIAN = 192,
+    EPOCH_GPS_MODIFIED_JULIAN = 193,
+    /**
+     * Days since PCEEvaluationContext.REFERENCE_EPOCH.
+     */
+    ELAPSED_DAYS = 194,
+    /**
+     * Seconds since PCEEvaluationContext.REFERENCE_EPOCH.
+     */
+    ELAPSED_SECONDS = 195,
+    DRY_MASS = 220,
+    TOTAL_MASS = 221,
+    DRAG_COEFFICIENT = 222,
+    DRAG_AREA = 223,
+    REFLECTIVITY_COEFFICIENT = 224,
+    SOLAR_RADIATION_PRESSURE_AREA = 225,
+    ATMOSPHERIC_DENSITY_SCALE_FACTOR = 226,
+    DRAG_SCALE_FACTOR = 227,
+    SOLAR_RADIATION_PRESSURE_SCALE_FACTOR = 228,
+    BALLISTIC_COEFFICIENT = 229,
+    AREA_TO_MASS_RATIO = 230,
+    CENTER_OF_MASS_X = 231,
+    CENTER_OF_MASS_Y = 232,
+    CENTER_OF_MASS_Z = 233,
+    /**
+     * Three by three inertia tensor, row-major, in body axes.
+     */
+    MOMENT_OF_INERTIA_MATRIX = 234,
+    ATTITUDE_QUATERNION_1 = 250,
+    ATTITUDE_QUATERNION_2 = 251,
+    ATTITUDE_QUATERNION_3 = 252,
+    /**
+     * Scalar component of the attitude quaternion.
+     */
+    ATTITUDE_QUATERNION_4 = 253,
+    /**
+     * Three by three direction cosine matrix, row-major.
+     */
+    ATTITUDE_DIRECTION_COSINE_MATRIX = 254,
+    EULER_ANGLE_1 = 255,
+    EULER_ANGLE_2 = 256,
+    EULER_ANGLE_3 = 257,
+    EULER_ANGLE_RATE_1 = 258,
+    EULER_ANGLE_RATE_2 = 259,
+    EULER_ANGLE_RATE_3 = 260,
+    MODIFIED_RODRIGUES_PARAMETER_1 = 261,
+    MODIFIED_RODRIGUES_PARAMETER_2 = 262,
+    MODIFIED_RODRIGUES_PARAMETER_3 = 263,
+    ANGULAR_VELOCITY_X = 264,
+    ANGULAR_VELOCITY_Y = 265,
+    ANGULAR_VELOCITY_Z = 266,
+    EULER_AXIS_X = 267,
+    EULER_AXIS_Y = 268,
+    EULER_AXIS_Z = 269,
+    PRINCIPAL_ROTATION_ANGLE = 270,
+    TANK_FUEL_MASS = 300,
+    TANK_PRESSURE = 301,
+    TANK_TEMPERATURE = 302,
+    TANK_REFERENCE_TEMPERATURE = 303,
+    TANK_VOLUME = 304,
+    TANK_FUEL_DENSITY = 305,
+    THRUSTER_DUTY_CYCLE = 320,
+    THRUSTER_THRUST_SCALE_FACTOR = 321,
+    THRUSTER_GRAVITATIONAL_ACCELERATION = 322,
+    THRUSTER_MIXTURE_RATIO = 323,
+    THRUSTER_SPECIFIC_IMPULSE = 324,
+    THRUSTER_THRUST_MAGNITUDE = 325,
+    THRUSTER_MASS_FLOW_RATE = 326,
+    THRUSTER_DIRECTION_X = 327,
+    THRUSTER_DIRECTION_Y = 328,
+    THRUSTER_DIRECTION_Z = 329,
+    /**
+     * Coefficient vector of the thrust polynomial; address one coefficient
+     * with PCEParameterRef.ELEMENT_INDEX.
+     */
+    THRUSTER_THRUST_COEFFICIENTS = 330,
+    /**
+     * Coefficient vector of the specific-impulse polynomial; address one
+     * coefficient with PCEParameterRef.ELEMENT_INDEX.
+     */
+    THRUSTER_IMPULSE_COEFFICIENTS = 331,
+    /**
+     * First component of the velocity change in the burn coordinate system.
+     */
+    IMPULSIVE_BURN_ELEMENT_1 = 370,
+    IMPULSIVE_BURN_ELEMENT_2 = 371,
+    IMPULSIVE_BURN_ELEMENT_3 = 372,
+    IMPULSIVE_BURN_DELTA_V_MAGNITUDE = 373,
+    IMPULSIVE_BURN_MASS_CONSUMED = 374,
+    FINITE_BURN_THRUST_MAGNITUDE = 390,
+    FINITE_BURN_MASS_FLOW_RATE = 391,
+    FINITE_BURN_THRUST_X = 392,
+    FINITE_BURN_THRUST_Y = 393,
+    FINITE_BURN_THRUST_Z = 394,
+    FINITE_BURN_ACCELERATION_MAGNITUDE = 395,
+    FINITE_BURN_MASS_CONSUMED = 396,
+    TOTAL_POWER_AVAILABLE = 410,
+    REQUIRED_BUS_POWER = 411,
+    THRUST_POWER_AVAILABLE = 412,
+    GENERATED_POWER = 413,
+    TOTAL_TORQUE_X = 430,
+    TOTAL_TORQUE_Y = 431,
+    TOTAL_TORQUE_Z = 432,
+    TOTAL_TORQUE_MAGNITUDE = 433,
+    /**
+     * Run state of the solver, as an integer code the solver family defines.
+     */
+    SOLVER_STATUS = 450,
+    SOLVER_ITERATION_COUNT = 451,
+    SOLVER_OBJECTIVE_VALUE = 452,
+    SOLVER_MAXIMUM_CONSTRAINT_VIOLATION = 453,
+    /**
+     * Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID.
+     */
+    RELATIVE_RANGE = 470,
+    RELATIVE_RANGE_RATE = 471,
+    RELATIVE_POSITION_X = 472,
+    RELATIVE_POSITION_Y = 473,
+    RELATIVE_POSITION_Z = 474,
+    RELATIVE_VELOCITY_X = 475,
+    RELATIVE_VELOCITY_Y = 476,
+    RELATIVE_VELOCITY_Z = 477,
+    /**
+     * Azimuth of the owner as seen from the site named on the request.
+     */
+    TOPOCENTRIC_AZIMUTH = 478,
+    /**
+     * Elevation of the owner as seen from the site named on the request.
+     */
+    TOPOCENTRIC_ELEVATION = 479,
+    /**
+     * Angle subtended at the owner between two named directions.
+     */
+    ANGULAR_SEPARATION = 480,
+    /**
+     * Angle at the owner between the illuminating body and the observer.
+     */
+    SOLAR_PHASE_ANGLE = 481,
+    /**
+     * Elevation of the illuminating body at the site named on the request.
+     */
+    LOCAL_SOLAR_ELEVATION_ANGLE = 482,
+    /**
+     * Fraction of the illuminating body disc visible from the owner: 1 in full
+     * sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the
+     * eclipse entry and exit conditions.
+     */
+    ILLUMINATION_FRACTION = 483,
+    /**
+     * One-way signal propagation time between the owner and the observer.
+     */
+    LIGHT_TIME_DELAY = 484,
+    /**
+     * The parameter is outside this roster and is named in
+     * PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST
+     * refuse the entry; it never guesses a neighbouring member.
+     */
+    PROVIDER_DEFINED = 65535
+}
+//# sourceMappingURL=pceParameter.d.ts.map

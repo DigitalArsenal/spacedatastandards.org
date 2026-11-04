@@ -119,7 +119,12 @@ struct PVN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PRODUCER = 12,
     VT_LICENSE_CLASS = 14,
     VT_LICENSE_ID = 16,
-    VT_LINEAGE = 18
+    VT_LINEAGE = 18,
+    VT_SOURCE_URL = 20,
+    VT_SOURCE_VERSION = 22,
+    VT_RETRIEVED_AT = 24,
+    VT_SOURCE_SHA256 = 26,
+    VT_SOURCE_BYTES = 28
   };
   /// Publisher-stable, lowercase identifier of the source in the provider's
   /// registry of sources.
@@ -162,6 +167,31 @@ struct PVN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *LINEAGE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LINEAGE);
   }
+  /// Replayable URL or provider query identifying the source material as it
+  /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+  const ::flatbuffers::String *SOURCE_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_URL);
+  }
+  /// Source revision, edition or upstream update marker verbatim: for a file
+  /// its originator stamps, the stamp.
+  const ::flatbuffers::String *SOURCE_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_VERSION);
+  }
+  /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+  const ::flatbuffers::String *RETRIEVED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RETRIEVED_AT);
+  }
+  /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+  /// hexadecimal characters. Empty when the source cannot expose replayable
+  /// bytes.
+  const ::flatbuffers::String *SOURCE_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_SHA256);
+  }
+  /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+  /// the source was fetched by range. 0 when not stated.
+  uint64_t SOURCE_BYTES() const {
+    return GetField<uint64_t>(VT_SOURCE_BYTES, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -179,6 +209,15 @@ struct PVN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(LICENSE_ID()) &&
            VerifyOffset(verifier, VT_LINEAGE) &&
            verifier.VerifyString(LINEAGE()) &&
+           VerifyOffset(verifier, VT_SOURCE_URL) &&
+           verifier.VerifyString(SOURCE_URL()) &&
+           VerifyOffset(verifier, VT_SOURCE_VERSION) &&
+           verifier.VerifyString(SOURCE_VERSION()) &&
+           VerifyOffset(verifier, VT_RETRIEVED_AT) &&
+           verifier.VerifyString(RETRIEVED_AT()) &&
+           VerifyOffset(verifier, VT_SOURCE_SHA256) &&
+           verifier.VerifyString(SOURCE_SHA256()) &&
+           VerifyField<uint64_t>(verifier, VT_SOURCE_BYTES, 8) &&
            verifier.EndTable();
   }
 };
@@ -211,6 +250,21 @@ struct PVNBuilder {
   void add_LINEAGE(::flatbuffers::Offset<::flatbuffers::String> LINEAGE) {
     fbb_.AddOffset(PVN::VT_LINEAGE, LINEAGE);
   }
+  void add_SOURCE_URL(::flatbuffers::Offset<::flatbuffers::String> SOURCE_URL) {
+    fbb_.AddOffset(PVN::VT_SOURCE_URL, SOURCE_URL);
+  }
+  void add_SOURCE_VERSION(::flatbuffers::Offset<::flatbuffers::String> SOURCE_VERSION) {
+    fbb_.AddOffset(PVN::VT_SOURCE_VERSION, SOURCE_VERSION);
+  }
+  void add_RETRIEVED_AT(::flatbuffers::Offset<::flatbuffers::String> RETRIEVED_AT) {
+    fbb_.AddOffset(PVN::VT_RETRIEVED_AT, RETRIEVED_AT);
+  }
+  void add_SOURCE_SHA256(::flatbuffers::Offset<::flatbuffers::String> SOURCE_SHA256) {
+    fbb_.AddOffset(PVN::VT_SOURCE_SHA256, SOURCE_SHA256);
+  }
+  void add_SOURCE_BYTES(uint64_t SOURCE_BYTES) {
+    fbb_.AddElement<uint64_t>(PVN::VT_SOURCE_BYTES, SOURCE_BYTES, 0);
+  }
   explicit PVNBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -231,8 +285,18 @@ inline ::flatbuffers::Offset<PVN> CreatePVN(
     ::flatbuffers::Offset<::flatbuffers::String> PRODUCER = 0,
     pvnLicenseClass LICENSE_CLASS = pvnLicenseClass_Unspecified,
     ::flatbuffers::Offset<::flatbuffers::String> LICENSE_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINEAGE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> LINEAGE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RETRIEVED_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_SHA256 = 0,
+    uint64_t SOURCE_BYTES = 0) {
   PVNBuilder builder_(_fbb);
+  builder_.add_SOURCE_BYTES(SOURCE_BYTES);
+  builder_.add_SOURCE_SHA256(SOURCE_SHA256);
+  builder_.add_RETRIEVED_AT(RETRIEVED_AT);
+  builder_.add_SOURCE_VERSION(SOURCE_VERSION);
+  builder_.add_SOURCE_URL(SOURCE_URL);
   builder_.add_LINEAGE(LINEAGE);
   builder_.add_LICENSE_ID(LICENSE_ID);
   builder_.add_PRODUCER(PRODUCER);
@@ -253,13 +317,22 @@ inline ::flatbuffers::Offset<PVN> CreatePVNDirect(
     const char *PRODUCER = nullptr,
     pvnLicenseClass LICENSE_CLASS = pvnLicenseClass_Unspecified,
     const char *LICENSE_ID = nullptr,
-    const char *LINEAGE = nullptr) {
+    const char *LINEAGE = nullptr,
+    const char *SOURCE_URL = nullptr,
+    const char *SOURCE_VERSION = nullptr,
+    const char *RETRIEVED_AT = nullptr,
+    const char *SOURCE_SHA256 = nullptr,
+    uint64_t SOURCE_BYTES = 0) {
   auto SOURCE_ID__ = SOURCE_ID ? _fbb.CreateString(SOURCE_ID) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto PROVIDER_ID__ = PROVIDER_ID ? _fbb.CreateString(PROVIDER_ID) : 0;
   auto PRODUCER__ = PRODUCER ? _fbb.CreateString(PRODUCER) : 0;
   auto LICENSE_ID__ = LICENSE_ID ? _fbb.CreateString(LICENSE_ID) : 0;
   auto LINEAGE__ = LINEAGE ? _fbb.CreateString(LINEAGE) : 0;
+  auto SOURCE_URL__ = SOURCE_URL ? _fbb.CreateString(SOURCE_URL) : 0;
+  auto SOURCE_VERSION__ = SOURCE_VERSION ? _fbb.CreateString(SOURCE_VERSION) : 0;
+  auto RETRIEVED_AT__ = RETRIEVED_AT ? _fbb.CreateString(RETRIEVED_AT) : 0;
+  auto SOURCE_SHA256__ = SOURCE_SHA256 ? _fbb.CreateString(SOURCE_SHA256) : 0;
   return CreatePVN(
       _fbb,
       SOURCE_ID__,
@@ -269,7 +342,12 @@ inline ::flatbuffers::Offset<PVN> CreatePVNDirect(
       PRODUCER__,
       LICENSE_CLASS,
       LICENSE_ID__,
-      LINEAGE__);
+      LINEAGE__,
+      SOURCE_URL__,
+      SOURCE_VERSION__,
+      RETRIEVED_AT__,
+      SOURCE_SHA256__,
+      SOURCE_BYTES);
 }
 
 inline const PVN *GetPVN(const void *buf) {

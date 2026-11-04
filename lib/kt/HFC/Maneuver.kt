@@ -493,6 +493,16 @@ class Maneuver : Table() {
             val o = __offset(76)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
+    /**
+     * NORAD_CAT_ID of the object that maneuvered, for a message whose
+     * maneuvers belong to more than one object (a relative-motion message's
+     * chaser and target). 0 when the message's own object maneuvered.
+     */
+    val noradCatId : UInt
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsManeuver(_bb: ByteBuffer): Maneuver = getRootAsManeuver(_bb, Maneuver())
@@ -500,13 +510,14 @@ class Maneuver : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createManeuver(builder: FlatBufferBuilder, manIdOffset: Int, manBasisOffset: Int, manDeviceIdOffset: Int, manPrevIdOffset: Int, manPurposeOffset: Int, manRefFrameOffset: Int, manFrameEpochOffset: Int, manTypeOffset: Int, manEpochStartOffset: Int, manDuration: Double, manUnitsOffset: Int, dataOffset: Int, manCommentOffset: Int, manCompositionOffset: Int, manNextIdOffset: Int, manBasisIdOffset: Int, manPrevEpochOffset: Int, manNextEpochOffset: Int, manPredSourceOffset: Int, gravAssistNameOffset: Int, dcTypeOffset: Int, dcWinOpenOffset: Int, dcWinCloseOffset: Int, dcMinCycles: UInt, dcMaxCycles: UInt, hasDcMinCycles: Boolean, hasDcMaxCycles: Boolean, dcExecStartOffset: Int, dcExecStopOffset: Int, dcRefTimeOffset: Int, dcTimePulseDuration: Double, dcTimePulsePeriod: Double, dcRefDirOffset: Int, dcBodyFrameOffset: Int, dcBodyTriggerOffset: Int, dcPaStartAngle: Double, dcPaStopAngle: Double) : Int {
-            builder.startTable(37)
+        fun createManeuver(builder: FlatBufferBuilder, manIdOffset: Int, manBasisOffset: Int, manDeviceIdOffset: Int, manPrevIdOffset: Int, manPurposeOffset: Int, manRefFrameOffset: Int, manFrameEpochOffset: Int, manTypeOffset: Int, manEpochStartOffset: Int, manDuration: Double, manUnitsOffset: Int, dataOffset: Int, manCommentOffset: Int, manCompositionOffset: Int, manNextIdOffset: Int, manBasisIdOffset: Int, manPrevEpochOffset: Int, manNextEpochOffset: Int, manPredSourceOffset: Int, gravAssistNameOffset: Int, dcTypeOffset: Int, dcWinOpenOffset: Int, dcWinCloseOffset: Int, dcMinCycles: UInt, dcMaxCycles: UInt, hasDcMinCycles: Boolean, hasDcMaxCycles: Boolean, dcExecStartOffset: Int, dcExecStopOffset: Int, dcRefTimeOffset: Int, dcTimePulseDuration: Double, dcTimePulsePeriod: Double, dcRefDirOffset: Int, dcBodyFrameOffset: Int, dcBodyTriggerOffset: Int, dcPaStartAngle: Double, dcPaStopAngle: Double, noradCatId: UInt) : Int {
+            builder.startTable(38)
             addDCPASTOPANGLE(builder, dcPaStopAngle)
             addDCPASTARTANGLE(builder, dcPaStartAngle)
             addDCTIMEPULSEPERIOD(builder, dcTimePulsePeriod)
             addDCTIMEPULSEDURATION(builder, dcTimePulseDuration)
             addMANDURATION(builder, manDuration)
+            addNORADCATID(builder, noradCatId)
             addDCBODYTRIGGER(builder, dcBodyTriggerOffset)
             addDCBODYFRAME(builder, dcBodyFrameOffset)
             addDCREFDIR(builder, dcRefDirOffset)
@@ -541,7 +552,7 @@ class Maneuver : Table() {
             addHASDCMINCYCLES(builder, hasDcMinCycles)
             return endManeuver(builder)
         }
-        fun startManeuver(builder: FlatBufferBuilder) = builder.startTable(37)
+        fun startManeuver(builder: FlatBufferBuilder) = builder.startTable(38)
         fun addMANID(builder: FlatBufferBuilder, manId: Int) = builder.addOffset(0, manId, 0)
         fun addMANBASIS(builder: FlatBufferBuilder, manBasis: Int) = builder.addOffset(1, manBasis, 0)
         fun addMANDEVICEID(builder: FlatBufferBuilder, manDeviceId: Int) = builder.addOffset(2, manDeviceId, 0)
@@ -627,6 +638,7 @@ class Maneuver : Table() {
         fun startDcBodyTriggerVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addDCPASTARTANGLE(builder: FlatBufferBuilder, dcPaStartAngle: Double) = builder.addDouble(35, dcPaStartAngle, Double.NaN)
         fun addDCPASTOPANGLE(builder: FlatBufferBuilder, dcPaStopAngle: Double) = builder.addDouble(36, dcPaStopAngle, Double.NaN)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(37, noradCatId.toInt(), 0)
         fun endManeuver(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

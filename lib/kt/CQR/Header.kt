@@ -111,6 +111,28 @@ class Header : Table() {
         }
     val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Whether the message is real, test or exercise data.
+     */
+    val messageStatus : UByte
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+     */
+    val exerciseName : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val exerciseNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun exerciseNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsHeader(_bb: ByteBuffer): Header = getRootAsHeader(_bb, Header())
@@ -118,17 +140,19 @@ class Header : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createHeader(builder: FlatBufferBuilder, ccsdsOcmVersOffset: Int, commentOffset: Int, classificationOffset: Int, creationDateOffset: Int, originatorOffset: Int, messageIdOffset: Int) : Int {
-            builder.startTable(6)
+        fun createHeader(builder: FlatBufferBuilder, ccsdsOcmVersOffset: Int, commentOffset: Int, classificationOffset: Int, creationDateOffset: Int, originatorOffset: Int, messageIdOffset: Int, messageStatus: UByte, exerciseNameOffset: Int) : Int {
+            builder.startTable(8)
+            addEXERCISENAME(builder, exerciseNameOffset)
             addMESSAGEID(builder, messageIdOffset)
             addORIGINATOR(builder, originatorOffset)
             addCREATIONDATE(builder, creationDateOffset)
             addCLASSIFICATION(builder, classificationOffset)
             addCOMMENT(builder, commentOffset)
             addCCSDSOCMVERS(builder, ccsdsOcmVersOffset)
+            addMESSAGESTATUS(builder, messageStatus)
             return endHeader(builder)
         }
-        fun startHeader(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startHeader(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addCCSDSOCMVERS(builder: FlatBufferBuilder, ccsdsOcmVers: Int) = builder.addOffset(0, ccsdsOcmVers, 0)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(1, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -143,6 +167,8 @@ class Header : Table() {
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(3, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(4, originator, 0)
         fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(5, messageId, 0)
+        fun addMESSAGESTATUS(builder: FlatBufferBuilder, messageStatus: UByte) = builder.addByte(6, messageStatus.toByte(), 0)
+        fun addEXERCISENAME(builder: FlatBufferBuilder, exerciseName: Int) = builder.addOffset(7, exerciseName, 0)
         fun endHeader(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

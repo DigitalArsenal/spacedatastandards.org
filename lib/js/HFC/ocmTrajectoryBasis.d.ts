@@ -1,0 +1,31 @@
+/**
+ * Basis of a trajectory (CCSDS 502.0-B-3 TRAJ_BASIS, a closed set). Append new
+ * values only.
+ */
+export declare enum ocmTrajectoryBasis {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Computed forward from a determination or a plan.
+     */
+    PREDICTED = 1,
+    /**
+     * Determined from observations or from element sets in force at each time.
+     */
+    DETERMINED = 2,
+    /**
+     * Reported by the object.
+     */
+    TELEMETRY = 3,
+    /**
+     * Produced by a simulation.
+     */
+    SIMULATED = 4,
+    /**
+     * None of the above.
+     */
+    OTHER = 5
+}
+//# sourceMappingURL=ocmTrajectoryBasis.d.ts.map

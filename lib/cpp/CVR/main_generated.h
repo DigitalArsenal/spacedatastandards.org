@@ -133,7 +133,14 @@ struct CVR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HISTORY_SAMPLES = 32,
     VT_HISTORY_SETS = 34,
     VT_HISTORY_WINDOW = 36,
-    VT_SHRINKAGE_WEIGHT = 38
+    VT_SHRINKAGE_WEIGHT = 38,
+    VT_TRUTH_EPOCHS = 40,
+    VT_COVERAGE_1_SIGMA_AXIS1 = 42,
+    VT_COVERAGE_1_SIGMA_AXIS2 = 44,
+    VT_COVERAGE_1_SIGMA_AXIS3 = 46,
+    VT_COVERAGE_3_SIGMA_AXIS1 = 48,
+    VT_COVERAGE_3_SIGMA_AXIS2 = 50,
+    VT_COVERAGE_3_SIGMA_AXIS3 = 52
   };
   /// The rule that produced the covariance. In a CCSDS covariance block,
   /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
@@ -237,6 +244,34 @@ struct CVR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double SHRINKAGE_WEIGHT() const {
     return GetField<double>(VT_SHRINKAGE_WEIGHT, std::numeric_limits<double>::quiet_NaN());
   }
+  /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+  /// state count once here. 0 when not stated.
+  uint32_t TRUTH_EPOCHS() const {
+    return GetField<uint32_t>(VT_TRUTH_EPOCHS, 0);
+  }
+  /// Share of the held-out samples whose error lies inside the 1-sigma band of
+  /// the first, second and third axis of the covariance's frame (radial,
+  /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+  /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+  double COVERAGE_1_SIGMA_AXIS1() const {
+    return GetField<double>(VT_COVERAGE_1_SIGMA_AXIS1, std::numeric_limits<double>::quiet_NaN());
+  }
+  double COVERAGE_1_SIGMA_AXIS2() const {
+    return GetField<double>(VT_COVERAGE_1_SIGMA_AXIS2, std::numeric_limits<double>::quiet_NaN());
+  }
+  double COVERAGE_1_SIGMA_AXIS3() const {
+    return GetField<double>(VT_COVERAGE_1_SIGMA_AXIS3, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+  double COVERAGE_3_SIGMA_AXIS1() const {
+    return GetField<double>(VT_COVERAGE_3_SIGMA_AXIS1, std::numeric_limits<double>::quiet_NaN());
+  }
+  double COVERAGE_3_SIGMA_AXIS2() const {
+    return GetField<double>(VT_COVERAGE_3_SIGMA_AXIS2, std::numeric_limits<double>::quiet_NaN());
+  }
+  double COVERAGE_3_SIGMA_AXIS3() const {
+    return GetField<double>(VT_COVERAGE_3_SIGMA_AXIS3, std::numeric_limits<double>::quiet_NaN());
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -264,6 +299,13 @@ struct CVR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_HISTORY_WINDOW) &&
            verifier.VerifyString(HISTORY_WINDOW()) &&
            VerifyField<double>(verifier, VT_SHRINKAGE_WEIGHT, 8) &&
+           VerifyField<uint32_t>(verifier, VT_TRUTH_EPOCHS, 4) &&
+           VerifyField<double>(verifier, VT_COVERAGE_1_SIGMA_AXIS1, 8) &&
+           VerifyField<double>(verifier, VT_COVERAGE_1_SIGMA_AXIS2, 8) &&
+           VerifyField<double>(verifier, VT_COVERAGE_1_SIGMA_AXIS3, 8) &&
+           VerifyField<double>(verifier, VT_COVERAGE_3_SIGMA_AXIS1, 8) &&
+           VerifyField<double>(verifier, VT_COVERAGE_3_SIGMA_AXIS2, 8) &&
+           VerifyField<double>(verifier, VT_COVERAGE_3_SIGMA_AXIS3, 8) &&
            verifier.EndTable();
   }
 };
@@ -326,6 +368,27 @@ struct CVRBuilder {
   void add_SHRINKAGE_WEIGHT(double SHRINKAGE_WEIGHT) {
     fbb_.AddElement<double>(CVR::VT_SHRINKAGE_WEIGHT, SHRINKAGE_WEIGHT, std::numeric_limits<double>::quiet_NaN());
   }
+  void add_TRUTH_EPOCHS(uint32_t TRUTH_EPOCHS) {
+    fbb_.AddElement<uint32_t>(CVR::VT_TRUTH_EPOCHS, TRUTH_EPOCHS, 0);
+  }
+  void add_COVERAGE_1_SIGMA_AXIS1(double COVERAGE_1_SIGMA_AXIS1) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_1_SIGMA_AXIS1, COVERAGE_1_SIGMA_AXIS1, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVERAGE_1_SIGMA_AXIS2(double COVERAGE_1_SIGMA_AXIS2) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_1_SIGMA_AXIS2, COVERAGE_1_SIGMA_AXIS2, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVERAGE_1_SIGMA_AXIS3(double COVERAGE_1_SIGMA_AXIS3) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_1_SIGMA_AXIS3, COVERAGE_1_SIGMA_AXIS3, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVERAGE_3_SIGMA_AXIS1(double COVERAGE_3_SIGMA_AXIS1) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_3_SIGMA_AXIS1, COVERAGE_3_SIGMA_AXIS1, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVERAGE_3_SIGMA_AXIS2(double COVERAGE_3_SIGMA_AXIS2) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_3_SIGMA_AXIS2, COVERAGE_3_SIGMA_AXIS2, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVERAGE_3_SIGMA_AXIS3(double COVERAGE_3_SIGMA_AXIS3) {
+    fbb_.AddElement<double>(CVR::VT_COVERAGE_3_SIGMA_AXIS3, COVERAGE_3_SIGMA_AXIS3, std::numeric_limits<double>::quiet_NaN());
+  }
   explicit CVRBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -356,14 +419,28 @@ inline ::flatbuffers::Offset<CVR> CreateCVR(
     uint32_t HISTORY_SAMPLES = 0,
     uint32_t HISTORY_SETS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> HISTORY_WINDOW = 0,
-    double SHRINKAGE_WEIGHT = std::numeric_limits<double>::quiet_NaN()) {
+    double SHRINKAGE_WEIGHT = std::numeric_limits<double>::quiet_NaN(),
+    uint32_t TRUTH_EPOCHS = 0,
+    double COVERAGE_1_SIGMA_AXIS1 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_1_SIGMA_AXIS2 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_1_SIGMA_AXIS3 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS1 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS2 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS3 = std::numeric_limits<double>::quiet_NaN()) {
   CVRBuilder builder_(_fbb);
+  builder_.add_COVERAGE_3_SIGMA_AXIS3(COVERAGE_3_SIGMA_AXIS3);
+  builder_.add_COVERAGE_3_SIGMA_AXIS2(COVERAGE_3_SIGMA_AXIS2);
+  builder_.add_COVERAGE_3_SIGMA_AXIS1(COVERAGE_3_SIGMA_AXIS1);
+  builder_.add_COVERAGE_1_SIGMA_AXIS3(COVERAGE_1_SIGMA_AXIS3);
+  builder_.add_COVERAGE_1_SIGMA_AXIS2(COVERAGE_1_SIGMA_AXIS2);
+  builder_.add_COVERAGE_1_SIGMA_AXIS1(COVERAGE_1_SIGMA_AXIS1);
   builder_.add_SHRINKAGE_WEIGHT(SHRINKAGE_WEIGHT);
   builder_.add_SCALE_FACTOR(SCALE_FACTOR);
   builder_.add_COVERAGE_95(COVERAGE_95);
   builder_.add_MEAN_D2_OVER_3(MEAN_D2_OVER_3);
   builder_.add_HORIZON_DAYS(HORIZON_DAYS);
   builder_.add_AGE_DAYS(AGE_DAYS);
+  builder_.add_TRUTH_EPOCHS(TRUTH_EPOCHS);
   builder_.add_HISTORY_WINDOW(HISTORY_WINDOW);
   builder_.add_HISTORY_SETS(HISTORY_SETS);
   builder_.add_HISTORY_SAMPLES(HISTORY_SAMPLES);
@@ -398,7 +475,14 @@ inline ::flatbuffers::Offset<CVR> CreateCVRDirect(
     uint32_t HISTORY_SAMPLES = 0,
     uint32_t HISTORY_SETS = 0,
     const char *HISTORY_WINDOW = nullptr,
-    double SHRINKAGE_WEIGHT = std::numeric_limits<double>::quiet_NaN()) {
+    double SHRINKAGE_WEIGHT = std::numeric_limits<double>::quiet_NaN(),
+    uint32_t TRUTH_EPOCHS = 0,
+    double COVERAGE_1_SIGMA_AXIS1 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_1_SIGMA_AXIS2 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_1_SIGMA_AXIS3 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS1 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS2 = std::numeric_limits<double>::quiet_NaN(),
+    double COVERAGE_3_SIGMA_AXIS3 = std::numeric_limits<double>::quiet_NaN()) {
   auto MODEL_ID__ = MODEL_ID ? _fbb.CreateString(MODEL_ID) : 0;
   auto REGIME__ = REGIME ? _fbb.CreateString(REGIME) : 0;
   auto MEASURED_LINEAGE__ = MEASURED_LINEAGE ? _fbb.CreateString(MEASURED_LINEAGE) : 0;
@@ -424,7 +508,14 @@ inline ::flatbuffers::Offset<CVR> CreateCVRDirect(
       HISTORY_SAMPLES,
       HISTORY_SETS,
       HISTORY_WINDOW__,
-      SHRINKAGE_WEIGHT);
+      SHRINKAGE_WEIGHT,
+      TRUTH_EPOCHS,
+      COVERAGE_1_SIGMA_AXIS1,
+      COVERAGE_1_SIGMA_AXIS2,
+      COVERAGE_1_SIGMA_AXIS3,
+      COVERAGE_3_SIGMA_AXIS1,
+      COVERAGE_3_SIGMA_AXIS2,
+      COVERAGE_3_SIGMA_AXIS3);
 }
 
 inline const CVR *GetCVR(const void *buf) {

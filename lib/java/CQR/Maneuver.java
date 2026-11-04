@@ -231,6 +231,12 @@ public final class Maneuver extends com.google.flatbuffers.Table {
    */
   public double DC_PA_START_ANGLE() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   public double DC_PA_STOP_ANGLE() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * NORAD_CAT_ID of the object that maneuvered, for a message whose
+   * maneuvers belong to more than one object (a relative-motion message's
+   * chaser and target). 0 when the message's own object maneuvered.
+   */
+  public long NORAD_CAT_ID() { int o = __offset(78); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createManeuver(FlatBufferBuilder builder,
       int MAN_IDOffset,
@@ -269,13 +275,15 @@ public final class Maneuver extends com.google.flatbuffers.Table {
       int DC_BODY_FRAMEOffset,
       int DC_BODY_TRIGGEROffset,
       double DC_PA_START_ANGLE,
-      double DC_PA_STOP_ANGLE) {
-    builder.startTable(37);
+      double DC_PA_STOP_ANGLE,
+      long NORAD_CAT_ID) {
+    builder.startTable(38);
     Maneuver.addDcPaStopAngle(builder, DC_PA_STOP_ANGLE);
     Maneuver.addDcPaStartAngle(builder, DC_PA_START_ANGLE);
     Maneuver.addDcTimePulsePeriod(builder, DC_TIME_PULSE_PERIOD);
     Maneuver.addDcTimePulseDuration(builder, DC_TIME_PULSE_DURATION);
     Maneuver.addManDuration(builder, MAN_DURATION);
+    Maneuver.addNoradCatId(builder, NORAD_CAT_ID);
     Maneuver.addDcBodyTrigger(builder, DC_BODY_TRIGGEROffset);
     Maneuver.addDcBodyFrame(builder, DC_BODY_FRAMEOffset);
     Maneuver.addDcRefDir(builder, DC_REF_DIROffset);
@@ -311,7 +319,7 @@ public final class Maneuver extends com.google.flatbuffers.Table {
     return Maneuver.endManeuver(builder);
   }
 
-  public static void startManeuver(FlatBufferBuilder builder) { builder.startTable(37); }
+  public static void startManeuver(FlatBufferBuilder builder) { builder.startTable(38); }
   public static void addManId(FlatBufferBuilder builder, int MAN_IDOffset) { builder.addOffset(0, MAN_IDOffset, 0); }
   public static void addManBasis(FlatBufferBuilder builder, int MAN_BASISOffset) { builder.addOffset(1, MAN_BASISOffset, 0); }
   public static void addManDeviceId(FlatBufferBuilder builder, int MAN_DEVICE_IDOffset) { builder.addOffset(2, MAN_DEVICE_IDOffset, 0); }
@@ -361,6 +369,7 @@ public final class Maneuver extends com.google.flatbuffers.Table {
   public static void startDcBodyTriggerVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addDcPaStartAngle(FlatBufferBuilder builder, double DC_PA_START_ANGLE) { builder.addDouble(35, DC_PA_START_ANGLE, Double.NaN); }
   public static void addDcPaStopAngle(FlatBufferBuilder builder, double DC_PA_STOP_ANGLE) { builder.addDouble(36, DC_PA_STOP_ANGLE, Double.NaN); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(37, (int) NORAD_CAT_ID, (int) 0L); }
   public static int endManeuver(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

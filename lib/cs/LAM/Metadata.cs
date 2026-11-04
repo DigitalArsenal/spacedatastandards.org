@@ -344,6 +344,11 @@ public struct Metadata : IFlatbufferObject
   public ArraySegment<byte>? GetCELESTIAL_SOURCEBytes() { return __p.__vector_as_arraysegment(98); }
 #endif
   public byte[] GetCELESTIAL_SOURCEArray() { return __p.__vector_as_array<byte>(98); }
+  /// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+  /// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+  /// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+  /// the object has no NORAD number.
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<Metadata> CreateMetadata(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -393,14 +398,16 @@ public struct Metadata : IFlatbufferObject
       double UT1MUTC_AT_TZERO = 0.0,
       StringOffset EOP_SOURCEOffset = default(StringOffset),
       StringOffset INTERP_METHOD_EOPOffset = default(StringOffset),
-      StringOffset CELESTIAL_SOURCEOffset = default(StringOffset)) {
-    builder.StartTable(48);
+      StringOffset CELESTIAL_SOURCEOffset = default(StringOffset),
+      uint NORAD_CAT_ID = 0) {
+    builder.StartTable(49);
     Metadata.AddUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO);
     Metadata.AddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC);
     Metadata.AddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO);
     Metadata.AddTIME_SPAN(builder, TIME_SPAN);
     Metadata.AddSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC);
     Metadata.AddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH);
+    Metadata.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     Metadata.AddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCEOffset);
     Metadata.AddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOPOffset);
     Metadata.AddEOP_SOURCE(builder, EOP_SOURCEOffset);
@@ -446,7 +453,7 @@ public struct Metadata : IFlatbufferObject
     return Metadata.EndMetadata(builder);
   }
 
-  public static void StartMetadata(FlatBufferBuilder builder) { builder.StartTable(48); }
+  public static void StartMetadata(FlatBufferBuilder builder) { builder.StartTable(49); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -515,6 +522,7 @@ public struct Metadata : IFlatbufferObject
   public static void AddEOP_SOURCE(FlatBufferBuilder builder, StringOffset EOP_SOURCEOffset) { builder.AddOffset(45, EOP_SOURCEOffset.Value, 0); }
   public static void AddINTERP_METHOD_EOP(FlatBufferBuilder builder, StringOffset INTERP_METHOD_EOPOffset) { builder.AddOffset(46, INTERP_METHOD_EOPOffset.Value, 0); }
   public static void AddCELESTIAL_SOURCE(FlatBufferBuilder builder, StringOffset CELESTIAL_SOURCEOffset) { builder.AddOffset(47, CELESTIAL_SOURCEOffset.Value, 0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(48, NORAD_CAT_ID, 0); }
   public static Offset<Metadata> EndMetadata(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Metadata>(o);
@@ -577,6 +585,7 @@ public struct Metadata : IFlatbufferObject
     _o.EOP_SOURCE = this.EOP_SOURCE;
     _o.INTERP_METHOD_EOP = this.INTERP_METHOD_EOP;
     _o.CELESTIAL_SOURCE = this.CELESTIAL_SOURCE;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
   }
   public static Offset<Metadata> Pack(FlatBufferBuilder builder, MetadataT _o) {
     if (_o == null) return default(Offset<Metadata>);
@@ -691,7 +700,8 @@ public struct Metadata : IFlatbufferObject
       _o.UT1MUTC_AT_TZERO,
       _EOP_SOURCE,
       _INTERP_METHOD_EOP,
-      _CELESTIAL_SOURCE);
+      _CELESTIAL_SOURCE,
+      _o.NORAD_CAT_ID);
   }
 }
 
@@ -745,6 +755,7 @@ public class MetadataT
   public string EOP_SOURCE { get; set; }
   public string INTERP_METHOD_EOP { get; set; }
   public string CELESTIAL_SOURCE { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
 
   public MetadataT() {
     this.COMMENT = null;
@@ -795,6 +806,7 @@ public class MetadataT
     this.EOP_SOURCE = null;
     this.INTERP_METHOD_EOP = null;
     this.CELESTIAL_SOURCE = null;
+    this.NORAD_CAT_ID = 0;
   }
 }
 
@@ -852,6 +864,7 @@ static public class MetadataVerify
       && verifier.VerifyString(tablePos, 94 /*EOP_SOURCE*/, false)
       && verifier.VerifyString(tablePos, 96 /*INTERP_METHOD_EOP*/, false)
       && verifier.VerifyString(tablePos, 98 /*CELESTIAL_SOURCE*/, false)
+      && verifier.VerifyField(tablePos, 100 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

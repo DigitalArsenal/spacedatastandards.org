@@ -138,8 +138,44 @@ func (rcv *Header) MessageId() []byte {
 }
 
 /// Free-text field containing an ID that uniquely identifies a message from this originator.
+/// Whether the message is real, test or exercise data.
+func (rcv *Header) MESSAGE_STATUS() ocmMessageStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return ocmMessageStatus(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *Header) MessageStatus() ocmMessageStatus {
+	return rcv.MESSAGE_STATUS()
+}
+
+/// Whether the message is real, test or exercise data.
+func (rcv *Header) MutateMESSAGE_STATUS(n ocmMessageStatus) bool {
+	return rcv._tab.MutateByteSlot(16, byte(n))
+}
+
+func (rcv *Header) MutateMessageStatus(n ocmMessageStatus) bool {
+	return rcv.MutateMESSAGE_STATUS(n)
+}
+
+/// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+func (rcv *Header) EXERCISE_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Header) ExerciseName() []byte {
+	return rcv.EXERCISE_NAME()
+}
+
+/// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
 func HeaderStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(8)
 }
 func HeaderAddCCSDS_OCM_VERS(builder *flatbuffers.Builder, CCSDS_OCM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_OCM_VERS), 0)
@@ -182,6 +218,18 @@ func HeaderAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UO
 }
 func HeaderAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
 	HeaderAddMESSAGE_ID(builder, MESSAGE_ID)
+}
+func HeaderAddMESSAGE_STATUS(builder *flatbuffers.Builder, MESSAGE_STATUS ocmMessageStatus) {
+	builder.PrependByteSlot(6, byte(MESSAGE_STATUS), 0)
+}
+func HeaderAddMessageStatus(builder *flatbuffers.Builder, MESSAGE_STATUS ocmMessageStatus) {
+	HeaderAddMESSAGE_STATUS(builder, MESSAGE_STATUS)
+}
+func HeaderAddEXERCISE_NAME(builder *flatbuffers.Builder, EXERCISE_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EXERCISE_NAME), 0)
+}
+func HeaderAddExerciseName(builder *flatbuffers.Builder, EXERCISE_NAME flatbuffers.UOffsetT) {
+	HeaderAddEXERCISE_NAME(builder, EXERCISE_NAME)
 }
 func HeaderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -742,8 +742,34 @@ func (rcv *Maneuver) MutateDcPaStopAngle(n float64) bool {
 	return rcv.MutateDC_PA_STOP_ANGLE(n)
 }
 
+/// NORAD_CAT_ID of the object that maneuvered, for a message whose
+/// maneuvers belong to more than one object (a relative-motion message's
+/// chaser and target). 0 when the message's own object maneuvered.
+func (rcv *Maneuver) NORAD_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Maneuver) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
+/// NORAD_CAT_ID of the object that maneuvered, for a message whose
+/// maneuvers belong to more than one object (a relative-motion message's
+/// chaser and target). 0 when the message's own object maneuvered.
+func (rcv *Maneuver) MutateNORAD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(78, n)
+}
+
+func (rcv *Maneuver) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
+}
+
 func ManeuverStart(builder *flatbuffers.Builder) {
-	builder.StartObject(37)
+	builder.StartObject(38)
 }
 func ManeuverAddMAN_ID(builder *flatbuffers.Builder, MAN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MAN_ID), 0)
@@ -1002,6 +1028,12 @@ func ManeuverAddDC_PA_STOP_ANGLE(builder *flatbuffers.Builder, DC_PA_STOP_ANGLE 
 }
 func ManeuverAddDcPaStopAngle(builder *flatbuffers.Builder, DC_PA_STOP_ANGLE float64) {
 	ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE)
+}
+func ManeuverAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(37, NORAD_CAT_ID, 0)
+}
+func ManeuverAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	ManeuverAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
 func ManeuverEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -69,6 +69,7 @@ public final class OCM extends com.google.flatbuffers.Table {
    * Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
    * Length must be divisible by STATE_VECTOR_SIZE.
    * Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+   * Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
    */
   public double STATE_DATA(int j) { int o = __offset(16); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int STATE_DATALength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
@@ -135,7 +136,8 @@ public final class OCM extends com.google.flatbuffers.Table {
   public OrbitDetermination ORBIT_DETERMINATION() { return ORBIT_DETERMINATION(new OrbitDetermination()); }
   public OrbitDetermination ORBIT_DETERMINATION(OrbitDetermination obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * User-defined parameters and supplemental comments.
+   * CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+   * SDN readers never read it.
    */
   public UserDefinedParameters USER_DEFINED_PARAMETERS(int j) { return USER_DEFINED_PARAMETERS(new UserDefinedParameters(), j); }
   public UserDefinedParameters USER_DEFINED_PARAMETERS(UserDefinedParameters obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
@@ -149,8 +151,8 @@ public final class OCM extends com.google.flatbuffers.Table {
   public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
-   * Reference frame of STATE_DATA and the polynomial records
-   * (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+   * Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+   * frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
    */
   public RFM TRAJ_REF_FRAME() { return TRAJ_REF_FRAME(new RFM()); }
   public RFM TRAJ_REF_FRAME(RFM obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -266,6 +268,56 @@ public final class OCM extends com.google.flatbuffers.Table {
   public int COV_REALISMLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
   public CVR.Vector covRealismVector() { return covRealismVector(new CVR.Vector()); }
   public CVR.Vector covRealismVector(CVR.Vector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The mean element set this message carries, under the theory it names. STATE_DATA is
+   * empty when this is present; no state travels beside a set.
+   */
+  public OCMMeanElements MEAN_ELEMENTS() { return MEAN_ELEMENTS(new OCMMeanElements()); }
+  public OCMMeanElements MEAN_ELEMENTS(OCMMeanElements obj) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+   */
+  public OCMCovariancePropagation COV_PROPAGATION() { return COV_PROPAGATION(new OCMCovariancePropagation()); }
+  public OCMCovariancePropagation COV_PROPAGATION(OCMCovariancePropagation obj) { int o = __offset(72); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+   * every reader keys on these, never on the COV_PARAMETERS strings.
+   */
+  public int COV_PARAMETER_KINDS(int j) { int o = __offset(74); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int COV_PARAMETER_KINDSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector covParameterKindsVector() { return covParameterKindsVector(new ByteVector()); }
+  public ByteVector covParameterKindsVector(ByteVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COV_PARAMETER_KINDSAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer COV_PARAMETER_KINDSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+   * (CCSDS 502.0-B-3 TRAJ_BASIS).
+   */
+  public int TRAJ_BASIS() { int o = __offset(76); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The element sets the trajectory was computed from, one per object whose
+   * elements it used.
+   */
+  public OCMSeedSet SEED_SETS(int j) { return SEED_SETS(new OCMSeedSet(), j); }
+  public OCMSeedSet SEED_SETS(OCMSeedSet obj, int j) { int o = __offset(78); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SEED_SETSLength() { int o = __offset(78); return o != 0 ? __vector_len(o) : 0; }
+  public OCMSeedSet.Vector seedSetsVector() { return seedSetsVector(new OCMSeedSet.Vector()); }
+  public OCMSeedSet.Vector seedSetsVector(OCMSeedSet.Vector obj) { int o = __offset(78); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Integrator settings of a solution made from a legacy VCM.
+   */
+  public OCMIntegrator INTEGRATOR() { return INTEGRATOR(new OCMIntegrator()); }
+  public OCMIntegrator INTEGRATOR(OCMIntegrator obj) { int o = __offset(80); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Relative-motion geometry; STATE_DATA is empty when this is present.
+   */
+  public OCMRelativeGeometry RPO_GEOMETRY() { return RPO_GEOMETRY(new OCMRelativeGeometry()); }
+  public OCMRelativeGeometry RPO_GEOMETRY(OCMRelativeGeometry obj) { int o = __offset(82); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Inspection geometry; STATE_DATA is empty when this is present.
+   */
+  public OCMInspectionGeometry RPO_INSPECTION() { return RPO_INSPECTION(new OCMInspectionGeometry()); }
+  public OCMInspectionGeometry RPO_INSPECTION(OCMInspectionGeometry obj) { int o = __offset(84); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -300,9 +352,24 @@ public final class OCM extends com.google.flatbuffers.Table {
       int TRAJECTORY_BLOCKSOffset,
       int COVARIANCE_BLOCKSOffset,
       int PROVENANCEOffset,
-      int COV_REALISMOffset) {
-    builder.startTable(33);
+      int COV_REALISMOffset,
+      int MEAN_ELEMENTSOffset,
+      int COV_PROPAGATIONOffset,
+      int COV_PARAMETER_KINDSOffset,
+      int TRAJ_BASIS,
+      int SEED_SETSOffset,
+      int INTEGRATOROffset,
+      int RPO_GEOMETRYOffset,
+      int RPO_INSPECTIONOffset) {
+    builder.startTable(41);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addRpoInspection(builder, RPO_INSPECTIONOffset);
+    OCM.addRpoGeometry(builder, RPO_GEOMETRYOffset);
+    OCM.addIntegrator(builder, INTEGRATOROffset);
+    OCM.addSeedSets(builder, SEED_SETSOffset);
+    OCM.addCovParameterKinds(builder, COV_PARAMETER_KINDSOffset);
+    OCM.addCovPropagation(builder, COV_PROPAGATIONOffset);
+    OCM.addMeanElements(builder, MEAN_ELEMENTSOffset);
     OCM.addCovRealism(builder, COV_REALISMOffset);
     OCM.addProvenance(builder, PROVENANCEOffset);
     OCM.addCovarianceBlocks(builder, COVARIANCE_BLOCKSOffset);
@@ -330,6 +397,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     OCM.addTrajTypeDescription(builder, TRAJ_TYPE_DESCRIPTIONOffset);
     OCM.addMetadata(builder, METADATAOffset);
     OCM.addHeader(builder, HEADEROffset);
+    OCM.addTrajBasis(builder, TRAJ_BASIS);
     OCM.addCovSize(builder, COV_SIZE);
     OCM.addCovOrdering(builder, COV_ORDERING);
     OCM.addCovCalibration(builder, COV_CALIBRATION);
@@ -338,7 +406,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(33); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(41); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -396,6 +464,19 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(32, COV_REALISMOffset, 0); }
   public static int createCovRealismVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCovRealismVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMeanElements(FlatBufferBuilder builder, int MEAN_ELEMENTSOffset) { builder.addOffset(33, MEAN_ELEMENTSOffset, 0); }
+  public static void addCovPropagation(FlatBufferBuilder builder, int COV_PROPAGATIONOffset) { builder.addOffset(34, COV_PROPAGATIONOffset, 0); }
+  public static void addCovParameterKinds(FlatBufferBuilder builder, int COV_PARAMETER_KINDSOffset) { builder.addOffset(35, COV_PARAMETER_KINDSOffset, 0); }
+  public static int createCovParameterKindsVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCovParameterKindsVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCovParameterKindsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addTrajBasis(FlatBufferBuilder builder, int TRAJ_BASIS) { builder.addByte(36, (byte) TRAJ_BASIS, (byte) 0); }
+  public static void addSeedSets(FlatBufferBuilder builder, int SEED_SETSOffset) { builder.addOffset(37, SEED_SETSOffset, 0); }
+  public static int createSeedSetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSeedSetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOROffset) { builder.addOffset(38, INTEGRATOROffset, 0); }
+  public static void addRpoGeometry(FlatBufferBuilder builder, int RPO_GEOMETRYOffset) { builder.addOffset(39, RPO_GEOMETRYOffset, 0); }
+  public static void addRpoInspection(FlatBufferBuilder builder, int RPO_INSPECTIONOffset) { builder.addOffset(40, RPO_INSPECTIONOffset, 0); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

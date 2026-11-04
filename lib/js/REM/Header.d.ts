@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { ocmMessageStatus } from './ocmMessageStatus.js';
 export declare class Header implements flatbuffers.IUnpackableObject<HeaderT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -36,6 +37,15 @@ export declare class Header implements flatbuffers.IUnpackableObject<HeaderT> {
      */
     MESSAGE_ID(): string | null;
     MESSAGE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Whether the message is real, test or exercise data.
+     */
+    MESSAGE_STATUS(): ocmMessageStatus;
+    /**
+     * Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+     */
+    EXERCISE_NAME(): string | null;
+    EXERCISE_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startHeader(builder: flatbuffers.Builder): void;
     static addCcsdsOcmVers(builder: flatbuffers.Builder, CCSDS_OCM_VERSOffset: flatbuffers.Offset): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
@@ -45,8 +55,10 @@ export declare class Header implements flatbuffers.IUnpackableObject<HeaderT> {
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
     static addOriginator(builder: flatbuffers.Builder, ORIGINATOROffset: flatbuffers.Offset): void;
     static addMessageId(builder: flatbuffers.Builder, MESSAGE_IDOffset: flatbuffers.Offset): void;
+    static addMessageStatus(builder: flatbuffers.Builder, MESSAGE_STATUS: ocmMessageStatus): void;
+    static addExerciseName(builder: flatbuffers.Builder, EXERCISE_NAMEOffset: flatbuffers.Offset): void;
     static endHeader(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createHeader(builder: flatbuffers.Builder, CCSDS_OCM_VERSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, MESSAGE_IDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createHeader(builder: flatbuffers.Builder, CCSDS_OCM_VERSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset, CLASSIFICATIONOffset: flatbuffers.Offset, CREATION_DATEOffset: flatbuffers.Offset, ORIGINATOROffset: flatbuffers.Offset, MESSAGE_IDOffset: flatbuffers.Offset, MESSAGE_STATUS: ocmMessageStatus, EXERCISE_NAMEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): HeaderT;
     unpackTo(_o: HeaderT): void;
 }
@@ -57,7 +69,9 @@ export declare class HeaderT implements flatbuffers.IGeneratedObject {
     CREATION_DATE: string | Uint8Array | null;
     ORIGINATOR: string | Uint8Array | null;
     MESSAGE_ID: string | Uint8Array | null;
-    constructor(CCSDS_OCM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CLASSIFICATION?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null);
+    MESSAGE_STATUS: ocmMessageStatus;
+    EXERCISE_NAME: string | Uint8Array | null;
+    constructor(CCSDS_OCM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CLASSIFICATION?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, MESSAGE_STATUS?: ocmMessageStatus, EXERCISE_NAME?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Header.d.ts.map

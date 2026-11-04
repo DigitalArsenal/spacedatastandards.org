@@ -12,12 +12,21 @@ class meanElementSource
     const DSST = 2;
     /// Universal Semianalytical Method
     const USM = 3;
+    /// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+    /// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+    /// unused: it was a cut value of an earlier theory.
+    const AP = 5;
+    /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+    /// set is always written.
+    const UNSPECIFIED = 6;
 
     private static $names = array(
         meanElementSource::SGP4=>"SGP4",
         meanElementSource::SGP4XP=>"SGP4XP",
         meanElementSource::DSST=>"DSST",
         meanElementSource::USM=>"USM",
+        meanElementSource::AP=>"AP",
+        meanElementSource::UNSPECIFIED=>"UNSPECIFIED",
     );
 
     public static function Name($e)

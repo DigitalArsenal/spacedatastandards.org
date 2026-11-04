@@ -25,4 +25,8 @@ public enum pcfAtmosphereFamily : byte
   /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
   /// with Mars.
   MARS_EXPONENTIAL = 7,
+  /// Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+  /// and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+  /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+  JACCHIA70 = 8,
 };

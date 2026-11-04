@@ -112,22 +112,65 @@ class PVN extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Replayable URL or provider query identifying the source material as it
+    /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+    public function getSOURCE_URL()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Source revision, edition or upstream update marker verbatim: for a file
+    /// its originator stamps, the stamp.
+    public function getSOURCE_VERSION()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+    public function getRETRIEVED_AT()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+    /// hexadecimal characters. Empty when the source cannot expose replayable
+    /// bytes.
+    public function getSOURCE_SHA256()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+    /// the source was fetched by range. 0 when not stated.
+    /**
+     * @return ulong
+     */
+    public function getSOURCE_BYTES()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPVN(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PVN
      */
-    public static function createPVN(FlatBufferBuilder $builder, $SOURCE_ID, $SOURCE_KIND, $ORIGINATOR, $PROVIDER_ID, $PRODUCER, $LICENSE_CLASS, $LICENSE_ID, $LINEAGE)
+    public static function createPVN(FlatBufferBuilder $builder, $SOURCE_ID, $SOURCE_KIND, $ORIGINATOR, $PROVIDER_ID, $PRODUCER, $LICENSE_CLASS, $LICENSE_ID, $LINEAGE, $SOURCE_URL, $SOURCE_VERSION, $RETRIEVED_AT, $SOURCE_SHA256, $SOURCE_BYTES)
     {
-        $builder->startObject(8);
+        $builder->startObject(13);
         self::addSOURCE_ID($builder, $SOURCE_ID);
         self::addSOURCE_KIND($builder, $SOURCE_KIND);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -136,6 +179,11 @@ class PVN extends Table
         self::addLICENSE_CLASS($builder, $LICENSE_CLASS);
         self::addLICENSE_ID($builder, $LICENSE_ID);
         self::addLINEAGE($builder, $LINEAGE);
+        self::addSOURCE_URL($builder, $SOURCE_URL);
+        self::addSOURCE_VERSION($builder, $SOURCE_VERSION);
+        self::addRETRIEVED_AT($builder, $RETRIEVED_AT);
+        self::addSOURCE_SHA256($builder, $SOURCE_SHA256);
+        self::addSOURCE_BYTES($builder, $SOURCE_BYTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -218,6 +266,56 @@ class PVN extends Table
     public static function addLINEAGE(FlatBufferBuilder $builder, $LINEAGE)
     {
         $builder->addOffsetX(7, $LINEAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_URL(FlatBufferBuilder $builder, $SOURCE_URL)
+    {
+        $builder->addOffsetX(8, $SOURCE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_VERSION(FlatBufferBuilder $builder, $SOURCE_VERSION)
+    {
+        $builder->addOffsetX(9, $SOURCE_VERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addRETRIEVED_AT(FlatBufferBuilder $builder, $RETRIEVED_AT)
+    {
+        $builder->addOffsetX(10, $RETRIEVED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_SHA256(FlatBufferBuilder $builder, $SOURCE_SHA256)
+    {
+        $builder->addOffsetX(11, $SOURCE_SHA256, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addSOURCE_BYTES(FlatBufferBuilder $builder, $SOURCE_BYTES)
+    {
+        $builder->addUlongX(12, $SOURCE_BYTES, 0);
     }
 
     /**

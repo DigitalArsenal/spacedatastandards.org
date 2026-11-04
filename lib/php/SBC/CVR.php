@@ -233,22 +233,92 @@ class CVR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
+    /// Distinct truth epochs among the SAMPLES: predictions that share one truth
+    /// state count once here. 0 when not stated.
+    /**
+     * @return uint
+     */
+    public function getTRUTH_EPOCHS()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Share of the held-out samples whose error lies inside the 1-sigma band of
+    /// the first, second and third axis of the covariance's frame (radial,
+    /// in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+    /// nominal 0.6827 for Gaussian errors. NaN when not measured.
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_1_SIGMA_AXIS1()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_1_SIGMA_AXIS2()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_1_SIGMA_AXIS3()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_3_SIGMA_AXIS1()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_3_SIGMA_AXIS2()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /**
+     * @return double
+     */
+    public function getCOVERAGE_3_SIGMA_AXIS3()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCVR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(25);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CVR
      */
-    public static function createCVR(FlatBufferBuilder $builder, $RULE, $MODEL_ID, $REGIME, $AGE_DAYS, $HORIZON_DAYS, $MEASURED_LINEAGE, $TEST_WINDOW, $MEAN_D2_OVER_3, $COVERAGE_95, $SAMPLES, $OBJECTS, $SCALE_FACTOR, $CALIBRATION, $EVIDENCE, $HISTORY_SAMPLES, $HISTORY_SETS, $HISTORY_WINDOW, $SHRINKAGE_WEIGHT)
+    public static function createCVR(FlatBufferBuilder $builder, $RULE, $MODEL_ID, $REGIME, $AGE_DAYS, $HORIZON_DAYS, $MEASURED_LINEAGE, $TEST_WINDOW, $MEAN_D2_OVER_3, $COVERAGE_95, $SAMPLES, $OBJECTS, $SCALE_FACTOR, $CALIBRATION, $EVIDENCE, $HISTORY_SAMPLES, $HISTORY_SETS, $HISTORY_WINDOW, $SHRINKAGE_WEIGHT, $TRUTH_EPOCHS, $COVERAGE_1_SIGMA_AXIS1, $COVERAGE_1_SIGMA_AXIS2, $COVERAGE_1_SIGMA_AXIS3, $COVERAGE_3_SIGMA_AXIS1, $COVERAGE_3_SIGMA_AXIS2, $COVERAGE_3_SIGMA_AXIS3)
     {
-        $builder->startObject(18);
+        $builder->startObject(25);
         self::addRULE($builder, $RULE);
         self::addMODEL_ID($builder, $MODEL_ID);
         self::addREGIME($builder, $REGIME);
@@ -267,6 +337,13 @@ class CVR extends Table
         self::addHISTORY_SETS($builder, $HISTORY_SETS);
         self::addHISTORY_WINDOW($builder, $HISTORY_WINDOW);
         self::addSHRINKAGE_WEIGHT($builder, $SHRINKAGE_WEIGHT);
+        self::addTRUTH_EPOCHS($builder, $TRUTH_EPOCHS);
+        self::addCOVERAGE_1_SIGMA_AXIS1($builder, $COVERAGE_1_SIGMA_AXIS1);
+        self::addCOVERAGE_1_SIGMA_AXIS2($builder, $COVERAGE_1_SIGMA_AXIS2);
+        self::addCOVERAGE_1_SIGMA_AXIS3($builder, $COVERAGE_1_SIGMA_AXIS3);
+        self::addCOVERAGE_3_SIGMA_AXIS1($builder, $COVERAGE_3_SIGMA_AXIS1);
+        self::addCOVERAGE_3_SIGMA_AXIS2($builder, $COVERAGE_3_SIGMA_AXIS2);
+        self::addCOVERAGE_3_SIGMA_AXIS3($builder, $COVERAGE_3_SIGMA_AXIS3);
         $o = $builder->endObject();
         return $o;
     }
@@ -449,6 +526,76 @@ class CVR extends Table
     public static function addSHRINKAGE_WEIGHT(FlatBufferBuilder $builder, $SHRINKAGE_WEIGHT)
     {
         $builder->addDoubleX(17, $SHRINKAGE_WEIGHT, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addTRUTH_EPOCHS(FlatBufferBuilder $builder, $TRUTH_EPOCHS)
+    {
+        $builder->addUintX(18, $TRUTH_EPOCHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_1_SIGMA_AXIS1(FlatBufferBuilder $builder, $COVERAGE_1_SIGMA_AXIS1)
+    {
+        $builder->addDoubleX(19, $COVERAGE_1_SIGMA_AXIS1, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_1_SIGMA_AXIS2(FlatBufferBuilder $builder, $COVERAGE_1_SIGMA_AXIS2)
+    {
+        $builder->addDoubleX(20, $COVERAGE_1_SIGMA_AXIS2, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_1_SIGMA_AXIS3(FlatBufferBuilder $builder, $COVERAGE_1_SIGMA_AXIS3)
+    {
+        $builder->addDoubleX(21, $COVERAGE_1_SIGMA_AXIS3, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_3_SIGMA_AXIS1(FlatBufferBuilder $builder, $COVERAGE_3_SIGMA_AXIS1)
+    {
+        $builder->addDoubleX(22, $COVERAGE_3_SIGMA_AXIS1, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_3_SIGMA_AXIS2(FlatBufferBuilder $builder, $COVERAGE_3_SIGMA_AXIS2)
+    {
+        $builder->addDoubleX(23, $COVERAGE_3_SIGMA_AXIS2, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOVERAGE_3_SIGMA_AXIS3(FlatBufferBuilder $builder, $COVERAGE_3_SIGMA_AXIS3)
+    {
+        $builder->addDoubleX(24, $COVERAGE_3_SIGMA_AXIS3, NAN);
     }
 
     /**

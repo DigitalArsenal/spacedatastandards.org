@@ -405,8 +405,18 @@ DC_PA_STOP_ANGLE():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
+/**
+ * NORAD_CAT_ID of the object that maneuvered, for a message whose
+ * maneuvers belong to more than one object (a relative-motion message's
+ * chaser and target). 0 when the message's own object maneuvered.
+ */
+NORAD_CAT_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
 static startManeuver(builder:flatbuffers.Builder) {
-  builder.startObject(37);
+  builder.startObject(38);
 }
 
 static addManId(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset) {
@@ -639,12 +649,16 @@ static addDcPaStopAngle(builder:flatbuffers.Builder, DC_PA_STOP_ANGLE:number) {
   builder.addFieldFloat64(36, DC_PA_STOP_ANGLE, NaN);
 }
 
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(37, NORAD_CAT_ID, 0);
+}
+
 static endManeuver(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset, MAN_BASISOffset:flatbuffers.Offset, MAN_DEVICE_IDOffset:flatbuffers.Offset, MAN_PREV_IDOffset:flatbuffers.Offset, MAN_PURPOSEOffset:flatbuffers.Offset, MAN_REF_FRAMEOffset:flatbuffers.Offset, MAN_FRAME_EPOCHOffset:flatbuffers.Offset, MAN_TYPEOffset:flatbuffers.Offset, MAN_EPOCH_STARTOffset:flatbuffers.Offset, MAN_DURATION:number, MAN_UNITSOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, MAN_COMMENTOffset:flatbuffers.Offset, MAN_COMPOSITIONOffset:flatbuffers.Offset, MAN_NEXT_IDOffset:flatbuffers.Offset, MAN_BASIS_IDOffset:flatbuffers.Offset, MAN_PREV_EPOCHOffset:flatbuffers.Offset, MAN_NEXT_EPOCHOffset:flatbuffers.Offset, MAN_PRED_SOURCEOffset:flatbuffers.Offset, GRAV_ASSIST_NAMEOffset:flatbuffers.Offset, DC_TYPEOffset:flatbuffers.Offset, DC_WIN_OPENOffset:flatbuffers.Offset, DC_WIN_CLOSEOffset:flatbuffers.Offset, DC_MIN_CYCLES:number, DC_MAX_CYCLES:number, HAS_DC_MIN_CYCLES:boolean, HAS_DC_MAX_CYCLES:boolean, DC_EXEC_STARTOffset:flatbuffers.Offset, DC_EXEC_STOPOffset:flatbuffers.Offset, DC_REF_TIMEOffset:flatbuffers.Offset, DC_TIME_PULSE_DURATION:number, DC_TIME_PULSE_PERIOD:number, DC_REF_DIROffset:flatbuffers.Offset, DC_BODY_FRAMEOffset:flatbuffers.Offset, DC_BODY_TRIGGEROffset:flatbuffers.Offset, DC_PA_START_ANGLE:number, DC_PA_STOP_ANGLE:number):flatbuffers.Offset {
+static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offset, MAN_BASISOffset:flatbuffers.Offset, MAN_DEVICE_IDOffset:flatbuffers.Offset, MAN_PREV_IDOffset:flatbuffers.Offset, MAN_PURPOSEOffset:flatbuffers.Offset, MAN_REF_FRAMEOffset:flatbuffers.Offset, MAN_FRAME_EPOCHOffset:flatbuffers.Offset, MAN_TYPEOffset:flatbuffers.Offset, MAN_EPOCH_STARTOffset:flatbuffers.Offset, MAN_DURATION:number, MAN_UNITSOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, MAN_COMMENTOffset:flatbuffers.Offset, MAN_COMPOSITIONOffset:flatbuffers.Offset, MAN_NEXT_IDOffset:flatbuffers.Offset, MAN_BASIS_IDOffset:flatbuffers.Offset, MAN_PREV_EPOCHOffset:flatbuffers.Offset, MAN_NEXT_EPOCHOffset:flatbuffers.Offset, MAN_PRED_SOURCEOffset:flatbuffers.Offset, GRAV_ASSIST_NAMEOffset:flatbuffers.Offset, DC_TYPEOffset:flatbuffers.Offset, DC_WIN_OPENOffset:flatbuffers.Offset, DC_WIN_CLOSEOffset:flatbuffers.Offset, DC_MIN_CYCLES:number, DC_MAX_CYCLES:number, HAS_DC_MIN_CYCLES:boolean, HAS_DC_MAX_CYCLES:boolean, DC_EXEC_STARTOffset:flatbuffers.Offset, DC_EXEC_STOPOffset:flatbuffers.Offset, DC_REF_TIMEOffset:flatbuffers.Offset, DC_TIME_PULSE_DURATION:number, DC_TIME_PULSE_PERIOD:number, DC_REF_DIROffset:flatbuffers.Offset, DC_BODY_FRAMEOffset:flatbuffers.Offset, DC_BODY_TRIGGEROffset:flatbuffers.Offset, DC_PA_START_ANGLE:number, DC_PA_STOP_ANGLE:number, NORAD_CAT_ID:number):flatbuffers.Offset {
   Maneuver.startManeuver(builder);
   Maneuver.addManId(builder, MAN_IDOffset);
   Maneuver.addManBasis(builder, MAN_BASISOffset);
@@ -683,6 +697,7 @@ static createManeuver(builder:flatbuffers.Builder, MAN_IDOffset:flatbuffers.Offs
   Maneuver.addDcBodyTrigger(builder, DC_BODY_TRIGGEROffset);
   Maneuver.addDcPaStartAngle(builder, DC_PA_START_ANGLE);
   Maneuver.addDcPaStopAngle(builder, DC_PA_STOP_ANGLE);
+  Maneuver.addNoradCatId(builder, NORAD_CAT_ID);
   return Maneuver.endManeuver(builder);
 }
 
@@ -724,7 +739,8 @@ unpack(): ManeuverT {
     this.DC_BODY_FRAME(),
     this.bb!.createScalarList<number>(this.DC_BODY_TRIGGER.bind(this), this.dcBodyTriggerLength()),
     this.DC_PA_START_ANGLE(),
-    this.DC_PA_STOP_ANGLE()
+    this.DC_PA_STOP_ANGLE(),
+    this.NORAD_CAT_ID()
   );
 }
 
@@ -767,6 +783,7 @@ unpackTo(_o: ManeuverT): void {
   _o.DC_BODY_TRIGGER = this.bb!.createScalarList<number>(this.DC_BODY_TRIGGER.bind(this), this.dcBodyTriggerLength());
   _o.DC_PA_START_ANGLE = this.DC_PA_START_ANGLE();
   _o.DC_PA_STOP_ANGLE = this.DC_PA_STOP_ANGLE();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
 }
 }
 
@@ -808,7 +825,8 @@ constructor(
   public DC_BODY_FRAME: string|Uint8Array|null = null,
   public DC_BODY_TRIGGER: (number)[] = [],
   public DC_PA_START_ANGLE: number = NaN,
-  public DC_PA_STOP_ANGLE: number = NaN
+  public DC_PA_STOP_ANGLE: number = NaN,
+  public NORAD_CAT_ID: number = 0
 ){}
 
 
@@ -879,7 +897,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DC_BODY_FRAME,
     DC_BODY_TRIGGER,
     this.DC_PA_START_ANGLE,
-    this.DC_PA_STOP_ANGLE
+    this.DC_PA_STOP_ANGLE,
+    this.NORAD_CAT_ID
   );
 }
 }

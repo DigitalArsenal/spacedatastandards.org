@@ -58,6 +58,35 @@ export declare class PVN implements flatbuffers.IUnpackableObject<PVNT> {
      */
     LINEAGE(): string | null;
     LINEAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Replayable URL or provider query identifying the source material as it
+     * was retrieved (the SOURCE_URL of $CMR and $AVL).
+     */
+    SOURCE_URL(): string | null;
+    SOURCE_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Source revision, edition or upstream update marker verbatim: for a file
+     * its originator stamps, the stamp.
+     */
+    SOURCE_VERSION(): string | null;
+    SOURCE_VERSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+     */
+    RETRIEVED_AT(): string | null;
+    RETRIEVED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+     * hexadecimal characters. Empty when the source cannot expose replayable
+     * bytes.
+     */
+    SOURCE_SHA256(): string | null;
+    SOURCE_SHA256(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+     * the source was fetched by range. 0 when not stated.
+     */
+    SOURCE_BYTES(): bigint;
     static startPVN(builder: flatbuffers.Builder): void;
     static addSourceId(builder: flatbuffers.Builder, SOURCE_IDOffset: flatbuffers.Offset): void;
     static addSourceKind(builder: flatbuffers.Builder, SOURCE_KIND: pvnSourceKind): void;
@@ -67,10 +96,15 @@ export declare class PVN implements flatbuffers.IUnpackableObject<PVNT> {
     static addLicenseClass(builder: flatbuffers.Builder, LICENSE_CLASS: pvnLicenseClass): void;
     static addLicenseId(builder: flatbuffers.Builder, LICENSE_IDOffset: flatbuffers.Offset): void;
     static addLineage(builder: flatbuffers.Builder, LINEAGEOffset: flatbuffers.Offset): void;
+    static addSourceUrl(builder: flatbuffers.Builder, SOURCE_URLOffset: flatbuffers.Offset): void;
+    static addSourceVersion(builder: flatbuffers.Builder, SOURCE_VERSIONOffset: flatbuffers.Offset): void;
+    static addRetrievedAt(builder: flatbuffers.Builder, RETRIEVED_ATOffset: flatbuffers.Offset): void;
+    static addSourceSha256(builder: flatbuffers.Builder, SOURCE_SHA256Offset: flatbuffers.Offset): void;
+    static addSourceBytes(builder: flatbuffers.Builder, SOURCE_BYTES: bigint): void;
     static endPVN(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPVNBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPVNBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createPVN(builder: flatbuffers.Builder, SOURCE_IDOffset: flatbuffers.Offset, SOURCE_KIND: pvnSourceKind, ORIGINATOROffset: flatbuffers.Offset, PROVIDER_IDOffset: flatbuffers.Offset, PRODUCEROffset: flatbuffers.Offset, LICENSE_CLASS: pvnLicenseClass, LICENSE_IDOffset: flatbuffers.Offset, LINEAGEOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPVN(builder: flatbuffers.Builder, SOURCE_IDOffset: flatbuffers.Offset, SOURCE_KIND: pvnSourceKind, ORIGINATOROffset: flatbuffers.Offset, PROVIDER_IDOffset: flatbuffers.Offset, PRODUCEROffset: flatbuffers.Offset, LICENSE_CLASS: pvnLicenseClass, LICENSE_IDOffset: flatbuffers.Offset, LINEAGEOffset: flatbuffers.Offset, SOURCE_URLOffset: flatbuffers.Offset, SOURCE_VERSIONOffset: flatbuffers.Offset, RETRIEVED_ATOffset: flatbuffers.Offset, SOURCE_SHA256Offset: flatbuffers.Offset, SOURCE_BYTES: bigint): flatbuffers.Offset;
     unpack(): PVNT;
     unpackTo(_o: PVNT): void;
 }
@@ -83,7 +117,12 @@ export declare class PVNT implements flatbuffers.IGeneratedObject {
     LICENSE_CLASS: pvnLicenseClass;
     LICENSE_ID: string | Uint8Array | null;
     LINEAGE: string | Uint8Array | null;
-    constructor(SOURCE_ID?: string | Uint8Array | null, SOURCE_KIND?: pvnSourceKind, ORIGINATOR?: string | Uint8Array | null, PROVIDER_ID?: string | Uint8Array | null, PRODUCER?: string | Uint8Array | null, LICENSE_CLASS?: pvnLicenseClass, LICENSE_ID?: string | Uint8Array | null, LINEAGE?: string | Uint8Array | null);
+    SOURCE_URL: string | Uint8Array | null;
+    SOURCE_VERSION: string | Uint8Array | null;
+    RETRIEVED_AT: string | Uint8Array | null;
+    SOURCE_SHA256: string | Uint8Array | null;
+    SOURCE_BYTES: bigint;
+    constructor(SOURCE_ID?: string | Uint8Array | null, SOURCE_KIND?: pvnSourceKind, ORIGINATOR?: string | Uint8Array | null, PROVIDER_ID?: string | Uint8Array | null, PRODUCER?: string | Uint8Array | null, LICENSE_CLASS?: pvnLicenseClass, LICENSE_ID?: string | Uint8Array | null, LINEAGE?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, SOURCE_VERSION?: string | Uint8Array | null, RETRIEVED_AT?: string | Uint8Array | null, SOURCE_SHA256?: string | Uint8Array | null, SOURCE_BYTES?: bigint);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PVN.d.ts.map

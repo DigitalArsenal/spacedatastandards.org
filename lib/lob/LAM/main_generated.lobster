@@ -4,22 +4,31 @@ import ATM.main_generated
 import BOV.main_generated
 import CAT.main_generated
 import CVR.main_generated
+import EOP.main_generated
 import EPM.main_generated
+import EVL.main_generated
+import FRM.main_generated
 import HFC.main_generated
 import IDM.main_generated
 import LCC.main_generated
 import LDM.main_generated
 import LND.main_generated
 import LNE.main_generated
+import MET.main_generated
 import MST.main_generated
+import NCD.main_generated
 import OCM.main_generated
 import OEM.main_generated
+import PCE.main_generated
+import PCF.main_generated
 import PLD.main_generated
 import PPE.main_generated
+import PRW.main_generated
 import PVN.main_generated
 import RFM.main_generated
 import ROC.main_generated
 import SIT.main_generated
+import SPW.main_generated
 import TIM.main_generated
 
 /// Launch-ascent mission phase.

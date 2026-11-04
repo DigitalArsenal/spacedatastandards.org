@@ -21,4 +21,7 @@ public enum pcfTheory : byte
   FFM = 4,
   /// Two-body (Keplerian) motion about the central body.
   KEPLER = 5,
+  /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+  /// 3 stays unused.
+  AP = 6,
 };

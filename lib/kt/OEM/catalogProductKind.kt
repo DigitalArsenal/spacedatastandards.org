@@ -11,16 +11,21 @@ class catalogProductKind private constructor() {
          */
         const val Unspecified: Byte = 0
         /**
-         * $OMM with MEAN_ELEMENT_THEORY SGP4
+         * An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+         * MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
          */
         const val Sgp4Elements: Byte = 1
         /**
-         * $OMM with MEAN_ELEMENT_THEORY SGP4XP
+         * As Sgp4Elements, under SGP4XP
          */
         const val Sgp4XpElements: Byte = 2
         /**
          * $OCM: a state and its covariance
          */
         const val StateCovariance: Byte = 3
+        /**
+         * An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+         */
+        const val ApElements: Byte = 4
     }
 }

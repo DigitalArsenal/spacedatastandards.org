@@ -29,8 +29,11 @@ public enum pcfTheory: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case ffm = 4
   ///  Two-body (Keplerian) motion about the central body.
   case kepler = 5
+  ///  SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+  ///  3 stays unused.
+  case ap = 6
 
-  public static var max: pcfTheory { return .kepler }
+  public static var max: pcfTheory { return .ap }
   public static var min: pcfTheory { return .unspecified }
 }
 
@@ -100,10 +103,16 @@ public enum pcfWeatherSource: UInt8, FlatbuffersVectorInitializable, Enum, Verif
   ///  PCFSpaceWeather, held for the whole arc.
   case constant = 1
   ///  Daily rows supplied with the request ($SPW rows; the JB2008 indices
-  ///  for the JB2008 atmosphere).
+  ///  for the JB2008 atmosphere). In an $OCM element set, the rows of
+  ///  PERTURBATIONS.SPACE_WEATHER.
   case records = 2
+  ///  The theory's own generic flux model: no rows, no PCFSpaceWeather (a
+  ///  mean-element theory's built-in solar and geomagnetic activity).
+  case theoryFluxModel = 3
+  ///  No drag weather: the theory's own drag term (SGP4's BSTAR).
+  case none_ = 4
 
-  public static var max: pcfWeatherSource { return .records }
+  public static var max: pcfWeatherSource { return .none_ }
   public static var min: pcfWeatherSource { return .unspecified }
 }
 
@@ -413,8 +422,12 @@ public enum pcfAtmosphereFamily: UInt8, FlatbuffersVectorInitializable, Enum, Ve
   ///  Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
   ///  with Mars.
   case marsExponential = 7
+  ///  Jacchia 1970 static diffusion model, the atmosphere of the SGP4-XP theory
+  ///  and of AP sets fitted under it: ATM JXX with version 1970 in an $OCM
+  ///  element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
+  case jacchia70 = 8
 
-  public static var max: pcfAtmosphereFamily { return .marsExponential }
+  public static var max: pcfAtmosphereFamily { return .jacchia70 }
   public static var min: pcfAtmosphereFamily { return .unspecified }
 }
 
@@ -628,6 +641,7 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let SRP_PRIOR: VOffset = 32
     static let DRAG_PRIOR_FORM: VOffset = 34
     static let SRP_PRIOR_FORM: VOffset = 36
+    static let WEATHER_HORIZON_DAYS: VOffset = 38
   }
 
   ///  Fit span used when the span rule is not run, hours. Default 48.
@@ -681,7 +695,14 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   ///  the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
   ///  ln AGOM.
   public var SRP_PRIOR_FORM: pcfPriorForm { let o = _accessor.offset(VT.SRP_PRIOR_FORM); return o == 0 ? .gaussianSigned : pcfPriorForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .gaussianSigned }
-  public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  Days past the element set's epoch day through which the fit writes the
+  ///  daily space weather into the record it emits (OCM
+  ///  PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+  ///  (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+  ///  arc's last day and the epoch's day plus this count; rows supplied with
+  ///  the request must reach it, or the fit is refused by name. Default 30.
+  public var WEATHER_HORIZON_DAYS: UInt16 { let o = _accessor.offset(VT.WEATHER_HORIZON_DAYS); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_SPAN_HOURS, def: 48.0, at: VT.DEFAULT_SPAN_HOURS) }
   public static func add(MINIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_SPAN_HOURS, def: 24.0, at: VT.MINIMUM_SPAN_HOURS) }
   public static func add(MAXIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SPAN_HOURS, def: 120.0, at: VT.MAXIMUM_SPAN_HOURS) }
@@ -700,6 +721,7 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public static func add(SRP_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRP_PRIOR, at: VT.SRP_PRIOR) }
   public static func add(DRAG_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_PRIOR_FORM.rawValue, def: 0, at: VT.DRAG_PRIOR_FORM) }
   public static func add(SRP_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_PRIOR_FORM.rawValue, def: 0, at: VT.SRP_PRIOR_FORM) }
+  public static func add(WEATHER_HORIZON_DAYS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEATHER_HORIZON_DAYS, def: 30, at: VT.WEATHER_HORIZON_DAYS) }
   public static func endPCFFitPolicy(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFFitPolicy(
     _ fbb: inout FlatBufferBuilder,
@@ -719,7 +741,8 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     DRAG_PRIOROffset DRAG_PRIOR: Offset = Offset(),
     SRP_PRIOROffset SRP_PRIOR: Offset = Offset(),
     DRAG_PRIOR_FORM: pcfPriorForm = .gaussianSigned,
-    SRP_PRIOR_FORM: pcfPriorForm = .gaussianSigned
+    SRP_PRIOR_FORM: pcfPriorForm = .gaussianSigned,
+    WEATHER_HORIZON_DAYS: UInt16 = 30
   ) -> Offset {
     let __start = PCFFitPolicy.startPCFFitPolicy(&fbb)
     PCFFitPolicy.add(DEFAULT_SPAN_HOURS: DEFAULT_SPAN_HOURS, &fbb)
@@ -739,6 +762,7 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     PCFFitPolicy.add(SRP_PRIOR: SRP_PRIOR, &fbb)
     PCFFitPolicy.add(DRAG_PRIOR_FORM: DRAG_PRIOR_FORM, &fbb)
     PCFFitPolicy.add(SRP_PRIOR_FORM: SRP_PRIOR_FORM, &fbb)
+    PCFFitPolicy.add(WEATHER_HORIZON_DAYS: WEATHER_HORIZON_DAYS, &fbb)
     return PCFFitPolicy.endPCFFitPolicy(&fbb, start: __start)
   }
 
@@ -761,6 +785,7 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     try _v.visit(field: VT.SRP_PRIOR, fieldName: "SRP_PRIOR", required: false, type: ForwardOffset<PCFGaussianPrior>.self)
     try _v.visit(field: VT.DRAG_PRIOR_FORM, fieldName: "DRAG_PRIOR_FORM", required: false, type: pcfPriorForm.self)
     try _v.visit(field: VT.SRP_PRIOR_FORM, fieldName: "SRP_PRIOR_FORM", required: false, type: pcfPriorForm.self)
+    try _v.visit(field: VT.WEATHER_HORIZON_DAYS, fieldName: "WEATHER_HORIZON_DAYS", required: false, type: UInt16.self)
     _v.finish()
   }
 }
@@ -968,6 +993,9 @@ public struct PCFOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     static let FRAME: VOffset = 4
     static let STEP_SECONDS: VOffset = 6
     static let MAXIMUM_STATES: VOffset = 8
+    static let EPOCHS: VOffset = 10
+    static let START_TIME: VOffset = 12
+    static let STOP_TIME: VOffset = 14
   }
 
   ///  Frame of the output states. Default UNSPECIFIED (the grid template's
@@ -978,21 +1006,42 @@ public struct PCFOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   public var STEP_SECONDS: Double { let o = _accessor.offset(VT.STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Most states one request may produce. Default 500000.
   public var MAXIMUM_STATES: UInt32 { let o = _accessor.offset(VT.MAXIMUM_STATES); return o == 0 ? 500000 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPCFOutput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Output epochs, ISO 8601 UTC, ascending; when present they are the
+  ///  states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+  ///  Default empty.
+  public var EPOCHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.EPOCHS, byteSize: 4) }
+  ///  First output epoch, ISO 8601 UTC. Default empty: the element set's
+  ///  epoch.
+  public var START_TIME: String? { let o = _accessor.offset(VT.START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_TIME) }
+  ///  Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+  ///  START_TIME plus one day.
+  public var STOP_TIME: String? { let o = _accessor.offset(VT.STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_TIME) }
+  public static func startPCFOutput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(FRAME: pcfOutputFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME.rawValue, def: 0, at: VT.FRAME) }
   public static func add(STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SECONDS, def: 60.0, at: VT.STEP_SECONDS) }
   public static func add(MAXIMUM_STATES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STATES, def: 500000, at: VT.MAXIMUM_STATES) }
+  public static func addVectorOf(EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCHS, at: VT.EPOCHS) }
+  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VT.START_TIME) }
+  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VT.STOP_TIME) }
   public static func endPCFOutput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFOutput(
     _ fbb: inout FlatBufferBuilder,
     FRAME: pcfOutputFrame = .unspecified,
     STEP_SECONDS: Double = 60.0,
-    MAXIMUM_STATES: UInt32 = 500000
+    MAXIMUM_STATES: UInt32 = 500000,
+    EPOCHSVectorOffset EPOCHS: Offset = Offset(),
+    START_TIMEOffset START_TIME: Offset = Offset(),
+    STOP_TIMEOffset STOP_TIME: Offset = Offset()
   ) -> Offset {
     let __start = PCFOutput.startPCFOutput(&fbb)
     PCFOutput.add(FRAME: FRAME, &fbb)
     PCFOutput.add(STEP_SECONDS: STEP_SECONDS, &fbb)
     PCFOutput.add(MAXIMUM_STATES: MAXIMUM_STATES, &fbb)
+    PCFOutput.addVectorOf(EPOCHS: EPOCHS, &fbb)
+    PCFOutput.add(START_TIME: START_TIME, &fbb)
+    PCFOutput.add(STOP_TIME: STOP_TIME, &fbb)
     return PCFOutput.endPCFOutput(&fbb, start: __start)
   }
 
@@ -1001,6 +1050,9 @@ public struct PCFOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     try _v.visit(field: VT.FRAME, fieldName: "FRAME", required: false, type: pcfOutputFrame.self)
     try _v.visit(field: VT.STEP_SECONDS, fieldName: "STEP_SECONDS", required: false, type: Double.self)
     try _v.visit(field: VT.MAXIMUM_STATES, fieldName: "MAXIMUM_STATES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EPOCHS, fieldName: "EPOCHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.START_TIME, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_TIME, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

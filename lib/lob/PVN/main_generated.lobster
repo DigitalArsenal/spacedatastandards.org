@@ -66,13 +66,33 @@ class PVN : flatbuffers.handle
     /// independent of each other.
     def LINEAGE() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
+    /// Replayable URL or provider query identifying the source material as it
+    /// was retrieved (the SOURCE_URL of $CMR and $AVL).
+    def SOURCE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Source revision, edition or upstream update marker verbatim: for a file
+    /// its originator stamps, the stamp.
+    def SOURCE_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+    def RETRIEVED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+    /// hexadecimal characters. Empty when the source cannot expose replayable
+    /// bytes.
+    def SOURCE_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+    /// the source was fetched by range. 0 when not stated.
+    def SOURCE_BYTES() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 28, 0)
 
 def GetRootAsPVN(buf:string): return PVN { buf, flatbuffers.indirect(buf, 0) }
 
 struct PVNBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(13)
         return this
     def add_SOURCE_ID(SOURCE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SOURCE_ID)
@@ -97,6 +117,21 @@ struct PVNBuilder:
         return this
     def add_LINEAGE(LINEAGE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, LINEAGE)
+        return this
+    def add_SOURCE_URL(SOURCE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, SOURCE_URL)
+        return this
+    def add_SOURCE_VERSION(SOURCE_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, SOURCE_VERSION)
+        return this
+    def add_RETRIEVED_AT(RETRIEVED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, RETRIEVED_AT)
+        return this
+    def add_SOURCE_SHA256(SOURCE_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, SOURCE_SHA256)
+        return this
+    def add_SOURCE_BYTES(SOURCE_BYTES:int):
+        b_.PrependUint64Slot(12, SOURCE_BYTES, 0)
         return this
     def end():
         return b_.EndObject()

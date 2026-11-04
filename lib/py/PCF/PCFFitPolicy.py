@@ -210,8 +210,21 @@ class PCFFitPolicy(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Days past the element set's epoch day through which the fit writes the
+    # daily space weather into the record it emits (OCM
+    # PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+    # (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+    # arc's last day and the epoch's day plus this count; rows supplied with
+    # the request must reach it, or the fit is refused by name. Default 30.
+    # PCFFitPolicy
+    def WEATHER_HORIZON_DAYS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 30
+
 def PCFFitPolicyStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(18)
 
 def Start(builder):
     PCFFitPolicyStart(builder)
@@ -334,6 +347,12 @@ def PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM):
 def AddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM):
     PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM)
 
+def PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS):
+    builder.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 30)
+
+def AddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS):
+    PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS)
+
 def PCFFitPolicyEnd(builder):
     return builder.EndObject()
 
@@ -368,6 +387,7 @@ class PCFFitPolicyT(object):
         SRP_PRIOR = None,
         DRAG_PRIOR_FORM = 0,
         SRP_PRIOR_FORM = 0,
+        WEATHER_HORIZON_DAYS = 30,
     ):
         self.DEFAULT_SPAN_HOURS = DEFAULT_SPAN_HOURS  # type: float
         self.MINIMUM_SPAN_HOURS = MINIMUM_SPAN_HOURS  # type: float
@@ -386,6 +406,7 @@ class PCFFitPolicyT(object):
         self.SRP_PRIOR = SRP_PRIOR  # type: Optional[PCFGaussianPrior.PCFGaussianPriorT]
         self.DRAG_PRIOR_FORM = DRAG_PRIOR_FORM  # type: int
         self.SRP_PRIOR_FORM = SRP_PRIOR_FORM  # type: int
+        self.WEATHER_HORIZON_DAYS = WEATHER_HORIZON_DAYS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -433,6 +454,7 @@ class PCFFitPolicyT(object):
             self.SRP_PRIOR = PCFGaussianPrior.PCFGaussianPriorT.InitFromObj(PCFFitPolicy.SRP_PRIOR())
         self.DRAG_PRIOR_FORM = PCFFitPolicy.DRAG_PRIOR_FORM()
         self.SRP_PRIOR_FORM = PCFFitPolicy.SRP_PRIOR_FORM()
+        self.WEATHER_HORIZON_DAYS = PCFFitPolicy.WEATHER_HORIZON_DAYS()
 
     # PCFFitPolicyT
     def Pack(self, builder):
@@ -469,5 +491,6 @@ class PCFFitPolicyT(object):
             PCFFitPolicyAddSRP_PRIOR(builder, SRP_PRIOR)
         PCFFitPolicyAddDRAG_PRIOR_FORM(builder, self.DRAG_PRIOR_FORM)
         PCFFitPolicyAddSRP_PRIOR_FORM(builder, self.SRP_PRIOR_FORM)
+        PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, self.WEATHER_HORIZON_DAYS)
         PCFFitPolicy = PCFFitPolicyEnd(builder)
         return PCFFitPolicy

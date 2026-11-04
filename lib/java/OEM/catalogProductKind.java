@@ -11,19 +11,24 @@ public final class catalogProductKind {
    */
   public static final byte Unspecified = 0;
   /**
-   * $OMM with MEAN_ELEMENT_THEORY SGP4
+   * An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose
+   * MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4
    */
   public static final byte Sgp4Elements = 1;
   /**
-   * $OMM with MEAN_ELEMENT_THEORY SGP4XP
+   * As Sgp4Elements, under SGP4XP
    */
   public static final byte Sgp4XpElements = 2;
   /**
    * $OCM: a state and its covariance
    */
   public static final byte StateCovariance = 3;
+  /**
+   * An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP
+   */
+  public static final byte ApElements = 4;
 
-  public static final String[] names = { "Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance", };
+  public static final String[] names = { "Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance", "ApElements", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -73,25 +73,66 @@ class PCFOutput extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 500000;
     }
 
+    /// Output epochs, ISO 8601 UTC, ascending; when present they are the
+    /// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+    /// Default empty.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getEPOCHS($j)
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEPOCHSLength()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// First output epoch, ISO 8601 UTC. Default empty: the element set's
+    /// epoch.
+    public function getSTART_TIME()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+    /// START_TIME plus one day.
+    public function getSTOP_TIME()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCFOutput(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFOutput
      */
-    public static function createPCFOutput(FlatBufferBuilder $builder, $FRAME, $STEP_SECONDS, $MAXIMUM_STATES)
+    public static function createPCFOutput(FlatBufferBuilder $builder, $FRAME, $STEP_SECONDS, $MAXIMUM_STATES, $EPOCHS, $START_TIME, $STOP_TIME)
     {
-        $builder->startObject(3);
+        $builder->startObject(6);
         self::addFRAME($builder, $FRAME);
         self::addSTEP_SECONDS($builder, $STEP_SECONDS);
         self::addMAXIMUM_STATES($builder, $MAXIMUM_STATES);
+        self::addEPOCHS($builder, $EPOCHS);
+        self::addSTART_TIME($builder, $START_TIME);
+        self::addSTOP_TIME($builder, $STOP_TIME);
         $o = $builder->endObject();
         return $o;
     }
@@ -124,6 +165,60 @@ class PCFOutput extends Table
     public static function addMAXIMUM_STATES(FlatBufferBuilder $builder, $MAXIMUM_STATES)
     {
         $builder->addUintX(2, $MAXIMUM_STATES, 500000);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEPOCHS(FlatBufferBuilder $builder, $EPOCHS)
+    {
+        $builder->addOffsetX(3, $EPOCHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEPOCHSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEPOCHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
+    {
+        $builder->addOffsetX(4, $START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTOP_TIME(FlatBufferBuilder $builder, $STOP_TIME)
+    {
+        $builder->addOffsetX(5, $STOP_TIME, 0);
     }
 
     /**

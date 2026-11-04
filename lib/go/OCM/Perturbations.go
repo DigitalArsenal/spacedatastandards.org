@@ -753,8 +753,307 @@ func (rcv *Perturbations) MutateFixedY10p7Mean(n float64) bool {
 	return rcv.MutateFIXED_Y10P7_MEAN(n)
 }
 
+/// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+/// the gravity field the record was computed with (SDS addition; the $PCF
+/// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+/// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+/// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+/// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+/// order pair cannot state a tesseral cap below a zonal one.
+func (rcv *Perturbations) MAXIMUM_TESSERAL_DEGREE() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) MaximumTesseralDegree() uint16 {
+	return rcv.MAXIMUM_TESSERAL_DEGREE()
+}
+
+/// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+/// the gravity field the record was computed with (SDS addition; the $PCF
+/// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+/// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+/// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+/// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+/// order pair cannot state a tesseral cap below a zonal one.
+func (rcv *Perturbations) MutateMAXIMUM_TESSERAL_DEGREE(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(80, n)
+}
+
+func (rcv *Perturbations) MutateMaximumTesseralDegree(n uint16) bool {
+	return rcv.MutateMAXIMUM_TESSERAL_DEGREE(n)
+}
+
+/// Highest degree of the zonal terms (order 0) of the gravity field the
+/// record was computed with (SDS addition). For a mean-element set the tail
+/// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+/// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+/// otherwise not stated.
+func (rcv *Perturbations) MAXIMUM_ZONAL_DEGREE() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) MaximumZonalDegree() uint16 {
+	return rcv.MAXIMUM_ZONAL_DEGREE()
+}
+
+/// Highest degree of the zonal terms (order 0) of the gravity field the
+/// record was computed with (SDS addition). For a mean-element set the tail
+/// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+/// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+/// otherwise not stated.
+func (rcv *Perturbations) MutateMAXIMUM_ZONAL_DEGREE(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(82, n)
+}
+
+func (rcv *Perturbations) MutateMaximumZonalDegree(n uint16) bool {
+	return rcv.MutateMAXIMUM_ZONAL_DEGREE(n)
+}
+
+/// Where the space weather behind the drag density comes from. RECORDS: the
+/// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+/// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+/// in an element-set record.
+func (rcv *Perturbations) WEATHER_SOURCE() pcfWeatherSource {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return pcfWeatherSource(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *Perturbations) WeatherSource() pcfWeatherSource {
+	return rcv.WEATHER_SOURCE()
+}
+
+/// Where the space weather behind the drag density comes from. RECORDS: the
+/// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+/// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+/// in an element-set record.
+func (rcv *Perturbations) MutateWEATHER_SOURCE(n pcfWeatherSource) bool {
+	return rcv._tab.MutateByteSlot(84, byte(n))
+}
+
+func (rcv *Perturbations) MutateWeatherSource(n pcfWeatherSource) bool {
+	return rcv.MutateWEATHER_SOURCE(n)
+}
+
+/// Correction applied to the atmosphere model's density.
+func (rcv *Perturbations) DENSITY_CORRECTION() pcfDensityCorrection {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return pcfDensityCorrection(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *Perturbations) DensityCorrection() pcfDensityCorrection {
+	return rcv.DENSITY_CORRECTION()
+}
+
+/// Correction applied to the atmosphere model's density.
+func (rcv *Perturbations) MutateDENSITY_CORRECTION(n pcfDensityCorrection) bool {
+	return rcv._tab.MutateByteSlot(86, byte(n))
+}
+
+func (rcv *Perturbations) MutateDensityCorrection(n pcfDensityCorrection) bool {
+	return rcv.MutateDENSITY_CORRECTION(n)
+}
+
+/// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+/// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+/// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+func (rcv *Perturbations) DENSITY_CORRECTION_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Perturbations) DensityCorrectionCid() []byte {
+	return rcv.DENSITY_CORRECTION_CID()
+}
+
+/// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+/// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+/// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+/// The daily space weather the drag density reads (SDS addition; CCSDS
+/// 502.0-B-3 names only the source, epoch and interpolation as text and
+/// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+/// UTC day, DATE ascending, no gap, from the day before the first day the
+/// record is flown or was fitted through its last day. The record is flown
+/// to the end of the last row's day and no further. Each row carries DATE,
+/// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+/// PRD, PRM predicted); other SPW fields unwritten.
+func (rcv *Perturbations) SPACE_WEATHER(obj *SPW, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SPW)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *Perturbations) SpaceWeather(obj *SPW, j int) bool {
+	return rcv.SPACE_WEATHER(obj, j)
+}
+
+func (rcv *Perturbations) SPACE_WEATHERLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) SpaceWeatherLength() int {
+	return rcv.SPACE_WEATHERLength()
+}
+
+/// The daily space weather the drag density reads (SDS addition; CCSDS
+/// 502.0-B-3 names only the source, epoch and interpolation as text and
+/// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+/// UTC day, DATE ascending, no gap, from the day before the first day the
+/// record is flown or was fitted through its last day. The record is flown
+/// to the end of the last row's day and no further. Each row carries DATE,
+/// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+/// PRD, PRM predicted); other SPW fields unwritten.
+/// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+/// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+/// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+/// Empty when DENSITY_CORRECTION is NONE.
+func (rcv *Perturbations) DENSITY_CORRECTION_NODE_TIMES_MS(j int) int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetInt64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *Perturbations) DensityCorrectionNodeTimesMs(j int) int64 {
+	return rcv.DENSITY_CORRECTION_NODE_TIMES_MS(j)
+}
+
+func (rcv *Perturbations) DENSITY_CORRECTION_NODE_TIMES_MSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) DensityCorrectionNodeTimesMsLength() int {
+	return rcv.DENSITY_CORRECTION_NODE_TIMES_MSLength()
+}
+
+/// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+/// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+/// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+/// Empty when DENSITY_CORRECTION is NONE.
+func (rcv *Perturbations) MutateDENSITY_CORRECTION_NODE_TIMES_MS(j int, n int64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateInt64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *Perturbations) MutateDensityCorrectionNodeTimesMs(j int, n int64) bool {
+	return rcv.MutateDENSITY_CORRECTION_NODE_TIMES_MS(j, n)
+}
+
+/// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+/// entry, dimensionless, as that $DCL's
+/// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+/// held at the end values outside them.
+func (rcv *Perturbations) DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *Perturbations) DensityCorrectionLogDensityScaleDimensionless(j int) float64 {
+	return rcv.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(j)
+}
+
+func (rcv *Perturbations) DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) DensityCorrectionLogDensityScaleDimensionlessLength() int {
+	return rcv.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength()
+}
+
+/// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+/// entry, dimensionless, as that $DCL's
+/// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+/// held at the end values outside them.
+func (rcv *Perturbations) MutateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *Perturbations) MutateDensityCorrectionLogDensityScaleDimensionless(j int, n float64) bool {
+	return rcv.MutateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(j, n)
+}
+
+/// Number of terms of the nutation series REDUCTION_THEORY names that the
+/// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+/// 4, 50 or 106). 0 when the series is not truncated or the count is not
+/// stated.
+func (rcv *Perturbations) REDUCTION_THEORY_TERMS() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Perturbations) ReductionTheoryTerms() uint16 {
+	return rcv.REDUCTION_THEORY_TERMS()
+}
+
+/// Number of terms of the nutation series REDUCTION_THEORY names that the
+/// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+/// 4, 50 or 106). 0 when the series is not truncated or the count is not
+/// stated.
+func (rcv *Perturbations) MutateREDUCTION_THEORY_TERMS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(96, n)
+}
+
+func (rcv *Perturbations) MutateReductionTheoryTerms(n uint16) bool {
+	return rcv.MutateREDUCTION_THEORY_TERMS(n)
+}
+
 func PerturbationsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(38)
+	builder.StartObject(47)
 }
 func PerturbationsAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -995,6 +1294,78 @@ func PerturbationsAddFIXED_Y10P7_MEAN(builder *flatbuffers.Builder, FIXED_Y10P7_
 }
 func PerturbationsAddFixedY10p7Mean(builder *flatbuffers.Builder, FIXED_Y10P7_MEAN float64) {
 	PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN)
+}
+func PerturbationsAddMAXIMUM_TESSERAL_DEGREE(builder *flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE uint16) {
+	builder.PrependUint16Slot(38, MAXIMUM_TESSERAL_DEGREE, 0)
+}
+func PerturbationsAddMaximumTesseralDegree(builder *flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE uint16) {
+	PerturbationsAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE)
+}
+func PerturbationsAddMAXIMUM_ZONAL_DEGREE(builder *flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE uint16) {
+	builder.PrependUint16Slot(39, MAXIMUM_ZONAL_DEGREE, 0)
+}
+func PerturbationsAddMaximumZonalDegree(builder *flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE uint16) {
+	PerturbationsAddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE)
+}
+func PerturbationsAddWEATHER_SOURCE(builder *flatbuffers.Builder, WEATHER_SOURCE pcfWeatherSource) {
+	builder.PrependByteSlot(40, byte(WEATHER_SOURCE), 0)
+}
+func PerturbationsAddWeatherSource(builder *flatbuffers.Builder, WEATHER_SOURCE pcfWeatherSource) {
+	PerturbationsAddWEATHER_SOURCE(builder, WEATHER_SOURCE)
+}
+func PerturbationsAddDENSITY_CORRECTION(builder *flatbuffers.Builder, DENSITY_CORRECTION pcfDensityCorrection) {
+	builder.PrependByteSlot(41, byte(DENSITY_CORRECTION), 0)
+}
+func PerturbationsAddDensityCorrection(builder *flatbuffers.Builder, DENSITY_CORRECTION pcfDensityCorrection) {
+	PerturbationsAddDENSITY_CORRECTION(builder, DENSITY_CORRECTION)
+}
+func PerturbationsAddDENSITY_CORRECTION_CID(builder *flatbuffers.Builder, DENSITY_CORRECTION_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(DENSITY_CORRECTION_CID), 0)
+}
+func PerturbationsAddDensityCorrectionCid(builder *flatbuffers.Builder, DENSITY_CORRECTION_CID flatbuffers.UOffsetT) {
+	PerturbationsAddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CID)
+}
+func PerturbationsAddSPACE_WEATHER(builder *flatbuffers.Builder, SPACE_WEATHER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(SPACE_WEATHER), 0)
+}
+func PerturbationsAddSpaceWeather(builder *flatbuffers.Builder, SPACE_WEATHER flatbuffers.UOffsetT) {
+	PerturbationsAddSPACE_WEATHER(builder, SPACE_WEATHER)
+}
+func PerturbationsStartSPACE_WEATHERVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PerturbationsStartSpaceWeatherVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PerturbationsStartSPACE_WEATHERVector(builder, numElems)
+}
+func PerturbationsAddDENSITY_CORRECTION_NODE_TIMES_MS(builder *flatbuffers.Builder, DENSITY_CORRECTION_NODE_TIMES_MS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(DENSITY_CORRECTION_NODE_TIMES_MS), 0)
+}
+func PerturbationsAddDensityCorrectionNodeTimesMs(builder *flatbuffers.Builder, DENSITY_CORRECTION_NODE_TIMES_MS flatbuffers.UOffsetT) {
+	PerturbationsAddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MS)
+}
+func PerturbationsStartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func PerturbationsStartDensityCorrectionNodeTimesMsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PerturbationsStartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, numElems)
+}
+func PerturbationsAddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder *flatbuffers.Builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS), 0)
+}
+func PerturbationsAddDensityCorrectionLogDensityScaleDimensionless(builder *flatbuffers.Builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS flatbuffers.UOffsetT) {
+	PerturbationsAddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+}
+func PerturbationsStartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func PerturbationsStartDensityCorrectionLogDensityScaleDimensionlessVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PerturbationsStartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems)
+}
+func PerturbationsAddREDUCTION_THEORY_TERMS(builder *flatbuffers.Builder, REDUCTION_THEORY_TERMS uint16) {
+	builder.PrependUint16Slot(46, REDUCTION_THEORY_TERMS, 0)
+}
+func PerturbationsAddReductionTheoryTerms(builder *flatbuffers.Builder, REDUCTION_THEORY_TERMS uint16) {
+	PerturbationsAddREDUCTION_THEORY_TERMS(builder, REDUCTION_THEORY_TERMS)
 }
 func PerturbationsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

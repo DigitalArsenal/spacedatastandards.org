@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { OCMDynamicParameter, OCMDynamicParameterT } from './OCMDynamicParameter.js';
+import { OCMFitStatistics, OCMFitStatisticsT } from './OCMFitStatistics.js';
 import { estimatorCategory } from './estimatorCategory.js';
 export declare class OrbitDetermination implements flatbuffers.IUnpackableObject<OrbitDeterminationT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -97,7 +98,9 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
      */
     OD_ESTIMATOR(): estimatorCategory;
     /**
-     * RMS of post-fit residuals for this solution.
+     * RMS of post-fit residuals for this solution. In the unit of the residuals the
+     * observation types state: arcsec for RADEC angles. A position RMS in km is
+     * OCMFitStatistics.FIT_RMS_KM.
      */
     OD_RESIDUAL_RMS(): number;
     /**
@@ -229,6 +232,10 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
     COMMENT(index: number): string;
     COMMENT(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     commentLength(): number;
+    /**
+     * Position statistics of a fit to a reference ephemeris.
+     */
+    FIT_STATISTICS(obj?: OCMFitStatistics): OCMFitStatistics | null;
     static startOrbitDetermination(builder: flatbuffers.Builder): void;
     static addOdId(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset): void;
     static addOdPrevId(builder: flatbuffers.Builder, OD_PREV_IDOffset: flatbuffers.Offset): void;
@@ -297,8 +304,8 @@ export declare class OrbitDetermination implements flatbuffers.IUnpackableObject
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startCommentVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addFitStatistics(builder: flatbuffers.Builder, FIT_STATISTICSOffset: flatbuffers.Offset): void;
     static endOrbitDetermination(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createOrbitDetermination(builder: flatbuffers.Builder, OD_IDOffset: flatbuffers.Offset, OD_PREV_IDOffset: flatbuffers.Offset, OD_ALGORITHMOffset: flatbuffers.Offset, OD_METHODOffset: flatbuffers.Offset, OD_EPOCHOffset: flatbuffers.Offset, OD_TIME_TAGOffset: flatbuffers.Offset, OD_PROCESS_NOISEOffset: flatbuffers.Offset, OD_COV_REDUCTIONOffset: flatbuffers.Offset, OD_NOISE_MODELSOffset: flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset: flatbuffers.Offset, OD_OBSERVATIONS_USED: number, OD_TRACKS_USED: number, OD_DATA_WEIGHTINGOffset: flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset: flatbuffers.Offset, OD_EST_PARAMETERSOffset: flatbuffers.Offset, OD_APRIORI_DATAOffset: flatbuffers.Offset, OD_RESIDUALSOffset: flatbuffers.Offset, OD_ESTIMATOR: estimatorCategory, OD_RESIDUAL_RMS: number, OD_RESIDUALS_SERIESOffset: flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset: flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset: flatbuffers.Offset, OD_BATCH_BASELINE_RMS: number, SEDR: number, WEIGHTED_RMS: number, OD_DYNAMIC_PARAMETERSOffset: flatbuffers.Offset, DAYS_SINCE_FIRST_OBS: number, DAYS_SINCE_LAST_OBS: number, RECOMMENDED_OD_SPAN: number, ACTUAL_OD_SPAN: number, OBS_AVAILABLE: number, TRACKS_AVAILABLE: number, MAXIMUM_OBS_GAP: number, OD_EPOCH_EIGMAJ: number, OD_EPOCH_EIGINT: number, OD_EPOCH_EIGMIN: number, OD_MAX_PRED_EIGMAJ: number, OD_MIN_PRED_EIGMIN: number, OD_CONFIDENCE: number, GDOP: number, SOLVE_N: number, SOLVE_STATESOffset: flatbuffers.Offset, CONSIDER_N: number, CONSIDER_PARAMSOffset: flatbuffers.Offset, SENSORS_N: number, SENSORSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OrbitDeterminationT;
     unpackTo(_o: OrbitDeterminationT): void;
 }
@@ -350,7 +357,8 @@ export declare class OrbitDeterminationT implements flatbuffers.IGeneratedObject
     SENSORS_N: number;
     SENSORS: string | Uint8Array | null;
     COMMENT: (string)[];
-    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number, OD_DYNAMIC_PARAMETERS?: (OCMDynamicParameterT)[], DAYS_SINCE_FIRST_OBS?: number, DAYS_SINCE_LAST_OBS?: number, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, TRACKS_AVAILABLE?: number, MAXIMUM_OBS_GAP?: number, OD_EPOCH_EIGMAJ?: number, OD_EPOCH_EIGINT?: number, OD_EPOCH_EIGMIN?: number, OD_MAX_PRED_EIGMAJ?: number, OD_MIN_PRED_EIGMIN?: number, OD_CONFIDENCE?: number, GDOP?: number, SOLVE_N?: number, SOLVE_STATES?: string | Uint8Array | null, CONSIDER_N?: number, CONSIDER_PARAMS?: string | Uint8Array | null, SENSORS_N?: number, SENSORS?: string | Uint8Array | null, COMMENT?: (string)[]);
+    FIT_STATISTICS: OCMFitStatisticsT | null;
+    constructor(OD_ID?: string | Uint8Array | null, OD_PREV_ID?: string | Uint8Array | null, OD_ALGORITHM?: string | Uint8Array | null, OD_METHOD?: string | Uint8Array | null, OD_EPOCH?: string | Uint8Array | null, OD_TIME_TAG?: string | Uint8Array | null, OD_PROCESS_NOISE?: string | Uint8Array | null, OD_COV_REDUCTION?: string | Uint8Array | null, OD_NOISE_MODELS?: string | Uint8Array | null, OD_OBSERVATIONS_TYPE?: (string)[], OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, OD_DATA_WEIGHTING?: string | Uint8Array | null, OD_CONVERGENCE_CRITERIA?: string | Uint8Array | null, OD_EST_PARAMETERS?: (string)[], OD_APRIORI_DATA?: string | Uint8Array | null, OD_RESIDUALS?: string | Uint8Array | null, OD_ESTIMATOR?: estimatorCategory, OD_RESIDUAL_RMS?: number, OD_RESIDUALS_SERIES?: (number)[], OD_RESIDUAL_EPOCHS?: (number)[], OD_BATCH_BASELINE_ID?: string | Uint8Array | null, OD_BATCH_BASELINE_RMS?: number, SEDR?: number, WEIGHTED_RMS?: number, OD_DYNAMIC_PARAMETERS?: (OCMDynamicParameterT)[], DAYS_SINCE_FIRST_OBS?: number, DAYS_SINCE_LAST_OBS?: number, RECOMMENDED_OD_SPAN?: number, ACTUAL_OD_SPAN?: number, OBS_AVAILABLE?: number, TRACKS_AVAILABLE?: number, MAXIMUM_OBS_GAP?: number, OD_EPOCH_EIGMAJ?: number, OD_EPOCH_EIGINT?: number, OD_EPOCH_EIGMIN?: number, OD_MAX_PRED_EIGMAJ?: number, OD_MIN_PRED_EIGMIN?: number, OD_CONFIDENCE?: number, GDOP?: number, SOLVE_N?: number, SOLVE_STATES?: string | Uint8Array | null, CONSIDER_N?: number, CONSIDER_PARAMS?: string | Uint8Array | null, SENSORS_N?: number, SENSORS?: string | Uint8Array | null, COMMENT?: (string)[], FIT_STATISTICS?: OCMFitStatisticsT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OrbitDetermination.d.ts.map

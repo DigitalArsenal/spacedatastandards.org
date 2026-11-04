@@ -142,6 +142,26 @@ public final class CVR extends com.google.flatbuffers.Table {
    * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
    */
   public double SHRINKAGE_WEIGHT() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Distinct truth epochs among the SAMPLES: predictions that share one truth
+   * state count once here. 0 when not stated.
+   */
+  public long TRUTH_EPOCHS() { int o = __offset(40); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Share of the held-out samples whose error lies inside the 1-sigma band of
+   * the first, second and third axis of the covariance's frame (radial,
+   * in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+   * nominal 0.6827 for Gaussian errors. NaN when not measured.
+   */
+  public double COVERAGE_1_SIGMA_AXIS1() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double COVERAGE_1_SIGMA_AXIS2() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double COVERAGE_1_SIGMA_AXIS3() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+   */
+  public double COVERAGE_3_SIGMA_AXIS1() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double COVERAGE_3_SIGMA_AXIS2() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  public double COVERAGE_3_SIGMA_AXIS3() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
 
   public static int createCVR(FlatBufferBuilder builder,
       byte RULE,
@@ -161,14 +181,28 @@ public final class CVR extends com.google.flatbuffers.Table {
       long HISTORY_SAMPLES,
       long HISTORY_SETS,
       int HISTORY_WINDOWOffset,
-      double SHRINKAGE_WEIGHT) {
-    builder.startTable(18);
+      double SHRINKAGE_WEIGHT,
+      long TRUTH_EPOCHS,
+      double COVERAGE_1_SIGMA_AXIS1,
+      double COVERAGE_1_SIGMA_AXIS2,
+      double COVERAGE_1_SIGMA_AXIS3,
+      double COVERAGE_3_SIGMA_AXIS1,
+      double COVERAGE_3_SIGMA_AXIS2,
+      double COVERAGE_3_SIGMA_AXIS3) {
+    builder.startTable(25);
+    CVR.addCoverage3SigmaAxis3(builder, COVERAGE_3_SIGMA_AXIS3);
+    CVR.addCoverage3SigmaAxis2(builder, COVERAGE_3_SIGMA_AXIS2);
+    CVR.addCoverage3SigmaAxis1(builder, COVERAGE_3_SIGMA_AXIS1);
+    CVR.addCoverage1SigmaAxis3(builder, COVERAGE_1_SIGMA_AXIS3);
+    CVR.addCoverage1SigmaAxis2(builder, COVERAGE_1_SIGMA_AXIS2);
+    CVR.addCoverage1SigmaAxis1(builder, COVERAGE_1_SIGMA_AXIS1);
     CVR.addShrinkageWeight(builder, SHRINKAGE_WEIGHT);
     CVR.addScaleFactor(builder, SCALE_FACTOR);
     CVR.addCoverage95(builder, COVERAGE_95);
     CVR.addMeanD2Over3(builder, MEAN_D2_OVER_3);
     CVR.addHorizonDays(builder, HORIZON_DAYS);
     CVR.addAgeDays(builder, AGE_DAYS);
+    CVR.addTruthEpochs(builder, TRUTH_EPOCHS);
     CVR.addHistoryWindow(builder, HISTORY_WINDOWOffset);
     CVR.addHistorySets(builder, HISTORY_SETS);
     CVR.addHistorySamples(builder, HISTORY_SAMPLES);
@@ -184,7 +218,7 @@ public final class CVR extends com.google.flatbuffers.Table {
     return CVR.endCVR(builder);
   }
 
-  public static void startCVR(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startCVR(FlatBufferBuilder builder) { builder.startTable(25); }
   public static void addRule(FlatBufferBuilder builder, byte RULE) { builder.addByte(0, RULE, 0); }
   public static void addModelId(FlatBufferBuilder builder, int MODEL_IDOffset) { builder.addOffset(1, MODEL_IDOffset, 0); }
   public static void addRegime(FlatBufferBuilder builder, int REGIMEOffset) { builder.addOffset(2, REGIMEOffset, 0); }
@@ -203,6 +237,13 @@ public final class CVR extends com.google.flatbuffers.Table {
   public static void addHistorySets(FlatBufferBuilder builder, long HISTORY_SETS) { builder.addInt(15, (int) HISTORY_SETS, (int) 0L); }
   public static void addHistoryWindow(FlatBufferBuilder builder, int HISTORY_WINDOWOffset) { builder.addOffset(16, HISTORY_WINDOWOffset, 0); }
   public static void addShrinkageWeight(FlatBufferBuilder builder, double SHRINKAGE_WEIGHT) { builder.addDouble(17, SHRINKAGE_WEIGHT, Double.NaN); }
+  public static void addTruthEpochs(FlatBufferBuilder builder, long TRUTH_EPOCHS) { builder.addInt(18, (int) TRUTH_EPOCHS, (int) 0L); }
+  public static void addCoverage1SigmaAxis1(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS1) { builder.addDouble(19, COVERAGE_1_SIGMA_AXIS1, Double.NaN); }
+  public static void addCoverage1SigmaAxis2(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS2) { builder.addDouble(20, COVERAGE_1_SIGMA_AXIS2, Double.NaN); }
+  public static void addCoverage1SigmaAxis3(FlatBufferBuilder builder, double COVERAGE_1_SIGMA_AXIS3) { builder.addDouble(21, COVERAGE_1_SIGMA_AXIS3, Double.NaN); }
+  public static void addCoverage3SigmaAxis1(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS1) { builder.addDouble(22, COVERAGE_3_SIGMA_AXIS1, Double.NaN); }
+  public static void addCoverage3SigmaAxis2(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS2) { builder.addDouble(23, COVERAGE_3_SIGMA_AXIS2, Double.NaN); }
+  public static void addCoverage3SigmaAxis3(FlatBufferBuilder builder, double COVERAGE_3_SIGMA_AXIS3) { builder.addDouble(24, COVERAGE_3_SIGMA_AXIS3, Double.NaN); }
   public static int endCVR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

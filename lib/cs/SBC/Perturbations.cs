@@ -198,6 +198,76 @@ public struct Perturbations : IFlatbufferObject
   public double FIXED_Y10P7 { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// FIXED_Y10P7_MEAN, NaN when not stated.
   public double FIXED_Y10P7_MEAN { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+  /// the gravity field the record was computed with (SDS addition; the $PCF
+  /// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+  /// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+  /// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+  /// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+  /// order pair cannot state a tesseral cap below a zonal one.
+  public ushort MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Highest degree of the zonal terms (order 0) of the gravity field the
+  /// record was computed with (SDS addition). For a mean-element set the tail
+  /// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+  /// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+  /// otherwise not stated.
+  public ushort MAXIMUM_ZONAL_DEGREE { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Where the space weather behind the drag density comes from. RECORDS: the
+  /// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+  /// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+  /// in an element-set record.
+  public pcfWeatherSource WEATHER_SOURCE { get { int o = __p.__offset(84); return o != 0 ? (pcfWeatherSource)__p.bb.Get(o + __p.bb_pos) : pcfWeatherSource.UNSPECIFIED; } }
+  /// Correction applied to the atmosphere model's density.
+  public pcfDensityCorrection DENSITY_CORRECTION { get { int o = __p.__offset(86); return o != 0 ? (pcfDensityCorrection)__p.bb.Get(o + __p.bb_pos) : pcfDensityCorrection.NONE; } }
+  /// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+  /// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+  /// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+  public string DENSITY_CORRECTION_CID { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDENSITY_CORRECTION_CIDBytes() { return __p.__vector_as_span<byte>(88, 1); }
+#else
+  public ArraySegment<byte>? GetDENSITY_CORRECTION_CIDBytes() { return __p.__vector_as_arraysegment(88); }
+#endif
+  public byte[] GetDENSITY_CORRECTION_CIDArray() { return __p.__vector_as_array<byte>(88); }
+  /// The daily space weather the drag density reads (SDS addition; CCSDS
+  /// 502.0-B-3 names only the source, epoch and interpolation as text and
+  /// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+  /// UTC day, DATE ascending, no gap, from the day before the first day the
+  /// record is flown or was fitted through its last day. The record is flown
+  /// to the end of the last row's day and no further. Each row carries DATE,
+  /// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+  /// PRD, PRM predicted); other SPW fields unwritten.
+  public SPW? SPACE_WEATHER(int j) { int o = __p.__offset(90); return o != 0 ? (SPW?)(new SPW()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SPACE_WEATHERLength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+  /// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+  /// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+  /// Empty when DENSITY_CORRECTION is NONE.
+  public long DENSITY_CORRECTION_NODE_TIMES_MS(int j) { int o = __p.__offset(92); return o != 0 ? __p.bb.GetLong(__p.__vector(o) + j * 8) : (long)0; }
+  public int DENSITY_CORRECTION_NODE_TIMES_MSLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<long> GetDENSITY_CORRECTION_NODE_TIMES_MSBytes() { return __p.__vector_as_span<long>(92, 8); }
+#else
+  public ArraySegment<byte>? GetDENSITY_CORRECTION_NODE_TIMES_MSBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public long[] GetDENSITY_CORRECTION_NODE_TIMES_MSArray() { return __p.__vector_as_array<long>(92); }
+  /// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+  /// entry, dimensionless, as that $DCL's
+  /// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+  /// held at the end values outside them.
+  public double DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(int j) { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSBytes() { return __p.__vector_as_span<double>(94, 8); }
+#else
+  public ArraySegment<byte>? GetDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public double[] GetDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSArray() { return __p.__vector_as_array<double>(94); }
+  /// Number of terms of the nutation series REDUCTION_THEORY names that the
+  /// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+  /// 4, 50 or 106). 0 when the series is not truncated or the count is not
+  /// stated.
+  public ushort REDUCTION_THEORY_TERMS { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<Perturbations> CreatePerturbations(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -237,8 +307,17 @@ public struct Perturbations : IFlatbufferObject
       double FIXED_S10P7 = Double.NaN,
       double FIXED_S10P7_MEAN = Double.NaN,
       double FIXED_Y10P7 = Double.NaN,
-      double FIXED_Y10P7_MEAN = Double.NaN) {
-    builder.StartTable(38);
+      double FIXED_Y10P7_MEAN = Double.NaN,
+      ushort MAXIMUM_TESSERAL_DEGREE = 0,
+      ushort MAXIMUM_ZONAL_DEGREE = 0,
+      pcfWeatherSource WEATHER_SOURCE = pcfWeatherSource.UNSPECIFIED,
+      pcfDensityCorrection DENSITY_CORRECTION = pcfDensityCorrection.NONE,
+      StringOffset DENSITY_CORRECTION_CIDOffset = default(StringOffset),
+      VectorOffset SPACE_WEATHEROffset = default(VectorOffset),
+      VectorOffset DENSITY_CORRECTION_NODE_TIMES_MSOffset = default(VectorOffset),
+      VectorOffset DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset = default(VectorOffset),
+      ushort REDUCTION_THEORY_TERMS = 0) {
+    builder.StartTable(47);
     Perturbations.AddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN);
     Perturbations.AddFIXED_Y10P7(builder, FIXED_Y10P7);
     Perturbations.AddFIXED_S10P7_MEAN(builder, FIXED_S10P7_MEAN);
@@ -254,6 +333,10 @@ public struct Perturbations : IFlatbufferObject
     Perturbations.AddFIXED_F10P7(builder, FIXED_F10P7);
     Perturbations.AddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP);
     Perturbations.AddGM(builder, GM);
+    Perturbations.AddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
+    Perturbations.AddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MSOffset);
+    Perturbations.AddSPACE_WEATHER(builder, SPACE_WEATHEROffset);
+    Perturbations.AddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CIDOffset);
     Perturbations.AddSW_INTERP_METHOD(builder, SW_INTERP_METHODOffset);
     Perturbations.AddSW_DATA_EPOCH(builder, SW_DATA_EPOCHOffset);
     Perturbations.AddSW_DATA_SOURCE(builder, SW_DATA_SOURCEOffset);
@@ -277,10 +360,15 @@ public struct Perturbations : IFlatbufferObject
     Perturbations.AddGRAVITY_MODEL(builder, GRAVITY_MODELOffset);
     Perturbations.AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset);
     Perturbations.AddCOMMENT(builder, COMMENTOffset);
+    Perturbations.AddREDUCTION_THEORY_TERMS(builder, REDUCTION_THEORY_TERMS);
+    Perturbations.AddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE);
+    Perturbations.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
+    Perturbations.AddDENSITY_CORRECTION(builder, DENSITY_CORRECTION);
+    Perturbations.AddWEATHER_SOURCE(builder, WEATHER_SOURCE);
     return Perturbations.EndPerturbations(builder);
   }
 
-  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(38); }
+  public static void StartPerturbations(FlatBufferBuilder builder) { builder.StartTable(47); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -329,6 +417,30 @@ public struct Perturbations : IFlatbufferObject
   public static void AddFIXED_S10P7_MEAN(FlatBufferBuilder builder, double FIXED_S10P7_MEAN) { builder.AddDouble(35, FIXED_S10P7_MEAN, Double.NaN); }
   public static void AddFIXED_Y10P7(FlatBufferBuilder builder, double FIXED_Y10P7) { builder.AddDouble(36, FIXED_Y10P7, Double.NaN); }
   public static void AddFIXED_Y10P7_MEAN(FlatBufferBuilder builder, double FIXED_Y10P7_MEAN) { builder.AddDouble(37, FIXED_Y10P7_MEAN, Double.NaN); }
+  public static void AddMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, ushort MAXIMUM_TESSERAL_DEGREE) { builder.AddUshort(38, MAXIMUM_TESSERAL_DEGREE, 0); }
+  public static void AddMAXIMUM_ZONAL_DEGREE(FlatBufferBuilder builder, ushort MAXIMUM_ZONAL_DEGREE) { builder.AddUshort(39, MAXIMUM_ZONAL_DEGREE, 0); }
+  public static void AddWEATHER_SOURCE(FlatBufferBuilder builder, pcfWeatherSource WEATHER_SOURCE) { builder.AddByte(40, (byte)WEATHER_SOURCE, 0); }
+  public static void AddDENSITY_CORRECTION(FlatBufferBuilder builder, pcfDensityCorrection DENSITY_CORRECTION) { builder.AddByte(41, (byte)DENSITY_CORRECTION, 0); }
+  public static void AddDENSITY_CORRECTION_CID(FlatBufferBuilder builder, StringOffset DENSITY_CORRECTION_CIDOffset) { builder.AddOffset(42, DENSITY_CORRECTION_CIDOffset.Value, 0); }
+  public static void AddSPACE_WEATHER(FlatBufferBuilder builder, VectorOffset SPACE_WEATHEROffset) { builder.AddOffset(43, SPACE_WEATHEROffset.Value, 0); }
+  public static VectorOffset CreateSPACE_WEATHERVector(FlatBufferBuilder builder, Offset<SPW>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSPACE_WEATHERVectorBlock(FlatBufferBuilder builder, Offset<SPW>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPACE_WEATHERVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SPW>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPACE_WEATHERVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SPW>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPACE_WEATHERVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddDENSITY_CORRECTION_NODE_TIMES_MS(FlatBufferBuilder builder, VectorOffset DENSITY_CORRECTION_NODE_TIMES_MSOffset) { builder.AddOffset(44, DENSITY_CORRECTION_NODE_TIMES_MSOffset.Value, 0); }
+  public static VectorOffset CreateDENSITY_CORRECTION_NODE_TIMES_MSVector(FlatBufferBuilder builder, long[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddLong(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_NODE_TIMES_MSVectorBlock(FlatBufferBuilder builder, long[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_NODE_TIMES_MSVectorBlock(FlatBufferBuilder builder, ArraySegment<long> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_NODE_TIMES_MSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<long>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDENSITY_CORRECTION_NODE_TIMES_MSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(FlatBufferBuilder builder, VectorOffset DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset) { builder.AddOffset(45, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSOffset.Value, 0); }
+  public static VectorOffset CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddREDUCTION_THEORY_TERMS(FlatBufferBuilder builder, ushort REDUCTION_THEORY_TERMS) { builder.AddUshort(46, REDUCTION_THEORY_TERMS, 0); }
   public static Offset<Perturbations> EndPerturbations(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<Perturbations>(o);
@@ -379,6 +491,18 @@ public struct Perturbations : IFlatbufferObject
     _o.FIXED_S10P7_MEAN = this.FIXED_S10P7_MEAN;
     _o.FIXED_Y10P7 = this.FIXED_Y10P7;
     _o.FIXED_Y10P7_MEAN = this.FIXED_Y10P7_MEAN;
+    _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE;
+    _o.MAXIMUM_ZONAL_DEGREE = this.MAXIMUM_ZONAL_DEGREE;
+    _o.WEATHER_SOURCE = this.WEATHER_SOURCE;
+    _o.DENSITY_CORRECTION = this.DENSITY_CORRECTION;
+    _o.DENSITY_CORRECTION_CID = this.DENSITY_CORRECTION_CID;
+    _o.SPACE_WEATHER = new List<SPWT>();
+    for (var _j = 0; _j < this.SPACE_WEATHERLength; ++_j) {_o.SPACE_WEATHER.Add(this.SPACE_WEATHER(_j).HasValue ? this.SPACE_WEATHER(_j).Value.UnPack() : null);}
+    _o.DENSITY_CORRECTION_NODE_TIMES_MS = new List<long>();
+    for (var _j = 0; _j < this.DENSITY_CORRECTION_NODE_TIMES_MSLength; ++_j) {_o.DENSITY_CORRECTION_NODE_TIMES_MS.Add(this.DENSITY_CORRECTION_NODE_TIMES_MS(_j));}
+    _o.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = new List<double>();
+    for (var _j = 0; _j < this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength; ++_j) {_o.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.Add(this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(_j));}
+    _o.REDUCTION_THEORY_TERMS = this.REDUCTION_THEORY_TERMS;
   }
   public static Offset<Perturbations> Pack(FlatBufferBuilder builder, PerturbationsT _o) {
     if (_o == null) return default(Offset<Perturbations>);
@@ -412,6 +536,23 @@ public struct Perturbations : IFlatbufferObject
     var _SW_DATA_SOURCE = _o.SW_DATA_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.SW_DATA_SOURCE);
     var _SW_DATA_EPOCH = _o.SW_DATA_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.SW_DATA_EPOCH);
     var _SW_INTERP_METHOD = _o.SW_INTERP_METHOD == null ? default(StringOffset) : builder.CreateString(_o.SW_INTERP_METHOD);
+    var _DENSITY_CORRECTION_CID = _o.DENSITY_CORRECTION_CID == null ? default(StringOffset) : builder.CreateString(_o.DENSITY_CORRECTION_CID);
+    var _SPACE_WEATHER = default(VectorOffset);
+    if (_o.SPACE_WEATHER != null) {
+      var __SPACE_WEATHER = new Offset<SPW>[_o.SPACE_WEATHER.Count];
+      for (var _j = 0; _j < __SPACE_WEATHER.Length; ++_j) { __SPACE_WEATHER[_j] = SPW.Pack(builder, _o.SPACE_WEATHER[_j]); }
+      _SPACE_WEATHER = CreateSPACE_WEATHERVector(builder, __SPACE_WEATHER);
+    }
+    var _DENSITY_CORRECTION_NODE_TIMES_MS = default(VectorOffset);
+    if (_o.DENSITY_CORRECTION_NODE_TIMES_MS != null) {
+      var __DENSITY_CORRECTION_NODE_TIMES_MS = _o.DENSITY_CORRECTION_NODE_TIMES_MS.ToArray();
+      _DENSITY_CORRECTION_NODE_TIMES_MS = CreateDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, __DENSITY_CORRECTION_NODE_TIMES_MS);
+    }
+    var _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = default(VectorOffset);
+    if (_o.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS != null) {
+      var __DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = _o.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.ToArray();
+      _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, __DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS);
+    }
     return CreatePerturbations(
       builder,
       _COMMENT,
@@ -451,7 +592,16 @@ public struct Perturbations : IFlatbufferObject
       _o.FIXED_S10P7,
       _o.FIXED_S10P7_MEAN,
       _o.FIXED_Y10P7,
-      _o.FIXED_Y10P7_MEAN);
+      _o.FIXED_Y10P7_MEAN,
+      _o.MAXIMUM_TESSERAL_DEGREE,
+      _o.MAXIMUM_ZONAL_DEGREE,
+      _o.WEATHER_SOURCE,
+      _o.DENSITY_CORRECTION,
+      _DENSITY_CORRECTION_CID,
+      _SPACE_WEATHER,
+      _DENSITY_CORRECTION_NODE_TIMES_MS,
+      _DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS,
+      _o.REDUCTION_THEORY_TERMS);
   }
 }
 
@@ -495,6 +645,15 @@ public class PerturbationsT
   public double FIXED_S10P7_MEAN { get; set; }
   public double FIXED_Y10P7 { get; set; }
   public double FIXED_Y10P7_MEAN { get; set; }
+  public ushort MAXIMUM_TESSERAL_DEGREE { get; set; }
+  public ushort MAXIMUM_ZONAL_DEGREE { get; set; }
+  public pcfWeatherSource WEATHER_SOURCE { get; set; }
+  public pcfDensityCorrection DENSITY_CORRECTION { get; set; }
+  public string DENSITY_CORRECTION_CID { get; set; }
+  public List<SPWT> SPACE_WEATHER { get; set; }
+  public List<long> DENSITY_CORRECTION_NODE_TIMES_MS { get; set; }
+  public List<double> DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS { get; set; }
+  public ushort REDUCTION_THEORY_TERMS { get; set; }
 
   public PerturbationsT() {
     this.COMMENT = null;
@@ -535,6 +694,15 @@ public class PerturbationsT
     this.FIXED_S10P7_MEAN = Double.NaN;
     this.FIXED_Y10P7 = Double.NaN;
     this.FIXED_Y10P7_MEAN = Double.NaN;
+    this.MAXIMUM_TESSERAL_DEGREE = 0;
+    this.MAXIMUM_ZONAL_DEGREE = 0;
+    this.WEATHER_SOURCE = pcfWeatherSource.UNSPECIFIED;
+    this.DENSITY_CORRECTION = pcfDensityCorrection.NONE;
+    this.DENSITY_CORRECTION_CID = null;
+    this.SPACE_WEATHER = null;
+    this.DENSITY_CORRECTION_NODE_TIMES_MS = null;
+    this.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = null;
+    this.REDUCTION_THEORY_TERMS = 0;
   }
 }
 
@@ -582,6 +750,15 @@ static public class PerturbationsVerify
       && verifier.VerifyField(tablePos, 74 /*FIXED_S10P7_MEAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 76 /*FIXED_Y10P7*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 78 /*FIXED_Y10P7_MEAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*MAXIMUM_TESSERAL_DEGREE*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 82 /*MAXIMUM_ZONAL_DEGREE*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 84 /*WEATHER_SOURCE*/, 1 /*pcfWeatherSource*/, 1, false)
+      && verifier.VerifyField(tablePos, 86 /*DENSITY_CORRECTION*/, 1 /*pcfDensityCorrection*/, 1, false)
+      && verifier.VerifyString(tablePos, 88 /*DENSITY_CORRECTION_CID*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 90 /*SPACE_WEATHER*/, SPWVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 92 /*DENSITY_CORRECTION_NODE_TIMES_MS*/, 8 /*long*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 94 /*DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 96 /*REDUCTION_THEORY_TERMS*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

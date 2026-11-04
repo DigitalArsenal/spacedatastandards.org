@@ -512,8 +512,19 @@ CELESTIAL_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+ * NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+ * strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+ * the object has no NORAD number.
+ */
+NORAD_CAT_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
 static startMetadata(builder:flatbuffers.Builder) {
-  builder.startObject(48);
+  builder.startObject(49);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -756,12 +767,16 @@ static addCelestialSource(builder:flatbuffers.Builder, CELESTIAL_SOURCEOffset:fl
   builder.addFieldOffset(47, CELESTIAL_SOURCEOffset, 0);
 }
 
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(48, NORAD_CAT_ID, 0);
+}
+
 static endMetadata(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createMetadata(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, INTERNATIONAL_DESIGNATOROffset:flatbuffers.Offset, CATALOG_NAMEOffset:flatbuffers.Offset, OBJECT_DESIGNATOROffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, ORIGINATOR_POCOffset:flatbuffers.Offset, ORIGINATOR_POSITIONOffset:flatbuffers.Offset, ORIGINATOR_PHONEOffset:flatbuffers.Offset, ORIGINATOR_EMAILOffset:flatbuffers.Offset, ORIGINATOR_ADDRESSOffset:flatbuffers.Offset, TECH_ORGOffset:flatbuffers.Offset, TECH_POCOffset:flatbuffers.Offset, TECH_POSITIONOffset:flatbuffers.Offset, TECH_PHONEOffset:flatbuffers.Offset, TECH_EMAILOffset:flatbuffers.Offset, TECH_ADDRESSOffset:flatbuffers.Offset, PREVIOUS_MESSAGE_IDOffset:flatbuffers.Offset, NEXT_MESSAGE_IDOffset:flatbuffers.Offset, ADM_MSG_LINKOffset:flatbuffers.Offset, CDM_MSG_LINKOffset:flatbuffers.Offset, PRM_MSG_LINKOffset:flatbuffers.Offset, RDM_MSG_LINKOffset:flatbuffers.Offset, TDM_MSG_LINKOffset:flatbuffers.Offset, OPERATOROffset:flatbuffers.Offset, OWNEROffset:flatbuffers.Offset, COUNTRYOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, OBJECT_TYPEOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, EPOCH_TZEROOffset:flatbuffers.Offset, OPS_STATUSOffset:flatbuffers.Offset, ORBIT_CATEGORYOffset:flatbuffers.Offset, OCM_DATA_ELEMENTSOffset:flatbuffers.Offset, SCLK_OFFSET_AT_EPOCH:number, SCLK_SEC_PER_SI_SEC:number, PREVIOUS_MESSAGE_EPOCHOffset:flatbuffers.Offset, NEXT_MESSAGE_EPOCHOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, TIME_SPAN:number, TAIMUTC_AT_TZERO:number, NEXT_LEAP_EPOCHOffset:flatbuffers.Offset, NEXT_LEAP_TAIMUTC:number, UT1MUTC_AT_TZERO:number, EOP_SOURCEOffset:flatbuffers.Offset, INTERP_METHOD_EOPOffset:flatbuffers.Offset, CELESTIAL_SOURCEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createMetadata(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, INTERNATIONAL_DESIGNATOROffset:flatbuffers.Offset, CATALOG_NAMEOffset:flatbuffers.Offset, OBJECT_DESIGNATOROffset:flatbuffers.Offset, ALTERNATE_NAMESOffset:flatbuffers.Offset, ORIGINATOR_POCOffset:flatbuffers.Offset, ORIGINATOR_POSITIONOffset:flatbuffers.Offset, ORIGINATOR_PHONEOffset:flatbuffers.Offset, ORIGINATOR_EMAILOffset:flatbuffers.Offset, ORIGINATOR_ADDRESSOffset:flatbuffers.Offset, TECH_ORGOffset:flatbuffers.Offset, TECH_POCOffset:flatbuffers.Offset, TECH_POSITIONOffset:flatbuffers.Offset, TECH_PHONEOffset:flatbuffers.Offset, TECH_EMAILOffset:flatbuffers.Offset, TECH_ADDRESSOffset:flatbuffers.Offset, PREVIOUS_MESSAGE_IDOffset:flatbuffers.Offset, NEXT_MESSAGE_IDOffset:flatbuffers.Offset, ADM_MSG_LINKOffset:flatbuffers.Offset, CDM_MSG_LINKOffset:flatbuffers.Offset, PRM_MSG_LINKOffset:flatbuffers.Offset, RDM_MSG_LINKOffset:flatbuffers.Offset, TDM_MSG_LINKOffset:flatbuffers.Offset, OPERATOROffset:flatbuffers.Offset, OWNEROffset:flatbuffers.Offset, COUNTRYOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, OBJECT_TYPEOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, EPOCH_TZEROOffset:flatbuffers.Offset, OPS_STATUSOffset:flatbuffers.Offset, ORBIT_CATEGORYOffset:flatbuffers.Offset, OCM_DATA_ELEMENTSOffset:flatbuffers.Offset, SCLK_OFFSET_AT_EPOCH:number, SCLK_SEC_PER_SI_SEC:number, PREVIOUS_MESSAGE_EPOCHOffset:flatbuffers.Offset, NEXT_MESSAGE_EPOCHOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, STOP_TIMEOffset:flatbuffers.Offset, TIME_SPAN:number, TAIMUTC_AT_TZERO:number, NEXT_LEAP_EPOCHOffset:flatbuffers.Offset, NEXT_LEAP_TAIMUTC:number, UT1MUTC_AT_TZERO:number, EOP_SOURCEOffset:flatbuffers.Offset, INTERP_METHOD_EOPOffset:flatbuffers.Offset, CELESTIAL_SOURCEOffset:flatbuffers.Offset, NORAD_CAT_ID:number):flatbuffers.Offset {
   Metadata.startMetadata(builder);
   Metadata.addComment(builder, COMMENTOffset);
   Metadata.addObjectName(builder, OBJECT_NAMEOffset);
@@ -811,6 +826,7 @@ static createMetadata(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Off
   Metadata.addEopSource(builder, EOP_SOURCEOffset);
   Metadata.addInterpMethodEop(builder, INTERP_METHOD_EOPOffset);
   Metadata.addCelestialSource(builder, CELESTIAL_SOURCEOffset);
+  Metadata.addNoradCatId(builder, NORAD_CAT_ID);
   return Metadata.endMetadata(builder);
 }
 
@@ -863,7 +879,8 @@ unpack(): MetadataT {
     this.UT1MUTC_AT_TZERO(),
     this.EOP_SOURCE(),
     this.INTERP_METHOD_EOP(),
-    this.CELESTIAL_SOURCE()
+    this.CELESTIAL_SOURCE(),
+    this.NORAD_CAT_ID()
   );
 }
 
@@ -917,6 +934,7 @@ unpackTo(_o: MetadataT): void {
   _o.EOP_SOURCE = this.EOP_SOURCE();
   _o.INTERP_METHOD_EOP = this.INTERP_METHOD_EOP();
   _o.CELESTIAL_SOURCE = this.CELESTIAL_SOURCE();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
 }
 }
 
@@ -969,7 +987,8 @@ constructor(
   public UT1MUTC_AT_TZERO: number = 0.0,
   public EOP_SOURCE: string|Uint8Array|null = null,
   public INTERP_METHOD_EOP: string|Uint8Array|null = null,
-  public CELESTIAL_SOURCE: string|Uint8Array|null = null
+  public CELESTIAL_SOURCE: string|Uint8Array|null = null,
+  public NORAD_CAT_ID: number = 0
 ){}
 
 
@@ -1065,7 +1084,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.UT1MUTC_AT_TZERO,
     EOP_SOURCE,
     INTERP_METHOD_EOP,
-    CELESTIAL_SOURCE
+    CELESTIAL_SOURCE,
+    this.NORAD_CAT_ID
   );
 }
 }

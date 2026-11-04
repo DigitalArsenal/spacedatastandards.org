@@ -200,8 +200,96 @@ func (rcv *PVN) Lineage() []byte {
 /// Identifier of the lineage the source's data descends from. Sources that
 /// republish one upstream share its lineage, so their products are not
 /// independent of each other.
+/// Replayable URL or provider query identifying the source material as it
+/// was retrieved (the SOURCE_URL of $CMR and $AVL).
+func (rcv *PVN) SOURCE_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PVN) SourceUrl() []byte {
+	return rcv.SOURCE_URL()
+}
+
+/// Replayable URL or provider query identifying the source material as it
+/// was retrieved (the SOURCE_URL of $CMR and $AVL).
+/// Source revision, edition or upstream update marker verbatim: for a file
+/// its originator stamps, the stamp.
+func (rcv *PVN) SOURCE_VERSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PVN) SourceVersion() []byte {
+	return rcv.SOURCE_VERSION()
+}
+
+/// Source revision, edition or upstream update marker verbatim: for a file
+/// its originator stamps, the stamp.
+/// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+func (rcv *PVN) RETRIEVED_AT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PVN) RetrievedAt() []byte {
+	return rcv.RETRIEVED_AT()
+}
+
+/// RFC 3339 UTC fixed-millisecond time the source material was retrieved.
+/// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+/// hexadecimal characters. Empty when the source cannot expose replayable
+/// bytes.
+func (rcv *PVN) SOURCE_SHA256() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PVN) SourceSha256() []byte {
+	return rcv.SOURCE_SHA256()
+}
+
+/// SHA-256 of the exact source payload bytes as retrieved, 64 lowercase
+/// hexadecimal characters. Empty when the source cannot expose replayable
+/// bytes.
+/// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+/// the source was fetched by range. 0 when not stated.
+func (rcv *PVN) SOURCE_BYTES() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PVN) SourceBytes() uint64 {
+	return rcv.SOURCE_BYTES()
+}
+
+/// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
+/// the source was fetched by range. 0 when not stated.
+func (rcv *PVN) MutateSOURCE_BYTES(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(28, n)
+}
+
+func (rcv *PVN) MutateSourceBytes(n uint64) bool {
+	return rcv.MutateSOURCE_BYTES(n)
+}
+
 func PVNStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(13)
 }
 func PVNAddSOURCE_ID(builder *flatbuffers.Builder, SOURCE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOURCE_ID), 0)
@@ -250,6 +338,36 @@ func PVNAddLINEAGE(builder *flatbuffers.Builder, LINEAGE flatbuffers.UOffsetT) {
 }
 func PVNAddLineage(builder *flatbuffers.Builder, LINEAGE flatbuffers.UOffsetT) {
 	PVNAddLINEAGE(builder, LINEAGE)
+}
+func PVNAddSOURCE_URL(builder *flatbuffers.Builder, SOURCE_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SOURCE_URL), 0)
+}
+func PVNAddSourceUrl(builder *flatbuffers.Builder, SOURCE_URL flatbuffers.UOffsetT) {
+	PVNAddSOURCE_URL(builder, SOURCE_URL)
+}
+func PVNAddSOURCE_VERSION(builder *flatbuffers.Builder, SOURCE_VERSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SOURCE_VERSION), 0)
+}
+func PVNAddSourceVersion(builder *flatbuffers.Builder, SOURCE_VERSION flatbuffers.UOffsetT) {
+	PVNAddSOURCE_VERSION(builder, SOURCE_VERSION)
+}
+func PVNAddRETRIEVED_AT(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(RETRIEVED_AT), 0)
+}
+func PVNAddRetrievedAt(builder *flatbuffers.Builder, RETRIEVED_AT flatbuffers.UOffsetT) {
+	PVNAddRETRIEVED_AT(builder, RETRIEVED_AT)
+}
+func PVNAddSOURCE_SHA256(builder *flatbuffers.Builder, SOURCE_SHA256 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SOURCE_SHA256), 0)
+}
+func PVNAddSourceSha256(builder *flatbuffers.Builder, SOURCE_SHA256 flatbuffers.UOffsetT) {
+	PVNAddSOURCE_SHA256(builder, SOURCE_SHA256)
+}
+func PVNAddSOURCE_BYTES(builder *flatbuffers.Builder, SOURCE_BYTES uint64) {
+	builder.PrependUint64Slot(12, SOURCE_BYTES, 0)
+}
+func PVNAddSourceBytes(builder *flatbuffers.Builder, SOURCE_BYTES uint64) {
+	PVNAddSOURCE_BYTES(builder, SOURCE_BYTES)
 }
 func PVNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

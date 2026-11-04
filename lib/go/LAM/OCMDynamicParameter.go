@@ -44,8 +44,8 @@ func (rcv *OCMDynamicParameter) Table() flatbuffers.Table {
 }
 
 /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-/// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-/// are the producer's, as in USER_DEFINED_PARAMETERS.
+/// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+/// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
 func (rcv *OCMDynamicParameter) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -59,8 +59,8 @@ func (rcv *OCMDynamicParameter) Name() []byte {
 }
 
 /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-/// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-/// are the producer's, as in USER_DEFINED_PARAMETERS.
+/// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+/// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
 /// Value at the solution epoch, in UNITS.
 func (rcv *OCMDynamicParameter) VALUE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -121,8 +121,30 @@ func (rcv *OCMDynamicParameter) MutateSolvedFor(n bool) bool {
 	return rcv.MutateSOLVED_FOR(n)
 }
 
+/// The parameter, typed: every reader keys on this, never on NAME.
+func (rcv *OCMDynamicParameter) PARAMETER() prwDynamicParameter {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return prwDynamicParameter(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *OCMDynamicParameter) Parameter() prwDynamicParameter {
+	return rcv.PARAMETER()
+}
+
+/// The parameter, typed: every reader keys on this, never on NAME.
+func (rcv *OCMDynamicParameter) MutatePARAMETER(n prwDynamicParameter) bool {
+	return rcv._tab.MutateByteSlot(12, byte(n))
+}
+
+func (rcv *OCMDynamicParameter) MutateParameter(n prwDynamicParameter) bool {
+	return rcv.MutatePARAMETER(n)
+}
+
 func OCMDynamicParameterStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(5)
 }
 func OCMDynamicParameterAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -147,6 +169,12 @@ func OCMDynamicParameterAddSOLVED_FOR(builder *flatbuffers.Builder, SOLVED_FOR b
 }
 func OCMDynamicParameterAddSolvedFor(builder *flatbuffers.Builder, SOLVED_FOR bool) {
 	OCMDynamicParameterAddSOLVED_FOR(builder, SOLVED_FOR)
+}
+func OCMDynamicParameterAddPARAMETER(builder *flatbuffers.Builder, PARAMETER prwDynamicParameter) {
+	builder.PrependByteSlot(4, byte(PARAMETER), 0)
+}
+func OCMDynamicParameterAddParameter(builder *flatbuffers.Builder, PARAMETER prwDynamicParameter) {
+	OCMDynamicParameterAddPARAMETER(builder, PARAMETER)
 }
 func OCMDynamicParameterEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

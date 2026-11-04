@@ -7,7 +7,9 @@
         "SGP4",
         "SGP4XP",
         "DSST",
-        "USM"
+        "USM",
+        "AP",
+        "UNSPECIFIED"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -27,6 +29,14 @@
         "USM": {
           "value": 3,
           "description": "Universal Semianalytical Method"
+        },
+        "AP": {
+          "value": 5,
+          "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+        },
+        "UNSPECIFIED": {
+          "value": 6,
+          "description": "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
         }
       }
     },
@@ -54,6 +64,14 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
+            },
+            "AP": {
+              "value": 5,
+              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+            },
+            "UNSPECIFIED": {
+              "value": 6,
+              "description": "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
             }
           }
         }
@@ -239,6 +257,14 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
+            },
+            "AP": {
+              "value": 5,
+              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+            },
+            "UNSPECIFIED": {
+              "value": 6,
+              "description": "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
             }
           },
           "x-flatbuffer-default": "SGP4"

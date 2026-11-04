@@ -119,6 +119,15 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
    * ln AGOM.
    */
   public int SRP_PRIOR_FORM() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Days past the element set's epoch day through which the fit writes the
+   * daily space weather into the record it emits (OCM
+   * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
+   * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
+   * arc's last day and the epoch's day plus this count; rows supplied with
+   * the request must reach it, or the fit is refused by name. Default 30.
+   */
+  public int WEATHER_HORIZON_DAYS() { int o = __offset(38); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 30; }
 
   public static int createPCFFitPolicy(FlatBufferBuilder builder,
       double DEFAULT_SPAN_HOURS,
@@ -137,8 +146,9 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
       int DRAG_PRIOROffset,
       int SRP_PRIOROffset,
       int DRAG_PRIOR_FORM,
-      int SRP_PRIOR_FORM) {
-    builder.startTable(17);
+      int SRP_PRIOR_FORM,
+      int WEATHER_HORIZON_DAYS) {
+    builder.startTable(18);
     PCFFitPolicy.addImplausibleRmsKm(builder, IMPLAUSIBLE_RMS_KM);
     PCFFitPolicy.addEccentricMaximumPeriodHours(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS);
     PCFFitPolicy.addEccentricExtensionMargin(builder, ECCENTRIC_EXTENSION_MARGIN);
@@ -153,13 +163,14 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
     PCFFitPolicy.addSrpPrior(builder, SRP_PRIOROffset);
     PCFFitPolicy.addDragPrior(builder, DRAG_PRIOROffset);
     PCFFitPolicy.addCandidateSpansHours(builder, CANDIDATE_SPANS_HOURSOffset);
+    PCFFitPolicy.addWeatherHorizonDays(builder, WEATHER_HORIZON_DAYS);
     PCFFitPolicy.addSrpPriorForm(builder, SRP_PRIOR_FORM);
     PCFFitPolicy.addDragPriorForm(builder, DRAG_PRIOR_FORM);
     PCFFitPolicy.addHasHoldoutHours(builder, HAS_HOLDOUT_HOURS);
     return PCFFitPolicy.endPCFFitPolicy(builder);
   }
 
-  public static void startPCFFitPolicy(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startPCFFitPolicy(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addDefaultSpanHours(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.addDouble(0, DEFAULT_SPAN_HOURS, 48.0); }
   public static void addMinimumSpanHours(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.addDouble(1, MINIMUM_SPAN_HOURS, 24.0); }
   public static void addMaximumSpanHours(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.addDouble(2, MAXIMUM_SPAN_HOURS, 120.0); }
@@ -179,6 +190,7 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   public static void addSrpPrior(FlatBufferBuilder builder, int SRP_PRIOROffset) { builder.addOffset(14, SRP_PRIOROffset, 0); }
   public static void addDragPriorForm(FlatBufferBuilder builder, int DRAG_PRIOR_FORM) { builder.addByte(15, (byte) DRAG_PRIOR_FORM, (byte) 0); }
   public static void addSrpPriorForm(FlatBufferBuilder builder, int SRP_PRIOR_FORM) { builder.addByte(16, (byte) SRP_PRIOR_FORM, (byte) 0); }
+  public static void addWeatherHorizonDays(FlatBufferBuilder builder, int WEATHER_HORIZON_DAYS) { builder.addShort(17, (short) WEATHER_HORIZON_DAYS, (short) 30); }
   public static int endPCFFitPolicy(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

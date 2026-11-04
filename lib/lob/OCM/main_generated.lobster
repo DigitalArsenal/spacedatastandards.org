@@ -3,12 +3,21 @@ import flatbuffers
 import ATM.main_generated
 import CAT.main_generated
 import CVR.main_generated
+import EOP.main_generated
+import EVL.main_generated
+import FRM.main_generated
 import IDM.main_generated
 import LCC.main_generated
+import MET.main_generated
+import NCD.main_generated
+import PCE.main_generated
+import PCF.main_generated
 import PLD.main_generated
 import PPE.main_generated
+import PRW.main_generated
 import PVN.main_generated
 import RFM.main_generated
+import SPW.main_generated
 import TIM.main_generated
 
 /// Trajectory state representation type.
@@ -48,6 +57,90 @@ enum trajectoryType:
     /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
     /// (OID 1.3.112.4.57.5.9).
     trajectoryType_EQUINOCTIAL_MOD = 9
+
+/// Whether a message is real, test or exercise data (the Real/Test/Exercise
+/// indicator of the legacy SP Vector/Covariance Message). Append new values
+/// only.
+enum ocmMessageStatus:
+    /// Not stated.
+    ocmMessageStatus_UNSPECIFIED = 0
+    /// Real data.
+    ocmMessageStatus_REAL = 1
+    /// Test data.
+    ocmMessageStatus_TEST = 2
+    /// Exercise data; the exercise is named in EXERCISE_NAME.
+    ocmMessageStatus_EXERCISE = 3
+
+/// Basis of a trajectory (CCSDS 502.0-B-3 TRAJ_BASIS, a closed set). Append new
+/// values only.
+enum ocmTrajectoryBasis:
+    /// Not stated.
+    ocmTrajectoryBasis_UNSPECIFIED = 0
+    /// Computed forward from a determination or a plan.
+    ocmTrajectoryBasis_PREDICTED = 1
+    /// Determined from observations or from element sets in force at each time.
+    ocmTrajectoryBasis_DETERMINED = 2
+    /// Reported by the object.
+    ocmTrajectoryBasis_TELEMETRY = 3
+    /// Produced by a simulation.
+    ocmTrajectoryBasis_SIMULATED = 4
+    /// None of the above.
+    ocmTrajectoryBasis_OTHER = 5
+
+/// Integrator mode of the legacy SP system that made a solution (INTEGRATOR
+/// MODE of the SP Vector/Covariance Message). Append new values only.
+enum ocmIntegratorMode:
+    /// Not stated: the solution did not come from an SP integrator.
+    ocmIntegratorMode_UNSPECIFIED = 0
+    /// SPADOC.
+    ocmIntegratorMode_SPADOC = 1
+    /// ASW.
+    ocmIntegratorMode_ASW = 2
+
+/// Coordinate system a numerical integrator integrates in (COORD SYS of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmIntegrationFrame:
+    /// Not stated.
+    ocmIntegrationFrame_UNSPECIFIED = 0
+    /// Mean equator and mean equinox of J2000.0.
+    ocmIntegrationFrame_J2000 = 1
+    /// True equator and mean equinox of the epoch of the solution.
+    ocmIntegrationFrame_EPOCH = 2
+
+/// How the partial derivatives of the dynamics are computed (PARTIALS of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmPartialsMethod:
+    /// Not stated.
+    ocmPartialsMethod_UNSPECIFIED = 0
+    /// Analytic partials.
+    ocmPartialsMethod_ANALYTIC = 1
+    /// Full numerical partials.
+    ocmPartialsMethod_FULL_NUMERICAL = 2
+    /// Fast numerical partials.
+    ocmPartialsMethod_FAST_NUMERICAL = 3
+
+/// Integrator step mode (STEP MODE of the SP Vector/Covariance Message). Append
+/// new values only.
+enum ocmStepMode:
+    /// Not stated.
+    ocmStepMode_UNSPECIFIED = 0
+    /// The integrator chooses.
+    ocmStepMode_AUTO = 1
+    /// Steps in time.
+    ocmStepMode_TIME = 2
+    /// Steps in the integrator's variable S, which the format does not define
+    /// further.
+    ocmStepMode_S = 3
+
+/// How the initial integration step is selected (STEP SIZE SELECTION of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmStepSelection:
+    /// Not stated.
+    ocmStepSelection_UNSPECIFIED = 0
+    /// The integrator selects it.
+    ocmStepSelection_AUTO = 1
+    /// INITIAL_STEP_SECONDS states it.
+    ocmStepSelection_MANUAL = 2
 
 /// Estimator class that produced an orbit-determination solution
 /// (batch-vs-filter provenance).
@@ -92,6 +185,24 @@ class Maneuver
 
 class OCMDynamicParameter
 
+class OCMHeldOutDay
+
+class OCMFitStatistics
+
+class OCMMeanElements
+
+class OCMCovariancePropagation
+
+class OCMSeedSet
+
+class OCMIntegrator
+
+class OCMRelativeGeometry
+
+class OCMRadarInputs
+
+class OCMInspectionGeometry
+
 class OrbitDetermination
 
 class OCMTrajectoryBlock
@@ -123,13 +234,19 @@ class Header : flatbuffers.handle
     /// Free-text field containing an ID that uniquely identifies a message from this originator.
     def MESSAGE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
+    /// Whether the message is real, test or exercise data.
+    def MESSAGE_STATUS() -> ocmMessageStatus:
+        return ocmMessageStatus(flatbuffers.field_uint8(buf_, pos_, 16, 0))
+    /// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+    def EXERCISE_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
 
 def GetRootAsHeader(buf:string): return Header { buf, flatbuffers.indirect(buf, 0) }
 
 struct HeaderBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(8)
         return this
     def add_CCSDS_OCM_VERS(CCSDS_OCM_VERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CCSDS_OCM_VERS)
@@ -148,6 +265,12 @@ struct HeaderBuilder:
         return this
     def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, MESSAGE_ID)
+        return this
+    def add_MESSAGE_STATUS(MESSAGE_STATUS:ocmMessageStatus):
+        b_.PrependUint8Slot(6, MESSAGE_STATUS, 0)
+        return this
+    def add_EXERCISE_NAME(EXERCISE_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, EXERCISE_NAME)
         return this
     def end():
         return b_.EndObject()
@@ -312,13 +435,19 @@ class Metadata : flatbuffers.handle
     /// Source and version of celestial body ephemeris data used.
     def CELESTIAL_SOURCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 98)
+    /// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+    /// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+    /// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+    /// the object has no NORAD number.
+    def NORAD_CAT_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 100, 0)
 
 def GetRootAsMetadata(buf:string): return Metadata { buf, flatbuffers.indirect(buf, 0) }
 
 struct MetadataBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(48)
+        b_.StartObject(49)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -463,6 +592,9 @@ struct MetadataBuilder:
         return this
     def add_CELESTIAL_SOURCE(CELESTIAL_SOURCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(47, CELESTIAL_SOURCE)
+        return this
+    def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
+        b_.PrependUint32Slot(48, NORAD_CAT_ID, 0)
         return this
     def end():
         return b_.EndObject()
@@ -1028,13 +1160,77 @@ class Perturbations : flatbuffers.handle
     /// FIXED_Y10P7_MEAN, NaN when not stated.
     def FIXED_Y10P7_MEAN() -> float:
         return flatbuffers.field_float64(buf_, pos_, 78, nan)
+    /// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+    /// the gravity field the record was computed with (SDS addition; the $PCF
+    /// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+    /// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+    /// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+    /// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+    /// order pair cannot state a tesseral cap below a zonal one.
+    def MAXIMUM_TESSERAL_DEGREE() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 80, 0)
+    /// Highest degree of the zonal terms (order 0) of the gravity field the
+    /// record was computed with (SDS addition). For a mean-element set the tail
+    /// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+    /// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+    /// otherwise not stated.
+    def MAXIMUM_ZONAL_DEGREE() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 82, 0)
+    /// Where the space weather behind the drag density comes from. RECORDS: the
+    /// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+    /// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+    /// in an element-set record.
+    def WEATHER_SOURCE() -> pcfWeatherSource:
+        return pcfWeatherSource(flatbuffers.field_uint8(buf_, pos_, 84, 0))
+    /// Correction applied to the atmosphere model's density.
+    def DENSITY_CORRECTION() -> pcfDensityCorrection:
+        return pcfDensityCorrection(flatbuffers.field_uint8(buf_, pos_, 86, 0))
+    /// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+    /// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+    /// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+    def DENSITY_CORRECTION_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 88)
+    /// The daily space weather the drag density reads (SDS addition; CCSDS
+    /// 502.0-B-3 names only the source, epoch and interpolation as text and
+    /// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+    /// UTC day, DATE ascending, no gap, from the day before the first day the
+    /// record is flown or was fitted through its last day. The record is flown
+    /// to the end of the last row's day and no further. Each row carries DATE,
+    /// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+    /// PRD, PRM predicted); other SPW fields unwritten.
+    def SPACE_WEATHER(i:int) -> SPW:
+        return SPW { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 90) + i * 4) }
+    def SPACE_WEATHER_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 90)
+    /// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+    /// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+    /// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+    /// Empty when DENSITY_CORRECTION is NONE.
+    def DENSITY_CORRECTION_NODE_TIMES_MS(i:int) -> int:
+        return read_int64_le(buf_, buf_.flatbuffers.field_vector(pos_, 92) + i * 8)
+    def DENSITY_CORRECTION_NODE_TIMES_MS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 92)
+    /// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+    /// entry, dimensionless, as that $DCL's
+    /// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+    /// held at the end values outside them.
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 94) + i * 8)
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 94)
+    /// Number of terms of the nutation series REDUCTION_THEORY names that the
+    /// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+    /// 4, 50 or 106). 0 when the series is not truncated or the count is not
+    /// stated.
+    def REDUCTION_THEORY_TERMS() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 96, 0)
 
 def GetRootAsPerturbations(buf:string): return Perturbations { buf, flatbuffers.indirect(buf, 0) }
 
 struct PerturbationsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(38)
+        b_.StartObject(47)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -1150,6 +1346,33 @@ struct PerturbationsBuilder:
     def add_FIXED_Y10P7_MEAN(FIXED_Y10P7_MEAN:float):
         b_.PrependFloat64Slot(37, FIXED_Y10P7_MEAN, nan)
         return this
+    def add_MAXIMUM_TESSERAL_DEGREE(MAXIMUM_TESSERAL_DEGREE:int):
+        b_.PrependUint16Slot(38, MAXIMUM_TESSERAL_DEGREE, 0)
+        return this
+    def add_MAXIMUM_ZONAL_DEGREE(MAXIMUM_ZONAL_DEGREE:int):
+        b_.PrependUint16Slot(39, MAXIMUM_ZONAL_DEGREE, 0)
+        return this
+    def add_WEATHER_SOURCE(WEATHER_SOURCE:pcfWeatherSource):
+        b_.PrependUint8Slot(40, WEATHER_SOURCE, 0)
+        return this
+    def add_DENSITY_CORRECTION(DENSITY_CORRECTION:pcfDensityCorrection):
+        b_.PrependUint8Slot(41, DENSITY_CORRECTION, 0)
+        return this
+    def add_DENSITY_CORRECTION_CID(DENSITY_CORRECTION_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, DENSITY_CORRECTION_CID)
+        return this
+    def add_SPACE_WEATHER(SPACE_WEATHER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, SPACE_WEATHER)
+        return this
+    def add_DENSITY_CORRECTION_NODE_TIMES_MS(DENSITY_CORRECTION_NODE_TIMES_MS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(44, DENSITY_CORRECTION_NODE_TIMES_MS)
+        return this
+    def add_DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+        return this
+    def add_REDUCTION_THEORY_TERMS(REDUCTION_THEORY_TERMS:int):
+        b_.PrependUint16Slot(46, REDUCTION_THEORY_TERMS, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1165,6 +1388,27 @@ def PerturbationsStartNBODYPERTURBATIONSVector(b_:flatbuffers.builder, n_:int):
 def PerturbationsCreateNBODYPERTURBATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PerturbationsStartSPACEWEATHERVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PerturbationsCreateSPACEWEATHERVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PerturbationsStartDENSITYCORRECTIONNODETIMESMSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def PerturbationsCreateDENSITYCORRECTIONNODETIMESMSVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependInt64(e_)
+    return b_.EndVector(v_.length)
+
+def PerturbationsStartDENSITYCORRECTIONLOGDENSITYSCALEDIMENSIONLESSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def PerturbationsCreateDENSITYCORRECTIONLOGDENSITYSCALEDIMENSIONLESSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 class Maneuver : flatbuffers.handle
@@ -1294,13 +1538,18 @@ class Maneuver : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 74, nan)
     def DC_PA_STOP_ANGLE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 76, nan)
+    /// NORAD_CAT_ID of the object that maneuvered, for a message whose
+    /// maneuvers belong to more than one object (a relative-motion message's
+    /// chaser and target). 0 when the message's own object maneuvered.
+    def NORAD_CAT_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 78, 0)
 
 def GetRootAsManeuver(buf:string): return Maneuver { buf, flatbuffers.indirect(buf, 0) }
 
 struct ManeuverBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(37)
+        b_.StartObject(38)
         return this
     def add_MAN_ID(MAN_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, MAN_ID)
@@ -1413,6 +1662,9 @@ struct ManeuverBuilder:
     def add_DC_PA_STOP_ANGLE(DC_PA_STOP_ANGLE:float):
         b_.PrependFloat64Slot(36, DC_PA_STOP_ANGLE, nan)
         return this
+    def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
+        b_.PrependUint32Slot(37, NORAD_CAT_ID, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1462,8 +1714,8 @@ def ManeuverCreateDCBODYTRIGGERVector(b_:flatbuffers.builder, v_:[float]):
 /// epoch and whether the orbit determination solved for it (a held value is a catalog value).
 class OCMDynamicParameter : flatbuffers.handle
     /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
-    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names
-    /// are the producer's, as in USER_DEFINED_PARAMETERS.
+    /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+    /// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
     def NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Value at the solution epoch, in UNITS.
@@ -1476,13 +1728,16 @@ class OCMDynamicParameter : flatbuffers.handle
     /// True when the orbit determination solved for the parameter, false when VALUE was held.
     def SOLVED_FOR() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// The parameter, typed: every reader keys on this, never on NAME.
+    def PARAMETER() -> prwDynamicParameter:
+        return prwDynamicParameter(flatbuffers.field_uint8(buf_, pos_, 12, 0))
 
 def GetRootAsOCMDynamicParameter(buf:string): return OCMDynamicParameter { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMDynamicParameterBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(5)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -1496,8 +1751,1033 @@ struct OCMDynamicParameterBuilder:
     def add_SOLVED_FOR(SOLVED_FOR:bool):
         b_.PrependBoolSlot(3, SOLVED_FOR, 0)
         return this
+    def add_PARAMETER(PARAMETER:prwDynamicParameter):
+        b_.PrependUint8Slot(4, PARAMETER, 0)
+        return this
     def end():
         return b_.EndObject()
+
+/// One day of held-out prediction error after the end of a fit arc.
+class OCMHeldOutDay : flatbuffers.handle
+    /// The day after the end of the fit arc, from 1.
+    def DAY() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 4, 0)
+    /// Reference states in the day.
+    def STATES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// Position RMS over the day, km.
+    def RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, nan)
+
+def GetRootAsOCMHeldOutDay(buf:string): return OCMHeldOutDay { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMHeldOutDayBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_DAY(DAY:int):
+        b_.PrependUint16Slot(0, DAY, 0)
+        return this
+    def add_STATES(STATES:int):
+        b_.PrependUint32Slot(1, STATES, 0)
+        return this
+    def add_RMS_KM(RMS_KM:float):
+        b_.PrependFloat64Slot(2, RMS_KM, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
+/// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
+class OCMFitStatistics : flatbuffers.handle
+    /// Reference states fitted.
+    def FIT_STATES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// Position RMS over the fit arc, km.
+    def FIT_RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, nan)
+    /// Largest position error over the fit arc, km.
+    def FIT_MAX_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, nan)
+    /// RMS of each position error component in the model's radial, in-track and cross-track
+    /// axes, km.
+    def FIT_RADIAL_RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, nan)
+    def FIT_IN_TRACK_RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, nan)
+    def FIT_CROSS_TRACK_RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, nan)
+    /// Iterations the fit took.
+    def ITERATIONS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    /// True when the fit converged.
+    def CONVERGED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// End of the held-out window (ISO 8601 UTC); empty without one.
+    def HELD_OUT_STOP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Held-out reference states, their position RMS and largest error, km.
+    def HELD_OUT_STATES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 22, 0)
+    def HELD_OUT_RMS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, nan)
+    def HELD_OUT_MAX_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, nan)
+    /// The held-out error by day after the fit arc.
+    def HELD_OUT_DAYS(i:int) -> OCMHeldOutDay:
+        return OCMHeldOutDay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
+    def HELD_OUT_DAYS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    def PCF_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// First epoch of the fit arc (ISO 8601 UTC).
+    def FIT_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// Last epoch of the fit arc (ISO 8601 UTC).
+    def FIT_STOP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+
+def GetRootAsOCMFitStatistics(buf:string): return OCMFitStatistics { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMFitStatisticsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(16)
+        return this
+    def add_FIT_STATES(FIT_STATES:int):
+        b_.PrependUint32Slot(0, FIT_STATES, 0)
+        return this
+    def add_FIT_RMS_KM(FIT_RMS_KM:float):
+        b_.PrependFloat64Slot(1, FIT_RMS_KM, nan)
+        return this
+    def add_FIT_MAX_KM(FIT_MAX_KM:float):
+        b_.PrependFloat64Slot(2, FIT_MAX_KM, nan)
+        return this
+    def add_FIT_RADIAL_RMS_KM(FIT_RADIAL_RMS_KM:float):
+        b_.PrependFloat64Slot(3, FIT_RADIAL_RMS_KM, nan)
+        return this
+    def add_FIT_IN_TRACK_RMS_KM(FIT_IN_TRACK_RMS_KM:float):
+        b_.PrependFloat64Slot(4, FIT_IN_TRACK_RMS_KM, nan)
+        return this
+    def add_FIT_CROSS_TRACK_RMS_KM(FIT_CROSS_TRACK_RMS_KM:float):
+        b_.PrependFloat64Slot(5, FIT_CROSS_TRACK_RMS_KM, nan)
+        return this
+    def add_ITERATIONS(ITERATIONS:int):
+        b_.PrependUint32Slot(6, ITERATIONS, 0)
+        return this
+    def add_CONVERGED(CONVERGED:bool):
+        b_.PrependBoolSlot(7, CONVERGED, 0)
+        return this
+    def add_HELD_OUT_STOP(HELD_OUT_STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, HELD_OUT_STOP)
+        return this
+    def add_HELD_OUT_STATES(HELD_OUT_STATES:int):
+        b_.PrependUint32Slot(9, HELD_OUT_STATES, 0)
+        return this
+    def add_HELD_OUT_RMS_KM(HELD_OUT_RMS_KM:float):
+        b_.PrependFloat64Slot(10, HELD_OUT_RMS_KM, nan)
+        return this
+    def add_HELD_OUT_MAX_KM(HELD_OUT_MAX_KM:float):
+        b_.PrependFloat64Slot(11, HELD_OUT_MAX_KM, nan)
+        return this
+    def add_HELD_OUT_DAYS(HELD_OUT_DAYS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, HELD_OUT_DAYS)
+        return this
+    def add_PCF_CID(PCF_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, PCF_CID)
+        return this
+    def add_FIT_START(FIT_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, FIT_START)
+        return this
+    def add_FIT_STOP(FIT_STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, FIT_STOP)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OCMFitStatisticsStartHELDOUTDAYSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMFitStatisticsCreateHELDOUTDAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// A mean element set under a named theory, with the elements exactly as the theory defines
+/// them. SDS addition: CCSDS 502.0-B-3 OCM carries no mean-motion element set. Epoch in
+/// METADATA.TIME_SYSTEM; frame is TRAJ_REF_FRAME about CENTER_NAME (EARTH).
+class OCMMeanElements : flatbuffers.handle
+    /// The theory the set is defined under and flies on, written explicitly, SGP4 (0)
+    /// included. A reader refuses UNSPECIFIED.
+    def MEAN_ELEMENT_THEORY() -> meanElementSource:
+        return meanElementSource(flatbuffers.field_int8(buf_, pos_, 4, 6))
+    /// EPOCH of the elements (ISO 8601 UTC).
+    def EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// MEAN_MOTION in rev/day as the theory defines it: Kozai for SGP4, Brouwer for SGP4-XP
+    /// and AP. Never derived from a semi-major axis.
+    def MEAN_MOTION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// ECCENTRICITY (unitless).
+    def ECCENTRICITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// INCLINATION, deg.
+    def INCLINATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// RA_OF_ASC_NODE, deg.
+    def RA_OF_ASC_NODE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// ARG_OF_PERICENTER, deg.
+    def ARG_OF_PERICENTER() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// MEAN_ANOMALY, deg.
+    def MEAN_ANOMALY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// BSTAR in 1/Earth radii. SGP4 only; 0 for SGP4-XP and AP.
+    def BSTAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// MEAN_MOTION_DOT in rev/day**2. SGP4 only.
+    def MEAN_MOTION_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// MEAN_MOTION_DDOT in rev/day**3. SGP4 only.
+    def MEAN_MOTION_DDOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+    def BTERM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// AGOM, the SGP4-XP radiation term Cr*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+    def AGOM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+
+def GetRootAsOCMMeanElements(buf:string): return OCMMeanElements { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMMeanElementsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY:meanElementSource):
+        b_.PrependInt8Slot(0, MEAN_ELEMENT_THEORY, 6)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, EPOCH)
+        return this
+    def add_MEAN_MOTION(MEAN_MOTION:float):
+        b_.PrependFloat64Slot(2, MEAN_MOTION, 0.0)
+        return this
+    def add_ECCENTRICITY(ECCENTRICITY:float):
+        b_.PrependFloat64Slot(3, ECCENTRICITY, 0.0)
+        return this
+    def add_INCLINATION(INCLINATION:float):
+        b_.PrependFloat64Slot(4, INCLINATION, 0.0)
+        return this
+    def add_RA_OF_ASC_NODE(RA_OF_ASC_NODE:float):
+        b_.PrependFloat64Slot(5, RA_OF_ASC_NODE, 0.0)
+        return this
+    def add_ARG_OF_PERICENTER(ARG_OF_PERICENTER:float):
+        b_.PrependFloat64Slot(6, ARG_OF_PERICENTER, 0.0)
+        return this
+    def add_MEAN_ANOMALY(MEAN_ANOMALY:float):
+        b_.PrependFloat64Slot(7, MEAN_ANOMALY, 0.0)
+        return this
+    def add_BSTAR(BSTAR:float):
+        b_.PrependFloat64Slot(8, BSTAR, 0.0)
+        return this
+    def add_MEAN_MOTION_DOT(MEAN_MOTION_DOT:float):
+        b_.PrependFloat64Slot(9, MEAN_MOTION_DOT, 0.0)
+        return this
+    def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
+        b_.PrependFloat64Slot(10, MEAN_MOTION_DDOT, 0.0)
+        return this
+    def add_BTERM(BTERM:float):
+        b_.PrependFloat64Slot(11, BTERM, 0.0)
+        return this
+    def add_AGOM(AGOM:float):
+        b_.PrependFloat64Slot(12, AGOM, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// What propagates the covariance of a mean element set beyond its epoch value.
+/// SDS addition (no CCSDS counterpart; OD_PROCESS_NOISE is free text).
+class OCMCovariancePropagation : flatbuffers.handle
+    /// Theory floor, the fit's residual covariance in the UVW axes of the state at each time
+    /// (U radial, V in-track, W along r x v), km**2: the uu, vu, vv, wu, wv and ww entries.
+    /// Included in the state block of COVARIANCE_DATA at epoch; subtracted when read, added at
+    /// every time.
+    def FLOOR_UU_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    def FLOOR_VU_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    def FLOOR_VV_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def FLOOR_WU_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    def FLOOR_WV_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    def FLOOR_WW_KM2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Rate errors of the mean elements from NOISE_START_MINUTES on: eccentricity vector and
+    /// inclination vector, 1/day.
+    def NOISE_ECCENTRICITY_PER_DAY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    def NOISE_INCLINATION_PER_DAY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Relative mean-motion error, dimensionless.
+    def NOISE_MEAN_MOTION_RELATIVE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Non-gravitational mean-motion rate error, rad/day**2: the value that flies.
+    def NOISE_NON_GRAVITATIONAL_RAD_DAY2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Start of the rate errors: end of the fit arc, minutes from the set's epoch (signed).
+    def NOISE_START_MINUTES() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Share c of the non-gravitational mean-motion rate that is error, dimensionless, and the
+    /// rate itself as n-dot_ng / n, 1/day. NOISE_NON_GRAVITATIONAL_RAD_DAY2 = c |n-dot_ng|.
+    def NON_GRAVITATIONAL_SHARE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    def NON_GRAVITATIONAL_RATE_PER_DAY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+
+def GetRootAsOCMCovariancePropagation(buf:string): return OCMCovariancePropagation { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMCovariancePropagationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_FLOOR_UU_KM2(FLOOR_UU_KM2:float):
+        b_.PrependFloat64Slot(0, FLOOR_UU_KM2, 0.0)
+        return this
+    def add_FLOOR_VU_KM2(FLOOR_VU_KM2:float):
+        b_.PrependFloat64Slot(1, FLOOR_VU_KM2, 0.0)
+        return this
+    def add_FLOOR_VV_KM2(FLOOR_VV_KM2:float):
+        b_.PrependFloat64Slot(2, FLOOR_VV_KM2, 0.0)
+        return this
+    def add_FLOOR_WU_KM2(FLOOR_WU_KM2:float):
+        b_.PrependFloat64Slot(3, FLOOR_WU_KM2, 0.0)
+        return this
+    def add_FLOOR_WV_KM2(FLOOR_WV_KM2:float):
+        b_.PrependFloat64Slot(4, FLOOR_WV_KM2, 0.0)
+        return this
+    def add_FLOOR_WW_KM2(FLOOR_WW_KM2:float):
+        b_.PrependFloat64Slot(5, FLOOR_WW_KM2, 0.0)
+        return this
+    def add_NOISE_ECCENTRICITY_PER_DAY(NOISE_ECCENTRICITY_PER_DAY:float):
+        b_.PrependFloat64Slot(6, NOISE_ECCENTRICITY_PER_DAY, 0.0)
+        return this
+    def add_NOISE_INCLINATION_PER_DAY(NOISE_INCLINATION_PER_DAY:float):
+        b_.PrependFloat64Slot(7, NOISE_INCLINATION_PER_DAY, 0.0)
+        return this
+    def add_NOISE_MEAN_MOTION_RELATIVE(NOISE_MEAN_MOTION_RELATIVE:float):
+        b_.PrependFloat64Slot(8, NOISE_MEAN_MOTION_RELATIVE, 0.0)
+        return this
+    def add_NOISE_NON_GRAVITATIONAL_RAD_DAY2(NOISE_NON_GRAVITATIONAL_RAD_DAY2:float):
+        b_.PrependFloat64Slot(9, NOISE_NON_GRAVITATIONAL_RAD_DAY2, 0.0)
+        return this
+    def add_NOISE_START_MINUTES(NOISE_START_MINUTES:float):
+        b_.PrependFloat64Slot(10, NOISE_START_MINUTES, 0.0)
+        return this
+    def add_NON_GRAVITATIONAL_SHARE(NON_GRAVITATIONAL_SHARE:float):
+        b_.PrependFloat64Slot(11, NON_GRAVITATIONAL_SHARE, 0.0)
+        return this
+    def add_NON_GRAVITATIONAL_RATE_PER_DAY(NON_GRAVITATIONAL_RATE_PER_DAY:float):
+        b_.PrependFloat64Slot(12, NON_GRAVITATIONAL_RATE_PER_DAY, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An element set a trajectory was computed from (SDS addition: CCSDS 502.0-B-3
+/// TRAJ_BASIS_ID names one determination, a relative trajectory has two).
+class OCMSeedSet : flatbuffers.handle
+    /// NORAD_CAT_ID of the object the set describes.
+    def NORAD_CAT_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// EPOCH of the element set, ISO 8601 UTC.
+    def EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// CREATION_DATE of the element set: when its originator made it, ISO 8601
+    /// UTC.
+    def CREATION_DATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// MESSAGE_ID of the element set; for a Space-Track set its GP_ID.
+    def MESSAGE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsOCMSeedSet(buf:string): return OCMSeedSet { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMSeedSetBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
+        b_.PrependUint32Slot(0, NORAD_CAT_ID, 0)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, EPOCH)
+        return this
+    def add_CREATION_DATE(CREATION_DATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CREATION_DATE)
+        return this
+    def add_MESSAGE_ID(MESSAGE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MESSAGE_ID)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Settings of the numerical integrator that made a solution, as a legacy SP
+/// Vector/Covariance Message states them (SDS addition: CCSDS 502.0-B-3 has no
+/// integrator keywords). Present only on a message made from such a message;
+/// a reader of any other message treats it as absent.
+class OCMIntegrator : flatbuffers.handle
+    /// INTEGRATOR MODE.
+    def MODE() -> ocmIntegratorMode:
+        return ocmIntegratorMode(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    /// COORD SYS: the coordinate system the integration ran in. Not
+    /// TRAJ_REF_FRAME, which is the frame of STATE_DATA.
+    def COORDINATE_SYSTEM() -> ocmIntegrationFrame:
+        return ocmIntegrationFrame(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    /// PARTIALS.
+    def PARTIALS() -> ocmPartialsMethod:
+        return ocmPartialsMethod(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    /// STEP MODE.
+    def STEP_MODE() -> ocmStepMode:
+        return ocmStepMode(flatbuffers.field_uint8(buf_, pos_, 10, 0))
+    /// FIXED STEP: true for ON.
+    def FIXED_STEP() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// STEP SIZE SELECTION.
+    def STEP_SIZE_SELECTION() -> ocmStepSelection:
+        return ocmStepSelection(flatbuffers.field_uint8(buf_, pos_, 14, 0))
+    /// INITIAL STEP SIZE, s. NaN when not stated.
+    def INITIAL_STEP_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, nan)
+    /// ERROR CONTROL, dimensionless, as the SP integrator takes it. NaN when not
+    /// stated.
+    def ERROR_CONTROL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+
+def GetRootAsOCMIntegrator(buf:string): return OCMIntegrator { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMIntegratorBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_MODE(MODE:ocmIntegratorMode):
+        b_.PrependUint8Slot(0, MODE, 0)
+        return this
+    def add_COORDINATE_SYSTEM(COORDINATE_SYSTEM:ocmIntegrationFrame):
+        b_.PrependUint8Slot(1, COORDINATE_SYSTEM, 0)
+        return this
+    def add_PARTIALS(PARTIALS:ocmPartialsMethod):
+        b_.PrependUint8Slot(2, PARTIALS, 0)
+        return this
+    def add_STEP_MODE(STEP_MODE:ocmStepMode):
+        b_.PrependUint8Slot(3, STEP_MODE, 0)
+        return this
+    def add_FIXED_STEP(FIXED_STEP:bool):
+        b_.PrependBoolSlot(4, FIXED_STEP, 0)
+        return this
+    def add_STEP_SIZE_SELECTION(STEP_SIZE_SELECTION:ocmStepSelection):
+        b_.PrependUint8Slot(5, STEP_SIZE_SELECTION, 0)
+        return this
+    def add_INITIAL_STEP_SECONDS(INITIAL_STEP_SECONDS:float):
+        b_.PrependFloat64Slot(6, INITIAL_STEP_SECONDS, nan)
+        return this
+    def add_ERROR_CONTROL(ERROR_CONTROL:float):
+        b_.PrependFloat64Slot(7, ERROR_CONTROL, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Relative-motion geometry of a chaser about a target on the time grid of the
+/// message (SDS addition: CCSDS 502.0-B-3 has no curvilinear or
+/// relative-orbital-element trajectory type). Every vector holds one entry per
+/// time, in order: entry i is at STATE_EPOCHS[i], or at Metadata.START_TIME +
+/// i * STATE_STEP_SIZE. The target is CENTER_NAME and TRAJ_REF_FRAME its RTN
+/// axes. NaN where a quantity is not defined at a time. The first fourteen
+/// vectors are derived from the two element sets (SEED_SETS); the seven SIGMA_*
+/// and BAND3_* vectors are the projection's, NaN in a history segment.
+class OCMRelativeGeometry : flatbuffers.handle
+    /// Curvilinear radial offset R = |p| - r0, km: p the chaser's geocentric
+    /// position, r0 = |r_target|.
+    def R_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 8)
+    def R_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+    /// Curvilinear in-track offset I = r0 atan2(y, r0 + x), km, wrapped to
+    /// +-pi r0; (x, y, z) the chaser's rectilinear RTN offset from the target.
+    def I_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def I_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Curvilinear cross-track offset C = r0 atan2(z, hypot(r0 + x, y)), km.
+    def C_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def C_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// I_KM continuous within the message (unwrapped), km.
+    def I_UNWRAPPED_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def I_UNWRAPPED_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Chaser-target distance, km.
+    def SEPARATION_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def SEPARATION_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Rate of the separation, km/s.
+    def RANGE_RATE_KM_S(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
+    def RANGE_RATE_KM_S_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Angle between the orbit normals (osculating angular momenta) of the chaser
+    /// and the target, deg.
+    def PLANE_ANGLE_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
+    def PLANE_ANGLE_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// Semi-major axis of the chief (the target), from its osculating two-body
+    /// elements, km.
+    def A_CHIEF_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def A_CHIEF_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Quasi-nonsingular relative orbital elements after D'Amico (2010), chief =
+    /// target, from osculating two-body elements: DA = (a_d - a_c) / a_c,
+    /// dimensionless.
+    def DA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def DA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// DLAMBDA = du + dRAAN cos i_c, rad.
+    def DLAMBDA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 8)
+    def DLAMBDA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// DEX: difference of e cos(w), dimensionless.
+    def DEX(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def DEX_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// DEY: difference of e sin(w), dimensionless.
+    def DEY(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 8)
+    def DEY_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// DIX = di, rad.
+    def DIX(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 8)
+    def DIX_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// DIY = dRAAN sin i_c, rad.
+    def DIY(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 8)
+    def DIY_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// 1-sigma of R_KM, I_KM and C_KM: the GP error model's sigma times a
+    /// per-axis factor, the 68.27 % quantile of |error| / model sigma over the
+    /// pair's own relative samples (predictions against the next element sets) in
+    /// the trailing calibration window; km.
+    def SIGMA_R_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 8)
+    def SIGMA_R_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+    def SIGMA_I_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 8)
+    def SIGMA_I_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+    def SIGMA_C_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 8)
+    def SIGMA_C_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// 1-sigma of SEPARATION_KM, km.
+    def SIGMA_SEPARATION_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 8)
+    def SIGMA_SEPARATION_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
+    /// 3-sigma band half-width of R_KM, I_KM and C_KM from the 99.73 % quantile of
+    /// the same ratio (not 3 SIGMA_* when the errors are not Gaussian), km.
+    def BAND3_R_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 8)
+    def BAND3_R_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
+    def BAND3_I_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 8)
+    def BAND3_I_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
+    def BAND3_C_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 8)
+    def BAND3_C_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
+
+def GetRootAsOCMRelativeGeometry(buf:string): return OCMRelativeGeometry { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMRelativeGeometryBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(21)
+        return this
+    def add_R_KM(R_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, R_KM)
+        return this
+    def add_I_KM(I_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, I_KM)
+        return this
+    def add_C_KM(C_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, C_KM)
+        return this
+    def add_I_UNWRAPPED_KM(I_UNWRAPPED_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, I_UNWRAPPED_KM)
+        return this
+    def add_SEPARATION_KM(SEPARATION_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SEPARATION_KM)
+        return this
+    def add_RANGE_RATE_KM_S(RANGE_RATE_KM_S:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, RANGE_RATE_KM_S)
+        return this
+    def add_PLANE_ANGLE_DEG(PLANE_ANGLE_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, PLANE_ANGLE_DEG)
+        return this
+    def add_A_CHIEF_KM(A_CHIEF_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, A_CHIEF_KM)
+        return this
+    def add_DA(DA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, DA)
+        return this
+    def add_DLAMBDA(DLAMBDA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, DLAMBDA)
+        return this
+    def add_DEX(DEX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, DEX)
+        return this
+    def add_DEY(DEY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, DEY)
+        return this
+    def add_DIX(DIX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, DIX)
+        return this
+    def add_DIY(DIY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, DIY)
+        return this
+    def add_SIGMA_R_KM(SIGMA_R_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, SIGMA_R_KM)
+        return this
+    def add_SIGMA_I_KM(SIGMA_I_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, SIGMA_I_KM)
+        return this
+    def add_SIGMA_C_KM(SIGMA_C_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, SIGMA_C_KM)
+        return this
+    def add_SIGMA_SEPARATION_KM(SIGMA_SEPARATION_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, SIGMA_SEPARATION_KM)
+        return this
+    def add_BAND3_R_KM(BAND3_R_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, BAND3_R_KM)
+        return this
+    def add_BAND3_I_KM(BAND3_I_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, BAND3_I_KM)
+        return this
+    def add_BAND3_C_KM(BAND3_C_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, BAND3_C_KM)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OCMRelativeGeometryStartRKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateRKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartIKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateIKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartCKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateCKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartIUNWRAPPEDKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateIUNWRAPPEDKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartSEPARATIONKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateSEPARATIONKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartRANGERATEKMSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateRANGERATEKMSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartPLANEANGLEDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreatePLANEANGLEDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartACHIEFKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateACHIEFKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDLAMBDAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDLAMBDAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDEXVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDEXVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDEYVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDEYVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDIXVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDIXVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartDIYVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateDIYVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartSIGMARKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateSIGMARKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartSIGMAIKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateSIGMAIKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartSIGMACKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateSIGMACKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartSIGMASEPARATIONKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateSIGMASEPARATIONKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartBAND3RKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateBAND3RKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartBAND3IKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateBAND3IKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMRelativeGeometryStartBAND3CKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMRelativeGeometryCreateBAND3CKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// The side-looking radar a chaser's position is tested against (the inputs
+/// only: wavelength, beamwidths and look angles follow from them).
+class OCMRadarInputs : flatbuffers.handle
+    /// Citation of the radar's published characteristics.
+    def SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Carrier frequency, GHz. NaN when not stated.
+    def FREQUENCY_GHZ() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, nan)
+    /// Antenna aperture along track, m. NaN when not stated.
+    def ANTENNA_LENGTH_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, nan)
+    /// Antenna aperture across track, m. NaN when not stated.
+    def ANTENNA_HEIGHT_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, nan)
+    /// Incidence-angle band of the swath, deg. NaN when not stated.
+    def INCIDENCE_MIN_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, nan)
+    def INCIDENCE_MAX_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, nan)
+
+def GetRootAsOCMRadarInputs(buf:string): return OCMRadarInputs { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMRadarInputsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_SOURCE(SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOURCE)
+        return this
+    def add_FREQUENCY_GHZ(FREQUENCY_GHZ:float):
+        b_.PrependFloat64Slot(1, FREQUENCY_GHZ, nan)
+        return this
+    def add_ANTENNA_LENGTH_M(ANTENNA_LENGTH_M:float):
+        b_.PrependFloat64Slot(2, ANTENNA_LENGTH_M, nan)
+        return this
+    def add_ANTENNA_HEIGHT_M(ANTENNA_HEIGHT_M:float):
+        b_.PrependFloat64Slot(3, ANTENNA_HEIGHT_M, nan)
+        return this
+    def add_INCIDENCE_MIN_DEG(INCIDENCE_MIN_DEG:float):
+        b_.PrependFloat64Slot(4, INCIDENCE_MIN_DEG, nan)
+        return this
+    def add_INCIDENCE_MAX_DEG(INCIDENCE_MAX_DEG:float):
+        b_.PrependFloat64Slot(5, INCIDENCE_MAX_DEG, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Inspection geometry of a chaser about a target on the time grid of the
+/// message (SDS addition; CCSDS 502.0-B-3 has none). Every vector holds one
+/// entry per time, in order: entry i is at STATE_EPOCHS[i], or at
+/// Metadata.START_TIME + i * STATE_STEP_SIZE. The target is CENTER_NAME. The
+/// Earth shadow is the conical model of a spherical Earth (6378.137 km) and a
+/// spherical Sun (695700 km); the target's nadir is -r / |r|; the along-track
+/// direction is the Earth-relative velocity perpendicular to r; right is nadir
+/// x along-track.
+class OCMInspectionGeometry : flatbuffers.handle
+    /// Angle at the target between the Sun and the chaser, deg.
+    def PHASE_ANGLE_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 8)
+    def PHASE_ANGLE_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+    /// Fraction of the Sun's disk the target sees: 0 umbra, 1 sunlit.
+    def TARGET_SUNLIT(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def TARGET_SUNLIT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// The same for the chaser.
+    def CHASER_SUNLIT(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def CHASER_SUNLIT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// True when the chaser-target segment clears a sphere of 6378.137 km.
+    def LINE_OF_SIGHT(i:int) -> bool:
+        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+    def LINE_OF_SIGHT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// TARGET_SUNLIT times LINE_OF_SIGHT.
+    def TARGET_LIT_FROM_CHASER(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def TARGET_LIT_FROM_CHASER_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Angle at the chaser between the target and the Sun, deg.
+    def SUN_FROM_LINE_OF_SIGHT_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
+    def SUN_FROM_LINE_OF_SIGHT_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Chaser-target distance, km.
+    def RANGE_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
+    def RANGE_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// Angle at the target between its nadir and the chaser, deg.
+    def CHASER_OFF_NADIR_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def CHASER_OFF_NADIR_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// The chaser's clock angle about the target's nadir, deg, from along-track
+    /// toward right (90 right of the track, 270 left).
+    def CHASER_CLOCK_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def CHASER_CLOCK_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// True when the chaser is inside the target radar's field of regard on that
+    /// side: off-nadir between the look angles of the incidence band, within half
+    /// the azimuth beamwidth (0.886 wavelength / aperture length, -3 dB, uniform
+    /// aperture) of the broadside plane. Empty without RADAR.
+    def IN_SAR_RIGHT(i:int) -> bool:
+        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1)
+    def IN_SAR_RIGHT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    def IN_SAR_LEFT(i:int) -> bool:
+        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 1)
+    def IN_SAR_LEFT_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// The radar. Absent when no radar was given.
+    def RADAR() -> OCMRadarInputs?:
+        let o = flatbuffers.field_table(buf_, pos_, 26)
+        return if o: OCMRadarInputs { buf_, o } else: nil
+
+def GetRootAsOCMInspectionGeometry(buf:string): return OCMInspectionGeometry { buf, flatbuffers.indirect(buf, 0) }
+
+struct OCMInspectionGeometryBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_PHASE_ANGLE_DEG(PHASE_ANGLE_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PHASE_ANGLE_DEG)
+        return this
+    def add_TARGET_SUNLIT(TARGET_SUNLIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, TARGET_SUNLIT)
+        return this
+    def add_CHASER_SUNLIT(CHASER_SUNLIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CHASER_SUNLIT)
+        return this
+    def add_LINE_OF_SIGHT(LINE_OF_SIGHT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, LINE_OF_SIGHT)
+        return this
+    def add_TARGET_LIT_FROM_CHASER(TARGET_LIT_FROM_CHASER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TARGET_LIT_FROM_CHASER)
+        return this
+    def add_SUN_FROM_LINE_OF_SIGHT_DEG(SUN_FROM_LINE_OF_SIGHT_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, SUN_FROM_LINE_OF_SIGHT_DEG)
+        return this
+    def add_RANGE_KM(RANGE_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, RANGE_KM)
+        return this
+    def add_CHASER_OFF_NADIR_DEG(CHASER_OFF_NADIR_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, CHASER_OFF_NADIR_DEG)
+        return this
+    def add_CHASER_CLOCK_DEG(CHASER_CLOCK_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, CHASER_CLOCK_DEG)
+        return this
+    def add_IN_SAR_RIGHT(IN_SAR_RIGHT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, IN_SAR_RIGHT)
+        return this
+    def add_IN_SAR_LEFT(IN_SAR_LEFT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, IN_SAR_LEFT)
+        return this
+    def add_RADAR(RADAR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, RADAR)
+        return this
+    def end():
+        return b_.EndObject()
+
+def OCMInspectionGeometryStartPHASEANGLEDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreatePHASEANGLEDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartTARGETSUNLITVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateTARGETSUNLITVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartCHASERSUNLITVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateCHASERSUNLITVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartLINEOFSIGHTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def OCMInspectionGeometryCreateLINEOFSIGHTVector(b_:flatbuffers.builder, v_:[bool]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependBool(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartTARGETLITFROMCHASERVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateTARGETLITFROMCHASERVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartSUNFROMLINEOFSIGHTDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateSUNFROMLINEOFSIGHTDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartRANGEKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateRANGEKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartCHASEROFFNADIRDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateCHASEROFFNADIRDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartCHASERCLOCKDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMInspectionGeometryCreateCHASERCLOCKDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartINSARRIGHTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def OCMInspectionGeometryCreateINSARRIGHTVector(b_:flatbuffers.builder, v_:[bool]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependBool(e_)
+    return b_.EndVector(v_.length)
+
+def OCMInspectionGeometryStartINSARLEFTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def OCMInspectionGeometryCreateINSARLEFTVector(b_:flatbuffers.builder, v_:[bool]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependBool(e_)
+    return b_.EndVector(v_.length)
 
 class OrbitDetermination : flatbuffers.handle
     /// Unique identifier for the orbit determination.
@@ -1558,7 +2838,9 @@ class OrbitDetermination : flatbuffers.handle
     /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
     def OD_ESTIMATOR() -> estimatorCategory:
         return estimatorCategory(flatbuffers.field_int8(buf_, pos_, 38, 0))
-    /// RMS of post-fit residuals for this solution.
+    /// RMS of post-fit residuals for this solution. In the unit of the residuals the
+    /// observation types state: arcsec for RADEC angles. A position RMS in km is
+    /// OCMFitStatistics.FIT_RMS_KM.
     def OD_RESIDUAL_RMS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
     /// Post-fit residual series, one entry per accepted observation.
@@ -1659,13 +2941,17 @@ class OrbitDetermination : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 96) + i * 4)
     def COMMENT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 96)
+    /// Position statistics of a fit to a reference ephemeris.
+    def FIT_STATISTICS() -> OCMFitStatistics?:
+        let o = flatbuffers.field_table(buf_, pos_, 98)
+        return if o: OCMFitStatistics { buf_, o } else: nil
 
 def GetRootAsOrbitDetermination(buf:string): return OrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
 
 struct OrbitDeterminationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(47)
+        b_.StartObject(48)
         return this
     def add_OD_ID(OD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OD_ID)
@@ -1807,6 +3093,9 @@ struct OrbitDeterminationBuilder:
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(46, COMMENT)
+        return this
+    def add_FIT_STATISTICS(FIT_STATISTICS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(47, FIT_STATISTICS)
         return this
     def end():
         return b_.EndObject()
@@ -2187,6 +3476,7 @@ class OCM : flatbuffers.handle
     /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
     /// Length must be divisible by STATE_VECTOR_SIZE.
     /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+    /// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
     def STATE_DATA(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
     def STATE_DATA_length() -> int:
@@ -2233,7 +3523,8 @@ class OCM : flatbuffers.handle
     def ORBIT_DETERMINATION() -> OrbitDetermination?:
         let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: OrbitDetermination { buf_, o } else: nil
-    /// User-defined parameters and supplemental comments.
+    /// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+    /// SDN readers never read it.
     def USER_DEFINED_PARAMETERS(i:int) -> UserDefinedParameters:
         return UserDefinedParameters { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
     def USER_DEFINED_PARAMETERS_length() -> int:
@@ -2241,8 +3532,8 @@ class OCM : flatbuffers.handle
     /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
     def CENTER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
-    /// Reference frame of STATE_DATA and the polynomial records
-    /// (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+    /// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+    /// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
     def TRAJ_REF_FRAME() -> RFM?:
         let o = flatbuffers.field_table(buf_, pos_, 36)
         return if o: RFM { buf_, o } else: nil
@@ -2325,13 +3616,50 @@ class OCM : flatbuffers.handle
         return CVR { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 68) + i * 4) }
     def COV_REALISM_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 68)
+    /// The mean element set this message carries, under the theory it names. STATE_DATA is
+    /// empty when this is present; no state travels beside a set.
+    def MEAN_ELEMENTS() -> OCMMeanElements?:
+        let o = flatbuffers.field_table(buf_, pos_, 70)
+        return if o: OCMMeanElements { buf_, o } else: nil
+    /// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+    def COV_PROPAGATION() -> OCMCovariancePropagation?:
+        let o = flatbuffers.field_table(buf_, pos_, 72)
+        return if o: OCMCovariancePropagation { buf_, o } else: nil
+    /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+    /// every reader keys on these, never on the COV_PARAMETERS strings.
+    def COV_PARAMETER_KINDS(i:int) -> prwDynamicParameter:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 74) + i * 1)
+    def COV_PARAMETER_KINDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 74)
+    /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+    /// (CCSDS 502.0-B-3 TRAJ_BASIS).
+    def TRAJ_BASIS() -> ocmTrajectoryBasis:
+        return ocmTrajectoryBasis(flatbuffers.field_uint8(buf_, pos_, 76, 0))
+    /// The element sets the trajectory was computed from, one per object whose
+    /// elements it used.
+    def SEED_SETS(i:int) -> OCMSeedSet:
+        return OCMSeedSet { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 78) + i * 4) }
+    def SEED_SETS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 78)
+    /// Integrator settings of a solution made from a legacy VCM.
+    def INTEGRATOR() -> OCMIntegrator?:
+        let o = flatbuffers.field_table(buf_, pos_, 80)
+        return if o: OCMIntegrator { buf_, o } else: nil
+    /// Relative-motion geometry; STATE_DATA is empty when this is present.
+    def RPO_GEOMETRY() -> OCMRelativeGeometry?:
+        let o = flatbuffers.field_table(buf_, pos_, 82)
+        return if o: OCMRelativeGeometry { buf_, o } else: nil
+    /// Inspection geometry; STATE_DATA is empty when this is present.
+    def RPO_INSPECTION() -> OCMInspectionGeometry?:
+        let o = flatbuffers.field_table(buf_, pos_, 84)
+        return if o: OCMInspectionGeometry { buf_, o } else: nil
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(33)
+        b_.StartObject(41)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -2432,6 +3760,30 @@ struct OCMBuilder:
     def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(32, COV_REALISM)
         return this
+    def add_MEAN_ELEMENTS(MEAN_ELEMENTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, MEAN_ELEMENTS)
+        return this
+    def add_COV_PROPAGATION(COV_PROPAGATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, COV_PROPAGATION)
+        return this
+    def add_COV_PARAMETER_KINDS(COV_PARAMETER_KINDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, COV_PARAMETER_KINDS)
+        return this
+    def add_TRAJ_BASIS(TRAJ_BASIS:ocmTrajectoryBasis):
+        b_.PrependUint8Slot(36, TRAJ_BASIS, 0)
+        return this
+    def add_SEED_SETS(SEED_SETS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(37, SEED_SETS)
+        return this
+    def add_INTEGRATOR(INTEGRATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(38, INTEGRATOR)
+        return this
+    def add_RPO_GEOMETRY(RPO_GEOMETRY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(39, RPO_GEOMETRY)
+        return this
+    def add_RPO_INSPECTION(RPO_INSPECTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(40, RPO_INSPECTION)
+        return this
     def end():
         return b_.EndObject()
 
@@ -2515,6 +3867,20 @@ def OCMCreateCOVARIANCEBLOCKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
 def OCMStartCOVREALISMVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def OCMCreateCOVREALISMVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartCOVPARAMETERKINDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def OCMCreateCOVPARAMETERKINDSVector(b_:flatbuffers.builder, v_:[prwDynamicParameter]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def OCMStartSEEDSETSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def OCMCreateSEEDSETSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

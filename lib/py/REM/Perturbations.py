@@ -364,8 +364,169 @@ class Perturbations(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
+    # Highest degree of the tesseral and sectorial terms (order 1 and above) of
+    # the gravity field the record was computed with (SDS addition; the $PCF
+    # FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+    # theory: 0 is the theory's own terms. For a numerical solution the nn of a
+    # legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+    # either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+    # order pair cannot state a tesseral cap below a zonal one.
+    # Perturbations
+    def MAXIMUM_TESSERAL_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Highest degree of the zonal terms (order 0) of the gravity field the
+    # record was computed with (SDS addition). For a mean-element set the tail
+    # J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+    # For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+    # otherwise not stated.
+    # Perturbations
+    def MAXIMUM_ZONAL_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Where the space weather behind the drag density comes from. RECORDS: the
+    # daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+    # flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+    # in an element-set record.
+    # Perturbations
+    def WEATHER_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Correction applied to the atmosphere model's density.
+    # Perturbations
+    def DENSITY_CORRECTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+    # DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+    # DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+    # Perturbations
+    def DENSITY_CORRECTION_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The daily space weather the drag density reads (SDS addition; CCSDS
+    # 502.0-B-3 names only the source, epoch and interpolation as text and
+    # fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+    # UTC day, DATE ascending, no gap, from the day before the first day the
+    # record is flown or was fitted through its last day. The record is flown
+    # to the end of the last row's day and no further. Each row carries DATE,
+    # F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+    # PRD, PRM predicted); other SPW fields unwritten.
+    # Perturbations
+    def SPACE_WEATHER(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SPW import SPW
+            obj = SPW()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Perturbations
+    def SPACE_WEATHERLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Perturbations
+    def SPACE_WEATHERIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        return o == 0
+
+    # DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+    # set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+    # milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+    # Empty when DENSITY_CORRECTION is NONE.
+    # Perturbations
+    def DENSITY_CORRECTION_NODE_TIMES_MS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_NODE_TIMES_MSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_NODE_TIMES_MSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_NODE_TIMES_MSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        return o == 0
+
+    # One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+    # entry, dimensionless, as that $DCL's
+    # CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+    # held at the end values outside them.
+    # Perturbations
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Perturbations
+    def DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        return o == 0
+
+    # Number of terms of the nutation series REDUCTION_THEORY names that the
+    # force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+    # 4, 50 or 106). 0 when the series is not truncated or the count is not
+    # stated.
+    # Perturbations
+    def REDUCTION_THEORY_TERMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
 def PerturbationsStart(builder):
-    builder.StartObject(38)
+    builder.StartObject(47)
 
 def Start(builder):
     PerturbationsStart(builder)
@@ -622,6 +783,104 @@ def PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN):
 def AddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN):
     PerturbationsAddFIXED_Y10P7_MEAN(builder, FIXED_Y10P7_MEAN)
 
+def PerturbationsAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE):
+    builder.PrependUint16Slot(38, MAXIMUM_TESSERAL_DEGREE, 0)
+
+def AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE):
+    PerturbationsAddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE)
+
+def PerturbationsAddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE):
+    builder.PrependUint16Slot(39, MAXIMUM_ZONAL_DEGREE, 0)
+
+def AddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE):
+    PerturbationsAddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE)
+
+def PerturbationsAddWEATHER_SOURCE(builder, WEATHER_SOURCE):
+    builder.PrependUint8Slot(40, WEATHER_SOURCE, 0)
+
+def AddWEATHER_SOURCE(builder, WEATHER_SOURCE):
+    PerturbationsAddWEATHER_SOURCE(builder, WEATHER_SOURCE)
+
+def PerturbationsAddDENSITY_CORRECTION(builder, DENSITY_CORRECTION):
+    builder.PrependUint8Slot(41, DENSITY_CORRECTION, 0)
+
+def AddDENSITY_CORRECTION(builder, DENSITY_CORRECTION):
+    PerturbationsAddDENSITY_CORRECTION(builder, DENSITY_CORRECTION)
+
+def PerturbationsAddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CID):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_CORRECTION_CID), 0)
+
+def AddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CID):
+    PerturbationsAddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CID)
+
+def PerturbationsAddSPACE_WEATHER(builder, SPACE_WEATHER):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SPACE_WEATHER), 0)
+
+def AddSPACE_WEATHER(builder, SPACE_WEATHER):
+    PerturbationsAddSPACE_WEATHER(builder, SPACE_WEATHER)
+
+def PerturbationsStartSPACE_WEATHERVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSPACE_WEATHERVector(builder, numElems):
+    return PerturbationsStartSPACE_WEATHERVector(builder, numElems)
+
+def PerturbationsCreateSPACE_WEATHERVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSPACE_WEATHERVector(builder, data):
+    return PerturbationsCreateSPACE_WEATHERVector(builder, data)
+
+def PerturbationsAddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MS):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_CORRECTION_NODE_TIMES_MS), 0)
+
+def AddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MS):
+    PerturbationsAddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MS)
+
+def PerturbationsStartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, numElems):
+    return PerturbationsStartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, numElems)
+
+def PerturbationsCreateDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependInt64(item)
+    return builder.EndVector()
+
+def CreateDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, data):
+    return PerturbationsCreateDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, data)
+
+def PerturbationsAddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS), 0)
+
+def AddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS):
+    PerturbationsAddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+
+def PerturbationsStartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems):
+    return PerturbationsStartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems)
+
+def PerturbationsCreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data):
+    return PerturbationsCreateDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data)
+
+def PerturbationsAddREDUCTION_THEORY_TERMS(builder, REDUCTION_THEORY_TERMS):
+    builder.PrependUint16Slot(46, REDUCTION_THEORY_TERMS, 0)
+
+def AddREDUCTION_THEORY_TERMS(builder, REDUCTION_THEORY_TERMS):
+    PerturbationsAddREDUCTION_THEORY_TERMS(builder, REDUCTION_THEORY_TERMS)
+
 def PerturbationsEnd(builder):
     return builder.EndObject()
 
@@ -629,6 +888,7 @@ def End(builder):
     return PerturbationsEnd(builder)
 
 import ATM
+import SPW
 try:
     from typing import List, Optional
 except:
@@ -677,6 +937,15 @@ class PerturbationsT(object):
         FIXED_S10P7_MEAN = float('nan'),
         FIXED_Y10P7 = float('nan'),
         FIXED_Y10P7_MEAN = float('nan'),
+        MAXIMUM_TESSERAL_DEGREE = 0,
+        MAXIMUM_ZONAL_DEGREE = 0,
+        WEATHER_SOURCE = 0,
+        DENSITY_CORRECTION = 0,
+        DENSITY_CORRECTION_CID = None,
+        SPACE_WEATHER = None,
+        DENSITY_CORRECTION_NODE_TIMES_MS = None,
+        DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = None,
+        REDUCTION_THEORY_TERMS = 0,
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[ATM.ATMT]
@@ -716,6 +985,15 @@ class PerturbationsT(object):
         self.FIXED_S10P7_MEAN = FIXED_S10P7_MEAN  # type: float
         self.FIXED_Y10P7 = FIXED_Y10P7  # type: float
         self.FIXED_Y10P7_MEAN = FIXED_Y10P7_MEAN  # type: float
+        self.MAXIMUM_TESSERAL_DEGREE = MAXIMUM_TESSERAL_DEGREE  # type: int
+        self.MAXIMUM_ZONAL_DEGREE = MAXIMUM_ZONAL_DEGREE  # type: int
+        self.WEATHER_SOURCE = WEATHER_SOURCE  # type: int
+        self.DENSITY_CORRECTION = DENSITY_CORRECTION  # type: int
+        self.DENSITY_CORRECTION_CID = DENSITY_CORRECTION_CID  # type: Optional[str]
+        self.SPACE_WEATHER = SPACE_WEATHER  # type: Optional[List[SPW.SPWT]]
+        self.DENSITY_CORRECTION_NODE_TIMES_MS = DENSITY_CORRECTION_NODE_TIMES_MS  # type: Optional[List[int]]
+        self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS  # type: Optional[List[float]]
+        self.REDUCTION_THEORY_TERMS = REDUCTION_THEORY_TERMS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -783,6 +1061,34 @@ class PerturbationsT(object):
         self.FIXED_S10P7_MEAN = Perturbations.FIXED_S10P7_MEAN()
         self.FIXED_Y10P7 = Perturbations.FIXED_Y10P7()
         self.FIXED_Y10P7_MEAN = Perturbations.FIXED_Y10P7_MEAN()
+        self.MAXIMUM_TESSERAL_DEGREE = Perturbations.MAXIMUM_TESSERAL_DEGREE()
+        self.MAXIMUM_ZONAL_DEGREE = Perturbations.MAXIMUM_ZONAL_DEGREE()
+        self.WEATHER_SOURCE = Perturbations.WEATHER_SOURCE()
+        self.DENSITY_CORRECTION = Perturbations.DENSITY_CORRECTION()
+        self.DENSITY_CORRECTION_CID = Perturbations.DENSITY_CORRECTION_CID()
+        if not Perturbations.SPACE_WEATHERIsNone():
+            self.SPACE_WEATHER = []
+            for i in range(Perturbations.SPACE_WEATHERLength()):
+                if Perturbations.SPACE_WEATHER(i) is None:
+                    self.SPACE_WEATHER.append(None)
+                else:
+                    sPW_ = SPW.SPWT.InitFromObj(Perturbations.SPACE_WEATHER(i))
+                    self.SPACE_WEATHER.append(sPW_)
+        if not Perturbations.DENSITY_CORRECTION_NODE_TIMES_MSIsNone():
+            if np is None:
+                self.DENSITY_CORRECTION_NODE_TIMES_MS = []
+                for i in range(Perturbations.DENSITY_CORRECTION_NODE_TIMES_MSLength()):
+                    self.DENSITY_CORRECTION_NODE_TIMES_MS.append(Perturbations.DENSITY_CORRECTION_NODE_TIMES_MS(i))
+            else:
+                self.DENSITY_CORRECTION_NODE_TIMES_MS = Perturbations.DENSITY_CORRECTION_NODE_TIMES_MSAsNumpy()
+        if not Perturbations.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSIsNone():
+            if np is None:
+                self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = []
+                for i in range(Perturbations.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSLength()):
+                    self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS.append(Perturbations.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(i))
+            else:
+                self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = Perturbations.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSAsNumpy()
+        self.REDUCTION_THEORY_TERMS = Perturbations.REDUCTION_THEORY_TERMS()
 
     # PerturbationsT
     def Pack(self, builder):
@@ -838,6 +1144,32 @@ class PerturbationsT(object):
             SW_DATA_EPOCH = builder.CreateString(self.SW_DATA_EPOCH)
         if self.SW_INTERP_METHOD is not None:
             SW_INTERP_METHOD = builder.CreateString(self.SW_INTERP_METHOD)
+        if self.DENSITY_CORRECTION_CID is not None:
+            DENSITY_CORRECTION_CID = builder.CreateString(self.DENSITY_CORRECTION_CID)
+        if self.SPACE_WEATHER is not None:
+            SPACE_WEATHERlist = []
+            for i in range(len(self.SPACE_WEATHER)):
+                SPACE_WEATHERlist.append(self.SPACE_WEATHER[i].Pack(builder))
+            PerturbationsStartSPACE_WEATHERVector(builder, len(self.SPACE_WEATHER))
+            for i in reversed(range(len(self.SPACE_WEATHER))):
+                builder.PrependUOffsetTRelative(SPACE_WEATHERlist[i])
+            SPACE_WEATHER = builder.EndVector()
+        if self.DENSITY_CORRECTION_NODE_TIMES_MS is not None:
+            if np is not None and type(self.DENSITY_CORRECTION_NODE_TIMES_MS) is np.ndarray:
+                DENSITY_CORRECTION_NODE_TIMES_MS = builder.CreateNumpyVector(self.DENSITY_CORRECTION_NODE_TIMES_MS)
+            else:
+                PerturbationsStartDENSITY_CORRECTION_NODE_TIMES_MSVector(builder, len(self.DENSITY_CORRECTION_NODE_TIMES_MS))
+                for i in reversed(range(len(self.DENSITY_CORRECTION_NODE_TIMES_MS))):
+                    builder.PrependInt64(self.DENSITY_CORRECTION_NODE_TIMES_MS[i])
+                DENSITY_CORRECTION_NODE_TIMES_MS = builder.EndVector()
+        if self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS is not None:
+            if np is not None and type(self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS) is np.ndarray:
+                DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = builder.CreateNumpyVector(self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+            else:
+                PerturbationsStartDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, len(self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS))
+                for i in reversed(range(len(self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS))):
+                    builder.PrependFloat64(self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS[i])
+                DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS = builder.EndVector()
         PerturbationsStart(builder)
         if self.COMMENT is not None:
             PerturbationsAddCOMMENT(builder, COMMENT)
@@ -897,5 +1229,18 @@ class PerturbationsT(object):
         PerturbationsAddFIXED_S10P7_MEAN(builder, self.FIXED_S10P7_MEAN)
         PerturbationsAddFIXED_Y10P7(builder, self.FIXED_Y10P7)
         PerturbationsAddFIXED_Y10P7_MEAN(builder, self.FIXED_Y10P7_MEAN)
+        PerturbationsAddMAXIMUM_TESSERAL_DEGREE(builder, self.MAXIMUM_TESSERAL_DEGREE)
+        PerturbationsAddMAXIMUM_ZONAL_DEGREE(builder, self.MAXIMUM_ZONAL_DEGREE)
+        PerturbationsAddWEATHER_SOURCE(builder, self.WEATHER_SOURCE)
+        PerturbationsAddDENSITY_CORRECTION(builder, self.DENSITY_CORRECTION)
+        if self.DENSITY_CORRECTION_CID is not None:
+            PerturbationsAddDENSITY_CORRECTION_CID(builder, DENSITY_CORRECTION_CID)
+        if self.SPACE_WEATHER is not None:
+            PerturbationsAddSPACE_WEATHER(builder, SPACE_WEATHER)
+        if self.DENSITY_CORRECTION_NODE_TIMES_MS is not None:
+            PerturbationsAddDENSITY_CORRECTION_NODE_TIMES_MS(builder, DENSITY_CORRECTION_NODE_TIMES_MS)
+        if self.DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS is not None:
+            PerturbationsAddDENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS)
+        PerturbationsAddREDUCTION_THEORY_TERMS(builder, self.REDUCTION_THEORY_TERMS)
         Perturbations = PerturbationsEnd(builder)
         return Perturbations

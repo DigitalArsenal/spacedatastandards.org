@@ -25,22 +25,59 @@ public struct PCFOutput : IFlatbufferObject
   public double STEP_SECONDS { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)60.0; } }
   /// Most states one request may produce. Default 500000.
   public uint MAXIMUM_STATES { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)500000; } }
+  /// Output epochs, ISO 8601 UTC, ascending; when present they are the
+  /// states written and START_TIME, STOP_TIME and STEP_SECONDS are not read.
+  /// Default empty.
+  public string EPOCHS(int j) { int o = __p.__offset(10); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int EPOCHSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// First output epoch, ISO 8601 UTC. Default empty: the element set's
+  /// epoch.
+  public string START_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTART_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetSTART_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetSTART_TIMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Last output epoch, ISO 8601 UTC, at or after START_TIME. Default empty:
+  /// START_TIME plus one day.
+  public string STOP_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTOP_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetSTOP_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetSTOP_TIMEArray() { return __p.__vector_as_array<byte>(14); }
 
   public static Offset<PCFOutput> CreatePCFOutput(FlatBufferBuilder builder,
       pcfOutputFrame FRAME = pcfOutputFrame.UNSPECIFIED,
       double STEP_SECONDS = 60.0,
-      uint MAXIMUM_STATES = 500000) {
-    builder.StartTable(3);
+      uint MAXIMUM_STATES = 500000,
+      VectorOffset EPOCHSOffset = default(VectorOffset),
+      StringOffset START_TIMEOffset = default(StringOffset),
+      StringOffset STOP_TIMEOffset = default(StringOffset)) {
+    builder.StartTable(6);
     PCFOutput.AddSTEP_SECONDS(builder, STEP_SECONDS);
+    PCFOutput.AddSTOP_TIME(builder, STOP_TIMEOffset);
+    PCFOutput.AddSTART_TIME(builder, START_TIMEOffset);
+    PCFOutput.AddEPOCHS(builder, EPOCHSOffset);
     PCFOutput.AddMAXIMUM_STATES(builder, MAXIMUM_STATES);
     PCFOutput.AddFRAME(builder, FRAME);
     return PCFOutput.EndPCFOutput(builder);
   }
 
-  public static void StartPCFOutput(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartPCFOutput(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddFRAME(FlatBufferBuilder builder, pcfOutputFrame FRAME) { builder.AddByte(0, (byte)FRAME, 0); }
   public static void AddSTEP_SECONDS(FlatBufferBuilder builder, double STEP_SECONDS) { builder.AddDouble(1, STEP_SECONDS, 60.0); }
   public static void AddMAXIMUM_STATES(FlatBufferBuilder builder, uint MAXIMUM_STATES) { builder.AddUint(2, MAXIMUM_STATES, 500000); }
+  public static void AddEPOCHS(FlatBufferBuilder builder, VectorOffset EPOCHSOffset) { builder.AddOffset(3, EPOCHSOffset.Value, 0); }
+  public static VectorOffset CreateEPOCHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEPOCHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEPOCHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEPOCHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(4, START_TIMEOffset.Value, 0); }
+  public static void AddSTOP_TIME(FlatBufferBuilder builder, StringOffset STOP_TIMEOffset) { builder.AddOffset(5, STOP_TIMEOffset.Value, 0); }
   public static Offset<PCFOutput> EndPCFOutput(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFOutput>(o);
@@ -54,14 +91,29 @@ public struct PCFOutput : IFlatbufferObject
     _o.FRAME = this.FRAME;
     _o.STEP_SECONDS = this.STEP_SECONDS;
     _o.MAXIMUM_STATES = this.MAXIMUM_STATES;
+    _o.EPOCHS = new List<string>();
+    for (var _j = 0; _j < this.EPOCHSLength; ++_j) {_o.EPOCHS.Add(this.EPOCHS(_j));}
+    _o.START_TIME = this.START_TIME;
+    _o.STOP_TIME = this.STOP_TIME;
   }
   public static Offset<PCFOutput> Pack(FlatBufferBuilder builder, PCFOutputT _o) {
     if (_o == null) return default(Offset<PCFOutput>);
+    var _EPOCHS = default(VectorOffset);
+    if (_o.EPOCHS != null) {
+      var __EPOCHS = new StringOffset[_o.EPOCHS.Count];
+      for (var _j = 0; _j < __EPOCHS.Length; ++_j) { __EPOCHS[_j] = builder.CreateString(_o.EPOCHS[_j]); }
+      _EPOCHS = CreateEPOCHSVector(builder, __EPOCHS);
+    }
+    var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
+    var _STOP_TIME = _o.STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.STOP_TIME);
     return CreatePCFOutput(
       builder,
       _o.FRAME,
       _o.STEP_SECONDS,
-      _o.MAXIMUM_STATES);
+      _o.MAXIMUM_STATES,
+      _EPOCHS,
+      _START_TIME,
+      _STOP_TIME);
   }
 }
 
@@ -70,11 +122,17 @@ public class PCFOutputT
   public pcfOutputFrame FRAME { get; set; }
   public double STEP_SECONDS { get; set; }
   public uint MAXIMUM_STATES { get; set; }
+  public List<string> EPOCHS { get; set; }
+  public string START_TIME { get; set; }
+  public string STOP_TIME { get; set; }
 
   public PCFOutputT() {
     this.FRAME = pcfOutputFrame.UNSPECIFIED;
     this.STEP_SECONDS = 60.0;
     this.MAXIMUM_STATES = 500000;
+    this.EPOCHS = null;
+    this.START_TIME = null;
+    this.STOP_TIME = null;
   }
 }
 
@@ -87,6 +145,9 @@ static public class PCFOutputVerify
       && verifier.VerifyField(tablePos, 4 /*FRAME*/, 1 /*pcfOutputFrame*/, 1, false)
       && verifier.VerifyField(tablePos, 6 /*STEP_SECONDS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*MAXIMUM_STATES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 10 /*EPOCHS*/, false)
+      && verifier.VerifyString(tablePos, 12 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*STOP_TIME*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

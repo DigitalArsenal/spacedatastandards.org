@@ -198,7 +198,9 @@ class OrbitDetermination(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # RMS of post-fit residuals for this solution.
+    # RMS of post-fit residuals for this solution. In the unit of the residuals the
+    # observation types state: arcsec for RADEC angles. A position RMS in km is
+    # OCMFitStatistics.FIT_RMS_KM.
     # OrbitDetermination
     def OD_RESIDUAL_RMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -507,8 +509,20 @@ class OrbitDetermination(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         return o == 0
 
+    # Position statistics of a fit to a reference ephemeris.
+    # OrbitDetermination
+    def FIT_STATISTICS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OCMFitStatistics import OCMFitStatistics
+            obj = OCMFitStatistics()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def OrbitDeterminationStart(builder):
-    builder.StartObject(47)
+    builder.StartObject(48)
 
 def Start(builder):
     OrbitDeterminationStart(builder)
@@ -875,6 +889,12 @@ def OrbitDeterminationCreateCOMMENTVector(builder, data):
 def CreateCOMMENTVector(builder, data):
     return OrbitDeterminationCreateCOMMENTVector(builder, data)
 
+def OrbitDeterminationAddFIT_STATISTICS(builder, FIT_STATISTICS):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(FIT_STATISTICS), 0)
+
+def AddFIT_STATISTICS(builder, FIT_STATISTICS):
+    OrbitDeterminationAddFIT_STATISTICS(builder, FIT_STATISTICS)
+
 def OrbitDeterminationEnd(builder):
     return builder.EndObject()
 
@@ -882,8 +902,9 @@ def End(builder):
     return OrbitDeterminationEnd(builder)
 
 import OCMDynamicParameter
+import OCMFitStatistics
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -939,6 +960,7 @@ class OrbitDeterminationT(object):
         SENSORS_N = 0,
         SENSORS = None,
         COMMENT = None,
+        FIT_STATISTICS = None,
     ):
         self.OD_ID = OD_ID  # type: Optional[str]
         self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
@@ -987,6 +1009,7 @@ class OrbitDeterminationT(object):
         self.SENSORS_N = SENSORS_N  # type: int
         self.SENSORS = SENSORS  # type: Optional[str]
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.FIT_STATISTICS = FIT_STATISTICS  # type: Optional[OCMFitStatistics.OCMFitStatisticsT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1084,6 +1107,8 @@ class OrbitDeterminationT(object):
             self.COMMENT = []
             for i in range(OrbitDetermination.COMMENTLength()):
                 self.COMMENT.append(OrbitDetermination.COMMENT(i))
+        if OrbitDetermination.FIT_STATISTICS() is not None:
+            self.FIT_STATISTICS = OCMFitStatistics.OCMFitStatisticsT.InitFromObj(OrbitDetermination.FIT_STATISTICS())
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -1169,6 +1194,8 @@ class OrbitDeterminationT(object):
             for i in reversed(range(len(self.COMMENT))):
                 builder.PrependUOffsetTRelative(COMMENTlist[i])
             COMMENT = builder.EndVector()
+        if self.FIT_STATISTICS is not None:
+            FIT_STATISTICS = self.FIT_STATISTICS.Pack(builder)
         OrbitDeterminationStart(builder)
         if self.OD_ID is not None:
             OrbitDeterminationAddOD_ID(builder, OD_ID)
@@ -1240,5 +1267,7 @@ class OrbitDeterminationT(object):
             OrbitDeterminationAddSENSORS(builder, SENSORS)
         if self.COMMENT is not None:
             OrbitDeterminationAddCOMMENT(builder, COMMENT)
+        if self.FIT_STATISTICS is not None:
+            OrbitDeterminationAddFIT_STATISTICS(builder, FIT_STATISTICS)
         OrbitDetermination = OrbitDeterminationEnd(builder)
         return OrbitDetermination

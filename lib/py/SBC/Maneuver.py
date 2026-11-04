@@ -419,8 +419,18 @@ class Maneuver(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
+    # NORAD_CAT_ID of the object that maneuvered, for a message whose
+    # maneuvers belong to more than one object (a relative-motion message's
+    # chaser and target). 0 when the message's own object maneuvered.
+    # Maneuver
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
 def ManeuverStart(builder):
-    builder.StartObject(37)
+    builder.StartObject(38)
 
 def Start(builder):
     ManeuverStart(builder)
@@ -727,6 +737,12 @@ def ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE):
 def AddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE):
     ManeuverAddDC_PA_STOP_ANGLE(builder, DC_PA_STOP_ANGLE)
 
+def ManeuverAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(37, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    ManeuverAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
 def ManeuverEnd(builder):
     return builder.EndObject()
 
@@ -780,6 +796,7 @@ class ManeuverT(object):
         DC_BODY_TRIGGER = None,
         DC_PA_START_ANGLE = float('nan'),
         DC_PA_STOP_ANGLE = float('nan'),
+        NORAD_CAT_ID = 0,
     ):
         self.MAN_ID = MAN_ID  # type: Optional[str]
         self.MAN_BASIS = MAN_BASIS  # type: Optional[str]
@@ -818,6 +835,7 @@ class ManeuverT(object):
         self.DC_BODY_TRIGGER = DC_BODY_TRIGGER  # type: Optional[List[float]]
         self.DC_PA_START_ANGLE = DC_PA_START_ANGLE  # type: float
         self.DC_PA_STOP_ANGLE = DC_PA_STOP_ANGLE  # type: float
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -901,6 +919,7 @@ class ManeuverT(object):
                 self.DC_BODY_TRIGGER = Maneuver.DC_BODY_TRIGGERAsNumpy()
         self.DC_PA_START_ANGLE = Maneuver.DC_PA_START_ANGLE()
         self.DC_PA_STOP_ANGLE = Maneuver.DC_PA_STOP_ANGLE()
+        self.NORAD_CAT_ID = Maneuver.NORAD_CAT_ID()
 
     # ManeuverT
     def Pack(self, builder):
@@ -1062,5 +1081,6 @@ class ManeuverT(object):
             ManeuverAddDC_BODY_TRIGGER(builder, DC_BODY_TRIGGER)
         ManeuverAddDC_PA_START_ANGLE(builder, self.DC_PA_START_ANGLE)
         ManeuverAddDC_PA_STOP_ANGLE(builder, self.DC_PA_STOP_ANGLE)
+        ManeuverAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
         Maneuver = ManeuverEnd(builder)
         return Maneuver

@@ -20,8 +20,19 @@ public final class meanElementSource {
    * Universal Semianalytical Method
    */
   public static final byte USM = 3;
+  /**
+   * SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
+   * atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
+   * unused: it was a cut value of an earlier theory.
+   */
+  public static final byte AP = 5;
+  /**
+   * Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+   * set is always written.
+   */
+  public static final byte UNSPECIFIED = 6;
 
-  public static final String[] names = { "SGP4", "SGP4XP", "DSST", "USM", };
+  public static final String[] names = { "SGP4", "SGP4XP", "DSST", "USM", "", "AP", "UNSPECIFIED", };
 
   public static String name(int e) { return names[e]; }
 }
