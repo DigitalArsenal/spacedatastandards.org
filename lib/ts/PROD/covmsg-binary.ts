@@ -22,7 +22,11 @@
 //
 // Reader refusals, as {code, message}: p6-framing (a count that is short, missing or unequal to its trailing
 // copy), p6-header-width, p6-cov-size, p6-row-width:<row>, p6-trailing, p6-not-finite:<field>.
+// Writer refusals: record-missing:STATE_DATA, record-missing:COVARIANCE_DATA, record-missing:WEIGHTED_RMS,
+// p6-cov-size, p6-not-finite:<field>, and frames.ts's (frame-degenerate).
 import { ok, refuse, type Result } from './tokens.js';
+import { type Record } from './record.js';
+import { covarianceToUvw } from './frames.js';
 
 export const P6_LITTLE_ENDIAN = true;
 export const P6_MARKER_BYTES = 4;
@@ -99,4 +103,41 @@ export function readP6(bytes: Uint8Array): Result<P6Message> {
   }
   if (at !== bytes.byteLength) return refuse('p6-trailing', `${bytes.byteLength - at} bytes follow the last row`);
   return ok({ epochMs, covSize, weightedRms, ltm });
+}
+
+/** P6 of a Record: the first epoch's covariance, state block in UVW; refuses a Record without the required fields. */
+export function writeP6(record: Record): Result<Uint8Array> {
+  const first = record.epochs[0];
+  if (!first) return refuse('record-missing:STATE_DATA', 'P6 needs a state');
+  const cov = record.covariance;
+  if (!cov.perEpoch.length) return refuse('record-missing:COVARIANCE_DATA', 'P6 needs a covariance');
+  const weightedRms = record.fit.weightedRms;
+  if (weightedRms === null) return refuse('record-missing:WEIGHTED_RMS', 'P6 needs the fit weighted RMS');
+  const n = cov.size;
+  if (n < P6_MIN_COV_SIZE || n > P6_MAX_COV_SIZE) return refuse('p6-cov-size', `COV_SIZE ${n} is outside ${P6_MIN_COV_SIZE}..${P6_MAX_COV_SIZE}`);
+  const s = first.state;
+  const uvw = covarianceToUvw(cov.perEpoch[0].ltm, n, [s[0], s[1], s[2]], [s[3], s[4], s[5]]);
+  if (!uvw.ok) return uvw;
+  if (!Number.isFinite(first.epochMs)) return refuse('p6-not-finite:EPOCH', 'the epoch is not finite');
+  if (!Number.isFinite(weightedRms)) return refuse('p6-not-finite:WTD_RMS', 'the weighted RMS is not finite');
+  if (uvw.value.some((v) => !Number.isFinite(v))) return refuse('p6-not-finite:COV', 'a covariance value is not finite');
+  const bytes = new Uint8Array(p6Length(n));
+  const view = new DataView(bytes.buffer);
+  let at = 0;
+  const record_ = (length: number, fill: (offset: number) => void) => {
+    view.setUint32(at, length, P6_LITTLE_ENDIAN);
+    fill(at + P6_MARKER_BYTES);
+    view.setUint32(at + P6_MARKER_BYTES + length, length, P6_LITTLE_ENDIAN);
+    at += length + 2 * P6_MARKER_BYTES;
+  };
+  record_(P6_HEADER_BYTES, (o) => {
+    view.setFloat64(o + P6_HEADER_FIELDS[0].offset, first.epochMs, P6_LITTLE_ENDIAN);
+    view.setInt32(o + P6_HEADER_FIELDS[1].offset, n, P6_LITTLE_ENDIAN);
+    view.setFloat64(o + P6_HEADER_FIELDS[2].offset, weightedRms, P6_LITTLE_ENDIAN);
+  });
+  let k = 0;
+  for (const width of p6RowWidths(n)) {
+    record_(width * P6_VALUE_BYTES, (o) => { for (let j = 0; j < width; j++) view.setFloat64(o + j * P6_VALUE_BYTES, uvw.value[k++], P6_LITTLE_ENDIAN); });
+  }
+  return ok(bytes);
 }
