@@ -119,6 +119,17 @@ public struct PVN : IFlatbufferObject
   /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
   /// the source was fetched by range. 0 when not stated.
   public ulong SOURCE_BYTES { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// SHA-256 of the build of PRODUCER that made the product (its dist
+  /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+  /// that loaded the producing module: a module cannot hash its own bytes.
+  /// Empty when not stated.
+  public string PRODUCER_SHA256 { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPRODUCER_SHA256Bytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetPRODUCER_SHA256Bytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetPRODUCER_SHA256Array() { return __p.__vector_as_array<byte>(30); }
 
   public static Offset<PVN> CreatePVN(FlatBufferBuilder builder,
       StringOffset SOURCE_IDOffset = default(StringOffset),
@@ -133,9 +144,11 @@ public struct PVN : IFlatbufferObject
       StringOffset SOURCE_VERSIONOffset = default(StringOffset),
       StringOffset RETRIEVED_ATOffset = default(StringOffset),
       StringOffset SOURCE_SHA256Offset = default(StringOffset),
-      ulong SOURCE_BYTES = 0) {
-    builder.StartTable(13);
+      ulong SOURCE_BYTES = 0,
+      StringOffset PRODUCER_SHA256Offset = default(StringOffset)) {
+    builder.StartTable(14);
     PVN.AddSOURCE_BYTES(builder, SOURCE_BYTES);
+    PVN.AddPRODUCER_SHA256(builder, PRODUCER_SHA256Offset);
     PVN.AddSOURCE_SHA256(builder, SOURCE_SHA256Offset);
     PVN.AddRETRIEVED_AT(builder, RETRIEVED_ATOffset);
     PVN.AddSOURCE_VERSION(builder, SOURCE_VERSIONOffset);
@@ -151,7 +164,7 @@ public struct PVN : IFlatbufferObject
     return PVN.EndPVN(builder);
   }
 
-  public static void StartPVN(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPVN(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddSOURCE_ID(FlatBufferBuilder builder, StringOffset SOURCE_IDOffset) { builder.AddOffset(0, SOURCE_IDOffset.Value, 0); }
   public static void AddSOURCE_KIND(FlatBufferBuilder builder, pvnSourceKind SOURCE_KIND) { builder.AddSbyte(1, (sbyte)SOURCE_KIND, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -165,6 +178,7 @@ public struct PVN : IFlatbufferObject
   public static void AddRETRIEVED_AT(FlatBufferBuilder builder, StringOffset RETRIEVED_ATOffset) { builder.AddOffset(10, RETRIEVED_ATOffset.Value, 0); }
   public static void AddSOURCE_SHA256(FlatBufferBuilder builder, StringOffset SOURCE_SHA256Offset) { builder.AddOffset(11, SOURCE_SHA256Offset.Value, 0); }
   public static void AddSOURCE_BYTES(FlatBufferBuilder builder, ulong SOURCE_BYTES) { builder.AddUlong(12, SOURCE_BYTES, 0); }
+  public static void AddPRODUCER_SHA256(FlatBufferBuilder builder, StringOffset PRODUCER_SHA256Offset) { builder.AddOffset(13, PRODUCER_SHA256Offset.Value, 0); }
   public static Offset<PVN> EndPVN(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PVN>(o);
@@ -190,6 +204,7 @@ public struct PVN : IFlatbufferObject
     _o.RETRIEVED_AT = this.RETRIEVED_AT;
     _o.SOURCE_SHA256 = this.SOURCE_SHA256;
     _o.SOURCE_BYTES = this.SOURCE_BYTES;
+    _o.PRODUCER_SHA256 = this.PRODUCER_SHA256;
   }
   public static Offset<PVN> Pack(FlatBufferBuilder builder, PVNT _o) {
     if (_o == null) return default(Offset<PVN>);
@@ -203,6 +218,7 @@ public struct PVN : IFlatbufferObject
     var _SOURCE_VERSION = _o.SOURCE_VERSION == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_VERSION);
     var _RETRIEVED_AT = _o.RETRIEVED_AT == null ? default(StringOffset) : builder.CreateString(_o.RETRIEVED_AT);
     var _SOURCE_SHA256 = _o.SOURCE_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_SHA256);
+    var _PRODUCER_SHA256 = _o.PRODUCER_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.PRODUCER_SHA256);
     return CreatePVN(
       builder,
       _SOURCE_ID,
@@ -217,7 +233,8 @@ public struct PVN : IFlatbufferObject
       _SOURCE_VERSION,
       _RETRIEVED_AT,
       _SOURCE_SHA256,
-      _o.SOURCE_BYTES);
+      _o.SOURCE_BYTES,
+      _PRODUCER_SHA256);
   }
 }
 
@@ -236,6 +253,7 @@ public class PVNT
   public string RETRIEVED_AT { get; set; }
   public string SOURCE_SHA256 { get; set; }
   public ulong SOURCE_BYTES { get; set; }
+  public string PRODUCER_SHA256 { get; set; }
 
   public PVNT() {
     this.SOURCE_ID = null;
@@ -251,6 +269,7 @@ public class PVNT
     this.RETRIEVED_AT = null;
     this.SOURCE_SHA256 = null;
     this.SOURCE_BYTES = 0;
+    this.PRODUCER_SHA256 = null;
   }
   public static PVNT DeserializeFromBinary(byte[] fbBuffer) {
     return PVN.GetRootAsPVN(new ByteBuffer(fbBuffer)).UnPack();
@@ -281,6 +300,7 @@ static public class PVNVerify
       && verifier.VerifyString(tablePos, 24 /*RETRIEVED_AT*/, false)
       && verifier.VerifyString(tablePos, 26 /*SOURCE_SHA256*/, false)
       && verifier.VerifyField(tablePos, 28 /*SOURCE_BYTES*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 30 /*PRODUCER_SHA256*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

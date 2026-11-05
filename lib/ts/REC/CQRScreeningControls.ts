@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT } from './CQRVerifiedCovarianceProducer.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { cqrProbabilityAlgorithm } from './cqrProbabilityAlgorithm.js';
 import { cqrVolumeAnchor } from './cqrVolumeAnchor.js';
@@ -140,8 +141,22 @@ VOLUME_CENTER():cqrVolumeAnchor {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeAnchor.PRIMARY;
 }
 
+/**
+ * Builds whose AP covariance a collision probability may use. An empty or
+ * absent list means no collision probability from AP covariance.
+ */
+VERIFIED_COVARIANCE_PRODUCERS(index: number, obj?:CQRVerifiedCovarianceProducer):CQRVerifiedCovarianceProducer|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new CQRVerifiedCovarianceProducer()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+verifiedCovarianceProducersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startCQRScreeningControls(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(19);
 }
 
 static addStartEpoch(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset) {
@@ -216,13 +231,29 @@ static addVolumeCenter(builder:flatbuffers.Builder, VOLUME_CENTER:cqrVolumeAncho
   builder.addFieldInt8(17, VOLUME_CENTER, cqrVolumeAnchor.PRIMARY);
 }
 
+static addVerifiedCovarianceProducers(builder:flatbuffers.Builder, VERIFIED_COVARIANCE_PRODUCERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, VERIFIED_COVARIANCE_PRODUCERSOffset, 0);
+}
+
+static createVerifiedCovarianceProducersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startVerifiedCovarianceProducersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endCQRScreeningControls(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // START_EPOCH
   return offset;
 }
 
-static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm, SCREENING:cqrVolumeGeometry, RADIAL_M:number, IN_TRACK_M:number, CROSS_TRACK_M:number, VOLUME_CENTER:cqrVolumeAnchor):flatbuffers.Offset {
+static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm, SCREENING:cqrVolumeGeometry, RADIAL_M:number, IN_TRACK_M:number, CROSS_TRACK_M:number, VOLUME_CENTER:cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CQRScreeningControls.startCQRScreeningControls(builder);
   CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
   CQRScreeningControls.addDurationSeconds(builder, DURATION_SECONDS);
@@ -242,6 +273,7 @@ static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset
   CQRScreeningControls.addInTrackM(builder, IN_TRACK_M);
   CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
   CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
+  CQRScreeningControls.addVerifiedCovarianceProducers(builder, VERIFIED_COVARIANCE_PRODUCERSOffset);
   return CQRScreeningControls.endCQRScreeningControls(builder);
 }
 
@@ -264,7 +296,8 @@ unpack(): CQRScreeningControlsT {
     this.RADIAL_M(),
     this.IN_TRACK_M(),
     this.CROSS_TRACK_M(),
-    this.VOLUME_CENTER()
+    this.VOLUME_CENTER(),
+    this.bb!.createObjList<CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT>(this.VERIFIED_COVARIANCE_PRODUCERS.bind(this), this.verifiedCovarianceProducersLength())
   );
 }
 
@@ -288,6 +321,7 @@ unpackTo(_o: CQRScreeningControlsT): void {
   _o.IN_TRACK_M = this.IN_TRACK_M();
   _o.CROSS_TRACK_M = this.CROSS_TRACK_M();
   _o.VOLUME_CENTER = this.VOLUME_CENTER();
+  _o.VERIFIED_COVARIANCE_PRODUCERS = this.bb!.createObjList<CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT>(this.VERIFIED_COVARIANCE_PRODUCERS.bind(this), this.verifiedCovarianceProducersLength());
 }
 }
 
@@ -310,12 +344,14 @@ constructor(
   public RADIAL_M: number = 0.0,
   public IN_TRACK_M: number = 0.0,
   public CROSS_TRACK_M: number = 0.0,
-  public VOLUME_CENTER: cqrVolumeAnchor = cqrVolumeAnchor.PRIMARY
+  public VOLUME_CENTER: cqrVolumeAnchor = cqrVolumeAnchor.PRIMARY,
+  public VERIFIED_COVARIANCE_PRODUCERS: (CQRVerifiedCovarianceProducerT)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const START_EPOCH = (this.START_EPOCH !== null ? this.START_EPOCH!.pack(builder) : 0);
+  const VERIFIED_COVARIANCE_PRODUCERS = CQRScreeningControls.createVerifiedCovarianceProducersVector(builder, builder.createObjectOffsetList(this.VERIFIED_COVARIANCE_PRODUCERS));
 
   return CQRScreeningControls.createCQRScreeningControls(builder,
     START_EPOCH,
@@ -335,7 +371,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RADIAL_M,
     this.IN_TRACK_M,
     this.CROSS_TRACK_M,
-    this.VOLUME_CENTER
+    this.VOLUME_CENTER,
+    VERIFIED_COVARIANCE_PRODUCERS
   );
 }
 }

@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.278.0+1793889410335",
+  version: "1.279.0+1793905746591",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: f2481e45b6a46761ea28c2e4629626fbdae6fe73aca8d279f22e4b1aef14a3be
-// Version: 1.0.7
+      IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -61,7 +61,8 @@ enum pcfTheory : ubyte {
   FFM = 4,
   /// Two-body (Keplerian) motion about the central body.
   KEPLER = 5,
-  /// SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+  /// SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics.
+  /// Not the number of $MET AP (5).
   /// 3 stays unused.
   AP = 6
 }
@@ -9811,8 +9812,8 @@ file_identifier "$NHS";`,
       ]
     },
     PVN: {
-      IDL: `// Hash: 17556e26188665ce53622bcc252cf7d18bfed0bc6a913ea1c1b320052614dfd4
-// Version: 1.245.2
+      IDL: `// Hash: 0fdc7397212b0ee65c0a9363d9ee1df5ca323b23e863b4ba899809934c30c936
+// Version: 1.245.3
 // -----------------------------------END_HEADER
 // Product Provenance (PVN)
 //
@@ -9897,6 +9898,11 @@ table PVN {
   /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
   /// the source was fetched by range. 0 when not stated.
   SOURCE_BYTES: uint64;
+  /// SHA-256 of the build of PRODUCER that made the product (its dist
+  /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+  /// that loaded the producing module: a module cannot hash its own bytes.
+  /// Empty when not stated.
+  PRODUCER_SHA256: string;
 }
 
 root_type PVN;
@@ -12223,7 +12229,34 @@ file_identifier "$TBP";`,
       ]
     },
     MET: {
-      IDL: '// Hash: b3249acd994f8b190d3bbeea88831d347a6be6701e43508ec72d41ce2d92fef2\n// Version: 1.0.6\n// -----------------------------------END_HEADER\nenum meanElementSource : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),\n  /// as published in the 2022 astrodynamics conference literature.\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM,\n  /// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag\n  /// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left\n  /// unused: it was a cut value of an earlier theory.\n  AP = 5,\n  /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a\n  /// set is always written.\n  UNSPECIFIED = 6\n}\n\n/// Mean Element Theory\ntable MET {\n  MEAN_ELEMENT_THEORY:meanElementSource;\n}\nroot_type MET;\nfile_identifier "$MET";',
+      IDL: `// Hash: 49eb7321b0feffc01a882b2aa9d647f461dd52bedf9597695c892a8b648b4531
+// Version: 1.0.7
+// -----------------------------------END_HEADER
+enum meanElementSource : byte {
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
+  SGP4XP,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM,
+  /// SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics
+  /// (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on
+  /// AP. 4 is left unused: it was a cut value of an earlier theory.
+  AP = 5,
+  /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+  /// set is always written.
+  UNSPECIFIED = 6
+}
+
+/// Mean Element Theory
+table MET {
+  MEAN_ELEMENT_THEORY:meanElementSource;
+}
+root_type MET;
+file_identifier "$MET";`,
       files: [
         "./dist/MET/MET.sw.tar.gz",
         "./dist/MET/MET.py.tar.gz",
@@ -24623,8 +24656,8 @@ file_identifier "$DAV";`,
       ]
     },
     CQR: {
-      IDL: `// Hash: 073530a07e27b1a60ae8d19ffbf36a8a158a22637e379549d5a051925c6e2aff
-// Version: 1.219.3
+      IDL: `// Hash: 57fb9c0f02106deb779ad0477585c0f1c34573724c8fadeeb654696918ceaf35
+// Version: 1.219.4
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -24773,6 +24806,19 @@ enum cqrVolumeAnchor : ubyte {
   BOTH = 3
 }
 
+/// One covariance-producing build whose covariance realism was verified. A
+/// collision probability uses AP covariance only when the covariance's PVN
+/// names a listed build.
+table CQRVerifiedCovarianceProducer {
+  /// PVN.PRODUCER verbatim: the module identifier and its version.
+  PRODUCER:string (required);
+  /// SHA-256 of the producing build's dist module.wasm, 64 lowercase
+  /// hexadecimal characters (PVN.PRODUCER_SHA256).
+  PRODUCER_SHA256:string (required);
+  /// Identifier of the record whose covariance realism E2E verified the build.
+  VERIFICATION_REFERENCE:string;
+}
+
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
 table CQRScreeningControls {
   START_EPOCH:TIMInstant (required);
@@ -24802,6 +24848,9 @@ table CQRScreeningControls {
   /// BOTH tests each object's volume independently and admits their union.
   /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
   VOLUME_CENTER:cqrVolumeAnchor = PRIMARY;
+  /// Builds whose AP covariance a collision probability may use. An empty or
+  /// absent list means no collision probability from AP covariance.
+  VERIFIED_COVARIANCE_PRODUCERS:[CQRVerifiedCovarianceProducer];
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
@@ -24963,6 +25012,10 @@ table CQREvent {
   /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
   /// UNSPECIFIED means admission provenance was not reported.
   ADMITTED_BY:cqrVolumeAnchor = UNSPECIFIED;
+  /// Why PROBABILITY is absent for an event that carries covariance, for
+  /// example an AP covariance whose producer is not in
+  /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+  PROBABILITY_REFUSAL:string;
 }
 
 table CQRScreeningStatistics {
@@ -42595,6 +42648,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -45052,6 +45109,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -50143,6 +50204,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -51837,6 +51902,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -53711,6 +53780,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -54831,6 +54904,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -57602,6 +57679,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -74969,6 +75050,10 @@ turned into a number.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -88074,6 +88159,10 @@ verbatim what that source states about itself.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -96751,6 +96840,10 @@ turned into a number.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -97805,6 +97898,10 @@ turned into a number.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -99030,6 +99127,10 @@ turned into a number.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -102335,6 +102436,10 @@ turned into a number.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -105828,6 +105933,10 @@ provider's reviewed register). Never free text.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -116104,6 +116213,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -119876,6 +119989,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -125120,6 +125237,10 @@ provider's reviewed register). Never free text.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -128297,6 +128418,10 @@ verbatim what that source states about itself.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -132582,6 +132707,10 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -142495,6 +142624,10 @@ Decoding applies the inverses from the last back.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -148588,6 +148721,10 @@ format class are named by $NCD's container format.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -173255,6 +173392,10 @@ stated.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -188796,6 +188937,29 @@ stated.`
           ],
           additionalProperties: false
         },
+        CQRVerifiedCovarianceProducer: {
+          type: "object",
+          description: "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+          properties: {
+            PRODUCER: {
+              type: "string",
+              description: "PVN.PRODUCER verbatim: the module identifier and its version."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256)."
+            },
+            VERIFICATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of the record whose covariance realism E2E verified the build."
+            }
+          },
+          required: [
+            "PRODUCER",
+            "PRODUCER_SHA256"
+          ],
+          additionalProperties: false
+        },
         CQRScreeningControls: {
           type: "object",
           description: "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -188860,6 +189024,13 @@ stated.`
             VOLUME_CENTER: {
               $ref: "#/definitions/cqrVolumeAnchor",
               description: "PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:\nR = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.\nBOTH tests each object's volume independently and admits their union.\nUNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres."
+            },
+            VERIFIED_COVARIANCE_PRODUCERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CQRVerifiedCovarianceProducer"
+              },
+              description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
             }
           },
           required: [
@@ -189252,6 +189423,10 @@ assumptions".`
             ADMITTED_BY: {
               $ref: "#/definitions/cqrVolumeAnchor",
               description: "Volume(s) containing the other object at TCA; BOTH means both tests passed.\nUNSPECIFIED means admission provenance was not reported."
+            },
+            PROBABILITY_REFUSAL: {
+              type: "string",
+              description: "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused."
             }
           },
           required: [
@@ -253653,6 +253828,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -266239,6 +266418,10 @@ balance service's own rate.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -278233,6 +278416,10 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -292419,6 +292606,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -297391,6 +297582,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -302159,6 +302354,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -309781,6 +309980,29 @@ compressed). Nothing hashes the payload before the protocol hash.`
           ],
           additionalProperties: false
         },
+        CQRVerifiedCovarianceProducer: {
+          type: "object",
+          description: "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+          properties: {
+            PRODUCER: {
+              type: "string",
+              description: "PVN.PRODUCER verbatim: the module identifier and its version."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256)."
+            },
+            VERIFICATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of the record whose covariance realism E2E verified the build."
+            }
+          },
+          required: [
+            "PRODUCER",
+            "PRODUCER_SHA256"
+          ],
+          additionalProperties: false
+        },
         CQRScreeningControls: {
           type: "object",
           description: "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -309845,6 +310067,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             VOLUME_CENTER: {
               $ref: "#/definitions/cqrVolumeAnchor",
               description: "PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:\nR = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.\nBOTH tests each object's volume independently and admits their union.\nUNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres."
+            },
+            VERIFIED_COVARIANCE_PRODUCERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CQRVerifiedCovarianceProducer"
+              },
+              description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
             }
           },
           required: [
@@ -310237,6 +310466,10 @@ assumptions".`
             ADMITTED_BY: {
               $ref: "#/definitions/cqrVolumeAnchor",
               description: "Volume(s) containing the other object at TCA; BOTH means both tests passed.\nUNSPECIFIED means admission provenance was not reported."
+            },
+            PROBABILITY_REFUSAL: {
+              type: "string",
+              description: "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused."
             }
           },
           required: [
@@ -311145,6 +311378,10 @@ assumptions".`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -317864,6 +318101,10 @@ assumptions".`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -330447,6 +330688,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -338136,6 +338381,10 @@ stated.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -339029,6 +339278,10 @@ stated.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -341003,6 +341256,10 @@ stated.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -352415,6 +352672,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
             }
           },
           additionalProperties: false
@@ -363435,7 +363696,7 @@ var fbjson_default = {
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -373974,7 +374235,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -390498,6 +390759,11 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -391735,7 +392001,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -393635,7 +393901,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -396124,6 +396390,11 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -408569,6 +408840,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -411160,6 +411436,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -414363,6 +414644,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -415638,7 +415924,7 @@ Decoding applies the inverses from the last back.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -417416,7 +417702,7 @@ Decoding applies the inverses from the last back.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -417739,6 +418025,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -417896,7 +418187,7 @@ Decoding applies the inverses from the last back.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -421802,7 +422093,7 @@ Decoding applies the inverses from the last back.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -423689,7 +423980,7 @@ Decoding applies the inverses from the last back.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -425793,6 +426084,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -429809,7 +430105,7 @@ Decoding applies the inverses from the last back.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -438161,7 +438457,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -442774,7 +443070,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -444485,7 +444781,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -461366,7 +461662,7 @@ turned into a number.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -463253,7 +463549,7 @@ turned into a number.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -468624,6 +468920,11 @@ turned into a number.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -469852,7 +470153,7 @@ turned into a number.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -478204,7 +478505,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -482817,7 +483118,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -496199,7 +496500,7 @@ verbatim what that source states about itself.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -497173,7 +497474,7 @@ verbatim what that source states about itself.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -503886,6 +504187,11 @@ verbatim what that source states about itself.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -510996,7 +511302,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -513114,7 +513420,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -513472,7 +513778,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -521417,6 +521723,11 @@ turned into a number.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -524465,6 +524776,11 @@ turned into a number.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -528682,6 +528998,11 @@ turned into a number.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -543786,6 +544107,11 @@ turned into a number.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -547913,7 +548239,7 @@ provider's reviewed register). Never free text.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -549800,7 +550126,7 @@ provider's reviewed register). Never free text.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -555866,6 +556192,11 @@ provider's reviewed register). Never free text.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -557094,7 +557425,7 @@ provider's reviewed register). Never free text.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -565446,7 +565777,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -570059,7 +570390,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -576950,6 +577281,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -580939,7 +581275,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -585048,7 +585384,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -585371,6 +585707,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -585528,7 +585869,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -594040,6 +594381,11 @@ provider's reviewed register). Never free text.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -601252,6 +601598,11 @@ verbatim what that source states about itself.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -612161,6 +612512,11 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -617523,7 +617879,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -617558,7 +617914,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -633857,6 +634213,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -642244,7 +642605,7 @@ format class are named by $NCD's container format.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -644131,7 +644492,7 @@ format class are named by $NCD's container format.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -649647,6 +650008,11 @@ format class are named by $NCD's container format.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -650875,7 +651241,7 @@ format class are named by $NCD's container format.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -659227,7 +659593,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -663840,7 +664206,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -683134,7 +683500,7 @@ stated.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -684108,7 +684474,7 @@ stated.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -711827,6 +712193,11 @@ stated.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -736075,7 +736446,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -738193,7 +738564,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -738551,7 +738922,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -740785,7 +741156,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -742557,6 +742928,34 @@ stated.`,
           ],
           additionalProperties: false
         },
+        CQRVerifiedCovarianceProducer: {
+          type: "object",
+          description: "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+          properties: {
+            PRODUCER: {
+              type: "string",
+              description: "PVN.PRODUCER verbatim: the module identifier and its version.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERIFICATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of the record whose covariance realism E2E verified the build.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "PRODUCER",
+            "PRODUCER_SHA256"
+          ],
+          additionalProperties: false
+        },
         CQRScreeningControls: {
           type: "object",
           description: "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -742692,6 +743091,14 @@ stated.`,
                 }
               },
               "x-flatbuffer-default": "PRIMARY"
+            },
+            VERIFIED_COVARIANCE_PRODUCERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CQRVerifiedCovarianceProducer"
+              },
+              description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance.",
+              "x-flatbuffer-type": "[CQRVerifiedCovarianceProducer]"
             }
           },
           required: [
@@ -743399,6 +743806,11 @@ assumptions".`,
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROBABILITY_REFUSAL: {
+              type: "string",
+              description: "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.",
+              "x-flatbuffer-type": "string"
             }
           },
           required: [
@@ -781294,7 +781706,7 @@ provider's reviewed register). Never free text.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -850357,7 +850769,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -852087,7 +852499,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -852410,6 +852822,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -852567,7 +852984,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -875020,7 +875437,7 @@ balance service's own rate.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -882372,6 +882789,11 @@ balance service's own rate.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -889482,7 +889904,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -917409,6 +917831,11 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -928244,7 +928671,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -928279,7 +928706,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -928472,7 +928899,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -944930,6 +945357,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -955655,6 +956087,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -964464,7 +964901,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -965438,7 +965875,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -972783,6 +973220,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -979893,7 +980335,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -982011,7 +982453,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -982369,7 +982811,7 @@ empty = the provider's native frame.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -984693,7 +985135,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -987297,6 +987739,34 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           ],
           additionalProperties: false
         },
+        CQRVerifiedCovarianceProducer: {
+          type: "object",
+          description: "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+          properties: {
+            PRODUCER: {
+              type: "string",
+              description: "PVN.PRODUCER verbatim: the module identifier and its version.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERIFICATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of the record whose covariance realism E2E verified the build.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "PRODUCER",
+            "PRODUCER_SHA256"
+          ],
+          additionalProperties: false
+        },
         CQRScreeningControls: {
           type: "object",
           description: "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -987432,6 +987902,14 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 }
               },
               "x-flatbuffer-default": "PRIMARY"
+            },
+            VERIFIED_COVARIANCE_PRODUCERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CQRVerifiedCovarianceProducer"
+              },
+              description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance.",
+              "x-flatbuffer-type": "[CQRVerifiedCovarianceProducer]"
             }
           },
           required: [
@@ -988139,6 +988617,11 @@ assumptions".`,
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROBABILITY_REFUSAL: {
+              type: "string",
+              description: "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.",
+              "x-flatbuffer-type": "string"
             }
           },
           required: [
@@ -989757,6 +990240,11 @@ assumptions".`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -997293,7 +997781,7 @@ assumptions".`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -1001485,7 +1001973,7 @@ assumptions".`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -1001808,6 +1002296,11 @@ assumptions".`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1001965,7 +1002458,7 @@ assumptions".`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -1025451,7 +1025944,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 5,
-              description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             UNSPECIFIED: {
               value: 6,
@@ -1027338,7 +1027831,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -1029326,6 +1029819,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1033342,7 +1033840,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -1041694,7 +1042192,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -1046307,7 +1046805,7 @@ stated.`,
                 },
                 AP: {
                   value: 5,
-                  description: "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
                 },
                 UNSPECIFIED: {
                   value: 6,
@@ -1048920,6 +1049418,11 @@ stated.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1050338,6 +1050841,11 @@ stated.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1054412,6 +1054920,11 @@ stated.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1077033,7 +1077546,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             AP: {
               value: 6,
-              description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           }
         },
@@ -1078960,6 +1079473,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               maximum: 18446744073709552e3,
               description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
               "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1092806,7 +1093324,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 },
                 AP: {
                   value: 6,
-                  description: "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -1099657,7 +1100175,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

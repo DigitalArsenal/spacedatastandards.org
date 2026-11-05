@@ -523,6 +523,63 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   }
 }
 
+///  One covariance-producing build whose covariance realism was verified. A
+///  collision probability uses AP covariance only when the covariance's PVN
+///  names a listed build.
+public struct CQRVerifiedCovarianceProducer: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CQR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CQRVerifiedCovarianceProducer.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PRODUCER: VOffset = 4
+    static let PRODUCER_SHA256: VOffset = 6
+    static let VERIFICATION_REFERENCE: VOffset = 8
+  }
+
+  ///  PVN.PRODUCER verbatim: the module identifier and its version.
+  public var PRODUCER: String! { let o = _accessor.offset(VT.PRODUCER); return _accessor.string(at: o) }
+  public var PRODUCERSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRODUCER) }
+  ///  SHA-256 of the producing build's dist module.wasm, 64 lowercase
+  ///  hexadecimal characters (PVN.PRODUCER_SHA256).
+  public var PRODUCER_SHA256: String! { let o = _accessor.offset(VT.PRODUCER_SHA256); return _accessor.string(at: o) }
+  public var PRODUCER_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.PRODUCER_SHA256) }
+  ///  Identifier of the record whose covariance realism E2E verified the build.
+  public var VERIFICATION_REFERENCE: String? { let o = _accessor.offset(VT.VERIFICATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERIFICATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERIFICATION_REFERENCE) }
+  public static func startCQRVerifiedCovarianceProducer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(PRODUCER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER, at: VT.PRODUCER) }
+  public static func add(PRODUCER_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_SHA256, at: VT.PRODUCER_SHA256) }
+  public static func add(VERIFICATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFICATION_REFERENCE, at: VT.VERIFICATION_REFERENCE) }
+  public static func endCQRVerifiedCovarianceProducer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6]); return end }
+  public static func createCQRVerifiedCovarianceProducer(
+    _ fbb: inout FlatBufferBuilder,
+    PRODUCEROffset PRODUCER: Offset,
+    PRODUCER_SHA256Offset PRODUCER_SHA256: Offset,
+    VERIFICATION_REFERENCEOffset VERIFICATION_REFERENCE: Offset = Offset()
+  ) -> Offset {
+    let __start = CQRVerifiedCovarianceProducer.startCQRVerifiedCovarianceProducer(&fbb)
+    CQRVerifiedCovarianceProducer.add(PRODUCER: PRODUCER, &fbb)
+    CQRVerifiedCovarianceProducer.add(PRODUCER_SHA256: PRODUCER_SHA256, &fbb)
+    CQRVerifiedCovarianceProducer.add(VERIFICATION_REFERENCE: VERIFICATION_REFERENCE, &fbb)
+    return CQRVerifiedCovarianceProducer.endCQRVerifiedCovarianceProducer(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PRODUCER, fieldName: "PRODUCER", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PRODUCER_SHA256, fieldName: "PRODUCER_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERIFICATION_REFERENCE, fieldName: "VERIFICATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Explicit UTC search window and positive resolution, SI seconds/metres.
 public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -554,6 +611,7 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     static let IN_TRACK_M: VOffset = 34
     static let CROSS_TRACK_M: VOffset = 36
     static let VOLUME_CENTER: VOffset = 38
+    static let VERIFIED_COVARIANCE_PRODUCERS: VOffset = 40
   }
 
   public var START_EPOCH: TIMInstant! { let o = _accessor.offset(VT.START_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -583,7 +641,10 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
   ///  BOTH tests each object's volume independently and admits their union.
   ///  UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
   public var VOLUME_CENTER: cqrVolumeAnchor { let o = _accessor.offset(VT.VOLUME_CENTER); return o == 0 ? .primary : cqrVolumeAnchor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .primary }
-  public static func startCQRScreeningControls(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  ///  Builds whose AP covariance a collision probability may use. An empty or
+  ///  absent list means no collision probability from AP covariance.
+  public var VERIFIED_COVARIANCE_PRODUCERS: FlatbufferVector<CQRVerifiedCovarianceProducer> { return _accessor.vector(at: VT.VERIFIED_COVARIANCE_PRODUCERS, byteSize: 4) }
+  public static func startCQRScreeningControls(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
   public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 604800.0, at: VT.DURATION_SECONDS) }
   public static func add(THRESHOLD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_M, def: 5000.0, at: VT.THRESHOLD_M) }
@@ -606,6 +667,7 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
   public static func add(IN_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_M, def: 0.0, at: VT.IN_TRACK_M) }
   public static func add(CROSS_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_TRACK_M, def: 0.0, at: VT.CROSS_TRACK_M) }
   public static func add(VOLUME_CENTER: cqrVolumeAnchor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VOLUME_CENTER.rawValue, def: 1, at: VT.VOLUME_CENTER) }
+  public static func addVectorOf(VERIFIED_COVARIANCE_PRODUCERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFIED_COVARIANCE_PRODUCERS, at: VT.VERIFIED_COVARIANCE_PRODUCERS) }
   public static func endCQRScreeningControls(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createCQRScreeningControls(
     _ fbb: inout FlatBufferBuilder,
@@ -626,7 +688,8 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     RADIAL_M: Double = 0.0,
     IN_TRACK_M: Double = 0.0,
     CROSS_TRACK_M: Double = 0.0,
-    VOLUME_CENTER: cqrVolumeAnchor = .primary
+    VOLUME_CENTER: cqrVolumeAnchor = .primary,
+    VERIFIED_COVARIANCE_PRODUCERSVectorOffset VERIFIED_COVARIANCE_PRODUCERS: Offset = Offset()
   ) -> Offset {
     let __start = CQRScreeningControls.startCQRScreeningControls(&fbb)
     CQRScreeningControls.add(START_EPOCH: START_EPOCH, &fbb)
@@ -647,6 +710,7 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     CQRScreeningControls.add(IN_TRACK_M: IN_TRACK_M, &fbb)
     CQRScreeningControls.add(CROSS_TRACK_M: CROSS_TRACK_M, &fbb)
     CQRScreeningControls.add(VOLUME_CENTER: VOLUME_CENTER, &fbb)
+    CQRScreeningControls.addVectorOf(VERIFIED_COVARIANCE_PRODUCERS: VERIFIED_COVARIANCE_PRODUCERS, &fbb)
     return CQRScreeningControls.endCQRScreeningControls(&fbb, start: __start)
   }
 
@@ -670,6 +734,7 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     try _v.visit(field: VT.IN_TRACK_M, fieldName: "IN_TRACK_M", required: false, type: Double.self)
     try _v.visit(field: VT.CROSS_TRACK_M, fieldName: "CROSS_TRACK_M", required: false, type: Double.self)
     try _v.visit(field: VT.VOLUME_CENTER, fieldName: "VOLUME_CENTER", required: false, type: cqrVolumeAnchor.self)
+    try _v.visit(field: VT.VERIFIED_COVARIANCE_PRODUCERS, fieldName: "VERIFIED_COVARIANCE_PRODUCERS", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRVerifiedCovarianceProducer>, CQRVerifiedCovarianceProducer>>.self)
     _v.finish()
   }
 }
@@ -1280,6 +1345,7 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let SECONDARY_COVARIANCE_BASIS: VOffset = 72
     static let SCREENING: VOffset = 74
     static let ADMITTED_BY: VOffset = 76
+    static let PROBABILITY_REFUSAL: VOffset = 78
   }
 
   public var PRIMARY_ID: String! { let o = _accessor.offset(VT.PRIMARY_ID); return _accessor.string(at: o) }
@@ -1340,7 +1406,12 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  Volume(s) containing the other object at TCA; BOTH means both tests passed.
   ///  UNSPECIFIED means admission provenance was not reported.
   public var ADMITTED_BY: cqrVolumeAnchor { let o = _accessor.offset(VT.ADMITTED_BY); return o == 0 ? .unspecified : cqrVolumeAnchor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
-  public static func startCQREvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
+  ///  Why PROBABILITY is absent for an event that carries covariance, for
+  ///  example an AP covariance whose producer is not in
+  ///  VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+  public var PROBABILITY_REFUSAL: String? { let o = _accessor.offset(VT.PROBABILITY_REFUSAL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROBABILITY_REFUSALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROBABILITY_REFUSAL) }
+  public static func startCQREvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
   public static func add(PRIMARY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_ID, at: VT.PRIMARY_ID) }
   public static func add(SECONDARY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECONDARY_ID, at: VT.SECONDARY_ID) }
   public static func add(PRIMARY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMARY_NAME, at: VT.PRIMARY_NAME) }
@@ -1385,6 +1456,7 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func add(SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SECONDARY_COVARIANCE_BASIS.rawValue, def: 0, at: VT.SECONDARY_COVARIANCE_BASIS) }
   public static func add(SCREENING: cqrVolumeGeometry, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCREENING.rawValue, def: 0, at: VT.SCREENING) }
   public static func add(ADMITTED_BY: cqrVolumeAnchor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ADMITTED_BY.rawValue, def: 0, at: VT.ADMITTED_BY) }
+  public static func add(PROBABILITY_REFUSAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROBABILITY_REFUSAL, at: VT.PROBABILITY_REFUSAL) }
   public static func endCQREvent(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 16]); return end }
   public static func createCQREvent(
     _ fbb: inout FlatBufferBuilder,
@@ -1424,7 +1496,8 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis = .unspecified,
     SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = .unspecified,
     SCREENING: cqrVolumeGeometry = .spherical,
-    ADMITTED_BY: cqrVolumeAnchor = .unspecified
+    ADMITTED_BY: cqrVolumeAnchor = .unspecified,
+    PROBABILITY_REFUSALOffset PROBABILITY_REFUSAL: Offset = Offset()
   ) -> Offset {
     let __start = CQREvent.startCQREvent(&fbb)
     CQREvent.add(PRIMARY_ID: PRIMARY_ID, &fbb)
@@ -1464,6 +1537,7 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     CQREvent.add(SECONDARY_COVARIANCE_BASIS: SECONDARY_COVARIANCE_BASIS, &fbb)
     CQREvent.add(SCREENING: SCREENING, &fbb)
     CQREvent.add(ADMITTED_BY: ADMITTED_BY, &fbb)
+    CQREvent.add(PROBABILITY_REFUSAL: PROBABILITY_REFUSAL, &fbb)
     return CQREvent.endCQREvent(&fbb, start: __start)
   }
 
@@ -1506,6 +1580,7 @@ public struct CQREvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.SECONDARY_COVARIANCE_BASIS, fieldName: "SECONDARY_COVARIANCE_BASIS", required: false, type: cqrCovarianceBasis.self)
     try _v.visit(field: VT.SCREENING, fieldName: "SCREENING", required: false, type: cqrVolumeGeometry.self)
     try _v.visit(field: VT.ADMITTED_BY, fieldName: "ADMITTED_BY", required: false, type: cqrVolumeAnchor.self)
+    try _v.visit(field: VT.PROBABILITY_REFUSAL, fieldName: "PROBABILITY_REFUSAL", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

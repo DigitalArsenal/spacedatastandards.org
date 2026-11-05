@@ -126,6 +126,14 @@ public final class CQREvent extends com.google.flatbuffers.Table {
    * UNSPECIFIED means admission provenance was not reported.
    */
   public int ADMITTED_BY() { int o = __offset(76); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Why PROBABILITY is absent for an event that carries covariance, for
+   * example an AP covariance whose producer is not in
+   * VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+   */
+  public String PROBABILITY_REFUSAL() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROBABILITY_REFUSALAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer PROBABILITY_REFUSALInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
 
   public static int createCQREvent(FlatBufferBuilder builder,
       int PRIMARY_IDOffset,
@@ -164,8 +172,9 @@ public final class CQREvent extends com.google.flatbuffers.Table {
       int PRIMARY_COVARIANCE_BASIS,
       int SECONDARY_COVARIANCE_BASIS,
       int SCREENING,
-      int ADMITTED_BY) {
-    builder.startTable(37);
+      int ADMITTED_BY,
+      int PROBABILITY_REFUSALOffset) {
+    builder.startTable(38);
     CQREvent.addSecondaryHardBodyRadiusM(builder, SECONDARY_HARD_BODY_RADIUS_M);
     CQREvent.addPrimaryHardBodyRadiusM(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.addCombinedRadiusM(builder, COMBINED_RADIUS_M);
@@ -175,6 +184,7 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     CQREvent.addDilutionThresholdM(builder, DILUTION_THRESHOLD_M);
     CQREvent.addRelativeSpeedMS(builder, RELATIVE_SPEED_M_S);
     CQREvent.addMissDistanceM(builder, MISS_DISTANCE_M);
+    CQREvent.addProbabilityRefusal(builder, PROBABILITY_REFUSALOffset);
     CQREvent.addSecondaryState(builder, SECONDARY_STATEOffset);
     CQREvent.addPrimaryState(builder, PRIMARY_STATEOffset);
     CQREvent.addConjunctionMessage(builder, CONJUNCTION_MESSAGEOffset);
@@ -206,7 +216,7 @@ public final class CQREvent extends com.google.flatbuffers.Table {
     return CQREvent.endCQREvent(builder);
   }
 
-  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(37); }
+  public static void startCQREvent(FlatBufferBuilder builder) { builder.startTable(38); }
   public static void addPrimaryId(FlatBufferBuilder builder, int PRIMARY_IDOffset) { builder.addOffset(0, PRIMARY_IDOffset, 0); }
   public static void addSecondaryId(FlatBufferBuilder builder, int SECONDARY_IDOffset) { builder.addOffset(1, SECONDARY_IDOffset, 0); }
   public static void addPrimaryName(FlatBufferBuilder builder, int PRIMARY_NAMEOffset) { builder.addOffset(2, PRIMARY_NAMEOffset, 0); }
@@ -244,6 +254,7 @@ public final class CQREvent extends com.google.flatbuffers.Table {
   public static void addSecondaryCovarianceBasis(FlatBufferBuilder builder, int SECONDARY_COVARIANCE_BASIS) { builder.addByte(34, (byte) SECONDARY_COVARIANCE_BASIS, (byte) 0); }
   public static void addScreening(FlatBufferBuilder builder, int SCREENING) { builder.addByte(35, (byte) SCREENING, (byte) 0); }
   public static void addAdmittedBy(FlatBufferBuilder builder, int ADMITTED_BY) { builder.addByte(36, (byte) ADMITTED_BY, (byte) 0); }
+  public static void addProbabilityRefusal(FlatBufferBuilder builder, int PROBABILITY_REFUSALOffset) { builder.addOffset(37, PROBABILITY_REFUSALOffset, 0); }
   public static int endCQREvent(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PRIMARY_ID

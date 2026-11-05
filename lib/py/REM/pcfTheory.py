@@ -20,6 +20,7 @@ class pcfTheory(object):
     FFM = 4
     # Two-body (Keplerian) motion about the central body.
     KEPLER = 5
-    # SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5).
+    # SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics.
+    # Not the number of $MET AP (5).
     # 3 stays unused.
     AP = 6

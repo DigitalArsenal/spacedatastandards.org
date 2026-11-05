@@ -34,9 +34,9 @@ impl meanElementSource {
     pub const DSST: Self = Self(2);
     /// Universal Semianalytical Method
     pub const USM: Self = Self(3);
-    /// SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag
-    /// atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left
-    /// unused: it was a cut value of an earlier theory.
+    /// SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics
+    /// (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on
+    /// AP. 4 is left unused: it was a cut value of an earlier theory.
     pub const AP: Self = Self(5);
     /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
     /// set is always written.

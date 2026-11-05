@@ -274,8 +274,20 @@ ADMITTED_BY():cqrVolumeAnchor {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : cqrVolumeAnchor.UNSPECIFIED;
 }
 
+/**
+ * Why PROBABILITY is absent for an event that carries covariance, for
+ * example an AP covariance whose producer is not in
+ * VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+ */
+PROBABILITY_REFUSAL():string|null
+PROBABILITY_REFUSAL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROBABILITY_REFUSAL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCQREvent(builder:flatbuffers.Builder) {
-  builder.startObject(37);
+  builder.startObject(38);
 }
 
 static addPrimaryId(builder:flatbuffers.Builder, PRIMARY_IDOffset:flatbuffers.Offset) {
@@ -426,6 +438,10 @@ static addAdmittedBy(builder:flatbuffers.Builder, ADMITTED_BY:cqrVolumeAnchor) {
   builder.addFieldInt8(36, ADMITTED_BY, cqrVolumeAnchor.UNSPECIFIED);
 }
 
+static addProbabilityRefusal(builder:flatbuffers.Builder, PROBABILITY_REFUSALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, PROBABILITY_REFUSALOffset, 0);
+}
+
 static endCQREvent(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PRIMARY_ID
@@ -473,7 +489,8 @@ unpack(): CQREventT {
     this.PRIMARY_COVARIANCE_BASIS(),
     this.SECONDARY_COVARIANCE_BASIS(),
     this.SCREENING(),
-    this.ADMITTED_BY()
+    this.ADMITTED_BY(),
+    this.PROBABILITY_REFUSAL()
   );
 }
 
@@ -516,6 +533,7 @@ unpackTo(_o: CQREventT): void {
   _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS();
   _o.SCREENING = this.SCREENING();
   _o.ADMITTED_BY = this.ADMITTED_BY();
+  _o.PROBABILITY_REFUSAL = this.PROBABILITY_REFUSAL();
 }
 }
 
@@ -557,7 +575,8 @@ constructor(
   public PRIMARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED,
   public SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis = cqrCovarianceBasis.UNSPECIFIED,
   public SCREENING: cqrVolumeGeometry = cqrVolumeGeometry.SPHERICAL,
-  public ADMITTED_BY: cqrVolumeAnchor = cqrVolumeAnchor.UNSPECIFIED
+  public ADMITTED_BY: cqrVolumeAnchor = cqrVolumeAnchor.UNSPECIFIED,
+  public PROBABILITY_REFUSAL: string|Uint8Array|null = null
 ){}
 
 
@@ -575,6 +594,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONJUNCTION_MESSAGE = (this.CONJUNCTION_MESSAGE !== null ? this.CONJUNCTION_MESSAGE!.pack(builder) : 0);
   const PRIMARY_STATE = (this.PRIMARY_STATE !== null ? this.PRIMARY_STATE!.pack(builder) : 0);
   const SECONDARY_STATE = (this.SECONDARY_STATE !== null ? this.SECONDARY_STATE!.pack(builder) : 0);
+  const PROBABILITY_REFUSAL = (this.PROBABILITY_REFUSAL !== null ? builder.createString(this.PROBABILITY_REFUSAL!) : 0);
 
   CQREvent.startCQREvent(builder);
   CQREvent.addPrimaryId(builder, PRIMARY_ID);
@@ -614,6 +634,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQREvent.addSecondaryCovarianceBasis(builder, this.SECONDARY_COVARIANCE_BASIS);
   CQREvent.addScreening(builder, this.SCREENING);
   CQREvent.addAdmittedBy(builder, this.ADMITTED_BY);
+  CQREvent.addProbabilityRefusal(builder, PROBABILITY_REFUSAL);
 
   return CQREvent.endCQREvent(builder);
 }

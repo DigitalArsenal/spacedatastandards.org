@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT } from './CQRVerifiedCovarianceProducer.js';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
 import { cqrProbabilityAlgorithm } from './cqrProbabilityAlgorithm.js';
 import { cqrVolumeAnchor } from './cqrVolumeAnchor.js';
@@ -49,6 +50,12 @@ export declare class CQRScreeningControls implements flatbuffers.IUnpackableObje
      * UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
      */
     VOLUME_CENTER(): cqrVolumeAnchor;
+    /**
+     * Builds whose AP covariance a collision probability may use. An empty or
+     * absent list means no collision probability from AP covariance.
+     */
+    VERIFIED_COVARIANCE_PRODUCERS(index: number, obj?: CQRVerifiedCovarianceProducer): CQRVerifiedCovarianceProducer | null;
+    verifiedCovarianceProducersLength(): number;
     static startCQRScreeningControls(builder: flatbuffers.Builder): void;
     static addStartEpoch(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset): void;
     static addDurationSeconds(builder: flatbuffers.Builder, DURATION_SECONDS: number): void;
@@ -68,8 +75,11 @@ export declare class CQRScreeningControls implements flatbuffers.IUnpackableObje
     static addInTrackM(builder: flatbuffers.Builder, IN_TRACK_M: number): void;
     static addCrossTrackM(builder: flatbuffers.Builder, CROSS_TRACK_M: number): void;
     static addVolumeCenter(builder: flatbuffers.Builder, VOLUME_CENTER: cqrVolumeAnchor): void;
+    static addVerifiedCovarianceProducers(builder: flatbuffers.Builder, VERIFIED_COVARIANCE_PRODUCERSOffset: flatbuffers.Offset): void;
+    static createVerifiedCovarianceProducersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startVerifiedCovarianceProducersVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCQRScreeningControls(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createCQRScreeningControls(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, DURATION_SECONDS: number, THRESHOLD_M: number, REQUESTED_WORKERS: number, COARSE_STEP_SECONDS: number, REFINEMENT_TOLERANCE_SECONDS: number, COMBINED_RADIUS_M: number, USE_KD_TREE: boolean, USE_DYNAMIC_WINDOW: boolean, USE_PERIGEE_FILTER: boolean, PROGRESS_INTERVAL_SECONDS: number, HAS_PROGRESS_INTERVAL_SECONDS: boolean, ALGORITHM: cqrProbabilityAlgorithm, SCREENING: cqrVolumeGeometry, RADIAL_M: number, IN_TRACK_M: number, CROSS_TRACK_M: number, VOLUME_CENTER: cqrVolumeAnchor): flatbuffers.Offset;
+    static createCQRScreeningControls(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, DURATION_SECONDS: number, THRESHOLD_M: number, REQUESTED_WORKERS: number, COARSE_STEP_SECONDS: number, REFINEMENT_TOLERANCE_SECONDS: number, COMBINED_RADIUS_M: number, USE_KD_TREE: boolean, USE_DYNAMIC_WINDOW: boolean, USE_PERIGEE_FILTER: boolean, PROGRESS_INTERVAL_SECONDS: number, HAS_PROGRESS_INTERVAL_SECONDS: boolean, ALGORITHM: cqrProbabilityAlgorithm, SCREENING: cqrVolumeGeometry, RADIAL_M: number, IN_TRACK_M: number, CROSS_TRACK_M: number, VOLUME_CENTER: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CQRScreeningControlsT;
     unpackTo(_o: CQRScreeningControlsT): void;
 }
@@ -92,7 +102,8 @@ export declare class CQRScreeningControlsT implements flatbuffers.IGeneratedObje
     IN_TRACK_M: number;
     CROSS_TRACK_M: number;
     VOLUME_CENTER: cqrVolumeAnchor;
-    constructor(START_EPOCH?: TIMInstantT | null, DURATION_SECONDS?: number, THRESHOLD_M?: number, REQUESTED_WORKERS?: number, COARSE_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, COMBINED_RADIUS_M?: number, USE_KD_TREE?: boolean, USE_DYNAMIC_WINDOW?: boolean, USE_PERIGEE_FILTER?: boolean, PROGRESS_INTERVAL_SECONDS?: number, HAS_PROGRESS_INTERVAL_SECONDS?: boolean, ALGORITHM?: cqrProbabilityAlgorithm, SCREENING?: cqrVolumeGeometry, RADIAL_M?: number, IN_TRACK_M?: number, CROSS_TRACK_M?: number, VOLUME_CENTER?: cqrVolumeAnchor);
+    VERIFIED_COVARIANCE_PRODUCERS: (CQRVerifiedCovarianceProducerT)[];
+    constructor(START_EPOCH?: TIMInstantT | null, DURATION_SECONDS?: number, THRESHOLD_M?: number, REQUESTED_WORKERS?: number, COARSE_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, COMBINED_RADIUS_M?: number, USE_KD_TREE?: boolean, USE_DYNAMIC_WINDOW?: boolean, USE_PERIGEE_FILTER?: boolean, PROGRESS_INTERVAL_SECONDS?: number, HAS_PROGRESS_INTERVAL_SECONDS?: boolean, ALGORITHM?: cqrProbabilityAlgorithm, SCREENING?: cqrVolumeGeometry, RADIAL_M?: number, IN_TRACK_M?: number, CROSS_TRACK_M?: number, VOLUME_CENTER?: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERS?: (CQRVerifiedCovarianceProducerT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQRScreeningControls.d.ts.map

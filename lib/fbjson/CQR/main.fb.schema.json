@@ -4522,7 +4522,7 @@
         },
         "AP": {
           "value": 6,
-          "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+          "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
         }
       }
     },
@@ -5496,7 +5496,7 @@
         },
         "AP": {
           "value": 5,
-          "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+          "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
         },
         "UNSPECIFIED": {
           "value": 6,
@@ -12841,6 +12841,11 @@
           "maximum": 18446744073709551615,
           "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
           "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCER_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -19949,7 +19954,7 @@
             },
             "AP": {
               "value": 6,
-              "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -22066,7 +22071,7 @@
             },
             "AP": {
               "value": 5,
-              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             "UNSPECIFIED": {
               "value": 6,
@@ -22424,7 +22429,7 @@
             },
             "AP": {
               "value": 5,
-              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             "UNSPECIFIED": {
               "value": 6,
@@ -24735,7 +24740,7 @@
             },
             "AP": {
               "value": 5,
-              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             "UNSPECIFIED": {
               "value": 6,
@@ -27315,6 +27320,34 @@
       ],
       "additionalProperties": false
     },
+    "CQRVerifiedCovarianceProducer": {
+      "type": "object",
+      "description": "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+      "properties": {
+        "PRODUCER": {
+          "type": "string",
+          "description": "PVN.PRODUCER verbatim: the module identifier and its version.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PRODUCER_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERIFICATION_REFERENCE": {
+          "type": "string",
+          "description": "Identifier of the record whose covariance realism E2E verified the build.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "PRODUCER",
+        "PRODUCER_SHA256"
+      ],
+      "additionalProperties": false
+    },
     "CQRScreeningControls": {
       "type": "object",
       "description": "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -27450,6 +27483,14 @@
             }
           },
           "x-flatbuffer-default": "PRIMARY"
+        },
+        "VERIFIED_COVARIANCE_PRODUCERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CQRVerifiedCovarianceProducer"
+          },
+          "description": "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance.",
+          "x-flatbuffer-type": "[CQRVerifiedCovarianceProducer]"
         }
       },
       "required": [
@@ -28154,6 +28195,11 @@
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PROBABILITY_REFUSAL": {
+          "type": "string",
+          "description": "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.",
+          "x-flatbuffer-type": "string"
         }
       },
       "required": [

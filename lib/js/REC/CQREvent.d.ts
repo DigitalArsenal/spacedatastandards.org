@@ -103,6 +103,13 @@ export declare class CQREvent implements flatbuffers.IUnpackableObject<CQREventT
      * UNSPECIFIED means admission provenance was not reported.
      */
     ADMITTED_BY(): cqrVolumeAnchor;
+    /**
+     * Why PROBABILITY is absent for an event that carries covariance, for
+     * example an AP covariance whose producer is not in
+     * VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+     */
+    PROBABILITY_REFUSAL(): string | null;
+    PROBABILITY_REFUSAL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startCQREvent(builder: flatbuffers.Builder): void;
     static addPrimaryId(builder: flatbuffers.Builder, PRIMARY_IDOffset: flatbuffers.Offset): void;
     static addSecondaryId(builder: flatbuffers.Builder, SECONDARY_IDOffset: flatbuffers.Offset): void;
@@ -141,6 +148,7 @@ export declare class CQREvent implements flatbuffers.IUnpackableObject<CQREventT
     static addSecondaryCovarianceBasis(builder: flatbuffers.Builder, SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis): void;
     static addScreening(builder: flatbuffers.Builder, SCREENING: cqrVolumeGeometry): void;
     static addAdmittedBy(builder: flatbuffers.Builder, ADMITTED_BY: cqrVolumeAnchor): void;
+    static addProbabilityRefusal(builder: flatbuffers.Builder, PROBABILITY_REFUSALOffset: flatbuffers.Offset): void;
     static endCQREvent(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CQREventT;
     unpackTo(_o: CQREventT): void;
@@ -183,7 +191,8 @@ export declare class CQREventT implements flatbuffers.IGeneratedObject {
     SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis;
     SCREENING: cqrVolumeGeometry;
     ADMITTED_BY: cqrVolumeAnchor;
-    constructor(PRIMARY_ID?: string | Uint8Array | null, SECONDARY_ID?: string | Uint8Array | null, PRIMARY_NAME?: string | Uint8Array | null, SECONDARY_NAME?: string | Uint8Array | null, PRIMARY_NORAD_ID?: number, SECONDARY_NORAD_ID?: number, TCA?: TIMInstantT | null, MISS_DISTANCE_M?: number, RELATIVE_SPEED_M_S?: number, PROBABILITY?: CQRProbabilityResultT | null, DILUTION_THRESHOLD_M?: number, HAS_DILUTION_THRESHOLD_M?: boolean, RELATIVE_POSITION_RTN?: FRMVector3T | null, RELATIVE_VELOCITY_RTN?: FRMVector3T | null, PRIMARY_SIGMA_RTN_M?: FRMVector3T | null, SECONDARY_SIGMA_RTN_M?: FRMVector3T | null, PRIMARY_DAYS_SINCE_EPOCH?: number, HAS_PRIMARY_DAYS_SINCE_EPOCH?: boolean, SECONDARY_DAYS_SINCE_EPOCH?: number, HAS_SECONDARY_DAYS_SINCE_EPOCH?: boolean, CONJUNCTION_MESSAGE?: CDMT | null, PRIMARY_STATE?: PRWResidentStateT | null, SECONDARY_STATE?: PRWResidentStateT | null, MAHALANOBIS_3D_SQUARED?: number, HAS_MAHALANOBIS_3D_SQUARED?: boolean, COMBINED_RADIUS_M?: number, HAS_COMBINED_RADIUS_M?: boolean, PRIMARY_HARD_BODY_RADIUS_M?: number, HAS_PRIMARY_HARD_BODY_RADIUS_M?: boolean, SECONDARY_HARD_BODY_RADIUS_M?: number, HAS_SECONDARY_HARD_BODY_RADIUS_M?: boolean, PRIMARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, SECONDARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, PRIMARY_COVARIANCE_BASIS?: cqrCovarianceBasis, SECONDARY_COVARIANCE_BASIS?: cqrCovarianceBasis, SCREENING?: cqrVolumeGeometry, ADMITTED_BY?: cqrVolumeAnchor);
+    PROBABILITY_REFUSAL: string | Uint8Array | null;
+    constructor(PRIMARY_ID?: string | Uint8Array | null, SECONDARY_ID?: string | Uint8Array | null, PRIMARY_NAME?: string | Uint8Array | null, SECONDARY_NAME?: string | Uint8Array | null, PRIMARY_NORAD_ID?: number, SECONDARY_NORAD_ID?: number, TCA?: TIMInstantT | null, MISS_DISTANCE_M?: number, RELATIVE_SPEED_M_S?: number, PROBABILITY?: CQRProbabilityResultT | null, DILUTION_THRESHOLD_M?: number, HAS_DILUTION_THRESHOLD_M?: boolean, RELATIVE_POSITION_RTN?: FRMVector3T | null, RELATIVE_VELOCITY_RTN?: FRMVector3T | null, PRIMARY_SIGMA_RTN_M?: FRMVector3T | null, SECONDARY_SIGMA_RTN_M?: FRMVector3T | null, PRIMARY_DAYS_SINCE_EPOCH?: number, HAS_PRIMARY_DAYS_SINCE_EPOCH?: boolean, SECONDARY_DAYS_SINCE_EPOCH?: number, HAS_SECONDARY_DAYS_SINCE_EPOCH?: boolean, CONJUNCTION_MESSAGE?: CDMT | null, PRIMARY_STATE?: PRWResidentStateT | null, SECONDARY_STATE?: PRWResidentStateT | null, MAHALANOBIS_3D_SQUARED?: number, HAS_MAHALANOBIS_3D_SQUARED?: boolean, COMBINED_RADIUS_M?: number, HAS_COMBINED_RADIUS_M?: boolean, PRIMARY_HARD_BODY_RADIUS_M?: number, HAS_PRIMARY_HARD_BODY_RADIUS_M?: boolean, SECONDARY_HARD_BODY_RADIUS_M?: number, HAS_SECONDARY_HARD_BODY_RADIUS_M?: boolean, PRIMARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, SECONDARY_RADIUS_BASIS?: cqrHardBodyRadiusBasis, PRIMARY_COVARIANCE_BASIS?: cqrCovarianceBasis, SECONDARY_COVARIANCE_BASIS?: cqrCovarianceBasis, SCREENING?: cqrVolumeGeometry, ADMITTED_BY?: cqrVolumeAnchor, PROBABILITY_REFUSAL?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQREvent.d.ts.map

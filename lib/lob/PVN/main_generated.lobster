@@ -86,13 +86,19 @@ class PVN : flatbuffers.handle
     /// the source was fetched by range. 0 when not stated.
     def SOURCE_BYTES() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 28, 0)
+    /// SHA-256 of the build of PRODUCER that made the product (its dist
+    /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+    /// that loaded the producing module: a module cannot hash its own bytes.
+    /// Empty when not stated.
+    def PRODUCER_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
 
 def GetRootAsPVN(buf:string): return PVN { buf, flatbuffers.indirect(buf, 0) }
 
 struct PVNBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_SOURCE_ID(SOURCE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SOURCE_ID)
@@ -132,6 +138,9 @@ struct PVNBuilder:
         return this
     def add_SOURCE_BYTES(SOURCE_BYTES:int):
         b_.PrependUint64Slot(12, SOURCE_BYTES, 0)
+        return this
+    def add_PRODUCER_SHA256(PRODUCER_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, PRODUCER_SHA256)
         return this
     def end():
         return b_.EndObject()

@@ -341,8 +341,18 @@ class CQREvent(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Why PROBABILITY is absent for an event that carries covariance, for
+    # example an AP covariance whose producer is not in
+    # VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+    # CQREvent
+    def PROBABILITY_REFUSAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CQREventStart(builder):
-    builder.StartObject(37)
+    builder.StartObject(38)
 
 def Start(builder):
     CQREventStart(builder)
@@ -569,6 +579,12 @@ def CQREventAddADMITTED_BY(builder, ADMITTED_BY):
 def AddADMITTED_BY(builder, ADMITTED_BY):
     CQREventAddADMITTED_BY(builder, ADMITTED_BY)
 
+def CQREventAddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSAL):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(PROBABILITY_REFUSAL), 0)
+
+def AddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSAL):
+    CQREventAddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSAL)
+
 def CQREventEnd(builder):
     return builder.EndObject()
 
@@ -627,6 +643,7 @@ class CQREventT(object):
         SECONDARY_COVARIANCE_BASIS = 0,
         SCREENING = 0,
         ADMITTED_BY = 0,
+        PROBABILITY_REFUSAL = None,
     ):
         self.PRIMARY_ID = PRIMARY_ID  # type: Optional[str]
         self.SECONDARY_ID = SECONDARY_ID  # type: Optional[str]
@@ -665,6 +682,7 @@ class CQREventT(object):
         self.SECONDARY_COVARIANCE_BASIS = SECONDARY_COVARIANCE_BASIS  # type: int
         self.SCREENING = SCREENING  # type: int
         self.ADMITTED_BY = ADMITTED_BY  # type: int
+        self.PROBABILITY_REFUSAL = PROBABILITY_REFUSAL  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -733,6 +751,7 @@ class CQREventT(object):
         self.SECONDARY_COVARIANCE_BASIS = CQREvent.SECONDARY_COVARIANCE_BASIS()
         self.SCREENING = CQREvent.SCREENING()
         self.ADMITTED_BY = CQREvent.ADMITTED_BY()
+        self.PROBABILITY_REFUSAL = CQREvent.PROBABILITY_REFUSAL()
 
     # CQREventT
     def Pack(self, builder):
@@ -762,6 +781,8 @@ class CQREventT(object):
             PRIMARY_STATE = self.PRIMARY_STATE.Pack(builder)
         if self.SECONDARY_STATE is not None:
             SECONDARY_STATE = self.SECONDARY_STATE.Pack(builder)
+        if self.PROBABILITY_REFUSAL is not None:
+            PROBABILITY_REFUSAL = builder.CreateString(self.PROBABILITY_REFUSAL)
         CQREventStart(builder)
         if self.PRIMARY_ID is not None:
             CQREventAddPRIMARY_ID(builder, PRIMARY_ID)
@@ -813,5 +834,7 @@ class CQREventT(object):
         CQREventAddSECONDARY_COVARIANCE_BASIS(builder, self.SECONDARY_COVARIANCE_BASIS)
         CQREventAddSCREENING(builder, self.SCREENING)
         CQREventAddADMITTED_BY(builder, self.ADMITTED_BY)
+        if self.PROBABILITY_REFUSAL is not None:
+            CQREventAddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSAL)
         CQREvent = CQREventEnd(builder)
         return CQREvent

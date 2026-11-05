@@ -1539,6 +1539,10 @@
         "SOURCE_BYTES" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
                 "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
               }
       },
       "additionalProperties" : false

@@ -142,6 +142,23 @@ class CQRScreeningControls : Table() {
             val o = __offset(38)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 1u
         }
+    /**
+     * Builds whose AP covariance a collision probability may use. An empty or
+     * absent list means no collision probability from AP covariance.
+     */
+    fun verifiedCovarianceProducers(j: Int) : CQRVerifiedCovarianceProducer? = verifiedCovarianceProducers(CQRVerifiedCovarianceProducer(), j)
+    fun verifiedCovarianceProducers(obj: CQRVerifiedCovarianceProducer, j: Int) : CQRVerifiedCovarianceProducer? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val verifiedCovarianceProducersLength : Int
+        get() {
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRScreeningControls(_bb: ByteBuffer): CQRScreeningControls = getRootAsCQRScreeningControls(_bb, CQRScreeningControls())
@@ -149,8 +166,8 @@ class CQRScreeningControls : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte, screening: UByte, radialM: Double, inTrackM: Double, crossTrackM: Double, volumeCenter: UByte) : Int {
-            builder.startTable(18)
+        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte, screening: UByte, radialM: Double, inTrackM: Double, crossTrackM: Double, volumeCenter: UByte, verifiedCovarianceProducersOffset: Int) : Int {
+            builder.startTable(19)
             addCROSSTRACKM(builder, crossTrackM)
             addINTRACKM(builder, inTrackM)
             addRADIALM(builder, radialM)
@@ -160,6 +177,7 @@ class CQRScreeningControls : Table() {
             addCOARSESTEPSECONDS(builder, coarseStepSeconds)
             addTHRESHOLDM(builder, thresholdM)
             addDURATIONSECONDS(builder, durationSeconds)
+            addVERIFIEDCOVARIANCEPRODUCERS(builder, verifiedCovarianceProducersOffset)
             addREQUESTEDWORKERS(builder, requestedWorkers)
             addSTARTEPOCH(builder, startEpochOffset)
             addVOLUMECENTER(builder, volumeCenter)
@@ -171,7 +189,7 @@ class CQRScreeningControls : Table() {
             addUSEKDTREE(builder, useKdTree)
             return endCQRScreeningControls(builder)
         }
-        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(18)
+        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(0, startEpoch, 0)
         fun addDURATIONSECONDS(builder: FlatBufferBuilder, durationSeconds: Double) = builder.addDouble(1, durationSeconds, 604800.0)
         fun addTHRESHOLDM(builder: FlatBufferBuilder, thresholdM: Double) = builder.addDouble(2, thresholdM, 5000.0)
@@ -190,6 +208,15 @@ class CQRScreeningControls : Table() {
         fun addINTRACKM(builder: FlatBufferBuilder, inTrackM: Double) = builder.addDouble(15, inTrackM, 0.0)
         fun addCROSSTRACKM(builder: FlatBufferBuilder, crossTrackM: Double) = builder.addDouble(16, crossTrackM, 0.0)
         fun addVOLUMECENTER(builder: FlatBufferBuilder, volumeCenter: UByte) = builder.addByte(17, volumeCenter.toByte(), 1)
+        fun addVERIFIEDCOVARIANCEPRODUCERS(builder: FlatBufferBuilder, verifiedCovarianceProducers: Int) = builder.addOffset(18, verifiedCovarianceProducers, 0)
+        fun createVerifiedCovarianceProducersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startVerifiedCovarianceProducersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endCQRScreeningControls(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

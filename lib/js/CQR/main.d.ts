@@ -52,6 +52,7 @@ export * from './CQRScreeningControls.js';
 export * from './CQRScreeningStatistics.js';
 export * from './CQRSourceProvenance.js';
 export * from './cqrUncertaintyOrigin.js';
+export * from './CQRVerifiedCovarianceProducer.js';
 export * from './CQRVersionResult.js';
 export * from './cqrVolumeAnchor.js';
 export * from './cqrVolumeGeometry.js';

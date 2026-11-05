@@ -417,8 +417,43 @@ func (rcv *CQRScreeningControls) MutateVolumeCenter(n cqrVolumeAnchor) bool {
 	return rcv.MutateVOLUME_CENTER(n)
 }
 
+/// Builds whose AP covariance a collision probability may use. An empty or
+/// absent list means no collision probability from AP covariance.
+func (rcv *CQRScreeningControls) VERIFIED_COVARIANCE_PRODUCERS(obj *CQRVerifiedCovarianceProducer, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CQRVerifiedCovarianceProducer)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *CQRScreeningControls) VerifiedCovarianceProducers(obj *CQRVerifiedCovarianceProducer, j int) bool {
+	return rcv.VERIFIED_COVARIANCE_PRODUCERS(obj, j)
+}
+
+func (rcv *CQRScreeningControls) VERIFIED_COVARIANCE_PRODUCERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *CQRScreeningControls) VerifiedCovarianceProducersLength() int {
+	return rcv.VERIFIED_COVARIANCE_PRODUCERSLength()
+}
+
+/// Builds whose AP covariance a collision probability may use. An empty or
+/// absent list means no collision probability from AP covariance.
 func CQRScreeningControlsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(19)
 }
 func CQRScreeningControlsAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_EPOCH), 0)
@@ -527,6 +562,18 @@ func CQRScreeningControlsAddVOLUME_CENTER(builder *flatbuffers.Builder, VOLUME_C
 }
 func CQRScreeningControlsAddVolumeCenter(builder *flatbuffers.Builder, VOLUME_CENTER cqrVolumeAnchor) {
 	CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER)
+}
+func CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder *flatbuffers.Builder, VERIFIED_COVARIANCE_PRODUCERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(VERIFIED_COVARIANCE_PRODUCERS), 0)
+}
+func CQRScreeningControlsAddVerifiedCovarianceProducers(builder *flatbuffers.Builder, VERIFIED_COVARIANCE_PRODUCERS flatbuffers.UOffsetT) {
+	CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS)
+}
+func CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func CQRScreeningControlsStartVerifiedCovarianceProducersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder, numElems)
 }
 func CQRScreeningControlsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

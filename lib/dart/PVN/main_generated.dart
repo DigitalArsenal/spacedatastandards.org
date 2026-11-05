@@ -151,10 +151,16 @@ class PVN {
   ///  the source was fetched by range. 0 when not stated.
   int get SOURCE_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 28, 0);
   int get sourceBytes => SOURCE_BYTES;
+  ///  SHA-256 of the build of PRODUCER that made the product (its dist
+  ///  module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+  ///  that loaded the producing module: a module cannot hash its own bytes.
+  ///  Empty when not stated.
+  String? get PRODUCER_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get producerSha256 => PRODUCER_SHA256;
 
   @override
   String toString() {
-    return 'PVN{sourceId: ${sourceId}, sourceKind: ${sourceKind}, ORIGINATOR: ${ORIGINATOR}, providerId: ${providerId}, PRODUCER: ${PRODUCER}, licenseClass: ${licenseClass}, licenseId: ${licenseId}, LINEAGE: ${LINEAGE}, sourceUrl: ${sourceUrl}, sourceVersion: ${sourceVersion}, retrievedAt: ${retrievedAt}, sourceSha256: ${sourceSha256}, sourceBytes: ${sourceBytes}}';
+    return 'PVN{sourceId: ${sourceId}, sourceKind: ${sourceKind}, ORIGINATOR: ${ORIGINATOR}, providerId: ${providerId}, PRODUCER: ${PRODUCER}, licenseClass: ${licenseClass}, licenseId: ${licenseId}, LINEAGE: ${LINEAGE}, sourceUrl: ${sourceUrl}, sourceVersion: ${sourceVersion}, retrievedAt: ${retrievedAt}, sourceSha256: ${sourceSha256}, sourceBytes: ${sourceBytes}, producerSha256: ${producerSha256}}';
   }
 }
 
@@ -172,7 +178,7 @@ class PVNBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
   }
 
   int addSourceIdOffset(int? offset) {
@@ -227,6 +233,10 @@ class PVNBuilder {
     fbBuilder.addUint64(12, SOURCE_BYTES);
     return fbBuilder.offset;
   }
+  int addProducerSha256Offset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -247,6 +257,7 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
   final String? _RETRIEVED_AT;
   final String? _SOURCE_SHA256;
   final int? _SOURCE_BYTES;
+  final String? _PRODUCER_SHA256;
 
   PVNObjectBuilder({
     String? SOURCE_ID,
@@ -272,6 +283,8 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
     String? sourceSha256,
     int? SOURCE_BYTES,
     int? sourceBytes,
+    String? PRODUCER_SHA256,
+    String? producerSha256,
   })
       : _SOURCE_ID = sourceId ?? SOURCE_ID,
         _SOURCE_KIND = sourceKind ?? SOURCE_KIND,
@@ -285,7 +298,8 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
         _SOURCE_VERSION = sourceVersion ?? SOURCE_VERSION,
         _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
         _SOURCE_SHA256 = sourceSha256 ?? SOURCE_SHA256,
-        _SOURCE_BYTES = sourceBytes ?? SOURCE_BYTES;
+        _SOURCE_BYTES = sourceBytes ?? SOURCE_BYTES,
+        _PRODUCER_SHA256 = producerSha256 ?? PRODUCER_SHA256;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -310,7 +324,9 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_RETRIEVED_AT!);
     final int? SOURCE_SHA256Offset = _SOURCE_SHA256 == null ? null
         : fbBuilder.writeString(_SOURCE_SHA256!);
-    fbBuilder.startTable(13);
+    final int? PRODUCER_SHA256Offset = _PRODUCER_SHA256 == null ? null
+        : fbBuilder.writeString(_PRODUCER_SHA256!);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, SOURCE_IDOffset);
     fbBuilder.addInt8(1, _SOURCE_KIND?.value);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -324,6 +340,7 @@ class PVNObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, RETRIEVED_ATOffset);
     fbBuilder.addOffset(11, SOURCE_SHA256Offset);
     fbBuilder.addUint64(12, _SOURCE_BYTES);
+    fbBuilder.addOffset(13, PRODUCER_SHA256Offset);
     return fbBuilder.endTable();
   }
 

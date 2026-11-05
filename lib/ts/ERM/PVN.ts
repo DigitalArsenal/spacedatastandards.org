@@ -171,8 +171,21 @@ SOURCE_BYTES():bigint {
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * SHA-256 of the build of PRODUCER that made the product (its dist
+ * module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+ * that loaded the producing module: a module cannot hash its own bytes.
+ * Empty when not stated.
+ */
+PRODUCER_SHA256():string|null
+PRODUCER_SHA256(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PRODUCER_SHA256(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startPVN(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addSourceId(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset) {
@@ -227,6 +240,10 @@ static addSourceBytes(builder:flatbuffers.Builder, SOURCE_BYTES:bigint) {
   builder.addFieldInt64(12, SOURCE_BYTES, BigInt('0'));
 }
 
+static addProducerSha256(builder:flatbuffers.Builder, PRODUCER_SHA256Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, PRODUCER_SHA256Offset, 0);
+}
+
 static endPVN(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -240,7 +257,7 @@ static finishSizePrefixedPVNBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PVN', true);
 }
 
-static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_KIND:pvnSourceKind, ORIGINATOROffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, PRODUCEROffset:flatbuffers.Offset, LICENSE_CLASS:pvnLicenseClass, LICENSE_IDOffset:flatbuffers.Offset, LINEAGEOffset:flatbuffers.Offset, SOURCE_URLOffset:flatbuffers.Offset, SOURCE_VERSIONOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset, SOURCE_SHA256Offset:flatbuffers.Offset, SOURCE_BYTES:bigint):flatbuffers.Offset {
+static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset, SOURCE_KIND:pvnSourceKind, ORIGINATOROffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, PRODUCEROffset:flatbuffers.Offset, LICENSE_CLASS:pvnLicenseClass, LICENSE_IDOffset:flatbuffers.Offset, LINEAGEOffset:flatbuffers.Offset, SOURCE_URLOffset:flatbuffers.Offset, SOURCE_VERSIONOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset, SOURCE_SHA256Offset:flatbuffers.Offset, SOURCE_BYTES:bigint, PRODUCER_SHA256Offset:flatbuffers.Offset):flatbuffers.Offset {
   PVN.startPVN(builder);
   PVN.addSourceId(builder, SOURCE_IDOffset);
   PVN.addSourceKind(builder, SOURCE_KIND);
@@ -255,6 +272,7 @@ static createPVN(builder:flatbuffers.Builder, SOURCE_IDOffset:flatbuffers.Offset
   PVN.addRetrievedAt(builder, RETRIEVED_ATOffset);
   PVN.addSourceSha256(builder, SOURCE_SHA256Offset);
   PVN.addSourceBytes(builder, SOURCE_BYTES);
+  PVN.addProducerSha256(builder, PRODUCER_SHA256Offset);
   return PVN.endPVN(builder);
 }
 
@@ -272,7 +290,8 @@ unpack(): PVNT {
     this.SOURCE_VERSION(),
     this.RETRIEVED_AT(),
     this.SOURCE_SHA256(),
-    this.SOURCE_BYTES()
+    this.SOURCE_BYTES(),
+    this.PRODUCER_SHA256()
   );
 }
 
@@ -291,6 +310,7 @@ unpackTo(_o: PVNT): void {
   _o.RETRIEVED_AT = this.RETRIEVED_AT();
   _o.SOURCE_SHA256 = this.SOURCE_SHA256();
   _o.SOURCE_BYTES = this.SOURCE_BYTES();
+  _o.PRODUCER_SHA256 = this.PRODUCER_SHA256();
 }
 }
 
@@ -308,7 +328,8 @@ constructor(
   public SOURCE_VERSION: string|Uint8Array|null = null,
   public RETRIEVED_AT: string|Uint8Array|null = null,
   public SOURCE_SHA256: string|Uint8Array|null = null,
-  public SOURCE_BYTES: bigint = BigInt('0')
+  public SOURCE_BYTES: bigint = BigInt('0'),
+  public PRODUCER_SHA256: string|Uint8Array|null = null
 ){}
 
 
@@ -323,6 +344,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SOURCE_VERSION = (this.SOURCE_VERSION !== null ? builder.createString(this.SOURCE_VERSION!) : 0);
   const RETRIEVED_AT = (this.RETRIEVED_AT !== null ? builder.createString(this.RETRIEVED_AT!) : 0);
   const SOURCE_SHA256 = (this.SOURCE_SHA256 !== null ? builder.createString(this.SOURCE_SHA256!) : 0);
+  const PRODUCER_SHA256 = (this.PRODUCER_SHA256 !== null ? builder.createString(this.PRODUCER_SHA256!) : 0);
 
   return PVN.createPVN(builder,
     SOURCE_ID,
@@ -337,7 +359,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SOURCE_VERSION,
     RETRIEVED_AT,
     SOURCE_SHA256,
-    this.SOURCE_BYTES
+    this.SOURCE_BYTES,
+    PRODUCER_SHA256
   );
 }
 }

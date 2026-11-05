@@ -168,8 +168,35 @@ class CQRScreeningControls(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 1
 
+    # Builds whose AP covariance a collision probability may use. An empty or
+    # absent list means no collision probability from AP covariance.
+    # CQRScreeningControls
+    def VERIFIED_COVARIANCE_PRODUCERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CQRVerifiedCovarianceProducer import CQRVerifiedCovarianceProducer
+            obj = CQRVerifiedCovarianceProducer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CQRScreeningControls
+    def VERIFIED_COVARIANCE_PRODUCERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CQRScreeningControls
+    def VERIFIED_COVARIANCE_PRODUCERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
 def CQRScreeningControlsStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(19)
 
 def Start(builder):
     CQRScreeningControlsStart(builder)
@@ -282,15 +309,34 @@ def CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER):
 def AddVOLUME_CENTER(builder, VOLUME_CENTER):
     CQRScreeningControlsAddVOLUME_CENTER(builder, VOLUME_CENTER)
 
+def CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(VERIFIED_COVARIANCE_PRODUCERS), 0)
+
+def AddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS):
+    CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS)
+
+def CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartVERIFIED_COVARIANCE_PRODUCERSVector(builder, numElems):
+    return CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder, numElems)
+
+def CQRScreeningControlsCreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data):
+    return CQRScreeningControlsCreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data)
+
 def CQRScreeningControlsEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return CQRScreeningControlsEnd(builder)
 
+import CQRVerifiedCovarianceProducer
 import TIMInstant
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -317,6 +363,7 @@ class CQRScreeningControlsT(object):
         IN_TRACK_M = 0.0,
         CROSS_TRACK_M = 0.0,
         VOLUME_CENTER = 1,
+        VERIFIED_COVARIANCE_PRODUCERS = None,
     ):
         self.START_EPOCH = START_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
         self.DURATION_SECONDS = DURATION_SECONDS  # type: float
@@ -336,6 +383,7 @@ class CQRScreeningControlsT(object):
         self.IN_TRACK_M = IN_TRACK_M  # type: float
         self.CROSS_TRACK_M = CROSS_TRACK_M  # type: float
         self.VOLUME_CENTER = VOLUME_CENTER  # type: int
+        self.VERIFIED_COVARIANCE_PRODUCERS = VERIFIED_COVARIANCE_PRODUCERS  # type: Optional[List[CQRVerifiedCovarianceProducer.CQRVerifiedCovarianceProducerT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -377,11 +425,27 @@ class CQRScreeningControlsT(object):
         self.IN_TRACK_M = CQRScreeningControls.IN_TRACK_M()
         self.CROSS_TRACK_M = CQRScreeningControls.CROSS_TRACK_M()
         self.VOLUME_CENTER = CQRScreeningControls.VOLUME_CENTER()
+        if not CQRScreeningControls.VERIFIED_COVARIANCE_PRODUCERSIsNone():
+            self.VERIFIED_COVARIANCE_PRODUCERS = []
+            for i in range(CQRScreeningControls.VERIFIED_COVARIANCE_PRODUCERSLength()):
+                if CQRScreeningControls.VERIFIED_COVARIANCE_PRODUCERS(i) is None:
+                    self.VERIFIED_COVARIANCE_PRODUCERS.append(None)
+                else:
+                    cQRVerifiedCovarianceProducer_ = CQRVerifiedCovarianceProducer.CQRVerifiedCovarianceProducerT.InitFromObj(CQRScreeningControls.VERIFIED_COVARIANCE_PRODUCERS(i))
+                    self.VERIFIED_COVARIANCE_PRODUCERS.append(cQRVerifiedCovarianceProducer_)
 
     # CQRScreeningControlsT
     def Pack(self, builder):
         if self.START_EPOCH is not None:
             START_EPOCH = self.START_EPOCH.Pack(builder)
+        if self.VERIFIED_COVARIANCE_PRODUCERS is not None:
+            VERIFIED_COVARIANCE_PRODUCERSlist = []
+            for i in range(len(self.VERIFIED_COVARIANCE_PRODUCERS)):
+                VERIFIED_COVARIANCE_PRODUCERSlist.append(self.VERIFIED_COVARIANCE_PRODUCERS[i].Pack(builder))
+            CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder, len(self.VERIFIED_COVARIANCE_PRODUCERS))
+            for i in reversed(range(len(self.VERIFIED_COVARIANCE_PRODUCERS))):
+                builder.PrependUOffsetTRelative(VERIFIED_COVARIANCE_PRODUCERSlist[i])
+            VERIFIED_COVARIANCE_PRODUCERS = builder.EndVector()
         CQRScreeningControlsStart(builder)
         if self.START_EPOCH is not None:
             CQRScreeningControlsAddSTART_EPOCH(builder, START_EPOCH)
@@ -402,5 +466,7 @@ class CQRScreeningControlsT(object):
         CQRScreeningControlsAddIN_TRACK_M(builder, self.IN_TRACK_M)
         CQRScreeningControlsAddCROSS_TRACK_M(builder, self.CROSS_TRACK_M)
         CQRScreeningControlsAddVOLUME_CENTER(builder, self.VOLUME_CENTER)
+        if self.VERIFIED_COVARIANCE_PRODUCERS is not None:
+            CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS)
         CQRScreeningControls = CQRScreeningControlsEnd(builder)
         return CQRScreeningControls

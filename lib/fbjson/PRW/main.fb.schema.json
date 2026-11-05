@@ -4522,7 +4522,7 @@
         },
         "AP": {
           "value": 6,
-          "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+          "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
         }
       }
     },
@@ -11874,6 +11874,11 @@
           "maximum": 18446744073709551615,
           "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
           "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCER_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -18982,7 +18987,7 @@
             },
             "AP": {
               "value": 6,
-              "description": "SGP4-XP with parts replaced (SDN Advanced Propagator). Not the number of $MET AP (5). 3 stays unused."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics. Not the number of $MET AP (5). 3 stays unused."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

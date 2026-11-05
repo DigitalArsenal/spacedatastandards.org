@@ -6375,6 +6375,10 @@
         "SOURCE_BYTES" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
                 "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
               }
       },
       "additionalProperties" : false
@@ -19780,6 +19784,26 @@
       "required" : ["OBJECT_ID"],
       "additionalProperties" : false
     },
+    "CQRVerifiedCovarianceProducer" : {
+      "type" : "object",
+      "description" : "One covariance-producing build whose covariance realism was verified. A\ncollision probability uses AP covariance only when the covariance's PVN\nnames a listed build.",
+      "properties" : {
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "PVN.PRODUCER verbatim: the module identifier and its version."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the producing build's dist module.wasm, 64 lowercase\nhexadecimal characters (PVN.PRODUCER_SHA256)."
+              },
+        "VERIFICATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the record whose covariance realism E2E verified the build."
+              }
+      },
+      "required" : ["PRODUCER", "PRODUCER_SHA256"],
+      "additionalProperties" : false
+    },
     "CQRScreeningControls" : {
       "type" : "object",
       "description" : "Explicit UTC search window and positive resolution, SI seconds/metres.",
@@ -19842,6 +19866,10 @@
         "VOLUME_CENTER" : {
                 "$ref" : "#/definitions/cqrVolumeAnchor",
                 "description" : "PRIMARY or SECONDARY selects that object's centre and RTN at each epoch:\nR = unit(r), N = unit(r cross v), T = N cross R in EVALUATION_FRAME.\nBOTH tests each object's volume independently and admits their union.\nUNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres."
+              },
+        "VERIFIED_COVARIANCE_PRODUCERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CQRVerifiedCovarianceProducer"},
+                "description" : "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
               }
       },
       "required" : ["START_EPOCH"],
@@ -20184,6 +20212,10 @@
         "ADMITTED_BY" : {
                 "$ref" : "#/definitions/cqrVolumeAnchor",
                 "description" : "Volume(s) containing the other object at TCA; BOTH means both tests passed.\nUNSPECIFIED means admission provenance was not reported."
+              },
+        "PROBABILITY_REFUSAL" : {
+                "type" : "string",
+                "description" : "Why PROBABILITY is absent for an event that carries covariance, for\nexample an AP covariance whose producer is not in\nVERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused."
               }
       },
       "required" : ["PRIMARY_ID", "SECONDARY_ID", "TCA"],

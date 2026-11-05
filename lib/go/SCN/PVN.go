@@ -288,8 +288,28 @@ func (rcv *PVN) MutateSourceBytes(n uint64) bool {
 	return rcv.MutateSOURCE_BYTES(n)
 }
 
+/// SHA-256 of the build of PRODUCER that made the product (its dist
+/// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+/// that loaded the producing module: a module cannot hash its own bytes.
+/// Empty when not stated.
+func (rcv *PVN) PRODUCER_SHA256() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PVN) ProducerSha256() []byte {
+	return rcv.PRODUCER_SHA256()
+}
+
+/// SHA-256 of the build of PRODUCER that made the product (its dist
+/// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+/// that loaded the producing module: a module cannot hash its own bytes.
+/// Empty when not stated.
 func PVNStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func PVNAddSOURCE_ID(builder *flatbuffers.Builder, SOURCE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOURCE_ID), 0)
@@ -368,6 +388,12 @@ func PVNAddSOURCE_BYTES(builder *flatbuffers.Builder, SOURCE_BYTES uint64) {
 }
 func PVNAddSourceBytes(builder *flatbuffers.Builder, SOURCE_BYTES uint64) {
 	PVNAddSOURCE_BYTES(builder, SOURCE_BYTES)
+}
+func PVNAddPRODUCER_SHA256(builder *flatbuffers.Builder, PRODUCER_SHA256 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PRODUCER_SHA256), 0)
+}
+func PVNAddProducerSha256(builder *flatbuffers.Builder, PRODUCER_SHA256 flatbuffers.UOffsetT) {
+	PVNAddPRODUCER_SHA256(builder, PRODUCER_SHA256)
 }
 func PVNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

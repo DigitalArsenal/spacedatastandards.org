@@ -155,22 +155,32 @@ class PVN extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
+    /// SHA-256 of the build of PRODUCER that made the product (its dist
+    /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+    /// that loaded the producing module: a module cannot hash its own bytes.
+    /// Empty when not stated.
+    public function getPRODUCER_SHA256()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPVN(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PVN
      */
-    public static function createPVN(FlatBufferBuilder $builder, $SOURCE_ID, $SOURCE_KIND, $ORIGINATOR, $PROVIDER_ID, $PRODUCER, $LICENSE_CLASS, $LICENSE_ID, $LINEAGE, $SOURCE_URL, $SOURCE_VERSION, $RETRIEVED_AT, $SOURCE_SHA256, $SOURCE_BYTES)
+    public static function createPVN(FlatBufferBuilder $builder, $SOURCE_ID, $SOURCE_KIND, $ORIGINATOR, $PROVIDER_ID, $PRODUCER, $LICENSE_CLASS, $LICENSE_ID, $LINEAGE, $SOURCE_URL, $SOURCE_VERSION, $RETRIEVED_AT, $SOURCE_SHA256, $SOURCE_BYTES, $PRODUCER_SHA256)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addSOURCE_ID($builder, $SOURCE_ID);
         self::addSOURCE_KIND($builder, $SOURCE_KIND);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -184,6 +194,7 @@ class PVN extends Table
         self::addRETRIEVED_AT($builder, $RETRIEVED_AT);
         self::addSOURCE_SHA256($builder, $SOURCE_SHA256);
         self::addSOURCE_BYTES($builder, $SOURCE_BYTES);
+        self::addPRODUCER_SHA256($builder, $PRODUCER_SHA256);
         $o = $builder->endObject();
         return $o;
     }
@@ -316,6 +327,16 @@ class PVN extends Table
     public static function addSOURCE_BYTES(FlatBufferBuilder $builder, $SOURCE_BYTES)
     {
         $builder->addUlongX(12, $SOURCE_BYTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPRODUCER_SHA256(FlatBufferBuilder $builder, $PRODUCER_SHA256)
+    {
+        $builder->addOffsetX(13, $PRODUCER_SHA256, 0);
     }
 
     /**

@@ -95,6 +95,16 @@ public struct CQREvent : IFlatbufferObject
   /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
   /// UNSPECIFIED means admission provenance was not reported.
   public cqrVolumeAnchor ADMITTED_BY { get { int o = __p.__offset(76); return o != 0 ? (cqrVolumeAnchor)__p.bb.Get(o + __p.bb_pos) : cqrVolumeAnchor.UNSPECIFIED; } }
+  /// Why PROBABILITY is absent for an event that carries covariance, for
+  /// example an AP covariance whose producer is not in
+  /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+  public string PROBABILITY_REFUSAL { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROBABILITY_REFUSALBytes() { return __p.__vector_as_span<byte>(78, 1); }
+#else
+  public ArraySegment<byte>? GetPROBABILITY_REFUSALBytes() { return __p.__vector_as_arraysegment(78); }
+#endif
+  public byte[] GetPROBABILITY_REFUSALArray() { return __p.__vector_as_array<byte>(78); }
 
   public static Offset<CQREvent> CreateCQREvent(FlatBufferBuilder builder,
       StringOffset PRIMARY_IDOffset = default(StringOffset),
@@ -133,8 +143,9 @@ public struct CQREvent : IFlatbufferObject
       cqrCovarianceBasis PRIMARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED,
       cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED,
       cqrVolumeGeometry SCREENING = cqrVolumeGeometry.SPHERICAL,
-      cqrVolumeAnchor ADMITTED_BY = cqrVolumeAnchor.UNSPECIFIED) {
-    builder.StartTable(37);
+      cqrVolumeAnchor ADMITTED_BY = cqrVolumeAnchor.UNSPECIFIED,
+      StringOffset PROBABILITY_REFUSALOffset = default(StringOffset)) {
+    builder.StartTable(38);
     CQREvent.AddSECONDARY_HARD_BODY_RADIUS_M(builder, SECONDARY_HARD_BODY_RADIUS_M);
     CQREvent.AddPRIMARY_HARD_BODY_RADIUS_M(builder, PRIMARY_HARD_BODY_RADIUS_M);
     CQREvent.AddCOMBINED_RADIUS_M(builder, COMBINED_RADIUS_M);
@@ -144,6 +155,7 @@ public struct CQREvent : IFlatbufferObject
     CQREvent.AddDILUTION_THRESHOLD_M(builder, DILUTION_THRESHOLD_M);
     CQREvent.AddRELATIVE_SPEED_M_S(builder, RELATIVE_SPEED_M_S);
     CQREvent.AddMISS_DISTANCE_M(builder, MISS_DISTANCE_M);
+    CQREvent.AddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSALOffset);
     CQREvent.AddSECONDARY_STATE(builder, SECONDARY_STATEOffset);
     CQREvent.AddPRIMARY_STATE(builder, PRIMARY_STATEOffset);
     CQREvent.AddCONJUNCTION_MESSAGE(builder, CONJUNCTION_MESSAGEOffset);
@@ -175,7 +187,7 @@ public struct CQREvent : IFlatbufferObject
     return CQREvent.EndCQREvent(builder);
   }
 
-  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(37); }
+  public static void StartCQREvent(FlatBufferBuilder builder) { builder.StartTable(38); }
   public static void AddPRIMARY_ID(FlatBufferBuilder builder, StringOffset PRIMARY_IDOffset) { builder.AddOffset(0, PRIMARY_IDOffset.Value, 0); }
   public static void AddSECONDARY_ID(FlatBufferBuilder builder, StringOffset SECONDARY_IDOffset) { builder.AddOffset(1, SECONDARY_IDOffset.Value, 0); }
   public static void AddPRIMARY_NAME(FlatBufferBuilder builder, StringOffset PRIMARY_NAMEOffset) { builder.AddOffset(2, PRIMARY_NAMEOffset.Value, 0); }
@@ -213,6 +225,7 @@ public struct CQREvent : IFlatbufferObject
   public static void AddSECONDARY_COVARIANCE_BASIS(FlatBufferBuilder builder, cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS) { builder.AddByte(34, (byte)SECONDARY_COVARIANCE_BASIS, 0); }
   public static void AddSCREENING(FlatBufferBuilder builder, cqrVolumeGeometry SCREENING) { builder.AddByte(35, (byte)SCREENING, 0); }
   public static void AddADMITTED_BY(FlatBufferBuilder builder, cqrVolumeAnchor ADMITTED_BY) { builder.AddByte(36, (byte)ADMITTED_BY, 0); }
+  public static void AddPROBABILITY_REFUSAL(FlatBufferBuilder builder, StringOffset PROBABILITY_REFUSALOffset) { builder.AddOffset(37, PROBABILITY_REFUSALOffset.Value, 0); }
   public static Offset<CQREvent> EndCQREvent(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PRIMARY_ID
@@ -263,6 +276,7 @@ public struct CQREvent : IFlatbufferObject
     _o.SECONDARY_COVARIANCE_BASIS = this.SECONDARY_COVARIANCE_BASIS;
     _o.SCREENING = this.SCREENING;
     _o.ADMITTED_BY = this.ADMITTED_BY;
+    _o.PROBABILITY_REFUSAL = this.PROBABILITY_REFUSAL;
   }
   public static Offset<CQREvent> Pack(FlatBufferBuilder builder, CQREventT _o) {
     if (_o == null) return default(Offset<CQREvent>);
@@ -279,6 +293,7 @@ public struct CQREvent : IFlatbufferObject
     var _CONJUNCTION_MESSAGE = _o.CONJUNCTION_MESSAGE == null ? default(Offset<CDM>) : CDM.Pack(builder, _o.CONJUNCTION_MESSAGE);
     var _PRIMARY_STATE = _o.PRIMARY_STATE == null ? default(Offset<PRWResidentState>) : PRWResidentState.Pack(builder, _o.PRIMARY_STATE);
     var _SECONDARY_STATE = _o.SECONDARY_STATE == null ? default(Offset<PRWResidentState>) : PRWResidentState.Pack(builder, _o.SECONDARY_STATE);
+    var _PROBABILITY_REFUSAL = _o.PROBABILITY_REFUSAL == null ? default(StringOffset) : builder.CreateString(_o.PROBABILITY_REFUSAL);
     return CreateCQREvent(
       builder,
       _PRIMARY_ID,
@@ -317,7 +332,8 @@ public struct CQREvent : IFlatbufferObject
       _o.PRIMARY_COVARIANCE_BASIS,
       _o.SECONDARY_COVARIANCE_BASIS,
       _o.SCREENING,
-      _o.ADMITTED_BY);
+      _o.ADMITTED_BY,
+      _PROBABILITY_REFUSAL);
   }
 }
 
@@ -360,6 +376,7 @@ public class CQREventT
   public cqrCovarianceBasis SECONDARY_COVARIANCE_BASIS { get; set; }
   public cqrVolumeGeometry SCREENING { get; set; }
   public cqrVolumeAnchor ADMITTED_BY { get; set; }
+  public string PROBABILITY_REFUSAL { get; set; }
 
   public CQREventT() {
     this.PRIMARY_ID = null;
@@ -399,6 +416,7 @@ public class CQREventT
     this.SECONDARY_COVARIANCE_BASIS = cqrCovarianceBasis.UNSPECIFIED;
     this.SCREENING = cqrVolumeGeometry.SPHERICAL;
     this.ADMITTED_BY = cqrVolumeAnchor.UNSPECIFIED;
+    this.PROBABILITY_REFUSAL = null;
   }
 }
 
@@ -445,6 +463,7 @@ static public class CQREventVerify
       && verifier.VerifyField(tablePos, 72 /*SECONDARY_COVARIANCE_BASIS*/, 1 /*cqrCovarianceBasis*/, 1, false)
       && verifier.VerifyField(tablePos, 74 /*SCREENING*/, 1 /*cqrVolumeGeometry*/, 1, false)
       && verifier.VerifyField(tablePos, 76 /*ADMITTED_BY*/, 1 /*cqrVolumeAnchor*/, 1, false)
+      && verifier.VerifyString(tablePos, 78 /*PROBABILITY_REFUSAL*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -147,8 +147,19 @@ class PVN(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # SHA-256 of the build of PRODUCER that made the product (its dist
+    # module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+    # that loaded the producing module: a module cannot hash its own bytes.
+    # Empty when not stated.
+    # PVN
+    def PRODUCER_SHA256(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def PVNStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     PVNStart(builder)
@@ -231,6 +242,12 @@ def PVNAddSOURCE_BYTES(builder, SOURCE_BYTES):
 def AddSOURCE_BYTES(builder, SOURCE_BYTES):
     PVNAddSOURCE_BYTES(builder, SOURCE_BYTES)
 
+def PVNAddPRODUCER_SHA256(builder, PRODUCER_SHA256):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCER_SHA256), 0)
+
+def AddPRODUCER_SHA256(builder, PRODUCER_SHA256):
+    PVNAddPRODUCER_SHA256(builder, PRODUCER_SHA256)
+
 def PVNEnd(builder):
     return builder.EndObject()
 
@@ -256,6 +273,7 @@ class PVNT(object):
         RETRIEVED_AT = None,
         SOURCE_SHA256 = None,
         SOURCE_BYTES = 0,
+        PRODUCER_SHA256 = None,
     ):
         self.SOURCE_ID = SOURCE_ID  # type: Optional[str]
         self.SOURCE_KIND = SOURCE_KIND  # type: int
@@ -270,6 +288,7 @@ class PVNT(object):
         self.RETRIEVED_AT = RETRIEVED_AT  # type: Optional[str]
         self.SOURCE_SHA256 = SOURCE_SHA256  # type: Optional[str]
         self.SOURCE_BYTES = SOURCE_BYTES  # type: int
+        self.PRODUCER_SHA256 = PRODUCER_SHA256  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -305,6 +324,7 @@ class PVNT(object):
         self.RETRIEVED_AT = PVN.RETRIEVED_AT()
         self.SOURCE_SHA256 = PVN.SOURCE_SHA256()
         self.SOURCE_BYTES = PVN.SOURCE_BYTES()
+        self.PRODUCER_SHA256 = PVN.PRODUCER_SHA256()
 
     # PVNT
     def Pack(self, builder):
@@ -328,6 +348,8 @@ class PVNT(object):
             RETRIEVED_AT = builder.CreateString(self.RETRIEVED_AT)
         if self.SOURCE_SHA256 is not None:
             SOURCE_SHA256 = builder.CreateString(self.SOURCE_SHA256)
+        if self.PRODUCER_SHA256 is not None:
+            PRODUCER_SHA256 = builder.CreateString(self.PRODUCER_SHA256)
         PVNStart(builder)
         if self.SOURCE_ID is not None:
             PVNAddSOURCE_ID(builder, SOURCE_ID)
@@ -352,5 +374,7 @@ class PVNT(object):
         if self.SOURCE_SHA256 is not None:
             PVNAddSOURCE_SHA256(builder, SOURCE_SHA256)
         PVNAddSOURCE_BYTES(builder, self.SOURCE_BYTES)
+        if self.PRODUCER_SHA256 is not None:
+            PVNAddPRODUCER_SHA256(builder, PRODUCER_SHA256)
         PVN = PVNEnd(builder)
         return PVN

@@ -319,6 +319,22 @@ class CQREvent : Table() {
             val o = __offset(76)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Why PROBABILITY is absent for an event that carries covariance, for
+     * example an AP covariance whose producer is not in
+     * VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+     */
+    val probabilityRefusal : String?
+        get() {
+            val o = __offset(78)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val probabilityRefusalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun probabilityRefusalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQREvent(_bb: ByteBuffer): CQREvent = getRootAsCQREvent(_bb, CQREvent())
@@ -326,8 +342,8 @@ class CQREvent : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQREvent(builder: FlatBufferBuilder, primaryIdOffset: Int, secondaryIdOffset: Int, primaryNameOffset: Int, secondaryNameOffset: Int, primaryNoradId: UInt, secondaryNoradId: UInt, tcaOffset: Int, missDistanceM: Double, relativeSpeedMS: Double, probabilityOffset: Int, dilutionThresholdM: Double, hasDilutionThresholdM: Boolean, relativePositionRtnOffset: Int, relativeVelocityRtnOffset: Int, primarySigmaRtnMOffset: Int, secondarySigmaRtnMOffset: Int, primaryDaysSinceEpoch: Double, hasPrimaryDaysSinceEpoch: Boolean, secondaryDaysSinceEpoch: Double, hasSecondaryDaysSinceEpoch: Boolean, conjunctionMessageOffset: Int, primaryStateOffset: Int, secondaryStateOffset: Int, mahalanobis3DSquared: Double, hasMahalanobis3DSquared: Boolean, combinedRadiusM: Double, hasCombinedRadiusM: Boolean, primaryHardBodyRadiusM: Double, hasPrimaryHardBodyRadiusM: Boolean, secondaryHardBodyRadiusM: Double, hasSecondaryHardBodyRadiusM: Boolean, primaryRadiusBasis: UByte, secondaryRadiusBasis: UByte, primaryCovarianceBasis: UByte, secondaryCovarianceBasis: UByte, screening: UByte, admittedBy: UByte) : Int {
-            builder.startTable(37)
+        fun createCQREvent(builder: FlatBufferBuilder, primaryIdOffset: Int, secondaryIdOffset: Int, primaryNameOffset: Int, secondaryNameOffset: Int, primaryNoradId: UInt, secondaryNoradId: UInt, tcaOffset: Int, missDistanceM: Double, relativeSpeedMS: Double, probabilityOffset: Int, dilutionThresholdM: Double, hasDilutionThresholdM: Boolean, relativePositionRtnOffset: Int, relativeVelocityRtnOffset: Int, primarySigmaRtnMOffset: Int, secondarySigmaRtnMOffset: Int, primaryDaysSinceEpoch: Double, hasPrimaryDaysSinceEpoch: Boolean, secondaryDaysSinceEpoch: Double, hasSecondaryDaysSinceEpoch: Boolean, conjunctionMessageOffset: Int, primaryStateOffset: Int, secondaryStateOffset: Int, mahalanobis3DSquared: Double, hasMahalanobis3DSquared: Boolean, combinedRadiusM: Double, hasCombinedRadiusM: Boolean, primaryHardBodyRadiusM: Double, hasPrimaryHardBodyRadiusM: Boolean, secondaryHardBodyRadiusM: Double, hasSecondaryHardBodyRadiusM: Boolean, primaryRadiusBasis: UByte, secondaryRadiusBasis: UByte, primaryCovarianceBasis: UByte, secondaryCovarianceBasis: UByte, screening: UByte, admittedBy: UByte, probabilityRefusalOffset: Int) : Int {
+            builder.startTable(38)
             addSECONDARYHARDBODYRADIUSM(builder, secondaryHardBodyRadiusM)
             addPRIMARYHARDBODYRADIUSM(builder, primaryHardBodyRadiusM)
             addCOMBINEDRADIUSM(builder, combinedRadiusM)
@@ -337,6 +353,7 @@ class CQREvent : Table() {
             addDILUTIONTHRESHOLDM(builder, dilutionThresholdM)
             addRELATIVESPEEDMS(builder, relativeSpeedMS)
             addMISSDISTANCEM(builder, missDistanceM)
+            addPROBABILITYREFUSAL(builder, probabilityRefusalOffset)
             addSECONDARYSTATE(builder, secondaryStateOffset)
             addPRIMARYSTATE(builder, primaryStateOffset)
             addCONJUNCTIONMESSAGE(builder, conjunctionMessageOffset)
@@ -367,7 +384,7 @@ class CQREvent : Table() {
             addHASDILUTIONTHRESHOLDM(builder, hasDilutionThresholdM)
             return endCQREvent(builder)
         }
-        fun startCQREvent(builder: FlatBufferBuilder) = builder.startTable(37)
+        fun startCQREvent(builder: FlatBufferBuilder) = builder.startTable(38)
         fun addPRIMARYID(builder: FlatBufferBuilder, primaryId: Int) = builder.addOffset(0, primaryId, 0)
         fun addSECONDARYID(builder: FlatBufferBuilder, secondaryId: Int) = builder.addOffset(1, secondaryId, 0)
         fun addPRIMARYNAME(builder: FlatBufferBuilder, primaryName: Int) = builder.addOffset(2, primaryName, 0)
@@ -405,6 +422,7 @@ class CQREvent : Table() {
         fun addSECONDARYCOVARIANCEBASIS(builder: FlatBufferBuilder, secondaryCovarianceBasis: UByte) = builder.addByte(34, secondaryCovarianceBasis.toByte(), 0)
         fun addSCREENING(builder: FlatBufferBuilder, screening: UByte) = builder.addByte(35, screening.toByte(), 0)
         fun addADMITTEDBY(builder: FlatBufferBuilder, admittedBy: UByte) = builder.addByte(36, admittedBy.toByte(), 0)
+        fun addPROBABILITYREFUSAL(builder: FlatBufferBuilder, probabilityRefusal: Int) = builder.addOffset(37, probabilityRefusal, 0)
         fun endCQREvent(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

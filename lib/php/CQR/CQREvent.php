@@ -361,22 +361,31 @@ class CQREvent extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeAnchor::UNSPECIFIED;
     }
 
+    /// Why PROBABILITY is absent for an event that carries covariance, for
+    /// example an AP covariance whose producer is not in
+    /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+    public function getPROBABILITY_REFUSAL()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQREvent(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(37);
+        $builder->StartObject(38);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQREvent
      */
-    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M, $PRIMARY_HARD_BODY_RADIUS_M, $HAS_PRIMARY_HARD_BODY_RADIUS_M, $SECONDARY_HARD_BODY_RADIUS_M, $HAS_SECONDARY_HARD_BODY_RADIUS_M, $PRIMARY_RADIUS_BASIS, $SECONDARY_RADIUS_BASIS, $PRIMARY_COVARIANCE_BASIS, $SECONDARY_COVARIANCE_BASIS, $SCREENING, $ADMITTED_BY)
+    public static function createCQREvent(FlatBufferBuilder $builder, $PRIMARY_ID, $SECONDARY_ID, $PRIMARY_NAME, $SECONDARY_NAME, $PRIMARY_NORAD_ID, $SECONDARY_NORAD_ID, $TCA, $MISS_DISTANCE_M, $RELATIVE_SPEED_M_S, $PROBABILITY, $DILUTION_THRESHOLD_M, $HAS_DILUTION_THRESHOLD_M, $RELATIVE_POSITION_RTN, $RELATIVE_VELOCITY_RTN, $PRIMARY_SIGMA_RTN_M, $SECONDARY_SIGMA_RTN_M, $PRIMARY_DAYS_SINCE_EPOCH, $HAS_PRIMARY_DAYS_SINCE_EPOCH, $SECONDARY_DAYS_SINCE_EPOCH, $HAS_SECONDARY_DAYS_SINCE_EPOCH, $CONJUNCTION_MESSAGE, $PRIMARY_STATE, $SECONDARY_STATE, $MAHALANOBIS_3D_SQUARED, $HAS_MAHALANOBIS_3D_SQUARED, $COMBINED_RADIUS_M, $HAS_COMBINED_RADIUS_M, $PRIMARY_HARD_BODY_RADIUS_M, $HAS_PRIMARY_HARD_BODY_RADIUS_M, $SECONDARY_HARD_BODY_RADIUS_M, $HAS_SECONDARY_HARD_BODY_RADIUS_M, $PRIMARY_RADIUS_BASIS, $SECONDARY_RADIUS_BASIS, $PRIMARY_COVARIANCE_BASIS, $SECONDARY_COVARIANCE_BASIS, $SCREENING, $ADMITTED_BY, $PROBABILITY_REFUSAL)
     {
-        $builder->startObject(37);
+        $builder->startObject(38);
         self::addPRIMARY_ID($builder, $PRIMARY_ID);
         self::addSECONDARY_ID($builder, $SECONDARY_ID);
         self::addPRIMARY_NAME($builder, $PRIMARY_NAME);
@@ -414,6 +423,7 @@ class CQREvent extends Table
         self::addSECONDARY_COVARIANCE_BASIS($builder, $SECONDARY_COVARIANCE_BASIS);
         self::addSCREENING($builder, $SCREENING);
         self::addADMITTED_BY($builder, $ADMITTED_BY);
+        self::addPROBABILITY_REFUSAL($builder, $PROBABILITY_REFUSAL);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PRIMARY_ID
         $builder->required($o, 6);  // SECONDARY_ID
@@ -789,6 +799,16 @@ class CQREvent extends Table
     public static function addADMITTED_BY(FlatBufferBuilder $builder, $ADMITTED_BY)
     {
         $builder->addByteX(36, $ADMITTED_BY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROBABILITY_REFUSAL(FlatBufferBuilder $builder, $PROBABILITY_REFUSAL)
+    {
+        $builder->addOffsetX(37, $PROBABILITY_REFUSAL, 0);
     }
 
     /**

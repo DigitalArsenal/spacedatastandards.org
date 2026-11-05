@@ -757,8 +757,26 @@ func (rcv *CQREvent) MutateAdmittedBy(n cqrVolumeAnchor) bool {
 	return rcv.MutateADMITTED_BY(n)
 }
 
+/// Why PROBABILITY is absent for an event that carries covariance, for
+/// example an AP covariance whose producer is not in
+/// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+func (rcv *CQREvent) PROBABILITY_REFUSAL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CQREvent) ProbabilityRefusal() []byte {
+	return rcv.PROBABILITY_REFUSAL()
+}
+
+/// Why PROBABILITY is absent for an event that carries covariance, for
+/// example an AP covariance whose producer is not in
+/// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
 func CQREventStart(builder *flatbuffers.Builder) {
-	builder.StartObject(37)
+	builder.StartObject(38)
 }
 func CQREventAddPRIMARY_ID(builder *flatbuffers.Builder, PRIMARY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PRIMARY_ID), 0)
@@ -981,6 +999,12 @@ func CQREventAddADMITTED_BY(builder *flatbuffers.Builder, ADMITTED_BY cqrVolumeA
 }
 func CQREventAddAdmittedBy(builder *flatbuffers.Builder, ADMITTED_BY cqrVolumeAnchor) {
 	CQREventAddADMITTED_BY(builder, ADMITTED_BY)
+}
+func CQREventAddPROBABILITY_REFUSAL(builder *flatbuffers.Builder, PROBABILITY_REFUSAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(PROBABILITY_REFUSAL), 0)
+}
+func CQREventAddProbabilityRefusal(builder *flatbuffers.Builder, PROBABILITY_REFUSAL flatbuffers.UOffsetT) {
+	CQREventAddPROBABILITY_REFUSAL(builder, PROBABILITY_REFUSAL)
 }
 func CQREventEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

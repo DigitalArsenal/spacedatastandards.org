@@ -176,6 +176,8 @@ class CQRSourceProvenance
 
 class CQRObjectSource
 
+class CQRVerifiedCovarianceProducer
+
 class CQRScreeningControls
 
 class CQRPairRequest
@@ -422,6 +424,40 @@ struct CQRObjectSourceBuilder:
     def end():
         return b_.EndObject()
 
+/// One covariance-producing build whose covariance realism was verified. A
+/// collision probability uses AP covariance only when the covariance's PVN
+/// names a listed build.
+class CQRVerifiedCovarianceProducer : flatbuffers.handle
+    /// PVN.PRODUCER verbatim: the module identifier and its version.
+    def PRODUCER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// SHA-256 of the producing build's dist module.wasm, 64 lowercase
+    /// hexadecimal characters (PVN.PRODUCER_SHA256).
+    def PRODUCER_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Identifier of the record whose covariance realism E2E verified the build.
+    def VERIFICATION_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+
+def GetRootAsCQRVerifiedCovarianceProducer(buf:string): return CQRVerifiedCovarianceProducer { buf, flatbuffers.indirect(buf, 0) }
+
+struct CQRVerifiedCovarianceProducerBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_PRODUCER(PRODUCER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PRODUCER)
+        return this
+    def add_PRODUCER_SHA256(PRODUCER_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PRODUCER_SHA256)
+        return this
+    def add_VERIFICATION_REFERENCE(VERIFICATION_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, VERIFICATION_REFERENCE)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
 class CQRScreeningControls : flatbuffers.handle
     def START_EPOCH() -> TIMInstant:
@@ -470,13 +506,19 @@ class CQRScreeningControls : flatbuffers.handle
     /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
     def VOLUME_CENTER() -> cqrVolumeAnchor:
         return cqrVolumeAnchor(flatbuffers.field_uint8(buf_, pos_, 38, 1))
+    /// Builds whose AP covariance a collision probability may use. An empty or
+    /// absent list means no collision probability from AP covariance.
+    def VERIFIED_COVARIANCE_PRODUCERS(i:int) -> CQRVerifiedCovarianceProducer:
+        return CQRVerifiedCovarianceProducer { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 40) + i * 4) }
+    def VERIFIED_COVARIANCE_PRODUCERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
 
 def GetRootAsCQRScreeningControls(buf:string): return CQRScreeningControls { buf, flatbuffers.indirect(buf, 0) }
 
 struct CQRScreeningControlsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(19)
         return this
     def add_START_EPOCH(START_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, START_EPOCH)
@@ -532,8 +574,18 @@ struct CQRScreeningControlsBuilder:
     def add_VOLUME_CENTER(VOLUME_CENTER:cqrVolumeAnchor):
         b_.PrependUint8Slot(17, VOLUME_CENTER, 1)
         return this
+    def add_VERIFIED_COVARIANCE_PRODUCERS(VERIFIED_COVARIANCE_PRODUCERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, VERIFIED_COVARIANCE_PRODUCERS)
+        return this
     def end():
         return b_.EndObject()
+
+def CQRScreeningControlsStartVERIFIEDCOVARIANCEPRODUCERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def CQRScreeningControlsCreateVERIFIEDCOVARIANCEPRODUCERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
 /// Reject inconsistent radii instead of silently choosing one source.
@@ -1052,13 +1104,18 @@ class CQREvent : flatbuffers.handle
     /// UNSPECIFIED means admission provenance was not reported.
     def ADMITTED_BY() -> cqrVolumeAnchor:
         return cqrVolumeAnchor(flatbuffers.field_uint8(buf_, pos_, 76, 0))
+    /// Why PROBABILITY is absent for an event that carries covariance, for
+    /// example an AP covariance whose producer is not in
+    /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+    def PROBABILITY_REFUSAL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 78)
 
 def GetRootAsCQREvent(buf:string): return CQREvent { buf, flatbuffers.indirect(buf, 0) }
 
 struct CQREventBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(37)
+        b_.StartObject(38)
         return this
     def add_PRIMARY_ID(PRIMARY_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PRIMARY_ID)
@@ -1170,6 +1227,9 @@ struct CQREventBuilder:
         return this
     def add_ADMITTED_BY(ADMITTED_BY:cqrVolumeAnchor):
         b_.PrependUint8Slot(36, ADMITTED_BY, 0)
+        return this
+    def add_PROBABILITY_REFUSAL(PROBABILITY_REFUSAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(37, PROBABILITY_REFUSAL)
         return this
     def end():
         return b_.EndObject()

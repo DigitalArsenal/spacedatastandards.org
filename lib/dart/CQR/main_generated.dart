@@ -1074,6 +1074,112 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One covariance-producing build whose covariance realism was verified. A
+///  collision probability uses AP covariance only when the covariance's PVN
+///  names a listed build.
+class CQRVerifiedCovarianceProducer {
+  CQRVerifiedCovarianceProducer._(this._bc, this._bcOffset);
+  factory CQRVerifiedCovarianceProducer(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CQRVerifiedCovarianceProducer> reader = _CQRVerifiedCovarianceProducerReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  PVN.PRODUCER verbatim: the module identifier and its version.
+  String? get PRODUCER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  SHA-256 of the producing build's dist module.wasm, 64 lowercase
+  ///  hexadecimal characters (PVN.PRODUCER_SHA256).
+  String? get PRODUCER_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get producerSha256 => PRODUCER_SHA256;
+  ///  Identifier of the record whose covariance realism E2E verified the build.
+  String? get VERIFICATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get verificationReference => VERIFICATION_REFERENCE;
+
+  @override
+  String toString() {
+    return 'CQRVerifiedCovarianceProducer{PRODUCER: ${PRODUCER}, producerSha256: ${producerSha256}, verificationReference: ${verificationReference}}';
+  }
+}
+
+class _CQRVerifiedCovarianceProducerReader extends fb.TableReader<CQRVerifiedCovarianceProducer> {
+  const _CQRVerifiedCovarianceProducerReader();
+
+  @override
+  CQRVerifiedCovarianceProducer createObject(fb.BufferContext bc, int offset) =>
+    CQRVerifiedCovarianceProducer._(bc, offset);
+}
+
+class CQRVerifiedCovarianceProducerBuilder {
+  CQRVerifiedCovarianceProducerBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addProducerOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addProducerSha256Offset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVerificationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CQRVerifiedCovarianceProducerObjectBuilder extends fb.ObjectBuilder {
+  final String? _PRODUCER;
+  final String? _PRODUCER_SHA256;
+  final String? _VERIFICATION_REFERENCE;
+
+  CQRVerifiedCovarianceProducerObjectBuilder({
+    String? PRODUCER,
+    String? PRODUCER_SHA256,
+    String? producerSha256,
+    String? VERIFICATION_REFERENCE,
+    String? verificationReference,
+  })
+      : _PRODUCER = PRODUCER,
+        _PRODUCER_SHA256 = producerSha256 ?? PRODUCER_SHA256,
+        _VERIFICATION_REFERENCE = verificationReference ?? VERIFICATION_REFERENCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PRODUCEROffset = _PRODUCER == null ? null
+        : fbBuilder.writeString(_PRODUCER!);
+    final int? PRODUCER_SHA256Offset = _PRODUCER_SHA256 == null ? null
+        : fbBuilder.writeString(_PRODUCER_SHA256!);
+    final int? VERIFICATION_REFERENCEOffset = _VERIFICATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_VERIFICATION_REFERENCE!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, PRODUCEROffset);
+    fbBuilder.addOffset(1, PRODUCER_SHA256Offset);
+    fbBuilder.addOffset(2, VERIFICATION_REFERENCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Explicit UTC search window and positive resolution, SI seconds/metres.
 class CQRScreeningControls {
   CQRScreeningControls._(this._bc, this._bcOffset);
@@ -1130,10 +1236,14 @@ class CQRScreeningControls {
   ///  UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
   cqrVolumeAnchor get VOLUME_CENTER => cqrVolumeAnchor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 38, 1));
   cqrVolumeAnchor get volumeCenter => VOLUME_CENTER;
+  ///  Builds whose AP covariance a collision probability may use. An empty or
+  ///  absent list means no collision probability from AP covariance.
+  List<CQRVerifiedCovarianceProducer>? get VERIFIED_COVARIANCE_PRODUCERS => const fb.ListReader<CQRVerifiedCovarianceProducer>(CQRVerifiedCovarianceProducer.reader).vTableGetNullable(_bc, _bcOffset, 40);
+  List<CQRVerifiedCovarianceProducer>? get verifiedCovarianceProducers => VERIFIED_COVARIANCE_PRODUCERS;
 
   @override
   String toString() {
-    return 'CQRScreeningControls{startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, thresholdM: ${thresholdM}, requestedWorkers: ${requestedWorkers}, coarseStepSeconds: ${coarseStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, combinedRadiusM: ${combinedRadiusM}, useKdTree: ${useKdTree}, useDynamicWindow: ${useDynamicWindow}, usePerigeeFilter: ${usePerigeeFilter}, progressIntervalSeconds: ${progressIntervalSeconds}, hasProgressIntervalSeconds: ${hasProgressIntervalSeconds}, ALGORITHM: ${ALGORITHM}, SCREENING: ${SCREENING}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, volumeCenter: ${volumeCenter}}';
+    return 'CQRScreeningControls{startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, thresholdM: ${thresholdM}, requestedWorkers: ${requestedWorkers}, coarseStepSeconds: ${coarseStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, combinedRadiusM: ${combinedRadiusM}, useKdTree: ${useKdTree}, useDynamicWindow: ${useDynamicWindow}, usePerigeeFilter: ${usePerigeeFilter}, progressIntervalSeconds: ${progressIntervalSeconds}, hasProgressIntervalSeconds: ${hasProgressIntervalSeconds}, ALGORITHM: ${ALGORITHM}, SCREENING: ${SCREENING}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, volumeCenter: ${volumeCenter}, verifiedCovarianceProducers: ${verifiedCovarianceProducers}}';
   }
 }
 
@@ -1151,7 +1261,7 @@ class CQRScreeningControlsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(19);
   }
 
   int addStartEpochOffset(int? offset) {
@@ -1226,6 +1336,10 @@ class CQRScreeningControlsBuilder {
     fbBuilder.addUint8(17, VOLUME_CENTER?.value);
     return fbBuilder.offset;
   }
+  int addVerifiedCovarianceProducersOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1251,6 +1365,7 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
   final double? _IN_TRACK_M;
   final double? _CROSS_TRACK_M;
   final cqrVolumeAnchor? _VOLUME_CENTER;
+  final List<CQRVerifiedCovarianceProducerObjectBuilder>? _VERIFIED_COVARIANCE_PRODUCERS;
 
   CQRScreeningControlsObjectBuilder({
     TIMInstantObjectBuilder? START_EPOCH,
@@ -1287,6 +1402,8 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
     double? crossTrackM,
     cqrVolumeAnchor? VOLUME_CENTER,
     cqrVolumeAnchor? volumeCenter,
+    List<CQRVerifiedCovarianceProducerObjectBuilder>? VERIFIED_COVARIANCE_PRODUCERS,
+    List<CQRVerifiedCovarianceProducerObjectBuilder>? verifiedCovarianceProducers,
   })
       : _START_EPOCH = startEpoch ?? START_EPOCH,
         _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
@@ -1305,13 +1422,16 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
         _RADIAL_M = radialM ?? RADIAL_M,
         _IN_TRACK_M = inTrackM ?? IN_TRACK_M,
         _CROSS_TRACK_M = crossTrackM ?? CROSS_TRACK_M,
-        _VOLUME_CENTER = volumeCenter ?? VOLUME_CENTER;
+        _VOLUME_CENTER = volumeCenter ?? VOLUME_CENTER,
+        _VERIFIED_COVARIANCE_PRODUCERS = verifiedCovarianceProducers ?? VERIFIED_COVARIANCE_PRODUCERS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? START_EPOCHOffset = _START_EPOCH?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(18);
+    final int? VERIFIED_COVARIANCE_PRODUCERSOffset = _VERIFIED_COVARIANCE_PRODUCERS == null ? null
+        : fbBuilder.writeList(_VERIFIED_COVARIANCE_PRODUCERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(19);
     fbBuilder.addOffset(0, START_EPOCHOffset);
     fbBuilder.addFloat64(1, _DURATION_SECONDS);
     fbBuilder.addFloat64(2, _THRESHOLD_M);
@@ -1330,6 +1450,7 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(15, _IN_TRACK_M);
     fbBuilder.addFloat64(16, _CROSS_TRACK_M);
     fbBuilder.addUint8(17, _VOLUME_CENTER?.value);
+    fbBuilder.addOffset(18, VERIFIED_COVARIANCE_PRODUCERSOffset);
     return fbBuilder.endTable();
   }
 
@@ -2476,10 +2597,15 @@ class CQREvent {
   ///  UNSPECIFIED means admission provenance was not reported.
   cqrVolumeAnchor get ADMITTED_BY => cqrVolumeAnchor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 76, 0));
   cqrVolumeAnchor get admittedBy => ADMITTED_BY;
+  ///  Why PROBABILITY is absent for an event that carries covariance, for
+  ///  example an AP covariance whose producer is not in
+  ///  VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+  String? get PROBABILITY_REFUSAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  String? get probabilityRefusal => PROBABILITY_REFUSAL;
 
   @override
   String toString() {
-    return 'CQREvent{primaryId: ${primaryId}, secondaryId: ${secondaryId}, primaryName: ${primaryName}, secondaryName: ${secondaryName}, primaryNoradId: ${primaryNoradId}, secondaryNoradId: ${secondaryNoradId}, TCA: ${TCA}, missDistanceM: ${missDistanceM}, relativeSpeedMS: ${relativeSpeedMS}, PROBABILITY: ${PROBABILITY}, dilutionThresholdM: ${dilutionThresholdM}, hasDilutionThresholdM: ${hasDilutionThresholdM}, relativePositionRtn: ${relativePositionRtn}, relativeVelocityRtn: ${relativeVelocityRtn}, primarySigmaRtnM: ${primarySigmaRtnM}, secondarySigmaRtnM: ${secondarySigmaRtnM}, primaryDaysSinceEpoch: ${primaryDaysSinceEpoch}, hasPrimaryDaysSinceEpoch: ${hasPrimaryDaysSinceEpoch}, secondaryDaysSinceEpoch: ${secondaryDaysSinceEpoch}, hasSecondaryDaysSinceEpoch: ${hasSecondaryDaysSinceEpoch}, conjunctionMessage: ${conjunctionMessage}, primaryState: ${primaryState}, secondaryState: ${secondaryState}, mahalanobis3dSquared: ${mahalanobis3dSquared}, hasMahalanobis3dSquared: ${hasMahalanobis3dSquared}, combinedRadiusM: ${combinedRadiusM}, hasCombinedRadiusM: ${hasCombinedRadiusM}, primaryHardBodyRadiusM: ${primaryHardBodyRadiusM}, hasPrimaryHardBodyRadiusM: ${hasPrimaryHardBodyRadiusM}, secondaryHardBodyRadiusM: ${secondaryHardBodyRadiusM}, hasSecondaryHardBodyRadiusM: ${hasSecondaryHardBodyRadiusM}, primaryRadiusBasis: ${primaryRadiusBasis}, secondaryRadiusBasis: ${secondaryRadiusBasis}, primaryCovarianceBasis: ${primaryCovarianceBasis}, secondaryCovarianceBasis: ${secondaryCovarianceBasis}, SCREENING: ${SCREENING}, admittedBy: ${admittedBy}}';
+    return 'CQREvent{primaryId: ${primaryId}, secondaryId: ${secondaryId}, primaryName: ${primaryName}, secondaryName: ${secondaryName}, primaryNoradId: ${primaryNoradId}, secondaryNoradId: ${secondaryNoradId}, TCA: ${TCA}, missDistanceM: ${missDistanceM}, relativeSpeedMS: ${relativeSpeedMS}, PROBABILITY: ${PROBABILITY}, dilutionThresholdM: ${dilutionThresholdM}, hasDilutionThresholdM: ${hasDilutionThresholdM}, relativePositionRtn: ${relativePositionRtn}, relativeVelocityRtn: ${relativeVelocityRtn}, primarySigmaRtnM: ${primarySigmaRtnM}, secondarySigmaRtnM: ${secondarySigmaRtnM}, primaryDaysSinceEpoch: ${primaryDaysSinceEpoch}, hasPrimaryDaysSinceEpoch: ${hasPrimaryDaysSinceEpoch}, secondaryDaysSinceEpoch: ${secondaryDaysSinceEpoch}, hasSecondaryDaysSinceEpoch: ${hasSecondaryDaysSinceEpoch}, conjunctionMessage: ${conjunctionMessage}, primaryState: ${primaryState}, secondaryState: ${secondaryState}, mahalanobis3dSquared: ${mahalanobis3dSquared}, hasMahalanobis3dSquared: ${hasMahalanobis3dSquared}, combinedRadiusM: ${combinedRadiusM}, hasCombinedRadiusM: ${hasCombinedRadiusM}, primaryHardBodyRadiusM: ${primaryHardBodyRadiusM}, hasPrimaryHardBodyRadiusM: ${hasPrimaryHardBodyRadiusM}, secondaryHardBodyRadiusM: ${secondaryHardBodyRadiusM}, hasSecondaryHardBodyRadiusM: ${hasSecondaryHardBodyRadiusM}, primaryRadiusBasis: ${primaryRadiusBasis}, secondaryRadiusBasis: ${secondaryRadiusBasis}, primaryCovarianceBasis: ${primaryCovarianceBasis}, secondaryCovarianceBasis: ${secondaryCovarianceBasis}, SCREENING: ${SCREENING}, admittedBy: ${admittedBy}, probabilityRefusal: ${probabilityRefusal}}';
   }
 }
 
@@ -2497,7 +2623,7 @@ class CQREventBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(37);
+    fbBuilder.startTable(38);
   }
 
   int addPrimaryIdOffset(int? offset) {
@@ -2648,6 +2774,10 @@ class CQREventBuilder {
     fbBuilder.addUint8(36, ADMITTED_BY?.value);
     return fbBuilder.offset;
   }
+  int addProbabilityRefusalOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2692,6 +2822,7 @@ class CQREventObjectBuilder extends fb.ObjectBuilder {
   final cqrCovarianceBasis? _SECONDARY_COVARIANCE_BASIS;
   final cqrVolumeGeometry? _SCREENING;
   final cqrVolumeAnchor? _ADMITTED_BY;
+  final String? _PROBABILITY_REFUSAL;
 
   CQREventObjectBuilder({
     String? PRIMARY_ID,
@@ -2765,6 +2896,8 @@ class CQREventObjectBuilder extends fb.ObjectBuilder {
     cqrVolumeGeometry? SCREENING,
     cqrVolumeAnchor? ADMITTED_BY,
     cqrVolumeAnchor? admittedBy,
+    String? PROBABILITY_REFUSAL,
+    String? probabilityRefusal,
   })
       : _PRIMARY_ID = primaryId ?? PRIMARY_ID,
         _SECONDARY_ID = secondaryId ?? SECONDARY_ID,
@@ -2802,7 +2935,8 @@ class CQREventObjectBuilder extends fb.ObjectBuilder {
         _PRIMARY_COVARIANCE_BASIS = primaryCovarianceBasis ?? PRIMARY_COVARIANCE_BASIS,
         _SECONDARY_COVARIANCE_BASIS = secondaryCovarianceBasis ?? SECONDARY_COVARIANCE_BASIS,
         _SCREENING = SCREENING,
-        _ADMITTED_BY = admittedBy ?? ADMITTED_BY;
+        _ADMITTED_BY = admittedBy ?? ADMITTED_BY,
+        _PROBABILITY_REFUSAL = probabilityRefusal ?? PROBABILITY_REFUSAL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2824,7 +2958,9 @@ class CQREventObjectBuilder extends fb.ObjectBuilder {
     final int? CONJUNCTION_MESSAGEOffset = _CONJUNCTION_MESSAGE?.getOrCreateOffset(fbBuilder);
     final int? PRIMARY_STATEOffset = _PRIMARY_STATE?.getOrCreateOffset(fbBuilder);
     final int? SECONDARY_STATEOffset = _SECONDARY_STATE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(37);
+    final int? PROBABILITY_REFUSALOffset = _PROBABILITY_REFUSAL == null ? null
+        : fbBuilder.writeString(_PROBABILITY_REFUSAL!);
+    fbBuilder.startTable(38);
     fbBuilder.addOffset(0, PRIMARY_IDOffset);
     fbBuilder.addOffset(1, SECONDARY_IDOffset);
     fbBuilder.addOffset(2, PRIMARY_NAMEOffset);
@@ -2862,6 +2998,7 @@ class CQREventObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint8(34, _SECONDARY_COVARIANCE_BASIS?.value);
     fbBuilder.addUint8(35, _SCREENING?.value);
     fbBuilder.addUint8(36, _ADMITTED_BY?.value);
+    fbBuilder.addOffset(37, PROBABILITY_REFUSALOffset);
     return fbBuilder.endTable();
   }
 

@@ -207,6 +207,23 @@ class PVN : Table() {
             val o = __offset(28)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
+    /**
+     * SHA-256 of the build of PRODUCER that made the product (its dist
+     * module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+     * that loaded the producing module: a module cannot hash its own bytes.
+     * Empty when not stated.
+     */
+    val producerSha256 : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val producerSha256AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun producerSha256InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPVN(_bb: ByteBuffer): PVN = getRootAsPVN(_bb, PVN())
@@ -215,9 +232,10 @@ class PVN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PVNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PVN")
-        fun createPVN(builder: FlatBufferBuilder, sourceIdOffset: Int, sourceKind: Byte, originatorOffset: Int, providerIdOffset: Int, producerOffset: Int, licenseClass: Byte, licenseIdOffset: Int, lineageOffset: Int, sourceUrlOffset: Int, sourceVersionOffset: Int, retrievedAtOffset: Int, sourceSha256Offset: Int, sourceBytes: ULong) : Int {
-            builder.startTable(13)
+        fun createPVN(builder: FlatBufferBuilder, sourceIdOffset: Int, sourceKind: Byte, originatorOffset: Int, providerIdOffset: Int, producerOffset: Int, licenseClass: Byte, licenseIdOffset: Int, lineageOffset: Int, sourceUrlOffset: Int, sourceVersionOffset: Int, retrievedAtOffset: Int, sourceSha256Offset: Int, sourceBytes: ULong, producerSha256Offset: Int) : Int {
+            builder.startTable(14)
             addSOURCEBYTES(builder, sourceBytes)
+            addPRODUCERSHA256(builder, producerSha256Offset)
             addSOURCESHA256(builder, sourceSha256Offset)
             addRETRIEVEDAT(builder, retrievedAtOffset)
             addSOURCEVERSION(builder, sourceVersionOffset)
@@ -232,7 +250,7 @@ class PVN : Table() {
             addSOURCEKIND(builder, sourceKind)
             return endPVN(builder)
         }
-        fun startPVN(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startPVN(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addSOURCEID(builder: FlatBufferBuilder, sourceId: Int) = builder.addOffset(0, sourceId, 0)
         fun addSOURCEKIND(builder: FlatBufferBuilder, sourceKind: Byte) = builder.addByte(1, sourceKind, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -246,6 +264,7 @@ class PVN : Table() {
         fun addRETRIEVEDAT(builder: FlatBufferBuilder, retrievedAt: Int) = builder.addOffset(10, retrievedAt, 0)
         fun addSOURCESHA256(builder: FlatBufferBuilder, sourceSha256: Int) = builder.addOffset(11, sourceSha256, 0)
         fun addSOURCEBYTES(builder: FlatBufferBuilder, sourceBytes: ULong) = builder.addLong(12, sourceBytes.toLong(), 0)
+        fun addPRODUCERSHA256(builder: FlatBufferBuilder, producerSha256: Int) = builder.addOffset(13, producerSha256, 0)
         fun endPVN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

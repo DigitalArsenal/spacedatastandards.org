@@ -65,6 +65,15 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
    * UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
    */
   public int VOLUME_CENTER() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }
+  /**
+   * Builds whose AP covariance a collision probability may use. An empty or
+   * absent list means no collision probability from AP covariance.
+   */
+  public CQRVerifiedCovarianceProducer VERIFIED_COVARIANCE_PRODUCERS(int j) { return VERIFIED_COVARIANCE_PRODUCERS(new CQRVerifiedCovarianceProducer(), j); }
+  public CQRVerifiedCovarianceProducer VERIFIED_COVARIANCE_PRODUCERS(CQRVerifiedCovarianceProducer obj, int j) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int VERIFIED_COVARIANCE_PRODUCERSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public CQRVerifiedCovarianceProducer.Vector verifiedCovarianceProducersVector() { return verifiedCovarianceProducersVector(new CQRVerifiedCovarianceProducer.Vector()); }
+  public CQRVerifiedCovarianceProducer.Vector verifiedCovarianceProducersVector(CQRVerifiedCovarianceProducer.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createCQRScreeningControls(FlatBufferBuilder builder,
       int START_EPOCHOffset,
@@ -84,8 +93,9 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
       double RADIAL_M,
       double IN_TRACK_M,
       double CROSS_TRACK_M,
-      int VOLUME_CENTER) {
-    builder.startTable(18);
+      int VOLUME_CENTER,
+      int VERIFIED_COVARIANCE_PRODUCERSOffset) {
+    builder.startTable(19);
     CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
     CQRScreeningControls.addInTrackM(builder, IN_TRACK_M);
     CQRScreeningControls.addRadialM(builder, RADIAL_M);
@@ -95,6 +105,7 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     CQRScreeningControls.addCoarseStepSeconds(builder, COARSE_STEP_SECONDS);
     CQRScreeningControls.addThresholdM(builder, THRESHOLD_M);
     CQRScreeningControls.addDurationSeconds(builder, DURATION_SECONDS);
+    CQRScreeningControls.addVerifiedCovarianceProducers(builder, VERIFIED_COVARIANCE_PRODUCERSOffset);
     CQRScreeningControls.addRequestedWorkers(builder, REQUESTED_WORKERS);
     CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
     CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
@@ -107,7 +118,7 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     return CQRScreeningControls.endCQRScreeningControls(builder);
   }
 
-  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addStartEpoch(FlatBufferBuilder builder, int START_EPOCHOffset) { builder.addOffset(0, START_EPOCHOffset, 0); }
   public static void addDurationSeconds(FlatBufferBuilder builder, double DURATION_SECONDS) { builder.addDouble(1, DURATION_SECONDS, 604800.0); }
   public static void addThresholdM(FlatBufferBuilder builder, double THRESHOLD_M) { builder.addDouble(2, THRESHOLD_M, 5000.0); }
@@ -126,6 +137,9 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
   public static void addInTrackM(FlatBufferBuilder builder, double IN_TRACK_M) { builder.addDouble(15, IN_TRACK_M, 0.0); }
   public static void addCrossTrackM(FlatBufferBuilder builder, double CROSS_TRACK_M) { builder.addDouble(16, CROSS_TRACK_M, 0.0); }
   public static void addVolumeCenter(FlatBufferBuilder builder, int VOLUME_CENTER) { builder.addByte(17, (byte) VOLUME_CENTER, (byte) 1); }
+  public static void addVerifiedCovarianceProducers(FlatBufferBuilder builder, int VERIFIED_COVARIANCE_PRODUCERSOffset) { builder.addOffset(18, VERIFIED_COVARIANCE_PRODUCERSOffset, 0); }
+  public static int createVerifiedCovarianceProducersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startVerifiedCovarianceProducersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endCQRScreeningControls(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // START_EPOCH

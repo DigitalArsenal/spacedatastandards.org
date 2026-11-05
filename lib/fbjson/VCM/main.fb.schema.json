@@ -987,7 +987,7 @@
         },
         "AP": {
           "value": 5,
-          "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+          "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
         },
         "UNSPECIFIED": {
           "value": 6,
@@ -2887,7 +2887,7 @@
             },
             "AP": {
               "value": 5,
-              "description": "SDN Advanced Propagator (AP): SGP4-XP with parts of the theory replaced (the drag atmosphere, tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+              "description": "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
             },
             "UNSPECIFIED": {
               "value": 6,

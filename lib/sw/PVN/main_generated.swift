@@ -78,6 +78,7 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let RETRIEVED_AT: VOffset = 24
     static let SOURCE_SHA256: VOffset = 26
     static let SOURCE_BYTES: VOffset = 28
+    static let PRODUCER_SHA256: VOffset = 30
   }
 
   ///  Publisher-stable, lowercase identifier of the source in the provider's
@@ -130,7 +131,13 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
   ///  the source was fetched by range. 0 when not stated.
   public var SOURCE_BYTES: UInt64 { let o = _accessor.offset(VT.SOURCE_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startPVN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  SHA-256 of the build of PRODUCER that made the product (its dist
+  ///  module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+  ///  that loaded the producing module: a module cannot hash its own bytes.
+  ///  Empty when not stated.
+  public var PRODUCER_SHA256: String? { let o = _accessor.offset(VT.PRODUCER_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PRODUCER_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCER_SHA256) }
+  public static func startPVN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(SOURCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_ID, at: VT.SOURCE_ID) }
   public static func add(SOURCE_KIND: pvnSourceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_KIND.rawValue, def: 0, at: VT.SOURCE_KIND) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -144,6 +151,7 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
   public static func add(SOURCE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_SHA256, at: VT.SOURCE_SHA256) }
   public static func add(SOURCE_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_BYTES, def: 0, at: VT.SOURCE_BYTES) }
+  public static func add(PRODUCER_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER_SHA256, at: VT.PRODUCER_SHA256) }
   public static func endPVN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPVN(
     _ fbb: inout FlatBufferBuilder,
@@ -159,7 +167,8 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SOURCE_VERSIONOffset SOURCE_VERSION: Offset = Offset(),
     RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset(),
     SOURCE_SHA256Offset SOURCE_SHA256: Offset = Offset(),
-    SOURCE_BYTES: UInt64 = 0
+    SOURCE_BYTES: UInt64 = 0,
+    PRODUCER_SHA256Offset PRODUCER_SHA256: Offset = Offset()
   ) -> Offset {
     let __start = PVN.startPVN(&fbb)
     PVN.add(SOURCE_ID: SOURCE_ID, &fbb)
@@ -175,6 +184,7 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PVN.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
     PVN.add(SOURCE_SHA256: SOURCE_SHA256, &fbb)
     PVN.add(SOURCE_BYTES: SOURCE_BYTES, &fbb)
+    PVN.add(PRODUCER_SHA256: PRODUCER_SHA256, &fbb)
     return PVN.endPVN(&fbb, start: __start)
   }
 
@@ -193,6 +203,7 @@ public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SOURCE_SHA256, fieldName: "SOURCE_SHA256", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SOURCE_BYTES, fieldName: "SOURCE_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PRODUCER_SHA256, fieldName: "PRODUCER_SHA256", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

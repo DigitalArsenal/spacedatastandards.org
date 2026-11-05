@@ -114,6 +114,15 @@ public final class PVN extends com.google.flatbuffers.Table {
    * the source was fetched by range. 0 when not stated.
    */
   public long SOURCE_BYTES() { int o = __offset(28); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * SHA-256 of the build of PRODUCER that made the product (its dist
+   * module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+   * that loaded the producing module: a module cannot hash its own bytes.
+   * Empty when not stated.
+   */
+  public String PRODUCER_SHA256() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PRODUCER_SHA256AsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer PRODUCER_SHA256InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
 
   public static int createPVN(FlatBufferBuilder builder,
       int SOURCE_IDOffset,
@@ -128,9 +137,11 @@ public final class PVN extends com.google.flatbuffers.Table {
       int SOURCE_VERSIONOffset,
       int RETRIEVED_ATOffset,
       int SOURCE_SHA256Offset,
-      long SOURCE_BYTES) {
-    builder.startTable(13);
+      long SOURCE_BYTES,
+      int PRODUCER_SHA256Offset) {
+    builder.startTable(14);
     PVN.addSourceBytes(builder, SOURCE_BYTES);
+    PVN.addProducerSha256(builder, PRODUCER_SHA256Offset);
     PVN.addSourceSha256(builder, SOURCE_SHA256Offset);
     PVN.addRetrievedAt(builder, RETRIEVED_ATOffset);
     PVN.addSourceVersion(builder, SOURCE_VERSIONOffset);
@@ -146,7 +157,7 @@ public final class PVN extends com.google.flatbuffers.Table {
     return PVN.endPVN(builder);
   }
 
-  public static void startPVN(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPVN(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addSourceId(FlatBufferBuilder builder, int SOURCE_IDOffset) { builder.addOffset(0, SOURCE_IDOffset, 0); }
   public static void addSourceKind(FlatBufferBuilder builder, byte SOURCE_KIND) { builder.addByte(1, SOURCE_KIND, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -160,6 +171,7 @@ public final class PVN extends com.google.flatbuffers.Table {
   public static void addRetrievedAt(FlatBufferBuilder builder, int RETRIEVED_ATOffset) { builder.addOffset(10, RETRIEVED_ATOffset, 0); }
   public static void addSourceSha256(FlatBufferBuilder builder, int SOURCE_SHA256Offset) { builder.addOffset(11, SOURCE_SHA256Offset, 0); }
   public static void addSourceBytes(FlatBufferBuilder builder, long SOURCE_BYTES) { builder.addLong(12, SOURCE_BYTES, 0L); }
+  public static void addProducerSha256(FlatBufferBuilder builder, int PRODUCER_SHA256Offset) { builder.addOffset(13, PRODUCER_SHA256Offset, 0); }
   public static int endPVN(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

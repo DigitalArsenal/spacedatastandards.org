@@ -210,22 +210,43 @@ class CQRScreeningControls extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \cqrVolumeAnchor::PRIMARY;
     }
 
+    /// Builds whose AP covariance a collision probability may use. An empty or
+    /// absent list means no collision probability from AP covariance.
+    /**
+     * @returnVectorOffset
+     */
+    public function getVERIFIED_COVARIANCE_PRODUCERS($j)
+    {
+        $o = $this->__offset(40);
+        $obj = new CQRVerifiedCovarianceProducer();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVERIFIED_COVARIANCE_PRODUCERSLength()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRScreeningControls(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRScreeningControls
      */
-    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM, $SCREENING, $RADIAL_M, $IN_TRACK_M, $CROSS_TRACK_M, $VOLUME_CENTER)
+    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM, $SCREENING, $RADIAL_M, $IN_TRACK_M, $CROSS_TRACK_M, $VOLUME_CENTER, $VERIFIED_COVARIANCE_PRODUCERS)
     {
-        $builder->startObject(18);
+        $builder->startObject(19);
         self::addSTART_EPOCH($builder, $START_EPOCH);
         self::addDURATION_SECONDS($builder, $DURATION_SECONDS);
         self::addTHRESHOLD_M($builder, $THRESHOLD_M);
@@ -244,6 +265,7 @@ class CQRScreeningControls extends Table
         self::addIN_TRACK_M($builder, $IN_TRACK_M);
         self::addCROSS_TRACK_M($builder, $CROSS_TRACK_M);
         self::addVOLUME_CENTER($builder, $VOLUME_CENTER);
+        self::addVERIFIED_COVARIANCE_PRODUCERS($builder, $VERIFIED_COVARIANCE_PRODUCERS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // START_EPOCH
         return $o;
@@ -427,6 +449,40 @@ class CQRScreeningControls extends Table
     public static function addVOLUME_CENTER(FlatBufferBuilder $builder, $VOLUME_CENTER)
     {
         $builder->addByteX(17, $VOLUME_CENTER, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addVERIFIED_COVARIANCE_PRODUCERS(FlatBufferBuilder $builder, $VERIFIED_COVARIANCE_PRODUCERS)
+    {
+        $builder->addOffsetX(18, $VERIFIED_COVARIANCE_PRODUCERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createVERIFIED_COVARIANCE_PRODUCERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startVERIFIED_COVARIANCE_PRODUCERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

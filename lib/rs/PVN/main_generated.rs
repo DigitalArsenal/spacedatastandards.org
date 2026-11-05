@@ -261,6 +261,7 @@ impl<'a> PVN<'a> {
     pub const VT_RETRIEVED_AT: ::flatbuffers::VOffsetT = 24;
     pub const VT_SOURCE_SHA256: ::flatbuffers::VOffsetT = 26;
     pub const VT_SOURCE_BYTES: ::flatbuffers::VOffsetT = 28;
+    pub const VT_PRODUCER_SHA256: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -274,6 +275,7 @@ impl<'a> PVN<'a> {
     ) -> ::flatbuffers::WIPOffset<PVN<'bldr>> {
         let mut builder = PVNBuilder::new(_fbb);
         builder.add_SOURCE_BYTES(args.SOURCE_BYTES);
+        if let Some(x) = args.PRODUCER_SHA256 { builder.add_PRODUCER_SHA256(x); }
         if let Some(x) = args.SOURCE_SHA256 { builder.add_SOURCE_SHA256(x); }
         if let Some(x) = args.RETRIEVED_AT { builder.add_RETRIEVED_AT(x); }
         if let Some(x) = args.SOURCE_VERSION { builder.add_SOURCE_VERSION(x); }
@@ -323,6 +325,9 @@ impl<'a> PVN<'a> {
             alloc::string::ToString::to_string(x)
         });
         let SOURCE_BYTES = self.SOURCE_BYTES();
+        let PRODUCER_SHA256 = self.PRODUCER_SHA256().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         PVNT {
             SOURCE_ID,
             SOURCE_KIND,
@@ -337,6 +342,7 @@ impl<'a> PVN<'a> {
             RETRIEVED_AT,
             SOURCE_SHA256,
             SOURCE_BYTES,
+            PRODUCER_SHA256,
         }
     }
 
@@ -470,6 +476,18 @@ impl<'a> PVN<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<u64>(PVN::VT_SOURCE_BYTES, Some(0)).unwrap()}
     }
+
+    /// SHA-256 of the build of PRODUCER that made the product (its dist
+    /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+    /// that loaded the producing module: a module cannot hash its own bytes.
+    /// Empty when not stated.
+    #[inline]
+    pub fn PRODUCER_SHA256(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PVN::VT_PRODUCER_SHA256, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PVN<'_> {
@@ -491,6 +509,7 @@ impl ::flatbuffers::Verifiable for PVN<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RETRIEVED_AT", Self::VT_RETRIEVED_AT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_SHA256", Self::VT_SOURCE_SHA256, false)?
             .visit_field::<u64>("SOURCE_BYTES", Self::VT_SOURCE_BYTES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_SHA256", Self::VT_PRODUCER_SHA256, false)?
             .finish();
         Ok(())
     }
@@ -510,6 +529,7 @@ pub struct PVNArgs<'a> {
     pub RETRIEVED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_BYTES: u64,
+    pub PRODUCER_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for PVNArgs<'a> {
@@ -529,6 +549,7 @@ impl<'a> Default for PVNArgs<'a> {
             RETRIEVED_AT: None,
             SOURCE_SHA256: None,
             SOURCE_BYTES: 0,
+            PRODUCER_SHA256: None,
         }
     }
 }
@@ -605,6 +626,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PVNBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PRODUCER_SHA256(&mut self, PRODUCER_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PVN::VT_PRODUCER_SHA256, PRODUCER_SHA256);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PVNBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PVNBuilder {
@@ -636,6 +662,7 @@ impl ::core::fmt::Debug for PVN<'_> {
         ds.field("RETRIEVED_AT", &self.RETRIEVED_AT());
         ds.field("SOURCE_SHA256", &self.SOURCE_SHA256());
         ds.field("SOURCE_BYTES", &self.SOURCE_BYTES());
+        ds.field("PRODUCER_SHA256", &self.PRODUCER_SHA256());
         ds.finish()
     }
 }
@@ -656,6 +683,7 @@ pub struct PVNT {
     pub RETRIEVED_AT: Option<alloc::string::String>,
     pub SOURCE_SHA256: Option<alloc::string::String>,
     pub SOURCE_BYTES: u64,
+    pub PRODUCER_SHA256: Option<alloc::string::String>,
 }
 
 impl Default for PVNT {
@@ -674,6 +702,7 @@ impl Default for PVNT {
             RETRIEVED_AT: None,
             SOURCE_SHA256: None,
             SOURCE_BYTES: 0,
+            PRODUCER_SHA256: None,
         }
     }
 }
@@ -716,6 +745,9 @@ impl PVNT {
             _fbb.create_string(x)
         });
         let SOURCE_BYTES = self.SOURCE_BYTES;
+        let PRODUCER_SHA256 = self.PRODUCER_SHA256.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         PVN::create(_fbb, &PVNArgs{
             SOURCE_ID,
             SOURCE_KIND,
@@ -730,6 +762,7 @@ impl PVNT {
             RETRIEVED_AT,
             SOURCE_SHA256,
             SOURCE_BYTES,
+            PRODUCER_SHA256,
         })
     }
 }

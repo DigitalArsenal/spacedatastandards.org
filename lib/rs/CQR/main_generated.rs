@@ -2536,6 +2536,217 @@ impl CQRObjectSourceT {
     }
 }
 
+pub enum CQRVerifiedCovarianceProducerOffset {}
+
+/// One covariance-producing build whose covariance realism was verified. A
+/// collision probability uses AP covariance only when the covariance's PVN
+/// names a listed build.
+#[derive(Copy, Clone, PartialEq)]
+pub struct CQRVerifiedCovarianceProducer<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CQRVerifiedCovarianceProducer<'a> {
+    type Inner = CQRVerifiedCovarianceProducer<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> CQRVerifiedCovarianceProducer<'a> {
+    pub const VT_PRODUCER: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PRODUCER_SHA256: ::flatbuffers::VOffsetT = 6;
+    pub const VT_VERIFICATION_REFERENCE: ::flatbuffers::VOffsetT = 8;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        CQRVerifiedCovarianceProducer { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args CQRVerifiedCovarianceProducerArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<CQRVerifiedCovarianceProducer<'bldr>> {
+        let mut builder = CQRVerifiedCovarianceProducerBuilder::new(_fbb);
+        if let Some(x) = args.VERIFICATION_REFERENCE { builder.add_VERIFICATION_REFERENCE(x); }
+        if let Some(x) = args.PRODUCER_SHA256 { builder.add_PRODUCER_SHA256(x); }
+        if let Some(x) = args.PRODUCER { builder.add_PRODUCER(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> CQRVerifiedCovarianceProducerT {
+        let PRODUCER = {
+            let x = self.PRODUCER();
+            alloc::string::ToString::to_string(x)
+        };
+        let PRODUCER_SHA256 = {
+            let x = self.PRODUCER_SHA256();
+            alloc::string::ToString::to_string(x)
+        };
+        let VERIFICATION_REFERENCE = self.VERIFICATION_REFERENCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        CQRVerifiedCovarianceProducerT {
+            PRODUCER,
+            PRODUCER_SHA256,
+            VERIFICATION_REFERENCE,
+        }
+    }
+
+    /// PVN.PRODUCER verbatim: the module identifier and its version.
+    #[inline]
+    pub fn PRODUCER(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRVerifiedCovarianceProducer::VT_PRODUCER, None).unwrap()}
+    }
+
+    /// SHA-256 of the producing build's dist module.wasm, 64 lowercase
+    /// hexadecimal characters (PVN.PRODUCER_SHA256).
+    #[inline]
+    pub fn PRODUCER_SHA256(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRVerifiedCovarianceProducer::VT_PRODUCER_SHA256, None).unwrap()}
+    }
+
+    /// Identifier of the record whose covariance realism E2E verified the build.
+    #[inline]
+    pub fn VERIFICATION_REFERENCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQRVerifiedCovarianceProducer::VT_VERIFICATION_REFERENCE, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for CQRVerifiedCovarianceProducer<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER", Self::VT_PRODUCER, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCER_SHA256", Self::VT_PRODUCER_SHA256, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERIFICATION_REFERENCE", Self::VT_VERIFICATION_REFERENCE, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct CQRVerifiedCovarianceProducerArgs<'a> {
+    pub PRODUCER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PRODUCER_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VERIFICATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for CQRVerifiedCovarianceProducerArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        CQRVerifiedCovarianceProducerArgs {
+            PRODUCER: None, // required field
+            PRODUCER_SHA256: None, // required field
+            VERIFICATION_REFERENCE: None,
+        }
+    }
+}
+
+pub struct CQRVerifiedCovarianceProducerBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRVerifiedCovarianceProducerBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PRODUCER(&mut self, PRODUCER: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRVerifiedCovarianceProducer::VT_PRODUCER, PRODUCER);
+    }
+
+    #[inline]
+    pub fn add_PRODUCER_SHA256(&mut self, PRODUCER_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRVerifiedCovarianceProducer::VT_PRODUCER_SHA256, PRODUCER_SHA256);
+    }
+
+    #[inline]
+    pub fn add_VERIFICATION_REFERENCE(&mut self, VERIFICATION_REFERENCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRVerifiedCovarianceProducer::VT_VERIFICATION_REFERENCE, VERIFICATION_REFERENCE);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRVerifiedCovarianceProducerBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        CQRVerifiedCovarianceProducerBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<CQRVerifiedCovarianceProducer<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, CQRVerifiedCovarianceProducer::VT_PRODUCER,"PRODUCER");
+        self.fbb_.required(o, CQRVerifiedCovarianceProducer::VT_PRODUCER_SHA256,"PRODUCER_SHA256");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for CQRVerifiedCovarianceProducer<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("CQRVerifiedCovarianceProducer");
+        ds.field("PRODUCER", &self.PRODUCER());
+        ds.field("PRODUCER_SHA256", &self.PRODUCER_SHA256());
+        ds.field("VERIFICATION_REFERENCE", &self.VERIFICATION_REFERENCE());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CQRVerifiedCovarianceProducerT {
+    pub PRODUCER: alloc::string::String,
+    pub PRODUCER_SHA256: alloc::string::String,
+    pub VERIFICATION_REFERENCE: Option<alloc::string::String>,
+}
+
+impl Default for CQRVerifiedCovarianceProducerT {
+    fn default() -> Self {
+        Self {
+            PRODUCER: alloc::string::ToString::to_string(""),
+            PRODUCER_SHA256: alloc::string::ToString::to_string(""),
+            VERIFICATION_REFERENCE: None,
+        }
+    }
+}
+
+impl CQRVerifiedCovarianceProducerT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<CQRVerifiedCovarianceProducer<'b>> {
+        let PRODUCER = Some({
+            let x = &self.PRODUCER;
+            _fbb.create_string(x)
+        });
+        let PRODUCER_SHA256 = Some({
+            let x = &self.PRODUCER_SHA256;
+            _fbb.create_string(x)
+        });
+        let VERIFICATION_REFERENCE = self.VERIFICATION_REFERENCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        CQRVerifiedCovarianceProducer::create(_fbb, &CQRVerifiedCovarianceProducerArgs{
+            PRODUCER,
+            PRODUCER_SHA256,
+            VERIFICATION_REFERENCE,
+        })
+    }
+}
+
 pub enum CQRScreeningControlsOffset {}
 
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
@@ -2572,6 +2783,7 @@ impl<'a> CQRScreeningControls<'a> {
     pub const VT_IN_TRACK_M: ::flatbuffers::VOffsetT = 34;
     pub const VT_CROSS_TRACK_M: ::flatbuffers::VOffsetT = 36;
     pub const VT_VOLUME_CENTER: ::flatbuffers::VOffsetT = 38;
+    pub const VT_VERIFIED_COVARIANCE_PRODUCERS: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2593,6 +2805,7 @@ impl<'a> CQRScreeningControls<'a> {
         builder.add_COARSE_STEP_SECONDS(args.COARSE_STEP_SECONDS);
         builder.add_THRESHOLD_M(args.THRESHOLD_M);
         builder.add_DURATION_SECONDS(args.DURATION_SECONDS);
+        if let Some(x) = args.VERIFIED_COVARIANCE_PRODUCERS { builder.add_VERIFIED_COVARIANCE_PRODUCERS(x); }
         builder.add_REQUESTED_WORKERS(args.REQUESTED_WORKERS);
         if let Some(x) = args.START_EPOCH { builder.add_START_EPOCH(x); }
         builder.add_VOLUME_CENTER(args.VOLUME_CENTER);
@@ -2627,6 +2840,9 @@ impl<'a> CQRScreeningControls<'a> {
         let IN_TRACK_M = self.IN_TRACK_M();
         let CROSS_TRACK_M = self.CROSS_TRACK_M();
         let VOLUME_CENTER = self.VOLUME_CENTER();
+        let VERIFIED_COVARIANCE_PRODUCERS = self.VERIFIED_COVARIANCE_PRODUCERS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         CQRScreeningControlsT {
             START_EPOCH,
             DURATION_SECONDS,
@@ -2646,6 +2862,7 @@ impl<'a> CQRScreeningControls<'a> {
             IN_TRACK_M,
             CROSS_TRACK_M,
             VOLUME_CENTER,
+            VERIFIED_COVARIANCE_PRODUCERS,
         }
     }
 
@@ -2801,6 +3018,16 @@ impl<'a> CQRScreeningControls<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<cqrVolumeAnchor>(CQRScreeningControls::VT_VOLUME_CENTER, Some(cqrVolumeAnchor::PRIMARY)).unwrap()}
     }
+
+    /// Builds whose AP covariance a collision probability may use. An empty or
+    /// absent list means no collision probability from AP covariance.
+    #[inline]
+    pub fn VERIFIED_COVARIANCE_PRODUCERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer>>>>(CQRScreeningControls::VT_VERIFIED_COVARIANCE_PRODUCERS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
@@ -2827,6 +3054,7 @@ impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
             .visit_field::<f64>("IN_TRACK_M", Self::VT_IN_TRACK_M, false)?
             .visit_field::<f64>("CROSS_TRACK_M", Self::VT_CROSS_TRACK_M, false)?
             .visit_field::<cqrVolumeAnchor>("VOLUME_CENTER", Self::VT_VOLUME_CENTER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer>>>>("VERIFIED_COVARIANCE_PRODUCERS", Self::VT_VERIFIED_COVARIANCE_PRODUCERS, false)?
             .finish();
         Ok(())
     }
@@ -2851,6 +3079,7 @@ pub struct CQRScreeningControlsArgs<'a> {
     pub IN_TRACK_M: f64,
     pub CROSS_TRACK_M: f64,
     pub VOLUME_CENTER: cqrVolumeAnchor,
+    pub VERIFIED_COVARIANCE_PRODUCERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer<'a>>>>>,
 }
 
 impl<'a> Default for CQRScreeningControlsArgs<'a> {
@@ -2875,6 +3104,7 @@ impl<'a> Default for CQRScreeningControlsArgs<'a> {
             IN_TRACK_M: 0.0,
             CROSS_TRACK_M: 0.0,
             VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
+            VERIFIED_COVARIANCE_PRODUCERS: None,
         }
     }
 }
@@ -2976,6 +3206,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRScreeningControlsBuilder<'
     }
 
     #[inline]
+    pub fn add_VERIFIED_COVARIANCE_PRODUCERS(&mut self, VERIFIED_COVARIANCE_PRODUCERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRScreeningControls::VT_VERIFIED_COVARIANCE_PRODUCERS, VERIFIED_COVARIANCE_PRODUCERS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRScreeningControlsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRScreeningControlsBuilder {
@@ -3013,6 +3248,7 @@ impl ::core::fmt::Debug for CQRScreeningControls<'_> {
         ds.field("IN_TRACK_M", &self.IN_TRACK_M());
         ds.field("CROSS_TRACK_M", &self.CROSS_TRACK_M());
         ds.field("VOLUME_CENTER", &self.VOLUME_CENTER());
+        ds.field("VERIFIED_COVARIANCE_PRODUCERS", &self.VERIFIED_COVARIANCE_PRODUCERS());
         ds.finish()
     }
 }
@@ -3038,6 +3274,7 @@ pub struct CQRScreeningControlsT {
     pub IN_TRACK_M: f64,
     pub CROSS_TRACK_M: f64,
     pub VOLUME_CENTER: cqrVolumeAnchor,
+    pub VERIFIED_COVARIANCE_PRODUCERS: Option<alloc::vec::Vec<CQRVerifiedCovarianceProducerT>>,
 }
 
 impl Default for CQRScreeningControlsT {
@@ -3061,6 +3298,7 @@ impl Default for CQRScreeningControlsT {
             IN_TRACK_M: 0.0,
             CROSS_TRACK_M: 0.0,
             VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
+            VERIFIED_COVARIANCE_PRODUCERS: None,
         }
     }
 }
@@ -3091,6 +3329,9 @@ impl CQRScreeningControlsT {
         let IN_TRACK_M = self.IN_TRACK_M;
         let CROSS_TRACK_M = self.CROSS_TRACK_M;
         let VOLUME_CENTER = self.VOLUME_CENTER;
+        let VERIFIED_COVARIANCE_PRODUCERS = self.VERIFIED_COVARIANCE_PRODUCERS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         CQRScreeningControls::create(_fbb, &CQRScreeningControlsArgs{
             START_EPOCH,
             DURATION_SECONDS,
@@ -3110,6 +3351,7 @@ impl CQRScreeningControlsT {
             IN_TRACK_M,
             CROSS_TRACK_M,
             VOLUME_CENTER,
+            VERIFIED_COVARIANCE_PRODUCERS,
         })
     }
 }
@@ -5340,6 +5582,7 @@ impl<'a> CQREvent<'a> {
     pub const VT_SECONDARY_COVARIANCE_BASIS: ::flatbuffers::VOffsetT = 72;
     pub const VT_SCREENING: ::flatbuffers::VOffsetT = 74;
     pub const VT_ADMITTED_BY: ::flatbuffers::VOffsetT = 76;
+    pub const VT_PROBABILITY_REFUSAL: ::flatbuffers::VOffsetT = 78;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5361,6 +5604,7 @@ impl<'a> CQREvent<'a> {
         builder.add_DILUTION_THRESHOLD_M(args.DILUTION_THRESHOLD_M);
         builder.add_RELATIVE_SPEED_M_S(args.RELATIVE_SPEED_M_S);
         builder.add_MISS_DISTANCE_M(args.MISS_DISTANCE_M);
+        if let Some(x) = args.PROBABILITY_REFUSAL { builder.add_PROBABILITY_REFUSAL(x); }
         if let Some(x) = args.SECONDARY_STATE { builder.add_SECONDARY_STATE(x); }
         if let Some(x) = args.PRIMARY_STATE { builder.add_PRIMARY_STATE(x); }
         if let Some(x) = args.CONJUNCTION_MESSAGE { builder.add_CONJUNCTION_MESSAGE(x); }
@@ -5459,6 +5703,9 @@ impl<'a> CQREvent<'a> {
         let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS();
         let SCREENING = self.SCREENING();
         let ADMITTED_BY = self.ADMITTED_BY();
+        let PROBABILITY_REFUSAL = self.PROBABILITY_REFUSAL().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         CQREventT {
             PRIMARY_ID,
             SECONDARY_ID,
@@ -5497,6 +5744,7 @@ impl<'a> CQREvent<'a> {
             SECONDARY_COVARIANCE_BASIS,
             SCREENING,
             ADMITTED_BY,
+            PROBABILITY_REFUSAL,
         }
     }
 
@@ -5812,6 +6060,17 @@ impl<'a> CQREvent<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<cqrVolumeAnchor>(CQREvent::VT_ADMITTED_BY, Some(cqrVolumeAnchor::UNSPECIFIED)).unwrap()}
     }
+
+    /// Why PROBABILITY is absent for an event that carries covariance, for
+    /// example an AP covariance whose producer is not in
+    /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+    #[inline]
+    pub fn PROBABILITY_REFUSAL(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CQREvent::VT_PROBABILITY_REFUSAL, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQREvent<'_> {
@@ -5857,6 +6116,7 @@ impl ::flatbuffers::Verifiable for CQREvent<'_> {
             .visit_field::<cqrCovarianceBasis>("SECONDARY_COVARIANCE_BASIS", Self::VT_SECONDARY_COVARIANCE_BASIS, false)?
             .visit_field::<cqrVolumeGeometry>("SCREENING", Self::VT_SCREENING, false)?
             .visit_field::<cqrVolumeAnchor>("ADMITTED_BY", Self::VT_ADMITTED_BY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROBABILITY_REFUSAL", Self::VT_PROBABILITY_REFUSAL, false)?
             .finish();
         Ok(())
     }
@@ -5900,6 +6160,7 @@ pub struct CQREventArgs<'a> {
     pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
     pub SCREENING: cqrVolumeGeometry,
     pub ADMITTED_BY: cqrVolumeAnchor,
+    pub PROBABILITY_REFUSAL: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for CQREventArgs<'a> {
@@ -5943,6 +6204,7 @@ impl<'a> Default for CQREventArgs<'a> {
             SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
             SCREENING: cqrVolumeGeometry::SPHERICAL,
             ADMITTED_BY: cqrVolumeAnchor::UNSPECIFIED,
+            PROBABILITY_REFUSAL: None,
         }
     }
 }
@@ -6139,6 +6401,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQREventBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PROBABILITY_REFUSAL(&mut self, PROBABILITY_REFUSAL: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQREvent::VT_PROBABILITY_REFUSAL, PROBABILITY_REFUSAL);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQREventBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQREventBuilder {
@@ -6197,6 +6464,7 @@ impl ::core::fmt::Debug for CQREvent<'_> {
         ds.field("SECONDARY_COVARIANCE_BASIS", &self.SECONDARY_COVARIANCE_BASIS());
         ds.field("SCREENING", &self.SCREENING());
         ds.field("ADMITTED_BY", &self.ADMITTED_BY());
+        ds.field("PROBABILITY_REFUSAL", &self.PROBABILITY_REFUSAL());
         ds.finish()
     }
 }
@@ -6241,6 +6509,7 @@ pub struct CQREventT {
     pub SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis,
     pub SCREENING: cqrVolumeGeometry,
     pub ADMITTED_BY: cqrVolumeAnchor,
+    pub PROBABILITY_REFUSAL: Option<alloc::string::String>,
 }
 
 impl Default for CQREventT {
@@ -6283,6 +6552,7 @@ impl Default for CQREventT {
             SECONDARY_COVARIANCE_BASIS: cqrCovarianceBasis::UNSPECIFIED,
             SCREENING: cqrVolumeGeometry::SPHERICAL,
             ADMITTED_BY: cqrVolumeAnchor::UNSPECIFIED,
+            PROBABILITY_REFUSAL: None,
         }
     }
 }
@@ -6358,6 +6628,9 @@ impl CQREventT {
         let SECONDARY_COVARIANCE_BASIS = self.SECONDARY_COVARIANCE_BASIS;
         let SCREENING = self.SCREENING;
         let ADMITTED_BY = self.ADMITTED_BY;
+        let PROBABILITY_REFUSAL = self.PROBABILITY_REFUSAL.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         CQREvent::create(_fbb, &CQREventArgs{
             PRIMARY_ID,
             SECONDARY_ID,
@@ -6396,6 +6669,7 @@ impl CQREventT {
             SECONDARY_COVARIANCE_BASIS,
             SCREENING,
             ADMITTED_BY,
+            PROBABILITY_REFUSAL,
         })
     }
 }
