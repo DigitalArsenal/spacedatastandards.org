@@ -153,6 +153,10 @@ def main():
             for child in os.listdir(subdir_path):
                 child_path = os.path.join(subdir_path, child)
                 if os.path.isdir(child_path):
+                    # Only flatc output is archived and listed: a hand-written directory (lib/ts/PROD) has no
+                    # schema, and the manifest's STANDARDS stay the schema/*/main.fbs set (check-release-integrity R3).
+                    if not os.path.isfile(os.path.join(schema_dir, child, "main.fbs")):
+                        continue
                     child_dist_dir = os.path.join(dist_dir, child)
                     os.makedirs(child_dist_dir, exist_ok=True)
 

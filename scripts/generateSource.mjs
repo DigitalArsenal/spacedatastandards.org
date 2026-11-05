@@ -551,11 +551,42 @@ async function writeOutputs(baseDir, outputs, datatype, schemaName, includes = [
   }
 }
 
+// A hand-written lib/ts directory (lib/ts/PROD, the product codec family) is not flatc output: its main.ts
+// starts with this marker line, the same test scripts/createTSIndex.js makes. The regenerator removes every
+// lib/<ext>/<child> it may have written (and any stray file under lib/) and leaves a hand-written directory alone.
+const HAND_WRITTEN_MARKER = "// hand-written: not generated";
+
+async function isHandWritten(directory) {
+  try {
+    const main = await fs.readFile(path.join(directory, "main.ts"), "utf8");
+    return main.split("\n", 1)[0].trim() === HAND_WRITTEN_MARKER;
+  } catch {
+    return false;
+  }
+}
+
+async function removeGeneratedOutputs() {
+  await fs.mkdir(LIB_DIR, { recursive: true });
+  for (const entry of await fs.readdir(LIB_DIR, { withFileTypes: true })) {
+    const extDir = path.join(LIB_DIR, entry.name);
+    if (!entry.isDirectory()) {
+      await fs.rm(extDir, { force: true });
+      continue;
+    }
+    for (const child of await fs.readdir(extDir, { withFileTypes: true })) {
+      const childPath = path.join(extDir, child.name);
+      if (child.isDirectory() && (await isHandWritten(childPath))) {
+        continue;
+      }
+      await fs.rm(childPath, { recursive: true, force: true });
+    }
+  }
+}
+
 async function main() {
   const schemaNames = await listSchemaDirectories();
   const datatypes = await loadDatatypeConfigs();
-  await fs.rm(LIB_DIR, { recursive: true, force: true });
-  await fs.mkdir(LIB_DIR, { recursive: true });
+  await removeGeneratedOutputs();
 
   const flatc = await FlatcRunner.init();
   for (const schemaName of schemaNames) {
