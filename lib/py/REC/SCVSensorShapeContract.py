@@ -6,6 +6,9 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+# carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+# definition and an analysis request never describe a shape in two types.
 class SCVSensorShapeContract(object):
     __slots__ = ['_tab']
 
@@ -158,8 +161,35 @@ class SCVSensorShapeContract(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+    # Clips the shape: a direction below the mask is outside the field of view.
+    # SCVSensorShapeContract
+    def AZ_EL_MASK(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SCVAzElMaskPoint import SCVAzElMaskPoint
+            obj = SCVAzElMaskPoint()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SCVSensorShapeContract
+    def AZ_EL_MASKLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SCVSensorShapeContract
+    def AZ_EL_MASKIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
 def SCVSensorShapeContractStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(17)
 
 def Start(builder):
     SCVSensorShapeContractStart(builder)
@@ -272,12 +302,31 @@ def SCVSensorShapeContractAddPOLYGON_FRAME(builder, POLYGON_FRAME):
 def AddPOLYGON_FRAME(builder, POLYGON_FRAME):
     SCVSensorShapeContractAddPOLYGON_FRAME(builder, POLYGON_FRAME)
 
+def SCVSensorShapeContractAddAZ_EL_MASK(builder, AZ_EL_MASK):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(AZ_EL_MASK), 0)
+
+def AddAZ_EL_MASK(builder, AZ_EL_MASK):
+    SCVSensorShapeContractAddAZ_EL_MASK(builder, AZ_EL_MASK)
+
+def SCVSensorShapeContractStartAZ_EL_MASKVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartAZ_EL_MASKVector(builder, numElems):
+    return SCVSensorShapeContractStartAZ_EL_MASKVector(builder, numElems)
+
+def SCVSensorShapeContractCreateAZ_EL_MASKVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAZ_EL_MASKVector(builder, data):
+    return SCVSensorShapeContractCreateAZ_EL_MASKVector(builder, data)
+
 def SCVSensorShapeContractEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return SCVSensorShapeContractEnd(builder)
 
+import SCVAzElMaskPoint
 import SCVVec3
 try:
     from typing import List
@@ -305,6 +354,7 @@ class SCVSensorShapeContractT(object):
         MAX_RANGE_M = 0.0,
         POLYGON_VERTICES = None,
         POLYGON_FRAME = 0,
+        AZ_EL_MASK = None,
     ):
         self.SHAPE_KIND = SHAPE_KIND  # type: int
         self.AXIS_CONVENTION = AXIS_CONVENTION  # type: int
@@ -322,6 +372,7 @@ class SCVSensorShapeContractT(object):
         self.MAX_RANGE_M = MAX_RANGE_M  # type: float
         self.POLYGON_VERTICES = POLYGON_VERTICES  # type: Optional[List[SCVVec3.SCVVec3T]]
         self.POLYGON_FRAME = POLYGON_FRAME  # type: int
+        self.AZ_EL_MASK = AZ_EL_MASK  # type: Optional[List[SCVAzElMaskPoint.SCVAzElMaskPointT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -367,6 +418,14 @@ class SCVSensorShapeContractT(object):
                     sCVVec3_ = SCVVec3.SCVVec3T.InitFromObj(SCVSensorShapeContract.POLYGON_VERTICES(i))
                     self.POLYGON_VERTICES.append(sCVVec3_)
         self.POLYGON_FRAME = SCVSensorShapeContract.POLYGON_FRAME()
+        if not SCVSensorShapeContract.AZ_EL_MASKIsNone():
+            self.AZ_EL_MASK = []
+            for i in range(SCVSensorShapeContract.AZ_EL_MASKLength()):
+                if SCVSensorShapeContract.AZ_EL_MASK(i) is None:
+                    self.AZ_EL_MASK.append(None)
+                else:
+                    sCVAzElMaskPoint_ = SCVAzElMaskPoint.SCVAzElMaskPointT.InitFromObj(SCVSensorShapeContract.AZ_EL_MASK(i))
+                    self.AZ_EL_MASK.append(sCVAzElMaskPoint_)
 
     # SCVSensorShapeContractT
     def Pack(self, builder):
@@ -378,6 +437,14 @@ class SCVSensorShapeContractT(object):
             for i in reversed(range(len(self.POLYGON_VERTICES))):
                 builder.PrependUOffsetTRelative(POLYGON_VERTICESlist[i])
             POLYGON_VERTICES = builder.EndVector()
+        if self.AZ_EL_MASK is not None:
+            AZ_EL_MASKlist = []
+            for i in range(len(self.AZ_EL_MASK)):
+                AZ_EL_MASKlist.append(self.AZ_EL_MASK[i].Pack(builder))
+            SCVSensorShapeContractStartAZ_EL_MASKVector(builder, len(self.AZ_EL_MASK))
+            for i in reversed(range(len(self.AZ_EL_MASK))):
+                builder.PrependUOffsetTRelative(AZ_EL_MASKlist[i])
+            AZ_EL_MASK = builder.EndVector()
         SCVSensorShapeContractStart(builder)
         SCVSensorShapeContractAddSHAPE_KIND(builder, self.SHAPE_KIND)
         SCVSensorShapeContractAddAXIS_CONVENTION(builder, self.AXIS_CONVENTION)
@@ -396,5 +463,7 @@ class SCVSensorShapeContractT(object):
         if self.POLYGON_VERTICES is not None:
             SCVSensorShapeContractAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
         SCVSensorShapeContractAddPOLYGON_FRAME(builder, self.POLYGON_FRAME)
+        if self.AZ_EL_MASK is not None:
+            SCVSensorShapeContractAddAZ_EL_MASK(builder, AZ_EL_MASK)
         SCVSensorShapeContract = SCVSensorShapeContractEnd(builder)
         return SCVSensorShapeContract

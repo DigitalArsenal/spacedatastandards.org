@@ -4,10 +4,27 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { OPPProvenance, OPPProvenanceT } from './OPPProvenance.js';
+import { SCVSensorShapeContract, SCVSensorShapeContractT } from './SCVSensorShapeContract.js';
+import { SNRMounting, SNRMountingT } from './SNRMounting.js';
+import { SNROpticalParameters, SNROpticalParametersT } from './SNROpticalParameters.js';
+import { SNRRfParameters, SNRRfParametersT } from './SNRRfParameters.js';
+import { SNRSpectralBand, SNRSpectralBandT } from './SNRSpectralBand.js';
+import { SensorType } from './SensorType.js';
+import { snrEmissionMode } from './snrEmissionMode.js';
 
 
 /**
- * Sensor Systems
+ * Sensor definition: the sensor a platform carries. One record is one sensor.
+ *
+ * UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+ * is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+ * string, table or vector is absent. A value is never invented, never zero as a
+ * placeholder, never copied from another sensor. Hz is the only frequency unit.
+ * Display colors are viewer preferences and never travel in this record.
+ *
+ * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+ * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  */
 export class SNR implements flatbuffers.IUnpackableObject<SNRT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,178 +48,218 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SNR');
 }
 
-TYPE():number {
+/**
+ * Stable identifier of this sensor. $SEN.ID of the same sensor.
+ */
+SENSOR_ID():string
+SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SENSOR_ID(optionalEncoding?:any):string|Uint8Array {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+  return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
-MODE():number {
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RESERVED1():number {
+/**
+ * $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+ */
+NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-MAX_RANGE():number {
+/**
+ * $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+ */
+OBJECT_ID():string|null
+OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MIN_RANGE():number {
+/**
+ * $SIT.ID of the ground site the sensor is at.
+ */
+SITE_ID():string|null
+SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-FOV_AZIMUTH():number {
+/**
+ * Stable non-catalogue entity key of the platform, for a platform with neither
+ * a catalogue number nor a $SIT.
+ */
+ENTITY_ID():string|null
+ENTITY_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ENTITY_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-FOV_ELEVATION():number {
+TYPE():SensorType {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : SensorType.UNSPECIFIED;
 }
 
-ANGULAR_RESOLUTION():number {
+EMISSION():snrEmissionMode {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : snrEmissionMode.UNSPECIFIED;
 }
 
-RANGE_RESOLUTION():number {
+/**
+ * Spectral bands in Hz. One list serves a radar, a multispectral imager and
+ * a passive RF receiver. Empty = none stated.
+ */
+SPECTRAL_BANDS(index: number, obj?:SNRSpectralBand):SNRSpectralBand|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? (obj || new SNRSpectralBand()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
-UPDATE_RATE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-DETECTION_THRESHOLD():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-AZIMUTH_SCAN_RATE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-ELEVATION_SCAN_RATE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-POWER():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-FREQUENCY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-RESERVED(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
-}
-
-reservedLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+spectralBandsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-reservedArray():Uint8Array|null {
+/**
+ * Field-of-view shape: the same table $SCV analyses use.
+ */
+FIELD_OF_VIEW(obj?:SCVSensorShapeContract):SCVSensorShapeContract|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new SCVSensorShapeContract()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+ */
+FIELD_OF_VIEW_PROVENANCE(obj?:OPPProvenance):OPPProvenance|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new OPPProvenance()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+MOUNTING(obj?:SNRMounting):SNRMounting|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new SNRMounting()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+RF(obj?:SNRRfParameters):SNRRfParameters|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new SNRRfParameters()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+OPTICAL(obj?:SNROpticalParameters):SNROpticalParameters|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new SNROpticalParameters()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Where the values of this record were read. A published real-world sensor
+ * carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+ * carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+ * for that section.
+ */
+PROVENANCE(obj?:OPPProvenance):OPPProvenance|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new OPPProvenance()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startSNR(builder:flatbuffers.Builder) {
   builder.startObject(16);
 }
 
-static addType(builder:flatbuffers.Builder, TYPE:number) {
-  builder.addFieldInt8(0, TYPE, 0);
+static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, SENSOR_IDOffset, 0);
 }
 
-static addMode(builder:flatbuffers.Builder, MODE:number) {
-  builder.addFieldInt8(1, MODE, 0);
+static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, NAMEOffset, 0);
 }
 
-static addReserved1(builder:flatbuffers.Builder, RESERVED1:number) {
-  builder.addFieldInt16(2, RESERVED1, 0);
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(2, NORAD_CAT_ID, 0);
 }
 
-static addMaxRange(builder:flatbuffers.Builder, MAX_RANGE:number) {
-  builder.addFieldFloat64(3, MAX_RANGE, 0.0);
+static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, OBJECT_IDOffset, 0);
 }
 
-static addMinRange(builder:flatbuffers.Builder, MIN_RANGE:number) {
-  builder.addFieldFloat64(4, MIN_RANGE, 0.0);
+static addSiteId(builder:flatbuffers.Builder, SITE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, SITE_IDOffset, 0);
 }
 
-static addFovAzimuth(builder:flatbuffers.Builder, FOV_AZIMUTH:number) {
-  builder.addFieldFloat32(5, FOV_AZIMUTH, 0.0);
+static addEntityId(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, ENTITY_IDOffset, 0);
 }
 
-static addFovElevation(builder:flatbuffers.Builder, FOV_ELEVATION:number) {
-  builder.addFieldFloat32(6, FOV_ELEVATION, 0.0);
+static addType(builder:flatbuffers.Builder, TYPE:SensorType) {
+  builder.addFieldInt8(6, TYPE, SensorType.UNSPECIFIED);
 }
 
-static addAngularResolution(builder:flatbuffers.Builder, ANGULAR_RESOLUTION:number) {
-  builder.addFieldFloat32(7, ANGULAR_RESOLUTION, 0.0);
+static addEmission(builder:flatbuffers.Builder, EMISSION:snrEmissionMode) {
+  builder.addFieldInt8(7, EMISSION, snrEmissionMode.UNSPECIFIED);
 }
 
-static addRangeResolution(builder:flatbuffers.Builder, RANGE_RESOLUTION:number) {
-  builder.addFieldFloat32(8, RANGE_RESOLUTION, 0.0);
+static addSpectralBands(builder:flatbuffers.Builder, SPECTRAL_BANDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, SPECTRAL_BANDSOffset, 0);
 }
 
-static addUpdateRate(builder:flatbuffers.Builder, UPDATE_RATE:number) {
-  builder.addFieldFloat32(9, UPDATE_RATE, 0.0);
-}
-
-static addDetectionThreshold(builder:flatbuffers.Builder, DETECTION_THRESHOLD:number) {
-  builder.addFieldFloat32(10, DETECTION_THRESHOLD, 0.0);
-}
-
-static addAzimuthScanRate(builder:flatbuffers.Builder, AZIMUTH_SCAN_RATE:number) {
-  builder.addFieldFloat32(11, AZIMUTH_SCAN_RATE, 0.0);
-}
-
-static addElevationScanRate(builder:flatbuffers.Builder, ELEVATION_SCAN_RATE:number) {
-  builder.addFieldFloat32(12, ELEVATION_SCAN_RATE, 0.0);
-}
-
-static addPower(builder:flatbuffers.Builder, POWER:number) {
-  builder.addFieldFloat32(13, POWER, 0.0);
-}
-
-static addFrequency(builder:flatbuffers.Builder, FREQUENCY:number) {
-  builder.addFieldFloat32(14, FREQUENCY, 0.0);
-}
-
-static addReserved(builder:flatbuffers.Builder, RESERVEDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, RESERVEDOffset, 0);
-}
-
-static createReservedVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
-  builder.startVector(1, data.length, 1);
+static createSpectralBandsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]!);
+    builder.addOffset(data[i]!);
   }
   return builder.endVector();
 }
 
-static startReservedVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(1, numElems, 1);
+static startSpectralBandsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addFieldOfView(builder:flatbuffers.Builder, FIELD_OF_VIEWOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, FIELD_OF_VIEWOffset, 0);
+}
+
+static addFieldOfViewProvenance(builder:flatbuffers.Builder, FIELD_OF_VIEW_PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, FIELD_OF_VIEW_PROVENANCEOffset, 0);
+}
+
+static addMounting(builder:flatbuffers.Builder, MOUNTINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, MOUNTINGOffset, 0);
+}
+
+static addRf(builder:flatbuffers.Builder, RFOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, RFOffset, 0);
+}
+
+static addOptical(builder:flatbuffers.Builder, OPTICALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, OPTICALOffset, 0);
+}
+
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, PROVENANCEOffset, 0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, NOTESOffset, 0);
 }
 
 static endSNR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
+  builder.requiredField(offset, 4) // SENSOR_ID
   return offset;
 }
 
@@ -214,110 +271,103 @@ static finishSizePrefixedSNRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SNR', true);
 }
 
-static createSNR(builder:flatbuffers.Builder, TYPE:number, MODE:number, RESERVED1:number, MAX_RANGE:number, MIN_RANGE:number, FOV_AZIMUTH:number, FOV_ELEVATION:number, ANGULAR_RESOLUTION:number, RANGE_RESOLUTION:number, UPDATE_RATE:number, DETECTION_THRESHOLD:number, AZIMUTH_SCAN_RATE:number, ELEVATION_SCAN_RATE:number, POWER:number, FREQUENCY:number, RESERVEDOffset:flatbuffers.Offset):flatbuffers.Offset {
-  SNR.startSNR(builder);
-  SNR.addType(builder, TYPE);
-  SNR.addMode(builder, MODE);
-  SNR.addReserved1(builder, RESERVED1);
-  SNR.addMaxRange(builder, MAX_RANGE);
-  SNR.addMinRange(builder, MIN_RANGE);
-  SNR.addFovAzimuth(builder, FOV_AZIMUTH);
-  SNR.addFovElevation(builder, FOV_ELEVATION);
-  SNR.addAngularResolution(builder, ANGULAR_RESOLUTION);
-  SNR.addRangeResolution(builder, RANGE_RESOLUTION);
-  SNR.addUpdateRate(builder, UPDATE_RATE);
-  SNR.addDetectionThreshold(builder, DETECTION_THRESHOLD);
-  SNR.addAzimuthScanRate(builder, AZIMUTH_SCAN_RATE);
-  SNR.addElevationScanRate(builder, ELEVATION_SCAN_RATE);
-  SNR.addPower(builder, POWER);
-  SNR.addFrequency(builder, FREQUENCY);
-  SNR.addReserved(builder, RESERVEDOffset);
-  return SNR.endSNR(builder);
-}
 
 unpack(): SNRT {
   return new SNRT(
+    this.SENSOR_ID(),
+    this.NAME(),
+    this.NORAD_CAT_ID(),
+    this.OBJECT_ID(),
+    this.SITE_ID(),
+    this.ENTITY_ID(),
     this.TYPE(),
-    this.MODE(),
-    this.RESERVED1(),
-    this.MAX_RANGE(),
-    this.MIN_RANGE(),
-    this.FOV_AZIMUTH(),
-    this.FOV_ELEVATION(),
-    this.ANGULAR_RESOLUTION(),
-    this.RANGE_RESOLUTION(),
-    this.UPDATE_RATE(),
-    this.DETECTION_THRESHOLD(),
-    this.AZIMUTH_SCAN_RATE(),
-    this.ELEVATION_SCAN_RATE(),
-    this.POWER(),
-    this.FREQUENCY(),
-    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength())
+    this.EMISSION(),
+    this.bb!.createObjList<SNRSpectralBand, SNRSpectralBandT>(this.SPECTRAL_BANDS.bind(this), this.spectralBandsLength()),
+    (this.FIELD_OF_VIEW() !== null ? this.FIELD_OF_VIEW()!.unpack() : null),
+    (this.FIELD_OF_VIEW_PROVENANCE() !== null ? this.FIELD_OF_VIEW_PROVENANCE()!.unpack() : null),
+    (this.MOUNTING() !== null ? this.MOUNTING()!.unpack() : null),
+    (this.RF() !== null ? this.RF()!.unpack() : null),
+    (this.OPTICAL() !== null ? this.OPTICAL()!.unpack() : null),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.NOTES()
   );
 }
 
 
 unpackTo(_o: SNRT): void {
+  _o.SENSOR_ID = this.SENSOR_ID();
+  _o.NAME = this.NAME();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
+  _o.OBJECT_ID = this.OBJECT_ID();
+  _o.SITE_ID = this.SITE_ID();
+  _o.ENTITY_ID = this.ENTITY_ID();
   _o.TYPE = this.TYPE();
-  _o.MODE = this.MODE();
-  _o.RESERVED1 = this.RESERVED1();
-  _o.MAX_RANGE = this.MAX_RANGE();
-  _o.MIN_RANGE = this.MIN_RANGE();
-  _o.FOV_AZIMUTH = this.FOV_AZIMUTH();
-  _o.FOV_ELEVATION = this.FOV_ELEVATION();
-  _o.ANGULAR_RESOLUTION = this.ANGULAR_RESOLUTION();
-  _o.RANGE_RESOLUTION = this.RANGE_RESOLUTION();
-  _o.UPDATE_RATE = this.UPDATE_RATE();
-  _o.DETECTION_THRESHOLD = this.DETECTION_THRESHOLD();
-  _o.AZIMUTH_SCAN_RATE = this.AZIMUTH_SCAN_RATE();
-  _o.ELEVATION_SCAN_RATE = this.ELEVATION_SCAN_RATE();
-  _o.POWER = this.POWER();
-  _o.FREQUENCY = this.FREQUENCY();
-  _o.RESERVED = this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength());
+  _o.EMISSION = this.EMISSION();
+  _o.SPECTRAL_BANDS = this.bb!.createObjList<SNRSpectralBand, SNRSpectralBandT>(this.SPECTRAL_BANDS.bind(this), this.spectralBandsLength());
+  _o.FIELD_OF_VIEW = (this.FIELD_OF_VIEW() !== null ? this.FIELD_OF_VIEW()!.unpack() : null);
+  _o.FIELD_OF_VIEW_PROVENANCE = (this.FIELD_OF_VIEW_PROVENANCE() !== null ? this.FIELD_OF_VIEW_PROVENANCE()!.unpack() : null);
+  _o.MOUNTING = (this.MOUNTING() !== null ? this.MOUNTING()!.unpack() : null);
+  _o.RF = (this.RF() !== null ? this.RF()!.unpack() : null);
+  _o.OPTICAL = (this.OPTICAL() !== null ? this.OPTICAL()!.unpack() : null);
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.NOTES = this.NOTES();
 }
 }
 
 export class SNRT implements flatbuffers.IGeneratedObject {
 constructor(
-  public TYPE: number = 0,
-  public MODE: number = 0,
-  public RESERVED1: number = 0,
-  public MAX_RANGE: number = 0.0,
-  public MIN_RANGE: number = 0.0,
-  public FOV_AZIMUTH: number = 0.0,
-  public FOV_ELEVATION: number = 0.0,
-  public ANGULAR_RESOLUTION: number = 0.0,
-  public RANGE_RESOLUTION: number = 0.0,
-  public UPDATE_RATE: number = 0.0,
-  public DETECTION_THRESHOLD: number = 0.0,
-  public AZIMUTH_SCAN_RATE: number = 0.0,
-  public ELEVATION_SCAN_RATE: number = 0.0,
-  public POWER: number = 0.0,
-  public FREQUENCY: number = 0.0,
-  public RESERVED: (number)[] = []
+  public SENSOR_ID: string|Uint8Array|null = null,
+  public NAME: string|Uint8Array|null = null,
+  public NORAD_CAT_ID: number = 0,
+  public OBJECT_ID: string|Uint8Array|null = null,
+  public SITE_ID: string|Uint8Array|null = null,
+  public ENTITY_ID: string|Uint8Array|null = null,
+  public TYPE: SensorType = SensorType.UNSPECIFIED,
+  public EMISSION: snrEmissionMode = snrEmissionMode.UNSPECIFIED,
+  public SPECTRAL_BANDS: (SNRSpectralBandT)[] = [],
+  public FIELD_OF_VIEW: SCVSensorShapeContractT|null = null,
+  public FIELD_OF_VIEW_PROVENANCE: OPPProvenanceT|null = null,
+  public MOUNTING: SNRMountingT|null = null,
+  public RF: SNRRfParametersT|null = null,
+  public OPTICAL: SNROpticalParametersT|null = null,
+  public PROVENANCE: OPPProvenanceT|null = null,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const RESERVED = SNR.createReservedVector(builder, this.RESERVED);
+  const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
+  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
+  const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
+  const SITE_ID = (this.SITE_ID !== null ? builder.createString(this.SITE_ID!) : 0);
+  const ENTITY_ID = (this.ENTITY_ID !== null ? builder.createString(this.ENTITY_ID!) : 0);
+  const SPECTRAL_BANDS = SNR.createSpectralBandsVector(builder, builder.createObjectOffsetList(this.SPECTRAL_BANDS));
+  const FIELD_OF_VIEW = (this.FIELD_OF_VIEW !== null ? this.FIELD_OF_VIEW!.pack(builder) : 0);
+  const FIELD_OF_VIEW_PROVENANCE = (this.FIELD_OF_VIEW_PROVENANCE !== null ? this.FIELD_OF_VIEW_PROVENANCE!.pack(builder) : 0);
+  const MOUNTING = (this.MOUNTING !== null ? this.MOUNTING!.pack(builder) : 0);
+  const RF = (this.RF !== null ? this.RF!.pack(builder) : 0);
+  const OPTICAL = (this.OPTICAL !== null ? this.OPTICAL!.pack(builder) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
-  return SNR.createSNR(builder,
-    this.TYPE,
-    this.MODE,
-    this.RESERVED1,
-    this.MAX_RANGE,
-    this.MIN_RANGE,
-    this.FOV_AZIMUTH,
-    this.FOV_ELEVATION,
-    this.ANGULAR_RESOLUTION,
-    this.RANGE_RESOLUTION,
-    this.UPDATE_RATE,
-    this.DETECTION_THRESHOLD,
-    this.AZIMUTH_SCAN_RATE,
-    this.ELEVATION_SCAN_RATE,
-    this.POWER,
-    this.FREQUENCY,
-    RESERVED
-  );
+  SNR.startSNR(builder);
+  SNR.addSensorId(builder, SENSOR_ID);
+  SNR.addName(builder, NAME);
+  SNR.addNoradCatId(builder, this.NORAD_CAT_ID);
+  SNR.addObjectId(builder, OBJECT_ID);
+  SNR.addSiteId(builder, SITE_ID);
+  SNR.addEntityId(builder, ENTITY_ID);
+  SNR.addType(builder, this.TYPE);
+  SNR.addEmission(builder, this.EMISSION);
+  SNR.addSpectralBands(builder, SPECTRAL_BANDS);
+  SNR.addFieldOfView(builder, FIELD_OF_VIEW);
+  SNR.addFieldOfViewProvenance(builder, FIELD_OF_VIEW_PROVENANCE);
+  SNR.addMounting(builder, MOUNTING);
+  SNR.addRf(builder, RF);
+  SNR.addOptical(builder, OPTICAL);
+  SNR.addProvenance(builder, PROVENANCE);
+  SNR.addNotes(builder, NOTES);
+
+  return SNR.endSNR(builder);
 }
 }

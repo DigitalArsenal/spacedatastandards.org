@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { SCVAzElMaskPoint, SCVAzElMaskPointT } from './SCVAzElMaskPoint.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorAxisConvention } from './scvSensorAxisConvention.js';
@@ -11,6 +12,11 @@ import { scvSensorRangeBoundaryKind } from './scvSensorRangeBoundaryKind.js';
 import { scvSensorShapeKind } from './scvSensorShapeKind.js';
 
 
+/**
+ * The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+ * carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+ * definition and an analysis request never describe a shape in two types.
+ */
 export class SCVSensorShapeContract implements flatbuffers.IUnpackableObject<SCVSensorShapeContractT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -114,8 +120,22 @@ POLYGON_FRAME():scvCoordinateFrame {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvCoordinateFrame.UNKNOWN;
 }
 
+/**
+ * Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+ * Clips the shape: a direction below the mask is outside the field of view.
+ */
+AZ_EL_MASK(index: number, obj?:SCVAzElMaskPoint):SCVAzElMaskPoint|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new SCVAzElMaskPoint()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+azElMaskLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startSCVSensorShapeContract(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addShapeKind(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind) {
@@ -194,12 +214,28 @@ static addPolygonFrame(builder:flatbuffers.Builder, POLYGON_FRAME:scvCoordinateF
   builder.addFieldInt8(15, POLYGON_FRAME, scvCoordinateFrame.UNKNOWN);
 }
 
+static addAzElMask(builder:flatbuffers.Builder, AZ_EL_MASKOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, AZ_EL_MASKOffset, 0);
+}
+
+static createAzElMaskVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAzElMaskVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endSCVSensorShapeContract(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind, AXIS_CONVENTION:scvSensorAxisConvention, RANGE_BOUNDARY:scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG:number, INNER_HALF_ANGLE_DEG:number, MIN_CLOCK_ANGLE_DEG:number, MAX_CLOCK_ANGLE_DEG:number, X_HALF_ANGLE_DEG:number, Y_HALF_ANGLE_DEG:number, INNER_LOOK_ANGLE_DEG:number, OUTER_LOOK_ANGLE_DEG:number, SAR_SAMPLING_DENSITY:number, MIN_RANGE_M:number, MAX_RANGE_M:number, POLYGON_VERTICESOffset:flatbuffers.Offset, POLYGON_FRAME:scvCoordinateFrame):flatbuffers.Offset {
+static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind, AXIS_CONVENTION:scvSensorAxisConvention, RANGE_BOUNDARY:scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG:number, INNER_HALF_ANGLE_DEG:number, MIN_CLOCK_ANGLE_DEG:number, MAX_CLOCK_ANGLE_DEG:number, X_HALF_ANGLE_DEG:number, Y_HALF_ANGLE_DEG:number, INNER_LOOK_ANGLE_DEG:number, OUTER_LOOK_ANGLE_DEG:number, SAR_SAMPLING_DENSITY:number, MIN_RANGE_M:number, MAX_RANGE_M:number, POLYGON_VERTICESOffset:flatbuffers.Offset, POLYGON_FRAME:scvCoordinateFrame, AZ_EL_MASKOffset:flatbuffers.Offset):flatbuffers.Offset {
   SCVSensorShapeContract.startSCVSensorShapeContract(builder);
   SCVSensorShapeContract.addShapeKind(builder, SHAPE_KIND);
   SCVSensorShapeContract.addAxisConvention(builder, AXIS_CONVENTION);
@@ -217,6 +253,7 @@ static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE_KIND:scvS
   SCVSensorShapeContract.addMaxRangeM(builder, MAX_RANGE_M);
   SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
   SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
+  SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASKOffset);
   return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
 }
 
@@ -237,7 +274,8 @@ unpack(): SCVSensorShapeContractT {
     this.MIN_RANGE_M(),
     this.MAX_RANGE_M(),
     this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength()),
-    this.POLYGON_FRAME()
+    this.POLYGON_FRAME(),
+    this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength())
   );
 }
 
@@ -259,6 +297,7 @@ unpackTo(_o: SCVSensorShapeContractT): void {
   _o.MAX_RANGE_M = this.MAX_RANGE_M();
   _o.POLYGON_VERTICES = this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength());
   _o.POLYGON_FRAME = this.POLYGON_FRAME();
+  _o.AZ_EL_MASK = this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength());
 }
 }
 
@@ -279,12 +318,14 @@ constructor(
   public MIN_RANGE_M: number = 0.0,
   public MAX_RANGE_M: number = 0.0,
   public POLYGON_VERTICES: (SCVVec3T)[] = [],
-  public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN
+  public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN,
+  public AZ_EL_MASK: (SCVAzElMaskPointT)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POLYGON_VERTICES = SCVSensorShapeContract.createPolygonVerticesVector(builder, builder.createObjectOffsetList(this.POLYGON_VERTICES));
+  const AZ_EL_MASK = SCVSensorShapeContract.createAzElMaskVector(builder, builder.createObjectOffsetList(this.AZ_EL_MASK));
 
   return SCVSensorShapeContract.createSCVSensorShapeContract(builder,
     this.SHAPE_KIND,
@@ -302,7 +343,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.MIN_RANGE_M,
     this.MAX_RANGE_M,
     POLYGON_VERTICES,
-    this.POLYGON_FRAME
+    this.POLYGON_FRAME,
+    AZ_EL_MASK
   );
 }
 }

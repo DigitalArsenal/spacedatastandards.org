@@ -8,6 +8,10 @@ import Common
 
 import FlatBuffers
 
+///  What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+///  members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+///  by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+///  a writer always sets TYPE.
 public enum SensorType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -28,47 +32,501 @@ public enum SensorType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case sonarActive = 13
   case sonarPassive = 14
   case acoustic = 15
+  case opticalTelescope = 16
+  case multispectralImager = 17
+  case hyperspectralImager = 18
+  case sar = 19
+  case altimeter = 20
+  case scatterometer = 21
+  case radiometer = 22
+  case lidar = 23
+  case passiveRfEsm = 24
+  case sigint = 25
+  case commsAntenna = 26
+  case ttAndCAntenna = 27
+  case phasedArrayEarlyWarning = 28
+  ///  The writer states no kind. The default of TYPE, so an unset TYPE is not
+  ///  read as RADAR_PULSE.
+  case unspecified = 29
 
-  public static var max: SensorType { return .acoustic }
+  public static var max: SensorType { return .unspecified }
   public static var min: SensorType { return .radarPulse }
 }
 
 
-public enum SensorMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  Whether the sensor radiates to sense (ACTIVE) or only receives (PASSIVE).
+public enum snrEmissionMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case off = 0
-  case standby = 1
-  case search = 2
-  case acquisition = 3
-  case track = 4
-  case trackWhileScan = 5
-  case designate = 6
-  case jammed = 7
+  case unspecified = 0
+  case active = 1
+  case passive = 2
 
-  public static var max: SensorMode { return .jammed }
-  public static var min: SensorMode { return .off }
+  public static var max: snrEmissionMode { return .passive }
+  public static var min: snrEmissionMode { return .unspecified }
 }
 
 
-public enum TrackQuality: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  How a spectral band is used. Matters for antennas and EW receivers whose
+///  transmit and receive bands differ.
+public enum snrBandDirection: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case none_ = 0
-  case tentative = 1
-  case firm = 2
-  case locked = 3
-  case coasting = 4
-  case lost = 5
+  case unspecified = 0
+  case receive = 1
+  case transmit = 2
+  case transceive = 3
 
-  public static var max: TrackQuality { return .lost }
-  public static var min: TrackQuality { return .none_ }
+  public static var max: snrBandDirection { return .transceive }
+  public static var min: snrBandDirection { return .unspecified }
 }
 
 
-///  Sensor Systems
+///  The frame MOUNTING angles are expressed in.
+public enum snrMountingFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Fixed to the platform body; the angles are body-axis angles.
+  case platformBody = 1
+  ///  Local vertical, local horizontal at the platform: radial, along-track,
+  ///  cross-track.
+  case lvlh = 2
+  ///  Local east-north-up at a ground site. Azimuth clockwise from north,
+  ///  elevation above the local horizontal.
+  case localEnu = 3
+
+  public static var max: snrMountingFrame { return .localEnu }
+  public static var min: snrMountingFrame { return .unspecified }
+}
+
+
+///  Where the sensor points by default.
+public enum snrPointingMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Toward the center of the body the platform orbits.
+  case nadir = 1
+  ///  Fixed at the boresight angles in the mounting frame.
+  case fixed = 2
+  ///  Slews to follow a designated target or object.
+  case track = 3
+  ///  Sweeps at the scan rates through the field of regard.
+  case scan = 4
+
+  public static var max: snrPointingMode { return .scan }
+  public static var min: snrPointingMode { return .unspecified }
+}
+
+
+///  Radiation pattern of an RF antenna. Names follow OrbPro's antenna patterns.
+public enum snrAntennaPattern: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  case isotropic = 1
+  case hemispheric = 2
+  case parabolic = 3
+  case gaussian = 4
+  case pencil = 5
+  case helix = 6
+  case dipole = 7
+  case ringed = 8
+  ///  The earth-coverage (teardrop) beam of a geostationary antenna.
+  case teardrop = 9
+  case toroidal = 10
+  case cardioid = 11
+
+  public static var max: snrAntennaPattern { return .cardioid }
+  public static var min: snrAntennaPattern { return .unspecified }
+}
+
+
+///  One spectral band of a sensor, in Hz. Hz is the unit for every band, optical
+///  included; a consumer that wants wavelength converts (lambda = c / f).
+///  Positive quantities use the default 0 for "not stated".
+public struct SNRSpectralBand: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SNR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNRSpectralBand.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DESIGNATION: VOffset = 6
+    static let FREQ_LOW_HZ: VOffset = 8
+    static let FREQ_HIGH_HZ: VOffset = 10
+    static let DIRECTION: VOffset = 12
+    static let PROVENANCE: VOffset = 14
+  }
+
+  ///  The band as its source names it: "UHF", "X-band", "VNIR", "Green".
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").
+  ///  Verbatim, never derived from the frequencies. RF designations use $RFB
+  ///  rfBandDesignation spellings. Absent when the source states none.
+  public var DESIGNATION: String? { let o = _accessor.offset(VT.DESIGNATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESIGNATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESIGNATION) }
+  ///  Lower edge, Hz. 0 = not stated.
+  public var FREQ_LOW_HZ: Double { let o = _accessor.offset(VT.FREQ_LOW_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper edge, Hz. 0 = not stated.
+  public var FREQ_HIGH_HZ: Double { let o = _accessor.offset(VT.FREQ_HIGH_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DIRECTION: snrBandDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .unspecified : snrBandDirection(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Where this band was read, when it differs from the record's PROVENANCE.
+  public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSNRSpectralBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DESIGNATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESIGNATION, at: VT.DESIGNATION) }
+  public static func add(FREQ_LOW_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_LOW_HZ, def: 0.0, at: VT.FREQ_LOW_HZ) }
+  public static func add(FREQ_HIGH_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_HIGH_HZ, def: 0.0, at: VT.FREQ_HIGH_HZ) }
+  public static func add(DIRECTION: snrBandDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endSNRSpectralBand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSNRSpectralBand(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    DESIGNATIONOffset DESIGNATION: Offset = Offset(),
+    FREQ_LOW_HZ: Double = 0.0,
+    FREQ_HIGH_HZ: Double = 0.0,
+    DIRECTION: snrBandDirection = .unspecified,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
+  ) -> Offset {
+    let __start = SNRSpectralBand.startSNRSpectralBand(&fbb)
+    SNRSpectralBand.add(NAME: NAME, &fbb)
+    SNRSpectralBand.add(DESIGNATION: DESIGNATION, &fbb)
+    SNRSpectralBand.add(FREQ_LOW_HZ: FREQ_LOW_HZ, &fbb)
+    SNRSpectralBand.add(FREQ_HIGH_HZ: FREQ_HIGH_HZ, &fbb)
+    SNRSpectralBand.add(DIRECTION: DIRECTION, &fbb)
+    SNRSpectralBand.add(PROVENANCE: PROVENANCE, &fbb)
+    return SNRSpectralBand.endSNRSpectralBand(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESIGNATION, fieldName: "DESIGNATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FREQ_LOW_HZ, fieldName: "FREQ_LOW_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.FREQ_HIGH_HZ, fieldName: "FREQ_HIGH_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: snrBandDirection.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    _v.finish()
+  }
+}
+
+///  How the sensor sits on its platform and where it points. Angles are degrees
+///  and signed, so an unset angle is NaN (absent), never 0.
+public struct SNRMounting: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SNR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNRMounting.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FRAME: VOffset = 4
+    static let BORESIGHT_AZIMUTH_DEG: VOffset = 6
+    static let BORESIGHT_ELEVATION_DEG: VOffset = 8
+    static let ROLL_DEG: VOffset = 10
+    static let POINTING: VOffset = 12
+    static let SCAN_AZIMUTH_RATE_DEG_S: VOffset = 14
+    static let SCAN_ELEVATION_RATE_DEG_S: VOffset = 16
+    static let AZIMUTH_LIMIT_MIN_DEG: VOffset = 18
+    static let AZIMUTH_LIMIT_MAX_DEG: VOffset = 20
+    static let ELEVATION_LIMIT_MIN_DEG: VOffset = 22
+    static let ELEVATION_LIMIT_MAX_DEG: VOffset = 24
+    static let PROVENANCE: VOffset = 26
+  }
+
+  public var FRAME: snrMountingFrame { let o = _accessor.offset(VT.FRAME); return o == 0 ? .unspecified : snrMountingFrame(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Boresight azimuth in FRAME. NaN = not stated.
+  public var BORESIGHT_AZIMUTH_DEG: Double { let o = _accessor.offset(VT.BORESIGHT_AZIMUTH_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Boresight elevation in FRAME. NaN = not stated.
+  public var BORESIGHT_ELEVATION_DEG: Double { let o = _accessor.offset(VT.BORESIGHT_ELEVATION_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Roll about the boresight. NaN = not stated.
+  public var ROLL_DEG: Double { let o = _accessor.offset(VT.ROLL_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POINTING: snrPointingMode { let o = _accessor.offset(VT.POINTING); return o == 0 ? .unspecified : snrPointingMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  public var SCAN_AZIMUTH_RATE_DEG_S: Double { let o = _accessor.offset(VT.SCAN_AZIMUTH_RATE_DEG_S); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  public var SCAN_ELEVATION_RATE_DEG_S: Double { let o = _accessor.offset(VT.SCAN_ELEVATION_RATE_DEG_S); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Field-of-regard limits in FRAME, degrees. NaN = no limit stated.
+  ///  ELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.
+  public var AZIMUTH_LIMIT_MIN_DEG: Double { let o = _accessor.offset(VT.AZIMUTH_LIMIT_MIN_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var AZIMUTH_LIMIT_MAX_DEG: Double { let o = _accessor.offset(VT.AZIMUTH_LIMIT_MAX_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION_LIMIT_MIN_DEG: Double { let o = _accessor.offset(VT.ELEVATION_LIMIT_MIN_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ELEVATION_LIMIT_MAX_DEG: Double { let o = _accessor.offset(VT.ELEVATION_LIMIT_MAX_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Where the mounting was read, when it differs from the record's PROVENANCE.
+  public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSNRMounting(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(FRAME: snrMountingFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME.rawValue, def: 0, at: VT.FRAME) }
+  public static func add(BORESIGHT_AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BORESIGHT_AZIMUTH_DEG, def: .nan, at: VT.BORESIGHT_AZIMUTH_DEG) }
+  public static func add(BORESIGHT_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BORESIGHT_ELEVATION_DEG, def: .nan, at: VT.BORESIGHT_ELEVATION_DEG) }
+  public static func add(ROLL_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL_DEG, def: .nan, at: VT.ROLL_DEG) }
+  public static func add(POINTING: snrPointingMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING.rawValue, def: 0, at: VT.POINTING) }
+  public static func add(SCAN_AZIMUTH_RATE_DEG_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_AZIMUTH_RATE_DEG_S, def: .nan, at: VT.SCAN_AZIMUTH_RATE_DEG_S) }
+  public static func add(SCAN_ELEVATION_RATE_DEG_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_ELEVATION_RATE_DEG_S, def: .nan, at: VT.SCAN_ELEVATION_RATE_DEG_S) }
+  public static func add(AZIMUTH_LIMIT_MIN_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_LIMIT_MIN_DEG, def: .nan, at: VT.AZIMUTH_LIMIT_MIN_DEG) }
+  public static func add(AZIMUTH_LIMIT_MAX_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_LIMIT_MAX_DEG, def: .nan, at: VT.AZIMUTH_LIMIT_MAX_DEG) }
+  public static func add(ELEVATION_LIMIT_MIN_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_LIMIT_MIN_DEG, def: .nan, at: VT.ELEVATION_LIMIT_MIN_DEG) }
+  public static func add(ELEVATION_LIMIT_MAX_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_LIMIT_MAX_DEG, def: .nan, at: VT.ELEVATION_LIMIT_MAX_DEG) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endSNRMounting(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSNRMounting(
+    _ fbb: inout FlatBufferBuilder,
+    FRAME: snrMountingFrame = .unspecified,
+    BORESIGHT_AZIMUTH_DEG: Double = .nan,
+    BORESIGHT_ELEVATION_DEG: Double = .nan,
+    ROLL_DEG: Double = .nan,
+    POINTING: snrPointingMode = .unspecified,
+    SCAN_AZIMUTH_RATE_DEG_S: Double = .nan,
+    SCAN_ELEVATION_RATE_DEG_S: Double = .nan,
+    AZIMUTH_LIMIT_MIN_DEG: Double = .nan,
+    AZIMUTH_LIMIT_MAX_DEG: Double = .nan,
+    ELEVATION_LIMIT_MIN_DEG: Double = .nan,
+    ELEVATION_LIMIT_MAX_DEG: Double = .nan,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
+  ) -> Offset {
+    let __start = SNRMounting.startSNRMounting(&fbb)
+    SNRMounting.add(FRAME: FRAME, &fbb)
+    SNRMounting.add(BORESIGHT_AZIMUTH_DEG: BORESIGHT_AZIMUTH_DEG, &fbb)
+    SNRMounting.add(BORESIGHT_ELEVATION_DEG: BORESIGHT_ELEVATION_DEG, &fbb)
+    SNRMounting.add(ROLL_DEG: ROLL_DEG, &fbb)
+    SNRMounting.add(POINTING: POINTING, &fbb)
+    SNRMounting.add(SCAN_AZIMUTH_RATE_DEG_S: SCAN_AZIMUTH_RATE_DEG_S, &fbb)
+    SNRMounting.add(SCAN_ELEVATION_RATE_DEG_S: SCAN_ELEVATION_RATE_DEG_S, &fbb)
+    SNRMounting.add(AZIMUTH_LIMIT_MIN_DEG: AZIMUTH_LIMIT_MIN_DEG, &fbb)
+    SNRMounting.add(AZIMUTH_LIMIT_MAX_DEG: AZIMUTH_LIMIT_MAX_DEG, &fbb)
+    SNRMounting.add(ELEVATION_LIMIT_MIN_DEG: ELEVATION_LIMIT_MIN_DEG, &fbb)
+    SNRMounting.add(ELEVATION_LIMIT_MAX_DEG: ELEVATION_LIMIT_MAX_DEG, &fbb)
+    SNRMounting.add(PROVENANCE: PROVENANCE, &fbb)
+    return SNRMounting.endSNRMounting(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FRAME, fieldName: "FRAME", required: false, type: snrMountingFrame.self)
+    try _v.visit(field: VT.BORESIGHT_AZIMUTH_DEG, fieldName: "BORESIGHT_AZIMUTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.BORESIGHT_ELEVATION_DEG, fieldName: "BORESIGHT_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ROLL_DEG, fieldName: "ROLL_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.POINTING, fieldName: "POINTING", required: false, type: snrPointingMode.self)
+    try _v.visit(field: VT.SCAN_AZIMUTH_RATE_DEG_S, fieldName: "SCAN_AZIMUTH_RATE_DEG_S", required: false, type: Double.self)
+    try _v.visit(field: VT.SCAN_ELEVATION_RATE_DEG_S, fieldName: "SCAN_ELEVATION_RATE_DEG_S", required: false, type: Double.self)
+    try _v.visit(field: VT.AZIMUTH_LIMIT_MIN_DEG, fieldName: "AZIMUTH_LIMIT_MIN_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.AZIMUTH_LIMIT_MAX_DEG, fieldName: "AZIMUTH_LIMIT_MAX_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION_LIMIT_MIN_DEG, fieldName: "ELEVATION_LIMIT_MIN_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ELEVATION_LIMIT_MAX_DEG, fieldName: "ELEVATION_LIMIT_MAX_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    _v.finish()
+  }
+}
+
+///  Radio-frequency parameters. Positive quantities use 0 for "not stated";
+///  ANTENNA_GAIN_DBI is signed and uses NaN.
+public struct SNRRfParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SNR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNRRfParameters.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ANTENNA_PATTERN: VOffset = 4
+    static let PEAK_POWER_W: VOffset = 6
+    static let ANTENNA_GAIN_DBI: VOffset = 8
+    static let BEAMWIDTH_AZIMUTH_DEG: VOffset = 10
+    static let BEAMWIDTH_ELEVATION_DEG: VOffset = 12
+    static let BANDWIDTH_HZ: VOffset = 14
+    static let POLARIZATION: VOffset = 16
+    static let PRF_HZ: VOffset = 18
+    static let PULSE_WIDTH_S: VOffset = 20
+    static let PROVENANCE: VOffset = 22
+  }
+
+  public var ANTENNA_PATTERN: snrAntennaPattern { let o = _accessor.offset(VT.ANTENNA_PATTERN); return o == 0 ? .unspecified : snrAntennaPattern(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Peak transmit power, W.
+  public var PEAK_POWER_W: Double { let o = _accessor.offset(VT.PEAK_POWER_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Antenna gain, dBi. NaN = not stated.
+  public var ANTENNA_GAIN_DBI: Double { let o = _accessor.offset(VT.ANTENNA_GAIN_DBI); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  3 dB beamwidth in azimuth, degrees.
+  public var BEAMWIDTH_AZIMUTH_DEG: Double { let o = _accessor.offset(VT.BEAMWIDTH_AZIMUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  3 dB beamwidth in elevation, degrees.
+  public var BEAMWIDTH_ELEVATION_DEG: Double { let o = _accessor.offset(VT.BEAMWIDTH_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Instantaneous bandwidth, Hz.
+  public var BANDWIDTH_HZ: Double { let o = _accessor.offset(VT.BANDWIDTH_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .unknown : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Pulse repetition frequency, Hz (radar).
+  public var PRF_HZ: Double { let o = _accessor.offset(VT.PRF_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pulse width, seconds (radar).
+  public var PULSE_WIDTH_S: Double { let o = _accessor.offset(VT.PULSE_WIDTH_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Where these values were read, when it differs from the record's PROVENANCE.
+  public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSNRRfParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(ANTENNA_PATTERN: snrAntennaPattern, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANTENNA_PATTERN.rawValue, def: 0, at: VT.ANTENNA_PATTERN) }
+  public static func add(PEAK_POWER_W: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_POWER_W, def: 0.0, at: VT.PEAK_POWER_W) }
+  public static func add(ANTENNA_GAIN_DBI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANTENNA_GAIN_DBI, def: .nan, at: VT.ANTENNA_GAIN_DBI) }
+  public static func add(BEAMWIDTH_AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH_AZIMUTH_DEG, def: 0.0, at: VT.BEAMWIDTH_AZIMUTH_DEG) }
+  public static func add(BEAMWIDTH_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH_ELEVATION_DEG, def: 0.0, at: VT.BEAMWIDTH_ELEVATION_DEG) }
+  public static func add(BANDWIDTH_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH_HZ, def: 0.0, at: VT.BANDWIDTH_HZ) }
+  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 6, at: VT.POLARIZATION) }
+  public static func add(PRF_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRF_HZ, def: 0.0, at: VT.PRF_HZ) }
+  public static func add(PULSE_WIDTH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PULSE_WIDTH_S, def: 0.0, at: VT.PULSE_WIDTH_S) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endSNRRfParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSNRRfParameters(
+    _ fbb: inout FlatBufferBuilder,
+    ANTENNA_PATTERN: snrAntennaPattern = .unspecified,
+    PEAK_POWER_W: Double = 0.0,
+    ANTENNA_GAIN_DBI: Double = .nan,
+    BEAMWIDTH_AZIMUTH_DEG: Double = 0.0,
+    BEAMWIDTH_ELEVATION_DEG: Double = 0.0,
+    BANDWIDTH_HZ: Double = 0.0,
+    POLARIZATION: rfPolarization = .unknown,
+    PRF_HZ: Double = 0.0,
+    PULSE_WIDTH_S: Double = 0.0,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
+  ) -> Offset {
+    let __start = SNRRfParameters.startSNRRfParameters(&fbb)
+    SNRRfParameters.add(ANTENNA_PATTERN: ANTENNA_PATTERN, &fbb)
+    SNRRfParameters.add(PEAK_POWER_W: PEAK_POWER_W, &fbb)
+    SNRRfParameters.add(ANTENNA_GAIN_DBI: ANTENNA_GAIN_DBI, &fbb)
+    SNRRfParameters.add(BEAMWIDTH_AZIMUTH_DEG: BEAMWIDTH_AZIMUTH_DEG, &fbb)
+    SNRRfParameters.add(BEAMWIDTH_ELEVATION_DEG: BEAMWIDTH_ELEVATION_DEG, &fbb)
+    SNRRfParameters.add(BANDWIDTH_HZ: BANDWIDTH_HZ, &fbb)
+    SNRRfParameters.add(POLARIZATION: POLARIZATION, &fbb)
+    SNRRfParameters.add(PRF_HZ: PRF_HZ, &fbb)
+    SNRRfParameters.add(PULSE_WIDTH_S: PULSE_WIDTH_S, &fbb)
+    SNRRfParameters.add(PROVENANCE: PROVENANCE, &fbb)
+    return SNRRfParameters.endSNRRfParameters(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ANTENNA_PATTERN, fieldName: "ANTENNA_PATTERN", required: false, type: snrAntennaPattern.self)
+    try _v.visit(field: VT.PEAK_POWER_W, fieldName: "PEAK_POWER_W", required: false, type: Double.self)
+    try _v.visit(field: VT.ANTENNA_GAIN_DBI, fieldName: "ANTENNA_GAIN_DBI", required: false, type: Double.self)
+    try _v.visit(field: VT.BEAMWIDTH_AZIMUTH_DEG, fieldName: "BEAMWIDTH_AZIMUTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.BEAMWIDTH_ELEVATION_DEG, fieldName: "BEAMWIDTH_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.BANDWIDTH_HZ, fieldName: "BANDWIDTH_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
+    try _v.visit(field: VT.PRF_HZ, fieldName: "PRF_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.PULSE_WIDTH_S, fieldName: "PULSE_WIDTH_S", required: false, type: Double.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    _v.finish()
+  }
+}
+
+///  Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,
+///  which is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.
+public struct SNROpticalParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SNR" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SNROpticalParameters.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let APERTURE_M: VOffset = 4
+    static let FOCAL_LENGTH_M: VOffset = 6
+    static let IFOV_RAD: VOffset = 8
+    static let GSD_M: VOffset = 10
+    static let LIMITING_MAGNITUDE: VOffset = 12
+    static let DETECTOR: VOffset = 14
+    static let PROVENANCE: VOffset = 16
+  }
+
+  ///  Clear aperture diameter, m.
+  public var APERTURE_M: Double { let o = _accessor.offset(VT.APERTURE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Focal length, m.
+  public var FOCAL_LENGTH_M: Double { let o = _accessor.offset(VT.FOCAL_LENGTH_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Instantaneous field of view of one detector element, radians.
+  public var IFOV_RAD: Double { let o = _accessor.offset(VT.IFOV_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Ground sample distance, m, at the nadir and nominal altitude the source
+  ///  states (qualifiers go in PROVENANCE.NOTES).
+  public var GSD_M: Double { let o = _accessor.offset(VT.GSD_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Limiting visual magnitude. NaN = not stated.
+  public var LIMITING_MAGNITUDE: Double { let o = _accessor.offset(VT.LIMITING_MAGNITUDE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Detector as the source names it ("CCD", "HgCdTe", "sCMOS").
+  public var DETECTOR: String? { let o = _accessor.offset(VT.DETECTOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DETECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DETECTOR) }
+  ///  Where these values were read, when it differs from the record's PROVENANCE.
+  public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSNROpticalParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(APERTURE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APERTURE_M, def: 0.0, at: VT.APERTURE_M) }
+  public static func add(FOCAL_LENGTH_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOCAL_LENGTH_M, def: 0.0, at: VT.FOCAL_LENGTH_M) }
+  public static func add(IFOV_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IFOV_RAD, def: 0.0, at: VT.IFOV_RAD) }
+  public static func add(GSD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GSD_M, def: 0.0, at: VT.GSD_M) }
+  public static func add(LIMITING_MAGNITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIMITING_MAGNITUDE, def: .nan, at: VT.LIMITING_MAGNITUDE) }
+  public static func add(DETECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DETECTOR, at: VT.DETECTOR) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func endSNROpticalParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSNROpticalParameters(
+    _ fbb: inout FlatBufferBuilder,
+    APERTURE_M: Double = 0.0,
+    FOCAL_LENGTH_M: Double = 0.0,
+    IFOV_RAD: Double = 0.0,
+    GSD_M: Double = 0.0,
+    LIMITING_MAGNITUDE: Double = .nan,
+    DETECTOROffset DETECTOR: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
+  ) -> Offset {
+    let __start = SNROpticalParameters.startSNROpticalParameters(&fbb)
+    SNROpticalParameters.add(APERTURE_M: APERTURE_M, &fbb)
+    SNROpticalParameters.add(FOCAL_LENGTH_M: FOCAL_LENGTH_M, &fbb)
+    SNROpticalParameters.add(IFOV_RAD: IFOV_RAD, &fbb)
+    SNROpticalParameters.add(GSD_M: GSD_M, &fbb)
+    SNROpticalParameters.add(LIMITING_MAGNITUDE: LIMITING_MAGNITUDE, &fbb)
+    SNROpticalParameters.add(DETECTOR: DETECTOR, &fbb)
+    SNROpticalParameters.add(PROVENANCE: PROVENANCE, &fbb)
+    return SNROpticalParameters.endSNROpticalParameters(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.APERTURE_M, fieldName: "APERTURE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.FOCAL_LENGTH_M, fieldName: "FOCAL_LENGTH_M", required: false, type: Double.self)
+    try _v.visit(field: VT.IFOV_RAD, fieldName: "IFOV_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.GSD_M, fieldName: "GSD_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LIMITING_MAGNITUDE, fieldName: "LIMITING_MAGNITUDE", required: false, type: Double.self)
+    try _v.visit(field: VT.DETECTOR, fieldName: "DETECTOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    _v.finish()
+  }
+}
+
+///  Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+///  UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+///  is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+///  string, table or vector is absent. A value is never invented, never zero as a
+///  placeholder, never copied from another sensor. Hz is the only frequency unit.
+///  Display colors are viewer preferences and never travel in this record.
+///
+///  Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+///  SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -81,116 +539,135 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let TYPE: VOffset = 4
-    static let MODE: VOffset = 6
-    static let RESERVED1: VOffset = 8
-    static let MAX_RANGE: VOffset = 10
-    static let MIN_RANGE: VOffset = 12
-    static let FOV_AZIMUTH: VOffset = 14
-    static let FOV_ELEVATION: VOffset = 16
-    static let ANGULAR_RESOLUTION: VOffset = 18
-    static let RANGE_RESOLUTION: VOffset = 20
-    static let UPDATE_RATE: VOffset = 22
-    static let DETECTION_THRESHOLD: VOffset = 24
-    static let AZIMUTH_SCAN_RATE: VOffset = 26
-    static let ELEVATION_SCAN_RATE: VOffset = 28
-    static let POWER: VOffset = 30
-    static let FREQUENCY: VOffset = 32
-    static let RESERVED: VOffset = 34
+    static let SENSOR_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let NORAD_CAT_ID: VOffset = 8
+    static let OBJECT_ID: VOffset = 10
+    static let SITE_ID: VOffset = 12
+    static let ENTITY_ID: VOffset = 14
+    static let TYPE: VOffset = 16
+    static let EMISSION: VOffset = 18
+    static let SPECTRAL_BANDS: VOffset = 20
+    static let FIELD_OF_VIEW: VOffset = 22
+    static let FIELD_OF_VIEW_PROVENANCE: VOffset = 24
+    static let MOUNTING: VOffset = 26
+    static let RF: VOffset = 28
+    static let OPTICAL: VOffset = 30
+    static let PROVENANCE: VOffset = 32
+    static let NOTES: VOffset = 34
   }
 
-  public var TYPE: UInt8 { let o = _accessor.offset(VT.TYPE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var MODE: UInt8 { let o = _accessor.offset(VT.MODE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var RESERVED1: UInt16 { let o = _accessor.offset(VT.RESERVED1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var MAX_RANGE: Double { let o = _accessor.offset(VT.MAX_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MIN_RANGE: Double { let o = _accessor.offset(VT.MIN_RANGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FOV_AZIMUTH: Float32 { let o = _accessor.offset(VT.FOV_AZIMUTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var FOV_ELEVATION: Float32 { let o = _accessor.offset(VT.FOV_ELEVATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ANGULAR_RESOLUTION: Float32 { let o = _accessor.offset(VT.ANGULAR_RESOLUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RANGE_RESOLUTION: Float32 { let o = _accessor.offset(VT.RANGE_RESOLUTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var UPDATE_RATE: Float32 { let o = _accessor.offset(VT.UPDATE_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var DETECTION_THRESHOLD: Float32 { let o = _accessor.offset(VT.DETECTION_THRESHOLD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AZIMUTH_SCAN_RATE: Float32 { let o = _accessor.offset(VT.AZIMUTH_SCAN_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var ELEVATION_SCAN_RATE: Float32 { let o = _accessor.offset(VT.ELEVATION_SCAN_RATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var POWER: Float32 { let o = _accessor.offset(VT.POWER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var FREQUENCY: Float32 { let o = _accessor.offset(VT.FREQUENCY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
+  ///  Stable identifier of this sensor. $SEN.ID of the same sensor.
+  public var SENSOR_ID: String! { let o = _accessor.offset(VT.SENSOR_ID); return _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SENSOR_ID) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  $SIT.ID of the ground site the sensor is at.
+  public var SITE_ID: String? { let o = _accessor.offset(VT.SITE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SITE_ID) }
+  ///  Stable non-catalogue entity key of the platform, for a platform with neither
+  ///  a catalogue number nor a $SIT.
+  public var ENTITY_ID: String? { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_ID) }
+  public var TYPE: SensorType { let o = _accessor.offset(VT.TYPE); return o == 0 ? .unspecified : SensorType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  public var EMISSION: snrEmissionMode { let o = _accessor.offset(VT.EMISSION); return o == 0 ? .unspecified : snrEmissionMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Spectral bands in Hz. One list serves a radar, a multispectral imager and
+  ///  a passive RF receiver. Empty = none stated.
+  public var SPECTRAL_BANDS: FlatbufferVector<SNRSpectralBand> { return _accessor.vector(at: VT.SPECTRAL_BANDS, byteSize: 4) }
+  ///  Field-of-view shape: the same table $SCV analyses use.
+  public var FIELD_OF_VIEW: SCVSensorShapeContract? { let o = _accessor.offset(VT.FIELD_OF_VIEW); return o == 0 ? nil : SCVSensorShapeContract(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+  public var FIELD_OF_VIEW_PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.FIELD_OF_VIEW_PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var MOUNTING: SNRMounting? { let o = _accessor.offset(VT.MOUNTING); return o == 0 ? nil : SNRMounting(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RF: SNRRfParameters? { let o = _accessor.offset(VT.RF); return o == 0 ? nil : SNRRfParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var OPTICAL: SNROpticalParameters? { let o = _accessor.offset(VT.OPTICAL); return o == 0 ? nil : SNROpticalParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Where the values of this record were read. A published real-world sensor
+  ///  carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+  ///  carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+  ///  for that section.
+  public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
   public static func startSNR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
-  public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VT.TYPE) }
-  public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VT.MODE) }
-  public static func add(RESERVED1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESERVED1, def: 0, at: VT.RESERVED1) }
-  public static func add(MAX_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE, def: 0.0, at: VT.MAX_RANGE) }
-  public static func add(MIN_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE, def: 0.0, at: VT.MIN_RANGE) }
-  public static func add(FOV_AZIMUTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_AZIMUTH, def: 0.0, at: VT.FOV_AZIMUTH) }
-  public static func add(FOV_ELEVATION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOV_ELEVATION, def: 0.0, at: VT.FOV_ELEVATION) }
-  public static func add(ANGULAR_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGULAR_RESOLUTION, def: 0.0, at: VT.ANGULAR_RESOLUTION) }
-  public static func add(RANGE_RESOLUTION: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RESOLUTION, def: 0.0, at: VT.RANGE_RESOLUTION) }
-  public static func add(UPDATE_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATE_RATE, def: 0.0, at: VT.UPDATE_RATE) }
-  public static func add(DETECTION_THRESHOLD: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_THRESHOLD, def: 0.0, at: VT.DETECTION_THRESHOLD) }
-  public static func add(AZIMUTH_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_SCAN_RATE, def: 0.0, at: VT.AZIMUTH_SCAN_RATE) }
-  public static func add(ELEVATION_SCAN_RATE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_SCAN_RATE, def: 0.0, at: VT.ELEVATION_SCAN_RATE) }
-  public static func add(POWER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VT.POWER) }
-  public static func add(FREQUENCY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VT.FREQUENCY) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
-  public static func endSNR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SITE_ID, at: VT.SITE_ID) }
+  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
+  public static func add(TYPE: SensorType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 29, at: VT.TYPE) }
+  public static func add(EMISSION: snrEmissionMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMISSION.rawValue, def: 0, at: VT.EMISSION) }
+  public static func addVectorOf(SPECTRAL_BANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_BANDS, at: VT.SPECTRAL_BANDS) }
+  public static func add(FIELD_OF_VIEW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_OF_VIEW, at: VT.FIELD_OF_VIEW) }
+  public static func add(FIELD_OF_VIEW_PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_OF_VIEW_PROVENANCE, at: VT.FIELD_OF_VIEW_PROVENANCE) }
+  public static func add(MOUNTING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOUNTING, at: VT.MOUNTING) }
+  public static func add(RF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RF, at: VT.RF) }
+  public static func add(OPTICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPTICAL, at: VT.OPTICAL) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func endSNR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createSNR(
     _ fbb: inout FlatBufferBuilder,
-    TYPE: UInt8 = 0,
-    MODE: UInt8 = 0,
-    RESERVED1: UInt16 = 0,
-    MAX_RANGE: Double = 0.0,
-    MIN_RANGE: Double = 0.0,
-    FOV_AZIMUTH: Float32 = 0.0,
-    FOV_ELEVATION: Float32 = 0.0,
-    ANGULAR_RESOLUTION: Float32 = 0.0,
-    RANGE_RESOLUTION: Float32 = 0.0,
-    UPDATE_RATE: Float32 = 0.0,
-    DETECTION_THRESHOLD: Float32 = 0.0,
-    AZIMUTH_SCAN_RATE: Float32 = 0.0,
-    ELEVATION_SCAN_RATE: Float32 = 0.0,
-    POWER: Float32 = 0.0,
-    FREQUENCY: Float32 = 0.0,
-    RESERVEDVectorOffset RESERVED: Offset = Offset()
+    SENSOR_IDOffset SENSOR_ID: Offset,
+    NAMEOffset NAME: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    SITE_IDOffset SITE_ID: Offset = Offset(),
+    ENTITY_IDOffset ENTITY_ID: Offset = Offset(),
+    TYPE: SensorType = .unspecified,
+    EMISSION: snrEmissionMode = .unspecified,
+    SPECTRAL_BANDSVectorOffset SPECTRAL_BANDS: Offset = Offset(),
+    FIELD_OF_VIEWOffset FIELD_OF_VIEW: Offset = Offset(),
+    FIELD_OF_VIEW_PROVENANCEOffset FIELD_OF_VIEW_PROVENANCE: Offset = Offset(),
+    MOUNTINGOffset MOUNTING: Offset = Offset(),
+    RFOffset RF: Offset = Offset(),
+    OPTICALOffset OPTICAL: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = SNR.startSNR(&fbb)
+    SNR.add(SENSOR_ID: SENSOR_ID, &fbb)
+    SNR.add(NAME: NAME, &fbb)
+    SNR.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    SNR.add(OBJECT_ID: OBJECT_ID, &fbb)
+    SNR.add(SITE_ID: SITE_ID, &fbb)
+    SNR.add(ENTITY_ID: ENTITY_ID, &fbb)
     SNR.add(TYPE: TYPE, &fbb)
-    SNR.add(MODE: MODE, &fbb)
-    SNR.add(RESERVED1: RESERVED1, &fbb)
-    SNR.add(MAX_RANGE: MAX_RANGE, &fbb)
-    SNR.add(MIN_RANGE: MIN_RANGE, &fbb)
-    SNR.add(FOV_AZIMUTH: FOV_AZIMUTH, &fbb)
-    SNR.add(FOV_ELEVATION: FOV_ELEVATION, &fbb)
-    SNR.add(ANGULAR_RESOLUTION: ANGULAR_RESOLUTION, &fbb)
-    SNR.add(RANGE_RESOLUTION: RANGE_RESOLUTION, &fbb)
-    SNR.add(UPDATE_RATE: UPDATE_RATE, &fbb)
-    SNR.add(DETECTION_THRESHOLD: DETECTION_THRESHOLD, &fbb)
-    SNR.add(AZIMUTH_SCAN_RATE: AZIMUTH_SCAN_RATE, &fbb)
-    SNR.add(ELEVATION_SCAN_RATE: ELEVATION_SCAN_RATE, &fbb)
-    SNR.add(POWER: POWER, &fbb)
-    SNR.add(FREQUENCY: FREQUENCY, &fbb)
-    SNR.addVectorOf(RESERVED: RESERVED, &fbb)
+    SNR.add(EMISSION: EMISSION, &fbb)
+    SNR.addVectorOf(SPECTRAL_BANDS: SPECTRAL_BANDS, &fbb)
+    SNR.add(FIELD_OF_VIEW: FIELD_OF_VIEW, &fbb)
+    SNR.add(FIELD_OF_VIEW_PROVENANCE: FIELD_OF_VIEW_PROVENANCE, &fbb)
+    SNR.add(MOUNTING: MOUNTING, &fbb)
+    SNR.add(RF: RF, &fbb)
+    SNR.add(OPTICAL: OPTICAL, &fbb)
+    SNR.add(PROVENANCE: PROVENANCE, &fbb)
+    SNR.add(NOTES: NOTES, &fbb)
     return SNR.endSNR(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: UInt8.self)
-    try _v.visit(field: VT.MODE, fieldName: "MODE", required: false, type: UInt8.self)
-    try _v.visit(field: VT.RESERVED1, fieldName: "RESERVED1", required: false, type: UInt16.self)
-    try _v.visit(field: VT.MAX_RANGE, fieldName: "MAX_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VT.MIN_RANGE, fieldName: "MIN_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VT.FOV_AZIMUTH, fieldName: "FOV_AZIMUTH", required: false, type: Float32.self)
-    try _v.visit(field: VT.FOV_ELEVATION, fieldName: "FOV_ELEVATION", required: false, type: Float32.self)
-    try _v.visit(field: VT.ANGULAR_RESOLUTION, fieldName: "ANGULAR_RESOLUTION", required: false, type: Float32.self)
-    try _v.visit(field: VT.RANGE_RESOLUTION, fieldName: "RANGE_RESOLUTION", required: false, type: Float32.self)
-    try _v.visit(field: VT.UPDATE_RATE, fieldName: "UPDATE_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VT.DETECTION_THRESHOLD, fieldName: "DETECTION_THRESHOLD", required: false, type: Float32.self)
-    try _v.visit(field: VT.AZIMUTH_SCAN_RATE, fieldName: "AZIMUTH_SCAN_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VT.ELEVATION_SCAN_RATE, fieldName: "ELEVATION_SCAN_RATE", required: false, type: Float32.self)
-    try _v.visit(field: VT.POWER, fieldName: "POWER", required: false, type: Float32.self)
-    try _v.visit(field: VT.FREQUENCY, fieldName: "FREQUENCY", required: false, type: Float32.self)
-    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SENSOR_ID, fieldName: "SENSOR_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SITE_ID, fieldName: "SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: SensorType.self)
+    try _v.visit(field: VT.EMISSION, fieldName: "EMISSION", required: false, type: snrEmissionMode.self)
+    try _v.visit(field: VT.SPECTRAL_BANDS, fieldName: "SPECTRAL_BANDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SNRSpectralBand>, SNRSpectralBand>>.self)
+    try _v.visit(field: VT.FIELD_OF_VIEW, fieldName: "FIELD_OF_VIEW", required: false, type: ForwardOffset<SCVSensorShapeContract>.self)
+    try _v.visit(field: VT.FIELD_OF_VIEW_PROVENANCE, fieldName: "FIELD_OF_VIEW_PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    try _v.visit(field: VT.MOUNTING, fieldName: "MOUNTING", required: false, type: ForwardOffset<SNRMounting>.self)
+    try _v.visit(field: VT.RF, fieldName: "RF", required: false, type: ForwardOffset<SNRRfParameters>.self)
+    try _v.visit(field: VT.OPTICAL, fieldName: "OPTICAL", required: false, type: ForwardOffset<SNROpticalParameters>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
+    try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

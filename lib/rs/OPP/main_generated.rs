@@ -6,11 +6,11 @@ extern crate alloc;
 pub const ENUM_MIN_OPP_DETERMINATION_METHOD: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_OPP_DETERMINATION_METHOD: i8 = 6;
+pub const ENUM_MAX_OPP_DETERMINATION_METHOD: i8 = 7;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_OPP_DETERMINATION_METHOD: [oppDeterminationMethod; 7] = [
+pub const ENUM_VALUES_OPP_DETERMINATION_METHOD: [oppDeterminationMethod; 8] = [
     oppDeterminationMethod::UNSPECIFIED,
     oppDeterminationMethod::MEASURED,
     oppDeterminationMethod::OPERATOR_STATED,
@@ -18,6 +18,7 @@ pub const ENUM_VALUES_OPP_DETERMINATION_METHOD: [oppDeterminationMethod; 7] = [
     oppDeterminationMethod::DERIVED,
     oppDeterminationMethod::MODEL_DERIVED,
     oppDeterminationMethod::INFERRED_FROM_FAMILY,
+    oppDeterminationMethod::USER_DEFINED,
 ];
 
 /// How one physical value was determined. Append new values only; never
@@ -47,9 +48,12 @@ impl oppDeterminationMethod {
     /// Taken from the bus design or from a sibling object in the same family
     /// because no per-object value exists. Always an approximation.
     pub const INFERRED_FROM_FAMILY: Self = Self(6);
+    /// Entered by a user for a sensor or object they define; no source publishes
+    /// it. Appended 1.278.0.
+    pub const USER_DEFINED: Self = Self(7);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 6;
+    pub const ENUM_MAX: i8 = 7;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::MEASURED,
@@ -58,6 +62,7 @@ impl oppDeterminationMethod {
         Self::DERIVED,
         Self::MODEL_DERIVED,
         Self::INFERRED_FROM_FAMILY,
+        Self::USER_DEFINED,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -70,6 +75,7 @@ impl oppDeterminationMethod {
             Self::DERIVED => Some("DERIVED"),
             Self::MODEL_DERIVED => Some("MODEL_DERIVED"),
             Self::INFERRED_FROM_FAMILY => Some("INFERRED_FROM_FAMILY"),
+            Self::USER_DEFINED => Some("USER_DEFINED"),
             _ => None,
         }
     }

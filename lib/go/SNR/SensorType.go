@@ -4,63 +4,111 @@ package SNR
 
 import "strconv"
 
+/// What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+/// members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+/// by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+/// a writer always sets TYPE.
 type SensorType int8
 
 const (
-	SensorTypeRADAR_PULSE       SensorType = 0
-	SensorTypeRADAR_DOPPLER     SensorType = 1
-	SensorTypeRADAR_CW          SensorType = 2
-	SensorTypeRADAR_AESA        SensorType = 3
-	SensorTypeRADAR_PESA        SensorType = 4
-	SensorTypeIR_SEARCH         SensorType = 5
-	SensorTypeIR_IMAGING        SensorType = 6
-	SensorTypeEO_TV             SensorType = 7
-	SensorTypeEO_LLLTV          SensorType = 8
-	SensorTypeLASER_DESIGNATOR  SensorType = 9
-	SensorTypeLASER_RANGEFINDER SensorType = 10
-	SensorTypeRWR               SensorType = 11
-	SensorTypeMAW               SensorType = 12
-	SensorTypeSONAR_ACTIVE      SensorType = 13
-	SensorTypeSONAR_PASSIVE     SensorType = 14
-	SensorTypeACOUSTIC          SensorType = 15
+	SensorTypeRADAR_PULSE                SensorType = 0
+	SensorTypeRADAR_DOPPLER              SensorType = 1
+	SensorTypeRADAR_CW                   SensorType = 2
+	SensorTypeRADAR_AESA                 SensorType = 3
+	SensorTypeRADAR_PESA                 SensorType = 4
+	SensorTypeIR_SEARCH                  SensorType = 5
+	SensorTypeIR_IMAGING                 SensorType = 6
+	SensorTypeEO_TV                      SensorType = 7
+	SensorTypeEO_LLLTV                   SensorType = 8
+	SensorTypeLASER_DESIGNATOR           SensorType = 9
+	SensorTypeLASER_RANGEFINDER          SensorType = 10
+	SensorTypeRWR                        SensorType = 11
+	SensorTypeMAW                        SensorType = 12
+	SensorTypeSONAR_ACTIVE               SensorType = 13
+	SensorTypeSONAR_PASSIVE              SensorType = 14
+	SensorTypeACOUSTIC                   SensorType = 15
+	SensorTypeOPTICAL_TELESCOPE          SensorType = 16
+	SensorTypeMULTISPECTRAL_IMAGER       SensorType = 17
+	SensorTypeHYPERSPECTRAL_IMAGER       SensorType = 18
+	SensorTypeSAR                        SensorType = 19
+	SensorTypeALTIMETER                  SensorType = 20
+	SensorTypeSCATTEROMETER              SensorType = 21
+	SensorTypeRADIOMETER                 SensorType = 22
+	SensorTypeLIDAR                      SensorType = 23
+	SensorTypePASSIVE_RF_ESM             SensorType = 24
+	SensorTypeSIGINT                     SensorType = 25
+	SensorTypeCOMMS_ANTENNA              SensorType = 26
+	SensorTypeTT_AND_C_ANTENNA           SensorType = 27
+	SensorTypePHASED_ARRAY_EARLY_WARNING SensorType = 28
+	/// The writer states no kind. The default of TYPE, so an unset TYPE is not
+	/// read as RADAR_PULSE.
+	SensorTypeUNSPECIFIED                SensorType = 29
 )
 
 var EnumNamesSensorType = map[SensorType]string{
-	SensorTypeRADAR_PULSE:       "RADAR_PULSE",
-	SensorTypeRADAR_DOPPLER:     "RADAR_DOPPLER",
-	SensorTypeRADAR_CW:          "RADAR_CW",
-	SensorTypeRADAR_AESA:        "RADAR_AESA",
-	SensorTypeRADAR_PESA:        "RADAR_PESA",
-	SensorTypeIR_SEARCH:         "IR_SEARCH",
-	SensorTypeIR_IMAGING:        "IR_IMAGING",
-	SensorTypeEO_TV:             "EO_TV",
-	SensorTypeEO_LLLTV:          "EO_LLLTV",
-	SensorTypeLASER_DESIGNATOR:  "LASER_DESIGNATOR",
-	SensorTypeLASER_RANGEFINDER: "LASER_RANGEFINDER",
-	SensorTypeRWR:               "RWR",
-	SensorTypeMAW:               "MAW",
-	SensorTypeSONAR_ACTIVE:      "SONAR_ACTIVE",
-	SensorTypeSONAR_PASSIVE:     "SONAR_PASSIVE",
-	SensorTypeACOUSTIC:          "ACOUSTIC",
+	SensorTypeRADAR_PULSE:                "RADAR_PULSE",
+	SensorTypeRADAR_DOPPLER:              "RADAR_DOPPLER",
+	SensorTypeRADAR_CW:                   "RADAR_CW",
+	SensorTypeRADAR_AESA:                 "RADAR_AESA",
+	SensorTypeRADAR_PESA:                 "RADAR_PESA",
+	SensorTypeIR_SEARCH:                  "IR_SEARCH",
+	SensorTypeIR_IMAGING:                 "IR_IMAGING",
+	SensorTypeEO_TV:                      "EO_TV",
+	SensorTypeEO_LLLTV:                   "EO_LLLTV",
+	SensorTypeLASER_DESIGNATOR:           "LASER_DESIGNATOR",
+	SensorTypeLASER_RANGEFINDER:          "LASER_RANGEFINDER",
+	SensorTypeRWR:                        "RWR",
+	SensorTypeMAW:                        "MAW",
+	SensorTypeSONAR_ACTIVE:               "SONAR_ACTIVE",
+	SensorTypeSONAR_PASSIVE:              "SONAR_PASSIVE",
+	SensorTypeACOUSTIC:                   "ACOUSTIC",
+	SensorTypeOPTICAL_TELESCOPE:          "OPTICAL_TELESCOPE",
+	SensorTypeMULTISPECTRAL_IMAGER:       "MULTISPECTRAL_IMAGER",
+	SensorTypeHYPERSPECTRAL_IMAGER:       "HYPERSPECTRAL_IMAGER",
+	SensorTypeSAR:                        "SAR",
+	SensorTypeALTIMETER:                  "ALTIMETER",
+	SensorTypeSCATTEROMETER:              "SCATTEROMETER",
+	SensorTypeRADIOMETER:                 "RADIOMETER",
+	SensorTypeLIDAR:                      "LIDAR",
+	SensorTypePASSIVE_RF_ESM:             "PASSIVE_RF_ESM",
+	SensorTypeSIGINT:                     "SIGINT",
+	SensorTypeCOMMS_ANTENNA:              "COMMS_ANTENNA",
+	SensorTypeTT_AND_C_ANTENNA:           "TT_AND_C_ANTENNA",
+	SensorTypePHASED_ARRAY_EARLY_WARNING: "PHASED_ARRAY_EARLY_WARNING",
+	SensorTypeUNSPECIFIED:                "UNSPECIFIED",
 }
 
 var EnumValuesSensorType = map[string]SensorType{
-	"RADAR_PULSE":       SensorTypeRADAR_PULSE,
-	"RADAR_DOPPLER":     SensorTypeRADAR_DOPPLER,
-	"RADAR_CW":          SensorTypeRADAR_CW,
-	"RADAR_AESA":        SensorTypeRADAR_AESA,
-	"RADAR_PESA":        SensorTypeRADAR_PESA,
-	"IR_SEARCH":         SensorTypeIR_SEARCH,
-	"IR_IMAGING":        SensorTypeIR_IMAGING,
-	"EO_TV":             SensorTypeEO_TV,
-	"EO_LLLTV":          SensorTypeEO_LLLTV,
-	"LASER_DESIGNATOR":  SensorTypeLASER_DESIGNATOR,
-	"LASER_RANGEFINDER": SensorTypeLASER_RANGEFINDER,
-	"RWR":               SensorTypeRWR,
-	"MAW":               SensorTypeMAW,
-	"SONAR_ACTIVE":      SensorTypeSONAR_ACTIVE,
-	"SONAR_PASSIVE":     SensorTypeSONAR_PASSIVE,
-	"ACOUSTIC":          SensorTypeACOUSTIC,
+	"RADAR_PULSE":                SensorTypeRADAR_PULSE,
+	"RADAR_DOPPLER":              SensorTypeRADAR_DOPPLER,
+	"RADAR_CW":                   SensorTypeRADAR_CW,
+	"RADAR_AESA":                 SensorTypeRADAR_AESA,
+	"RADAR_PESA":                 SensorTypeRADAR_PESA,
+	"IR_SEARCH":                  SensorTypeIR_SEARCH,
+	"IR_IMAGING":                 SensorTypeIR_IMAGING,
+	"EO_TV":                      SensorTypeEO_TV,
+	"EO_LLLTV":                   SensorTypeEO_LLLTV,
+	"LASER_DESIGNATOR":           SensorTypeLASER_DESIGNATOR,
+	"LASER_RANGEFINDER":          SensorTypeLASER_RANGEFINDER,
+	"RWR":                        SensorTypeRWR,
+	"MAW":                        SensorTypeMAW,
+	"SONAR_ACTIVE":               SensorTypeSONAR_ACTIVE,
+	"SONAR_PASSIVE":              SensorTypeSONAR_PASSIVE,
+	"ACOUSTIC":                   SensorTypeACOUSTIC,
+	"OPTICAL_TELESCOPE":          SensorTypeOPTICAL_TELESCOPE,
+	"MULTISPECTRAL_IMAGER":       SensorTypeMULTISPECTRAL_IMAGER,
+	"HYPERSPECTRAL_IMAGER":       SensorTypeHYPERSPECTRAL_IMAGER,
+	"SAR":                        SensorTypeSAR,
+	"ALTIMETER":                  SensorTypeALTIMETER,
+	"SCATTEROMETER":              SensorTypeSCATTEROMETER,
+	"RADIOMETER":                 SensorTypeRADIOMETER,
+	"LIDAR":                      SensorTypeLIDAR,
+	"PASSIVE_RF_ESM":             SensorTypePASSIVE_RF_ESM,
+	"SIGINT":                     SensorTypeSIGINT,
+	"COMMS_ANTENNA":              SensorTypeCOMMS_ANTENNA,
+	"TT_AND_C_ANTENNA":           SensorTypeTT_AND_C_ANTENNA,
+	"PHASED_ARRAY_EARLY_WARNING": SensorTypePHASED_ARRAY_EARLY_WARNING,
+	"UNSPECIFIED":                SensorTypeUNSPECIFIED,
 }
 
 func (v SensorType) String() string {

@@ -16,6 +16,11 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+ * carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+ * definition and an analysis request never describe a shape in two types.
+ */
 @Suppress("unused")
 class SCVSensorShapeContract : Table() {
 
@@ -114,6 +119,23 @@ class SCVSensorShapeContract : Table() {
             val o = __offset(34)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+     * Clips the shape: a direction below the mask is outside the field of view.
+     */
+    fun azElMask(j: Int) : SCVAzElMaskPoint? = azElMask(SCVAzElMaskPoint(), j)
+    fun azElMask(obj: SCVAzElMaskPoint, j: Int) : SCVAzElMaskPoint? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val azElMaskLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVSensorShapeContract(_bb: ByteBuffer): SCVSensorShapeContract = getRootAsSCVSensorShapeContract(_bb, SCVSensorShapeContract())
@@ -121,8 +143,8 @@ class SCVSensorShapeContract : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shapeKind: UByte, axisConvention: UByte, rangeBoundary: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte) : Int {
-            builder.startTable(16)
+        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shapeKind: UByte, axisConvention: UByte, rangeBoundary: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte, azElMaskOffset: Int) : Int {
+            builder.startTable(17)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
             addSARSAMPLINGDENSITY(builder, sarSamplingDensity)
@@ -134,6 +156,7 @@ class SCVSensorShapeContract : Table() {
             addMINCLOCKANGLEDEG(builder, minClockAngleDeg)
             addINNERHALFANGLEDEG(builder, innerHalfAngleDeg)
             addOUTERHALFANGLEDEG(builder, outerHalfAngleDeg)
+            addAZELMASK(builder, azElMaskOffset)
             addPOLYGONVERTICES(builder, polygonVerticesOffset)
             addPOLYGONFRAME(builder, polygonFrame)
             addRANGEBOUNDARY(builder, rangeBoundary)
@@ -141,7 +164,7 @@ class SCVSensorShapeContract : Table() {
             addSHAPEKIND(builder, shapeKind)
             return endSCVSensorShapeContract(builder)
         }
-        fun startSCVSensorShapeContract(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSCVSensorShapeContract(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addSHAPEKIND(builder: FlatBufferBuilder, shapeKind: UByte) = builder.addByte(0, shapeKind.toByte(), 0)
         fun addAXISCONVENTION(builder: FlatBufferBuilder, axisConvention: UByte) = builder.addByte(1, axisConvention.toByte(), 0)
         fun addRANGEBOUNDARY(builder: FlatBufferBuilder, rangeBoundary: UByte) = builder.addByte(2, rangeBoundary.toByte(), 0)
@@ -166,6 +189,15 @@ class SCVSensorShapeContract : Table() {
         }
         fun startPolygonVerticesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPOLYGONFRAME(builder: FlatBufferBuilder, polygonFrame: UByte) = builder.addByte(15, polygonFrame.toByte(), 0)
+        fun addAZELMASK(builder: FlatBufferBuilder, azElMask: Int) = builder.addOffset(16, azElMask, 0)
+        fun createAzElMaskVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAzElMaskVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endSCVSensorShapeContract(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

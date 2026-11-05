@@ -45,5 +45,11 @@ export enum oppDeterminationMethod {
    * Taken from the bus design or from a sibling object in the same family
    * because no per-object value exists. Always an approximation.
    */
-  INFERRED_FROM_FAMILY = 6
+  INFERRED_FROM_FAMILY = 6,
+
+  /**
+   * Entered by a user for a sensor or object they define; no source publishes
+   * it. Appended 1.278.0.
+   */
+  USER_DEFINED = 7
 }

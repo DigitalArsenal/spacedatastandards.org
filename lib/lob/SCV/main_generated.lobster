@@ -116,6 +116,8 @@ class SCVEllipsoid
 
 class SCVTimeGrid
 
+class SCVAzElMaskPoint
+
 class SCVSensorShapeContract
 
 class SCVSensor
@@ -272,6 +274,37 @@ struct SCVTimeGridBuilder:
     def end():
         return b_.EndObject()
 
+/// One point of an azimuth/elevation mask: the lowest elevation at which the
+/// sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+/// polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+/// point to the first across 360 degrees, linearly interpolated in azimuth.
+class SCVAzElMaskPoint : flatbuffers.handle
+    /// Azimuth, degrees clockwise from north, in [0, 360).
+    def AZIMUTH_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+    def MIN_ELEVATION_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+
+def GetRootAsSCVAzElMaskPoint(buf:string): return SCVAzElMaskPoint { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVAzElMaskPointBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_AZIMUTH_DEG(AZIMUTH_DEG:float):
+        b_.PrependFloat64Slot(0, AZIMUTH_DEG, 0.0)
+        return this
+    def add_MIN_ELEVATION_DEG(MIN_ELEVATION_DEG:float):
+        b_.PrependFloat64Slot(1, MIN_ELEVATION_DEG, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
 class SCVSensorShapeContract : flatbuffers.handle
     def SHAPE_KIND() -> scvSensorShapeKind:
         return scvSensorShapeKind(flatbuffers.field_uint8(buf_, pos_, 4, 0))
@@ -307,13 +340,19 @@ class SCVSensorShapeContract : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 32)
     def POLYGON_FRAME() -> scvCoordinateFrame:
         return scvCoordinateFrame(flatbuffers.field_uint8(buf_, pos_, 34, 0))
+    /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+    /// Clips the shape: a direction below the mask is outside the field of view.
+    def AZ_EL_MASK(i:int) -> SCVAzElMaskPoint:
+        return SCVAzElMaskPoint { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 36) + i * 4) }
+    def AZ_EL_MASK_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
 
 def GetRootAsSCVSensorShapeContract(buf:string): return SCVSensorShapeContract { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVSensorShapeContractBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(17)
         return this
     def add_SHAPE_KIND(SHAPE_KIND:scvSensorShapeKind):
         b_.PrependUint8Slot(0, SHAPE_KIND, 0)
@@ -363,12 +402,22 @@ struct SCVSensorShapeContractBuilder:
     def add_POLYGON_FRAME(POLYGON_FRAME:scvCoordinateFrame):
         b_.PrependUint8Slot(15, POLYGON_FRAME, 0)
         return this
+    def add_AZ_EL_MASK(AZ_EL_MASK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, AZ_EL_MASK)
+        return this
     def end():
         return b_.EndObject()
 
 def SCVSensorShapeContractStartPOLYGONVERTICESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def SCVSensorShapeContractCreatePOLYGONVERTICESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCVSensorShapeContractStartAZELMASKVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVSensorShapeContractCreateAZELMASKVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

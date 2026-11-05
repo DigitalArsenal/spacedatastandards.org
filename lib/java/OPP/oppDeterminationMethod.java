@@ -40,8 +40,13 @@ public final class oppDeterminationMethod {
    * because no per-object value exists. Always an approximation.
    */
   public static final byte INFERRED_FROM_FAMILY = 6;
+  /**
+   * Entered by a user for a sensor or object they define; no source publishes
+   * it. Appended 1.278.0.
+   */
+  public static final byte USER_DEFINED = 7;
 
-  public static final String[] names = { "UNSPECIFIED", "MEASURED", "OPERATOR_STATED", "ESTIMATED", "DERIVED", "MODEL_DERIVED", "INFERRED_FROM_FAMILY", };
+  public static final String[] names = { "UNSPECIFIED", "MEASURED", "OPERATOR_STATED", "ESTIMATED", "DERIVED", "MODEL_DERIVED", "INFERRED_FROM_FAMILY", "USER_DEFINED", };
 
   public static String name(int e) { return names[e]; }
 }

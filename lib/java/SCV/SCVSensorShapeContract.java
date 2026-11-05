@@ -16,6 +16,11 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+ * carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+ * definition and an analysis request never describe a shape in two types.
+ */
 @SuppressWarnings("unused")
 public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
@@ -44,6 +49,15 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public SCVVec3.Vector polygonVerticesVector() { return polygonVerticesVector(new SCVVec3.Vector()); }
   public SCVVec3.Vector polygonVerticesVector(SCVVec3.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public int POLYGON_FRAME() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+   * Clips the shape: a direction below the mask is outside the field of view.
+   */
+  public SCVAzElMaskPoint AZ_EL_MASK(int j) { return AZ_EL_MASK(new SCVAzElMaskPoint(), j); }
+  public SCVAzElMaskPoint AZ_EL_MASK(SCVAzElMaskPoint obj, int j) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int AZ_EL_MASKLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public SCVAzElMaskPoint.Vector azElMaskVector() { return azElMaskVector(new SCVAzElMaskPoint.Vector()); }
+  public SCVAzElMaskPoint.Vector azElMaskVector(SCVAzElMaskPoint.Vector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSCVSensorShapeContract(FlatBufferBuilder builder,
       int SHAPE_KIND,
@@ -61,8 +75,9 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
       double MIN_RANGE_M,
       double MAX_RANGE_M,
       int POLYGON_VERTICESOffset,
-      int POLYGON_FRAME) {
-    builder.startTable(16);
+      int POLYGON_FRAME,
+      int AZ_EL_MASKOffset) {
+    builder.startTable(17);
     SCVSensorShapeContract.addMaxRangeM(builder, MAX_RANGE_M);
     SCVSensorShapeContract.addMinRangeM(builder, MIN_RANGE_M);
     SCVSensorShapeContract.addSarSamplingDensity(builder, SAR_SAMPLING_DENSITY);
@@ -74,6 +89,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     SCVSensorShapeContract.addMinClockAngleDeg(builder, MIN_CLOCK_ANGLE_DEG);
     SCVSensorShapeContract.addInnerHalfAngleDeg(builder, INNER_HALF_ANGLE_DEG);
     SCVSensorShapeContract.addOuterHalfAngleDeg(builder, OUTER_HALF_ANGLE_DEG);
+    SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASKOffset);
     SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
     SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
     SCVSensorShapeContract.addRangeBoundary(builder, RANGE_BOUNDARY);
@@ -82,7 +98,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
   }
 
-  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addShapeKind(FlatBufferBuilder builder, int SHAPE_KIND) { builder.addByte(0, (byte) SHAPE_KIND, (byte) 0); }
   public static void addAxisConvention(FlatBufferBuilder builder, int AXIS_CONVENTION) { builder.addByte(1, (byte) AXIS_CONVENTION, (byte) 0); }
   public static void addRangeBoundary(FlatBufferBuilder builder, int RANGE_BOUNDARY) { builder.addByte(2, (byte) RANGE_BOUNDARY, (byte) 0); }
@@ -101,6 +117,9 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public static int createPolygonVerticesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPolygonVerticesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addPolygonFrame(FlatBufferBuilder builder, int POLYGON_FRAME) { builder.addByte(15, (byte) POLYGON_FRAME, (byte) 0); }
+  public static void addAzElMask(FlatBufferBuilder builder, int AZ_EL_MASKOffset) { builder.addOffset(16, AZ_EL_MASKOffset, 0); }
+  public static int createAzElMaskVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAzElMaskVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endSCVSensorShapeContract(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -62,11 +62,14 @@ enum oppDeterminationMethod : int8_t {
   /// Taken from the bus design or from a sibling object in the same family
   /// because no per-object value exists. Always an approximation.
   oppDeterminationMethod_INFERRED_FROM_FAMILY = 6,
+  /// Entered by a user for a sensor or object they define; no source publishes
+  /// it. Appended 1.278.0.
+  oppDeterminationMethod_USER_DEFINED = 7,
   oppDeterminationMethod_MIN = oppDeterminationMethod_UNSPECIFIED,
-  oppDeterminationMethod_MAX = oppDeterminationMethod_INFERRED_FROM_FAMILY
+  oppDeterminationMethod_MAX = oppDeterminationMethod_USER_DEFINED
 };
 
-inline const oppDeterminationMethod (&EnumValuesoppDeterminationMethod())[7] {
+inline const oppDeterminationMethod (&EnumValuesoppDeterminationMethod())[8] {
   static const oppDeterminationMethod values[] = {
     oppDeterminationMethod_UNSPECIFIED,
     oppDeterminationMethod_MEASURED,
@@ -74,13 +77,14 @@ inline const oppDeterminationMethod (&EnumValuesoppDeterminationMethod())[7] {
     oppDeterminationMethod_ESTIMATED,
     oppDeterminationMethod_DERIVED,
     oppDeterminationMethod_MODEL_DERIVED,
-    oppDeterminationMethod_INFERRED_FROM_FAMILY
+    oppDeterminationMethod_INFERRED_FROM_FAMILY,
+    oppDeterminationMethod_USER_DEFINED
   };
   return values;
 }
 
 inline const char * const *EnumNamesoppDeterminationMethod() {
-  static const char * const names[8] = {
+  static const char * const names[9] = {
     "UNSPECIFIED",
     "MEASURED",
     "OPERATOR_STATED",
@@ -88,13 +92,14 @@ inline const char * const *EnumNamesoppDeterminationMethod() {
     "DERIVED",
     "MODEL_DERIVED",
     "INFERRED_FROM_FAMILY",
+    "USER_DEFINED",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameoppDeterminationMethod(oppDeterminationMethod e) {
-  if (::flatbuffers::IsOutRange(e, oppDeterminationMethod_UNSPECIFIED, oppDeterminationMethod_INFERRED_FROM_FAMILY)) return "";
+  if (::flatbuffers::IsOutRange(e, oppDeterminationMethod_UNSPECIFIED, oppDeterminationMethod_USER_DEFINED)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesoppDeterminationMethod()[index];
 }

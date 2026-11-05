@@ -6,7 +6,16 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Sensor Systems
+/// Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+/// UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+/// is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+/// string, table or vector is absent. A value is never invented, never zero as a
+/// placeholder, never copied from another sensor. Hz is the only frequency unit.
+/// Display colors are viewer preferences and never travel in this record.
+///
+/// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+/// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 type SNR struct {
 	_tab flatbuffers.Table
 }
@@ -54,332 +63,288 @@ func (rcv *SNR) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *SNR) TYPE() byte {
+/// Stable identifier of this sensor. $SEN.ID of the same sensor.
+func (rcv *SNR) SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
+/// Stable identifier of this sensor. $SEN.ID of the same sensor.
+func (rcv *SNR) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) Name() []byte {
+	return rcv.NAME()
+}
+
+/// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+func (rcv *SNR) NORAD_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SNR) Type() byte {
+func (rcv *SNR) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
+/// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+func (rcv *SNR) MutateNORAD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *SNR) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
+}
+
+/// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+func (rcv *SNR) OBJECT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
+/// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+/// $SIT.ID of the ground site the sensor is at.
+func (rcv *SNR) SITE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) SiteId() []byte {
+	return rcv.SITE_ID()
+}
+
+/// $SIT.ID of the ground site the sensor is at.
+/// Stable non-catalogue entity key of the platform, for a platform with neither
+/// a catalogue number nor a $SIT.
+func (rcv *SNR) ENTITY_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) EntityId() []byte {
+	return rcv.ENTITY_ID()
+}
+
+/// Stable non-catalogue entity key of the platform, for a platform with neither
+/// a catalogue number nor a $SIT.
+func (rcv *SNR) TYPE() SensorType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return SensorType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 29
+}
+
+func (rcv *SNR) Type() SensorType {
 	return rcv.TYPE()
 }
 
-func (rcv *SNR) MutateTYPE(n byte) bool {
-	return rcv._tab.MutateByteSlot(4, n)
+func (rcv *SNR) MutateTYPE(n SensorType) bool {
+	return rcv._tab.MutateInt8Slot(16, int8(n))
 }
 
-func (rcv *SNR) MutateType(n byte) bool {
+func (rcv *SNR) MutateType(n SensorType) bool {
 	return rcv.MutateTYPE(n)
 }
 
-func (rcv *SNR) MODE() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *SNR) Mode() byte {
-	return rcv.MODE()
-}
-
-func (rcv *SNR) MutateMODE(n byte) bool {
-	return rcv._tab.MutateByteSlot(6, n)
-}
-
-func (rcv *SNR) MutateMode(n byte) bool {
-	return rcv.MutateMODE(n)
-}
-
-func (rcv *SNR) RESERVED1() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *SNR) Reserved1() uint16 {
-	return rcv.RESERVED1()
-}
-
-func (rcv *SNR) MutateRESERVED1(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(8, n)
-}
-
-func (rcv *SNR) MutateReserved1(n uint16) bool {
-	return rcv.MutateRESERVED1(n)
-}
-
-func (rcv *SNR) MAX_RANGE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) MaxRange() float64 {
-	return rcv.MAX_RANGE()
-}
-
-func (rcv *SNR) MutateMAX_RANGE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
-}
-
-func (rcv *SNR) MutateMaxRange(n float64) bool {
-	return rcv.MutateMAX_RANGE(n)
-}
-
-func (rcv *SNR) MIN_RANGE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) MinRange() float64 {
-	return rcv.MIN_RANGE()
-}
-
-func (rcv *SNR) MutateMIN_RANGE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(12, n)
-}
-
-func (rcv *SNR) MutateMinRange(n float64) bool {
-	return rcv.MutateMIN_RANGE(n)
-}
-
-func (rcv *SNR) FOV_AZIMUTH() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) FovAzimuth() float32 {
-	return rcv.FOV_AZIMUTH()
-}
-
-func (rcv *SNR) MutateFOV_AZIMUTH(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(14, n)
-}
-
-func (rcv *SNR) MutateFovAzimuth(n float32) bool {
-	return rcv.MutateFOV_AZIMUTH(n)
-}
-
-func (rcv *SNR) FOV_ELEVATION() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) FovElevation() float32 {
-	return rcv.FOV_ELEVATION()
-}
-
-func (rcv *SNR) MutateFOV_ELEVATION(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(16, n)
-}
-
-func (rcv *SNR) MutateFovElevation(n float32) bool {
-	return rcv.MutateFOV_ELEVATION(n)
-}
-
-func (rcv *SNR) ANGULAR_RESOLUTION() float32 {
+func (rcv *SNR) EMISSION() snrEmissionMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) AngularResolution() float32 {
-	return rcv.ANGULAR_RESOLUTION()
-}
-
-func (rcv *SNR) MutateANGULAR_RESOLUTION(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(18, n)
-}
-
-func (rcv *SNR) MutateAngularResolution(n float32) bool {
-	return rcv.MutateANGULAR_RESOLUTION(n)
-}
-
-func (rcv *SNR) RANGE_RESOLUTION() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) RangeResolution() float32 {
-	return rcv.RANGE_RESOLUTION()
-}
-
-func (rcv *SNR) MutateRANGE_RESOLUTION(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(20, n)
-}
-
-func (rcv *SNR) MutateRangeResolution(n float32) bool {
-	return rcv.MutateRANGE_RESOLUTION(n)
-}
-
-func (rcv *SNR) UPDATE_RATE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) UpdateRate() float32 {
-	return rcv.UPDATE_RATE()
-}
-
-func (rcv *SNR) MutateUPDATE_RATE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(22, n)
-}
-
-func (rcv *SNR) MutateUpdateRate(n float32) bool {
-	return rcv.MutateUPDATE_RATE(n)
-}
-
-func (rcv *SNR) DETECTION_THRESHOLD() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) DetectionThreshold() float32 {
-	return rcv.DETECTION_THRESHOLD()
-}
-
-func (rcv *SNR) MutateDETECTION_THRESHOLD(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(24, n)
-}
-
-func (rcv *SNR) MutateDetectionThreshold(n float32) bool {
-	return rcv.MutateDETECTION_THRESHOLD(n)
-}
-
-func (rcv *SNR) AZIMUTH_SCAN_RATE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) AzimuthScanRate() float32 {
-	return rcv.AZIMUTH_SCAN_RATE()
-}
-
-func (rcv *SNR) MutateAZIMUTH_SCAN_RATE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(26, n)
-}
-
-func (rcv *SNR) MutateAzimuthScanRate(n float32) bool {
-	return rcv.MutateAZIMUTH_SCAN_RATE(n)
-}
-
-func (rcv *SNR) ELEVATION_SCAN_RATE() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) ElevationScanRate() float32 {
-	return rcv.ELEVATION_SCAN_RATE()
-}
-
-func (rcv *SNR) MutateELEVATION_SCAN_RATE(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(28, n)
-}
-
-func (rcv *SNR) MutateElevationScanRate(n float32) bool {
-	return rcv.MutateELEVATION_SCAN_RATE(n)
-}
-
-func (rcv *SNR) POWER() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) Power() float32 {
-	return rcv.POWER()
-}
-
-func (rcv *SNR) MutatePOWER(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(30, n)
-}
-
-func (rcv *SNR) MutatePower(n float32) bool {
-	return rcv.MutatePOWER(n)
-}
-
-func (rcv *SNR) FREQUENCY() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SNR) Frequency() float32 {
-	return rcv.FREQUENCY()
-}
-
-func (rcv *SNR) MutateFREQUENCY(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(32, n)
-}
-
-func (rcv *SNR) MutateFrequency(n float32) bool {
-	return rcv.MutateFREQUENCY(n)
-}
-
-func (rcv *SNR) RESERVED(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+		return snrEmissionMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *SNR) Reserved(j int) byte {
-	return rcv.RESERVED(j)
+func (rcv *SNR) Emission() snrEmissionMode {
+	return rcv.EMISSION()
 }
 
-func (rcv *SNR) RESERVEDLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+func (rcv *SNR) MutateEMISSION(n snrEmissionMode) bool {
+	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *SNR) MutateEmission(n snrEmissionMode) bool {
+	return rcv.MutateEMISSION(n)
+}
+
+/// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+/// a passive RF receiver. Empty = none stated.
+func (rcv *SNR) SPECTRAL_BANDS(obj *SNRSpectralBand, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SNRSpectralBand)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SNR) SpectralBands(obj *SNRSpectralBand, j int) bool {
+	return rcv.SPECTRAL_BANDS(obj, j)
+}
+
+func (rcv *SNR) SPECTRAL_BANDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SNR) ReservedLength() int {
-	return rcv.RESERVEDLength()
+func (rcv *SNR) SpectralBandsLength() int {
+	return rcv.SPECTRAL_BANDSLength()
 }
 
-func (rcv *SNR) RESERVEDBytes() []byte {
+/// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+/// a passive RF receiver. Empty = none stated.
+/// Field-of-view shape: the same table $SCV analyses use.
+func (rcv *SNR) FIELD_OF_VIEW(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVSensorShapeContract)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) FieldOfView(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	return rcv.FIELD_OF_VIEW(obj)
+}
+
+/// Field-of-view shape: the same table $SCV analyses use.
+/// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+func (rcv *SNR) FIELD_OF_VIEW_PROVENANCE(obj *OPPProvenance) *OPPProvenance {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OPPProvenance)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) FieldOfViewProvenance(obj *OPPProvenance) *OPPProvenance {
+	return rcv.FIELD_OF_VIEW_PROVENANCE(obj)
+}
+
+/// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+func (rcv *SNR) MOUNTING(obj *SNRMounting) *SNRMounting {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SNRMounting)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) Mounting(obj *SNRMounting) *SNRMounting {
+	return rcv.MOUNTING(obj)
+}
+
+func (rcv *SNR) RF(obj *SNRRfParameters) *SNRRfParameters {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SNRRfParameters)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) Rf(obj *SNRRfParameters) *SNRRfParameters {
+	return rcv.RF(obj)
+}
+
+func (rcv *SNR) OPTICAL(obj *SNROpticalParameters) *SNROpticalParameters {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SNROpticalParameters)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) Optical(obj *SNROpticalParameters) *SNROpticalParameters {
+	return rcv.OPTICAL(obj)
+}
+
+/// Where the values of this record were read. A published real-world sensor
+/// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+/// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+/// for that section.
+func (rcv *SNR) PROVENANCE(obj *OPPProvenance) *OPPProvenance {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OPPProvenance)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SNR) Provenance(obj *OPPProvenance) *OPPProvenance {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where the values of this record were read. A published real-world sensor
+/// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+/// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+/// for that section.
+func (rcv *SNR) NOTES() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -387,127 +352,114 @@ func (rcv *SNR) RESERVEDBytes() []byte {
 	return nil
 }
 
-func (rcv *SNR) ReservedBytes() []byte {
-	return rcv.RESERVEDBytes()
-}
-
-func (rcv *SNR) MutateRESERVED(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
-	}
-	return false
-}
-
-func (rcv *SNR) MutateReserved(j int, n byte) bool {
-	return rcv.MutateRESERVED(j, n)
+func (rcv *SNR) Notes() []byte {
+	return rcv.NOTES()
 }
 
 func SNRStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
 }
-func SNRAddTYPE(builder *flatbuffers.Builder, TYPE byte) {
-	builder.PrependByteSlot(0, TYPE, 0)
+func SNRAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
-func SNRAddType(builder *flatbuffers.Builder, TYPE byte) {
+func SNRAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	SNRAddSENSOR_ID(builder, SENSOR_ID)
+}
+func SNRAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func SNRAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SNRAddNAME(builder, NAME)
+}
+func SNRAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
+}
+func SNRAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	SNRAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+}
+func SNRAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_ID), 0)
+}
+func SNRAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	SNRAddOBJECT_ID(builder, OBJECT_ID)
+}
+func SNRAddSITE_ID(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SITE_ID), 0)
+}
+func SNRAddSiteId(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
+	SNRAddSITE_ID(builder, SITE_ID)
+}
+func SNRAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ENTITY_ID), 0)
+}
+func SNRAddEntityId(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
+	SNRAddENTITY_ID(builder, ENTITY_ID)
+}
+func SNRAddTYPE(builder *flatbuffers.Builder, TYPE SensorType) {
+	builder.PrependInt8Slot(6, int8(TYPE), 29)
+}
+func SNRAddType(builder *flatbuffers.Builder, TYPE SensorType) {
 	SNRAddTYPE(builder, TYPE)
 }
-func SNRAddMODE(builder *flatbuffers.Builder, MODE byte) {
-	builder.PrependByteSlot(1, MODE, 0)
+func SNRAddEMISSION(builder *flatbuffers.Builder, EMISSION snrEmissionMode) {
+	builder.PrependInt8Slot(7, int8(EMISSION), 0)
 }
-func SNRAddMode(builder *flatbuffers.Builder, MODE byte) {
-	SNRAddMODE(builder, MODE)
+func SNRAddEmission(builder *flatbuffers.Builder, EMISSION snrEmissionMode) {
+	SNRAddEMISSION(builder, EMISSION)
 }
-func SNRAddRESERVED1(builder *flatbuffers.Builder, RESERVED1 uint16) {
-	builder.PrependUint16Slot(2, RESERVED1, 0)
+func SNRAddSPECTRAL_BANDS(builder *flatbuffers.Builder, SPECTRAL_BANDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SPECTRAL_BANDS), 0)
 }
-func SNRAddReserved1(builder *flatbuffers.Builder, RESERVED1 uint16) {
-	SNRAddRESERVED1(builder, RESERVED1)
+func SNRAddSpectralBands(builder *flatbuffers.Builder, SPECTRAL_BANDS flatbuffers.UOffsetT) {
+	SNRAddSPECTRAL_BANDS(builder, SPECTRAL_BANDS)
 }
-func SNRAddMAX_RANGE(builder *flatbuffers.Builder, MAX_RANGE float64) {
-	builder.PrependFloat64Slot(3, MAX_RANGE, 0.0)
+func SNRStartSPECTRAL_BANDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
-func SNRAddMaxRange(builder *flatbuffers.Builder, MAX_RANGE float64) {
-	SNRAddMAX_RANGE(builder, MAX_RANGE)
+func SNRStartSpectralBandsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SNRStartSPECTRAL_BANDSVector(builder, numElems)
 }
-func SNRAddMIN_RANGE(builder *flatbuffers.Builder, MIN_RANGE float64) {
-	builder.PrependFloat64Slot(4, MIN_RANGE, 0.0)
+func SNRAddFIELD_OF_VIEW(builder *flatbuffers.Builder, FIELD_OF_VIEW flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(FIELD_OF_VIEW), 0)
 }
-func SNRAddMinRange(builder *flatbuffers.Builder, MIN_RANGE float64) {
-	SNRAddMIN_RANGE(builder, MIN_RANGE)
+func SNRAddFieldOfView(builder *flatbuffers.Builder, FIELD_OF_VIEW flatbuffers.UOffsetT) {
+	SNRAddFIELD_OF_VIEW(builder, FIELD_OF_VIEW)
 }
-func SNRAddFOV_AZIMUTH(builder *flatbuffers.Builder, FOV_AZIMUTH float32) {
-	builder.PrependFloat32Slot(5, FOV_AZIMUTH, 0.0)
+func SNRAddFIELD_OF_VIEW_PROVENANCE(builder *flatbuffers.Builder, FIELD_OF_VIEW_PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(FIELD_OF_VIEW_PROVENANCE), 0)
 }
-func SNRAddFovAzimuth(builder *flatbuffers.Builder, FOV_AZIMUTH float32) {
-	SNRAddFOV_AZIMUTH(builder, FOV_AZIMUTH)
+func SNRAddFieldOfViewProvenance(builder *flatbuffers.Builder, FIELD_OF_VIEW_PROVENANCE flatbuffers.UOffsetT) {
+	SNRAddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCE)
 }
-func SNRAddFOV_ELEVATION(builder *flatbuffers.Builder, FOV_ELEVATION float32) {
-	builder.PrependFloat32Slot(6, FOV_ELEVATION, 0.0)
+func SNRAddMOUNTING(builder *flatbuffers.Builder, MOUNTING flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MOUNTING), 0)
 }
-func SNRAddFovElevation(builder *flatbuffers.Builder, FOV_ELEVATION float32) {
-	SNRAddFOV_ELEVATION(builder, FOV_ELEVATION)
+func SNRAddMounting(builder *flatbuffers.Builder, MOUNTING flatbuffers.UOffsetT) {
+	SNRAddMOUNTING(builder, MOUNTING)
 }
-func SNRAddANGULAR_RESOLUTION(builder *flatbuffers.Builder, ANGULAR_RESOLUTION float32) {
-	builder.PrependFloat32Slot(7, ANGULAR_RESOLUTION, 0.0)
+func SNRAddRF(builder *flatbuffers.Builder, RF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RF), 0)
 }
-func SNRAddAngularResolution(builder *flatbuffers.Builder, ANGULAR_RESOLUTION float32) {
-	SNRAddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION)
+func SNRAddRf(builder *flatbuffers.Builder, RF flatbuffers.UOffsetT) {
+	SNRAddRF(builder, RF)
 }
-func SNRAddRANGE_RESOLUTION(builder *flatbuffers.Builder, RANGE_RESOLUTION float32) {
-	builder.PrependFloat32Slot(8, RANGE_RESOLUTION, 0.0)
+func SNRAddOPTICAL(builder *flatbuffers.Builder, OPTICAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(OPTICAL), 0)
 }
-func SNRAddRangeResolution(builder *flatbuffers.Builder, RANGE_RESOLUTION float32) {
-	SNRAddRANGE_RESOLUTION(builder, RANGE_RESOLUTION)
+func SNRAddOptical(builder *flatbuffers.Builder, OPTICAL flatbuffers.UOffsetT) {
+	SNRAddOPTICAL(builder, OPTICAL)
 }
-func SNRAddUPDATE_RATE(builder *flatbuffers.Builder, UPDATE_RATE float32) {
-	builder.PrependFloat32Slot(9, UPDATE_RATE, 0.0)
+func SNRAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(PROVENANCE), 0)
 }
-func SNRAddUpdateRate(builder *flatbuffers.Builder, UPDATE_RATE float32) {
-	SNRAddUPDATE_RATE(builder, UPDATE_RATE)
+func SNRAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	SNRAddPROVENANCE(builder, PROVENANCE)
 }
-func SNRAddDETECTION_THRESHOLD(builder *flatbuffers.Builder, DETECTION_THRESHOLD float32) {
-	builder.PrependFloat32Slot(10, DETECTION_THRESHOLD, 0.0)
+func SNRAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(NOTES), 0)
 }
-func SNRAddDetectionThreshold(builder *flatbuffers.Builder, DETECTION_THRESHOLD float32) {
-	SNRAddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD)
-}
-func SNRAddAZIMUTH_SCAN_RATE(builder *flatbuffers.Builder, AZIMUTH_SCAN_RATE float32) {
-	builder.PrependFloat32Slot(11, AZIMUTH_SCAN_RATE, 0.0)
-}
-func SNRAddAzimuthScanRate(builder *flatbuffers.Builder, AZIMUTH_SCAN_RATE float32) {
-	SNRAddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE)
-}
-func SNRAddELEVATION_SCAN_RATE(builder *flatbuffers.Builder, ELEVATION_SCAN_RATE float32) {
-	builder.PrependFloat32Slot(12, ELEVATION_SCAN_RATE, 0.0)
-}
-func SNRAddElevationScanRate(builder *flatbuffers.Builder, ELEVATION_SCAN_RATE float32) {
-	SNRAddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE)
-}
-func SNRAddPOWER(builder *flatbuffers.Builder, POWER float32) {
-	builder.PrependFloat32Slot(13, POWER, 0.0)
-}
-func SNRAddPower(builder *flatbuffers.Builder, POWER float32) {
-	SNRAddPOWER(builder, POWER)
-}
-func SNRAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float32) {
-	builder.PrependFloat32Slot(14, FREQUENCY, 0.0)
-}
-func SNRAddFrequency(builder *flatbuffers.Builder, FREQUENCY float32) {
-	SNRAddFREQUENCY(builder, FREQUENCY)
-}
-func SNRAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(RESERVED), 0)
-}
-func SNRAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
-	SNRAddRESERVED(builder, RESERVED)
-}
-func SNRStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(1, numElems, 1)
-}
-func SNRStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SNRStartRESERVEDVector(builder, numElems)
+func SNRAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	SNRAddNOTES(builder, NOTES)
 }
 func SNREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -564,8 +564,26 @@
       },
       "additionalProperties": false
     },
+    "SCVAzElMaskPoint": {
+      "type": "object",
+      "description": "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+      "properties": {
+        "AZIMUTH_DEG": {
+          "type": "number",
+          "description": "Azimuth, degrees clockwise from north, in [0, 360).",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_ELEVATION_DEG": {
+          "type": "number",
+          "description": "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "SCVSensorShapeContract": {
       "type": "object",
+      "description": "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
       "properties": {
         "SHAPE_KIND": {
           "$ref": "#/definitions/scvSensorShapeKind",
@@ -688,6 +706,14 @@
               "value": 6
             }
           }
+        },
+        "AZ_EL_MASK": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVAzElMaskPoint"
+          },
+          "description": "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
+          "x-flatbuffer-type": "[SCVAzElMaskPoint]"
         }
       },
       "additionalProperties": false

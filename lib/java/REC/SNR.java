@@ -17,7 +17,16 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Sensor Systems
+ * Sensor definition: the sensor a platform carries. One record is one sensor.
+ *
+ * UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+ * is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+ * string, table or vector is absent. A value is never invented, never zero as a
+ * placeholder, never copied from another sensor. Hz is the only frequency unit.
+ * Display colors are viewer preferences and never travel in this record.
+ *
+ * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+ * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  */
 @SuppressWarnings("unused")
 public final class SNR extends com.google.flatbuffers.Table {
@@ -28,87 +37,136 @@ public final class SNR extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SNR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int TYPE() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int MODE() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int RESERVED1() { int o = __offset(8); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
-  public double MAX_RANGE() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MIN_RANGE() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public float FOV_AZIMUTH() { int o = __offset(14); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float FOV_ELEVATION() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float ANGULAR_RESOLUTION() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float RANGE_RESOLUTION() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float UPDATE_RATE() { int o = __offset(22); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float DETECTION_THRESHOLD() { int o = __offset(24); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float AZIMUTH_SCAN_RATE() { int o = __offset(26); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float ELEVATION_SCAN_RATE() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float POWER() { int o = __offset(30); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float FREQUENCY() { int o = __offset(32); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public int RESERVED(int j) { int o = __offset(34); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int RESERVEDLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
-  public ByteVector reservedVector() { return reservedVector(new ByteVector()); }
-  public ByteVector reservedVector(ByteVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer RESERVEDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer RESERVEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Stable identifier of this sensor. $SEN.ID of the same sensor.
+   */
+  public String SENSOR_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String NAME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+   */
+  public long NORAD_CAT_ID() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+   */
+  public String OBJECT_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * $SIT.ID of the ground site the sensor is at.
+   */
+  public String SITE_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Stable non-catalogue entity key of the platform, for a platform with neither
+   * a catalogue number nor a $SIT.
+   */
+  public String ENTITY_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENTITY_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer ENTITY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public byte TYPE() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 29; }
+  public byte EMISSION() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Spectral bands in Hz. One list serves a radar, a multispectral imager and
+   * a passive RF receiver. Empty = none stated.
+   */
+  public SNRSpectralBand SPECTRAL_BANDS(int j) { return SPECTRAL_BANDS(new SNRSpectralBand(), j); }
+  public SNRSpectralBand SPECTRAL_BANDS(SNRSpectralBand obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SPECTRAL_BANDSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public SNRSpectralBand.Vector spectralBandsVector() { return spectralBandsVector(new SNRSpectralBand.Vector()); }
+  public SNRSpectralBand.Vector spectralBandsVector(SNRSpectralBand.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Field-of-view shape: the same table $SCV analyses use.
+   */
+  public SCVSensorShapeContract FIELD_OF_VIEW() { return FIELD_OF_VIEW(new SCVSensorShapeContract()); }
+  public SCVSensorShapeContract FIELD_OF_VIEW(SCVSensorShapeContract obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+   */
+  public OPPProvenance FIELD_OF_VIEW_PROVENANCE() { return FIELD_OF_VIEW_PROVENANCE(new OPPProvenance()); }
+  public OPPProvenance FIELD_OF_VIEW_PROVENANCE(OPPProvenance obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SNRMounting MOUNTING() { return MOUNTING(new SNRMounting()); }
+  public SNRMounting MOUNTING(SNRMounting obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SNRRfParameters RF() { return RF(new SNRRfParameters()); }
+  public SNRRfParameters RF(SNRRfParameters obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SNROpticalParameters OPTICAL() { return OPTICAL(new SNROpticalParameters()); }
+  public SNROpticalParameters OPTICAL(SNROpticalParameters obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Where the values of this record were read. A published real-world sensor
+   * carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+   * carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+   * for that section.
+   */
+  public OPPProvenance PROVENANCE() { return PROVENANCE(new OPPProvenance()); }
+  public OPPProvenance PROVENANCE(OPPProvenance obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public String NOTES() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
 
   public static int createSNR(FlatBufferBuilder builder,
-      int TYPE,
-      int MODE,
-      int RESERVED1,
-      double MAX_RANGE,
-      double MIN_RANGE,
-      float FOV_AZIMUTH,
-      float FOV_ELEVATION,
-      float ANGULAR_RESOLUTION,
-      float RANGE_RESOLUTION,
-      float UPDATE_RATE,
-      float DETECTION_THRESHOLD,
-      float AZIMUTH_SCAN_RATE,
-      float ELEVATION_SCAN_RATE,
-      float POWER,
-      float FREQUENCY,
-      int RESERVEDOffset) {
+      int SENSOR_IDOffset,
+      int NAMEOffset,
+      long NORAD_CAT_ID,
+      int OBJECT_IDOffset,
+      int SITE_IDOffset,
+      int ENTITY_IDOffset,
+      byte TYPE,
+      byte EMISSION,
+      int SPECTRAL_BANDSOffset,
+      int FIELD_OF_VIEWOffset,
+      int FIELD_OF_VIEW_PROVENANCEOffset,
+      int MOUNTINGOffset,
+      int RFOffset,
+      int OPTICALOffset,
+      int PROVENANCEOffset,
+      int NOTESOffset) {
     builder.startTable(16);
-    SNR.addMinRange(builder, MIN_RANGE);
-    SNR.addMaxRange(builder, MAX_RANGE);
-    SNR.addReserved(builder, RESERVEDOffset);
-    SNR.addFrequency(builder, FREQUENCY);
-    SNR.addPower(builder, POWER);
-    SNR.addElevationScanRate(builder, ELEVATION_SCAN_RATE);
-    SNR.addAzimuthScanRate(builder, AZIMUTH_SCAN_RATE);
-    SNR.addDetectionThreshold(builder, DETECTION_THRESHOLD);
-    SNR.addUpdateRate(builder, UPDATE_RATE);
-    SNR.addRangeResolution(builder, RANGE_RESOLUTION);
-    SNR.addAngularResolution(builder, ANGULAR_RESOLUTION);
-    SNR.addFovElevation(builder, FOV_ELEVATION);
-    SNR.addFovAzimuth(builder, FOV_AZIMUTH);
-    SNR.addReserved1(builder, RESERVED1);
-    SNR.addMode(builder, MODE);
+    SNR.addNotes(builder, NOTESOffset);
+    SNR.addProvenance(builder, PROVENANCEOffset);
+    SNR.addOptical(builder, OPTICALOffset);
+    SNR.addRf(builder, RFOffset);
+    SNR.addMounting(builder, MOUNTINGOffset);
+    SNR.addFieldOfViewProvenance(builder, FIELD_OF_VIEW_PROVENANCEOffset);
+    SNR.addFieldOfView(builder, FIELD_OF_VIEWOffset);
+    SNR.addSpectralBands(builder, SPECTRAL_BANDSOffset);
+    SNR.addEntityId(builder, ENTITY_IDOffset);
+    SNR.addSiteId(builder, SITE_IDOffset);
+    SNR.addObjectId(builder, OBJECT_IDOffset);
+    SNR.addNoradCatId(builder, NORAD_CAT_ID);
+    SNR.addName(builder, NAMEOffset);
+    SNR.addSensorId(builder, SENSOR_IDOffset);
+    SNR.addEmission(builder, EMISSION);
     SNR.addType(builder, TYPE);
     return SNR.endSNR(builder);
   }
 
   public static void startSNR(FlatBufferBuilder builder) { builder.startTable(16); }
-  public static void addType(FlatBufferBuilder builder, int TYPE) { builder.addByte(0, (byte) TYPE, (byte) 0); }
-  public static void addMode(FlatBufferBuilder builder, int MODE) { builder.addByte(1, (byte) MODE, (byte) 0); }
-  public static void addReserved1(FlatBufferBuilder builder, int RESERVED1) { builder.addShort(2, (short) RESERVED1, (short) 0); }
-  public static void addMaxRange(FlatBufferBuilder builder, double MAX_RANGE) { builder.addDouble(3, MAX_RANGE, 0.0); }
-  public static void addMinRange(FlatBufferBuilder builder, double MIN_RANGE) { builder.addDouble(4, MIN_RANGE, 0.0); }
-  public static void addFovAzimuth(FlatBufferBuilder builder, float FOV_AZIMUTH) { builder.addFloat(5, FOV_AZIMUTH, 0.0f); }
-  public static void addFovElevation(FlatBufferBuilder builder, float FOV_ELEVATION) { builder.addFloat(6, FOV_ELEVATION, 0.0f); }
-  public static void addAngularResolution(FlatBufferBuilder builder, float ANGULAR_RESOLUTION) { builder.addFloat(7, ANGULAR_RESOLUTION, 0.0f); }
-  public static void addRangeResolution(FlatBufferBuilder builder, float RANGE_RESOLUTION) { builder.addFloat(8, RANGE_RESOLUTION, 0.0f); }
-  public static void addUpdateRate(FlatBufferBuilder builder, float UPDATE_RATE) { builder.addFloat(9, UPDATE_RATE, 0.0f); }
-  public static void addDetectionThreshold(FlatBufferBuilder builder, float DETECTION_THRESHOLD) { builder.addFloat(10, DETECTION_THRESHOLD, 0.0f); }
-  public static void addAzimuthScanRate(FlatBufferBuilder builder, float AZIMUTH_SCAN_RATE) { builder.addFloat(11, AZIMUTH_SCAN_RATE, 0.0f); }
-  public static void addElevationScanRate(FlatBufferBuilder builder, float ELEVATION_SCAN_RATE) { builder.addFloat(12, ELEVATION_SCAN_RATE, 0.0f); }
-  public static void addPower(FlatBufferBuilder builder, float POWER) { builder.addFloat(13, POWER, 0.0f); }
-  public static void addFrequency(FlatBufferBuilder builder, float FREQUENCY) { builder.addFloat(14, FREQUENCY, 0.0f); }
-  public static void addReserved(FlatBufferBuilder builder, int RESERVEDOffset) { builder.addOffset(15, RESERVEDOffset, 0); }
-  public static int createReservedVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
-  public static int createReservedVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
-  public static void startReservedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(0, SENSOR_IDOffset, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
+  public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(3, OBJECT_IDOffset, 0); }
+  public static void addSiteId(FlatBufferBuilder builder, int SITE_IDOffset) { builder.addOffset(4, SITE_IDOffset, 0); }
+  public static void addEntityId(FlatBufferBuilder builder, int ENTITY_IDOffset) { builder.addOffset(5, ENTITY_IDOffset, 0); }
+  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(6, TYPE, 29); }
+  public static void addEmission(FlatBufferBuilder builder, byte EMISSION) { builder.addByte(7, EMISSION, 0); }
+  public static void addSpectralBands(FlatBufferBuilder builder, int SPECTRAL_BANDSOffset) { builder.addOffset(8, SPECTRAL_BANDSOffset, 0); }
+  public static int createSpectralBandsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSpectralBandsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFieldOfView(FlatBufferBuilder builder, int FIELD_OF_VIEWOffset) { builder.addOffset(9, FIELD_OF_VIEWOffset, 0); }
+  public static void addFieldOfViewProvenance(FlatBufferBuilder builder, int FIELD_OF_VIEW_PROVENANCEOffset) { builder.addOffset(10, FIELD_OF_VIEW_PROVENANCEOffset, 0); }
+  public static void addMounting(FlatBufferBuilder builder, int MOUNTINGOffset) { builder.addOffset(11, MOUNTINGOffset, 0); }
+  public static void addRf(FlatBufferBuilder builder, int RFOffset) { builder.addOffset(12, RFOffset, 0); }
+  public static void addOptical(FlatBufferBuilder builder, int OPTICALOffset) { builder.addOffset(13, OPTICALOffset, 0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(14, PROVENANCEOffset, 0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(15, NOTESOffset, 0); }
   public static int endSNR(FlatBufferBuilder builder) {
     int o = builder.endTable();
+    builder.required(o, 4);  // SENSOR_ID
     return o;
   }
   public static void finishSNRBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset, "$SNR"); }

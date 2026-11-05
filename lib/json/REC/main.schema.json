@@ -2091,7 +2091,7 @@
     },
     "oppDeterminationMethod" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "MEASURED", "OPERATOR_STATED", "ESTIMATED", "DERIVED", "MODEL_DERIVED", "INFERRED_FROM_FAMILY"]
+      "enum": ["UNSPECIFIED", "MEASURED", "OPERATOR_STATED", "ESTIMATED", "DERIVED", "MODEL_DERIVED", "INFERRED_FROM_FAMILY", "USER_DEFINED"]
     },
     "oppRcsAspect" : {
       "type" : "string",
@@ -2595,15 +2595,27 @@
     },
     "SensorType" : {
       "type" : "string",
-      "enum": ["RADAR_PULSE", "RADAR_DOPPLER", "RADAR_CW", "RADAR_AESA", "RADAR_PESA", "IR_SEARCH", "IR_IMAGING", "EO_TV", "EO_LLLTV", "LASER_DESIGNATOR", "LASER_RANGEFINDER", "RWR", "MAW", "SONAR_ACTIVE", "SONAR_PASSIVE", "ACOUSTIC"]
+      "enum": ["RADAR_PULSE", "RADAR_DOPPLER", "RADAR_CW", "RADAR_AESA", "RADAR_PESA", "IR_SEARCH", "IR_IMAGING", "EO_TV", "EO_LLLTV", "LASER_DESIGNATOR", "LASER_RANGEFINDER", "RWR", "MAW", "SONAR_ACTIVE", "SONAR_PASSIVE", "ACOUSTIC", "OPTICAL_TELESCOPE", "MULTISPECTRAL_IMAGER", "HYPERSPECTRAL_IMAGER", "SAR", "ALTIMETER", "SCATTEROMETER", "RADIOMETER", "LIDAR", "PASSIVE_RF_ESM", "SIGINT", "COMMS_ANTENNA", "TT_AND_C_ANTENNA", "PHASED_ARRAY_EARLY_WARNING", "UNSPECIFIED"]
     },
-    "SensorMode" : {
+    "snrEmissionMode" : {
       "type" : "string",
-      "enum": ["OFF", "STANDBY", "SEARCH", "ACQUISITION", "TRACK", "TRACK_WHILE_SCAN", "DESIGNATE", "JAMMED"]
+      "enum": ["UNSPECIFIED", "ACTIVE", "PASSIVE"]
     },
-    "TrackQuality" : {
+    "snrBandDirection" : {
       "type" : "string",
-      "enum": ["NONE", "TENTATIVE", "FIRM", "LOCKED", "COASTING", "LOST"]
+      "enum": ["UNSPECIFIED", "RECEIVE", "TRANSMIT", "TRANSCEIVE"]
+    },
+    "snrMountingFrame" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "PLATFORM_BODY", "LVLH", "LOCAL_ENU"]
+    },
+    "snrPointingMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NADIR", "FIXED", "TRACK", "SCAN"]
+    },
+    "snrAntennaPattern" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID"]
     },
     "snwErrorCode" : {
       "type" : "string",
@@ -53164,8 +53176,24 @@
       },
       "additionalProperties" : false
     },
+    "SCVAzElMaskPoint" : {
+      "type" : "object",
+      "description" : "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+      "properties" : {
+        "AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Azimuth, degrees clockwise from north, in [0, 360)."
+              },
+        "MIN_ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCVSensorShapeContract" : {
       "type" : "object",
+      "description" : "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
       "properties" : {
         "SHAPE_KIND" : {
                 "$ref" : "#/definitions/scvSensorShapeKind"
@@ -53214,6 +53242,10 @@
               },
         "POLYGON_FRAME" : {
                 "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "AZ_EL_MASK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVAzElMaskPoint"},
+                "description" : "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
               }
       },
       "additionalProperties" : false
@@ -56521,59 +56553,229 @@
       "required" : ["PROBLEM_ID", "PROPAGATOR_PORT_ID", "ATTESTATION"],
       "additionalProperties" : false
     },
-    "SNR" : {
+    "SNRSpectralBand" : {
       "type" : "object",
-      "description" : "Sensor Systems",
+      "description" : "One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for \"not stated\".",
       "properties" : {
-        "TYPE" : {
-                "type" : "integer", "minimum" : 0, "maximum" :255
+        "NAME" : {
+                "type" : "string",
+                "description" : "The band as its source names it: \"UHF\", \"X-band\", \"VNIR\", \"Green\"."
               },
-        "MODE" : {
-                "type" : "integer", "minimum" : 0, "maximum" :255
+        "DESIGNATION" : {
+                "type" : "string",
+                "description" : "The designation exactly as the source states it (\"UHF\", \"X\", \"Ka\", \"SWIR\").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none."
               },
-        "RESERVED1" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 65535
+        "FREQ_LOW_HZ" : {
+                "type" : "number",
+                "description" : "Lower edge, Hz. 0 = not stated."
               },
-        "MAX_RANGE" : {
-                "type" : "number"
+        "FREQ_HIGH_HZ" : {
+                "type" : "number",
+                "description" : "Upper edge, Hz. 0 = not stated."
               },
-        "MIN_RANGE" : {
-                "type" : "number"
+        "DIRECTION" : {
+                "$ref" : "#/definitions/snrBandDirection"
               },
-        "FOV_AZIMUTH" : {
-                "type" : "number"
-              },
-        "FOV_ELEVATION" : {
-                "type" : "number"
-              },
-        "ANGULAR_RESOLUTION" : {
-                "type" : "number"
-              },
-        "RANGE_RESOLUTION" : {
-                "type" : "number"
-              },
-        "UPDATE_RATE" : {
-                "type" : "number"
-              },
-        "DETECTION_THRESHOLD" : {
-                "type" : "number"
-              },
-        "AZIMUTH_SCAN_RATE" : {
-                "type" : "number"
-              },
-        "ELEVATION_SCAN_RATE" : {
-                "type" : "number"
-              },
-        "POWER" : {
-                "type" : "number"
-              },
-        "FREQUENCY" : {
-                "type" : "number"
-              },
-        "RESERVED" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where this band was read, when it differs from the record's PROVENANCE."
               }
       },
+      "additionalProperties" : false
+    },
+    "SNRMounting" : {
+      "type" : "object",
+      "description" : "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+      "properties" : {
+        "FRAME" : {
+                "$ref" : "#/definitions/snrMountingFrame"
+              },
+        "BORESIGHT_AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Boresight azimuth in FRAME. NaN = not stated."
+              },
+        "BORESIGHT_ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "Boresight elevation in FRAME. NaN = not stated."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "Roll about the boresight. NaN = not stated."
+              },
+        "POINTING" : {
+                "$ref" : "#/definitions/snrPointingMode"
+              },
+        "SCAN_AZIMUTH_RATE_DEG_S" : {
+                "type" : "number",
+                "description" : "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+              },
+        "SCAN_ELEVATION_RATE_DEG_S" : {
+                "type" : "number",
+                "description" : "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+              },
+        "AZIMUTH_LIMIT_MIN_DEG" : {
+                "type" : "number",
+                "description" : "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at."
+              },
+        "AZIMUTH_LIMIT_MAX_DEG" : {
+                "type" : "number"
+              },
+        "ELEVATION_LIMIT_MIN_DEG" : {
+                "type" : "number"
+              },
+        "ELEVATION_LIMIT_MAX_DEG" : {
+                "type" : "number"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where the mounting was read, when it differs from the record's PROVENANCE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SNRRfParameters" : {
+      "type" : "object",
+      "description" : "Radio-frequency parameters. Positive quantities use 0 for \"not stated\";\nANTENNA_GAIN_DBI is signed and uses NaN.",
+      "properties" : {
+        "ANTENNA_PATTERN" : {
+                "$ref" : "#/definitions/snrAntennaPattern"
+              },
+        "PEAK_POWER_W" : {
+                "type" : "number",
+                "description" : "Peak transmit power, W."
+              },
+        "ANTENNA_GAIN_DBI" : {
+                "type" : "number",
+                "description" : "Antenna gain, dBi. NaN = not stated."
+              },
+        "BEAMWIDTH_AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "3 dB beamwidth in azimuth, degrees."
+              },
+        "BEAMWIDTH_ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "3 dB beamwidth in elevation, degrees."
+              },
+        "BANDWIDTH_HZ" : {
+                "type" : "number",
+                "description" : "Instantaneous bandwidth, Hz."
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfPolarization"
+              },
+        "PRF_HZ" : {
+                "type" : "number",
+                "description" : "Pulse repetition frequency, Hz (radar)."
+              },
+        "PULSE_WIDTH_S" : {
+                "type" : "number",
+                "description" : "Pulse width, seconds (radar)."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where these values were read, when it differs from the record's PROVENANCE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SNROpticalParameters" : {
+      "type" : "object",
+      "description" : "Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for \"not stated\"; 0 means \"not stated\" elsewhere.",
+      "properties" : {
+        "APERTURE_M" : {
+                "type" : "number",
+                "description" : "Clear aperture diameter, m."
+              },
+        "FOCAL_LENGTH_M" : {
+                "type" : "number",
+                "description" : "Focal length, m."
+              },
+        "IFOV_RAD" : {
+                "type" : "number",
+                "description" : "Instantaneous field of view of one detector element, radians."
+              },
+        "GSD_M" : {
+                "type" : "number",
+                "description" : "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES)."
+              },
+        "LIMITING_MAGNITUDE" : {
+                "type" : "number",
+                "description" : "Limiting visual magnitude. NaN = not stated."
+              },
+        "DETECTOR" : {
+                "type" : "string",
+                "description" : "Detector as the source names it (\"CCD\", \"HgCdTe\", \"sCMOS\")."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where these values were read, when it differs from the record's PROVENANCE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SNR" : {
+      "type" : "object",
+      "description" : "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this sensor. $SEN.ID of the same sensor."
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "$SIT.ID of the ground site the sensor is at."
+              },
+        "ENTITY_ID" : {
+                "type" : "string",
+                "description" : "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT."
+              },
+        "TYPE" : {
+                "$ref" : "#/definitions/SensorType"
+              },
+        "EMISSION" : {
+                "$ref" : "#/definitions/snrEmissionMode"
+              },
+        "SPECTRAL_BANDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SNRSpectralBand"},
+                "description" : "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated."
+              },
+        "FIELD_OF_VIEW" : {
+                "$ref" : "#/definitions/SCVSensorShapeContract",
+                "description" : "Field-of-view shape: the same table $SCV analyses use."
+              },
+        "FIELD_OF_VIEW_PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE."
+              },
+        "MOUNTING" : {
+                "$ref" : "#/definitions/SNRMounting"
+              },
+        "RF" : {
+                "$ref" : "#/definitions/SNRRfParameters"
+              },
+        "OPTICAL" : {
+                "$ref" : "#/definitions/SNROpticalParameters"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/OPPProvenance",
+                "description" : "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section."
+              },
+        "NOTES" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SENSOR_ID"],
       "additionalProperties" : false
     },
     "SNWBatchRequest" : {

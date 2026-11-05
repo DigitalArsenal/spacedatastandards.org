@@ -24,6 +24,9 @@ class oppDeterminationMethod
     /// Taken from the bus design or from a sibling object in the same family
     /// because no per-object value exists. Always an approximation.
     const INFERRED_FROM_FAMILY = 6;
+    /// Entered by a user for a sensor or object they define; no source publishes
+    /// it. Appended 1.278.0.
+    const USER_DEFINED = 7;
 
     private static $names = array(
         oppDeterminationMethod::UNSPECIFIED=>"UNSPECIFIED",
@@ -33,6 +36,7 @@ class oppDeterminationMethod
         oppDeterminationMethod::DERIVED=>"DERIVED",
         oppDeterminationMethod::MODEL_DERIVED=>"MODEL_DERIVED",
         oppDeterminationMethod::INFERRED_FROM_FAMILY=>"INFERRED_FROM_FAMILY",
+        oppDeterminationMethod::USER_DEFINED=>"USER_DEFINED",
     );
 
     public static function Name($e)

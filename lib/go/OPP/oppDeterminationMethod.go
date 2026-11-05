@@ -28,6 +28,9 @@ const (
 	/// Taken from the bus design or from a sibling object in the same family
 	/// because no per-object value exists. Always an approximation.
 	oppDeterminationMethodINFERRED_FROM_FAMILY oppDeterminationMethod = 6
+	/// Entered by a user for a sensor or object they define; no source publishes
+	/// it. Appended 1.278.0.
+	oppDeterminationMethodUSER_DEFINED         oppDeterminationMethod = 7
 )
 
 var EnumNamesoppDeterminationMethod = map[oppDeterminationMethod]string{
@@ -38,6 +41,7 @@ var EnumNamesoppDeterminationMethod = map[oppDeterminationMethod]string{
 	oppDeterminationMethodDERIVED:              "DERIVED",
 	oppDeterminationMethodMODEL_DERIVED:        "MODEL_DERIVED",
 	oppDeterminationMethodINFERRED_FROM_FAMILY: "INFERRED_FROM_FAMILY",
+	oppDeterminationMethodUSER_DEFINED:         "USER_DEFINED",
 }
 
 var EnumValuesoppDeterminationMethod = map[string]oppDeterminationMethod{
@@ -48,6 +52,7 @@ var EnumValuesoppDeterminationMethod = map[string]oppDeterminationMethod{
 	"DERIVED":              oppDeterminationMethodDERIVED,
 	"MODEL_DERIVED":        oppDeterminationMethodMODEL_DERIVED,
 	"INFERRED_FROM_FAMILY": oppDeterminationMethodINFERRED_FROM_FAMILY,
+	"USER_DEFINED":         oppDeterminationMethodUSER_DEFINED,
 }
 
 func (v oppDeterminationMethod) String() string {

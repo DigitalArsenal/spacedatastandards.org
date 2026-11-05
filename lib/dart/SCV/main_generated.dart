@@ -939,6 +939,99 @@ class SCVTimeGridObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One point of an azimuth/elevation mask: the lowest elevation at which the
+///  sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+///  polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+///  point to the first across 360 degrees, linearly interpolated in azimuth.
+class SCVAzElMaskPoint {
+  SCVAzElMaskPoint._(this._bc, this._bcOffset);
+  factory SCVAzElMaskPoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVAzElMaskPoint> reader = _SCVAzElMaskPointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Azimuth, degrees clockwise from north, in [0, 360).
+  double get AZIMUTH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get azimuthDeg => AZIMUTH_DEG;
+  ///  Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+  double get MIN_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get minElevationDeg => MIN_ELEVATION_DEG;
+
+  @override
+  String toString() {
+    return 'SCVAzElMaskPoint{azimuthDeg: ${azimuthDeg}, minElevationDeg: ${minElevationDeg}}';
+  }
+}
+
+class _SCVAzElMaskPointReader extends fb.TableReader<SCVAzElMaskPoint> {
+  const _SCVAzElMaskPointReader();
+
+  @override
+  SCVAzElMaskPoint createObject(fb.BufferContext bc, int offset) =>
+    SCVAzElMaskPoint._(bc, offset);
+}
+
+class SCVAzElMaskPointBuilder {
+  SCVAzElMaskPointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addAzimuthDeg(double? AZIMUTH_DEG) {
+    fbBuilder.addFloat64(0, AZIMUTH_DEG);
+    return fbBuilder.offset;
+  }
+  int addMinElevationDeg(double? MIN_ELEVATION_DEG) {
+    fbBuilder.addFloat64(1, MIN_ELEVATION_DEG);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVAzElMaskPointObjectBuilder extends fb.ObjectBuilder {
+  final double? _AZIMUTH_DEG;
+  final double? _MIN_ELEVATION_DEG;
+
+  SCVAzElMaskPointObjectBuilder({
+    double? AZIMUTH_DEG,
+    double? azimuthDeg,
+    double? MIN_ELEVATION_DEG,
+    double? minElevationDeg,
+  })
+      : _AZIMUTH_DEG = azimuthDeg ?? AZIMUTH_DEG,
+        _MIN_ELEVATION_DEG = minElevationDeg ?? MIN_ELEVATION_DEG;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addFloat64(0, _AZIMUTH_DEG);
+    fbBuilder.addFloat64(1, _MIN_ELEVATION_DEG);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+///  carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+///  definition and an analysis request never describe a shape in two types.
 class SCVSensorShapeContract {
   SCVSensorShapeContract._(this._bc, this._bcOffset);
   factory SCVSensorShapeContract(List<int> bytes) {
@@ -983,10 +1076,14 @@ class SCVSensorShapeContract {
   List<SCVVec3>? get polygonVertices => POLYGON_VERTICES;
   scvCoordinateFrame get POLYGON_FRAME => scvCoordinateFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 34, 0));
   scvCoordinateFrame get polygonFrame => POLYGON_FRAME;
+  ///  Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+  ///  Clips the shape: a direction below the mask is outside the field of view.
+  List<SCVAzElMaskPoint>? get AZ_EL_MASK => const fb.ListReader<SCVAzElMaskPoint>(SCVAzElMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 36);
+  List<SCVAzElMaskPoint>? get azElMask => AZ_EL_MASK;
 
   @override
   String toString() {
-    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}}';
+    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}, azElMask: ${azElMask}}';
   }
 }
 
@@ -1004,7 +1101,7 @@ class SCVSensorShapeContractBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(17);
   }
 
   int addShapeKind(scvSensorShapeKind? SHAPE_KIND) {
@@ -1071,6 +1168,10 @@ class SCVSensorShapeContractBuilder {
     fbBuilder.addUint8(15, POLYGON_FRAME?.value);
     return fbBuilder.offset;
   }
+  int addAzElMaskOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1094,6 +1195,7 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
   final double? _MAX_RANGE_M;
   final List<SCVVec3ObjectBuilder>? _POLYGON_VERTICES;
   final scvCoordinateFrame? _POLYGON_FRAME;
+  final List<SCVAzElMaskPointObjectBuilder>? _AZ_EL_MASK;
 
   SCVSensorShapeContractObjectBuilder({
     scvSensorShapeKind? SHAPE_KIND,
@@ -1128,6 +1230,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     List<SCVVec3ObjectBuilder>? polygonVertices,
     scvCoordinateFrame? POLYGON_FRAME,
     scvCoordinateFrame? polygonFrame,
+    List<SCVAzElMaskPointObjectBuilder>? AZ_EL_MASK,
+    List<SCVAzElMaskPointObjectBuilder>? azElMask,
   })
       : _SHAPE_KIND = shapeKind ?? SHAPE_KIND,
         _AXIS_CONVENTION = axisConvention ?? AXIS_CONVENTION,
@@ -1144,14 +1248,17 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
         _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
         _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
         _POLYGON_VERTICES = polygonVertices ?? POLYGON_VERTICES,
-        _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME;
+        _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME,
+        _AZ_EL_MASK = azElMask ?? AZ_EL_MASK;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? POLYGON_VERTICESOffset = _POLYGON_VERTICES == null ? null
         : fbBuilder.writeList(_POLYGON_VERTICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(16);
+    final int? AZ_EL_MASKOffset = _AZ_EL_MASK == null ? null
+        : fbBuilder.writeList(_AZ_EL_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(17);
     fbBuilder.addUint8(0, _SHAPE_KIND?.value);
     fbBuilder.addUint8(1, _AXIS_CONVENTION?.value);
     fbBuilder.addUint8(2, _RANGE_BOUNDARY?.value);
@@ -1168,6 +1275,7 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(13, _MAX_RANGE_M);
     fbBuilder.addOffset(14, POLYGON_VERTICESOffset);
     fbBuilder.addUint8(15, _POLYGON_FRAME?.value);
+    fbBuilder.addOffset(16, AZ_EL_MASKOffset);
     return fbBuilder.endTable();
   }
 

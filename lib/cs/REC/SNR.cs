@@ -6,7 +6,16 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Sensor Systems
+/// Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+/// UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+/// is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+/// string, table or vector is absent. A value is never invented, never zero as a
+/// placeholder, never copied from another sensor. Hz is the only frequency unit.
+/// Display colors are viewer preferences and never travel in this record.
+///
+/// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+/// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 public struct SNR : IFlatbufferObject
 {
   private Table __p;
@@ -19,91 +28,136 @@ public struct SNR : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SNR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte TYPE { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public byte MODE { get { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public ushort RESERVED1 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public double MAX_RANGE { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MIN_RANGE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public float FOV_AZIMUTH { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float FOV_ELEVATION { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float ANGULAR_RESOLUTION { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float RANGE_RESOLUTION { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float UPDATE_RATE { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float DETECTION_THRESHOLD { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float AZIMUTH_SCAN_RATE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float ELEVATION_SCAN_RATE { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float POWER { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public float FREQUENCY { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public byte RESERVED(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int RESERVEDLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+  public string SENSOR_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRESERVEDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetRESERVEDBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetRESERVEDArray() { return __p.__vector_as_array<byte>(34); }
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(4); }
+  public string NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(6); }
+  /// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+  public string OBJECT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// $SIT.ID of the ground site the sensor is at.
+  public string SITE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSITE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetSITE_IDBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetSITE_IDArray() { return __p.__vector_as_array<byte>(12); }
+  /// Stable non-catalogue entity key of the platform, for a platform with neither
+  /// a catalogue number nor a $SIT.
+  public string ENTITY_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENTITY_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetENTITY_IDBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetENTITY_IDArray() { return __p.__vector_as_array<byte>(14); }
+  public SensorType TYPE { get { int o = __p.__offset(16); return o != 0 ? (SensorType)__p.bb.GetSbyte(o + __p.bb_pos) : SensorType.UNSPECIFIED; } }
+  public snrEmissionMode EMISSION { get { int o = __p.__offset(18); return o != 0 ? (snrEmissionMode)__p.bb.GetSbyte(o + __p.bb_pos) : snrEmissionMode.UNSPECIFIED; } }
+  /// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+  /// a passive RF receiver. Empty = none stated.
+  public SNRSpectralBand? SPECTRAL_BANDS(int j) { int o = __p.__offset(20); return o != 0 ? (SNRSpectralBand?)(new SNRSpectralBand()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SPECTRAL_BANDSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Field-of-view shape: the same table $SCV analyses use.
+  public SCVSensorShapeContract? FIELD_OF_VIEW { get { int o = __p.__offset(22); return o != 0 ? (SCVSensorShapeContract?)(new SCVSensorShapeContract()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+  public OPPProvenance? FIELD_OF_VIEW_PROVENANCE { get { int o = __p.__offset(24); return o != 0 ? (OPPProvenance?)(new OPPProvenance()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SNRMounting? MOUNTING { get { int o = __p.__offset(26); return o != 0 ? (SNRMounting?)(new SNRMounting()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SNRRfParameters? RF { get { int o = __p.__offset(28); return o != 0 ? (SNRRfParameters?)(new SNRRfParameters()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SNROpticalParameters? OPTICAL { get { int o = __p.__offset(30); return o != 0 ? (SNROpticalParameters?)(new SNROpticalParameters()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Where the values of this record were read. A published real-world sensor
+  /// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+  /// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+  /// for that section.
+  public OPPProvenance? PROVENANCE { get { int o = __p.__offset(32); return o != 0 ? (OPPProvenance?)(new OPPProvenance()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public string NOTES { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(34); }
 
   public static Offset<SNR> CreateSNR(FlatBufferBuilder builder,
-      byte TYPE = 0,
-      byte MODE = 0,
-      ushort RESERVED1 = 0,
-      double MAX_RANGE = 0.0,
-      double MIN_RANGE = 0.0,
-      float FOV_AZIMUTH = 0.0f,
-      float FOV_ELEVATION = 0.0f,
-      float ANGULAR_RESOLUTION = 0.0f,
-      float RANGE_RESOLUTION = 0.0f,
-      float UPDATE_RATE = 0.0f,
-      float DETECTION_THRESHOLD = 0.0f,
-      float AZIMUTH_SCAN_RATE = 0.0f,
-      float ELEVATION_SCAN_RATE = 0.0f,
-      float POWER = 0.0f,
-      float FREQUENCY = 0.0f,
-      VectorOffset RESERVEDOffset = default(VectorOffset)) {
+      StringOffset SENSOR_IDOffset = default(StringOffset),
+      StringOffset NAMEOffset = default(StringOffset),
+      uint NORAD_CAT_ID = 0,
+      StringOffset OBJECT_IDOffset = default(StringOffset),
+      StringOffset SITE_IDOffset = default(StringOffset),
+      StringOffset ENTITY_IDOffset = default(StringOffset),
+      SensorType TYPE = SensorType.UNSPECIFIED,
+      snrEmissionMode EMISSION = snrEmissionMode.UNSPECIFIED,
+      VectorOffset SPECTRAL_BANDSOffset = default(VectorOffset),
+      Offset<SCVSensorShapeContract> FIELD_OF_VIEWOffset = default(Offset<SCVSensorShapeContract>),
+      Offset<OPPProvenance> FIELD_OF_VIEW_PROVENANCEOffset = default(Offset<OPPProvenance>),
+      Offset<SNRMounting> MOUNTINGOffset = default(Offset<SNRMounting>),
+      Offset<SNRRfParameters> RFOffset = default(Offset<SNRRfParameters>),
+      Offset<SNROpticalParameters> OPTICALOffset = default(Offset<SNROpticalParameters>),
+      Offset<OPPProvenance> PROVENANCEOffset = default(Offset<OPPProvenance>),
+      StringOffset NOTESOffset = default(StringOffset)) {
     builder.StartTable(16);
-    SNR.AddMIN_RANGE(builder, MIN_RANGE);
-    SNR.AddMAX_RANGE(builder, MAX_RANGE);
-    SNR.AddRESERVED(builder, RESERVEDOffset);
-    SNR.AddFREQUENCY(builder, FREQUENCY);
-    SNR.AddPOWER(builder, POWER);
-    SNR.AddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE);
-    SNR.AddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE);
-    SNR.AddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD);
-    SNR.AddUPDATE_RATE(builder, UPDATE_RATE);
-    SNR.AddRANGE_RESOLUTION(builder, RANGE_RESOLUTION);
-    SNR.AddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION);
-    SNR.AddFOV_ELEVATION(builder, FOV_ELEVATION);
-    SNR.AddFOV_AZIMUTH(builder, FOV_AZIMUTH);
-    SNR.AddRESERVED1(builder, RESERVED1);
-    SNR.AddMODE(builder, MODE);
+    SNR.AddNOTES(builder, NOTESOffset);
+    SNR.AddPROVENANCE(builder, PROVENANCEOffset);
+    SNR.AddOPTICAL(builder, OPTICALOffset);
+    SNR.AddRF(builder, RFOffset);
+    SNR.AddMOUNTING(builder, MOUNTINGOffset);
+    SNR.AddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCEOffset);
+    SNR.AddFIELD_OF_VIEW(builder, FIELD_OF_VIEWOffset);
+    SNR.AddSPECTRAL_BANDS(builder, SPECTRAL_BANDSOffset);
+    SNR.AddENTITY_ID(builder, ENTITY_IDOffset);
+    SNR.AddSITE_ID(builder, SITE_IDOffset);
+    SNR.AddOBJECT_ID(builder, OBJECT_IDOffset);
+    SNR.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
+    SNR.AddNAME(builder, NAMEOffset);
+    SNR.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    SNR.AddEMISSION(builder, EMISSION);
     SNR.AddTYPE(builder, TYPE);
     return SNR.EndSNR(builder);
   }
 
   public static void StartSNR(FlatBufferBuilder builder) { builder.StartTable(16); }
-  public static void AddTYPE(FlatBufferBuilder builder, byte TYPE) { builder.AddByte(0, TYPE, 0); }
-  public static void AddMODE(FlatBufferBuilder builder, byte MODE) { builder.AddByte(1, MODE, 0); }
-  public static void AddRESERVED1(FlatBufferBuilder builder, ushort RESERVED1) { builder.AddUshort(2, RESERVED1, 0); }
-  public static void AddMAX_RANGE(FlatBufferBuilder builder, double MAX_RANGE) { builder.AddDouble(3, MAX_RANGE, 0.0); }
-  public static void AddMIN_RANGE(FlatBufferBuilder builder, double MIN_RANGE) { builder.AddDouble(4, MIN_RANGE, 0.0); }
-  public static void AddFOV_AZIMUTH(FlatBufferBuilder builder, float FOV_AZIMUTH) { builder.AddFloat(5, FOV_AZIMUTH, 0.0f); }
-  public static void AddFOV_ELEVATION(FlatBufferBuilder builder, float FOV_ELEVATION) { builder.AddFloat(6, FOV_ELEVATION, 0.0f); }
-  public static void AddANGULAR_RESOLUTION(FlatBufferBuilder builder, float ANGULAR_RESOLUTION) { builder.AddFloat(7, ANGULAR_RESOLUTION, 0.0f); }
-  public static void AddRANGE_RESOLUTION(FlatBufferBuilder builder, float RANGE_RESOLUTION) { builder.AddFloat(8, RANGE_RESOLUTION, 0.0f); }
-  public static void AddUPDATE_RATE(FlatBufferBuilder builder, float UPDATE_RATE) { builder.AddFloat(9, UPDATE_RATE, 0.0f); }
-  public static void AddDETECTION_THRESHOLD(FlatBufferBuilder builder, float DETECTION_THRESHOLD) { builder.AddFloat(10, DETECTION_THRESHOLD, 0.0f); }
-  public static void AddAZIMUTH_SCAN_RATE(FlatBufferBuilder builder, float AZIMUTH_SCAN_RATE) { builder.AddFloat(11, AZIMUTH_SCAN_RATE, 0.0f); }
-  public static void AddELEVATION_SCAN_RATE(FlatBufferBuilder builder, float ELEVATION_SCAN_RATE) { builder.AddFloat(12, ELEVATION_SCAN_RATE, 0.0f); }
-  public static void AddPOWER(FlatBufferBuilder builder, float POWER) { builder.AddFloat(13, POWER, 0.0f); }
-  public static void AddFREQUENCY(FlatBufferBuilder builder, float FREQUENCY) { builder.AddFloat(14, FREQUENCY, 0.0f); }
-  public static void AddRESERVED(FlatBufferBuilder builder, VectorOffset RESERVEDOffset) { builder.AddOffset(15, RESERVEDOffset.Value, 0); }
-  public static VectorOffset CreateRESERVEDVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartRESERVEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(0, SENSOR_IDOffset.Value, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
+  public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(3, OBJECT_IDOffset.Value, 0); }
+  public static void AddSITE_ID(FlatBufferBuilder builder, StringOffset SITE_IDOffset) { builder.AddOffset(4, SITE_IDOffset.Value, 0); }
+  public static void AddENTITY_ID(FlatBufferBuilder builder, StringOffset ENTITY_IDOffset) { builder.AddOffset(5, ENTITY_IDOffset.Value, 0); }
+  public static void AddTYPE(FlatBufferBuilder builder, SensorType TYPE) { builder.AddSbyte(6, (sbyte)TYPE, 29); }
+  public static void AddEMISSION(FlatBufferBuilder builder, snrEmissionMode EMISSION) { builder.AddSbyte(7, (sbyte)EMISSION, 0); }
+  public static void AddSPECTRAL_BANDS(FlatBufferBuilder builder, VectorOffset SPECTRAL_BANDSOffset) { builder.AddOffset(8, SPECTRAL_BANDSOffset.Value, 0); }
+  public static VectorOffset CreateSPECTRAL_BANDSVector(FlatBufferBuilder builder, Offset<SNRSpectralBand>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_BANDSVectorBlock(FlatBufferBuilder builder, Offset<SNRSpectralBand>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_BANDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SNRSpectralBand>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_BANDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SNRSpectralBand>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPECTRAL_BANDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFIELD_OF_VIEW(FlatBufferBuilder builder, Offset<SCVSensorShapeContract> FIELD_OF_VIEWOffset) { builder.AddOffset(9, FIELD_OF_VIEWOffset.Value, 0); }
+  public static void AddFIELD_OF_VIEW_PROVENANCE(FlatBufferBuilder builder, Offset<OPPProvenance> FIELD_OF_VIEW_PROVENANCEOffset) { builder.AddOffset(10, FIELD_OF_VIEW_PROVENANCEOffset.Value, 0); }
+  public static void AddMOUNTING(FlatBufferBuilder builder, Offset<SNRMounting> MOUNTINGOffset) { builder.AddOffset(11, MOUNTINGOffset.Value, 0); }
+  public static void AddRF(FlatBufferBuilder builder, Offset<SNRRfParameters> RFOffset) { builder.AddOffset(12, RFOffset.Value, 0); }
+  public static void AddOPTICAL(FlatBufferBuilder builder, Offset<SNROpticalParameters> OPTICALOffset) { builder.AddOffset(13, OPTICALOffset.Value, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<OPPProvenance> PROVENANCEOffset) { builder.AddOffset(14, PROVENANCEOffset.Value, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(15, NOTESOffset.Value, 0); }
   public static Offset<SNR> EndSNR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
+    builder.Required(o, 4);  // SENSOR_ID
     return new Offset<SNR>(o);
   }
   public static void FinishSNRBuffer(FlatBufferBuilder builder, Offset<SNR> offset) { builder.Finish(offset.Value, "$SNR"); }
@@ -114,88 +168,101 @@ public struct SNR : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SNRT _o) {
+    _o.SENSOR_ID = this.SENSOR_ID;
+    _o.NAME = this.NAME;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
+    _o.OBJECT_ID = this.OBJECT_ID;
+    _o.SITE_ID = this.SITE_ID;
+    _o.ENTITY_ID = this.ENTITY_ID;
     _o.TYPE = this.TYPE;
-    _o.MODE = this.MODE;
-    _o.RESERVED1 = this.RESERVED1;
-    _o.MAX_RANGE = this.MAX_RANGE;
-    _o.MIN_RANGE = this.MIN_RANGE;
-    _o.FOV_AZIMUTH = this.FOV_AZIMUTH;
-    _o.FOV_ELEVATION = this.FOV_ELEVATION;
-    _o.ANGULAR_RESOLUTION = this.ANGULAR_RESOLUTION;
-    _o.RANGE_RESOLUTION = this.RANGE_RESOLUTION;
-    _o.UPDATE_RATE = this.UPDATE_RATE;
-    _o.DETECTION_THRESHOLD = this.DETECTION_THRESHOLD;
-    _o.AZIMUTH_SCAN_RATE = this.AZIMUTH_SCAN_RATE;
-    _o.ELEVATION_SCAN_RATE = this.ELEVATION_SCAN_RATE;
-    _o.POWER = this.POWER;
-    _o.FREQUENCY = this.FREQUENCY;
-    _o.RESERVED = new List<byte>();
-    for (var _j = 0; _j < this.RESERVEDLength; ++_j) {_o.RESERVED.Add(this.RESERVED(_j));}
+    _o.EMISSION = this.EMISSION;
+    _o.SPECTRAL_BANDS = new List<SNRSpectralBandT>();
+    for (var _j = 0; _j < this.SPECTRAL_BANDSLength; ++_j) {_o.SPECTRAL_BANDS.Add(this.SPECTRAL_BANDS(_j).HasValue ? this.SPECTRAL_BANDS(_j).Value.UnPack() : null);}
+    _o.FIELD_OF_VIEW = this.FIELD_OF_VIEW.HasValue ? this.FIELD_OF_VIEW.Value.UnPack() : null;
+    _o.FIELD_OF_VIEW_PROVENANCE = this.FIELD_OF_VIEW_PROVENANCE.HasValue ? this.FIELD_OF_VIEW_PROVENANCE.Value.UnPack() : null;
+    _o.MOUNTING = this.MOUNTING.HasValue ? this.MOUNTING.Value.UnPack() : null;
+    _o.RF = this.RF.HasValue ? this.RF.Value.UnPack() : null;
+    _o.OPTICAL = this.OPTICAL.HasValue ? this.OPTICAL.Value.UnPack() : null;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<SNR> Pack(FlatBufferBuilder builder, SNRT _o) {
     if (_o == null) return default(Offset<SNR>);
-    var _RESERVED = default(VectorOffset);
-    if (_o.RESERVED != null) {
-      var __RESERVED = _o.RESERVED.ToArray();
-      _RESERVED = CreateRESERVEDVector(builder, __RESERVED);
+    var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
+    var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
+    var _SITE_ID = _o.SITE_ID == null ? default(StringOffset) : builder.CreateString(_o.SITE_ID);
+    var _ENTITY_ID = _o.ENTITY_ID == null ? default(StringOffset) : builder.CreateString(_o.ENTITY_ID);
+    var _SPECTRAL_BANDS = default(VectorOffset);
+    if (_o.SPECTRAL_BANDS != null) {
+      var __SPECTRAL_BANDS = new Offset<SNRSpectralBand>[_o.SPECTRAL_BANDS.Count];
+      for (var _j = 0; _j < __SPECTRAL_BANDS.Length; ++_j) { __SPECTRAL_BANDS[_j] = SNRSpectralBand.Pack(builder, _o.SPECTRAL_BANDS[_j]); }
+      _SPECTRAL_BANDS = CreateSPECTRAL_BANDSVector(builder, __SPECTRAL_BANDS);
     }
+    var _FIELD_OF_VIEW = _o.FIELD_OF_VIEW == null ? default(Offset<SCVSensorShapeContract>) : SCVSensorShapeContract.Pack(builder, _o.FIELD_OF_VIEW);
+    var _FIELD_OF_VIEW_PROVENANCE = _o.FIELD_OF_VIEW_PROVENANCE == null ? default(Offset<OPPProvenance>) : OPPProvenance.Pack(builder, _o.FIELD_OF_VIEW_PROVENANCE);
+    var _MOUNTING = _o.MOUNTING == null ? default(Offset<SNRMounting>) : SNRMounting.Pack(builder, _o.MOUNTING);
+    var _RF = _o.RF == null ? default(Offset<SNRRfParameters>) : SNRRfParameters.Pack(builder, _o.RF);
+    var _OPTICAL = _o.OPTICAL == null ? default(Offset<SNROpticalParameters>) : SNROpticalParameters.Pack(builder, _o.OPTICAL);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<OPPProvenance>) : OPPProvenance.Pack(builder, _o.PROVENANCE);
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateSNR(
       builder,
+      _SENSOR_ID,
+      _NAME,
+      _o.NORAD_CAT_ID,
+      _OBJECT_ID,
+      _SITE_ID,
+      _ENTITY_ID,
       _o.TYPE,
-      _o.MODE,
-      _o.RESERVED1,
-      _o.MAX_RANGE,
-      _o.MIN_RANGE,
-      _o.FOV_AZIMUTH,
-      _o.FOV_ELEVATION,
-      _o.ANGULAR_RESOLUTION,
-      _o.RANGE_RESOLUTION,
-      _o.UPDATE_RATE,
-      _o.DETECTION_THRESHOLD,
-      _o.AZIMUTH_SCAN_RATE,
-      _o.ELEVATION_SCAN_RATE,
-      _o.POWER,
-      _o.FREQUENCY,
-      _RESERVED);
+      _o.EMISSION,
+      _SPECTRAL_BANDS,
+      _FIELD_OF_VIEW,
+      _FIELD_OF_VIEW_PROVENANCE,
+      _MOUNTING,
+      _RF,
+      _OPTICAL,
+      _PROVENANCE,
+      _NOTES);
   }
 }
 
 public class SNRT
 {
-  public byte TYPE { get; set; }
-  public byte MODE { get; set; }
-  public ushort RESERVED1 { get; set; }
-  public double MAX_RANGE { get; set; }
-  public double MIN_RANGE { get; set; }
-  public float FOV_AZIMUTH { get; set; }
-  public float FOV_ELEVATION { get; set; }
-  public float ANGULAR_RESOLUTION { get; set; }
-  public float RANGE_RESOLUTION { get; set; }
-  public float UPDATE_RATE { get; set; }
-  public float DETECTION_THRESHOLD { get; set; }
-  public float AZIMUTH_SCAN_RATE { get; set; }
-  public float ELEVATION_SCAN_RATE { get; set; }
-  public float POWER { get; set; }
-  public float FREQUENCY { get; set; }
-  public List<byte> RESERVED { get; set; }
+  public string SENSOR_ID { get; set; }
+  public string NAME { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
+  public string OBJECT_ID { get; set; }
+  public string SITE_ID { get; set; }
+  public string ENTITY_ID { get; set; }
+  public SensorType TYPE { get; set; }
+  public snrEmissionMode EMISSION { get; set; }
+  public List<SNRSpectralBandT> SPECTRAL_BANDS { get; set; }
+  public SCVSensorShapeContractT FIELD_OF_VIEW { get; set; }
+  public OPPProvenanceT FIELD_OF_VIEW_PROVENANCE { get; set; }
+  public SNRMountingT MOUNTING { get; set; }
+  public SNRRfParametersT RF { get; set; }
+  public SNROpticalParametersT OPTICAL { get; set; }
+  public OPPProvenanceT PROVENANCE { get; set; }
+  public string NOTES { get; set; }
 
   public SNRT() {
-    this.TYPE = 0;
-    this.MODE = 0;
-    this.RESERVED1 = 0;
-    this.MAX_RANGE = 0.0;
-    this.MIN_RANGE = 0.0;
-    this.FOV_AZIMUTH = 0.0f;
-    this.FOV_ELEVATION = 0.0f;
-    this.ANGULAR_RESOLUTION = 0.0f;
-    this.RANGE_RESOLUTION = 0.0f;
-    this.UPDATE_RATE = 0.0f;
-    this.DETECTION_THRESHOLD = 0.0f;
-    this.AZIMUTH_SCAN_RATE = 0.0f;
-    this.ELEVATION_SCAN_RATE = 0.0f;
-    this.POWER = 0.0f;
-    this.FREQUENCY = 0.0f;
-    this.RESERVED = null;
+    this.SENSOR_ID = null;
+    this.NAME = null;
+    this.NORAD_CAT_ID = 0;
+    this.OBJECT_ID = null;
+    this.SITE_ID = null;
+    this.ENTITY_ID = null;
+    this.TYPE = SensorType.UNSPECIFIED;
+    this.EMISSION = snrEmissionMode.UNSPECIFIED;
+    this.SPECTRAL_BANDS = null;
+    this.FIELD_OF_VIEW = null;
+    this.FIELD_OF_VIEW_PROVENANCE = null;
+    this.MOUNTING = null;
+    this.RF = null;
+    this.OPTICAL = null;
+    this.PROVENANCE = null;
+    this.NOTES = null;
   }
   public static SNRT DeserializeFromBinary(byte[] fbBuffer) {
     return SNR.GetRootAsSNR(new ByteBuffer(fbBuffer)).UnPack();
@@ -213,22 +280,22 @@ static public class SNRVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*TYPE*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 6 /*MODE*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*RESERVED1*/, 2 /*ushort*/, 2, false)
-      && verifier.VerifyField(tablePos, 10 /*MAX_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*MIN_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*FOV_AZIMUTH*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 16 /*FOV_ELEVATION*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 18 /*ANGULAR_RESOLUTION*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 20 /*RANGE_RESOLUTION*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 22 /*UPDATE_RATE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 24 /*DETECTION_THRESHOLD*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 26 /*AZIMUTH_SCAN_RATE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 28 /*ELEVATION_SCAN_RATE*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 30 /*POWER*/, 4 /*float*/, 4, false)
-      && verifier.VerifyField(tablePos, 32 /*FREQUENCY*/, 4 /*float*/, 4, false)
-      && verifier.VerifyVectorOfData(tablePos, 34 /*RESERVED*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 4 /*SENSOR_ID*/, true)
+      && verifier.VerifyString(tablePos, 6 /*NAME*/, false)
+      && verifier.VerifyField(tablePos, 8 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 10 /*OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 12 /*SITE_ID*/, false)
+      && verifier.VerifyString(tablePos, 14 /*ENTITY_ID*/, false)
+      && verifier.VerifyField(tablePos, 16 /*TYPE*/, 1 /*SensorType*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*EMISSION*/, 1 /*snrEmissionMode*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 20 /*SPECTRAL_BANDS*/, SNRSpectralBandVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 22 /*FIELD_OF_VIEW*/, SCVSensorShapeContractVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 24 /*FIELD_OF_VIEW_PROVENANCE*/, OPPProvenanceVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 26 /*MOUNTING*/, SNRMountingVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 28 /*RF*/, SNRRfParametersVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*OPTICAL*/, SNROpticalParametersVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 32 /*PROVENANCE*/, OPPProvenanceVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 34 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -40,5 +40,10 @@ class oppDeterminationMethod private constructor() {
          * because no per-object value exists. Always an approximation.
          */
         const val INFERRED_FROM_FAMILY: Byte = 6
+        /**
+         * Entered by a user for a sensor or object they define; no source publishes
+         * it. Appended 1.278.0.
+         */
+        const val USER_DEFINED: Byte = 7
     }
 }

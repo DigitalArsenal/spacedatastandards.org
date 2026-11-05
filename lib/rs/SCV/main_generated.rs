@@ -2276,8 +2276,178 @@ impl SCVTimeGridT {
     }
 }
 
+pub enum SCVAzElMaskPointOffset {}
+
+/// One point of an azimuth/elevation mask: the lowest elevation at which the
+/// sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+/// polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+/// point to the first across 360 degrees, linearly interpolated in azimuth.
+#[derive(Copy, Clone, PartialEq)]
+pub struct SCVAzElMaskPoint<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVAzElMaskPoint<'a> {
+    type Inner = SCVAzElMaskPoint<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> SCVAzElMaskPoint<'a> {
+    pub const VT_AZIMUTH_DEG: ::flatbuffers::VOffsetT = 4;
+    pub const VT_MIN_ELEVATION_DEG: ::flatbuffers::VOffsetT = 6;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        SCVAzElMaskPoint { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args SCVAzElMaskPointArgs
+    ) -> ::flatbuffers::WIPOffset<SCVAzElMaskPoint<'bldr>> {
+        let mut builder = SCVAzElMaskPointBuilder::new(_fbb);
+        builder.add_MIN_ELEVATION_DEG(args.MIN_ELEVATION_DEG);
+        builder.add_AZIMUTH_DEG(args.AZIMUTH_DEG);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> SCVAzElMaskPointT {
+        let AZIMUTH_DEG = self.AZIMUTH_DEG();
+        let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG();
+        SCVAzElMaskPointT {
+            AZIMUTH_DEG,
+            MIN_ELEVATION_DEG,
+        }
+    }
+
+    /// Azimuth, degrees clockwise from north, in [0, 360).
+    #[inline]
+    pub fn AZIMUTH_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCVAzElMaskPoint::VT_AZIMUTH_DEG, Some(0.0)).unwrap()}
+    }
+
+    /// Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+    #[inline]
+    pub fn MIN_ELEVATION_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCVAzElMaskPoint::VT_MIN_ELEVATION_DEG, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for SCVAzElMaskPoint<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<f64>("AZIMUTH_DEG", Self::VT_AZIMUTH_DEG, false)?
+            .visit_field::<f64>("MIN_ELEVATION_DEG", Self::VT_MIN_ELEVATION_DEG, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct SCVAzElMaskPointArgs {
+    pub AZIMUTH_DEG: f64,
+    pub MIN_ELEVATION_DEG: f64,
+}
+
+impl<'a> Default for SCVAzElMaskPointArgs {
+    #[inline]
+    fn default() -> Self {
+        SCVAzElMaskPointArgs {
+            AZIMUTH_DEG: 0.0,
+            MIN_ELEVATION_DEG: 0.0,
+        }
+    }
+}
+
+pub struct SCVAzElMaskPointBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVAzElMaskPointBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_AZIMUTH_DEG(&mut self, AZIMUTH_DEG: f64) {
+        self.fbb_.push_slot::<f64>(SCVAzElMaskPoint::VT_AZIMUTH_DEG, AZIMUTH_DEG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MIN_ELEVATION_DEG(&mut self, MIN_ELEVATION_DEG: f64) {
+        self.fbb_.push_slot::<f64>(SCVAzElMaskPoint::VT_MIN_ELEVATION_DEG, MIN_ELEVATION_DEG, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVAzElMaskPointBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        SCVAzElMaskPointBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVAzElMaskPoint<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for SCVAzElMaskPoint<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("SCVAzElMaskPoint");
+        ds.field("AZIMUTH_DEG", &self.AZIMUTH_DEG());
+        ds.field("MIN_ELEVATION_DEG", &self.MIN_ELEVATION_DEG());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVAzElMaskPointT {
+    pub AZIMUTH_DEG: f64,
+    pub MIN_ELEVATION_DEG: f64,
+}
+
+impl Default for SCVAzElMaskPointT {
+    fn default() -> Self {
+        Self {
+            AZIMUTH_DEG: 0.0,
+            MIN_ELEVATION_DEG: 0.0,
+        }
+    }
+}
+
+impl SCVAzElMaskPointT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<SCVAzElMaskPoint<'b>> {
+        let AZIMUTH_DEG = self.AZIMUTH_DEG;
+        let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG;
+        SCVAzElMaskPoint::create(_fbb, &SCVAzElMaskPointArgs{
+            AZIMUTH_DEG,
+            MIN_ELEVATION_DEG,
+        })
+    }
+}
+
 pub enum SCVSensorShapeContractOffset {}
 
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
 #[derive(Copy, Clone, PartialEq)]
 pub struct SCVSensorShapeContract<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -2309,6 +2479,7 @@ impl<'a> SCVSensorShapeContract<'a> {
     pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 30;
     pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
     pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
+    pub const VT_AZ_EL_MASK: ::flatbuffers::VOffsetT = 36;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2332,6 +2503,7 @@ impl<'a> SCVSensorShapeContract<'a> {
         builder.add_MIN_CLOCK_ANGLE_DEG(args.MIN_CLOCK_ANGLE_DEG);
         builder.add_INNER_HALF_ANGLE_DEG(args.INNER_HALF_ANGLE_DEG);
         builder.add_OUTER_HALF_ANGLE_DEG(args.OUTER_HALF_ANGLE_DEG);
+        if let Some(x) = args.AZ_EL_MASK { builder.add_AZ_EL_MASK(x); }
         if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
         builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
         builder.add_RANGE_BOUNDARY(args.RANGE_BOUNDARY);
@@ -2359,6 +2531,9 @@ impl<'a> SCVSensorShapeContract<'a> {
             x.iter().map(|t| t.unpack()).collect()
         });
         let POLYGON_FRAME = self.POLYGON_FRAME();
+        let AZ_EL_MASK = self.AZ_EL_MASK().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         SCVSensorShapeContractT {
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -2376,6 +2551,7 @@ impl<'a> SCVSensorShapeContract<'a> {
             MAX_RANGE_M,
             POLYGON_VERTICES,
             POLYGON_FRAME,
+            AZ_EL_MASK,
         }
     }
 
@@ -2506,6 +2682,16 @@ impl<'a> SCVSensorShapeContract<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<scvCoordinateFrame>(SCVSensorShapeContract::VT_POLYGON_FRAME, Some(scvCoordinateFrame::UNKNOWN)).unwrap()}
     }
+
+    /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+    /// Clips the shape: a direction below the mask is outside the field of view.
+    #[inline]
+    pub fn AZ_EL_MASK(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint>>>>(SCVSensorShapeContract::VT_AZ_EL_MASK, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
@@ -2530,6 +2716,7 @@ impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
             .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
             .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint>>>>("AZ_EL_MASK", Self::VT_AZ_EL_MASK, false)?
             .finish();
         Ok(())
     }
@@ -2552,6 +2739,7 @@ pub struct SCVSensorShapeContractArgs<'a> {
     pub MAX_RANGE_M: f64,
     pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
     pub POLYGON_FRAME: scvCoordinateFrame,
+    pub AZ_EL_MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint<'a>>>>>,
 }
 
 impl<'a> Default for SCVSensorShapeContractArgs<'a> {
@@ -2574,6 +2762,7 @@ impl<'a> Default for SCVSensorShapeContractArgs<'a> {
             MAX_RANGE_M: 0.0,
             POLYGON_VERTICES: None,
             POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+            AZ_EL_MASK: None,
         }
     }
 }
@@ -2665,6 +2854,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder
     }
 
     #[inline]
+    pub fn add_AZ_EL_MASK(&mut self, AZ_EL_MASK: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVSensorShapeContract::VT_AZ_EL_MASK, AZ_EL_MASK);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorShapeContractBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCVSensorShapeContractBuilder {
@@ -2699,6 +2893,7 @@ impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
         ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
         ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
         ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
+        ds.field("AZ_EL_MASK", &self.AZ_EL_MASK());
         ds.finish()
     }
 }
@@ -2722,6 +2917,7 @@ pub struct SCVSensorShapeContractT {
     pub MAX_RANGE_M: f64,
     pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
     pub POLYGON_FRAME: scvCoordinateFrame,
+    pub AZ_EL_MASK: Option<alloc::vec::Vec<SCVAzElMaskPointT>>,
 }
 
 impl Default for SCVSensorShapeContractT {
@@ -2743,6 +2939,7 @@ impl Default for SCVSensorShapeContractT {
             MAX_RANGE_M: 0.0,
             POLYGON_VERTICES: None,
             POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+            AZ_EL_MASK: None,
         }
     }
 }
@@ -2770,6 +2967,9 @@ impl SCVSensorShapeContractT {
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
         let POLYGON_FRAME = self.POLYGON_FRAME;
+        let AZ_EL_MASK = self.AZ_EL_MASK.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -2787,6 +2987,7 @@ impl SCVSensorShapeContractT {
             MAX_RANGE_M,
             POLYGON_VERTICES,
             POLYGON_FRAME,
+            AZ_EL_MASK,
         })
     }
 }

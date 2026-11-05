@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.277.0+1793851676398",
+  version: "1.278.0+1793889410335",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: f2481e45b6a46761ea28c2e4629626fbdae6fe73aca8d279f22e4b1aef14a3be
@@ -6920,8 +6920,8 @@ file_identifier "$LCH";`,
       ]
     },
     OPP: {
-      IDL: `// Hash: 88352e6bb4dc5ff1264097a167f8c87f94c747cb444eb7b6e21103727ef3ee91
-// Version: 1.171.1
+      IDL: `// Hash: 6b78b8f34837f81565c7de8b1f3fef8652e8885da02cbd826534c874fa27e402
+// Version: 1.171.2
 // -----------------------------------END_HEADER
 /// How one physical value was determined. Append new values only; never
 /// reorder or reuse existing values.
@@ -6944,7 +6944,10 @@ enum oppDeterminationMethod : byte {
   MODEL_DERIVED,
   /// Taken from the bus design or from a sibling object in the same family
   /// because no per-object value exists. Always an approximation.
-  INFERRED_FROM_FAMILY
+  INFERRED_FROM_FAMILY,
+  /// Entered by a user for a sensor or object they define; no source publishes
+  /// it. Appended 1.278.0.
+  USER_DEFINED
 }
 
 /// Aspect convention a radar cross-section value was reported under. Append new
@@ -7912,7 +7915,243 @@ file_identifier "$DCL";`,
       ]
     },
     SNR: {
-      IDL: '// Hash: 9ec4d51a29649ca1bd414f3fd9ad64f2d79faef9619638958cdd371ccf7a8f45\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum SensorType : byte {\n  RADAR_PULSE = 0,        // Pulse radar\n  RADAR_DOPPLER = 1,      // Pulse-Doppler radar\n  RADAR_CW = 2,           // Continuous wave radar\n  RADAR_AESA = 3,         // Active electronically scanned array\n  RADAR_PESA = 4,         // Passive electronically scanned array\n  IR_SEARCH = 5,          // Infrared search & track\n  IR_IMAGING = 6,         // Imaging infrared\n  EO_TV = 7,              // Electro-optical TV\n  EO_LLLTV = 8,           // Low-light level TV\n  LASER_DESIGNATOR = 9,   // Laser target designator\n  LASER_RANGEFINDER = 10, // Laser rangefinder\n  RWR = 11,               // Radar warning receiver\n  MAW = 12,               // Missile approach warning\n  SONAR_ACTIVE = 13,      // Active sonar\n  SONAR_PASSIVE = 14,     // Passive sonar\n  ACOUSTIC = 15,          // Acoustic sensor\n}\n\nenum SensorMode : byte {\n  OFF = 0,\n  STANDBY = 1,\n  SEARCH = 2,\n  ACQUISITION = 3,\n  TRACK = 4,\n  TRACK_WHILE_SCAN = 5,\n  DESIGNATE = 6,\n  JAMMED = 7,\n}\n\nenum TrackQuality : byte {\n  NONE = 0,\n  TENTATIVE = 1,\n  FIRM = 2,\n  LOCKED = 3,\n  COASTING = 4,\n  LOST = 5,\n}\n\n/// Sensor Systems\ntable SNR {\n  TYPE:ubyte;\n  MODE:ubyte;\n  RESERVED1:ushort;\n  MAX_RANGE:double;\n  MIN_RANGE:double;\n  FOV_AZIMUTH:float;\n  FOV_ELEVATION:float;\n  ANGULAR_RESOLUTION:float;\n  RANGE_RESOLUTION:float;\n  UPDATE_RATE:float;\n  DETECTION_THRESHOLD:float;\n  AZIMUTH_SCAN_RATE:float;\n  ELEVATION_SCAN_RATE:float;\n  POWER:float;\n  FREQUENCY:float;\n  RESERVED:[uint8];\n}\n\nroot_type SNR;\nfile_identifier "$SNR";',
+      IDL: `// Hash: 27620fd7dca9079faf5500ba9bd51aaf2882cfc17d8dc7f4fe002b9721d45798
+// Version: 0.0.3
+// -----------------------------------END_HEADER
+include "../OPP/main.fbs";
+include "../RFB/main.fbs";
+include "../SCV/main.fbs";
+
+/// What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+/// members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+/// by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+/// a writer always sets TYPE.
+enum SensorType : byte {
+  RADAR_PULSE = 0,        // Pulse radar
+  RADAR_DOPPLER = 1,      // Pulse-Doppler radar
+  RADAR_CW = 2,           // Continuous wave radar
+  RADAR_AESA = 3,         // Active electronically scanned array
+  RADAR_PESA = 4,         // Passive electronically scanned array
+  IR_SEARCH = 5,          // Infrared search & track
+  IR_IMAGING = 6,         // Imaging infrared
+  EO_TV = 7,              // Electro-optical TV
+  EO_LLLTV = 8,           // Low-light level TV
+  LASER_DESIGNATOR = 9,   // Laser target designator
+  LASER_RANGEFINDER = 10, // Laser rangefinder
+  RWR = 11,               // Radar warning receiver
+  MAW = 12,               // Missile approach warning
+  SONAR_ACTIVE = 13,      // Active sonar
+  SONAR_PASSIVE = 14,     // Passive sonar
+  ACOUSTIC = 15,          // Acoustic sensor
+  OPTICAL_TELESCOPE = 16,          // Imaging or tracking telescope
+  MULTISPECTRAL_IMAGER = 17,       // A few discrete spectral bands
+  HYPERSPECTRAL_IMAGER = 18,       // Many contiguous narrow bands
+  SAR = 19,                        // Synthetic-aperture radar
+  ALTIMETER = 20,                  // Radar or laser altimeter
+  SCATTEROMETER = 21,             // Backscatter (wind/surface) radar
+  RADIOMETER = 22,                 // Passive microwave or infrared radiometer
+  LIDAR = 23,                      // Light detection and ranging
+  PASSIVE_RF_ESM = 24,             // Passive RF electronic-support-measures receiver
+  SIGINT = 25,                     // Signals-intelligence collection payload
+  COMMS_ANTENNA = 26,              // Communications antenna
+  TT_AND_C_ANTENNA = 27,           // Telemetry, tracking and command antenna
+  PHASED_ARRAY_EARLY_WARNING = 28, // Phased-array early-warning radar
+  /// The writer states no kind. The default of TYPE, so an unset TYPE is not
+  /// read as RADAR_PULSE.
+  UNSPECIFIED = 29
+}
+
+/// Whether the sensor radiates to sense (ACTIVE) or only receives (PASSIVE).
+enum snrEmissionMode : byte {
+  UNSPECIFIED,
+  ACTIVE,
+  PASSIVE
+}
+
+/// How a spectral band is used. Matters for antennas and EW receivers whose
+/// transmit and receive bands differ.
+enum snrBandDirection : byte {
+  UNSPECIFIED,
+  RECEIVE,
+  TRANSMIT,
+  TRANSCEIVE
+}
+
+/// The frame MOUNTING angles are expressed in.
+enum snrMountingFrame : byte {
+  UNSPECIFIED,
+  /// Fixed to the platform body; the angles are body-axis angles.
+  PLATFORM_BODY,
+  /// Local vertical, local horizontal at the platform: radial, along-track,
+  /// cross-track.
+  LVLH,
+  /// Local east-north-up at a ground site. Azimuth clockwise from north,
+  /// elevation above the local horizontal.
+  LOCAL_ENU
+}
+
+/// Where the sensor points by default.
+enum snrPointingMode : byte {
+  UNSPECIFIED,
+  /// Toward the center of the body the platform orbits.
+  NADIR,
+  /// Fixed at the boresight angles in the mounting frame.
+  FIXED,
+  /// Slews to follow a designated target or object.
+  TRACK,
+  /// Sweeps at the scan rates through the field of regard.
+  SCAN
+}
+
+/// Radiation pattern of an RF antenna. Names follow OrbPro's antenna patterns.
+enum snrAntennaPattern : byte {
+  UNSPECIFIED,
+  ISOTROPIC,
+  HEMISPHERIC,
+  PARABOLIC,
+  GAUSSIAN,
+  PENCIL,
+  HELIX,
+  DIPOLE,
+  RINGED,
+  /// The earth-coverage (teardrop) beam of a geostationary antenna.
+  TEARDROP,
+  TOROIDAL,
+  CARDIOID
+}
+
+/// One spectral band of a sensor, in Hz. Hz is the unit for every band, optical
+/// included; a consumer that wants wavelength converts (lambda = c / f).
+/// Positive quantities use the default 0 for "not stated".
+table SNRSpectralBand {
+  /// The band as its source names it: "UHF", "X-band", "VNIR", "Green".
+  NAME:string;
+  /// The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").
+  /// Verbatim, never derived from the frequencies. RF designations use $RFB
+  /// rfBandDesignation spellings. Absent when the source states none.
+  DESIGNATION:string;
+  /// Lower edge, Hz. 0 = not stated.
+  FREQ_LOW_HZ:double;
+  /// Upper edge, Hz. 0 = not stated.
+  FREQ_HIGH_HZ:double;
+  DIRECTION:snrBandDirection = UNSPECIFIED;
+  /// Where this band was read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// How the sensor sits on its platform and where it points. Angles are degrees
+/// and signed, so an unset angle is NaN (absent), never 0.
+table SNRMounting {
+  FRAME:snrMountingFrame = UNSPECIFIED;
+  /// Boresight azimuth in FRAME. NaN = not stated.
+  BORESIGHT_AZIMUTH_DEG:double = nan;
+  /// Boresight elevation in FRAME. NaN = not stated.
+  BORESIGHT_ELEVATION_DEG:double = nan;
+  /// Roll about the boresight. NaN = not stated.
+  ROLL_DEG:double = nan;
+  POINTING:snrPointingMode = UNSPECIFIED;
+  /// Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  SCAN_AZIMUTH_RATE_DEG_S:double = nan;
+  /// Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  SCAN_ELEVATION_RATE_DEG_S:double = nan;
+  /// Field-of-regard limits in FRAME, degrees. NaN = no limit stated.
+  /// ELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.
+  AZIMUTH_LIMIT_MIN_DEG:double = nan;
+  AZIMUTH_LIMIT_MAX_DEG:double = nan;
+  ELEVATION_LIMIT_MIN_DEG:double = nan;
+  ELEVATION_LIMIT_MAX_DEG:double = nan;
+  /// Where the mounting was read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Radio-frequency parameters. Positive quantities use 0 for "not stated";
+/// ANTENNA_GAIN_DBI is signed and uses NaN.
+table SNRRfParameters {
+  ANTENNA_PATTERN:snrAntennaPattern = UNSPECIFIED;
+  /// Peak transmit power, W.
+  PEAK_POWER_W:double;
+  /// Antenna gain, dBi. NaN = not stated.
+  ANTENNA_GAIN_DBI:double = nan;
+  /// 3 dB beamwidth in azimuth, degrees.
+  BEAMWIDTH_AZIMUTH_DEG:double;
+  /// 3 dB beamwidth in elevation, degrees.
+  BEAMWIDTH_ELEVATION_DEG:double;
+  /// Instantaneous bandwidth, Hz.
+  BANDWIDTH_HZ:double;
+  POLARIZATION:rfPolarization = UNKNOWN;
+  /// Pulse repetition frequency, Hz (radar).
+  PRF_HZ:double;
+  /// Pulse width, seconds (radar).
+  PULSE_WIDTH_S:double;
+  /// Where these values were read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,
+/// which is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.
+table SNROpticalParameters {
+  /// Clear aperture diameter, m.
+  APERTURE_M:double;
+  /// Focal length, m.
+  FOCAL_LENGTH_M:double;
+  /// Instantaneous field of view of one detector element, radians.
+  IFOV_RAD:double;
+  /// Ground sample distance, m, at the nadir and nominal altitude the source
+  /// states (qualifiers go in PROVENANCE.NOTES).
+  GSD_M:double;
+  /// Limiting visual magnitude. NaN = not stated.
+  LIMITING_MAGNITUDE:double = nan;
+  /// Detector as the source names it ("CCD", "HgCdTe", "sCMOS").
+  DETECTOR:string;
+  /// Where these values were read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+/// UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+/// is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+/// string, table or vector is absent. A value is never invented, never zero as a
+/// placeholder, never copied from another sensor. Hz is the only frequency unit.
+/// Display colors are viewer preferences and never travel in this record.
+///
+/// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+/// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
+table SNR {
+  /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+  SENSOR_ID:string (required);
+  NAME:string;
+  /// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+  NORAD_CAT_ID:uint;
+  /// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+  OBJECT_ID:string;
+  /// $SIT.ID of the ground site the sensor is at.
+  SITE_ID:string;
+  /// Stable non-catalogue entity key of the platform, for a platform with neither
+  /// a catalogue number nor a $SIT.
+  ENTITY_ID:string;
+  TYPE:SensorType = UNSPECIFIED;
+  EMISSION:snrEmissionMode = UNSPECIFIED;
+  /// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+  /// a passive RF receiver. Empty = none stated.
+  SPECTRAL_BANDS:[SNRSpectralBand];
+  /// Field-of-view shape: the same table $SCV analyses use.
+  FIELD_OF_VIEW:SCVSensorShapeContract;
+  /// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+  FIELD_OF_VIEW_PROVENANCE:OPPProvenance;
+  MOUNTING:SNRMounting;
+  RF:SNRRfParameters;
+  OPTICAL:SNROpticalParameters;
+  /// Where the values of this record were read. A published real-world sensor
+  /// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+  /// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+  /// for that section.
+  PROVENANCE:OPPProvenance;
+  NOTES:string;
+}
+
+root_type SNR;
+file_identifier "$SNR";`,
       files: [
         "./dist/SNR/SNR.sw.tar.gz",
         "./dist/SNR/SNR.py.tar.gz",
@@ -26971,7 +27210,464 @@ file_identifier "$RPC";`,
       ]
     },
     SCV: {
-      IDL: '// Hash: a708974880aa4f2b2a4039241cb3cf8508804f2780a3ac919f241486cb773470\n// Version: 1.101.5\n// -----------------------------------END_HEADER\n/// Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for\n/// access, coverage, swath, and coverage-geometry products produced by SDN\n/// modules and consumed by OrbPro analytics sessions.\n\nenum scvEnvelopeKind : ubyte {\n  REQUEST,\n  RESULT,\n  PROGRESS,\n  CANCEL,\n  GEOMETRY\n}\n\nenum scvAnalysisMode : ubyte {\n  COVERAGE,\n  ACCESS,\n  SWATH,\n  COMBINED\n}\n\nenum scvCoordinateFrame : ubyte {\n  UNKNOWN,\n  BODY_FIXED,\n  INERTIAL,\n  ECEF,\n  ECI,\n  CUSTOM,\n  SENSOR_LOCAL\n}\n\nenum scvBodyKind : ubyte {\n  EARTH,\n  MOON,\n  MARS,\n  CUSTOM\n}\n\nenum scvSensorShapeKind : ubyte {\n  CONIC,\n  RECTANGULAR,\n  CUSTOM_POLYGON,\n  SAR_ANNULAR_SECTOR\n}\n\nenum scvSensorAxisConvention : ubyte {\n  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT\n}\n\nenum scvSensorRangeBoundaryKind : ubyte {\n  RADIAL_SPHERICAL,\n  LOCAL_Z_PLANE\n}\n\nenum scvGeometryDomain : ubyte {\n  SURFACE,\n  SPACE,\n  ELLIPSOID,\n  PLANE,\n  CUSTOM_MESH\n}\n\nenum scvTargetShape : ubyte {\n  POINT,\n  POLYGON,\n  RECTANGLE,\n  BOX,\n  SPHERE,\n  EXTRUDED_POLYGON\n}\n\nenum scvResultState : ubyte {\n  OK,\n  PARTIAL,\n  CANCELLED,\n  FAILED\n}\n\nenum scvMetricSeriesKind : ushort {\n  PERCENT_COVERED,\n  COVERED_CELL_COUNT,\n  ACCESS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  OVERLAP_COUNT,\n  LATITUDE_BAND_COVERAGE\n}\n\nenum scvGeometryEncoding : ubyte {\n  FLAT_FLOAT32,\n  INTERLEAVED_FLOAT32,\n  QUANTIZED_UINT16,\n  SHARED_MEMORY_OFFSET\n}\n\nenum scvRasterProductKind : ushort {\n  CELL_BOUNDS_DEG,\n  CELL_CENTERS_DEG,\n  PERCENT_COVERAGE,\n  PASS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  CURRENT_ACCESS_BITSET,\n  BUCKET_START_SECONDS,\n  BUCKET_STOP_SECONDS,\n  BUCKET_ACTIVE_CELL_COUNT,\n  PASS_COUNT_RGBA,\n  CURRENT_ACCESS_RGBA,\n  LATITUDE_BAND_COVERAGE,\n  BUCKET_PASS_START_COUNT,\n  WINDOW_START_ACCESS_BITSET,\n  WINDOW_STOP_ACCESS_BITSET\n}\n\nenum scvRasterProductEncoding : ubyte {\n  FLOAT32,\n  FLOAT64,\n  UINT32,\n  BITSET_UINT32,\n  UINT8\n}\n\ntable SCVVec3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\ntable SCVEllipsoid {\n  BODY:scvBodyKind;\n  NAME:string;\n  SEMI_MAJOR_M:double;\n  SEMI_MINOR_M:double;\n  SEMI_INTERMEDIATE_M:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTimeGrid {\n  EPOCH_ISO:string;\n  EPOCH_JULIAN_DATE:double;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  STEP_SEC:double;\n  GRID_INDEX_START:uint32;\n  GRID_INDEX_COUNT:uint32;\n}\n\ntable SCVSensorShapeContract {\n  SHAPE_KIND:scvSensorShapeKind;\n  AXIS_CONVENTION:scvSensorAxisConvention;\n  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;\n  OUTER_HALF_ANGLE_DEG:double;\n  INNER_HALF_ANGLE_DEG:double;\n  MIN_CLOCK_ANGLE_DEG:double;\n  MAX_CLOCK_ANGLE_DEG:double = 360.0;\n  X_HALF_ANGLE_DEG:double;\n  Y_HALF_ANGLE_DEG:double;\n  INNER_LOOK_ANGLE_DEG:double;\n  OUTER_LOOK_ANGLE_DEG:double;\n  SAR_SAMPLING_DENSITY:double;\n  MIN_RANGE_M:double;\n  MAX_RANGE_M:double;\n  POLYGON_VERTICES:[SCVVec3];\n  POLYGON_FRAME:scvCoordinateFrame;\n}\n\ntable SCVSensor {\n  SENSOR_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  BORESIGHT_UNIT:SCVVec3;\n  UP_UNIT:SCVVec3;\n  SHAPE_CONTRACT:SCVSensorShapeContract;\n}\n\ntable SCVStateSample {\n  SENSOR_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTarget {\n  TARGET_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  RADIUS_M:double;\n  TARGET_KIND:scvTargetShape;\n  DOMAIN:scvGeometryDomain;\n  POLYGON_VERTICES:[SCVVec3];\n  MIN_ALTITUDE_M:double;\n  MAX_ALTITUDE_M:double;\n}\n\ntable SCVTargetStateSample {\n  TARGET_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVCoverageGrid {\n  GRID_ID:string;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  MIN_LAT_DEG:double;\n  MAX_LAT_DEG:double;\n  MIN_LON_DEG:double;\n  MAX_LON_DEG:double;\n  LAT_STEP_DEG:double;\n  LON_STEP_DEG:double;\n  ALTITUDE_M:double;\n  CELL_COUNT:uint32;\n  RESOLUTION_DEG:double;\n}\n\ntable SCVCoverageRequest {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  ANALYSIS_MODE:scvAnalysisMode;\n  TARGET_BODY:SCVEllipsoid;\n  TIME_GRID:SCVTimeGrid;\n  COVERAGE_GRID:SCVCoverageGrid;\n  SENSORS:[SCVSensor];\n  STATE_SAMPLES:[SCVStateSample];\n  TARGETS:[SCVTarget];\n  TARGET_STATE_SAMPLES:[SCVTargetStateSample];\n  REQUESTED_PRODUCTS:[scvMetricSeriesKind];\n  SENSOR_BATCH_START:uint32;\n  SENSOR_BATCH_COUNT:uint32;\n  WINDOW_BATCH_START:uint32;\n  WINDOW_BATCH_COUNT:uint32;\n  GEOMETRY_ENCODING:scvGeometryEncoding;\n  INCLUDE_PACKED_GEOMETRY:bool;\n}\n\ntable SCVProgress {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  COMPLETED_SENSORS:uint32;\n  TOTAL_SENSORS:uint32;\n  COMPLETED_WINDOWS:uint32;\n  TOTAL_WINDOWS:uint32;\n  BACKLOG_REMAINING:uint32;\n  COMPLETION_FRACTION:double;\n  MESSAGE:string;\n}\n\ntable SCVCancel {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  REASON:string;\n  CANCEL_AFTER_WINDOW_INDEX:uint32;\n}\n\ntable SCVSensorContribution {\n  SENSOR_ID:uint32;\n  FIRST_WINDOW_INDEX:uint32;\n  LAST_WINDOW_INDEX:uint32;\n  CONTRIBUTION_COUNT:uint32;\n}\n\ntable SCVHistogramBin {\n  METRIC_KIND:scvMetricSeriesKind;\n  MIN_VALUE:double;\n  MAX_VALUE:double;\n  COUNT:uint32;\n  WEIGHT:double;\n}\n\ntable SCVSwathSegment {\n  SEGMENT_ID:uint32;\n  SENSOR_ID:uint32;\n  WINDOW_INDEX:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  VERTEX_OFFSET:uint32;\n  VERTEX_COUNT:uint32;\n  INDEX_OFFSET:uint32;\n  INDEX_COUNT:uint32;\n  SENSOR_IDS:[uint32];\n}\n\ntable SCVMemoryRegion {\n  REGION_ID:uint32;\n  RECORD_INDEX:uint32;\n  REGION_KEY:string;\n  BYTE_OFFSET:uint64;\n  BYTE_LENGTH:uint64;\n  BYTE_STRIDE:uint32;\n  ALIGNMENT:uint32;\n  SHARED:bool;\n  MUTABLE:bool;\n}\n\ntable SCVPackedGeometryChunk {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  CHUNK_INDEX:uint32;\n  WINDOW_START_INDEX:uint32;\n  WINDOW_COUNT:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  ENCODING:scvGeometryEncoding;\n  TIME_START_OFFSET_SEC:double;\n  TIME_STOP_OFFSET_SEC:double;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  POSITIONS_REGION_ID:uint32;\n  POSITIONS_RECORD_INDEX:uint32;\n  NORMALS_REGION_ID:uint32;\n  NORMALS_RECORD_INDEX:uint32;\n  ST_REGION_ID:uint32;\n  ST_RECORD_INDEX:uint32;\n  REVEAL_COORDS_REGION_ID:uint32;\n  REVEAL_COORDS_RECORD_INDEX:uint32;\n  INDICES_REGION_ID:uint32;\n  INDICES_RECORD_INDEX:uint32;\n  POSITIONS:[float];\n  NORMALS:[float];\n  ST:[float];\n  REVEAL_COORDS:[float];\n  INDICES:[uint32];\n  SEGMENT_IDS:[uint32];\n  SENSOR_IDS:[uint32];\n  SEGMENTS:[SCVSwathSegment];\n}\n\ntable SCVPackedRasterBand {\n  PRODUCT_KIND:scvRasterProductKind;\n  METRIC_KIND:scvMetricSeriesKind;\n  ENCODING:scvRasterProductEncoding;\n  COMPONENTS_PER_CELL:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGION_ID:uint32;\n  MEMORY_RECORD_INDEX:uint32;\n  FLOAT32_VALUES:[float];\n  FLOAT64_VALUES:[double];\n  UINT32_VALUES:[uint32];\n}\n\ntable SCVPackedRasterProducts {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  GRID:SCVCoverageGrid;\n  TIME_GRID:SCVTimeGrid;\n  ROWS:uint32;\n  COLUMNS:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  BANDS:[SCVPackedRasterBand];\n}\n\ntable SCVAggregateStatistics {\n  TOTAL_CELLS:uint32;\n  ACCESSED_CELLS:uint32;\n  MULTI_ACCESS_CELLS:uint32;\n  ACTIVE_SENSOR_COUNT:uint32;\n  SWATH_COUNT:uint32;\n  TOTAL_WINDOWS:uint32;\n  TOTAL_INTERVAL_COUNT:uint32;\n  TOTAL_REVISIT_COUNT:uint32;\n  TOTAL_ACCESS_DURATION_SEC:double;\n  TOTAL_GAP_DURATION_SEC:double;\n  MAX_GAP_DURATION_SEC:double;\n  MEAN_REVISIT_TIME_SEC:double;\n  MAX_RESPONSE_TIME_SEC:double;\n  MEAN_RESPONSE_TIME_SEC:double;\n  PERCENT_COVERAGE:double;\n}\n\ntable SCVTargetResult {\n  TARGET_ID:uint32;\n  NAME:string;\n  ACCESS_COUNT:uint32;\n  REVISIT_COUNT:uint32;\n  TOTAL_ACCESS_DURATION_SEC:double;\n  MEAN_REVISIT_TIME_SEC:double;\n  MAX_GAP_SEC:double;\n  INTERVAL_START_SEC:[double];\n  INTERVAL_STOP_SEC:[double];\n  PASS_START_BUCKETS:[uint32];\n  ACCESS_BITSET:[uint32];\n}\n\ntable SCVResult {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  TIME_GRID:SCVTimeGrid;\n  TARGET_BODY:SCVEllipsoid;\n  TOTAL_SENSORS:uint32;\n  TOTAL_WINDOWS:uint32;\n  HISTOGRAMS:[SCVHistogramBin];\n  CONTRIBUTIONS:[SCVSensorContribution];\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n  MESSAGE:string;\n  AGGREGATE_STATISTICS:SCVAggregateStatistics;\n  TARGET_RESULTS:[SCVTargetResult];\n}\n\ntable SCV {\n  ENVELOPE_KIND:scvEnvelopeKind;\n  REQUEST:SCVCoverageRequest;\n  PROGRESS:SCVProgress;\n  CANCEL:SCVCancel;\n  RESULT:SCVResult;\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n}\n\nroot_type SCV;\nfile_identifier "$SCV";',
+      IDL: `// Hash: 63b30ae792ef43ea30c63e625212670f333422c2669b4acd9d1036952692eb7d
+// Version: 1.101.6
+// -----------------------------------END_HEADER
+/// Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for
+/// access, coverage, swath, and coverage-geometry products produced by SDN
+/// modules and consumed by OrbPro analytics sessions.
+
+enum scvEnvelopeKind : ubyte {
+  REQUEST,
+  RESULT,
+  PROGRESS,
+  CANCEL,
+  GEOMETRY
+}
+
+enum scvAnalysisMode : ubyte {
+  COVERAGE,
+  ACCESS,
+  SWATH,
+  COMBINED
+}
+
+enum scvCoordinateFrame : ubyte {
+  UNKNOWN,
+  BODY_FIXED,
+  INERTIAL,
+  ECEF,
+  ECI,
+  CUSTOM,
+  SENSOR_LOCAL
+}
+
+enum scvBodyKind : ubyte {
+  EARTH,
+  MOON,
+  MARS,
+  CUSTOM
+}
+
+enum scvSensorShapeKind : ubyte {
+  CONIC,
+  RECTANGULAR,
+  CUSTOM_POLYGON,
+  SAR_ANNULAR_SECTOR
+}
+
+enum scvSensorAxisConvention : ubyte {
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+}
+
+enum scvSensorRangeBoundaryKind : ubyte {
+  RADIAL_SPHERICAL,
+  LOCAL_Z_PLANE
+}
+
+enum scvGeometryDomain : ubyte {
+  SURFACE,
+  SPACE,
+  ELLIPSOID,
+  PLANE,
+  CUSTOM_MESH
+}
+
+enum scvTargetShape : ubyte {
+  POINT,
+  POLYGON,
+  RECTANGLE,
+  BOX,
+  SPHERE,
+  EXTRUDED_POLYGON
+}
+
+enum scvResultState : ubyte {
+  OK,
+  PARTIAL,
+  CANCELLED,
+  FAILED
+}
+
+enum scvMetricSeriesKind : ushort {
+  PERCENT_COVERED,
+  COVERED_CELL_COUNT,
+  ACCESS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  OVERLAP_COUNT,
+  LATITUDE_BAND_COVERAGE
+}
+
+enum scvGeometryEncoding : ubyte {
+  FLAT_FLOAT32,
+  INTERLEAVED_FLOAT32,
+  QUANTIZED_UINT16,
+  SHARED_MEMORY_OFFSET
+}
+
+enum scvRasterProductKind : ushort {
+  CELL_BOUNDS_DEG,
+  CELL_CENTERS_DEG,
+  PERCENT_COVERAGE,
+  PASS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  CURRENT_ACCESS_BITSET,
+  BUCKET_START_SECONDS,
+  BUCKET_STOP_SECONDS,
+  BUCKET_ACTIVE_CELL_COUNT,
+  PASS_COUNT_RGBA,
+  CURRENT_ACCESS_RGBA,
+  LATITUDE_BAND_COVERAGE,
+  BUCKET_PASS_START_COUNT,
+  WINDOW_START_ACCESS_BITSET,
+  WINDOW_STOP_ACCESS_BITSET
+}
+
+enum scvRasterProductEncoding : ubyte {
+  FLOAT32,
+  FLOAT64,
+  UINT32,
+  BITSET_UINT32,
+  UINT8
+}
+
+table SCVVec3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+table SCVEllipsoid {
+  BODY:scvBodyKind;
+  NAME:string;
+  SEMI_MAJOR_M:double;
+  SEMI_MINOR_M:double;
+  SEMI_INTERMEDIATE_M:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTimeGrid {
+  EPOCH_ISO:string;
+  EPOCH_JULIAN_DATE:double;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  STEP_SEC:double;
+  GRID_INDEX_START:uint32;
+  GRID_INDEX_COUNT:uint32;
+}
+
+/// One point of an azimuth/elevation mask: the lowest elevation at which the
+/// sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+/// polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+/// point to the first across 360 degrees, linearly interpolated in azimuth.
+table SCVAzElMaskPoint {
+  /// Azimuth, degrees clockwise from north, in [0, 360).
+  AZIMUTH_DEG:double;
+  /// Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+  MIN_ELEVATION_DEG:double;
+}
+
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
+table SCVSensorShapeContract {
+  SHAPE_KIND:scvSensorShapeKind;
+  AXIS_CONVENTION:scvSensorAxisConvention;
+  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;
+  OUTER_HALF_ANGLE_DEG:double;
+  INNER_HALF_ANGLE_DEG:double;
+  MIN_CLOCK_ANGLE_DEG:double;
+  MAX_CLOCK_ANGLE_DEG:double = 360.0;
+  X_HALF_ANGLE_DEG:double;
+  Y_HALF_ANGLE_DEG:double;
+  INNER_LOOK_ANGLE_DEG:double;
+  OUTER_LOOK_ANGLE_DEG:double;
+  SAR_SAMPLING_DENSITY:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  POLYGON_VERTICES:[SCVVec3];
+  POLYGON_FRAME:scvCoordinateFrame;
+  /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+  /// Clips the shape: a direction below the mask is outside the field of view.
+  AZ_EL_MASK:[SCVAzElMaskPoint];
+}
+
+table SCVSensor {
+  SENSOR_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  BORESIGHT_UNIT:SCVVec3;
+  UP_UNIT:SCVVec3;
+  SHAPE_CONTRACT:SCVSensorShapeContract;
+}
+
+table SCVStateSample {
+  SENSOR_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTarget {
+  TARGET_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  RADIUS_M:double;
+  TARGET_KIND:scvTargetShape;
+  DOMAIN:scvGeometryDomain;
+  POLYGON_VERTICES:[SCVVec3];
+  MIN_ALTITUDE_M:double;
+  MAX_ALTITUDE_M:double;
+}
+
+table SCVTargetStateSample {
+  TARGET_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVCoverageGrid {
+  GRID_ID:string;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  MIN_LAT_DEG:double;
+  MAX_LAT_DEG:double;
+  MIN_LON_DEG:double;
+  MAX_LON_DEG:double;
+  LAT_STEP_DEG:double;
+  LON_STEP_DEG:double;
+  ALTITUDE_M:double;
+  CELL_COUNT:uint32;
+  RESOLUTION_DEG:double;
+}
+
+table SCVCoverageRequest {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  ANALYSIS_MODE:scvAnalysisMode;
+  TARGET_BODY:SCVEllipsoid;
+  TIME_GRID:SCVTimeGrid;
+  COVERAGE_GRID:SCVCoverageGrid;
+  SENSORS:[SCVSensor];
+  STATE_SAMPLES:[SCVStateSample];
+  TARGETS:[SCVTarget];
+  TARGET_STATE_SAMPLES:[SCVTargetStateSample];
+  REQUESTED_PRODUCTS:[scvMetricSeriesKind];
+  SENSOR_BATCH_START:uint32;
+  SENSOR_BATCH_COUNT:uint32;
+  WINDOW_BATCH_START:uint32;
+  WINDOW_BATCH_COUNT:uint32;
+  GEOMETRY_ENCODING:scvGeometryEncoding;
+  INCLUDE_PACKED_GEOMETRY:bool;
+}
+
+table SCVProgress {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  COMPLETED_SENSORS:uint32;
+  TOTAL_SENSORS:uint32;
+  COMPLETED_WINDOWS:uint32;
+  TOTAL_WINDOWS:uint32;
+  BACKLOG_REMAINING:uint32;
+  COMPLETION_FRACTION:double;
+  MESSAGE:string;
+}
+
+table SCVCancel {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  REASON:string;
+  CANCEL_AFTER_WINDOW_INDEX:uint32;
+}
+
+table SCVSensorContribution {
+  SENSOR_ID:uint32;
+  FIRST_WINDOW_INDEX:uint32;
+  LAST_WINDOW_INDEX:uint32;
+  CONTRIBUTION_COUNT:uint32;
+}
+
+table SCVHistogramBin {
+  METRIC_KIND:scvMetricSeriesKind;
+  MIN_VALUE:double;
+  MAX_VALUE:double;
+  COUNT:uint32;
+  WEIGHT:double;
+}
+
+table SCVSwathSegment {
+  SEGMENT_ID:uint32;
+  SENSOR_ID:uint32;
+  WINDOW_INDEX:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  VERTEX_OFFSET:uint32;
+  VERTEX_COUNT:uint32;
+  INDEX_OFFSET:uint32;
+  INDEX_COUNT:uint32;
+  SENSOR_IDS:[uint32];
+}
+
+table SCVMemoryRegion {
+  REGION_ID:uint32;
+  RECORD_INDEX:uint32;
+  REGION_KEY:string;
+  BYTE_OFFSET:uint64;
+  BYTE_LENGTH:uint64;
+  BYTE_STRIDE:uint32;
+  ALIGNMENT:uint32;
+  SHARED:bool;
+  MUTABLE:bool;
+}
+
+table SCVPackedGeometryChunk {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  CHUNK_INDEX:uint32;
+  WINDOW_START_INDEX:uint32;
+  WINDOW_COUNT:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  ENCODING:scvGeometryEncoding;
+  TIME_START_OFFSET_SEC:double;
+  TIME_STOP_OFFSET_SEC:double;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  POSITIONS_REGION_ID:uint32;
+  POSITIONS_RECORD_INDEX:uint32;
+  NORMALS_REGION_ID:uint32;
+  NORMALS_RECORD_INDEX:uint32;
+  ST_REGION_ID:uint32;
+  ST_RECORD_INDEX:uint32;
+  REVEAL_COORDS_REGION_ID:uint32;
+  REVEAL_COORDS_RECORD_INDEX:uint32;
+  INDICES_REGION_ID:uint32;
+  INDICES_RECORD_INDEX:uint32;
+  POSITIONS:[float];
+  NORMALS:[float];
+  ST:[float];
+  REVEAL_COORDS:[float];
+  INDICES:[uint32];
+  SEGMENT_IDS:[uint32];
+  SENSOR_IDS:[uint32];
+  SEGMENTS:[SCVSwathSegment];
+}
+
+table SCVPackedRasterBand {
+  PRODUCT_KIND:scvRasterProductKind;
+  METRIC_KIND:scvMetricSeriesKind;
+  ENCODING:scvRasterProductEncoding;
+  COMPONENTS_PER_CELL:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGION_ID:uint32;
+  MEMORY_RECORD_INDEX:uint32;
+  FLOAT32_VALUES:[float];
+  FLOAT64_VALUES:[double];
+  UINT32_VALUES:[uint32];
+}
+
+table SCVPackedRasterProducts {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  GRID:SCVCoverageGrid;
+  TIME_GRID:SCVTimeGrid;
+  ROWS:uint32;
+  COLUMNS:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  BANDS:[SCVPackedRasterBand];
+}
+
+table SCVAggregateStatistics {
+  TOTAL_CELLS:uint32;
+  ACCESSED_CELLS:uint32;
+  MULTI_ACCESS_CELLS:uint32;
+  ACTIVE_SENSOR_COUNT:uint32;
+  SWATH_COUNT:uint32;
+  TOTAL_WINDOWS:uint32;
+  TOTAL_INTERVAL_COUNT:uint32;
+  TOTAL_REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  TOTAL_GAP_DURATION_SEC:double;
+  MAX_GAP_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_RESPONSE_TIME_SEC:double;
+  MEAN_RESPONSE_TIME_SEC:double;
+  PERCENT_COVERAGE:double;
+}
+
+table SCVTargetResult {
+  TARGET_ID:uint32;
+  NAME:string;
+  ACCESS_COUNT:uint32;
+  REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_GAP_SEC:double;
+  INTERVAL_START_SEC:[double];
+  INTERVAL_STOP_SEC:[double];
+  PASS_START_BUCKETS:[uint32];
+  ACCESS_BITSET:[uint32];
+}
+
+table SCVResult {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  TIME_GRID:SCVTimeGrid;
+  TARGET_BODY:SCVEllipsoid;
+  TOTAL_SENSORS:uint32;
+  TOTAL_WINDOWS:uint32;
+  HISTOGRAMS:[SCVHistogramBin];
+  CONTRIBUTIONS:[SCVSensorContribution];
+  GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
+  MESSAGE:string;
+  AGGREGATE_STATISTICS:SCVAggregateStatistics;
+  TARGET_RESULTS:[SCVTargetResult];
+}
+
+table SCV {
+  ENVELOPE_KIND:scvEnvelopeKind;
+  REQUEST:SCVCoverageRequest;
+  PROGRESS:SCVProgress;
+  CANCEL:SCVCancel;
+  RESULT:SCVResult;
+  GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
+}
+
+root_type SCV;
+file_identifier "$SCV";`,
       files: [
         "./dist/SCV/SCV.sw.tar.gz",
         "./dist/SCV/SCV.py.tar.gz",
@@ -70210,7 +70906,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "ESTIMATED",
             "DERIVED",
             "MODEL_DERIVED",
-            "INFERRED_FROM_FAMILY"
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
           ]
         },
         oppRcsAspect: {
@@ -93054,6 +93751,288 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
     SNR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        oppDeterminationMethod: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEASURED",
+            "OPERATOR_STATED",
+            "ESTIMATED",
+            "DERIVED",
+            "MODEL_DERIVED",
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
+          ]
+        },
+        oppRcsAspect: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AVERAGE",
+            "MINIMUM",
+            "MAXIMUM",
+            "MEDIAN",
+            "HEAD_ON",
+            "BROADSIDE",
+            "NADIR"
+          ]
+        },
+        oppSurfaceKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BUS_BODY",
+            "SOLAR_ARRAY",
+            "ANTENNA_DISH",
+            "ANTENNA_PANEL",
+            "RADIATOR",
+            "THERMAL_BLANKET",
+            "OPTICAL_APERTURE",
+            "BOOM",
+            "TRUSS",
+            "TANK",
+            "NOZZLE",
+            "SHIELD",
+            "DOCKING_INTERFACE",
+            "OTHER"
+          ]
+        },
+        oppMaterialClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ALUMINIUM",
+            "TITANIUM",
+            "STEEL",
+            "CARBON_COMPOSITE",
+            "MULTI_LAYER_INSULATION",
+            "SOLAR_CELL",
+            "COVER_GLASS",
+            "PAINT_WHITE",
+            "PAINT_BLACK",
+            "OPTICAL_SOLAR_REFLECTOR",
+            "POLYIMIDE_FILM",
+            "MESH",
+            "CERAMIC",
+            "GOLD_FOIL",
+            "OTHER"
+          ]
+        },
+        linkCategory: {
+          type: "string",
+          enum: [
+            "UPLINK",
+            "DOWNLINK",
+            "CROSSLINK",
+            "INTER_SATELLITE",
+            "GROUND_TO_GROUND",
+            "RELAY"
+          ]
+        },
+        linkCondition: {
+          type: "string",
+          enum: [
+            "ESTABLISHED",
+            "DEGRADED",
+            "INTERRUPTED",
+            "PLANNED",
+            "TERMINATED",
+            "UNKNOWN"
+          ]
+        },
+        rfBandDesignation: {
+          type: "string",
+          enum: [
+            "UHF",
+            "L",
+            "S",
+            "C",
+            "X",
+            "KU",
+            "K",
+            "KA",
+            "V",
+            "W",
+            "Q",
+            "EHF",
+            "OTHER",
+            "VHF",
+            "HF",
+            "MF",
+            "LF",
+            "VLF",
+            "SHF"
+          ]
+        },
+        rfPolarization: {
+          type: "string",
+          enum: [
+            "LHCP",
+            "RHCP",
+            "LINEAR_H",
+            "LINEAR_V",
+            "DUAL",
+            "CROSS",
+            "UNKNOWN"
+          ]
+        },
+        rfTransmitterState: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "ACTIVE",
+            "INACTIVE",
+            "INVALID"
+          ]
+        },
+        scvEnvelopeKind: {
+          type: "string",
+          enum: [
+            "REQUEST",
+            "RESULT",
+            "PROGRESS",
+            "CANCEL",
+            "GEOMETRY"
+          ]
+        },
+        scvAnalysisMode: {
+          type: "string",
+          enum: [
+            "COVERAGE",
+            "ACCESS",
+            "SWATH",
+            "COMBINED"
+          ]
+        },
+        scvCoordinateFrame: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "BODY_FIXED",
+            "INERTIAL",
+            "ECEF",
+            "ECI",
+            "CUSTOM",
+            "SENSOR_LOCAL"
+          ]
+        },
+        scvBodyKind: {
+          type: "string",
+          enum: [
+            "EARTH",
+            "MOON",
+            "MARS",
+            "CUSTOM"
+          ]
+        },
+        scvSensorShapeKind: {
+          type: "string",
+          enum: [
+            "CONIC",
+            "RECTANGULAR",
+            "CUSTOM_POLYGON",
+            "SAR_ANNULAR_SECTOR"
+          ]
+        },
+        scvSensorAxisConvention: {
+          type: "string",
+          enum: [
+            "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
+          ]
+        },
+        scvSensorRangeBoundaryKind: {
+          type: "string",
+          enum: [
+            "RADIAL_SPHERICAL",
+            "LOCAL_Z_PLANE"
+          ]
+        },
+        scvGeometryDomain: {
+          type: "string",
+          enum: [
+            "SURFACE",
+            "SPACE",
+            "ELLIPSOID",
+            "PLANE",
+            "CUSTOM_MESH"
+          ]
+        },
+        scvTargetShape: {
+          type: "string",
+          enum: [
+            "POINT",
+            "POLYGON",
+            "RECTANGLE",
+            "BOX",
+            "SPHERE",
+            "EXTRUDED_POLYGON"
+          ]
+        },
+        scvResultState: {
+          type: "string",
+          enum: [
+            "OK",
+            "PARTIAL",
+            "CANCELLED",
+            "FAILED"
+          ]
+        },
+        scvMetricSeriesKind: {
+          type: "string",
+          enum: [
+            "PERCENT_COVERED",
+            "COVERED_CELL_COUNT",
+            "ACCESS_COUNT",
+            "CONTACT_DURATION_SECONDS",
+            "REVISIT_SECONDS",
+            "GAP_SECONDS",
+            "REDUNDANCY",
+            "OVERLAP_COUNT",
+            "LATITUDE_BAND_COVERAGE"
+          ]
+        },
+        scvGeometryEncoding: {
+          type: "string",
+          enum: [
+            "FLAT_FLOAT32",
+            "INTERLEAVED_FLOAT32",
+            "QUANTIZED_UINT16",
+            "SHARED_MEMORY_OFFSET"
+          ]
+        },
+        scvRasterProductKind: {
+          type: "string",
+          enum: [
+            "CELL_BOUNDS_DEG",
+            "CELL_CENTERS_DEG",
+            "PERCENT_COVERAGE",
+            "PASS_COUNT",
+            "CONTACT_DURATION_SECONDS",
+            "REVISIT_SECONDS",
+            "GAP_SECONDS",
+            "REDUNDANCY",
+            "CURRENT_ACCESS_BITSET",
+            "BUCKET_START_SECONDS",
+            "BUCKET_STOP_SECONDS",
+            "BUCKET_ACTIVE_CELL_COUNT",
+            "PASS_COUNT_RGBA",
+            "CURRENT_ACCESS_RGBA",
+            "LATITUDE_BAND_COVERAGE",
+            "BUCKET_PASS_START_COUNT",
+            "WINDOW_START_ACCESS_BITSET",
+            "WINDOW_STOP_ACCESS_BITSET"
+          ]
+        },
+        scvRasterProductEncoding: {
+          type: "string",
+          enum: [
+            "FLOAT32",
+            "FLOAT64",
+            "UINT32",
+            "BITSET_UINT32",
+            "UINT8"
+          ]
+        },
         SensorType: {
           type: "string",
           enum: [
@@ -93072,97 +94051,2138 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "MAW",
             "SONAR_ACTIVE",
             "SONAR_PASSIVE",
-            "ACOUSTIC"
+            "ACOUSTIC",
+            "OPTICAL_TELESCOPE",
+            "MULTISPECTRAL_IMAGER",
+            "HYPERSPECTRAL_IMAGER",
+            "SAR",
+            "ALTIMETER",
+            "SCATTEROMETER",
+            "RADIOMETER",
+            "LIDAR",
+            "PASSIVE_RF_ESM",
+            "SIGINT",
+            "COMMS_ANTENNA",
+            "TT_AND_C_ANTENNA",
+            "PHASED_ARRAY_EARLY_WARNING",
+            "UNSPECIFIED"
           ]
         },
-        SensorMode: {
+        snrEmissionMode: {
           type: "string",
           enum: [
-            "OFF",
-            "STANDBY",
-            "SEARCH",
-            "ACQUISITION",
+            "UNSPECIFIED",
+            "ACTIVE",
+            "PASSIVE"
+          ]
+        },
+        snrBandDirection: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECEIVE",
+            "TRANSMIT",
+            "TRANSCEIVE"
+          ]
+        },
+        snrMountingFrame: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLATFORM_BODY",
+            "LVLH",
+            "LOCAL_ENU"
+          ]
+        },
+        snrPointingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NADIR",
+            "FIXED",
             "TRACK",
-            "TRACK_WHILE_SCAN",
-            "DESIGNATE",
-            "JAMMED"
+            "SCAN"
           ]
         },
-        TrackQuality: {
+        snrAntennaPattern: {
           type: "string",
           enum: [
-            "NONE",
-            "TENTATIVE",
-            "FIRM",
-            "LOCKED",
-            "COASTING",
-            "LOST"
+            "UNSPECIFIED",
+            "ISOTROPIC",
+            "HEMISPHERIC",
+            "PARABOLIC",
+            "GAUSSIAN",
+            "PENCIL",
+            "HELIX",
+            "DIPOLE",
+            "RINGED",
+            "TEARDROP",
+            "TOROIDAL",
+            "CARDIOID"
           ]
         },
-        SNR: {
+        OPPProvenance: {
           type: "object",
-          description: "Sensor Systems",
+          description: "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
           properties: {
-            TYPE: {
+            SOURCE: {
+              type: "string",
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Deep link to the exact source record when the source publishes one."
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE."
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's own revision, edition or publication marker, verbatim."
+            },
+            METHOD: {
+              $ref: "#/definitions/oppDeterminationMethod"
+            },
+            LICENSE: {
+              type: "string",
+              description: "Terms under which SOURCE permits redistribution of the value, verbatim."
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution string the source requires be displayed with the value."
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from."
+            },
+            NOTES: {
+              type: "string",
+              description: "Free text qualifying the value, such as the source's own caveat."
+            }
+          },
+          required: [
+            "SOURCE"
+          ],
+          additionalProperties: false
+        },
+        OPPQuantity: {
+          type: "object",
+          description: "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+          properties: {
+            VALUE: {
+              type: "number"
+            },
+            UNITS: {
+              type: "string",
+              description: 'Unit symbol verbatim, never silently converted: "kg", "m", "m2", "m2/kg",\n"kg/m2", "dBsm", "W", "mag". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED.'
+            },
+            SIGMA: {
+              type: "number",
+              description: "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance"
+            }
+          },
+          required: [
+            "UNITS",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        OPPRadarCrossSection: {
+          type: "object",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
+          properties: {
+            BAND: {
+              type: "string",
+              description: 'Radar band designation verbatim from the source: "UHF", "L", "S", "C",\n"X", "Ku". Empty when the source states no band.'
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Centre frequency [megahertz] when the source states one. Zero means\nunstated."
+            },
+            POLARIZATION: {
+              type: "string",
+              description: 'Polarization verbatim from the source: "HH", "VV", "HV", "RCRC". Empty\nwhen the source states none.'
+            },
+            ASPECT: {
+              $ref: "#/definitions/oppRcsAspect"
+            },
+            CROSS_SECTION: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'The cross-section itself. UNITS is "m2" or "dBsm" as the source published\nit; the two are never mixed within one entry and never silently converted.'
+            },
+            SIZE_CLASS: {
+              type: "string",
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`
+            },
+            SENSOR: {
+              type: "string",
+              description: "Sensor or facility that produced the measurement, when stated."
+            }
+          },
+          required: [
+            "CROSS_SECTION"
+          ],
+          additionalProperties: false
+        },
+        OPPMass: {
+          type: "object",
+          description: "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+          properties: {
+            DRY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass without propellant or consumables [kg]."
+            },
+            WET: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass with propellant, at the stated epoch [kg]."
+            },
+            LAUNCH: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass at separation from the launch vehicle [kg]."
+            },
+            PROPELLANT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Propellant mass at the stated epoch [kg]."
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Payload mass carried by the bus [kg]."
+            },
+            CURRENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Best current estimate of mass at the record's epoch [kg]."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPDimensions: {
+          type: "object",
+          description: "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+          properties: {
+            BODY_X: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Extents along the object's own body axes [m]."
+            },
+            BODY_Y: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            BODY_Z: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            HEIGHT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Envelope terms as an object database publishes them [m]."
+            },
+            WIDTH: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            DEPTH: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            DIAMETER: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            SPAN_STOWED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages stowed [m]."
+            },
+            SPAN_DEPLOYED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages deployed [m]."
+            },
+            SHAPE: {
+              type: "string",
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
+            },
+            SHAPE_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of SHAPE. Present whenever SHAPE is nonempty."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPAreas: {
+          type: "object",
+          description: "Projected areas and the ratios derived from them.",
+          properties: {
+            CROSS_SECTIONAL_AVERAGE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Average projected cross-sectional area over all aspects [m2]."
+            },
+            CROSS_SECTIONAL_MINIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Smallest projected cross-sectional area [m2]."
+            },
+            CROSS_SECTIONAL_MAXIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest projected cross-sectional area [m2]."
+            },
+            SOLAR_ARRAY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Total solar-array area [m2]."
+            },
+            AREA_TO_MASS_RATIO: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED."
+            },
+            BALLISTIC_COEFFICIENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Ballistic coefficient [kg/m2]."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPSurface: {
+          type: "object",
+          description: "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this surface within the record."
+            },
+            KIND: {
+              $ref: "#/definitions/oppSurfaceKind"
+            },
+            MATERIAL: {
+              type: "string",
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
+            },
+            MATERIAL_CLASS: {
+              $ref: "#/definitions/oppMaterialClass"
+            },
+            COUNT: {
               type: "integer",
               minimum: 0,
-              maximum: 255
+              maximum: 4294967295,
+              description: "How many identical surfaces this entry represents, such as two solar-array\nwings."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own."
+            },
+            AREA: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area of one surface, not of COUNT surfaces [m2]."
+            },
+            MASS: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass of one surface [kg]."
+            },
+            SPECULAR_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected specularly, dimensionless."
+            },
+            DIFFUSE_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected diffusely, dimensionless."
+            },
+            ABSORPTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Solar absorptivity, dimensionless."
+            },
+            EMISSIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Infrared emissivity, dimensionless."
+            },
+            PANEL_ID: {
+              type: "string",
+              description: "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists."
+            },
+            GLTF_MATERIAL_NAME: {
+              type: "string",
+              description: "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset."
+            },
+            GLTF_MATERIAL_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        OPPAssetRef: {
+          type: "object",
+          description: "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+          properties: {
+            VAM_ID: {
+              type: "string",
+              description: "$VAM.ID verbatim."
+            },
+            VAM_VERSION: {
+              type: "string",
+              description: "$VAM.VERSION verbatim."
+            },
+            VAM_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact $VAM bytes."
+            },
+            VARIANT_ID: {
+              type: "string",
+              description: "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes."
+            },
+            ASSET_SHA256: {
+              type: "string",
+              description: "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes."
+            },
+            ASSET_CID: {
+              type: "string",
+              description: "$VAMVariant.CID verbatim."
+            },
+            ASSET_FILE_NAME: {
+              type: "string",
+              description: "$VAMVariant.FILE_NAME verbatim."
+            },
+            ASSET_MEDIA_TYPE: {
+              type: "string",
+              description: "$VAMVariant.MEDIA_TYPE verbatim."
+            },
+            GLTF_VERSION: {
+              type: "string",
+              description: "$VAMVariant.GLTF_VERSION verbatim."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID."
+            },
+            GEOMETRY_MATCHES_PHYSICAL: {
+              type: "boolean",
+              description: "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions."
+            },
+            METERS_PER_ASSET_UNIT: {
+              type: "number",
+              description: "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP."
+            }
+          },
+          required: [
+            "VAM_ID",
+            "VARIANT_ID",
+            "ASSET_SHA256"
+          ],
+          additionalProperties: false
+        },
+        OPP: {
+          type: "object",
+          description: "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this record."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 record-format version, not a content revision."
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID verbatim: the COSPAR international designator."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "$CAT.OBJECT_NAME verbatim, for display only. Never a join key."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present."
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record."
+            },
+            BUS_FAMILY: {
+              type: "string",
+              description: "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record."
+            },
+            BUS_FAMILY_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE."
+            },
+            MANUFACTURER_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty."
+            },
+            MASS: {
+              $ref: "#/definitions/OPPMass"
+            },
+            DIMENSIONS: {
+              $ref: "#/definitions/OPPDimensions"
+            },
+            AREAS: {
+              $ref: "#/definitions/OPPAreas"
+            },
+            RADAR_CROSS_SECTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPRadarCrossSection"
+              },
+              description: "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object."
+            },
+            VISUAL_MAGNITUDE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'Visual magnitude, UNITS "mag", with the observing conditions in\nPROVENANCE.NOTES.'
+            },
+            SURFACES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPSurface"
+              },
+              description: "Material and surface inventory."
+            },
+            ASSET: {
+              $ref: "#/definitions/OPPAssetRef",
+              description: "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it."
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPProvenance"
+              },
+              description: 'Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish "not looked for" from\n"looked for and not published".'
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created."
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated."
+            },
+            SUPERSEDES_OPP_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact superseded $OPP bytes."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        LKS: {
+          type: "object",
+          description: "Link Status",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier"
+            },
+            ID_ON_ORBIT1: {
+              type: "string",
+              description: "First endpoint on-orbit identifier"
+            },
+            SAT_NO1: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "First endpoint satellite catalog number"
+            },
+            ID_ON_ORBIT2: {
+              type: "string",
+              description: "Second endpoint on-orbit identifier"
+            },
+            SAT_NO2: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Second endpoint satellite catalog number"
+            },
+            CONSTELLATION: {
+              type: "string",
+              description: "Constellation name"
+            },
+            LINK_NAME: {
+              type: "string",
+              description: "Link name or identifier"
+            },
+            LINK_TYPE: {
+              $ref: "#/definitions/linkCategory",
+              description: "Link type"
+            },
+            LINK_STATE: {
+              $ref: "#/definitions/linkCondition",
+              description: "Link state"
+            },
+            BAND: {
+              type: "string",
+              description: "RF band"
+            },
+            LINK_START_TIME: {
+              type: "string",
+              description: "Link start time (ISO 8601)"
+            },
+            LINK_STOP_TIME: {
+              type: "string",
+              description: "Link stop time (ISO 8601)"
+            },
+            ID_BEAM1: {
+              type: "string",
+              description: "First endpoint beam identifier"
+            },
+            END_POINT1_NAME: {
+              type: "string",
+              description: "First endpoint name"
+            },
+            END_POINT1_LAT: {
+              type: "number",
+              description: "First endpoint latitude (degrees)"
+            },
+            END_POINT1_LON: {
+              type: "number",
+              description: "First endpoint longitude (degrees)"
+            },
+            ID_BEAM2: {
+              type: "string",
+              description: "Second endpoint beam identifier"
+            },
+            END_POINT2_NAME: {
+              type: "string",
+              description: "Second endpoint name"
+            },
+            END_POINT2_LAT: {
+              type: "number",
+              description: "Second endpoint latitude (degrees)"
+            },
+            END_POINT2_LON: {
+              type: "number",
+              description: "Second endpoint longitude (degrees)"
+            },
+            DATA_RATE1_TO2: {
+              type: "number",
+              description: "Data rate from endpoint 1 to 2 (Mbps)"
+            },
+            DATA_RATE2_TO1: {
+              type: "number",
+              description: "Data rate from endpoint 2 to 1 (Mbps)"
+            },
+            SYS_CAP: {
+              type: "string",
+              description: "System capability status"
+            },
+            OPS_CAP: {
+              type: "string",
+              description: "Operational capability status"
+            }
+          },
+          additionalProperties: false
+        },
+        RFB: {
+          type: "object",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier"
+            },
+            ID_ENTITY: {
+              type: "string",
+              description: "Parent entity identifier"
+            },
+            NAME: {
+              type: "string",
+              description: "Band name or designation"
+            },
+            BAND: {
+              $ref: "#/definitions/rfBandDesignation",
+              description: "RF band designation"
             },
             MODE: {
+              type: "string",
+              description: "Operating mode"
+            },
+            PURPOSE: {
+              type: "string",
+              description: "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+            },
+            FREQ_MIN: {
+              type: "number",
+              description: "Minimum frequency (MHz)"
+            },
+            FREQ_MAX: {
+              type: "number",
+              description: "Maximum frequency (MHz)"
+            },
+            CENTER_FREQ: {
+              type: "number",
+              description: "Center frequency (MHz)"
+            },
+            BANDWIDTH: {
+              type: "number",
+              description: "Bandwidth (MHz)"
+            },
+            PEAK_GAIN: {
+              type: "number",
+              description: "Peak antenna gain (dBi)"
+            },
+            EDGE_GAIN: {
+              type: "number",
+              description: "Edge-of-coverage gain (dBi)"
+            },
+            BEAMWIDTH: {
+              type: "number",
+              description: "Antenna beamwidth (degrees)"
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization",
+              description: "Polarization"
+            },
+            ERP: {
+              type: "number",
+              description: "Effective radiated power (dBW)"
+            },
+            EIRP: {
+              type: "number",
+              description: "Effective isotropic radiated power (dBW)"
+            },
+            NORAD_CAT_ID: {
               type: "integer",
               minimum: 0,
-              maximum: 255
+              maximum: 4294967295,
+              description: "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
             },
-            RESERVED1: {
+            ID_TRANSMITTER: {
+              type: "string",
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
+            },
+            LINK_DIRECTION: {
+              $ref: "#/definitions/linkCategory",
+              description: "Direction of this emission relative to the spacecraft."
+            },
+            BAUD: {
+              type: "number",
+              description: "Symbol rate in baud (symbols per second), NOT kilobaud."
+            },
+            SERVICE: {
+              type: "string",
+              description: "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
+            },
+            XMT_STATUS: {
+              $ref: "#/definitions/rfTransmitterState",
+              description: "Operational state of this emitter."
+            },
+            INVERT: {
+              type: "boolean",
+              description: "True when the modulation sideband is inverted."
+            },
+            IARU_COORDINATION: {
+              type: "string",
+              description: "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
+            },
+            CITATION: {
+              type: "string",
+              description: "Attribution/citation string the source license requires this record to\ncarry downstream."
+            }
+          },
+          additionalProperties: false
+        },
+        SCVVec3: {
+          type: "object",
+          properties: {
+            X: {
+              type: "number"
+            },
+            Y: {
+              type: "number"
+            },
+            Z: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVEllipsoid: {
+          type: "object",
+          properties: {
+            BODY: {
+              $ref: "#/definitions/scvBodyKind"
+            },
+            NAME: {
+              type: "string"
+            },
+            SEMI_MAJOR_M: {
+              type: "number"
+            },
+            SEMI_MINOR_M: {
+              type: "number"
+            },
+            SEMI_INTERMEDIATE_M: {
+              type: "number"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTimeGrid: {
+          type: "object",
+          properties: {
+            EPOCH_ISO: {
+              type: "string"
+            },
+            EPOCH_JULIAN_DATE: {
+              type: "number"
+            },
+            START_OFFSET_SEC: {
+              type: "number"
+            },
+            STOP_OFFSET_SEC: {
+              type: "number"
+            },
+            STEP_SEC: {
+              type: "number"
+            },
+            GRID_INDEX_START: {
               type: "integer",
               minimum: 0,
-              maximum: 65535
+              maximum: 4294967295
             },
-            MAX_RANGE: {
+            GRID_INDEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            }
+          },
+          additionalProperties: false
+        },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
+              type: "number",
+              description: "Azimuth, degrees clockwise from north, in [0, 360)."
+            },
+            MIN_ELEVATION_DEG: {
+              type: "number",
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensorShapeContract: {
+          type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
+          properties: {
+            SHAPE_KIND: {
+              $ref: "#/definitions/scvSensorShapeKind"
+            },
+            AXIS_CONVENTION: {
+              $ref: "#/definitions/scvSensorAxisConvention"
+            },
+            RANGE_BOUNDARY: {
+              $ref: "#/definitions/scvSensorRangeBoundaryKind"
+            },
+            OUTER_HALF_ANGLE_DEG: {
               type: "number"
             },
-            MIN_RANGE: {
+            INNER_HALF_ANGLE_DEG: {
               type: "number"
             },
-            FOV_AZIMUTH: {
+            MIN_CLOCK_ANGLE_DEG: {
               type: "number"
             },
-            FOV_ELEVATION: {
+            MAX_CLOCK_ANGLE_DEG: {
               type: "number"
             },
-            ANGULAR_RESOLUTION: {
+            X_HALF_ANGLE_DEG: {
               type: "number"
             },
-            RANGE_RESOLUTION: {
+            Y_HALF_ANGLE_DEG: {
               type: "number"
             },
-            UPDATE_RATE: {
+            INNER_LOOK_ANGLE_DEG: {
               type: "number"
             },
-            DETECTION_THRESHOLD: {
+            OUTER_LOOK_ANGLE_DEG: {
               type: "number"
             },
-            AZIMUTH_SCAN_RATE: {
+            SAR_SAMPLING_DENSITY: {
               type: "number"
             },
-            ELEVATION_SCAN_RATE: {
+            MIN_RANGE_M: {
               type: "number"
             },
-            POWER: {
+            MAX_RANGE_M: {
               type: "number"
             },
-            FREQUENCY: {
+            POLYGON_VERTICES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVVec3"
+              }
+            },
+            POLYGON_FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensor: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            OBJECT_ID: {
+              type: "string"
+            },
+            NAME: {
+              type: "string"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            BORESIGHT_UNIT: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            UP_UNIT: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            SHAPE_CONTRACT: {
+              $ref: "#/definitions/SCVSensorShapeContract"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVStateSample: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TIME_OFFSET_SEC: {
               type: "number"
             },
-            RESERVED: {
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            QUATERNION_X: {
+              type: "number"
+            },
+            QUATERNION_Y: {
+              type: "number"
+            },
+            QUATERNION_Z: {
+              type: "number"
+            },
+            QUATERNION_W: {
+              type: "number"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTarget: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            OBJECT_ID: {
+              type: "string"
+            },
+            NAME: {
+              type: "string"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            RADIUS_M: {
+              type: "number"
+            },
+            TARGET_KIND: {
+              $ref: "#/definitions/scvTargetShape"
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain"
+            },
+            POLYGON_VERTICES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVVec3"
+              }
+            },
+            MIN_ALTITUDE_M: {
+              type: "number"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTargetStateSample: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TIME_OFFSET_SEC: {
+              type: "number"
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3"
+            },
+            QUATERNION_X: {
+              type: "number"
+            },
+            QUATERNION_Y: {
+              type: "number"
+            },
+            QUATERNION_Z: {
+              type: "number"
+            },
+            QUATERNION_W: {
+              type: "number"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCoverageGrid: {
+          type: "object",
+          properties: {
+            GRID_ID: {
+              type: "string"
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            MIN_LAT_DEG: {
+              type: "number"
+            },
+            MAX_LAT_DEG: {
+              type: "number"
+            },
+            MIN_LON_DEG: {
+              type: "number"
+            },
+            MAX_LON_DEG: {
+              type: "number"
+            },
+            LAT_STEP_DEG: {
+              type: "number"
+            },
+            LON_STEP_DEG: {
+              type: "number"
+            },
+            ALTITUDE_M: {
+              type: "number"
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            RESOLUTION_DEG: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCoverageRequest: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            ANALYSIS_MODE: {
+              $ref: "#/definitions/scvAnalysisMode"
+            },
+            TARGET_BODY: {
+              $ref: "#/definitions/SCVEllipsoid"
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid"
+            },
+            COVERAGE_GRID: {
+              $ref: "#/definitions/SCVCoverageGrid"
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSensor"
+              }
+            },
+            STATE_SAMPLES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVStateSample"
+              }
+            },
+            TARGETS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTarget"
+              }
+            },
+            TARGET_STATE_SAMPLES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTargetStateSample"
+              }
+            },
+            REQUESTED_PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/scvMetricSeriesKind"
+              }
+            },
+            SENSOR_BATCH_START: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SENSOR_BATCH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WINDOW_BATCH_START: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WINDOW_BATCH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            GEOMETRY_ENCODING: {
+              $ref: "#/definitions/scvGeometryEncoding"
+            },
+            INCLUDE_PACKED_GEOMETRY: {
+              type: "boolean"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVProgress: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            STATUS: {
+              $ref: "#/definitions/scvResultState"
+            },
+            COMPLETED_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            COMPLETED_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            BACKLOG_REMAINING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            COMPLETION_FRACTION: {
+              type: "number"
+            },
+            MESSAGE: {
+              type: "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCancel: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            REASON: {
+              type: "string"
+            },
+            CANCEL_AFTER_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensorContribution: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            FIRST_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            LAST_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            CONTRIBUTION_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            }
+          },
+          additionalProperties: false
+        },
+        SCVHistogramBin: {
+          type: "object",
+          properties: {
+            METRIC_KIND: {
+              $ref: "#/definitions/scvMetricSeriesKind"
+            },
+            MIN_VALUE: {
+              type: "number"
+            },
+            MAX_VALUE: {
+              type: "number"
+            },
+            COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WEIGHT: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSwathSegment: {
+          type: "object",
+          properties: {
+            SEGMENT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            START_OFFSET_SEC: {
+              type: "number"
+            },
+            STOP_OFFSET_SEC: {
+              type: "number"
+            },
+            VERTEX_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            VERTEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            INDEX_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            INDEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SENSOR_IDS: {
               type: "array",
               items: {
                 type: "integer",
                 minimum: 0,
-                maximum: 255
+                maximum: 4294967295
               }
             }
           },
+          additionalProperties: false
+        },
+        SCVMemoryRegion: {
+          type: "object",
+          properties: {
+            REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            REGION_KEY: {
+              type: "string"
+            },
+            BYTE_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            BYTE_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            BYTE_STRIDE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            ALIGNMENT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SHARED: {
+              type: "boolean"
+            },
+            MUTABLE: {
+              type: "boolean"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedGeometryChunk: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            CHUNK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WINDOW_START_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame"
+            },
+            ENCODING: {
+              $ref: "#/definitions/scvGeometryEncoding"
+            },
+            TIME_START_OFFSET_SEC: {
+              type: "number"
+            },
+            TIME_STOP_OFFSET_SEC: {
+              type: "number"
+            },
+            MEMORY_REGIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVMemoryRegion"
+              }
+            },
+            POSITIONS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            POSITIONS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            NORMALS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            NORMALS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            ST_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            ST_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            REVEAL_COORDS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            REVEAL_COORDS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            INDICES_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            INDICES_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            POSITIONS: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            NORMALS: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            ST: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            REVEAL_COORDS: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            INDICES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            },
+            SEGMENT_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            },
+            SENSOR_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            },
+            SEGMENTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSwathSegment"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedRasterBand: {
+          type: "object",
+          properties: {
+            PRODUCT_KIND: {
+              $ref: "#/definitions/scvRasterProductKind"
+            },
+            METRIC_KIND: {
+              $ref: "#/definitions/scvMetricSeriesKind"
+            },
+            ENCODING: {
+              $ref: "#/definitions/scvRasterProductEncoding"
+            },
+            COMPONENTS_PER_CELL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            BUCKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WORDS_PER_BUCKET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            MEMORY_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            MEMORY_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            FLOAT32_VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            FLOAT64_VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            UINT32_VALUES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedRasterProducts: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            GRID: {
+              $ref: "#/definitions/SCVCoverageGrid"
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid"
+            },
+            ROWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            COLUMNS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            BUCKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WORDS_PER_BUCKET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            MEMORY_REGIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVMemoryRegion"
+              }
+            },
+            BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVPackedRasterBand"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVAggregateStatistics: {
+          type: "object",
+          properties: {
+            TOTAL_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            ACCESSED_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            MULTI_ACCESS_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            ACTIVE_SENSOR_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SWATH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_INTERVAL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_REVISIT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_ACCESS_DURATION_SEC: {
+              type: "number"
+            },
+            TOTAL_GAP_DURATION_SEC: {
+              type: "number"
+            },
+            MAX_GAP_DURATION_SEC: {
+              type: "number"
+            },
+            MEAN_REVISIT_TIME_SEC: {
+              type: "number"
+            },
+            MAX_RESPONSE_TIME_SEC: {
+              type: "number"
+            },
+            MEAN_RESPONSE_TIME_SEC: {
+              type: "number"
+            },
+            PERCENT_COVERAGE: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTargetResult: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            NAME: {
+              type: "string"
+            },
+            ACCESS_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            REVISIT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_ACCESS_DURATION_SEC: {
+              type: "number"
+            },
+            MEAN_REVISIT_TIME_SEC: {
+              type: "number"
+            },
+            MAX_GAP_SEC: {
+              type: "number"
+            },
+            INTERVAL_START_SEC: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            INTERVAL_STOP_SEC: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            PASS_START_BUCKETS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            },
+            ACCESS_BITSET: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVResult: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            STATUS: {
+              $ref: "#/definitions/scvResultState"
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid"
+            },
+            TARGET_BODY: {
+              $ref: "#/definitions/SCVEllipsoid"
+            },
+            TOTAL_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            HISTOGRAMS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVHistogramBin"
+              }
+            },
+            CONTRIBUTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSensorContribution"
+              }
+            },
+            GEOMETRY: {
+              $ref: "#/definitions/SCVPackedGeometryChunk"
+            },
+            RASTER_PRODUCTS: {
+              $ref: "#/definitions/SCVPackedRasterProducts"
+            },
+            MESSAGE: {
+              type: "string"
+            },
+            AGGREGATE_STATISTICS: {
+              $ref: "#/definitions/SCVAggregateStatistics"
+            },
+            TARGET_RESULTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTargetResult"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCV: {
+          type: "object",
+          properties: {
+            ENVELOPE_KIND: {
+              $ref: "#/definitions/scvEnvelopeKind"
+            },
+            REQUEST: {
+              $ref: "#/definitions/SCVCoverageRequest"
+            },
+            PROGRESS: {
+              $ref: "#/definitions/SCVProgress"
+            },
+            CANCEL: {
+              $ref: "#/definitions/SCVCancel"
+            },
+            RESULT: {
+              $ref: "#/definitions/SCVResult"
+            },
+            GEOMETRY: {
+              $ref: "#/definitions/SCVPackedGeometryChunk"
+            },
+            RASTER_PRODUCTS: {
+              $ref: "#/definitions/SCVPackedRasterProducts"
+            }
+          },
+          additionalProperties: false
+        },
+        SNRSpectralBand: {
+          type: "object",
+          description: 'One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for "not stated".',
+          properties: {
+            NAME: {
+              type: "string",
+              description: 'The band as its source names it: "UHF", "X-band", "VNIR", "Green".'
+            },
+            DESIGNATION: {
+              type: "string",
+              description: 'The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none.'
+            },
+            FREQ_LOW_HZ: {
+              type: "number",
+              description: "Lower edge, Hz. 0 = not stated."
+            },
+            FREQ_HIGH_HZ: {
+              type: "number",
+              description: "Upper edge, Hz. 0 = not stated."
+            },
+            DIRECTION: {
+              $ref: "#/definitions/snrBandDirection"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where this band was read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNRMounting: {
+          type: "object",
+          description: "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+          properties: {
+            FRAME: {
+              $ref: "#/definitions/snrMountingFrame"
+            },
+            BORESIGHT_AZIMUTH_DEG: {
+              type: "number",
+              description: "Boresight azimuth in FRAME. NaN = not stated."
+            },
+            BORESIGHT_ELEVATION_DEG: {
+              type: "number",
+              description: "Boresight elevation in FRAME. NaN = not stated."
+            },
+            ROLL_DEG: {
+              type: "number",
+              description: "Roll about the boresight. NaN = not stated."
+            },
+            POINTING: {
+              $ref: "#/definitions/snrPointingMode"
+            },
+            SCAN_AZIMUTH_RATE_DEG_S: {
+              type: "number",
+              description: "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+            },
+            SCAN_ELEVATION_RATE_DEG_S: {
+              type: "number",
+              description: "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+            },
+            AZIMUTH_LIMIT_MIN_DEG: {
+              type: "number",
+              description: "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at."
+            },
+            AZIMUTH_LIMIT_MAX_DEG: {
+              type: "number"
+            },
+            ELEVATION_LIMIT_MIN_DEG: {
+              type: "number"
+            },
+            ELEVATION_LIMIT_MAX_DEG: {
+              type: "number"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the mounting was read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNRRfParameters: {
+          type: "object",
+          description: 'Radio-frequency parameters. Positive quantities use 0 for "not stated";\nANTENNA_GAIN_DBI is signed and uses NaN.',
+          properties: {
+            ANTENNA_PATTERN: {
+              $ref: "#/definitions/snrAntennaPattern"
+            },
+            PEAK_POWER_W: {
+              type: "number",
+              description: "Peak transmit power, W."
+            },
+            ANTENNA_GAIN_DBI: {
+              type: "number",
+              description: "Antenna gain, dBi. NaN = not stated."
+            },
+            BEAMWIDTH_AZIMUTH_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in azimuth, degrees."
+            },
+            BEAMWIDTH_ELEVATION_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in elevation, degrees."
+            },
+            BANDWIDTH_HZ: {
+              type: "number",
+              description: "Instantaneous bandwidth, Hz."
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization"
+            },
+            PRF_HZ: {
+              type: "number",
+              description: "Pulse repetition frequency, Hz (radar)."
+            },
+            PULSE_WIDTH_S: {
+              type: "number",
+              description: "Pulse width, seconds (radar)."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNROpticalParameters: {
+          type: "object",
+          description: 'Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.',
+          properties: {
+            APERTURE_M: {
+              type: "number",
+              description: "Clear aperture diameter, m."
+            },
+            FOCAL_LENGTH_M: {
+              type: "number",
+              description: "Focal length, m."
+            },
+            IFOV_RAD: {
+              type: "number",
+              description: "Instantaneous field of view of one detector element, radians."
+            },
+            GSD_M: {
+              type: "number",
+              description: "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES)."
+            },
+            LIMITING_MAGNITUDE: {
+              type: "number",
+              description: "Limiting visual magnitude. NaN = not stated."
+            },
+            DETECTOR: {
+              type: "string",
+              description: 'Detector as the source names it ("CCD", "HgCdTe", "sCMOS").'
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNR: {
+          type: "object",
+          description: "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+          properties: {
+            SENSOR_ID: {
+              type: "string",
+              description: "Stable identifier of this sensor. $SEN.ID of the same sensor."
+            },
+            NAME: {
+              type: "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it."
+            },
+            SITE_ID: {
+              type: "string",
+              description: "$SIT.ID of the ground site the sensor is at."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT."
+            },
+            TYPE: {
+              $ref: "#/definitions/SensorType"
+            },
+            EMISSION: {
+              $ref: "#/definitions/snrEmissionMode"
+            },
+            SPECTRAL_BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SNRSpectralBand"
+              },
+              description: "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated."
+            },
+            FIELD_OF_VIEW: {
+              $ref: "#/definitions/SCVSensorShapeContract",
+              description: "Field-of-view shape: the same table $SCV analyses use."
+            },
+            FIELD_OF_VIEW_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE."
+            },
+            MOUNTING: {
+              $ref: "#/definitions/SNRMounting"
+            },
+            RF: {
+              $ref: "#/definitions/SNRRfParameters"
+            },
+            OPTICAL: {
+              $ref: "#/definitions/SNROpticalParameters"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "SENSOR_ID"
+          ],
           additionalProperties: false
         }
       },
@@ -163004,7 +166024,8 @@ stated.`
             "ESTIMATED",
             "DERIVED",
             "MODEL_DERIVED",
-            "INFERRED_FROM_FAMILY"
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
           ]
         },
         oppRcsAspect: {
@@ -164472,31 +167493,74 @@ stated.`
             "MAW",
             "SONAR_ACTIVE",
             "SONAR_PASSIVE",
-            "ACOUSTIC"
+            "ACOUSTIC",
+            "OPTICAL_TELESCOPE",
+            "MULTISPECTRAL_IMAGER",
+            "HYPERSPECTRAL_IMAGER",
+            "SAR",
+            "ALTIMETER",
+            "SCATTEROMETER",
+            "RADIOMETER",
+            "LIDAR",
+            "PASSIVE_RF_ESM",
+            "SIGINT",
+            "COMMS_ANTENNA",
+            "TT_AND_C_ANTENNA",
+            "PHASED_ARRAY_EARLY_WARNING",
+            "UNSPECIFIED"
           ]
         },
-        SensorMode: {
+        snrEmissionMode: {
           type: "string",
           enum: [
-            "OFF",
-            "STANDBY",
-            "SEARCH",
-            "ACQUISITION",
+            "UNSPECIFIED",
+            "ACTIVE",
+            "PASSIVE"
+          ]
+        },
+        snrBandDirection: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECEIVE",
+            "TRANSMIT",
+            "TRANSCEIVE"
+          ]
+        },
+        snrMountingFrame: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLATFORM_BODY",
+            "LVLH",
+            "LOCAL_ENU"
+          ]
+        },
+        snrPointingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NADIR",
+            "FIXED",
             "TRACK",
-            "TRACK_WHILE_SCAN",
-            "DESIGNATE",
-            "JAMMED"
+            "SCAN"
           ]
         },
-        TrackQuality: {
+        snrAntennaPattern: {
           type: "string",
           enum: [
-            "NONE",
-            "TENTATIVE",
-            "FIRM",
-            "LOCKED",
-            "COASTING",
-            "LOST"
+            "UNSPECIFIED",
+            "ISOTROPIC",
+            "HEMISPHERIC",
+            "PARABOLIC",
+            "GAUSSIAN",
+            "PENCIL",
+            "HELIX",
+            "DIPOLE",
+            "RINGED",
+            "TEARDROP",
+            "TOROIDAL",
+            "CARDIOID"
           ]
         },
         snwErrorCode: {
@@ -224975,8 +228039,24 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           },
           additionalProperties: false
         },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
+              type: "number",
+              description: "Azimuth, degrees clockwise from north, in [0, 360)."
+            },
+            MIN_ELEVATION_DEG: {
+              type: "number",
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+            }
+          },
+          additionalProperties: false
+        },
         SCVSensorShapeContract: {
           type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
           properties: {
             SHAPE_KIND: {
               $ref: "#/definitions/scvSensorShapeKind"
@@ -225028,6 +228108,13 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             POLYGON_FRAME: {
               $ref: "#/definitions/scvCoordinateFrame"
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
             }
           },
           additionalProperties: false
@@ -229040,70 +232127,236 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           ],
           additionalProperties: false
         },
-        SNR: {
+        SNRSpectralBand: {
           type: "object",
-          description: "Sensor Systems",
+          description: 'One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for "not stated".',
           properties: {
-            TYPE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255
+            NAME: {
+              type: "string",
+              description: 'The band as its source names it: "UHF", "X-band", "VNIR", "Green".'
             },
-            MODE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255
+            DESIGNATION: {
+              type: "string",
+              description: 'The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none.'
             },
-            RESERVED1: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535
+            FREQ_LOW_HZ: {
+              type: "number",
+              description: "Lower edge, Hz. 0 = not stated."
             },
-            MAX_RANGE: {
-              type: "number"
+            FREQ_HIGH_HZ: {
+              type: "number",
+              description: "Upper edge, Hz. 0 = not stated."
             },
-            MIN_RANGE: {
-              type: "number"
+            DIRECTION: {
+              $ref: "#/definitions/snrBandDirection"
             },
-            FOV_AZIMUTH: {
-              type: "number"
-            },
-            FOV_ELEVATION: {
-              type: "number"
-            },
-            ANGULAR_RESOLUTION: {
-              type: "number"
-            },
-            RANGE_RESOLUTION: {
-              type: "number"
-            },
-            UPDATE_RATE: {
-              type: "number"
-            },
-            DETECTION_THRESHOLD: {
-              type: "number"
-            },
-            AZIMUTH_SCAN_RATE: {
-              type: "number"
-            },
-            ELEVATION_SCAN_RATE: {
-              type: "number"
-            },
-            POWER: {
-              type: "number"
-            },
-            FREQUENCY: {
-              type: "number"
-            },
-            RESERVED: {
-              type: "array",
-              items: {
-                type: "integer",
-                minimum: 0,
-                maximum: 255
-              }
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where this band was read, when it differs from the record's PROVENANCE."
             }
           },
+          additionalProperties: false
+        },
+        SNRMounting: {
+          type: "object",
+          description: "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+          properties: {
+            FRAME: {
+              $ref: "#/definitions/snrMountingFrame"
+            },
+            BORESIGHT_AZIMUTH_DEG: {
+              type: "number",
+              description: "Boresight azimuth in FRAME. NaN = not stated."
+            },
+            BORESIGHT_ELEVATION_DEG: {
+              type: "number",
+              description: "Boresight elevation in FRAME. NaN = not stated."
+            },
+            ROLL_DEG: {
+              type: "number",
+              description: "Roll about the boresight. NaN = not stated."
+            },
+            POINTING: {
+              $ref: "#/definitions/snrPointingMode"
+            },
+            SCAN_AZIMUTH_RATE_DEG_S: {
+              type: "number",
+              description: "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+            },
+            SCAN_ELEVATION_RATE_DEG_S: {
+              type: "number",
+              description: "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+            },
+            AZIMUTH_LIMIT_MIN_DEG: {
+              type: "number",
+              description: "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at."
+            },
+            AZIMUTH_LIMIT_MAX_DEG: {
+              type: "number"
+            },
+            ELEVATION_LIMIT_MIN_DEG: {
+              type: "number"
+            },
+            ELEVATION_LIMIT_MAX_DEG: {
+              type: "number"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the mounting was read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNRRfParameters: {
+          type: "object",
+          description: 'Radio-frequency parameters. Positive quantities use 0 for "not stated";\nANTENNA_GAIN_DBI is signed and uses NaN.',
+          properties: {
+            ANTENNA_PATTERN: {
+              $ref: "#/definitions/snrAntennaPattern"
+            },
+            PEAK_POWER_W: {
+              type: "number",
+              description: "Peak transmit power, W."
+            },
+            ANTENNA_GAIN_DBI: {
+              type: "number",
+              description: "Antenna gain, dBi. NaN = not stated."
+            },
+            BEAMWIDTH_AZIMUTH_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in azimuth, degrees."
+            },
+            BEAMWIDTH_ELEVATION_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in elevation, degrees."
+            },
+            BANDWIDTH_HZ: {
+              type: "number",
+              description: "Instantaneous bandwidth, Hz."
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization"
+            },
+            PRF_HZ: {
+              type: "number",
+              description: "Pulse repetition frequency, Hz (radar)."
+            },
+            PULSE_WIDTH_S: {
+              type: "number",
+              description: "Pulse width, seconds (radar)."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNROpticalParameters: {
+          type: "object",
+          description: 'Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.',
+          properties: {
+            APERTURE_M: {
+              type: "number",
+              description: "Clear aperture diameter, m."
+            },
+            FOCAL_LENGTH_M: {
+              type: "number",
+              description: "Focal length, m."
+            },
+            IFOV_RAD: {
+              type: "number",
+              description: "Instantaneous field of view of one detector element, radians."
+            },
+            GSD_M: {
+              type: "number",
+              description: "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES)."
+            },
+            LIMITING_MAGNITUDE: {
+              type: "number",
+              description: "Limiting visual magnitude. NaN = not stated."
+            },
+            DETECTOR: {
+              type: "string",
+              description: 'Detector as the source names it ("CCD", "HgCdTe", "sCMOS").'
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE."
+            }
+          },
+          additionalProperties: false
+        },
+        SNR: {
+          type: "object",
+          description: "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+          properties: {
+            SENSOR_ID: {
+              type: "string",
+              description: "Stable identifier of this sensor. $SEN.ID of the same sensor."
+            },
+            NAME: {
+              type: "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it."
+            },
+            SITE_ID: {
+              type: "string",
+              description: "$SIT.ID of the ground site the sensor is at."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT."
+            },
+            TYPE: {
+              $ref: "#/definitions/SensorType"
+            },
+            EMISSION: {
+              $ref: "#/definitions/snrEmissionMode"
+            },
+            SPECTRAL_BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SNRSpectralBand"
+              },
+              description: "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated."
+            },
+            FIELD_OF_VIEW: {
+              $ref: "#/definitions/SCVSensorShapeContract",
+              description: "Field-of-view shape: the same table $SCV analyses use."
+            },
+            FIELD_OF_VIEW_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE."
+            },
+            MOUNTING: {
+              $ref: "#/definitions/SNRMounting"
+            },
+            RF: {
+              $ref: "#/definitions/SNRRfParameters"
+            },
+            OPTICAL: {
+              $ref: "#/definitions/SNROpticalParameters"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "SENSOR_ID"
+          ],
           additionalProperties: false
         },
         SNWBatchRequest: {
@@ -317711,8 +320964,24 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
+              type: "number",
+              description: "Azimuth, degrees clockwise from north, in [0, 360)."
+            },
+            MIN_ELEVATION_DEG: {
+              type: "number",
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+            }
+          },
+          additionalProperties: false
+        },
         SCVSensorShapeContract: {
           type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
           properties: {
             SHAPE_KIND: {
               $ref: "#/definitions/scvSensorShapeKind"
@@ -317764,6 +321033,13 @@ provider's reviewed register). Never free text.`
             },
             POLYGON_FRAME: {
               $ref: "#/definitions/scvCoordinateFrame"
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
             }
           },
           additionalProperties: false
@@ -452566,7 +455842,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "ESTIMATED",
             "DERIVED",
             "MODEL_DERIVED",
-            "INFERRED_FROM_FAMILY"
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -452598,6 +455875,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             INFERRED_FROM_FAMILY: {
               value: 6,
               description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            },
+            USER_DEFINED: {
+              value: 7,
+              description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
             }
           }
         },
@@ -452852,6 +456133,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 INFERRED_FROM_FAMILY: {
                   value: 6,
                   description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+                },
+                USER_DEFINED: {
+                  value: 7,
+                  description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -512256,6 +515541,897 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
     SNR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        oppDeterminationMethod: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEASURED",
+            "OPERATOR_STATED",
+            "ESTIMATED",
+            "DERIVED",
+            "MODEL_DERIVED",
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source published the value without stating how it was obtained."
+            },
+            MEASURED: {
+              value: 1,
+              description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+            },
+            OPERATOR_STATED: {
+              value: 2,
+              description: "Published by the operator, manufacturer or launch provider for this specific object."
+            },
+            ESTIMATED: {
+              value: 3,
+              description: "The source's own estimate, stated as an estimate."
+            },
+            DERIVED: {
+              value: 4,
+              description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+            },
+            MODEL_DERIVED: {
+              value: 5,
+              description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+            },
+            INFERRED_FROM_FAMILY: {
+              value: 6,
+              description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            },
+            USER_DEFINED: {
+              value: 7,
+              description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
+            }
+          }
+        },
+        oppRcsAspect: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AVERAGE",
+            "MINIMUM",
+            "MAXIMUM",
+            "MEDIAN",
+            "HEAD_ON",
+            "BROADSIDE",
+            "NADIR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
+            },
+            AVERAGE: {
+              value: 1
+            },
+            MINIMUM: {
+              value: 2
+            },
+            MAXIMUM: {
+              value: 3
+            },
+            MEDIAN: {
+              value: 4
+            },
+            HEAD_ON: {
+              value: 5
+            },
+            BROADSIDE: {
+              value: 6
+            },
+            NADIR: {
+              value: 7
+            }
+          }
+        },
+        oppSurfaceKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BUS_BODY",
+            "SOLAR_ARRAY",
+            "ANTENNA_DISH",
+            "ANTENNA_PANEL",
+            "RADIATOR",
+            "THERMAL_BLANKET",
+            "OPTICAL_APERTURE",
+            "BOOM",
+            "TRUSS",
+            "TANK",
+            "NOZZLE",
+            "SHIELD",
+            "DOCKING_INTERFACE",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            BUS_BODY: {
+              value: 1
+            },
+            SOLAR_ARRAY: {
+              value: 2
+            },
+            ANTENNA_DISH: {
+              value: 3
+            },
+            ANTENNA_PANEL: {
+              value: 4
+            },
+            RADIATOR: {
+              value: 5
+            },
+            THERMAL_BLANKET: {
+              value: 6
+            },
+            OPTICAL_APERTURE: {
+              value: 7
+            },
+            BOOM: {
+              value: 8
+            },
+            TRUSS: {
+              value: 9
+            },
+            TANK: {
+              value: 10
+            },
+            NOZZLE: {
+              value: 11
+            },
+            SHIELD: {
+              value: 12
+            },
+            DOCKING_INTERFACE: {
+              value: 13
+            },
+            OTHER: {
+              value: 14
+            }
+          }
+        },
+        oppMaterialClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ALUMINIUM",
+            "TITANIUM",
+            "STEEL",
+            "CARBON_COMPOSITE",
+            "MULTI_LAYER_INSULATION",
+            "SOLAR_CELL",
+            "COVER_GLASS",
+            "PAINT_WHITE",
+            "PAINT_BLACK",
+            "OPTICAL_SOLAR_REFLECTOR",
+            "POLYIMIDE_FILM",
+            "MESH",
+            "CERAMIC",
+            "GOLD_FOIL",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ALUMINIUM: {
+              value: 1
+            },
+            TITANIUM: {
+              value: 2
+            },
+            STEEL: {
+              value: 3
+            },
+            CARBON_COMPOSITE: {
+              value: 4
+            },
+            MULTI_LAYER_INSULATION: {
+              value: 5
+            },
+            SOLAR_CELL: {
+              value: 6
+            },
+            COVER_GLASS: {
+              value: 7
+            },
+            PAINT_WHITE: {
+              value: 8
+            },
+            PAINT_BLACK: {
+              value: 9
+            },
+            OPTICAL_SOLAR_REFLECTOR: {
+              value: 10
+            },
+            POLYIMIDE_FILM: {
+              value: 11
+            },
+            MESH: {
+              value: 12
+            },
+            CERAMIC: {
+              value: 13
+            },
+            GOLD_FOIL: {
+              value: 14
+            },
+            OTHER: {
+              value: 15
+            }
+          }
+        },
+        linkCategory: {
+          type: "string",
+          enum: [
+            "UPLINK",
+            "DOWNLINK",
+            "CROSSLINK",
+            "INTER_SATELLITE",
+            "GROUND_TO_GROUND",
+            "RELAY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UPLINK: {
+              value: 0
+            },
+            DOWNLINK: {
+              value: 1
+            },
+            CROSSLINK: {
+              value: 2
+            },
+            INTER_SATELLITE: {
+              value: 3
+            },
+            GROUND_TO_GROUND: {
+              value: 4
+            },
+            RELAY: {
+              value: 5
+            }
+          }
+        },
+        linkCondition: {
+          type: "string",
+          enum: [
+            "ESTABLISHED",
+            "DEGRADED",
+            "INTERRUPTED",
+            "PLANNED",
+            "TERMINATED",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ESTABLISHED: {
+              value: 0
+            },
+            DEGRADED: {
+              value: 1
+            },
+            INTERRUPTED: {
+              value: 2
+            },
+            PLANNED: {
+              value: 3
+            },
+            TERMINATED: {
+              value: 4
+            },
+            UNKNOWN: {
+              value: 5
+            }
+          }
+        },
+        rfBandDesignation: {
+          type: "string",
+          enum: [
+            "UHF",
+            "L",
+            "S",
+            "C",
+            "X",
+            "KU",
+            "K",
+            "KA",
+            "V",
+            "W",
+            "Q",
+            "EHF",
+            "OTHER",
+            "VHF",
+            "HF",
+            "MF",
+            "LF",
+            "VLF",
+            "SHF"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UHF: {
+              value: 0
+            },
+            L: {
+              value: 1
+            },
+            S: {
+              value: 2
+            },
+            C: {
+              value: 3
+            },
+            X: {
+              value: 4
+            },
+            KU: {
+              value: 5
+            },
+            K: {
+              value: 6
+            },
+            KA: {
+              value: 7
+            },
+            V: {
+              value: 8
+            },
+            W: {
+              value: 9
+            },
+            Q: {
+              value: 10
+            },
+            EHF: {
+              value: 11
+            },
+            OTHER: {
+              value: 12,
+              description: "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+            },
+            VHF: {
+              value: 13,
+              description: "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+            },
+            HF: {
+              value: 14,
+              description: "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+            },
+            MF: {
+              value: 15,
+              description: "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+            },
+            LF: {
+              value: 16,
+              description: "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+            },
+            VLF: {
+              value: 17,
+              description: "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+            },
+            SHF: {
+              value: 18,
+              description: "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
+            }
+          }
+        },
+        rfPolarization: {
+          type: "string",
+          enum: [
+            "LHCP",
+            "RHCP",
+            "LINEAR_H",
+            "LINEAR_V",
+            "DUAL",
+            "CROSS",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            LHCP: {
+              value: 0
+            },
+            RHCP: {
+              value: 1
+            },
+            LINEAR_H: {
+              value: 2
+            },
+            LINEAR_V: {
+              value: 3
+            },
+            DUAL: {
+              value: 4
+            },
+            CROSS: {
+              value: 5
+            },
+            UNKNOWN: {
+              value: 6
+            }
+          }
+        },
+        rfTransmitterState: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "ACTIVE",
+            "INACTIVE",
+            "INVALID"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            ACTIVE: {
+              value: 1
+            },
+            INACTIVE: {
+              value: 2
+            },
+            INVALID: {
+              value: 3
+            }
+          }
+        },
+        scvEnvelopeKind: {
+          type: "string",
+          enum: [
+            "REQUEST",
+            "RESULT",
+            "PROGRESS",
+            "CANCEL",
+            "GEOMETRY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            REQUEST: {
+              value: 0
+            },
+            RESULT: {
+              value: 1
+            },
+            PROGRESS: {
+              value: 2
+            },
+            CANCEL: {
+              value: 3
+            },
+            GEOMETRY: {
+              value: 4
+            }
+          }
+        },
+        scvAnalysisMode: {
+          type: "string",
+          enum: [
+            "COVERAGE",
+            "ACCESS",
+            "SWATH",
+            "COMBINED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            COVERAGE: {
+              value: 0
+            },
+            ACCESS: {
+              value: 1
+            },
+            SWATH: {
+              value: 2
+            },
+            COMBINED: {
+              value: 3
+            }
+          }
+        },
+        scvCoordinateFrame: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "BODY_FIXED",
+            "INERTIAL",
+            "ECEF",
+            "ECI",
+            "CUSTOM",
+            "SENSOR_LOCAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            BODY_FIXED: {
+              value: 1
+            },
+            INERTIAL: {
+              value: 2
+            },
+            ECEF: {
+              value: 3
+            },
+            ECI: {
+              value: 4
+            },
+            CUSTOM: {
+              value: 5
+            },
+            SENSOR_LOCAL: {
+              value: 6
+            }
+          }
+        },
+        scvBodyKind: {
+          type: "string",
+          enum: [
+            "EARTH",
+            "MOON",
+            "MARS",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            EARTH: {
+              value: 0
+            },
+            MOON: {
+              value: 1
+            },
+            MARS: {
+              value: 2
+            },
+            CUSTOM: {
+              value: 3
+            }
+          }
+        },
+        scvSensorShapeKind: {
+          type: "string",
+          enum: [
+            "CONIC",
+            "RECTANGULAR",
+            "CUSTOM_POLYGON",
+            "SAR_ANNULAR_SECTOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            CONIC: {
+              value: 0
+            },
+            RECTANGULAR: {
+              value: 1
+            },
+            CUSTOM_POLYGON: {
+              value: 2
+            },
+            SAR_ANNULAR_SECTOR: {
+              value: 3
+            }
+          }
+        },
+        scvSensorAxisConvention: {
+          type: "string",
+          enum: [
+            "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: {
+              value: 0
+            }
+          }
+        },
+        scvSensorRangeBoundaryKind: {
+          type: "string",
+          enum: [
+            "RADIAL_SPHERICAL",
+            "LOCAL_Z_PLANE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            RADIAL_SPHERICAL: {
+              value: 0
+            },
+            LOCAL_Z_PLANE: {
+              value: 1
+            }
+          }
+        },
+        scvGeometryDomain: {
+          type: "string",
+          enum: [
+            "SURFACE",
+            "SPACE",
+            "ELLIPSOID",
+            "PLANE",
+            "CUSTOM_MESH"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            SURFACE: {
+              value: 0
+            },
+            SPACE: {
+              value: 1
+            },
+            ELLIPSOID: {
+              value: 2
+            },
+            PLANE: {
+              value: 3
+            },
+            CUSTOM_MESH: {
+              value: 4
+            }
+          }
+        },
+        scvTargetShape: {
+          type: "string",
+          enum: [
+            "POINT",
+            "POLYGON",
+            "RECTANGLE",
+            "BOX",
+            "SPHERE",
+            "EXTRUDED_POLYGON"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            POINT: {
+              value: 0
+            },
+            POLYGON: {
+              value: 1
+            },
+            RECTANGLE: {
+              value: 2
+            },
+            BOX: {
+              value: 3
+            },
+            SPHERE: {
+              value: 4
+            },
+            EXTRUDED_POLYGON: {
+              value: 5
+            }
+          }
+        },
+        scvResultState: {
+          type: "string",
+          enum: [
+            "OK",
+            "PARTIAL",
+            "CANCELLED",
+            "FAILED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            OK: {
+              value: 0
+            },
+            PARTIAL: {
+              value: 1
+            },
+            CANCELLED: {
+              value: 2
+            },
+            FAILED: {
+              value: 3
+            }
+          }
+        },
+        scvMetricSeriesKind: {
+          type: "string",
+          enum: [
+            "PERCENT_COVERED",
+            "COVERED_CELL_COUNT",
+            "ACCESS_COUNT",
+            "CONTACT_DURATION_SECONDS",
+            "REVISIT_SECONDS",
+            "GAP_SECONDS",
+            "REDUNDANCY",
+            "OVERLAP_COUNT",
+            "LATITUDE_BAND_COVERAGE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            PERCENT_COVERED: {
+              value: 0
+            },
+            COVERED_CELL_COUNT: {
+              value: 1
+            },
+            ACCESS_COUNT: {
+              value: 2
+            },
+            CONTACT_DURATION_SECONDS: {
+              value: 3
+            },
+            REVISIT_SECONDS: {
+              value: 4
+            },
+            GAP_SECONDS: {
+              value: 5
+            },
+            REDUNDANCY: {
+              value: 6
+            },
+            OVERLAP_COUNT: {
+              value: 7
+            },
+            LATITUDE_BAND_COVERAGE: {
+              value: 8
+            }
+          }
+        },
+        scvGeometryEncoding: {
+          type: "string",
+          enum: [
+            "FLAT_FLOAT32",
+            "INTERLEAVED_FLOAT32",
+            "QUANTIZED_UINT16",
+            "SHARED_MEMORY_OFFSET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            FLAT_FLOAT32: {
+              value: 0
+            },
+            INTERLEAVED_FLOAT32: {
+              value: 1
+            },
+            QUANTIZED_UINT16: {
+              value: 2
+            },
+            SHARED_MEMORY_OFFSET: {
+              value: 3
+            }
+          }
+        },
+        scvRasterProductKind: {
+          type: "string",
+          enum: [
+            "CELL_BOUNDS_DEG",
+            "CELL_CENTERS_DEG",
+            "PERCENT_COVERAGE",
+            "PASS_COUNT",
+            "CONTACT_DURATION_SECONDS",
+            "REVISIT_SECONDS",
+            "GAP_SECONDS",
+            "REDUNDANCY",
+            "CURRENT_ACCESS_BITSET",
+            "BUCKET_START_SECONDS",
+            "BUCKET_STOP_SECONDS",
+            "BUCKET_ACTIVE_CELL_COUNT",
+            "PASS_COUNT_RGBA",
+            "CURRENT_ACCESS_RGBA",
+            "LATITUDE_BAND_COVERAGE",
+            "BUCKET_PASS_START_COUNT",
+            "WINDOW_START_ACCESS_BITSET",
+            "WINDOW_STOP_ACCESS_BITSET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            CELL_BOUNDS_DEG: {
+              value: 0
+            },
+            CELL_CENTERS_DEG: {
+              value: 1
+            },
+            PERCENT_COVERAGE: {
+              value: 2
+            },
+            PASS_COUNT: {
+              value: 3
+            },
+            CONTACT_DURATION_SECONDS: {
+              value: 4
+            },
+            REVISIT_SECONDS: {
+              value: 5
+            },
+            GAP_SECONDS: {
+              value: 6
+            },
+            REDUNDANCY: {
+              value: 7
+            },
+            CURRENT_ACCESS_BITSET: {
+              value: 8
+            },
+            BUCKET_START_SECONDS: {
+              value: 9
+            },
+            BUCKET_STOP_SECONDS: {
+              value: 10
+            },
+            BUCKET_ACTIVE_CELL_COUNT: {
+              value: 11
+            },
+            PASS_COUNT_RGBA: {
+              value: 12
+            },
+            CURRENT_ACCESS_RGBA: {
+              value: 13
+            },
+            LATITUDE_BAND_COVERAGE: {
+              value: 14
+            },
+            BUCKET_PASS_START_COUNT: {
+              value: 15
+            },
+            WINDOW_START_ACCESS_BITSET: {
+              value: 16
+            },
+            WINDOW_STOP_ACCESS_BITSET: {
+              value: 17
+            }
+          }
+        },
+        scvRasterProductEncoding: {
+          type: "string",
+          enum: [
+            "FLOAT32",
+            "FLOAT64",
+            "UINT32",
+            "BITSET_UINT32",
+            "UINT8"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            FLOAT32: {
+              value: 0
+            },
+            FLOAT64: {
+              value: 1
+            },
+            UINT32: {
+              value: 2
+            },
+            BITSET_UINT32: {
+              value: 3
+            },
+            UINT8: {
+              value: 4
+            }
+          }
+        },
         SensorType: {
           type: "string",
           enum: [
@@ -512274,7 +516450,21 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             "MAW",
             "SONAR_ACTIVE",
             "SONAR_PASSIVE",
-            "ACOUSTIC"
+            "ACOUSTIC",
+            "OPTICAL_TELESCOPE",
+            "MULTISPECTRAL_IMAGER",
+            "HYPERSPECTRAL_IMAGER",
+            "SAR",
+            "ALTIMETER",
+            "SCATTEROMETER",
+            "RADIOMETER",
+            "LIDAR",
+            "PASSIVE_RF_ESM",
+            "SIGINT",
+            "COMMS_ANTENNA",
+            "TT_AND_C_ANTENNA",
+            "PHASED_ARRAY_EARLY_WARNING",
+            "UNSPECIFIED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -512326,163 +516516,3897 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             ACOUSTIC: {
               value: 15
+            },
+            OPTICAL_TELESCOPE: {
+              value: 16
+            },
+            MULTISPECTRAL_IMAGER: {
+              value: 17
+            },
+            HYPERSPECTRAL_IMAGER: {
+              value: 18
+            },
+            SAR: {
+              value: 19
+            },
+            ALTIMETER: {
+              value: 20
+            },
+            SCATTEROMETER: {
+              value: 21
+            },
+            RADIOMETER: {
+              value: 22
+            },
+            LIDAR: {
+              value: 23
+            },
+            PASSIVE_RF_ESM: {
+              value: 24
+            },
+            SIGINT: {
+              value: 25
+            },
+            COMMS_ANTENNA: {
+              value: 26
+            },
+            TT_AND_C_ANTENNA: {
+              value: 27
+            },
+            PHASED_ARRAY_EARLY_WARNING: {
+              value: 28
+            },
+            UNSPECIFIED: {
+              value: 29,
+              description: "The writer states no kind. The default of TYPE, so an unset TYPE is not read as RADAR_PULSE."
             }
           }
         },
-        SensorMode: {
+        snrEmissionMode: {
           type: "string",
           enum: [
-            "OFF",
-            "STANDBY",
-            "SEARCH",
-            "ACQUISITION",
-            "TRACK",
-            "TRACK_WHILE_SCAN",
-            "DESIGNATE",
-            "JAMMED"
+            "UNSPECIFIED",
+            "ACTIVE",
+            "PASSIVE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            OFF: {
+            UNSPECIFIED: {
               value: 0
             },
-            STANDBY: {
+            ACTIVE: {
               value: 1
             },
-            SEARCH: {
+            PASSIVE: {
+              value: 2
+            }
+          }
+        },
+        snrBandDirection: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECEIVE",
+            "TRANSMIT",
+            "TRANSCEIVE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RECEIVE: {
+              value: 1
+            },
+            TRANSMIT: {
               value: 2
             },
-            ACQUISITION: {
+            TRANSCEIVE: {
               value: 3
+            }
+          }
+        },
+        snrMountingFrame: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLATFORM_BODY",
+            "LVLH",
+            "LOCAL_ENU"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            PLATFORM_BODY: {
+              value: 1,
+              description: "Fixed to the platform body; the angles are body-axis angles."
+            },
+            LVLH: {
+              value: 2,
+              description: "Local vertical, local horizontal at the platform: radial, along-track, cross-track."
+            },
+            LOCAL_ENU: {
+              value: 3,
+              description: "Local east-north-up at a ground site. Azimuth clockwise from north, elevation above the local horizontal."
+            }
+          }
+        },
+        snrPointingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NADIR",
+            "FIXED",
+            "TRACK",
+            "SCAN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            NADIR: {
+              value: 1,
+              description: "Toward the center of the body the platform orbits."
+            },
+            FIXED: {
+              value: 2,
+              description: "Fixed at the boresight angles in the mounting frame."
             },
             TRACK: {
-              value: 4
+              value: 3,
+              description: "Slews to follow a designated target or object."
             },
-            TRACK_WHILE_SCAN: {
-              value: 5
-            },
-            DESIGNATE: {
-              value: 6
-            },
-            JAMMED: {
-              value: 7
+            SCAN: {
+              value: 4,
+              description: "Sweeps at the scan rates through the field of regard."
             }
           }
         },
-        TrackQuality: {
+        snrAntennaPattern: {
           type: "string",
           enum: [
-            "NONE",
-            "TENTATIVE",
-            "FIRM",
-            "LOCKED",
-            "COASTING",
-            "LOST"
+            "UNSPECIFIED",
+            "ISOTROPIC",
+            "HEMISPHERIC",
+            "PARABOLIC",
+            "GAUSSIAN",
+            "PENCIL",
+            "HELIX",
+            "DIPOLE",
+            "RINGED",
+            "TEARDROP",
+            "TOROIDAL",
+            "CARDIOID"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             },
-            TENTATIVE: {
+            ISOTROPIC: {
               value: 1
             },
-            FIRM: {
+            HEMISPHERIC: {
               value: 2
             },
-            LOCKED: {
+            PARABOLIC: {
               value: 3
             },
-            COASTING: {
+            GAUSSIAN: {
               value: 4
             },
-            LOST: {
+            PENCIL: {
               value: 5
+            },
+            HELIX: {
+              value: 6
+            },
+            DIPOLE: {
+              value: 7
+            },
+            RINGED: {
+              value: 8
+            },
+            TEARDROP: {
+              value: 9,
+              description: "The earth-coverage (teardrop) beam of a geostationary antenna."
+            },
+            TOROIDAL: {
+              value: 10
+            },
+            CARDIOID: {
+              value: 11
             }
           }
         },
-        SNR: {
+        OPPProvenance: {
           type: "object",
-          description: "Sensor Systems",
+          description: "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
           properties: {
-            TYPE: {
+            SOURCE: {
+              type: "string",
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Deep link to the exact source record when the source publishes one.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's own revision, edition or publication marker, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            METHOD: {
+              $ref: "#/definitions/oppDeterminationMethod",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source published the value without stating how it was obtained."
+                },
+                MEASURED: {
+                  value: 1,
+                  description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+                },
+                OPERATOR_STATED: {
+                  value: 2,
+                  description: "Published by the operator, manufacturer or launch provider for this specific object."
+                },
+                ESTIMATED: {
+                  value: 3,
+                  description: "The source's own estimate, stated as an estimate."
+                },
+                DERIVED: {
+                  value: 4,
+                  description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+                },
+                MODEL_DERIVED: {
+                  value: 5,
+                  description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+                },
+                INFERRED_FROM_FAMILY: {
+                  value: 6,
+                  description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+                },
+                USER_DEFINED: {
+                  value: 7,
+                  description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LICENSE: {
+              type: "string",
+              description: "Terms under which SOURCE permits redistribution of the value, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution string the source requires be displayed with the value.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              description: "Free text qualifying the value, such as the source's own caveat.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "SOURCE"
+          ],
+          additionalProperties: false
+        },
+        OPPQuantity: {
+          type: "object",
+          description: "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+          properties: {
+            VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: 'Unit symbol verbatim, never silently converted: "kg", "m", "m2", "m2/kg",\n"kg/m2", "dBsm", "W", "mag". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED.',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SIGMA: {
+              type: "number",
+              description: "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero.",
+              "x-flatbuffer-type": "double"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              "x-flatbuffer-type": "OPPProvenance",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "UNITS",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        OPPRadarCrossSection: {
+          type: "object",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
+          properties: {
+            BAND: {
+              type: "string",
+              description: 'Radar band designation verbatim from the source: "UHF", "L", "S", "C",\n"X", "Ku". Empty when the source states no band.',
+              "x-flatbuffer-type": "string"
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Centre frequency [megahertz] when the source states one. Zero means\nunstated.",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              type: "string",
+              description: 'Polarization verbatim from the source: "HH", "VV", "HV", "RCRC". Empty\nwhen the source states none.',
+              "x-flatbuffer-type": "string"
+            },
+            ASPECT: {
+              $ref: "#/definitions/oppRcsAspect",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
+                },
+                AVERAGE: {
+                  value: 1
+                },
+                MINIMUM: {
+                  value: 2
+                },
+                MAXIMUM: {
+                  value: 3
+                },
+                MEDIAN: {
+                  value: 4
+                },
+                HEAD_ON: {
+                  value: 5
+                },
+                BROADSIDE: {
+                  value: 6
+                },
+                NADIR: {
+                  value: 7
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CROSS_SECTION: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'The cross-section itself. UNITS is "m2" or "dBsm" as the source published\nit; the two are never mixed within one entry and never silently converted.',
+              "x-flatbuffer-type": "OPPQuantity",
+              "x-flatbuffer-required": true
+            },
+            SIZE_CLASS: {
+              type: "string",
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`,
+              "x-flatbuffer-type": "string"
+            },
+            SENSOR: {
+              type: "string",
+              description: "Sensor or facility that produced the measurement, when stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "CROSS_SECTION"
+          ],
+          additionalProperties: false
+        },
+        OPPMass: {
+          type: "object",
+          description: "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+          properties: {
+            DRY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass without propellant or consumables [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WET: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass with propellant, at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            LAUNCH: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass at separation from the launch vehicle [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PROPELLANT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Propellant mass at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Payload mass carried by the bus [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CURRENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Best current estimate of mass at the record's epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPDimensions: {
+          type: "object",
+          description: "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+          properties: {
+            BODY_X: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Extents along the object's own body axes [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Y: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Z: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            HEIGHT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Envelope terms as an object database publishes them [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WIDTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DEPTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIAMETER: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_STOWED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages stowed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_DEPLOYED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages deployed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SHAPE: {
+              type: "string",
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
+              "x-flatbuffer-type": "string"
+            },
+            SHAPE_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of SHAPE. Present whenever SHAPE is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPAreas: {
+          type: "object",
+          description: "Projected areas and the ratios derived from them.",
+          properties: {
+            CROSS_SECTIONAL_AVERAGE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Average projected cross-sectional area over all aspects [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MINIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Smallest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MAXIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SOLAR_ARRAY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Total solar-array area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            AREA_TO_MASS_RATIO: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BALLISTIC_COEFFICIENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Ballistic coefficient [kg/m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPSurface: {
+          type: "object",
+          description: "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this surface within the record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            KIND: {
+              $ref: "#/definitions/oppSurfaceKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                BUS_BODY: {
+                  value: 1
+                },
+                SOLAR_ARRAY: {
+                  value: 2
+                },
+                ANTENNA_DISH: {
+                  value: 3
+                },
+                ANTENNA_PANEL: {
+                  value: 4
+                },
+                RADIATOR: {
+                  value: 5
+                },
+                THERMAL_BLANKET: {
+                  value: 6
+                },
+                OPTICAL_APERTURE: {
+                  value: 7
+                },
+                BOOM: {
+                  value: 8
+                },
+                TRUSS: {
+                  value: 9
+                },
+                TANK: {
+                  value: 10
+                },
+                NOZZLE: {
+                  value: 11
+                },
+                SHIELD: {
+                  value: 12
+                },
+                DOCKING_INTERFACE: {
+                  value: 13
+                },
+                OTHER: {
+                  value: 14
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            MATERIAL: {
+              type: "string",
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated.",
+              "x-flatbuffer-type": "string"
+            },
+            MATERIAL_CLASS: {
+              $ref: "#/definitions/oppMaterialClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ALUMINIUM: {
+                  value: 1
+                },
+                TITANIUM: {
+                  value: 2
+                },
+                STEEL: {
+                  value: 3
+                },
+                CARBON_COMPOSITE: {
+                  value: 4
+                },
+                MULTI_LAYER_INSULATION: {
+                  value: 5
+                },
+                SOLAR_CELL: {
+                  value: 6
+                },
+                COVER_GLASS: {
+                  value: 7
+                },
+                PAINT_WHITE: {
+                  value: 8
+                },
+                PAINT_BLACK: {
+                  value: 9
+                },
+                OPTICAL_SOLAR_REFLECTOR: {
+                  value: 10
+                },
+                POLYIMIDE_FILM: {
+                  value: 11
+                },
+                MESH: {
+                  value: 12
+                },
+                CERAMIC: {
+                  value: 13
+                },
+                GOLD_FOIL: {
+                  value: 14
+                },
+                OTHER: {
+                  value: 15
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            COUNT: {
               type: "integer",
               minimum: 0,
-              maximum: 255,
-              "x-flatbuffer-type": "ubyte"
+              maximum: 4294967295,
+              description: "How many identical surfaces this entry represents, such as two solar-array\nwings.",
+              "x-flatbuffer-type": "uint",
+              "x-flatbuffer-default": "1"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            AREA: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area of one surface, not of COUNT surfaces [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass of one surface [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPECULAR_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected specularly, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIFFUSE_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected diffusely, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            ABSORPTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Solar absorptivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            EMISSIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Infrared emissivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PANEL_ID: {
+              type: "string",
+              description: "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_NAME: {
+              type: "string",
+              description: "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        OPPAssetRef: {
+          type: "object",
+          description: "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+          properties: {
+            VAM_ID: {
+              type: "string",
+              description: "$VAM.ID verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VAM_VERSION: {
+              type: "string",
+              description: "$VAM.VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            VAM_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact $VAM bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            VARIANT_ID: {
+              type: "string",
+              description: "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_SHA256: {
+              type: "string",
+              description: "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_CID: {
+              type: "string",
+              description: "$VAMVariant.CID verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_FILE_NAME: {
+              type: "string",
+              description: "$VAMVariant.FILE_NAME verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_MEDIA_TYPE: {
+              type: "string",
+              description: "$VAMVariant.MEDIA_TYPE verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_VERSION: {
+              type: "string",
+              description: "$VAMVariant.GLTF_VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            GEOMETRY_MATCHES_PHYSICAL: {
+              type: "boolean",
+              description: "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            METERS_PER_ASSET_UNIT: {
+              type: "number",
+              description: "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "1.0"
+            }
+          },
+          required: [
+            "VAM_ID",
+            "VARIANT_ID",
+            "ASSET_SHA256"
+          ],
+          additionalProperties: false
+        },
+        OPP: {
+          type: "object",
+          description: "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 record-format version, not a content revision.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID verbatim: the COSPAR international designator.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "$CAT.OBJECT_NAME verbatim, for display only. Never a join key.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY: {
+              type: "string",
+              description: "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            MANUFACTURER_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPMass",
+              "x-flatbuffer-type": "OPPMass"
+            },
+            DIMENSIONS: {
+              $ref: "#/definitions/OPPDimensions",
+              "x-flatbuffer-type": "OPPDimensions"
+            },
+            AREAS: {
+              $ref: "#/definitions/OPPAreas",
+              "x-flatbuffer-type": "OPPAreas"
+            },
+            RADAR_CROSS_SECTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPRadarCrossSection"
+              },
+              description: "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object.",
+              "x-flatbuffer-type": "[OPPRadarCrossSection]"
+            },
+            VISUAL_MAGNITUDE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'Visual magnitude, UNITS "mag", with the observing conditions in\nPROVENANCE.NOTES.',
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SURFACES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPSurface"
+              },
+              description: "Material and surface inventory.",
+              "x-flatbuffer-type": "[OPPSurface]"
+            },
+            ASSET: {
+              $ref: "#/definitions/OPPAssetRef",
+              description: "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it.",
+              "x-flatbuffer-type": "OPPAssetRef"
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPProvenance"
+              },
+              description: 'Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish "not looked for" from\n"looked for and not published".',
+              "x-flatbuffer-type": "[OPPProvenance]"
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated.",
+              "x-flatbuffer-type": "string"
+            },
+            SUPERSEDES_OPP_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact superseded $OPP bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        LKS: {
+          type: "object",
+          description: "Link Status",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier",
+              "x-flatbuffer-type": "string"
+            },
+            ID_ON_ORBIT1: {
+              type: "string",
+              description: "First endpoint on-orbit identifier",
+              "x-flatbuffer-type": "string"
+            },
+            SAT_NO1: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "First endpoint satellite catalog number",
+              "x-flatbuffer-type": "uint32"
+            },
+            ID_ON_ORBIT2: {
+              type: "string",
+              description: "Second endpoint on-orbit identifier",
+              "x-flatbuffer-type": "string"
+            },
+            SAT_NO2: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Second endpoint satellite catalog number",
+              "x-flatbuffer-type": "uint32"
+            },
+            CONSTELLATION: {
+              type: "string",
+              description: "Constellation name",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_NAME: {
+              type: "string",
+              description: "Link name or identifier",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_TYPE: {
+              $ref: "#/definitions/linkCategory",
+              description: "Link type",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UPLINK: {
+                  value: 0
+                },
+                DOWNLINK: {
+                  value: 1
+                },
+                CROSSLINK: {
+                  value: 2
+                },
+                INTER_SATELLITE: {
+                  value: 3
+                },
+                GROUND_TO_GROUND: {
+                  value: 4
+                },
+                RELAY: {
+                  value: 5
+                }
+              }
+            },
+            LINK_STATE: {
+              $ref: "#/definitions/linkCondition",
+              description: "Link state",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ESTABLISHED: {
+                  value: 0
+                },
+                DEGRADED: {
+                  value: 1
+                },
+                INTERRUPTED: {
+                  value: 2
+                },
+                PLANNED: {
+                  value: 3
+                },
+                TERMINATED: {
+                  value: 4
+                },
+                UNKNOWN: {
+                  value: 5
+                }
+              }
+            },
+            BAND: {
+              type: "string",
+              description: "RF band",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_START_TIME: {
+              type: "string",
+              description: "Link start time (ISO 8601)",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_STOP_TIME: {
+              type: "string",
+              description: "Link stop time (ISO 8601)",
+              "x-flatbuffer-type": "string"
+            },
+            ID_BEAM1: {
+              type: "string",
+              description: "First endpoint beam identifier",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT1_NAME: {
+              type: "string",
+              description: "First endpoint name",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT1_LAT: {
+              type: "number",
+              description: "First endpoint latitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            END_POINT1_LON: {
+              type: "number",
+              description: "First endpoint longitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            ID_BEAM2: {
+              type: "string",
+              description: "Second endpoint beam identifier",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT2_NAME: {
+              type: "string",
+              description: "Second endpoint name",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT2_LAT: {
+              type: "number",
+              description: "Second endpoint latitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            END_POINT2_LON: {
+              type: "number",
+              description: "Second endpoint longitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            DATA_RATE1_TO2: {
+              type: "number",
+              description: "Data rate from endpoint 1 to 2 (Mbps)",
+              "x-flatbuffer-type": "double"
+            },
+            DATA_RATE2_TO1: {
+              type: "number",
+              description: "Data rate from endpoint 2 to 1 (Mbps)",
+              "x-flatbuffer-type": "double"
+            },
+            SYS_CAP: {
+              type: "string",
+              description: "System capability status",
+              "x-flatbuffer-type": "string"
+            },
+            OPS_CAP: {
+              type: "string",
+              description: "Operational capability status",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        RFB: {
+          type: "object",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier",
+              "x-flatbuffer-type": "string"
+            },
+            ID_ENTITY: {
+              type: "string",
+              description: "Parent entity identifier",
+              "x-flatbuffer-type": "string"
+            },
+            NAME: {
+              type: "string",
+              description: "Band name or designation",
+              "x-flatbuffer-type": "string"
+            },
+            BAND: {
+              $ref: "#/definitions/rfBandDesignation",
+              description: "RF band designation",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UHF: {
+                  value: 0
+                },
+                L: {
+                  value: 1
+                },
+                S: {
+                  value: 2
+                },
+                C: {
+                  value: 3
+                },
+                X: {
+                  value: 4
+                },
+                KU: {
+                  value: 5
+                },
+                K: {
+                  value: 6
+                },
+                KA: {
+                  value: 7
+                },
+                V: {
+                  value: 8
+                },
+                W: {
+                  value: 9
+                },
+                Q: {
+                  value: 10
+                },
+                EHF: {
+                  value: 11
+                },
+                OTHER: {
+                  value: 12,
+                  description: "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+                },
+                VHF: {
+                  value: 13,
+                  description: "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+                },
+                HF: {
+                  value: 14,
+                  description: "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+                },
+                MF: {
+                  value: 15,
+                  description: "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+                },
+                LF: {
+                  value: 16,
+                  description: "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+                },
+                VLF: {
+                  value: 17,
+                  description: "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+                },
+                SHF: {
+                  value: 18,
+                  description: "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
+                }
+              }
             },
             MODE: {
+              type: "string",
+              description: "Operating mode",
+              "x-flatbuffer-type": "string"
+            },
+            PURPOSE: {
+              type: "string",
+              description: "Band purpose (e.g., TT&C, PAYLOAD, BEACON)",
+              "x-flatbuffer-type": "string"
+            },
+            FREQ_MIN: {
+              type: "number",
+              description: "Minimum frequency (MHz)",
+              "x-flatbuffer-type": "double"
+            },
+            FREQ_MAX: {
+              type: "number",
+              description: "Maximum frequency (MHz)",
+              "x-flatbuffer-type": "double"
+            },
+            CENTER_FREQ: {
+              type: "number",
+              description: "Center frequency (MHz)",
+              "x-flatbuffer-type": "double"
+            },
+            BANDWIDTH: {
+              type: "number",
+              description: "Bandwidth (MHz)",
+              "x-flatbuffer-type": "double"
+            },
+            PEAK_GAIN: {
+              type: "number",
+              description: "Peak antenna gain (dBi)",
+              "x-flatbuffer-type": "double"
+            },
+            EDGE_GAIN: {
+              type: "number",
+              description: "Edge-of-coverage gain (dBi)",
+              "x-flatbuffer-type": "double"
+            },
+            BEAMWIDTH: {
+              type: "number",
+              description: "Antenna beamwidth (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization",
+              description: "Polarization",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LHCP: {
+                  value: 0
+                },
+                RHCP: {
+                  value: 1
+                },
+                LINEAR_H: {
+                  value: 2
+                },
+                LINEAR_V: {
+                  value: 3
+                },
+                DUAL: {
+                  value: 4
+                },
+                CROSS: {
+                  value: 5
+                },
+                UNKNOWN: {
+                  value: 6
+                }
+              }
+            },
+            ERP: {
+              type: "number",
+              description: "Effective radiated power (dBW)",
+              "x-flatbuffer-type": "double"
+            },
+            EIRP: {
+              type: "number",
+              description: "Effective isotropic radiated power (dBW)",
+              "x-flatbuffer-type": "double"
+            },
+            NORAD_CAT_ID: {
               type: "integer",
               minimum: 0,
-              maximum: 255,
-              "x-flatbuffer-type": "ubyte"
+              maximum: 4294967295,
+              description: "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
             },
-            RESERVED1: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              "x-flatbuffer-type": "ushort"
+            ID_TRANSMITTER: {
+              type: "string",
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
+              "x-flatbuffer-type": "string"
             },
-            MAX_RANGE: {
+            LINK_DIRECTION: {
+              $ref: "#/definitions/linkCategory",
+              description: "Direction of this emission relative to the spacecraft.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UPLINK: {
+                  value: 0
+                },
+                DOWNLINK: {
+                  value: 1
+                },
+                CROSSLINK: {
+                  value: 2
+                },
+                INTER_SATELLITE: {
+                  value: 3
+                },
+                GROUND_TO_GROUND: {
+                  value: 4
+                },
+                RELAY: {
+                  value: 5
+                }
+              }
+            },
+            BAUD: {
+              type: "number",
+              description: "Symbol rate in baud (symbols per second), NOT kilobaud.",
+              "x-flatbuffer-type": "double"
+            },
+            SERVICE: {
+              type: "string",
+              description: "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
+              "x-flatbuffer-type": "string"
+            },
+            XMT_STATUS: {
+              $ref: "#/definitions/rfTransmitterState",
+              description: "Operational state of this emitter.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                ACTIVE: {
+                  value: 1
+                },
+                INACTIVE: {
+                  value: 2
+                },
+                INVALID: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "UNKNOWN"
+            },
+            INVERT: {
+              type: "boolean",
+              description: "True when the modulation sideband is inverted.",
+              "x-flatbuffer-type": "bool"
+            },
+            IARU_COORDINATION: {
+              type: "string",
+              description: "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "Attribution/citation string the source license requires this record to\ncarry downstream.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVVec3: {
+          type: "object",
+          properties: {
+            X: {
               type: "number",
               "x-flatbuffer-type": "double"
             },
-            MIN_RANGE: {
+            Y: {
               type: "number",
               "x-flatbuffer-type": "double"
             },
-            FOV_AZIMUTH: {
+            Z: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVEllipsoid: {
+          type: "object",
+          properties: {
+            BODY: {
+              $ref: "#/definitions/scvBodyKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                EARTH: {
+                  value: 0
+                },
+                MOON: {
+                  value: 1
+                },
+                MARS: {
+                  value: 2
+                },
+                CUSTOM: {
+                  value: 3
+                }
+              }
             },
-            FOV_ELEVATION: {
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SEMI_MAJOR_M: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            ANGULAR_RESOLUTION: {
+            SEMI_MINOR_M: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            RANGE_RESOLUTION: {
+            SEMI_INTERMEDIATE_M: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            UPDATE_RATE: {
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTimeGrid: {
+          type: "object",
+          properties: {
+            EPOCH_ISO: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_JULIAN_DATE: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            DETECTION_THRESHOLD: {
+            START_OFFSET_SEC: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            AZIMUTH_SCAN_RATE: {
+            STOP_OFFSET_SEC: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            ELEVATION_SCAN_RATE: {
+            STEP_SEC: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              "x-flatbuffer-type": "double"
             },
-            POWER: {
+            GRID_INDEX_START: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            GRID_INDEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              description: "Azimuth, degrees clockwise from north, in [0, 360).",
+              "x-flatbuffer-type": "double"
             },
-            FREQUENCY: {
+            MIN_ELEVATION_DEG: {
               type: "number",
-              "x-flatbuffer-type": "float"
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensorShapeContract: {
+          type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
+          properties: {
+            SHAPE_KIND: {
+              $ref: "#/definitions/scvSensorShapeKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                CONIC: {
+                  value: 0
+                },
+                RECTANGULAR: {
+                  value: 1
+                },
+                CUSTOM_POLYGON: {
+                  value: 2
+                },
+                SAR_ANNULAR_SECTOR: {
+                  value: 3
+                }
+              }
             },
-            RESERVED: {
+            AXIS_CONVENTION: {
+              $ref: "#/definitions/scvSensorAxisConvention",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: {
+                  value: 0
+                }
+              }
+            },
+            RANGE_BOUNDARY: {
+              $ref: "#/definitions/scvSensorRangeBoundaryKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                RADIAL_SPHERICAL: {
+                  value: 0
+                },
+                LOCAL_Z_PLANE: {
+                  value: 1
+                }
+              }
+            },
+            OUTER_HALF_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INNER_HALF_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_CLOCK_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_CLOCK_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "360.0"
+            },
+            X_HALF_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            Y_HALF_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INNER_LOOK_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            OUTER_LOOK_ANGLE_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            SAR_SAMPLING_DENSITY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_RANGE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_RANGE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POLYGON_VERTICES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVVec3"
+              },
+              "x-flatbuffer-type": "[SCVVec3]"
+            },
+            POLYGON_FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
+              "x-flatbuffer-type": "[SCVAzElMaskPoint]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensor: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            BORESIGHT_UNIT: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            UP_UNIT: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            SHAPE_CONTRACT: {
+              $ref: "#/definitions/SCVSensorShapeContract",
+              "x-flatbuffer-type": "SCVSensorShapeContract"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVStateSample: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TIME_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            QUATERNION_X: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_W: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTarget: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            RADIUS_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TARGET_KIND: {
+              $ref: "#/definitions/scvTargetShape",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                POINT: {
+                  value: 0
+                },
+                POLYGON: {
+                  value: 1
+                },
+                RECTANGLE: {
+                  value: 2
+                },
+                BOX: {
+                  value: 3
+                },
+                SPHERE: {
+                  value: 4
+                },
+                EXTRUDED_POLYGON: {
+                  value: 5
+                }
+              }
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                SURFACE: {
+                  value: 0
+                },
+                SPACE: {
+                  value: 1
+                },
+                ELLIPSOID: {
+                  value: 2
+                },
+                PLANE: {
+                  value: 3
+                },
+                CUSTOM_MESH: {
+                  value: 4
+                }
+              }
+            },
+            POLYGON_VERTICES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVVec3"
+              },
+              "x-flatbuffer-type": "[SCVVec3]"
+            },
+            MIN_ALTITUDE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTargetStateSample: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TIME_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_M: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            VELOCITY_MPS: {
+              $ref: "#/definitions/SCVVec3",
+              "x-flatbuffer-type": "SCVVec3"
+            },
+            QUATERNION_X: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QUATERNION_W: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCoverageGrid: {
+          type: "object",
+          properties: {
+            GRID_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                SURFACE: {
+                  value: 0
+                },
+                SPACE: {
+                  value: 1
+                },
+                ELLIPSOID: {
+                  value: 2
+                },
+                PLANE: {
+                  value: 3
+                },
+                CUSTOM_MESH: {
+                  value: 4
+                }
+              }
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            MIN_LAT_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_LAT_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_LON_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_LON_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            LAT_STEP_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            LON_STEP_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            RESOLUTION_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCoverageRequest: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            ANALYSIS_MODE: {
+              $ref: "#/definitions/scvAnalysisMode",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                COVERAGE: {
+                  value: 0
+                },
+                ACCESS: {
+                  value: 1
+                },
+                SWATH: {
+                  value: 2
+                },
+                COMBINED: {
+                  value: 3
+                }
+              }
+            },
+            TARGET_BODY: {
+              $ref: "#/definitions/SCVEllipsoid",
+              "x-flatbuffer-type": "SCVEllipsoid"
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid",
+              "x-flatbuffer-type": "SCVTimeGrid"
+            },
+            COVERAGE_GRID: {
+              $ref: "#/definitions/SCVCoverageGrid",
+              "x-flatbuffer-type": "SCVCoverageGrid"
+            },
+            SENSORS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSensor"
+              },
+              "x-flatbuffer-type": "[SCVSensor]"
+            },
+            STATE_SAMPLES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVStateSample"
+              },
+              "x-flatbuffer-type": "[SCVStateSample]"
+            },
+            TARGETS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTarget"
+              },
+              "x-flatbuffer-type": "[SCVTarget]"
+            },
+            TARGET_STATE_SAMPLES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTargetStateSample"
+              },
+              "x-flatbuffer-type": "[SCVTargetStateSample]"
+            },
+            REQUESTED_PRODUCTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/scvMetricSeriesKind"
+              },
+              "x-flatbuffer-type": "[scvMetricSeriesKind]"
+            },
+            SENSOR_BATCH_START: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            SENSOR_BATCH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WINDOW_BATCH_START: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WINDOW_BATCH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            GEOMETRY_ENCODING: {
+              $ref: "#/definitions/scvGeometryEncoding",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                FLAT_FLOAT32: {
+                  value: 0
+                },
+                INTERLEAVED_FLOAT32: {
+                  value: 1
+                },
+                QUANTIZED_UINT16: {
+                  value: 2
+                },
+                SHARED_MEMORY_OFFSET: {
+                  value: 3
+                }
+              }
+            },
+            INCLUDE_PACKED_GEOMETRY: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVProgress: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            STATUS: {
+              $ref: "#/definitions/scvResultState",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                OK: {
+                  value: 0
+                },
+                PARTIAL: {
+                  value: 1
+                },
+                CANCELLED: {
+                  value: 2
+                },
+                FAILED: {
+                  value: 3
+                }
+              }
+            },
+            COMPLETED_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            COMPLETED_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            BACKLOG_REMAINING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            COMPLETION_FRACTION: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MESSAGE: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVCancel: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            REASON: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            CANCEL_AFTER_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSensorContribution: {
+          type: "object",
+          properties: {
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            FIRST_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            LAST_WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            CONTRIBUTION_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVHistogramBin: {
+          type: "object",
+          properties: {
+            METRIC_KIND: {
+              $ref: "#/definitions/scvMetricSeriesKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                PERCENT_COVERED: {
+                  value: 0
+                },
+                COVERED_CELL_COUNT: {
+                  value: 1
+                },
+                ACCESS_COUNT: {
+                  value: 2
+                },
+                CONTACT_DURATION_SECONDS: {
+                  value: 3
+                },
+                REVISIT_SECONDS: {
+                  value: 4
+                },
+                GAP_SECONDS: {
+                  value: 5
+                },
+                REDUNDANCY: {
+                  value: 6
+                },
+                OVERLAP_COUNT: {
+                  value: 7
+                },
+                LATITUDE_BAND_COVERAGE: {
+                  value: 8
+                }
+              }
+            },
+            MIN_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WEIGHT: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVSwathSegment: {
+          type: "object",
+          properties: {
+            SEGMENT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            SENSOR_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WINDOW_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                SURFACE: {
+                  value: 0
+                },
+                SPACE: {
+                  value: 1
+                },
+                ELLIPSOID: {
+                  value: 2
+                },
+                PLANE: {
+                  value: 3
+                },
+                CUSTOM_MESH: {
+                  value: 4
+                }
+              }
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            START_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            STOP_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VERTEX_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            VERTEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            INDEX_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            INDEX_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            SENSOR_IDS: {
               type: "array",
               items: {
                 type: "integer",
                 minimum: 0,
-                maximum: 255
+                maximum: 4294967295
               },
-              "x-flatbuffer-type": "[uint8]"
+              "x-flatbuffer-type": "[uint32]"
             }
           },
+          additionalProperties: false
+        },
+        SCVMemoryRegion: {
+          type: "object",
+          properties: {
+            REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            REGION_KEY: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            BYTE_OFFSET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            BYTE_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            BYTE_STRIDE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            ALIGNMENT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            SHARED: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool"
+            },
+            MUTABLE: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedGeometryChunk: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            CHUNK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WINDOW_START_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            DOMAIN: {
+              $ref: "#/definitions/scvGeometryDomain",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                SURFACE: {
+                  value: 0
+                },
+                SPACE: {
+                  value: 1
+                },
+                ELLIPSOID: {
+                  value: 2
+                },
+                PLANE: {
+                  value: 3
+                },
+                CUSTOM_MESH: {
+                  value: 4
+                }
+              }
+            },
+            FRAME: {
+              $ref: "#/definitions/scvCoordinateFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1
+                },
+                INERTIAL: {
+                  value: 2
+                },
+                ECEF: {
+                  value: 3
+                },
+                ECI: {
+                  value: 4
+                },
+                CUSTOM: {
+                  value: 5
+                },
+                SENSOR_LOCAL: {
+                  value: 6
+                }
+              }
+            },
+            ENCODING: {
+              $ref: "#/definitions/scvGeometryEncoding",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                FLAT_FLOAT32: {
+                  value: 0
+                },
+                INTERLEAVED_FLOAT32: {
+                  value: 1
+                },
+                QUANTIZED_UINT16: {
+                  value: 2
+                },
+                SHARED_MEMORY_OFFSET: {
+                  value: 3
+                }
+              }
+            },
+            TIME_START_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TIME_STOP_OFFSET_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MEMORY_REGIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVMemoryRegion"
+              },
+              "x-flatbuffer-type": "[SCVMemoryRegion]"
+            },
+            POSITIONS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            POSITIONS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            NORMALS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            NORMALS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            ST_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            ST_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            REVEAL_COORDS_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            REVEAL_COORDS_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            INDICES_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            INDICES_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            POSITIONS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[float]"
+            },
+            NORMALS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[float]"
+            },
+            ST: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[float]"
+            },
+            REVEAL_COORDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[float]"
+            },
+            INDICES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            },
+            SEGMENT_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            },
+            SENSOR_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            },
+            SEGMENTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSwathSegment"
+              },
+              "x-flatbuffer-type": "[SCVSwathSegment]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedRasterBand: {
+          type: "object",
+          properties: {
+            PRODUCT_KIND: {
+              $ref: "#/definitions/scvRasterProductKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                CELL_BOUNDS_DEG: {
+                  value: 0
+                },
+                CELL_CENTERS_DEG: {
+                  value: 1
+                },
+                PERCENT_COVERAGE: {
+                  value: 2
+                },
+                PASS_COUNT: {
+                  value: 3
+                },
+                CONTACT_DURATION_SECONDS: {
+                  value: 4
+                },
+                REVISIT_SECONDS: {
+                  value: 5
+                },
+                GAP_SECONDS: {
+                  value: 6
+                },
+                REDUNDANCY: {
+                  value: 7
+                },
+                CURRENT_ACCESS_BITSET: {
+                  value: 8
+                },
+                BUCKET_START_SECONDS: {
+                  value: 9
+                },
+                BUCKET_STOP_SECONDS: {
+                  value: 10
+                },
+                BUCKET_ACTIVE_CELL_COUNT: {
+                  value: 11
+                },
+                PASS_COUNT_RGBA: {
+                  value: 12
+                },
+                CURRENT_ACCESS_RGBA: {
+                  value: 13
+                },
+                LATITUDE_BAND_COVERAGE: {
+                  value: 14
+                },
+                BUCKET_PASS_START_COUNT: {
+                  value: 15
+                },
+                WINDOW_START_ACCESS_BITSET: {
+                  value: 16
+                },
+                WINDOW_STOP_ACCESS_BITSET: {
+                  value: 17
+                }
+              }
+            },
+            METRIC_KIND: {
+              $ref: "#/definitions/scvMetricSeriesKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                PERCENT_COVERED: {
+                  value: 0
+                },
+                COVERED_CELL_COUNT: {
+                  value: 1
+                },
+                ACCESS_COUNT: {
+                  value: 2
+                },
+                CONTACT_DURATION_SECONDS: {
+                  value: 3
+                },
+                REVISIT_SECONDS: {
+                  value: 4
+                },
+                GAP_SECONDS: {
+                  value: 5
+                },
+                REDUNDANCY: {
+                  value: 6
+                },
+                OVERLAP_COUNT: {
+                  value: 7
+                },
+                LATITUDE_BAND_COVERAGE: {
+                  value: 8
+                }
+              }
+            },
+            ENCODING: {
+              $ref: "#/definitions/scvRasterProductEncoding",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                FLOAT32: {
+                  value: 0
+                },
+                FLOAT64: {
+                  value: 1
+                },
+                UINT32: {
+                  value: 2
+                },
+                BITSET_UINT32: {
+                  value: 3
+                },
+                UINT8: {
+                  value: 4
+                }
+              }
+            },
+            COMPONENTS_PER_CELL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            BUCKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WORDS_PER_BUCKET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            MEMORY_REGION_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            MEMORY_RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            FLOAT32_VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[float]"
+            },
+            FLOAT64_VALUES: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            UINT32_VALUES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVPackedRasterProducts: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            GRID: {
+              $ref: "#/definitions/SCVCoverageGrid",
+              "x-flatbuffer-type": "SCVCoverageGrid"
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid",
+              "x-flatbuffer-type": "SCVTimeGrid"
+            },
+            ROWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            COLUMNS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            CELL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            BUCKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WORDS_PER_BUCKET: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            MEMORY_REGIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVMemoryRegion"
+              },
+              "x-flatbuffer-type": "[SCVMemoryRegion]"
+            },
+            BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVPackedRasterBand"
+              },
+              "x-flatbuffer-type": "[SCVPackedRasterBand]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVAggregateStatistics: {
+          type: "object",
+          properties: {
+            TOTAL_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            ACCESSED_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            MULTI_ACCESS_CELLS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            ACTIVE_SENSOR_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            SWATH_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_INTERVAL_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_REVISIT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_ACCESS_DURATION_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TOTAL_GAP_DURATION_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_GAP_DURATION_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_REVISIT_TIME_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_RESPONSE_TIME_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_RESPONSE_TIME_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            PERCENT_COVERAGE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVTargetResult: {
+          type: "object",
+          properties: {
+            TARGET_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            ACCESS_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            REVISIT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_ACCESS_DURATION_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_REVISIT_TIME_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_GAP_SEC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INTERVAL_START_SEC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            INTERVAL_STOP_SEC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            PASS_START_BUCKETS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            },
+            ACCESS_BITSET: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              "x-flatbuffer-type": "[uint32]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCVResult: {
+          type: "object",
+          properties: {
+            JOB_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TRACE_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "uint64"
+            },
+            STATUS: {
+              $ref: "#/definitions/scvResultState",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                OK: {
+                  value: 0
+                },
+                PARTIAL: {
+                  value: 1
+                },
+                CANCELLED: {
+                  value: 2
+                },
+                FAILED: {
+                  value: 3
+                }
+              }
+            },
+            TIME_GRID: {
+              $ref: "#/definitions/SCVTimeGrid",
+              "x-flatbuffer-type": "SCVTimeGrid"
+            },
+            TARGET_BODY: {
+              $ref: "#/definitions/SCVEllipsoid",
+              "x-flatbuffer-type": "SCVEllipsoid"
+            },
+            TOTAL_SENSORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            TOTAL_WINDOWS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            HISTOGRAMS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVHistogramBin"
+              },
+              "x-flatbuffer-type": "[SCVHistogramBin]"
+            },
+            CONTRIBUTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVSensorContribution"
+              },
+              "x-flatbuffer-type": "[SCVSensorContribution]"
+            },
+            GEOMETRY: {
+              $ref: "#/definitions/SCVPackedGeometryChunk",
+              "x-flatbuffer-type": "SCVPackedGeometryChunk"
+            },
+            RASTER_PRODUCTS: {
+              $ref: "#/definitions/SCVPackedRasterProducts",
+              "x-flatbuffer-type": "SCVPackedRasterProducts"
+            },
+            MESSAGE: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            AGGREGATE_STATISTICS: {
+              $ref: "#/definitions/SCVAggregateStatistics",
+              "x-flatbuffer-type": "SCVAggregateStatistics"
+            },
+            TARGET_RESULTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVTargetResult"
+              },
+              "x-flatbuffer-type": "[SCVTargetResult]"
+            }
+          },
+          additionalProperties: false
+        },
+        SCV: {
+          type: "object",
+          properties: {
+            ENVELOPE_KIND: {
+              $ref: "#/definitions/scvEnvelopeKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                REQUEST: {
+                  value: 0
+                },
+                RESULT: {
+                  value: 1
+                },
+                PROGRESS: {
+                  value: 2
+                },
+                CANCEL: {
+                  value: 3
+                },
+                GEOMETRY: {
+                  value: 4
+                }
+              }
+            },
+            REQUEST: {
+              $ref: "#/definitions/SCVCoverageRequest",
+              "x-flatbuffer-type": "SCVCoverageRequest"
+            },
+            PROGRESS: {
+              $ref: "#/definitions/SCVProgress",
+              "x-flatbuffer-type": "SCVProgress"
+            },
+            CANCEL: {
+              $ref: "#/definitions/SCVCancel",
+              "x-flatbuffer-type": "SCVCancel"
+            },
+            RESULT: {
+              $ref: "#/definitions/SCVResult",
+              "x-flatbuffer-type": "SCVResult"
+            },
+            GEOMETRY: {
+              $ref: "#/definitions/SCVPackedGeometryChunk",
+              "x-flatbuffer-type": "SCVPackedGeometryChunk"
+            },
+            RASTER_PRODUCTS: {
+              $ref: "#/definitions/SCVPackedRasterProducts",
+              "x-flatbuffer-type": "SCVPackedRasterProducts"
+            }
+          },
+          additionalProperties: false
+        },
+        SNRSpectralBand: {
+          type: "object",
+          description: 'One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for "not stated".',
+          properties: {
+            NAME: {
+              type: "string",
+              description: 'The band as its source names it: "UHF", "X-band", "VNIR", "Green".',
+              "x-flatbuffer-type": "string"
+            },
+            DESIGNATION: {
+              type: "string",
+              description: 'The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none.',
+              "x-flatbuffer-type": "string"
+            },
+            FREQ_LOW_HZ: {
+              type: "number",
+              description: "Lower edge, Hz. 0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            FREQ_HIGH_HZ: {
+              type: "number",
+              description: "Upper edge, Hz. 0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            DIRECTION: {
+              $ref: "#/definitions/snrBandDirection",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RECEIVE: {
+                  value: 1
+                },
+                TRANSMIT: {
+                  value: 2
+                },
+                TRANSCEIVE: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where this band was read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNRMounting: {
+          type: "object",
+          description: "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+          properties: {
+            FRAME: {
+              $ref: "#/definitions/snrMountingFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                PLATFORM_BODY: {
+                  value: 1,
+                  description: "Fixed to the platform body; the angles are body-axis angles."
+                },
+                LVLH: {
+                  value: 2,
+                  description: "Local vertical, local horizontal at the platform: radial, along-track, cross-track."
+                },
+                LOCAL_ENU: {
+                  value: 3,
+                  description: "Local east-north-up at a ground site. Azimuth clockwise from north, elevation above the local horizontal."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            BORESIGHT_AZIMUTH_DEG: {
+              type: "number",
+              description: "Boresight azimuth in FRAME. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            BORESIGHT_ELEVATION_DEG: {
+              type: "number",
+              description: "Boresight elevation in FRAME. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ROLL_DEG: {
+              type: "number",
+              description: "Roll about the boresight. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTING: {
+              $ref: "#/definitions/snrPointingMode",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                NADIR: {
+                  value: 1,
+                  description: "Toward the center of the body the platform orbits."
+                },
+                FIXED: {
+                  value: 2,
+                  description: "Fixed at the boresight angles in the mounting frame."
+                },
+                TRACK: {
+                  value: 3,
+                  description: "Slews to follow a designated target or object."
+                },
+                SCAN: {
+                  value: 4,
+                  description: "Sweeps at the scan rates through the field of regard."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SCAN_AZIMUTH_RATE_DEG_S: {
+              type: "number",
+              description: "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SCAN_ELEVATION_RATE_DEG_S: {
+              type: "number",
+              description: "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AZIMUTH_LIMIT_MIN_DEG: {
+              type: "number",
+              description: "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AZIMUTH_LIMIT_MAX_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ELEVATION_LIMIT_MIN_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ELEVATION_LIMIT_MAX_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the mounting was read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNRRfParameters: {
+          type: "object",
+          description: 'Radio-frequency parameters. Positive quantities use 0 for "not stated";\nANTENNA_GAIN_DBI is signed and uses NaN.',
+          properties: {
+            ANTENNA_PATTERN: {
+              $ref: "#/definitions/snrAntennaPattern",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ISOTROPIC: {
+                  value: 1
+                },
+                HEMISPHERIC: {
+                  value: 2
+                },
+                PARABOLIC: {
+                  value: 3
+                },
+                GAUSSIAN: {
+                  value: 4
+                },
+                PENCIL: {
+                  value: 5
+                },
+                HELIX: {
+                  value: 6
+                },
+                DIPOLE: {
+                  value: 7
+                },
+                RINGED: {
+                  value: 8
+                },
+                TEARDROP: {
+                  value: 9,
+                  description: "The earth-coverage (teardrop) beam of a geostationary antenna."
+                },
+                TOROIDAL: {
+                  value: 10
+                },
+                CARDIOID: {
+                  value: 11
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PEAK_POWER_W: {
+              type: "number",
+              description: "Peak transmit power, W.",
+              "x-flatbuffer-type": "double"
+            },
+            ANTENNA_GAIN_DBI: {
+              type: "number",
+              description: "Antenna gain, dBi. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            BEAMWIDTH_AZIMUTH_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in azimuth, degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            BEAMWIDTH_ELEVATION_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in elevation, degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            BANDWIDTH_HZ: {
+              type: "number",
+              description: "Instantaneous bandwidth, Hz.",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LHCP: {
+                  value: 0
+                },
+                RHCP: {
+                  value: 1
+                },
+                LINEAR_H: {
+                  value: 2
+                },
+                LINEAR_V: {
+                  value: 3
+                },
+                DUAL: {
+                  value: 4
+                },
+                CROSS: {
+                  value: 5
+                },
+                UNKNOWN: {
+                  value: 6
+                }
+              },
+              "x-flatbuffer-default": "UNKNOWN"
+            },
+            PRF_HZ: {
+              type: "number",
+              description: "Pulse repetition frequency, Hz (radar).",
+              "x-flatbuffer-type": "double"
+            },
+            PULSE_WIDTH_S: {
+              type: "number",
+              description: "Pulse width, seconds (radar).",
+              "x-flatbuffer-type": "double"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNROpticalParameters: {
+          type: "object",
+          description: 'Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.',
+          properties: {
+            APERTURE_M: {
+              type: "number",
+              description: "Clear aperture diameter, m.",
+              "x-flatbuffer-type": "double"
+            },
+            FOCAL_LENGTH_M: {
+              type: "number",
+              description: "Focal length, m.",
+              "x-flatbuffer-type": "double"
+            },
+            IFOV_RAD: {
+              type: "number",
+              description: "Instantaneous field of view of one detector element, radians.",
+              "x-flatbuffer-type": "double"
+            },
+            GSD_M: {
+              type: "number",
+              description: "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES).",
+              "x-flatbuffer-type": "double"
+            },
+            LIMITING_MAGNITUDE: {
+              type: "number",
+              description: "Limiting visual magnitude. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DETECTOR: {
+              type: "string",
+              description: 'Detector as the source names it ("CCD", "HgCdTe", "sCMOS").',
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNR: {
+          type: "object",
+          description: "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+          properties: {
+            SENSOR_ID: {
+              type: "string",
+              description: "Stable identifier of this sensor. $SEN.ID of the same sensor.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_ID: {
+              type: "string",
+              description: "$SIT.ID of the ground site the sensor is at.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT.",
+              "x-flatbuffer-type": "string"
+            },
+            TYPE: {
+              $ref: "#/definitions/SensorType",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                RADAR_PULSE: {
+                  value: 0
+                },
+                RADAR_DOPPLER: {
+                  value: 1
+                },
+                RADAR_CW: {
+                  value: 2
+                },
+                RADAR_AESA: {
+                  value: 3
+                },
+                RADAR_PESA: {
+                  value: 4
+                },
+                IR_SEARCH: {
+                  value: 5
+                },
+                IR_IMAGING: {
+                  value: 6
+                },
+                EO_TV: {
+                  value: 7
+                },
+                EO_LLLTV: {
+                  value: 8
+                },
+                LASER_DESIGNATOR: {
+                  value: 9
+                },
+                LASER_RANGEFINDER: {
+                  value: 10
+                },
+                RWR: {
+                  value: 11
+                },
+                MAW: {
+                  value: 12
+                },
+                SONAR_ACTIVE: {
+                  value: 13
+                },
+                SONAR_PASSIVE: {
+                  value: 14
+                },
+                ACOUSTIC: {
+                  value: 15
+                },
+                OPTICAL_TELESCOPE: {
+                  value: 16
+                },
+                MULTISPECTRAL_IMAGER: {
+                  value: 17
+                },
+                HYPERSPECTRAL_IMAGER: {
+                  value: 18
+                },
+                SAR: {
+                  value: 19
+                },
+                ALTIMETER: {
+                  value: 20
+                },
+                SCATTEROMETER: {
+                  value: 21
+                },
+                RADIOMETER: {
+                  value: 22
+                },
+                LIDAR: {
+                  value: 23
+                },
+                PASSIVE_RF_ESM: {
+                  value: 24
+                },
+                SIGINT: {
+                  value: 25
+                },
+                COMMS_ANTENNA: {
+                  value: 26
+                },
+                TT_AND_C_ANTENNA: {
+                  value: 27
+                },
+                PHASED_ARRAY_EARLY_WARNING: {
+                  value: 28
+                },
+                UNSPECIFIED: {
+                  value: 29,
+                  description: "The writer states no kind. The default of TYPE, so an unset TYPE is not read as RADAR_PULSE."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EMISSION: {
+              $ref: "#/definitions/snrEmissionMode",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ACTIVE: {
+                  value: 1
+                },
+                PASSIVE: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SPECTRAL_BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SNRSpectralBand"
+              },
+              description: "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated.",
+              "x-flatbuffer-type": "[SNRSpectralBand]"
+            },
+            FIELD_OF_VIEW: {
+              $ref: "#/definitions/SCVSensorShapeContract",
+              description: "Field-of-view shape: the same table $SCV analyses use.",
+              "x-flatbuffer-type": "SCVSensorShapeContract"
+            },
+            FIELD_OF_VIEW_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MOUNTING: {
+              $ref: "#/definitions/SNRMounting",
+              "x-flatbuffer-type": "SNRMounting"
+            },
+            RF: {
+              $ref: "#/definitions/SNRRfParameters",
+              "x-flatbuffer-type": "SNRRfParameters"
+            },
+            OPTICAL: {
+              $ref: "#/definitions/SNROpticalParameters",
+              "x-flatbuffer-type": "SNROpticalParameters"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "SENSOR_ID"
+          ],
           additionalProperties: false
         }
       },
@@ -686429,7 +694353,8 @@ stated.`,
             "ESTIMATED",
             "DERIVED",
             "MODEL_DERIVED",
-            "INFERRED_FROM_FAMILY"
+            "INFERRED_FROM_FAMILY",
+            "USER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -686461,6 +694386,10 @@ stated.`,
             INFERRED_FROM_FAMILY: {
               value: 6,
               description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            },
+            USER_DEFINED: {
+              value: 7,
+              description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
             }
           }
         },
@@ -691090,7 +699019,21 @@ stated.`,
             "MAW",
             "SONAR_ACTIVE",
             "SONAR_PASSIVE",
-            "ACOUSTIC"
+            "ACOUSTIC",
+            "OPTICAL_TELESCOPE",
+            "MULTISPECTRAL_IMAGER",
+            "HYPERSPECTRAL_IMAGER",
+            "SAR",
+            "ALTIMETER",
+            "SCATTEROMETER",
+            "RADIOMETER",
+            "LIDAR",
+            "PASSIVE_RF_ESM",
+            "SIGINT",
+            "COMMS_ANTENNA",
+            "TT_AND_C_ANTENNA",
+            "PHASED_ARRAY_EARLY_WARNING",
+            "UNSPECIFIED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -691142,80 +699085,214 @@ stated.`,
             },
             ACOUSTIC: {
               value: 15
+            },
+            OPTICAL_TELESCOPE: {
+              value: 16
+            },
+            MULTISPECTRAL_IMAGER: {
+              value: 17
+            },
+            HYPERSPECTRAL_IMAGER: {
+              value: 18
+            },
+            SAR: {
+              value: 19
+            },
+            ALTIMETER: {
+              value: 20
+            },
+            SCATTEROMETER: {
+              value: 21
+            },
+            RADIOMETER: {
+              value: 22
+            },
+            LIDAR: {
+              value: 23
+            },
+            PASSIVE_RF_ESM: {
+              value: 24
+            },
+            SIGINT: {
+              value: 25
+            },
+            COMMS_ANTENNA: {
+              value: 26
+            },
+            TT_AND_C_ANTENNA: {
+              value: 27
+            },
+            PHASED_ARRAY_EARLY_WARNING: {
+              value: 28
+            },
+            UNSPECIFIED: {
+              value: 29,
+              description: "The writer states no kind. The default of TYPE, so an unset TYPE is not read as RADAR_PULSE."
             }
           }
         },
-        SensorMode: {
+        snrEmissionMode: {
           type: "string",
           enum: [
-            "OFF",
-            "STANDBY",
-            "SEARCH",
-            "ACQUISITION",
-            "TRACK",
-            "TRACK_WHILE_SCAN",
-            "DESIGNATE",
-            "JAMMED"
+            "UNSPECIFIED",
+            "ACTIVE",
+            "PASSIVE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            OFF: {
+            UNSPECIFIED: {
               value: 0
             },
-            STANDBY: {
+            ACTIVE: {
               value: 1
             },
-            SEARCH: {
+            PASSIVE: {
+              value: 2
+            }
+          }
+        },
+        snrBandDirection: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECEIVE",
+            "TRANSMIT",
+            "TRANSCEIVE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RECEIVE: {
+              value: 1
+            },
+            TRANSMIT: {
               value: 2
             },
-            ACQUISITION: {
+            TRANSCEIVE: {
               value: 3
+            }
+          }
+        },
+        snrMountingFrame: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLATFORM_BODY",
+            "LVLH",
+            "LOCAL_ENU"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            PLATFORM_BODY: {
+              value: 1,
+              description: "Fixed to the platform body; the angles are body-axis angles."
+            },
+            LVLH: {
+              value: 2,
+              description: "Local vertical, local horizontal at the platform: radial, along-track, cross-track."
+            },
+            LOCAL_ENU: {
+              value: 3,
+              description: "Local east-north-up at a ground site. Azimuth clockwise from north, elevation above the local horizontal."
+            }
+          }
+        },
+        snrPointingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NADIR",
+            "FIXED",
+            "TRACK",
+            "SCAN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            NADIR: {
+              value: 1,
+              description: "Toward the center of the body the platform orbits."
+            },
+            FIXED: {
+              value: 2,
+              description: "Fixed at the boresight angles in the mounting frame."
             },
             TRACK: {
-              value: 4
+              value: 3,
+              description: "Slews to follow a designated target or object."
             },
-            TRACK_WHILE_SCAN: {
-              value: 5
-            },
-            DESIGNATE: {
-              value: 6
-            },
-            JAMMED: {
-              value: 7
+            SCAN: {
+              value: 4,
+              description: "Sweeps at the scan rates through the field of regard."
             }
           }
         },
-        TrackQuality: {
+        snrAntennaPattern: {
           type: "string",
           enum: [
-            "NONE",
-            "TENTATIVE",
-            "FIRM",
-            "LOCKED",
-            "COASTING",
-            "LOST"
+            "UNSPECIFIED",
+            "ISOTROPIC",
+            "HEMISPHERIC",
+            "PARABOLIC",
+            "GAUSSIAN",
+            "PENCIL",
+            "HELIX",
+            "DIPOLE",
+            "RINGED",
+            "TEARDROP",
+            "TOROIDAL",
+            "CARDIOID"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             },
-            TENTATIVE: {
+            ISOTROPIC: {
               value: 1
             },
-            FIRM: {
+            HEMISPHERIC: {
               value: 2
             },
-            LOCKED: {
+            PARABOLIC: {
               value: 3
             },
-            COASTING: {
+            GAUSSIAN: {
               value: 4
             },
-            LOST: {
+            PENCIL: {
               value: 5
+            },
+            HELIX: {
+              value: 6
+            },
+            DIPOLE: {
+              value: 7
+            },
+            RINGED: {
+              value: 8
+            },
+            TEARDROP: {
+              value: 9,
+              description: "The earth-coverage (teardrop) beam of a geostationary antenna."
+            },
+            TOROIDAL: {
+              value: 10
+            },
+            CARDIOID: {
+              value: 11
             }
           }
         },
@@ -780579,6 +788656,10 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
                 INFERRED_FROM_FAMILY: {
                   value: 6,
                   description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+                },
+                USER_DEFINED: {
+                  value: 7,
+                  description: "Entered by a user for a sensor or object they define; no source publishes it. Appended 1.278.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -792417,8 +800498,26 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
+              type: "number",
+              description: "Azimuth, degrees clockwise from north, in [0, 360).",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_ELEVATION_DEG: {
+              type: "number",
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
         SCVSensorShapeContract: {
           type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
           properties: {
             SHAPE_KIND: {
               $ref: "#/definitions/scvSensorShapeKind",
@@ -792541,6 +800640,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                   value: 6
                 }
               }
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
+              "x-flatbuffer-type": "[SCVAzElMaskPoint]"
             }
           },
           additionalProperties: false
@@ -801664,86 +809771,531 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           ],
           additionalProperties: false
         },
-        SNR: {
+        SNRSpectralBand: {
           type: "object",
-          description: "Sensor Systems",
+          description: 'One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for "not stated".',
           properties: {
-            TYPE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              "x-flatbuffer-type": "ubyte"
+            NAME: {
+              type: "string",
+              description: 'The band as its source names it: "UHF", "X-band", "VNIR", "Green".',
+              "x-flatbuffer-type": "string"
             },
-            MODE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              "x-flatbuffer-type": "ubyte"
+            DESIGNATION: {
+              type: "string",
+              description: 'The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none.',
+              "x-flatbuffer-type": "string"
             },
-            RESERVED1: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              "x-flatbuffer-type": "ushort"
-            },
-            MAX_RANGE: {
+            FREQ_LOW_HZ: {
               type: "number",
+              description: "Lower edge, Hz. 0 = not stated.",
               "x-flatbuffer-type": "double"
             },
-            MIN_RANGE: {
+            FREQ_HIGH_HZ: {
               type: "number",
+              description: "Upper edge, Hz. 0 = not stated.",
               "x-flatbuffer-type": "double"
             },
-            FOV_AZIMUTH: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            FOV_ELEVATION: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            ANGULAR_RESOLUTION: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            RANGE_RESOLUTION: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            UPDATE_RATE: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            DETECTION_THRESHOLD: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            AZIMUTH_SCAN_RATE: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            ELEVATION_SCAN_RATE: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            POWER: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            FREQUENCY: {
-              type: "number",
-              "x-flatbuffer-type": "float"
-            },
-            RESERVED: {
-              type: "array",
-              items: {
-                type: "integer",
-                minimum: 0,
-                maximum: 255
+            DIRECTION: {
+              $ref: "#/definitions/snrBandDirection",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RECEIVE: {
+                  value: 1
+                },
+                TRANSMIT: {
+                  value: 2
+                },
+                TRANSCEIVE: {
+                  value: 3
+                }
               },
-              "x-flatbuffer-type": "[uint8]"
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where this band was read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
             }
           },
+          additionalProperties: false
+        },
+        SNRMounting: {
+          type: "object",
+          description: "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+          properties: {
+            FRAME: {
+              $ref: "#/definitions/snrMountingFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                PLATFORM_BODY: {
+                  value: 1,
+                  description: "Fixed to the platform body; the angles are body-axis angles."
+                },
+                LVLH: {
+                  value: 2,
+                  description: "Local vertical, local horizontal at the platform: radial, along-track, cross-track."
+                },
+                LOCAL_ENU: {
+                  value: 3,
+                  description: "Local east-north-up at a ground site. Azimuth clockwise from north, elevation above the local horizontal."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            BORESIGHT_AZIMUTH_DEG: {
+              type: "number",
+              description: "Boresight azimuth in FRAME. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            BORESIGHT_ELEVATION_DEG: {
+              type: "number",
+              description: "Boresight elevation in FRAME. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ROLL_DEG: {
+              type: "number",
+              description: "Roll about the boresight. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTING: {
+              $ref: "#/definitions/snrPointingMode",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                NADIR: {
+                  value: 1,
+                  description: "Toward the center of the body the platform orbits."
+                },
+                FIXED: {
+                  value: 2,
+                  description: "Fixed at the boresight angles in the mounting frame."
+                },
+                TRACK: {
+                  value: 3,
+                  description: "Slews to follow a designated target or object."
+                },
+                SCAN: {
+                  value: 4,
+                  description: "Sweeps at the scan rates through the field of regard."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SCAN_AZIMUTH_RATE_DEG_S: {
+              type: "number",
+              description: "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SCAN_ELEVATION_RATE_DEG_S: {
+              type: "number",
+              description: "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AZIMUTH_LIMIT_MIN_DEG: {
+              type: "number",
+              description: "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AZIMUTH_LIMIT_MAX_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ELEVATION_LIMIT_MIN_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ELEVATION_LIMIT_MAX_DEG: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the mounting was read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNRRfParameters: {
+          type: "object",
+          description: 'Radio-frequency parameters. Positive quantities use 0 for "not stated";\nANTENNA_GAIN_DBI is signed and uses NaN.',
+          properties: {
+            ANTENNA_PATTERN: {
+              $ref: "#/definitions/snrAntennaPattern",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ISOTROPIC: {
+                  value: 1
+                },
+                HEMISPHERIC: {
+                  value: 2
+                },
+                PARABOLIC: {
+                  value: 3
+                },
+                GAUSSIAN: {
+                  value: 4
+                },
+                PENCIL: {
+                  value: 5
+                },
+                HELIX: {
+                  value: 6
+                },
+                DIPOLE: {
+                  value: 7
+                },
+                RINGED: {
+                  value: 8
+                },
+                TEARDROP: {
+                  value: 9,
+                  description: "The earth-coverage (teardrop) beam of a geostationary antenna."
+                },
+                TOROIDAL: {
+                  value: 10
+                },
+                CARDIOID: {
+                  value: 11
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PEAK_POWER_W: {
+              type: "number",
+              description: "Peak transmit power, W.",
+              "x-flatbuffer-type": "double"
+            },
+            ANTENNA_GAIN_DBI: {
+              type: "number",
+              description: "Antenna gain, dBi. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            BEAMWIDTH_AZIMUTH_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in azimuth, degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            BEAMWIDTH_ELEVATION_DEG: {
+              type: "number",
+              description: "3 dB beamwidth in elevation, degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            BANDWIDTH_HZ: {
+              type: "number",
+              description: "Instantaneous bandwidth, Hz.",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              $ref: "#/definitions/rfPolarization",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                LHCP: {
+                  value: 0
+                },
+                RHCP: {
+                  value: 1
+                },
+                LINEAR_H: {
+                  value: 2
+                },
+                LINEAR_V: {
+                  value: 3
+                },
+                DUAL: {
+                  value: 4
+                },
+                CROSS: {
+                  value: 5
+                },
+                UNKNOWN: {
+                  value: 6
+                }
+              },
+              "x-flatbuffer-default": "UNKNOWN"
+            },
+            PRF_HZ: {
+              type: "number",
+              description: "Pulse repetition frequency, Hz (radar).",
+              "x-flatbuffer-type": "double"
+            },
+            PULSE_WIDTH_S: {
+              type: "number",
+              description: "Pulse width, seconds (radar).",
+              "x-flatbuffer-type": "double"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNROpticalParameters: {
+          type: "object",
+          description: 'Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.',
+          properties: {
+            APERTURE_M: {
+              type: "number",
+              description: "Clear aperture diameter, m.",
+              "x-flatbuffer-type": "double"
+            },
+            FOCAL_LENGTH_M: {
+              type: "number",
+              description: "Focal length, m.",
+              "x-flatbuffer-type": "double"
+            },
+            IFOV_RAD: {
+              type: "number",
+              description: "Instantaneous field of view of one detector element, radians.",
+              "x-flatbuffer-type": "double"
+            },
+            GSD_M: {
+              type: "number",
+              description: "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES).",
+              "x-flatbuffer-type": "double"
+            },
+            LIMITING_MAGNITUDE: {
+              type: "number",
+              description: "Limiting visual magnitude. NaN = not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DETECTOR: {
+              type: "string",
+              description: 'Detector as the source names it ("CCD", "HgCdTe", "sCMOS").',
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where these values were read, when it differs from the record's PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        SNR: {
+          type: "object",
+          description: "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+          properties: {
+            SENSOR_ID: {
+              type: "string",
+              description: "Stable identifier of this sensor. $SEN.ID of the same sensor.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_ID: {
+              type: "string",
+              description: "$SIT.ID of the ground site the sensor is at.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT.",
+              "x-flatbuffer-type": "string"
+            },
+            TYPE: {
+              $ref: "#/definitions/SensorType",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                RADAR_PULSE: {
+                  value: 0
+                },
+                RADAR_DOPPLER: {
+                  value: 1
+                },
+                RADAR_CW: {
+                  value: 2
+                },
+                RADAR_AESA: {
+                  value: 3
+                },
+                RADAR_PESA: {
+                  value: 4
+                },
+                IR_SEARCH: {
+                  value: 5
+                },
+                IR_IMAGING: {
+                  value: 6
+                },
+                EO_TV: {
+                  value: 7
+                },
+                EO_LLLTV: {
+                  value: 8
+                },
+                LASER_DESIGNATOR: {
+                  value: 9
+                },
+                LASER_RANGEFINDER: {
+                  value: 10
+                },
+                RWR: {
+                  value: 11
+                },
+                MAW: {
+                  value: 12
+                },
+                SONAR_ACTIVE: {
+                  value: 13
+                },
+                SONAR_PASSIVE: {
+                  value: 14
+                },
+                ACOUSTIC: {
+                  value: 15
+                },
+                OPTICAL_TELESCOPE: {
+                  value: 16
+                },
+                MULTISPECTRAL_IMAGER: {
+                  value: 17
+                },
+                HYPERSPECTRAL_IMAGER: {
+                  value: 18
+                },
+                SAR: {
+                  value: 19
+                },
+                ALTIMETER: {
+                  value: 20
+                },
+                SCATTEROMETER: {
+                  value: 21
+                },
+                RADIOMETER: {
+                  value: 22
+                },
+                LIDAR: {
+                  value: 23
+                },
+                PASSIVE_RF_ESM: {
+                  value: 24
+                },
+                SIGINT: {
+                  value: 25
+                },
+                COMMS_ANTENNA: {
+                  value: 26
+                },
+                TT_AND_C_ANTENNA: {
+                  value: 27
+                },
+                PHASED_ARRAY_EARLY_WARNING: {
+                  value: 28
+                },
+                UNSPECIFIED: {
+                  value: 29,
+                  description: "The writer states no kind. The default of TYPE, so an unset TYPE is not read as RADAR_PULSE."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EMISSION: {
+              $ref: "#/definitions/snrEmissionMode",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ACTIVE: {
+                  value: 1
+                },
+                PASSIVE: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            SPECTRAL_BANDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SNRSpectralBand"
+              },
+              description: "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated.",
+              "x-flatbuffer-type": "[SNRSpectralBand]"
+            },
+            FIELD_OF_VIEW: {
+              $ref: "#/definitions/SCVSensorShapeContract",
+              description: "Field-of-view shape: the same table $SCV analyses use.",
+              "x-flatbuffer-type": "SCVSensorShapeContract"
+            },
+            FIELD_OF_VIEW_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MOUNTING: {
+              $ref: "#/definitions/SNRMounting",
+              "x-flatbuffer-type": "SNRMounting"
+            },
+            RF: {
+              $ref: "#/definitions/SNRRfParameters",
+              "x-flatbuffer-type": "SNRRfParameters"
+            },
+            OPTICAL: {
+              $ref: "#/definitions/SNROpticalParameters",
+              "x-flatbuffer-type": "SNROpticalParameters"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "SENSOR_ID"
+          ],
           additionalProperties: false
         },
         SNWBatchRequest: {
@@ -998161,8 +1006713,26 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        SCVAzElMaskPoint: {
+          type: "object",
+          description: "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+          properties: {
+            AZIMUTH_DEG: {
+              type: "number",
+              description: "Azimuth, degrees clockwise from north, in [0, 360).",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_ELEVATION_DEG: {
+              type: "number",
+              description: "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
         SCVSensorShapeContract: {
           type: "object",
+          description: "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
           properties: {
             SHAPE_KIND: {
               $ref: "#/definitions/scvSensorShapeKind",
@@ -998285,6 +1006855,14 @@ provider's reviewed register). Never free text.`,
                   value: 6
                 }
               }
+            },
+            AZ_EL_MASK: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCVAzElMaskPoint"
+              },
+              description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
+              "x-flatbuffer-type": "[SCVAzElMaskPoint]"
             }
           },
           additionalProperties: false
@@ -1091079,7 +1099657,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

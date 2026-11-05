@@ -6,7 +6,16 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Sensor Systems
+/// Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+/// UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+/// is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+/// string, table or vector is absent. A value is never invented, never zero as a
+/// placeholder, never copied from another sensor. Hz is the only frequency unit.
+/// Display colors are viewer preferences and never travel in this record.
+///
+/// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+/// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 class SNR extends Table
 {
     /**
@@ -41,166 +50,142 @@ class SNR extends Table
         return $this;
     }
 
+    /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+    public function getSENSOR_ID()
+    {
+        $o = $this->__offset(4);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getNAME()
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
     /**
-     * @return byte
+     * @return uint
+     */
+    public function getNORAD_CAT_ID()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+    public function getOBJECT_ID()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// $SIT.ID of the ground site the sensor is at.
+    public function getSITE_ID()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Stable non-catalogue entity key of the platform, for a platform with neither
+    /// a catalogue number nor a $SIT.
+    public function getENTITY_ID()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /**
+     * @return sbyte
      */
     public function getTYPE()
     {
-        $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return byte
-     */
-    public function getMODE()
-    {
-        $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return ushort
-     */
-    public function getRESERVED1()
-    {
-        $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMAX_RANGE()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMIN_RANGE()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getFOV_AZIMUTH()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getFOV_ELEVATION()
-    {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \SensorType::UNSPECIFIED;
     }
 
     /**
-     * @return float
+     * @return sbyte
      */
-    public function getANGULAR_RESOLUTION()
+    public function getEMISSION()
     {
         $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \snrEmissionMode::UNSPECIFIED;
     }
 
+    /// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+    /// a passive RF receiver. Empty = none stated.
     /**
-     * @return float
+     * @returnVectorOffset
      */
-    public function getRANGE_RESOLUTION()
+    public function getSPECTRAL_BANDS($j)
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getUPDATE_RATE()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getDETECTION_THRESHOLD()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getAZIMUTH_SCAN_RATE()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getELEVATION_SCAN_RATE()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPOWER()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getFREQUENCY()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @param int offset
-     * @return byte
-     */
-    public function getRESERVED($j)
-    {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+        $obj = new SNRSpectralBand();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
      * @return int
      */
-    public function getRESERVEDLength()
+    public function getSPECTRAL_BANDSLength()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @return string
-     */
-    public function getRESERVEDBytes()
+    /// Field-of-view shape: the same table $SCV analyses use.
+    public function getFIELD_OF_VIEW()
     {
-        return $this->__vector_as_bytes(34);
+        $obj = new SCVSensorShapeContract();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+    public function getFIELD_OF_VIEW_PROVENANCE()
+    {
+        $obj = new OPPProvenance();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getMOUNTING()
+    {
+        $obj = new SNRMounting();
+        $o = $this->__offset(26);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getRF()
+    {
+        $obj = new SNRRfParameters();
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getOPTICAL()
+    {
+        $obj = new SNROpticalParameters();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Where the values of this record were read. A published real-world sensor
+    /// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+    /// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+    /// for that section.
+    public function getPROVENANCE()
+    {
+        $obj = new OPPProvenance();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getNOTES()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -216,177 +201,108 @@ class SNR extends Table
      * @param FlatBufferBuilder $builder
      * @return SNR
      */
-    public static function createSNR(FlatBufferBuilder $builder, $TYPE, $MODE, $RESERVED1, $MAX_RANGE, $MIN_RANGE, $FOV_AZIMUTH, $FOV_ELEVATION, $ANGULAR_RESOLUTION, $RANGE_RESOLUTION, $UPDATE_RATE, $DETECTION_THRESHOLD, $AZIMUTH_SCAN_RATE, $ELEVATION_SCAN_RATE, $POWER, $FREQUENCY, $RESERVED)
+    public static function createSNR(FlatBufferBuilder $builder, $SENSOR_ID, $NAME, $NORAD_CAT_ID, $OBJECT_ID, $SITE_ID, $ENTITY_ID, $TYPE, $EMISSION, $SPECTRAL_BANDS, $FIELD_OF_VIEW, $FIELD_OF_VIEW_PROVENANCE, $MOUNTING, $RF, $OPTICAL, $PROVENANCE, $NOTES)
     {
         $builder->startObject(16);
+        self::addSENSOR_ID($builder, $SENSOR_ID);
+        self::addNAME($builder, $NAME);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
+        self::addOBJECT_ID($builder, $OBJECT_ID);
+        self::addSITE_ID($builder, $SITE_ID);
+        self::addENTITY_ID($builder, $ENTITY_ID);
         self::addTYPE($builder, $TYPE);
-        self::addMODE($builder, $MODE);
-        self::addRESERVED1($builder, $RESERVED1);
-        self::addMAX_RANGE($builder, $MAX_RANGE);
-        self::addMIN_RANGE($builder, $MIN_RANGE);
-        self::addFOV_AZIMUTH($builder, $FOV_AZIMUTH);
-        self::addFOV_ELEVATION($builder, $FOV_ELEVATION);
-        self::addANGULAR_RESOLUTION($builder, $ANGULAR_RESOLUTION);
-        self::addRANGE_RESOLUTION($builder, $RANGE_RESOLUTION);
-        self::addUPDATE_RATE($builder, $UPDATE_RATE);
-        self::addDETECTION_THRESHOLD($builder, $DETECTION_THRESHOLD);
-        self::addAZIMUTH_SCAN_RATE($builder, $AZIMUTH_SCAN_RATE);
-        self::addELEVATION_SCAN_RATE($builder, $ELEVATION_SCAN_RATE);
-        self::addPOWER($builder, $POWER);
-        self::addFREQUENCY($builder, $FREQUENCY);
-        self::addRESERVED($builder, $RESERVED);
+        self::addEMISSION($builder, $EMISSION);
+        self::addSPECTRAL_BANDS($builder, $SPECTRAL_BANDS);
+        self::addFIELD_OF_VIEW($builder, $FIELD_OF_VIEW);
+        self::addFIELD_OF_VIEW_PROVENANCE($builder, $FIELD_OF_VIEW_PROVENANCE);
+        self::addMOUNTING($builder, $MOUNTING);
+        self::addRF($builder, $RF);
+        self::addOPTICAL($builder, $OPTICAL);
+        self::addPROVENANCE($builder, $PROVENANCE);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
+        $builder->required($o, 4);  // SENSOR_ID
         return $o;
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param byte
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
+    {
+        $builder->addOffsetX(0, $SENSOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
+    {
+        $builder->addOffsetX(1, $NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
+    {
+        $builder->addUintX(2, $NORAD_CAT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_ID(FlatBufferBuilder $builder, $OBJECT_ID)
+    {
+        $builder->addOffsetX(3, $OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSITE_ID(FlatBufferBuilder $builder, $SITE_ID)
+    {
+        $builder->addOffsetX(4, $SITE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addENTITY_ID(FlatBufferBuilder $builder, $ENTITY_ID)
+    {
+        $builder->addOffsetX(5, $ENTITY_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
      * @return void
      */
     public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
     {
-        $builder->addByteX(0, $TYPE, 0);
+        $builder->addSbyteX(6, $TYPE, 29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param byte
+     * @param sbyte
      * @return void
      */
-    public static function addMODE(FlatBufferBuilder $builder, $MODE)
+    public static function addEMISSION(FlatBufferBuilder $builder, $EMISSION)
     {
-        $builder->addByteX(1, $MODE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param ushort
-     * @return void
-     */
-    public static function addRESERVED1(FlatBufferBuilder $builder, $RESERVED1)
-    {
-        $builder->addUshortX(2, $RESERVED1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMAX_RANGE(FlatBufferBuilder $builder, $MAX_RANGE)
-    {
-        $builder->addDoubleX(3, $MAX_RANGE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMIN_RANGE(FlatBufferBuilder $builder, $MIN_RANGE)
-    {
-        $builder->addDoubleX(4, $MIN_RANGE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addFOV_AZIMUTH(FlatBufferBuilder $builder, $FOV_AZIMUTH)
-    {
-        $builder->addFloatX(5, $FOV_AZIMUTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addFOV_ELEVATION(FlatBufferBuilder $builder, $FOV_ELEVATION)
-    {
-        $builder->addFloatX(6, $FOV_ELEVATION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addANGULAR_RESOLUTION(FlatBufferBuilder $builder, $ANGULAR_RESOLUTION)
-    {
-        $builder->addFloatX(7, $ANGULAR_RESOLUTION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addRANGE_RESOLUTION(FlatBufferBuilder $builder, $RANGE_RESOLUTION)
-    {
-        $builder->addFloatX(8, $RANGE_RESOLUTION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addUPDATE_RATE(FlatBufferBuilder $builder, $UPDATE_RATE)
-    {
-        $builder->addFloatX(9, $UPDATE_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addDETECTION_THRESHOLD(FlatBufferBuilder $builder, $DETECTION_THRESHOLD)
-    {
-        $builder->addFloatX(10, $DETECTION_THRESHOLD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addAZIMUTH_SCAN_RATE(FlatBufferBuilder $builder, $AZIMUTH_SCAN_RATE)
-    {
-        $builder->addFloatX(11, $AZIMUTH_SCAN_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addELEVATION_SCAN_RATE(FlatBufferBuilder $builder, $ELEVATION_SCAN_RATE)
-    {
-        $builder->addFloatX(12, $ELEVATION_SCAN_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addPOWER(FlatBufferBuilder $builder, $POWER)
-    {
-        $builder->addFloatX(13, $POWER, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addFREQUENCY(FlatBufferBuilder $builder, $FREQUENCY)
-    {
-        $builder->addFloatX(14, $FREQUENCY, 0.0);
+        $builder->addSbyteX(7, $EMISSION, 0);
     }
 
     /**
@@ -394,9 +310,9 @@ class SNR extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addRESERVED(FlatBufferBuilder $builder, $RESERVED)
+    public static function addSPECTRAL_BANDS(FlatBufferBuilder $builder, $SPECTRAL_BANDS)
     {
-        $builder->addOffsetX(15, $RESERVED, 0);
+        $builder->addOffsetX(8, $SPECTRAL_BANDS, 0);
     }
 
     /**
@@ -404,11 +320,11 @@ class SNR extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createRESERVEDVector(FlatBufferBuilder $builder, array $data)
+    public static function createSPECTRAL_BANDSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(1, count($data), 1);
+        $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putByte($data[$i]);
+            $builder->putOffset($data[$i]);
         }
         return $builder->endVector();
     }
@@ -418,9 +334,79 @@ class SNR extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startRESERVEDVector(FlatBufferBuilder $builder, $numElems)
+    public static function startSPECTRAL_BANDSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(1, $numElems, 1);
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFIELD_OF_VIEW(FlatBufferBuilder $builder, $FIELD_OF_VIEW)
+    {
+        $builder->addOffsetX(9, $FIELD_OF_VIEW, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFIELD_OF_VIEW_PROVENANCE(FlatBufferBuilder $builder, $FIELD_OF_VIEW_PROVENANCE)
+    {
+        $builder->addOffsetX(10, $FIELD_OF_VIEW_PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMOUNTING(FlatBufferBuilder $builder, $MOUNTING)
+    {
+        $builder->addOffsetX(11, $MOUNTING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRF(FlatBufferBuilder $builder, $RF)
+    {
+        $builder->addOffsetX(12, $RF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOPTICAL(FlatBufferBuilder $builder, $OPTICAL)
+    {
+        $builder->addOffsetX(13, $OPTICAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(14, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(15, $NOTES, 0);
     }
 
     /**
@@ -430,6 +416,7 @@ class SNR extends Table
     public static function endSNR(FlatBufferBuilder $builder)
     {
         $o = $builder->endObject();
+        $builder->required($o, 4);  // SENSOR_ID
         return $o;
     }
 

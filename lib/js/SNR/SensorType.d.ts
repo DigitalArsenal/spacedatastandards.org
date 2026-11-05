@@ -1,3 +1,9 @@
+/**
+ * What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+ * members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+ * by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+ * a writer always sets TYPE.
+ */
 export declare enum SensorType {
     RADAR_PULSE = 0,
     RADAR_DOPPLER = 1,
@@ -14,6 +20,24 @@ export declare enum SensorType {
     MAW = 12,
     SONAR_ACTIVE = 13,
     SONAR_PASSIVE = 14,
-    ACOUSTIC = 15
+    ACOUSTIC = 15,
+    OPTICAL_TELESCOPE = 16,
+    MULTISPECTRAL_IMAGER = 17,
+    HYPERSPECTRAL_IMAGER = 18,
+    SAR = 19,
+    ALTIMETER = 20,
+    SCATTEROMETER = 21,
+    RADIOMETER = 22,
+    LIDAR = 23,
+    PASSIVE_RF_ESM = 24,
+    SIGINT = 25,
+    COMMS_ANTENNA = 26,
+    TT_AND_C_ANTENNA = 27,
+    PHASED_ARRAY_EARLY_WARNING = 28,
+    /**
+     * The writer states no kind. The default of TYPE, so an unset TYPE is not
+     * read as RADAR_PULSE.
+     */
+    UNSPECIFIED = 29
 }
 //# sourceMappingURL=SensorType.d.ts.map

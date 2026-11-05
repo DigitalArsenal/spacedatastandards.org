@@ -36318,7 +36318,8 @@
                         "ESTIMATED",
                         "DERIVED",
                         "MODEL_DERIVED",
-                        "INFERRED_FROM_FAMILY"
+                        "INFERRED_FROM_FAMILY",
+                        "USER_DEFINED"
                     ]
                 },
                 "oppRcsAspect": {
@@ -59133,6 +59134,288 @@
         "SNR": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "oppDeterminationMethod": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "OPERATOR_STATED",
+                        "ESTIMATED",
+                        "DERIVED",
+                        "MODEL_DERIVED",
+                        "INFERRED_FROM_FAMILY",
+                        "USER_DEFINED"
+                    ]
+                },
+                "oppRcsAspect": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "AVERAGE",
+                        "MINIMUM",
+                        "MAXIMUM",
+                        "MEDIAN",
+                        "HEAD_ON",
+                        "BROADSIDE",
+                        "NADIR"
+                    ]
+                },
+                "oppSurfaceKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "BUS_BODY",
+                        "SOLAR_ARRAY",
+                        "ANTENNA_DISH",
+                        "ANTENNA_PANEL",
+                        "RADIATOR",
+                        "THERMAL_BLANKET",
+                        "OPTICAL_APERTURE",
+                        "BOOM",
+                        "TRUSS",
+                        "TANK",
+                        "NOZZLE",
+                        "SHIELD",
+                        "DOCKING_INTERFACE",
+                        "OTHER"
+                    ]
+                },
+                "oppMaterialClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ALUMINIUM",
+                        "TITANIUM",
+                        "STEEL",
+                        "CARBON_COMPOSITE",
+                        "MULTI_LAYER_INSULATION",
+                        "SOLAR_CELL",
+                        "COVER_GLASS",
+                        "PAINT_WHITE",
+                        "PAINT_BLACK",
+                        "OPTICAL_SOLAR_REFLECTOR",
+                        "POLYIMIDE_FILM",
+                        "MESH",
+                        "CERAMIC",
+                        "GOLD_FOIL",
+                        "OTHER"
+                    ]
+                },
+                "linkCategory": {
+                    "type": "string",
+                    "enum": [
+                        "UPLINK",
+                        "DOWNLINK",
+                        "CROSSLINK",
+                        "INTER_SATELLITE",
+                        "GROUND_TO_GROUND",
+                        "RELAY"
+                    ]
+                },
+                "linkCondition": {
+                    "type": "string",
+                    "enum": [
+                        "ESTABLISHED",
+                        "DEGRADED",
+                        "INTERRUPTED",
+                        "PLANNED",
+                        "TERMINATED",
+                        "UNKNOWN"
+                    ]
+                },
+                "rfBandDesignation": {
+                    "type": "string",
+                    "enum": [
+                        "UHF",
+                        "L",
+                        "S",
+                        "C",
+                        "X",
+                        "KU",
+                        "K",
+                        "KA",
+                        "V",
+                        "W",
+                        "Q",
+                        "EHF",
+                        "OTHER",
+                        "VHF",
+                        "HF",
+                        "MF",
+                        "LF",
+                        "VLF",
+                        "SHF"
+                    ]
+                },
+                "rfPolarization": {
+                    "type": "string",
+                    "enum": [
+                        "LHCP",
+                        "RHCP",
+                        "LINEAR_H",
+                        "LINEAR_V",
+                        "DUAL",
+                        "CROSS",
+                        "UNKNOWN"
+                    ]
+                },
+                "rfTransmitterState": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "ACTIVE",
+                        "INACTIVE",
+                        "INVALID"
+                    ]
+                },
+                "scvEnvelopeKind": {
+                    "type": "string",
+                    "enum": [
+                        "REQUEST",
+                        "RESULT",
+                        "PROGRESS",
+                        "CANCEL",
+                        "GEOMETRY"
+                    ]
+                },
+                "scvAnalysisMode": {
+                    "type": "string",
+                    "enum": [
+                        "COVERAGE",
+                        "ACCESS",
+                        "SWATH",
+                        "COMBINED"
+                    ]
+                },
+                "scvCoordinateFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNKNOWN",
+                        "BODY_FIXED",
+                        "INERTIAL",
+                        "ECEF",
+                        "ECI",
+                        "CUSTOM",
+                        "SENSOR_LOCAL"
+                    ]
+                },
+                "scvBodyKind": {
+                    "type": "string",
+                    "enum": [
+                        "EARTH",
+                        "MOON",
+                        "MARS",
+                        "CUSTOM"
+                    ]
+                },
+                "scvSensorShapeKind": {
+                    "type": "string",
+                    "enum": [
+                        "CONIC",
+                        "RECTANGULAR",
+                        "CUSTOM_POLYGON",
+                        "SAR_ANNULAR_SECTOR"
+                    ]
+                },
+                "scvSensorAxisConvention": {
+                    "type": "string",
+                    "enum": [
+                        "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
+                    ]
+                },
+                "scvSensorRangeBoundaryKind": {
+                    "type": "string",
+                    "enum": [
+                        "RADIAL_SPHERICAL",
+                        "LOCAL_Z_PLANE"
+                    ]
+                },
+                "scvGeometryDomain": {
+                    "type": "string",
+                    "enum": [
+                        "SURFACE",
+                        "SPACE",
+                        "ELLIPSOID",
+                        "PLANE",
+                        "CUSTOM_MESH"
+                    ]
+                },
+                "scvTargetShape": {
+                    "type": "string",
+                    "enum": [
+                        "POINT",
+                        "POLYGON",
+                        "RECTANGLE",
+                        "BOX",
+                        "SPHERE",
+                        "EXTRUDED_POLYGON"
+                    ]
+                },
+                "scvResultState": {
+                    "type": "string",
+                    "enum": [
+                        "OK",
+                        "PARTIAL",
+                        "CANCELLED",
+                        "FAILED"
+                    ]
+                },
+                "scvMetricSeriesKind": {
+                    "type": "string",
+                    "enum": [
+                        "PERCENT_COVERED",
+                        "COVERED_CELL_COUNT",
+                        "ACCESS_COUNT",
+                        "CONTACT_DURATION_SECONDS",
+                        "REVISIT_SECONDS",
+                        "GAP_SECONDS",
+                        "REDUNDANCY",
+                        "OVERLAP_COUNT",
+                        "LATITUDE_BAND_COVERAGE"
+                    ]
+                },
+                "scvGeometryEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "FLAT_FLOAT32",
+                        "INTERLEAVED_FLOAT32",
+                        "QUANTIZED_UINT16",
+                        "SHARED_MEMORY_OFFSET"
+                    ]
+                },
+                "scvRasterProductKind": {
+                    "type": "string",
+                    "enum": [
+                        "CELL_BOUNDS_DEG",
+                        "CELL_CENTERS_DEG",
+                        "PERCENT_COVERAGE",
+                        "PASS_COUNT",
+                        "CONTACT_DURATION_SECONDS",
+                        "REVISIT_SECONDS",
+                        "GAP_SECONDS",
+                        "REDUNDANCY",
+                        "CURRENT_ACCESS_BITSET",
+                        "BUCKET_START_SECONDS",
+                        "BUCKET_STOP_SECONDS",
+                        "BUCKET_ACTIVE_CELL_COUNT",
+                        "PASS_COUNT_RGBA",
+                        "CURRENT_ACCESS_RGBA",
+                        "LATITUDE_BAND_COVERAGE",
+                        "BUCKET_PASS_START_COUNT",
+                        "WINDOW_START_ACCESS_BITSET",
+                        "WINDOW_STOP_ACCESS_BITSET"
+                    ]
+                },
+                "scvRasterProductEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "FLOAT32",
+                        "FLOAT64",
+                        "UINT32",
+                        "BITSET_UINT32",
+                        "UINT8"
+                    ]
+                },
                 "SensorType": {
                     "type": "string",
                     "enum": [
@@ -59151,97 +59434,2136 @@
                         "MAW",
                         "SONAR_ACTIVE",
                         "SONAR_PASSIVE",
-                        "ACOUSTIC"
+                        "ACOUSTIC",
+                        "OPTICAL_TELESCOPE",
+                        "MULTISPECTRAL_IMAGER",
+                        "HYPERSPECTRAL_IMAGER",
+                        "SAR",
+                        "ALTIMETER",
+                        "SCATTEROMETER",
+                        "RADIOMETER",
+                        "LIDAR",
+                        "PASSIVE_RF_ESM",
+                        "SIGINT",
+                        "COMMS_ANTENNA",
+                        "TT_AND_C_ANTENNA",
+                        "PHASED_ARRAY_EARLY_WARNING",
+                        "UNSPECIFIED"
                     ]
                 },
-                "SensorMode": {
+                "snrEmissionMode": {
                     "type": "string",
                     "enum": [
-                        "OFF",
-                        "STANDBY",
-                        "SEARCH",
-                        "ACQUISITION",
+                        "UNSPECIFIED",
+                        "ACTIVE",
+                        "PASSIVE"
+                    ]
+                },
+                "snrBandDirection": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RECEIVE",
+                        "TRANSMIT",
+                        "TRANSCEIVE"
+                    ]
+                },
+                "snrMountingFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "PLATFORM_BODY",
+                        "LVLH",
+                        "LOCAL_ENU"
+                    ]
+                },
+                "snrPointingMode": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NADIR",
+                        "FIXED",
                         "TRACK",
-                        "TRACK_WHILE_SCAN",
-                        "DESIGNATE",
-                        "JAMMED"
+                        "SCAN"
                     ]
                 },
-                "TrackQuality": {
+                "snrAntennaPattern": {
                     "type": "string",
                     "enum": [
-                        "NONE",
-                        "TENTATIVE",
-                        "FIRM",
-                        "LOCKED",
-                        "COASTING",
-                        "LOST"
+                        "UNSPECIFIED",
+                        "ISOTROPIC",
+                        "HEMISPHERIC",
+                        "PARABOLIC",
+                        "GAUSSIAN",
+                        "PENCIL",
+                        "HELIX",
+                        "DIPOLE",
+                        "RINGED",
+                        "TEARDROP",
+                        "TOROIDAL",
+                        "CARDIOID"
                     ]
                 },
-                "SNR": {
+                "OPPProvenance": {
                     "type": "object",
-                    "description": "Sensor Systems",
+                    "description": "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
                     "properties": {
-                        "TYPE": {
+                        "SOURCE": {
+                            "type": "string",
+                            "description": "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
+                        },
+                        "SOURCE_RECORD_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Deep link to the exact source record when the source publishes one."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE."
+                        },
+                        "SOURCE_VERSION": {
+                            "type": "string",
+                            "description": "The source's own revision, edition or publication marker, verbatim."
+                        },
+                        "METHOD": {
+                            "$ref": "#/definitions/oppDeterminationMethod"
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Terms under which SOURCE permits redistribution of the value, verbatim."
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution string the source requires be displayed with the value."
+                        },
+                        "SOURCE_SHA256": {
+                            "type": "string",
+                            "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from."
+                        },
+                        "NOTES": {
+                            "type": "string",
+                            "description": "Free text qualifying the value, such as the source's own caveat."
+                        }
+                    },
+                    "required": [
+                        "SOURCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPQuantity": {
+                    "type": "object",
+                    "description": "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+                    "properties": {
+                        "VALUE": {
+                            "type": "number"
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Unit symbol verbatim, never silently converted: \"kg\", \"m\", \"m2\", \"m2/kg\",\n\"kg/m2\", \"dBsm\", \"W\", \"mag\". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED."
+                        },
+                        "SIGMA": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance"
+                        }
+                    },
+                    "required": [
+                        "UNITS",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPRadarCrossSection": {
+                    "type": "object",
+                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
+                    "properties": {
+                        "BAND": {
+                            "type": "string",
+                            "description": "Radar band designation verbatim from the source: \"UHF\", \"L\", \"S\", \"C\",\n\"X\", \"Ku\". Empty when the source states no band."
+                        },
+                        "FREQUENCY_MHZ": {
+                            "type": "number",
+                            "description": "Centre frequency [megahertz] when the source states one. Zero means\nunstated."
+                        },
+                        "POLARIZATION": {
+                            "type": "string",
+                            "description": "Polarization verbatim from the source: \"HH\", \"VV\", \"HV\", \"RCRC\". Empty\nwhen the source states none."
+                        },
+                        "ASPECT": {
+                            "$ref": "#/definitions/oppRcsAspect"
+                        },
+                        "CROSS_SECTION": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "The cross-section itself. UNITS is \"m2\" or \"dBsm\" as the source published\nit; the two are never mixed within one entry and never silently converted."
+                        },
+                        "SIZE_CLASS": {
+                            "type": "string",
+                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as a public catalogue's \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
+                        },
+                        "SENSOR": {
+                            "type": "string",
+                            "description": "Sensor or facility that produced the measurement, when stated."
+                        }
+                    },
+                    "required": [
+                        "CROSS_SECTION"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPMass": {
+                    "type": "object",
+                    "description": "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+                    "properties": {
+                        "DRY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass without propellant or consumables [kg]."
+                        },
+                        "WET": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass with propellant, at the stated epoch [kg]."
+                        },
+                        "LAUNCH": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass at separation from the launch vehicle [kg]."
+                        },
+                        "PROPELLANT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Propellant mass at the stated epoch [kg]."
+                        },
+                        "PAYLOAD": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Payload mass carried by the bus [kg]."
+                        },
+                        "CURRENT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Best current estimate of mass at the record's epoch [kg]."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPDimensions": {
+                    "type": "object",
+                    "description": "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+                    "properties": {
+                        "BODY_X": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Extents along the object's own body axes [m]."
+                        },
+                        "BODY_Y": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "BODY_Z": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "HEIGHT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Envelope terms as an object database publishes them [m]."
+                        },
+                        "WIDTH": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "DEPTH": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "DIAMETER": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "SPAN_STOWED": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest extent with appendages stowed [m]."
+                        },
+                        "SPAN_DEPLOYED": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest extent with appendages deployed [m]."
+                        },
+                        "SHAPE": {
+                            "type": "string",
+                            "description": "Gross geometric shape verbatim from the source, such as a shape string\nof the form \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
+                        },
+                        "SHAPE_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of SHAPE. Present whenever SHAPE is nonempty."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPAreas": {
+                    "type": "object",
+                    "description": "Projected areas and the ratios derived from them.",
+                    "properties": {
+                        "CROSS_SECTIONAL_AVERAGE": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Average projected cross-sectional area over all aspects [m2]."
+                        },
+                        "CROSS_SECTIONAL_MINIMUM": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Smallest projected cross-sectional area [m2]."
+                        },
+                        "CROSS_SECTIONAL_MAXIMUM": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest projected cross-sectional area [m2]."
+                        },
+                        "SOLAR_ARRAY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Total solar-array area [m2]."
+                        },
+                        "AREA_TO_MASS_RATIO": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED."
+                        },
+                        "BALLISTIC_COEFFICIENT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Ballistic coefficient [kg/m2]."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPSurface": {
+                    "type": "object",
+                    "description": "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Stable identifier for this surface within the record."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/oppSurfaceKind"
+                        },
+                        "MATERIAL": {
+                            "type": "string",
+                            "description": "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
+                        },
+                        "MATERIAL_CLASS": {
+                            "$ref": "#/definitions/oppMaterialClass"
+                        },
+                        "COUNT": {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 255
+                            "maximum": 4294967295,
+                            "description": "How many identical surfaces this entry represents, such as two solar-array\nwings."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own."
+                        },
+                        "AREA": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Area of one surface, not of COUNT surfaces [m2]."
+                        },
+                        "MASS": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass of one surface [kg]."
+                        },
+                        "SPECULAR_REFLECTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Fraction of incident radiation reflected specularly, dimensionless."
+                        },
+                        "DIFFUSE_REFLECTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Fraction of incident radiation reflected diffusely, dimensionless."
+                        },
+                        "ABSORPTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Solar absorptivity, dimensionless."
+                        },
+                        "EMISSIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Infrared emissivity, dimensionless."
+                        },
+                        "PANEL_ID": {
+                            "type": "string",
+                            "description": "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists."
+                        },
+                        "GLTF_MATERIAL_NAME": {
+                            "type": "string",
+                            "description": "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset."
+                        },
+                        "GLTF_MATERIAL_INDEX": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPAssetRef": {
+                    "type": "object",
+                    "description": "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+                    "properties": {
+                        "VAM_ID": {
+                            "type": "string",
+                            "description": "$VAM.ID verbatim."
+                        },
+                        "VAM_VERSION": {
+                            "type": "string",
+                            "description": "$VAM.VERSION verbatim."
+                        },
+                        "VAM_CID": {
+                            "type": "string",
+                            "description": "CIDv1 containing a multihash of the exact $VAM bytes."
+                        },
+                        "VARIANT_ID": {
+                            "type": "string",
+                            "description": "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes."
+                        },
+                        "ASSET_SHA256": {
+                            "type": "string",
+                            "description": "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes."
+                        },
+                        "ASSET_CID": {
+                            "type": "string",
+                            "description": "$VAMVariant.CID verbatim."
+                        },
+                        "ASSET_FILE_NAME": {
+                            "type": "string",
+                            "description": "$VAMVariant.FILE_NAME verbatim."
+                        },
+                        "ASSET_MEDIA_TYPE": {
+                            "type": "string",
+                            "description": "$VAMVariant.MEDIA_TYPE verbatim."
+                        },
+                        "GLTF_VERSION": {
+                            "type": "string",
+                            "description": "$VAMVariant.GLTF_VERSION verbatim."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID."
+                        },
+                        "GEOMETRY_MATCHES_PHYSICAL": {
+                            "type": "boolean",
+                            "description": "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions."
+                        },
+                        "METERS_PER_ASSET_UNIT": {
+                            "type": "number",
+                            "description": "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP."
+                        }
+                    },
+                    "required": [
+                        "VAM_ID",
+                        "VARIANT_ID",
+                        "ASSET_SHA256"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPP": {
+                    "type": "object",
+                    "description": "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Stable identifier for this record."
+                        },
+                        "VERSION": {
+                            "type": "string",
+                            "description": "SemVer 2.0.0 record-format version, not a content revision."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_ID verbatim: the COSPAR international designator."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_NAME verbatim, for display only. Never a join key."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present."
+                        },
+                        "BUS_ID": {
+                            "type": "string",
+                            "description": "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record."
+                        },
+                        "BUS_FAMILY": {
+                            "type": "string",
+                            "description": "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record."
+                        },
+                        "BUS_FAMILY_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty."
+                        },
+                        "MANUFACTURER": {
+                            "type": "string",
+                            "description": "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE."
+                        },
+                        "MANUFACTURER_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty."
+                        },
+                        "MASS": {
+                            "$ref": "#/definitions/OPPMass"
+                        },
+                        "DIMENSIONS": {
+                            "$ref": "#/definitions/OPPDimensions"
+                        },
+                        "AREAS": {
+                            "$ref": "#/definitions/OPPAreas"
+                        },
+                        "RADAR_CROSS_SECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPRadarCrossSection"
+                            },
+                            "description": "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object."
+                        },
+                        "VISUAL_MAGNITUDE": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Visual magnitude, UNITS \"mag\", with the observing conditions in\nPROVENANCE.NOTES."
+                        },
+                        "SURFACES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPSurface"
+                            },
+                            "description": "Material and surface inventory."
+                        },
+                        "ASSET": {
+                            "$ref": "#/definitions/OPPAssetRef",
+                            "description": "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPProvenance"
+                            },
+                            "description": "Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish \"not looked for\" from\n\"looked for and not published\"."
+                        },
+                        "CREATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created."
+                        },
+                        "UPDATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated."
+                        },
+                        "SUPERSEDES_OPP_CID": {
+                            "type": "string",
+                            "description": "CIDv1 containing a multihash of the exact superseded $OPP bytes."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "LKS": {
+                    "type": "object",
+                    "description": "Link Status",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Unique identifier"
+                        },
+                        "ID_ON_ORBIT1": {
+                            "type": "string",
+                            "description": "First endpoint on-orbit identifier"
+                        },
+                        "SAT_NO1": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "First endpoint satellite catalog number"
+                        },
+                        "ID_ON_ORBIT2": {
+                            "type": "string",
+                            "description": "Second endpoint on-orbit identifier"
+                        },
+                        "SAT_NO2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Second endpoint satellite catalog number"
+                        },
+                        "CONSTELLATION": {
+                            "type": "string",
+                            "description": "Constellation name"
+                        },
+                        "LINK_NAME": {
+                            "type": "string",
+                            "description": "Link name or identifier"
+                        },
+                        "LINK_TYPE": {
+                            "$ref": "#/definitions/linkCategory",
+                            "description": "Link type"
+                        },
+                        "LINK_STATE": {
+                            "$ref": "#/definitions/linkCondition",
+                            "description": "Link state"
+                        },
+                        "BAND": {
+                            "type": "string",
+                            "description": "RF band"
+                        },
+                        "LINK_START_TIME": {
+                            "type": "string",
+                            "description": "Link start time (ISO 8601)"
+                        },
+                        "LINK_STOP_TIME": {
+                            "type": "string",
+                            "description": "Link stop time (ISO 8601)"
+                        },
+                        "ID_BEAM1": {
+                            "type": "string",
+                            "description": "First endpoint beam identifier"
+                        },
+                        "END_POINT1_NAME": {
+                            "type": "string",
+                            "description": "First endpoint name"
+                        },
+                        "END_POINT1_LAT": {
+                            "type": "number",
+                            "description": "First endpoint latitude (degrees)"
+                        },
+                        "END_POINT1_LON": {
+                            "type": "number",
+                            "description": "First endpoint longitude (degrees)"
+                        },
+                        "ID_BEAM2": {
+                            "type": "string",
+                            "description": "Second endpoint beam identifier"
+                        },
+                        "END_POINT2_NAME": {
+                            "type": "string",
+                            "description": "Second endpoint name"
+                        },
+                        "END_POINT2_LAT": {
+                            "type": "number",
+                            "description": "Second endpoint latitude (degrees)"
+                        },
+                        "END_POINT2_LON": {
+                            "type": "number",
+                            "description": "Second endpoint longitude (degrees)"
+                        },
+                        "DATA_RATE1_TO2": {
+                            "type": "number",
+                            "description": "Data rate from endpoint 1 to 2 (Mbps)"
+                        },
+                        "DATA_RATE2_TO1": {
+                            "type": "number",
+                            "description": "Data rate from endpoint 2 to 1 (Mbps)"
+                        },
+                        "SYS_CAP": {
+                            "type": "string",
+                            "description": "System capability status"
+                        },
+                        "OPS_CAP": {
+                            "type": "string",
+                            "description": "Operational capability status"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RFB": {
+                    "type": "object",
+                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Unique identifier"
+                        },
+                        "ID_ENTITY": {
+                            "type": "string",
+                            "description": "Parent entity identifier"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Band name or designation"
+                        },
+                        "BAND": {
+                            "$ref": "#/definitions/rfBandDesignation",
+                            "description": "RF band designation"
                         },
                         "MODE": {
+                            "type": "string",
+                            "description": "Operating mode"
+                        },
+                        "PURPOSE": {
+                            "type": "string",
+                            "description": "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+                        },
+                        "FREQ_MIN": {
+                            "type": "number",
+                            "description": "Minimum frequency (MHz)"
+                        },
+                        "FREQ_MAX": {
+                            "type": "number",
+                            "description": "Maximum frequency (MHz)"
+                        },
+                        "CENTER_FREQ": {
+                            "type": "number",
+                            "description": "Center frequency (MHz)"
+                        },
+                        "BANDWIDTH": {
+                            "type": "number",
+                            "description": "Bandwidth (MHz)"
+                        },
+                        "PEAK_GAIN": {
+                            "type": "number",
+                            "description": "Peak antenna gain (dBi)"
+                        },
+                        "EDGE_GAIN": {
+                            "type": "number",
+                            "description": "Edge-of-coverage gain (dBi)"
+                        },
+                        "BEAMWIDTH": {
+                            "type": "number",
+                            "description": "Antenna beamwidth (degrees)"
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/rfPolarization",
+                            "description": "Polarization"
+                        },
+                        "ERP": {
+                            "type": "number",
+                            "description": "Effective radiated power (dBW)"
+                        },
+                        "EIRP": {
+                            "type": "number",
+                            "description": "Effective isotropic radiated power (dBW)"
+                        },
+                        "NORAD_CAT_ID": {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 255
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
                         },
-                        "RESERVED1": {
+                        "ID_TRANSMITTER": {
+                            "type": "string",
+                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
+                        },
+                        "LINK_DIRECTION": {
+                            "$ref": "#/definitions/linkCategory",
+                            "description": "Direction of this emission relative to the spacecraft."
+                        },
+                        "BAUD": {
+                            "type": "number",
+                            "description": "Symbol rate in baud (symbols per second), NOT kilobaud."
+                        },
+                        "SERVICE": {
+                            "type": "string",
+                            "description": "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
+                        },
+                        "XMT_STATUS": {
+                            "$ref": "#/definitions/rfTransmitterState",
+                            "description": "Operational state of this emitter."
+                        },
+                        "INVERT": {
+                            "type": "boolean",
+                            "description": "True when the modulation sideband is inverted."
+                        },
+                        "IARU_COORDINATION": {
+                            "type": "string",
+                            "description": "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Attribution/citation string the source license requires this record to\ncarry downstream."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVVec3": {
+                    "type": "object",
+                    "properties": {
+                        "X": {
+                            "type": "number"
+                        },
+                        "Y": {
+                            "type": "number"
+                        },
+                        "Z": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVEllipsoid": {
+                    "type": "object",
+                    "properties": {
+                        "BODY": {
+                            "$ref": "#/definitions/scvBodyKind"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "SEMI_MAJOR_M": {
+                            "type": "number"
+                        },
+                        "SEMI_MINOR_M": {
+                            "type": "number"
+                        },
+                        "SEMI_INTERMEDIATE_M": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTimeGrid": {
+                    "type": "object",
+                    "properties": {
+                        "EPOCH_ISO": {
+                            "type": "string"
+                        },
+                        "EPOCH_JULIAN_DATE": {
+                            "type": "number"
+                        },
+                        "START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STEP_SEC": {
+                            "type": "number"
+                        },
+                        "GRID_INDEX_START": {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 65535
+                            "maximum": 4294967295
                         },
-                        "MAX_RANGE": {
+                        "GRID_INDEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVAzElMaskPoint": {
+                    "type": "object",
+                    "description": "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+                    "properties": {
+                        "AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Azimuth, degrees clockwise from north, in [0, 360)."
+                        },
+                        "MIN_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSensorShapeContract": {
+                    "type": "object",
+                    "description": "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
+                    "properties": {
+                        "SHAPE_KIND": {
+                            "$ref": "#/definitions/scvSensorShapeKind"
+                        },
+                        "AXIS_CONVENTION": {
+                            "$ref": "#/definitions/scvSensorAxisConvention"
+                        },
+                        "RANGE_BOUNDARY": {
+                            "$ref": "#/definitions/scvSensorRangeBoundaryKind"
+                        },
+                        "OUTER_HALF_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "MIN_RANGE": {
+                        "INNER_HALF_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "FOV_AZIMUTH": {
+                        "MIN_CLOCK_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "FOV_ELEVATION": {
+                        "MAX_CLOCK_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "ANGULAR_RESOLUTION": {
+                        "X_HALF_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "RANGE_RESOLUTION": {
+                        "Y_HALF_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "UPDATE_RATE": {
+                        "INNER_LOOK_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "DETECTION_THRESHOLD": {
+                        "OUTER_LOOK_ANGLE_DEG": {
                             "type": "number"
                         },
-                        "AZIMUTH_SCAN_RATE": {
+                        "SAR_SAMPLING_DENSITY": {
                             "type": "number"
                         },
-                        "ELEVATION_SCAN_RATE": {
+                        "MIN_RANGE_M": {
                             "type": "number"
                         },
-                        "POWER": {
+                        "MAX_RANGE_M": {
                             "type": "number"
                         },
-                        "FREQUENCY": {
+                        "POLYGON_VERTICES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVVec3"
+                            }
+                        },
+                        "POLYGON_FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "AZ_EL_MASK": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVAzElMaskPoint"
+                            },
+                            "description": "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSensor": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "BORESIGHT_UNIT": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "UP_UNIT": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "SHAPE_CONTRACT": {
+                            "$ref": "#/definitions/SCVSensorShapeContract"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVStateSample": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TIME_OFFSET_SEC": {
                             "type": "number"
                         },
-                        "RESERVED": {
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "QUATERNION_X": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Y": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Z": {
+                            "type": "number"
+                        },
+                        "QUATERNION_W": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTarget": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "OBJECT_ID": {
+                            "type": "string"
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "RADIUS_M": {
+                            "type": "number"
+                        },
+                        "TARGET_KIND": {
+                            "$ref": "#/definitions/scvTargetShape"
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "POLYGON_VERTICES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVVec3"
+                            }
+                        },
+                        "MIN_ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "MAX_ALTITUDE_M": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTargetStateSample": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TIME_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "POSITION_M": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "VELOCITY_MPS": {
+                            "$ref": "#/definitions/SCVVec3"
+                        },
+                        "QUATERNION_X": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Y": {
+                            "type": "number"
+                        },
+                        "QUATERNION_Z": {
+                            "type": "number"
+                        },
+                        "QUATERNION_W": {
+                            "type": "number"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCoverageGrid": {
+                    "type": "object",
+                    "properties": {
+                        "GRID_ID": {
+                            "type": "string"
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "MIN_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "MAX_LAT_DEG": {
+                            "type": "number"
+                        },
+                        "MIN_LON_DEG": {
+                            "type": "number"
+                        },
+                        "MAX_LON_DEG": {
+                            "type": "number"
+                        },
+                        "LAT_STEP_DEG": {
+                            "type": "number"
+                        },
+                        "LON_STEP_DEG": {
+                            "type": "number"
+                        },
+                        "ALTITUDE_M": {
+                            "type": "number"
+                        },
+                        "CELL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RESOLUTION_DEG": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCoverageRequest": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ANALYSIS_MODE": {
+                            "$ref": "#/definitions/scvAnalysisMode"
+                        },
+                        "TARGET_BODY": {
+                            "$ref": "#/definitions/SCVEllipsoid"
+                        },
+                        "TIME_GRID": {
+                            "$ref": "#/definitions/SCVTimeGrid"
+                        },
+                        "COVERAGE_GRID": {
+                            "$ref": "#/definitions/SCVCoverageGrid"
+                        },
+                        "SENSORS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSensor"
+                            }
+                        },
+                        "STATE_SAMPLES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVStateSample"
+                            }
+                        },
+                        "TARGETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTarget"
+                            }
+                        },
+                        "TARGET_STATE_SAMPLES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTargetStateSample"
+                            }
+                        },
+                        "REQUESTED_PRODUCTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/scvMetricSeriesKind"
+                            }
+                        },
+                        "SENSOR_BATCH_START": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_BATCH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_BATCH_START": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_BATCH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "GEOMETRY_ENCODING": {
+                            "$ref": "#/definitions/scvGeometryEncoding"
+                        },
+                        "INCLUDE_PACKED_GEOMETRY": {
+                            "type": "boolean"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVProgress": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/scvResultState"
+                        },
+                        "COMPLETED_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COMPLETED_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BACKLOG_REMAINING": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COMPLETION_FRACTION": {
+                            "type": "number"
+                        },
+                        "MESSAGE": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVCancel": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "REASON": {
+                            "type": "string"
+                        },
+                        "CANCEL_AFTER_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSensorContribution": {
+                    "type": "object",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "FIRST_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "LAST_WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CONTRIBUTION_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVHistogramBin": {
+                    "type": "object",
+                    "properties": {
+                        "METRIC_KIND": {
+                            "$ref": "#/definitions/scvMetricSeriesKind"
+                        },
+                        "MIN_VALUE": {
+                            "type": "number"
+                        },
+                        "MAX_VALUE": {
+                            "type": "number"
+                        },
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WEIGHT": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVSwathSegment": {
+                    "type": "object",
+                    "properties": {
+                        "SEGMENT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "VERTEX_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "VERTEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDEX_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDEX_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SENSOR_IDS": {
                             "type": "array",
                             "items": {
                                 "type": "integer",
                                 "minimum": 0,
-                                "maximum": 255
+                                "maximum": 4294967295
                             }
                         }
                     },
+                    "additionalProperties": false
+                },
+                "SCVMemoryRegion": {
+                    "type": "object",
+                    "properties": {
+                        "REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REGION_KEY": {
+                            "type": "string"
+                        },
+                        "BYTE_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTE_LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTE_STRIDE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ALIGNMENT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SHARED": {
+                            "type": "boolean"
+                        },
+                        "MUTABLE": {
+                            "type": "boolean"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVPackedGeometryChunk": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "CHUNK_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_START_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WINDOW_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DOMAIN": {
+                            "$ref": "#/definitions/scvGeometryDomain"
+                        },
+                        "FRAME": {
+                            "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/scvGeometryEncoding"
+                        },
+                        "TIME_START_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "TIME_STOP_OFFSET_SEC": {
+                            "type": "number"
+                        },
+                        "MEMORY_REGIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVMemoryRegion"
+                            }
+                        },
+                        "POSITIONS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "POSITIONS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NORMALS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NORMALS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ST_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ST_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVEAL_COORDS_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVEAL_COORDS_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDICES_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "INDICES_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "POSITIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "NORMALS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "ST": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "REVEAL_COORDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "INDICES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SEGMENT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SENSOR_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "SEGMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSwathSegment"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVPackedRasterBand": {
+                    "type": "object",
+                    "properties": {
+                        "PRODUCT_KIND": {
+                            "$ref": "#/definitions/scvRasterProductKind"
+                        },
+                        "METRIC_KIND": {
+                            "$ref": "#/definitions/scvMetricSeriesKind"
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/scvRasterProductEncoding"
+                        },
+                        "COMPONENTS_PER_CELL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CELL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BUCKET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WORDS_PER_BUCKET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MEMORY_REGION_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MEMORY_RECORD_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "FLOAT32_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "FLOAT64_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "UINT32_VALUES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVPackedRasterProducts": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "GRID": {
+                            "$ref": "#/definitions/SCVCoverageGrid"
+                        },
+                        "TIME_GRID": {
+                            "$ref": "#/definitions/SCVTimeGrid"
+                        },
+                        "ROWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "COLUMNS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CELL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "BUCKET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "WORDS_PER_BUCKET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MEMORY_REGIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVMemoryRegion"
+                            }
+                        },
+                        "BANDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVPackedRasterBand"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVAggregateStatistics": {
+                    "type": "object",
+                    "properties": {
+                        "TOTAL_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ACCESSED_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MULTI_ACCESS_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ACTIVE_SENSOR_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SWATH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_INTERVAL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_REVISIT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_ACCESS_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "TOTAL_GAP_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_RESPONSE_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_RESPONSE_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "PERCENT_COVERAGE": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVTargetResult": {
+                    "type": "object",
+                    "properties": {
+                        "TARGET_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "ACCESS_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REVISIT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_ACCESS_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_SEC": {
+                            "type": "number"
+                        },
+                        "INTERVAL_START_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "INTERVAL_STOP_SEC": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "PASS_START_BUCKETS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        },
+                        "ACCESS_BITSET": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCVResult": {
+                    "type": "object",
+                    "properties": {
+                        "JOB_ID": {
+                            "type": "string"
+                        },
+                        "TRACE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/scvResultState"
+                        },
+                        "TIME_GRID": {
+                            "$ref": "#/definitions/SCVTimeGrid"
+                        },
+                        "TARGET_BODY": {
+                            "$ref": "#/definitions/SCVEllipsoid"
+                        },
+                        "TOTAL_SENSORS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "HISTOGRAMS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVHistogramBin"
+                            }
+                        },
+                        "CONTRIBUTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVSensorContribution"
+                            }
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/SCVPackedGeometryChunk"
+                        },
+                        "RASTER_PRODUCTS": {
+                            "$ref": "#/definitions/SCVPackedRasterProducts"
+                        },
+                        "MESSAGE": {
+                            "type": "string"
+                        },
+                        "AGGREGATE_STATISTICS": {
+                            "$ref": "#/definitions/SCVAggregateStatistics"
+                        },
+                        "TARGET_RESULTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVTargetResult"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCV": {
+                    "type": "object",
+                    "properties": {
+                        "ENVELOPE_KIND": {
+                            "$ref": "#/definitions/scvEnvelopeKind"
+                        },
+                        "REQUEST": {
+                            "$ref": "#/definitions/SCVCoverageRequest"
+                        },
+                        "PROGRESS": {
+                            "$ref": "#/definitions/SCVProgress"
+                        },
+                        "CANCEL": {
+                            "$ref": "#/definitions/SCVCancel"
+                        },
+                        "RESULT": {
+                            "$ref": "#/definitions/SCVResult"
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/SCVPackedGeometryChunk"
+                        },
+                        "RASTER_PRODUCTS": {
+                            "$ref": "#/definitions/SCVPackedRasterProducts"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNRSpectralBand": {
+                    "type": "object",
+                    "description": "One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for \"not stated\".",
+                    "properties": {
+                        "NAME": {
+                            "type": "string",
+                            "description": "The band as its source names it: \"UHF\", \"X-band\", \"VNIR\", \"Green\"."
+                        },
+                        "DESIGNATION": {
+                            "type": "string",
+                            "description": "The designation exactly as the source states it (\"UHF\", \"X\", \"Ka\", \"SWIR\").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none."
+                        },
+                        "FREQ_LOW_HZ": {
+                            "type": "number",
+                            "description": "Lower edge, Hz. 0 = not stated."
+                        },
+                        "FREQ_HIGH_HZ": {
+                            "type": "number",
+                            "description": "Upper edge, Hz. 0 = not stated."
+                        },
+                        "DIRECTION": {
+                            "$ref": "#/definitions/snrBandDirection"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where this band was read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNRMounting": {
+                    "type": "object",
+                    "description": "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+                    "properties": {
+                        "FRAME": {
+                            "$ref": "#/definitions/snrMountingFrame"
+                        },
+                        "BORESIGHT_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Boresight azimuth in FRAME. NaN = not stated."
+                        },
+                        "BORESIGHT_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "Boresight elevation in FRAME. NaN = not stated."
+                        },
+                        "ROLL_DEG": {
+                            "type": "number",
+                            "description": "Roll about the boresight. NaN = not stated."
+                        },
+                        "POINTING": {
+                            "$ref": "#/definitions/snrPointingMode"
+                        },
+                        "SCAN_AZIMUTH_RATE_DEG_S": {
+                            "type": "number",
+                            "description": "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+                        },
+                        "SCAN_ELEVATION_RATE_DEG_S": {
+                            "type": "number",
+                            "description": "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+                        },
+                        "AZIMUTH_LIMIT_MIN_DEG": {
+                            "type": "number",
+                            "description": "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at."
+                        },
+                        "AZIMUTH_LIMIT_MAX_DEG": {
+                            "type": "number"
+                        },
+                        "ELEVATION_LIMIT_MIN_DEG": {
+                            "type": "number"
+                        },
+                        "ELEVATION_LIMIT_MAX_DEG": {
+                            "type": "number"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where the mounting was read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNRRfParameters": {
+                    "type": "object",
+                    "description": "Radio-frequency parameters. Positive quantities use 0 for \"not stated\";\nANTENNA_GAIN_DBI is signed and uses NaN.",
+                    "properties": {
+                        "ANTENNA_PATTERN": {
+                            "$ref": "#/definitions/snrAntennaPattern"
+                        },
+                        "PEAK_POWER_W": {
+                            "type": "number",
+                            "description": "Peak transmit power, W."
+                        },
+                        "ANTENNA_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Antenna gain, dBi. NaN = not stated."
+                        },
+                        "BEAMWIDTH_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "3 dB beamwidth in azimuth, degrees."
+                        },
+                        "BEAMWIDTH_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "3 dB beamwidth in elevation, degrees."
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Instantaneous bandwidth, Hz."
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/rfPolarization"
+                        },
+                        "PRF_HZ": {
+                            "type": "number",
+                            "description": "Pulse repetition frequency, Hz (radar)."
+                        },
+                        "PULSE_WIDTH_S": {
+                            "type": "number",
+                            "description": "Pulse width, seconds (radar)."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where these values were read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNROpticalParameters": {
+                    "type": "object",
+                    "description": "Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for \"not stated\"; 0 means \"not stated\" elsewhere.",
+                    "properties": {
+                        "APERTURE_M": {
+                            "type": "number",
+                            "description": "Clear aperture diameter, m."
+                        },
+                        "FOCAL_LENGTH_M": {
+                            "type": "number",
+                            "description": "Focal length, m."
+                        },
+                        "IFOV_RAD": {
+                            "type": "number",
+                            "description": "Instantaneous field of view of one detector element, radians."
+                        },
+                        "GSD_M": {
+                            "type": "number",
+                            "description": "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES)."
+                        },
+                        "LIMITING_MAGNITUDE": {
+                            "type": "number",
+                            "description": "Limiting visual magnitude. NaN = not stated."
+                        },
+                        "DETECTOR": {
+                            "type": "string",
+                            "description": "Detector as the source names it (\"CCD\", \"HgCdTe\", \"sCMOS\")."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where these values were read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNR": {
+                    "type": "object",
+                    "description": "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this sensor. $SEN.ID of the same sensor."
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "$SIT.ID of the ground site the sensor is at."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT."
+                        },
+                        "TYPE": {
+                            "$ref": "#/definitions/SensorType"
+                        },
+                        "EMISSION": {
+                            "$ref": "#/definitions/snrEmissionMode"
+                        },
+                        "SPECTRAL_BANDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SNRSpectralBand"
+                            },
+                            "description": "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated."
+                        },
+                        "FIELD_OF_VIEW": {
+                            "$ref": "#/definitions/SCVSensorShapeContract",
+                            "description": "Field-of-view shape: the same table $SCV analyses use."
+                        },
+                        "FIELD_OF_VIEW_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE."
+                        },
+                        "MOUNTING": {
+                            "$ref": "#/definitions/SNRMounting"
+                        },
+                        "RF": {
+                            "$ref": "#/definitions/SNRRfParameters"
+                        },
+                        "OPTICAL": {
+                            "$ref": "#/definitions/SNROpticalParameters"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "SENSOR_ID"
+                    ],
                     "additionalProperties": false
                 }
             },
@@ -128957,7 +131279,8 @@
                         "ESTIMATED",
                         "DERIVED",
                         "MODEL_DERIVED",
-                        "INFERRED_FROM_FAMILY"
+                        "INFERRED_FROM_FAMILY",
+                        "USER_DEFINED"
                     ]
                 },
                 "oppRcsAspect": {
@@ -130425,31 +132748,74 @@
                         "MAW",
                         "SONAR_ACTIVE",
                         "SONAR_PASSIVE",
-                        "ACOUSTIC"
+                        "ACOUSTIC",
+                        "OPTICAL_TELESCOPE",
+                        "MULTISPECTRAL_IMAGER",
+                        "HYPERSPECTRAL_IMAGER",
+                        "SAR",
+                        "ALTIMETER",
+                        "SCATTEROMETER",
+                        "RADIOMETER",
+                        "LIDAR",
+                        "PASSIVE_RF_ESM",
+                        "SIGINT",
+                        "COMMS_ANTENNA",
+                        "TT_AND_C_ANTENNA",
+                        "PHASED_ARRAY_EARLY_WARNING",
+                        "UNSPECIFIED"
                     ]
                 },
-                "SensorMode": {
+                "snrEmissionMode": {
                     "type": "string",
                     "enum": [
-                        "OFF",
-                        "STANDBY",
-                        "SEARCH",
-                        "ACQUISITION",
+                        "UNSPECIFIED",
+                        "ACTIVE",
+                        "PASSIVE"
+                    ]
+                },
+                "snrBandDirection": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "RECEIVE",
+                        "TRANSMIT",
+                        "TRANSCEIVE"
+                    ]
+                },
+                "snrMountingFrame": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "PLATFORM_BODY",
+                        "LVLH",
+                        "LOCAL_ENU"
+                    ]
+                },
+                "snrPointingMode": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NADIR",
+                        "FIXED",
                         "TRACK",
-                        "TRACK_WHILE_SCAN",
-                        "DESIGNATE",
-                        "JAMMED"
+                        "SCAN"
                     ]
                 },
-                "TrackQuality": {
+                "snrAntennaPattern": {
                     "type": "string",
                     "enum": [
-                        "NONE",
-                        "TENTATIVE",
-                        "FIRM",
-                        "LOCKED",
-                        "COASTING",
-                        "LOST"
+                        "UNSPECIFIED",
+                        "ISOTROPIC",
+                        "HEMISPHERIC",
+                        "PARABOLIC",
+                        "GAUSSIAN",
+                        "PENCIL",
+                        "HELIX",
+                        "DIPOLE",
+                        "RINGED",
+                        "TEARDROP",
+                        "TOROIDAL",
+                        "CARDIOID"
                     ]
                 },
                 "snwErrorCode": {
@@ -190842,8 +193208,24 @@
                     },
                     "additionalProperties": false
                 },
+                "SCVAzElMaskPoint": {
+                    "type": "object",
+                    "description": "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+                    "properties": {
+                        "AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Azimuth, degrees clockwise from north, in [0, 360)."
+                        },
+                        "MIN_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCVSensorShapeContract": {
                     "type": "object",
+                    "description": "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
                     "properties": {
                         "SHAPE_KIND": {
                             "$ref": "#/definitions/scvSensorShapeKind"
@@ -190895,6 +193277,13 @@
                         },
                         "POLYGON_FRAME": {
                             "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "AZ_EL_MASK": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVAzElMaskPoint"
+                            },
+                            "description": "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
                         }
                     },
                     "additionalProperties": false
@@ -194907,70 +197296,236 @@
                     ],
                     "additionalProperties": false
                 },
-                "SNR": {
+                "SNRSpectralBand": {
                     "type": "object",
-                    "description": "Sensor Systems",
+                    "description": "One spectral band of a sensor, in Hz. Hz is the unit for every band, optical\nincluded; a consumer that wants wavelength converts (lambda = c / f).\nPositive quantities use the default 0 for \"not stated\".",
                     "properties": {
-                        "TYPE": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
+                        "NAME": {
+                            "type": "string",
+                            "description": "The band as its source names it: \"UHF\", \"X-band\", \"VNIR\", \"Green\"."
                         },
-                        "MODE": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 255
+                        "DESIGNATION": {
+                            "type": "string",
+                            "description": "The designation exactly as the source states it (\"UHF\", \"X\", \"Ka\", \"SWIR\").\nVerbatim, never derived from the frequencies. RF designations use $RFB\nrfBandDesignation spellings. Absent when the source states none."
                         },
-                        "RESERVED1": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 65535
+                        "FREQ_LOW_HZ": {
+                            "type": "number",
+                            "description": "Lower edge, Hz. 0 = not stated."
                         },
-                        "MAX_RANGE": {
-                            "type": "number"
+                        "FREQ_HIGH_HZ": {
+                            "type": "number",
+                            "description": "Upper edge, Hz. 0 = not stated."
                         },
-                        "MIN_RANGE": {
-                            "type": "number"
+                        "DIRECTION": {
+                            "$ref": "#/definitions/snrBandDirection"
                         },
-                        "FOV_AZIMUTH": {
-                            "type": "number"
-                        },
-                        "FOV_ELEVATION": {
-                            "type": "number"
-                        },
-                        "ANGULAR_RESOLUTION": {
-                            "type": "number"
-                        },
-                        "RANGE_RESOLUTION": {
-                            "type": "number"
-                        },
-                        "UPDATE_RATE": {
-                            "type": "number"
-                        },
-                        "DETECTION_THRESHOLD": {
-                            "type": "number"
-                        },
-                        "AZIMUTH_SCAN_RATE": {
-                            "type": "number"
-                        },
-                        "ELEVATION_SCAN_RATE": {
-                            "type": "number"
-                        },
-                        "POWER": {
-                            "type": "number"
-                        },
-                        "FREQUENCY": {
-                            "type": "number"
-                        },
-                        "RESERVED": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 255
-                            }
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where this band was read, when it differs from the record's PROVENANCE."
                         }
                     },
+                    "additionalProperties": false
+                },
+                "SNRMounting": {
+                    "type": "object",
+                    "description": "How the sensor sits on its platform and where it points. Angles are degrees\nand signed, so an unset angle is NaN (absent), never 0.",
+                    "properties": {
+                        "FRAME": {
+                            "$ref": "#/definitions/snrMountingFrame"
+                        },
+                        "BORESIGHT_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Boresight azimuth in FRAME. NaN = not stated."
+                        },
+                        "BORESIGHT_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "Boresight elevation in FRAME. NaN = not stated."
+                        },
+                        "ROLL_DEG": {
+                            "type": "number",
+                            "description": "Roll about the boresight. NaN = not stated."
+                        },
+                        "POINTING": {
+                            "$ref": "#/definitions/snrPointingMode"
+                        },
+                        "SCAN_AZIMUTH_RATE_DEG_S": {
+                            "type": "number",
+                            "description": "Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+                        },
+                        "SCAN_ELEVATION_RATE_DEG_S": {
+                            "type": "number",
+                            "description": "Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated."
+                        },
+                        "AZIMUTH_LIMIT_MIN_DEG": {
+                            "type": "number",
+                            "description": "Field-of-regard limits in FRAME, degrees. NaN = no limit stated.\nELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at."
+                        },
+                        "AZIMUTH_LIMIT_MAX_DEG": {
+                            "type": "number"
+                        },
+                        "ELEVATION_LIMIT_MIN_DEG": {
+                            "type": "number"
+                        },
+                        "ELEVATION_LIMIT_MAX_DEG": {
+                            "type": "number"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where the mounting was read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNRRfParameters": {
+                    "type": "object",
+                    "description": "Radio-frequency parameters. Positive quantities use 0 for \"not stated\";\nANTENNA_GAIN_DBI is signed and uses NaN.",
+                    "properties": {
+                        "ANTENNA_PATTERN": {
+                            "$ref": "#/definitions/snrAntennaPattern"
+                        },
+                        "PEAK_POWER_W": {
+                            "type": "number",
+                            "description": "Peak transmit power, W."
+                        },
+                        "ANTENNA_GAIN_DBI": {
+                            "type": "number",
+                            "description": "Antenna gain, dBi. NaN = not stated."
+                        },
+                        "BEAMWIDTH_AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "3 dB beamwidth in azimuth, degrees."
+                        },
+                        "BEAMWIDTH_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "3 dB beamwidth in elevation, degrees."
+                        },
+                        "BANDWIDTH_HZ": {
+                            "type": "number",
+                            "description": "Instantaneous bandwidth, Hz."
+                        },
+                        "POLARIZATION": {
+                            "$ref": "#/definitions/rfPolarization"
+                        },
+                        "PRF_HZ": {
+                            "type": "number",
+                            "description": "Pulse repetition frequency, Hz (radar)."
+                        },
+                        "PULSE_WIDTH_S": {
+                            "type": "number",
+                            "description": "Pulse width, seconds (radar)."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where these values were read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNROpticalParameters": {
+                    "type": "object",
+                    "description": "Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,\nwhich is signed and uses NaN for \"not stated\"; 0 means \"not stated\" elsewhere.",
+                    "properties": {
+                        "APERTURE_M": {
+                            "type": "number",
+                            "description": "Clear aperture diameter, m."
+                        },
+                        "FOCAL_LENGTH_M": {
+                            "type": "number",
+                            "description": "Focal length, m."
+                        },
+                        "IFOV_RAD": {
+                            "type": "number",
+                            "description": "Instantaneous field of view of one detector element, radians."
+                        },
+                        "GSD_M": {
+                            "type": "number",
+                            "description": "Ground sample distance, m, at the nadir and nominal altitude the source\nstates (qualifiers go in PROVENANCE.NOTES)."
+                        },
+                        "LIMITING_MAGNITUDE": {
+                            "type": "number",
+                            "description": "Limiting visual magnitude. NaN = not stated."
+                        },
+                        "DETECTOR": {
+                            "type": "string",
+                            "description": "Detector as the source names it (\"CCD\", \"HgCdTe\", \"sCMOS\")."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where these values were read, when it differs from the record's PROVENANCE."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SNR": {
+                    "type": "object",
+                    "description": "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.",
+                    "properties": {
+                        "SENSOR_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this sensor. $SEN.ID of the same sensor."
+                        },
+                        "NAME": {
+                            "type": "string"
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "$CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "$SIT.ID of the ground site the sensor is at."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable non-catalogue entity key of the platform, for a platform with neither\na catalogue number nor a $SIT."
+                        },
+                        "TYPE": {
+                            "$ref": "#/definitions/SensorType"
+                        },
+                        "EMISSION": {
+                            "$ref": "#/definitions/snrEmissionMode"
+                        },
+                        "SPECTRAL_BANDS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SNRSpectralBand"
+                            },
+                            "description": "Spectral bands in Hz. One list serves a radar, a multispectral imager and\na passive RF receiver. Empty = none stated."
+                        },
+                        "FIELD_OF_VIEW": {
+                            "$ref": "#/definitions/SCVSensorShapeContract",
+                            "description": "Field-of-view shape: the same table $SCV analyses use."
+                        },
+                        "FIELD_OF_VIEW_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where FIELD_OF_VIEW was read, when it differs from PROVENANCE."
+                        },
+                        "MOUNTING": {
+                            "$ref": "#/definitions/SNRMounting"
+                        },
+                        "RF": {
+                            "$ref": "#/definitions/SNRRfParameters"
+                        },
+                        "OPTICAL": {
+                            "$ref": "#/definitions/SNROpticalParameters"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Where the values of this record were read. A published real-world sensor\ncarries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor\ncarries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one\nfor that section."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "SENSOR_ID"
+                    ],
                     "additionalProperties": false
                 },
                 "SNWBatchRequest": {
@@ -283447,8 +286002,24 @@
                     },
                     "additionalProperties": false
                 },
+                "SCVAzElMaskPoint": {
+                    "type": "object",
+                    "description": "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+                    "properties": {
+                        "AZIMUTH_DEG": {
+                            "type": "number",
+                            "description": "Azimuth, degrees clockwise from north, in [0, 360)."
+                        },
+                        "MIN_ELEVATION_DEG": {
+                            "type": "number",
+                            "description": "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCVSensorShapeContract": {
                     "type": "object",
+                    "description": "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
                     "properties": {
                         "SHAPE_KIND": {
                             "$ref": "#/definitions/scvSensorShapeKind"
@@ -283500,6 +286071,13 @@
                         },
                         "POLYGON_FRAME": {
                             "$ref": "#/definitions/scvCoordinateFrame"
+                        },
+                        "AZ_EL_MASK": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SCVAzElMaskPoint"
+                            },
+                            "description": "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
                         }
                     },
                     "additionalProperties": false

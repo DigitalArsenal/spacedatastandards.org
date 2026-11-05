@@ -5,7 +5,15 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import '../LKS/main_generated.dart';
+import '../OPP/main_generated.dart';
+import '../RFB/main_generated.dart';
+import '../SCV/main_generated.dart';
 
+///  What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+///  members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+///  by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+///  a writer always sets TYPE.
 enum SensorType {
   RADAR_PULSE(0),
   RADAR_DOPPLER(1),
@@ -22,7 +30,21 @@ enum SensorType {
   MAW(12),
   SONAR_ACTIVE(13),
   SONAR_PASSIVE(14),
-  ACOUSTIC(15);
+  ACOUSTIC(15),
+  OPTICAL_TELESCOPE(16),
+  MULTISPECTRAL_IMAGER(17),
+  HYPERSPECTRAL_IMAGER(18),
+  SAR(19),
+  ALTIMETER(20),
+  SCATTEROMETER(21),
+  RADIOMETER(22),
+  LIDAR(23),
+  PASSIVE_RF_ESM(24),
+  SIGINT(25),
+  COMMS_ANTENNA(26),
+  TT_AND_C_ANTENNA(27),
+  PHASED_ARRAY_EARLY_WARNING(28),
+  UNSPECIFIED(29);
 
   final int value;
   const SensorType(this.value);
@@ -45,6 +67,20 @@ enum SensorType {
       case 13: return SensorType.SONAR_ACTIVE;
       case 14: return SensorType.SONAR_PASSIVE;
       case 15: return SensorType.ACOUSTIC;
+      case 16: return SensorType.OPTICAL_TELESCOPE;
+      case 17: return SensorType.MULTISPECTRAL_IMAGER;
+      case 18: return SensorType.HYPERSPECTRAL_IMAGER;
+      case 19: return SensorType.SAR;
+      case 20: return SensorType.ALTIMETER;
+      case 21: return SensorType.SCATTEROMETER;
+      case 22: return SensorType.RADIOMETER;
+      case 23: return SensorType.LIDAR;
+      case 24: return SensorType.PASSIVE_RF_ESM;
+      case 25: return SensorType.SIGINT;
+      case 26: return SensorType.COMMS_ANTENNA;
+      case 27: return SensorType.TT_AND_C_ANTENNA;
+      case 28: return SensorType.PHASED_ARRAY_EARLY_WARNING;
+      case 29: return SensorType.UNSPECIFIED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -53,7 +89,7 @@ enum SensorType {
       value == null ? null : SensorType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 15;
+  static const int maxValue = 29;
   static const fb.Reader<SensorType> reader = _SensorTypeReader();
 }
 
@@ -68,95 +104,889 @@ class _SensorTypeReader extends fb.Reader<SensorType> {
       SensorType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum SensorMode {
-  OFF(0),
-  STANDBY(1),
-  SEARCH(2),
-  ACQUISITION(3),
-  TRACK(4),
-  TRACK_WHILE_SCAN(5),
-  DESIGNATE(6),
-  JAMMED(7);
+///  Whether the sensor radiates to sense (ACTIVE) or only receives (PASSIVE).
+enum snrEmissionMode {
+  UNSPECIFIED(0),
+  ACTIVE(1),
+  PASSIVE(2);
 
   final int value;
-  const SensorMode(this.value);
+  const snrEmissionMode(this.value);
 
-  factory SensorMode.fromValue(int value) {
+  factory snrEmissionMode.fromValue(int value) {
     switch (value) {
-      case 0: return SensorMode.OFF;
-      case 1: return SensorMode.STANDBY;
-      case 2: return SensorMode.SEARCH;
-      case 3: return SensorMode.ACQUISITION;
-      case 4: return SensorMode.TRACK;
-      case 5: return SensorMode.TRACK_WHILE_SCAN;
-      case 6: return SensorMode.DESIGNATE;
-      case 7: return SensorMode.JAMMED;
+      case 0: return snrEmissionMode.UNSPECIFIED;
+      case 1: return snrEmissionMode.ACTIVE;
+      case 2: return snrEmissionMode.PASSIVE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static SensorMode? _createOrNull(int? value) =>
-      value == null ? null : SensorMode.fromValue(value);
+  static snrEmissionMode? _createOrNull(int? value) =>
+      value == null ? null : snrEmissionMode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
-  static const fb.Reader<SensorMode> reader = _SensorModeReader();
+  static const int maxValue = 2;
+  static const fb.Reader<snrEmissionMode> reader = _snrEmissionModeReader();
 }
 
-class _SensorModeReader extends fb.Reader<SensorMode> {
-  const _SensorModeReader();
+class _snrEmissionModeReader extends fb.Reader<snrEmissionMode> {
+  const _snrEmissionModeReader();
 
   @override
   int get size => 1;
 
   @override
-  SensorMode read(fb.BufferContext bc, int offset) =>
-      SensorMode.fromValue(const fb.Int8Reader().read(bc, offset));
+  snrEmissionMode read(fb.BufferContext bc, int offset) =>
+      snrEmissionMode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum TrackQuality {
-  NONE(0),
-  TENTATIVE(1),
-  FIRM(2),
-  LOCKED(3),
-  COASTING(4),
-  LOST(5);
+///  How a spectral band is used. Matters for antennas and EW receivers whose
+///  transmit and receive bands differ.
+enum snrBandDirection {
+  UNSPECIFIED(0),
+  RECEIVE(1),
+  TRANSMIT(2),
+  TRANSCEIVE(3);
 
   final int value;
-  const TrackQuality(this.value);
+  const snrBandDirection(this.value);
 
-  factory TrackQuality.fromValue(int value) {
+  factory snrBandDirection.fromValue(int value) {
     switch (value) {
-      case 0: return TrackQuality.NONE;
-      case 1: return TrackQuality.TENTATIVE;
-      case 2: return TrackQuality.FIRM;
-      case 3: return TrackQuality.LOCKED;
-      case 4: return TrackQuality.COASTING;
-      case 5: return TrackQuality.LOST;
+      case 0: return snrBandDirection.UNSPECIFIED;
+      case 1: return snrBandDirection.RECEIVE;
+      case 2: return snrBandDirection.TRANSMIT;
+      case 3: return snrBandDirection.TRANSCEIVE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static TrackQuality? _createOrNull(int? value) =>
-      value == null ? null : TrackQuality.fromValue(value);
+  static snrBandDirection? _createOrNull(int? value) =>
+      value == null ? null : snrBandDirection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
-  static const fb.Reader<TrackQuality> reader = _TrackQualityReader();
+  static const int maxValue = 3;
+  static const fb.Reader<snrBandDirection> reader = _snrBandDirectionReader();
 }
 
-class _TrackQualityReader extends fb.Reader<TrackQuality> {
-  const _TrackQualityReader();
+class _snrBandDirectionReader extends fb.Reader<snrBandDirection> {
+  const _snrBandDirectionReader();
 
   @override
   int get size => 1;
 
   @override
-  TrackQuality read(fb.BufferContext bc, int offset) =>
-      TrackQuality.fromValue(const fb.Int8Reader().read(bc, offset));
+  snrBandDirection read(fb.BufferContext bc, int offset) =>
+      snrBandDirection.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Sensor Systems
+///  The frame MOUNTING angles are expressed in.
+enum snrMountingFrame {
+  UNSPECIFIED(0),
+  PLATFORM_BODY(1),
+  LVLH(2),
+  LOCAL_ENU(3);
+
+  final int value;
+  const snrMountingFrame(this.value);
+
+  factory snrMountingFrame.fromValue(int value) {
+    switch (value) {
+      case 0: return snrMountingFrame.UNSPECIFIED;
+      case 1: return snrMountingFrame.PLATFORM_BODY;
+      case 2: return snrMountingFrame.LVLH;
+      case 3: return snrMountingFrame.LOCAL_ENU;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static snrMountingFrame? _createOrNull(int? value) =>
+      value == null ? null : snrMountingFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<snrMountingFrame> reader = _snrMountingFrameReader();
+}
+
+class _snrMountingFrameReader extends fb.Reader<snrMountingFrame> {
+  const _snrMountingFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  snrMountingFrame read(fb.BufferContext bc, int offset) =>
+      snrMountingFrame.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Where the sensor points by default.
+enum snrPointingMode {
+  UNSPECIFIED(0),
+  NADIR(1),
+  FIXED(2),
+  TRACK(3),
+  SCAN(4);
+
+  final int value;
+  const snrPointingMode(this.value);
+
+  factory snrPointingMode.fromValue(int value) {
+    switch (value) {
+      case 0: return snrPointingMode.UNSPECIFIED;
+      case 1: return snrPointingMode.NADIR;
+      case 2: return snrPointingMode.FIXED;
+      case 3: return snrPointingMode.TRACK;
+      case 4: return snrPointingMode.SCAN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static snrPointingMode? _createOrNull(int? value) =>
+      value == null ? null : snrPointingMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<snrPointingMode> reader = _snrPointingModeReader();
+}
+
+class _snrPointingModeReader extends fb.Reader<snrPointingMode> {
+  const _snrPointingModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  snrPointingMode read(fb.BufferContext bc, int offset) =>
+      snrPointingMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Radiation pattern of an RF antenna. Names follow OrbPro's antenna patterns.
+enum snrAntennaPattern {
+  UNSPECIFIED(0),
+  ISOTROPIC(1),
+  HEMISPHERIC(2),
+  PARABOLIC(3),
+  GAUSSIAN(4),
+  PENCIL(5),
+  HELIX(6),
+  DIPOLE(7),
+  RINGED(8),
+  TEARDROP(9),
+  TOROIDAL(10),
+  CARDIOID(11);
+
+  final int value;
+  const snrAntennaPattern(this.value);
+
+  factory snrAntennaPattern.fromValue(int value) {
+    switch (value) {
+      case 0: return snrAntennaPattern.UNSPECIFIED;
+      case 1: return snrAntennaPattern.ISOTROPIC;
+      case 2: return snrAntennaPattern.HEMISPHERIC;
+      case 3: return snrAntennaPattern.PARABOLIC;
+      case 4: return snrAntennaPattern.GAUSSIAN;
+      case 5: return snrAntennaPattern.PENCIL;
+      case 6: return snrAntennaPattern.HELIX;
+      case 7: return snrAntennaPattern.DIPOLE;
+      case 8: return snrAntennaPattern.RINGED;
+      case 9: return snrAntennaPattern.TEARDROP;
+      case 10: return snrAntennaPattern.TOROIDAL;
+      case 11: return snrAntennaPattern.CARDIOID;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static snrAntennaPattern? _createOrNull(int? value) =>
+      value == null ? null : snrAntennaPattern.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 11;
+  static const fb.Reader<snrAntennaPattern> reader = _snrAntennaPatternReader();
+}
+
+class _snrAntennaPatternReader extends fb.Reader<snrAntennaPattern> {
+  const _snrAntennaPatternReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  snrAntennaPattern read(fb.BufferContext bc, int offset) =>
+      snrAntennaPattern.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  One spectral band of a sensor, in Hz. Hz is the unit for every band, optical
+///  included; a consumer that wants wavelength converts (lambda = c / f).
+///  Positive quantities use the default 0 for "not stated".
+class SNRSpectralBand {
+  SNRSpectralBand._(this._bc, this._bcOffset);
+  factory SNRSpectralBand(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SNRSpectralBand> reader = _SNRSpectralBandReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The band as its source names it: "UHF", "X-band", "VNIR", "Green".
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").
+  ///  Verbatim, never derived from the frequencies. RF designations use $RFB
+  ///  rfBandDesignation spellings. Absent when the source states none.
+  String? get DESIGNATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Lower edge, Hz. 0 = not stated.
+  double get FREQ_LOW_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get freqLowHz => FREQ_LOW_HZ;
+  ///  Upper edge, Hz. 0 = not stated.
+  double get FREQ_HIGH_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get freqHighHz => FREQ_HIGH_HZ;
+  snrBandDirection get DIRECTION => snrBandDirection.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Where this band was read, when it differs from the record's PROVENANCE.
+  OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'SNRSpectralBand{NAME: ${NAME}, DESIGNATION: ${DESIGNATION}, freqLowHz: ${freqLowHz}, freqHighHz: ${freqHighHz}, DIRECTION: ${DIRECTION}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _SNRSpectralBandReader extends fb.TableReader<SNRSpectralBand> {
+  const _SNRSpectralBandReader();
+
+  @override
+  SNRSpectralBand createObject(fb.BufferContext bc, int offset) =>
+    SNRSpectralBand._(bc, offset);
+}
+
+class SNRSpectralBandBuilder {
+  SNRSpectralBandBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDesignationOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addFreqLowHz(double? FREQ_LOW_HZ) {
+    fbBuilder.addFloat64(2, FREQ_LOW_HZ);
+    return fbBuilder.offset;
+  }
+  int addFreqHighHz(double? FREQ_HIGH_HZ) {
+    fbBuilder.addFloat64(3, FREQ_HIGH_HZ);
+    return fbBuilder.offset;
+  }
+  int addDirection(snrBandDirection? DIRECTION) {
+    fbBuilder.addInt8(4, DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SNRSpectralBandObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESIGNATION;
+  final double? _FREQ_LOW_HZ;
+  final double? _FREQ_HIGH_HZ;
+  final snrBandDirection? _DIRECTION;
+  final OPPProvenanceObjectBuilder? _PROVENANCE;
+
+  SNRSpectralBandObjectBuilder({
+    String? NAME,
+    String? DESIGNATION,
+    double? FREQ_LOW_HZ,
+    double? freqLowHz,
+    double? FREQ_HIGH_HZ,
+    double? freqHighHz,
+    snrBandDirection? DIRECTION,
+    OPPProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _NAME = NAME,
+        _DESIGNATION = DESIGNATION,
+        _FREQ_LOW_HZ = freqLowHz ?? FREQ_LOW_HZ,
+        _FREQ_HIGH_HZ = freqHighHz ?? FREQ_HIGH_HZ,
+        _DIRECTION = DIRECTION,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESIGNATIONOffset = _DESIGNATION == null ? null
+        : fbBuilder.writeString(_DESIGNATION!);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESIGNATIONOffset);
+    fbBuilder.addFloat64(2, _FREQ_LOW_HZ);
+    fbBuilder.addFloat64(3, _FREQ_HIGH_HZ);
+    fbBuilder.addInt8(4, _DIRECTION?.value);
+    fbBuilder.addOffset(5, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  How the sensor sits on its platform and where it points. Angles are degrees
+///  and signed, so an unset angle is NaN (absent), never 0.
+class SNRMounting {
+  SNRMounting._(this._bc, this._bcOffset);
+  factory SNRMounting(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SNRMounting> reader = _SNRMountingReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  snrMountingFrame get FRAME => snrMountingFrame.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Boresight azimuth in FRAME. NaN = not stated.
+  double get BORESIGHT_AZIMUTH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, double.nan);
+  double get boresightAzimuthDeg => BORESIGHT_AZIMUTH_DEG;
+  ///  Boresight elevation in FRAME. NaN = not stated.
+  double get BORESIGHT_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get boresightElevationDeg => BORESIGHT_ELEVATION_DEG;
+  ///  Roll about the boresight. NaN = not stated.
+  double get ROLL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, double.nan);
+  double get rollDeg => ROLL_DEG;
+  snrPointingMode get POINTING => snrPointingMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  double get SCAN_AZIMUTH_RATE_DEG_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get scanAzimuthRateDegS => SCAN_AZIMUTH_RATE_DEG_S;
+  ///  Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  double get SCAN_ELEVATION_RATE_DEG_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
+  double get scanElevationRateDegS => SCAN_ELEVATION_RATE_DEG_S;
+  ///  Field-of-regard limits in FRAME, degrees. NaN = no limit stated.
+  ///  ELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.
+  double get AZIMUTH_LIMIT_MIN_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, double.nan);
+  double get azimuthLimitMinDeg => AZIMUTH_LIMIT_MIN_DEG;
+  double get AZIMUTH_LIMIT_MAX_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
+  double get azimuthLimitMaxDeg => AZIMUTH_LIMIT_MAX_DEG;
+  double get ELEVATION_LIMIT_MIN_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
+  double get elevationLimitMinDeg => ELEVATION_LIMIT_MIN_DEG;
+  double get ELEVATION_LIMIT_MAX_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
+  double get elevationLimitMaxDeg => ELEVATION_LIMIT_MAX_DEG;
+  ///  Where the mounting was read, when it differs from the record's PROVENANCE.
+  OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'SNRMounting{FRAME: ${FRAME}, boresightAzimuthDeg: ${boresightAzimuthDeg}, boresightElevationDeg: ${boresightElevationDeg}, rollDeg: ${rollDeg}, POINTING: ${POINTING}, scanAzimuthRateDegS: ${scanAzimuthRateDegS}, scanElevationRateDegS: ${scanElevationRateDegS}, azimuthLimitMinDeg: ${azimuthLimitMinDeg}, azimuthLimitMaxDeg: ${azimuthLimitMaxDeg}, elevationLimitMinDeg: ${elevationLimitMinDeg}, elevationLimitMaxDeg: ${elevationLimitMaxDeg}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _SNRMountingReader extends fb.TableReader<SNRMounting> {
+  const _SNRMountingReader();
+
+  @override
+  SNRMounting createObject(fb.BufferContext bc, int offset) =>
+    SNRMounting._(bc, offset);
+}
+
+class SNRMountingBuilder {
+  SNRMountingBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addFrame(snrMountingFrame? FRAME) {
+    fbBuilder.addInt8(0, FRAME?.value);
+    return fbBuilder.offset;
+  }
+  int addBoresightAzimuthDeg(double? BORESIGHT_AZIMUTH_DEG) {
+    fbBuilder.addFloat64(1, BORESIGHT_AZIMUTH_DEG);
+    return fbBuilder.offset;
+  }
+  int addBoresightElevationDeg(double? BORESIGHT_ELEVATION_DEG) {
+    fbBuilder.addFloat64(2, BORESIGHT_ELEVATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addRollDeg(double? ROLL_DEG) {
+    fbBuilder.addFloat64(3, ROLL_DEG);
+    return fbBuilder.offset;
+  }
+  int addPointing(snrPointingMode? POINTING) {
+    fbBuilder.addInt8(4, POINTING?.value);
+    return fbBuilder.offset;
+  }
+  int addScanAzimuthRateDegS(double? SCAN_AZIMUTH_RATE_DEG_S) {
+    fbBuilder.addFloat64(5, SCAN_AZIMUTH_RATE_DEG_S);
+    return fbBuilder.offset;
+  }
+  int addScanElevationRateDegS(double? SCAN_ELEVATION_RATE_DEG_S) {
+    fbBuilder.addFloat64(6, SCAN_ELEVATION_RATE_DEG_S);
+    return fbBuilder.offset;
+  }
+  int addAzimuthLimitMinDeg(double? AZIMUTH_LIMIT_MIN_DEG) {
+    fbBuilder.addFloat64(7, AZIMUTH_LIMIT_MIN_DEG);
+    return fbBuilder.offset;
+  }
+  int addAzimuthLimitMaxDeg(double? AZIMUTH_LIMIT_MAX_DEG) {
+    fbBuilder.addFloat64(8, AZIMUTH_LIMIT_MAX_DEG);
+    return fbBuilder.offset;
+  }
+  int addElevationLimitMinDeg(double? ELEVATION_LIMIT_MIN_DEG) {
+    fbBuilder.addFloat64(9, ELEVATION_LIMIT_MIN_DEG);
+    return fbBuilder.offset;
+  }
+  int addElevationLimitMaxDeg(double? ELEVATION_LIMIT_MAX_DEG) {
+    fbBuilder.addFloat64(10, ELEVATION_LIMIT_MAX_DEG);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SNRMountingObjectBuilder extends fb.ObjectBuilder {
+  final snrMountingFrame? _FRAME;
+  final double? _BORESIGHT_AZIMUTH_DEG;
+  final double? _BORESIGHT_ELEVATION_DEG;
+  final double? _ROLL_DEG;
+  final snrPointingMode? _POINTING;
+  final double? _SCAN_AZIMUTH_RATE_DEG_S;
+  final double? _SCAN_ELEVATION_RATE_DEG_S;
+  final double? _AZIMUTH_LIMIT_MIN_DEG;
+  final double? _AZIMUTH_LIMIT_MAX_DEG;
+  final double? _ELEVATION_LIMIT_MIN_DEG;
+  final double? _ELEVATION_LIMIT_MAX_DEG;
+  final OPPProvenanceObjectBuilder? _PROVENANCE;
+
+  SNRMountingObjectBuilder({
+    snrMountingFrame? FRAME,
+    double? BORESIGHT_AZIMUTH_DEG,
+    double? boresightAzimuthDeg,
+    double? BORESIGHT_ELEVATION_DEG,
+    double? boresightElevationDeg,
+    double? ROLL_DEG,
+    double? rollDeg,
+    snrPointingMode? POINTING,
+    double? SCAN_AZIMUTH_RATE_DEG_S,
+    double? scanAzimuthRateDegS,
+    double? SCAN_ELEVATION_RATE_DEG_S,
+    double? scanElevationRateDegS,
+    double? AZIMUTH_LIMIT_MIN_DEG,
+    double? azimuthLimitMinDeg,
+    double? AZIMUTH_LIMIT_MAX_DEG,
+    double? azimuthLimitMaxDeg,
+    double? ELEVATION_LIMIT_MIN_DEG,
+    double? elevationLimitMinDeg,
+    double? ELEVATION_LIMIT_MAX_DEG,
+    double? elevationLimitMaxDeg,
+    OPPProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _FRAME = FRAME,
+        _BORESIGHT_AZIMUTH_DEG = boresightAzimuthDeg ?? BORESIGHT_AZIMUTH_DEG,
+        _BORESIGHT_ELEVATION_DEG = boresightElevationDeg ?? BORESIGHT_ELEVATION_DEG,
+        _ROLL_DEG = rollDeg ?? ROLL_DEG,
+        _POINTING = POINTING,
+        _SCAN_AZIMUTH_RATE_DEG_S = scanAzimuthRateDegS ?? SCAN_AZIMUTH_RATE_DEG_S,
+        _SCAN_ELEVATION_RATE_DEG_S = scanElevationRateDegS ?? SCAN_ELEVATION_RATE_DEG_S,
+        _AZIMUTH_LIMIT_MIN_DEG = azimuthLimitMinDeg ?? AZIMUTH_LIMIT_MIN_DEG,
+        _AZIMUTH_LIMIT_MAX_DEG = azimuthLimitMaxDeg ?? AZIMUTH_LIMIT_MAX_DEG,
+        _ELEVATION_LIMIT_MIN_DEG = elevationLimitMinDeg ?? ELEVATION_LIMIT_MIN_DEG,
+        _ELEVATION_LIMIT_MAX_DEG = elevationLimitMaxDeg ?? ELEVATION_LIMIT_MAX_DEG,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
+    fbBuilder.addInt8(0, _FRAME?.value);
+    fbBuilder.addFloat64(1, _BORESIGHT_AZIMUTH_DEG);
+    fbBuilder.addFloat64(2, _BORESIGHT_ELEVATION_DEG);
+    fbBuilder.addFloat64(3, _ROLL_DEG);
+    fbBuilder.addInt8(4, _POINTING?.value);
+    fbBuilder.addFloat64(5, _SCAN_AZIMUTH_RATE_DEG_S);
+    fbBuilder.addFloat64(6, _SCAN_ELEVATION_RATE_DEG_S);
+    fbBuilder.addFloat64(7, _AZIMUTH_LIMIT_MIN_DEG);
+    fbBuilder.addFloat64(8, _AZIMUTH_LIMIT_MAX_DEG);
+    fbBuilder.addFloat64(9, _ELEVATION_LIMIT_MIN_DEG);
+    fbBuilder.addFloat64(10, _ELEVATION_LIMIT_MAX_DEG);
+    fbBuilder.addOffset(11, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Radio-frequency parameters. Positive quantities use 0 for "not stated";
+///  ANTENNA_GAIN_DBI is signed and uses NaN.
+class SNRRfParameters {
+  SNRRfParameters._(this._bc, this._bcOffset);
+  factory SNRRfParameters(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SNRRfParameters> reader = _SNRRfParametersReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  snrAntennaPattern get ANTENNA_PATTERN => snrAntennaPattern.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  snrAntennaPattern get antennaPattern => ANTENNA_PATTERN;
+  ///  Peak transmit power, W.
+  double get PEAK_POWER_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get peakPowerW => PEAK_POWER_W;
+  ///  Antenna gain, dBi. NaN = not stated.
+  double get ANTENNA_GAIN_DBI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get antennaGainDbi => ANTENNA_GAIN_DBI;
+  ///  3 dB beamwidth in azimuth, degrees.
+  double get BEAMWIDTH_AZIMUTH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get beamwidthAzimuthDeg => BEAMWIDTH_AZIMUTH_DEG;
+  ///  3 dB beamwidth in elevation, degrees.
+  double get BEAMWIDTH_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get beamwidthElevationDeg => BEAMWIDTH_ELEVATION_DEG;
+  ///  Instantaneous bandwidth, Hz.
+  double get BANDWIDTH_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get bandwidthHz => BANDWIDTH_HZ;
+  rfPolarization get POLARIZATION => rfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 6));
+  ///  Pulse repetition frequency, Hz (radar).
+  double get PRF_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get prfHz => PRF_HZ;
+  ///  Pulse width, seconds (radar).
+  double get PULSE_WIDTH_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get pulseWidthS => PULSE_WIDTH_S;
+  ///  Where these values were read, when it differs from the record's PROVENANCE.
+  OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 22);
+
+  @override
+  String toString() {
+    return 'SNRRfParameters{antennaPattern: ${antennaPattern}, peakPowerW: ${peakPowerW}, antennaGainDbi: ${antennaGainDbi}, beamwidthAzimuthDeg: ${beamwidthAzimuthDeg}, beamwidthElevationDeg: ${beamwidthElevationDeg}, bandwidthHz: ${bandwidthHz}, POLARIZATION: ${POLARIZATION}, prfHz: ${prfHz}, pulseWidthS: ${pulseWidthS}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _SNRRfParametersReader extends fb.TableReader<SNRRfParameters> {
+  const _SNRRfParametersReader();
+
+  @override
+  SNRRfParameters createObject(fb.BufferContext bc, int offset) =>
+    SNRRfParameters._(bc, offset);
+}
+
+class SNRRfParametersBuilder {
+  SNRRfParametersBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addAntennaPattern(snrAntennaPattern? ANTENNA_PATTERN) {
+    fbBuilder.addInt8(0, ANTENNA_PATTERN?.value);
+    return fbBuilder.offset;
+  }
+  int addPeakPowerW(double? PEAK_POWER_W) {
+    fbBuilder.addFloat64(1, PEAK_POWER_W);
+    return fbBuilder.offset;
+  }
+  int addAntennaGainDbi(double? ANTENNA_GAIN_DBI) {
+    fbBuilder.addFloat64(2, ANTENNA_GAIN_DBI);
+    return fbBuilder.offset;
+  }
+  int addBeamwidthAzimuthDeg(double? BEAMWIDTH_AZIMUTH_DEG) {
+    fbBuilder.addFloat64(3, BEAMWIDTH_AZIMUTH_DEG);
+    return fbBuilder.offset;
+  }
+  int addBeamwidthElevationDeg(double? BEAMWIDTH_ELEVATION_DEG) {
+    fbBuilder.addFloat64(4, BEAMWIDTH_ELEVATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addBandwidthHz(double? BANDWIDTH_HZ) {
+    fbBuilder.addFloat64(5, BANDWIDTH_HZ);
+    return fbBuilder.offset;
+  }
+  int addPolarization(rfPolarization? POLARIZATION) {
+    fbBuilder.addInt8(6, POLARIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addPrfHz(double? PRF_HZ) {
+    fbBuilder.addFloat64(7, PRF_HZ);
+    return fbBuilder.offset;
+  }
+  int addPulseWidthS(double? PULSE_WIDTH_S) {
+    fbBuilder.addFloat64(8, PULSE_WIDTH_S);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SNRRfParametersObjectBuilder extends fb.ObjectBuilder {
+  final snrAntennaPattern? _ANTENNA_PATTERN;
+  final double? _PEAK_POWER_W;
+  final double? _ANTENNA_GAIN_DBI;
+  final double? _BEAMWIDTH_AZIMUTH_DEG;
+  final double? _BEAMWIDTH_ELEVATION_DEG;
+  final double? _BANDWIDTH_HZ;
+  final rfPolarization? _POLARIZATION;
+  final double? _PRF_HZ;
+  final double? _PULSE_WIDTH_S;
+  final OPPProvenanceObjectBuilder? _PROVENANCE;
+
+  SNRRfParametersObjectBuilder({
+    snrAntennaPattern? ANTENNA_PATTERN,
+    snrAntennaPattern? antennaPattern,
+    double? PEAK_POWER_W,
+    double? peakPowerW,
+    double? ANTENNA_GAIN_DBI,
+    double? antennaGainDbi,
+    double? BEAMWIDTH_AZIMUTH_DEG,
+    double? beamwidthAzimuthDeg,
+    double? BEAMWIDTH_ELEVATION_DEG,
+    double? beamwidthElevationDeg,
+    double? BANDWIDTH_HZ,
+    double? bandwidthHz,
+    rfPolarization? POLARIZATION,
+    double? PRF_HZ,
+    double? prfHz,
+    double? PULSE_WIDTH_S,
+    double? pulseWidthS,
+    OPPProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _ANTENNA_PATTERN = antennaPattern ?? ANTENNA_PATTERN,
+        _PEAK_POWER_W = peakPowerW ?? PEAK_POWER_W,
+        _ANTENNA_GAIN_DBI = antennaGainDbi ?? ANTENNA_GAIN_DBI,
+        _BEAMWIDTH_AZIMUTH_DEG = beamwidthAzimuthDeg ?? BEAMWIDTH_AZIMUTH_DEG,
+        _BEAMWIDTH_ELEVATION_DEG = beamwidthElevationDeg ?? BEAMWIDTH_ELEVATION_DEG,
+        _BANDWIDTH_HZ = bandwidthHz ?? BANDWIDTH_HZ,
+        _POLARIZATION = POLARIZATION,
+        _PRF_HZ = prfHz ?? PRF_HZ,
+        _PULSE_WIDTH_S = pulseWidthS ?? PULSE_WIDTH_S,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(10);
+    fbBuilder.addInt8(0, _ANTENNA_PATTERN?.value);
+    fbBuilder.addFloat64(1, _PEAK_POWER_W);
+    fbBuilder.addFloat64(2, _ANTENNA_GAIN_DBI);
+    fbBuilder.addFloat64(3, _BEAMWIDTH_AZIMUTH_DEG);
+    fbBuilder.addFloat64(4, _BEAMWIDTH_ELEVATION_DEG);
+    fbBuilder.addFloat64(5, _BANDWIDTH_HZ);
+    fbBuilder.addInt8(6, _POLARIZATION?.value);
+    fbBuilder.addFloat64(7, _PRF_HZ);
+    fbBuilder.addFloat64(8, _PULSE_WIDTH_S);
+    fbBuilder.addOffset(9, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,
+///  which is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.
+class SNROpticalParameters {
+  SNROpticalParameters._(this._bc, this._bcOffset);
+  factory SNROpticalParameters(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SNROpticalParameters> reader = _SNROpticalParametersReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Clear aperture diameter, m.
+  double get APERTURE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get apertureM => APERTURE_M;
+  ///  Focal length, m.
+  double get FOCAL_LENGTH_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get focalLengthM => FOCAL_LENGTH_M;
+  ///  Instantaneous field of view of one detector element, radians.
+  double get IFOV_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get ifovRad => IFOV_RAD;
+  ///  Ground sample distance, m, at the nadir and nominal altitude the source
+  ///  states (qualifiers go in PROVENANCE.NOTES).
+  double get GSD_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get gsdM => GSD_M;
+  ///  Limiting visual magnitude. NaN = not stated.
+  double get LIMITING_MAGNITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get limitingMagnitude => LIMITING_MAGNITUDE;
+  ///  Detector as the source names it ("CCD", "HgCdTe", "sCMOS").
+  String? get DETECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Where these values were read, when it differs from the record's PROVENANCE.
+  OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'SNROpticalParameters{apertureM: ${apertureM}, focalLengthM: ${focalLengthM}, ifovRad: ${ifovRad}, gsdM: ${gsdM}, limitingMagnitude: ${limitingMagnitude}, DETECTOR: ${DETECTOR}, PROVENANCE: ${PROVENANCE}}';
+  }
+}
+
+class _SNROpticalParametersReader extends fb.TableReader<SNROpticalParameters> {
+  const _SNROpticalParametersReader();
+
+  @override
+  SNROpticalParameters createObject(fb.BufferContext bc, int offset) =>
+    SNROpticalParameters._(bc, offset);
+}
+
+class SNROpticalParametersBuilder {
+  SNROpticalParametersBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addApertureM(double? APERTURE_M) {
+    fbBuilder.addFloat64(0, APERTURE_M);
+    return fbBuilder.offset;
+  }
+  int addFocalLengthM(double? FOCAL_LENGTH_M) {
+    fbBuilder.addFloat64(1, FOCAL_LENGTH_M);
+    return fbBuilder.offset;
+  }
+  int addIfovRad(double? IFOV_RAD) {
+    fbBuilder.addFloat64(2, IFOV_RAD);
+    return fbBuilder.offset;
+  }
+  int addGsdM(double? GSD_M) {
+    fbBuilder.addFloat64(3, GSD_M);
+    return fbBuilder.offset;
+  }
+  int addLimitingMagnitude(double? LIMITING_MAGNITUDE) {
+    fbBuilder.addFloat64(4, LIMITING_MAGNITUDE);
+    return fbBuilder.offset;
+  }
+  int addDetectorOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SNROpticalParametersObjectBuilder extends fb.ObjectBuilder {
+  final double? _APERTURE_M;
+  final double? _FOCAL_LENGTH_M;
+  final double? _IFOV_RAD;
+  final double? _GSD_M;
+  final double? _LIMITING_MAGNITUDE;
+  final String? _DETECTOR;
+  final OPPProvenanceObjectBuilder? _PROVENANCE;
+
+  SNROpticalParametersObjectBuilder({
+    double? APERTURE_M,
+    double? apertureM,
+    double? FOCAL_LENGTH_M,
+    double? focalLengthM,
+    double? IFOV_RAD,
+    double? ifovRad,
+    double? GSD_M,
+    double? gsdM,
+    double? LIMITING_MAGNITUDE,
+    double? limitingMagnitude,
+    String? DETECTOR,
+    OPPProvenanceObjectBuilder? PROVENANCE,
+  })
+      : _APERTURE_M = apertureM ?? APERTURE_M,
+        _FOCAL_LENGTH_M = focalLengthM ?? FOCAL_LENGTH_M,
+        _IFOV_RAD = ifovRad ?? IFOV_RAD,
+        _GSD_M = gsdM ?? GSD_M,
+        _LIMITING_MAGNITUDE = limitingMagnitude ?? LIMITING_MAGNITUDE,
+        _DETECTOR = DETECTOR,
+        _PROVENANCE = PROVENANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DETECTOROffset = _DETECTOR == null ? null
+        : fbBuilder.writeString(_DETECTOR!);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
+    fbBuilder.addFloat64(0, _APERTURE_M);
+    fbBuilder.addFloat64(1, _FOCAL_LENGTH_M);
+    fbBuilder.addFloat64(2, _IFOV_RAD);
+    fbBuilder.addFloat64(3, _GSD_M);
+    fbBuilder.addFloat64(4, _LIMITING_MAGNITUDE);
+    fbBuilder.addOffset(5, DETECTOROffset);
+    fbBuilder.addOffset(6, PROVENANCEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+///  UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+///  is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+///  string, table or vector is absent. A value is never invented, never zero as a
+///  placeholder, never copied from another sensor. Hz is the only frequency unit.
+///  Display colors are viewer preferences and never travel in this record.
+///
+///  Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+///  SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 class SNR {
   SNR._(this._bc, this._bcOffset);
   factory SNR(List<int> bytes) {
@@ -169,36 +999,48 @@ class SNR {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  int get TYPE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get MODE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get RESERVED1 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  double get MAX_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get maxRange => MAX_RANGE;
-  double get MIN_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get minRange => MIN_RANGE;
-  double get FOV_AZIMUTH => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get fovAzimuth => FOV_AZIMUTH;
-  double get FOV_ELEVATION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get fovElevation => FOV_ELEVATION;
-  double get ANGULAR_RESOLUTION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get angularResolution => ANGULAR_RESOLUTION;
-  double get RANGE_RESOLUTION => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get rangeResolution => RANGE_RESOLUTION;
-  double get UPDATE_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get updateRate => UPDATE_RATE;
-  double get DETECTION_THRESHOLD => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get detectionThreshold => DETECTION_THRESHOLD;
-  double get AZIMUTH_SCAN_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get azimuthScanRate => AZIMUTH_SCAN_RATE;
-  double get ELEVATION_SCAN_RATE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get elevationScanRate => ELEVATION_SCAN_RATE;
-  double get POWER => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get FREQUENCY => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  List<int>? get RESERVED => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Stable identifier of this sensor. $SEN.ID of the same sensor.
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get sensorId => SENSOR_ID;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get objectId => OBJECT_ID;
+  ///  $SIT.ID of the ground site the sensor is at.
+  String? get SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get siteId => SITE_ID;
+  ///  Stable non-catalogue entity key of the platform, for a platform with neither
+  ///  a catalogue number nor a $SIT.
+  String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get entityId => ENTITY_ID;
+  SensorType get TYPE => SensorType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 29));
+  snrEmissionMode get EMISSION => snrEmissionMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Spectral bands in Hz. One list serves a radar, a multispectral imager and
+  ///  a passive RF receiver. Empty = none stated.
+  List<SNRSpectralBand>? get SPECTRAL_BANDS => const fb.ListReader<SNRSpectralBand>(SNRSpectralBand.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  List<SNRSpectralBand>? get spectralBands => SPECTRAL_BANDS;
+  ///  Field-of-view shape: the same table $SCV analyses use.
+  SCVSensorShapeContract? get FIELD_OF_VIEW => SCVSensorShapeContract.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  SCVSensorShapeContract? get fieldOfView => FIELD_OF_VIEW;
+  ///  Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+  OPPProvenance? get FIELD_OF_VIEW_PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  OPPProvenance? get fieldOfViewProvenance => FIELD_OF_VIEW_PROVENANCE;
+  SNRMounting? get MOUNTING => SNRMounting.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  SNRRfParameters? get RF => SNRRfParameters.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  SNROpticalParameters? get OPTICAL => SNROpticalParameters.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Where the values of this record were read. A published real-world sensor
+  ///  carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+  ///  carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+  ///  for that section.
+  OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
 
   @override
   String toString() {
-    return 'SNR{TYPE: ${TYPE}, MODE: ${MODE}, RESERVED1: ${RESERVED1}, maxRange: ${maxRange}, minRange: ${minRange}, fovAzimuth: ${fovAzimuth}, fovElevation: ${fovElevation}, angularResolution: ${angularResolution}, rangeResolution: ${rangeResolution}, updateRate: ${updateRate}, detectionThreshold: ${detectionThreshold}, azimuthScanRate: ${azimuthScanRate}, elevationScanRate: ${elevationScanRate}, POWER: ${POWER}, FREQUENCY: ${FREQUENCY}, RESERVED: ${RESERVED}}';
+    return 'SNR{sensorId: ${sensorId}, NAME: ${NAME}, noradCatId: ${noradCatId}, objectId: ${objectId}, siteId: ${siteId}, entityId: ${entityId}, TYPE: ${TYPE}, EMISSION: ${EMISSION}, spectralBands: ${spectralBands}, fieldOfView: ${fieldOfView}, fieldOfViewProvenance: ${fieldOfViewProvenance}, MOUNTING: ${MOUNTING}, RF: ${RF}, OPTICAL: ${OPTICAL}, PROVENANCE: ${PROVENANCE}, NOTES: ${NOTES}}';
   }
 }
 
@@ -219,67 +1061,67 @@ class SNRBuilder {
     fbBuilder.startTable(16);
   }
 
-  int addType(int? TYPE) {
-    fbBuilder.addUint8(0, TYPE);
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addMode(int? MODE) {
-    fbBuilder.addUint8(1, MODE);
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addReserved1(int? RESERVED1) {
-    fbBuilder.addUint16(2, RESERVED1);
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(2, NORAD_CAT_ID);
     return fbBuilder.offset;
   }
-  int addMaxRange(double? MAX_RANGE) {
-    fbBuilder.addFloat64(3, MAX_RANGE);
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addMinRange(double? MIN_RANGE) {
-    fbBuilder.addFloat64(4, MIN_RANGE);
+  int addSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addFovAzimuth(double? FOV_AZIMUTH) {
-    fbBuilder.addFloat32(5, FOV_AZIMUTH);
+  int addEntityIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addFovElevation(double? FOV_ELEVATION) {
-    fbBuilder.addFloat32(6, FOV_ELEVATION);
+  int addType(SensorType? TYPE) {
+    fbBuilder.addInt8(6, TYPE?.value);
     return fbBuilder.offset;
   }
-  int addAngularResolution(double? ANGULAR_RESOLUTION) {
-    fbBuilder.addFloat32(7, ANGULAR_RESOLUTION);
+  int addEmission(snrEmissionMode? EMISSION) {
+    fbBuilder.addInt8(7, EMISSION?.value);
     return fbBuilder.offset;
   }
-  int addRangeResolution(double? RANGE_RESOLUTION) {
-    fbBuilder.addFloat32(8, RANGE_RESOLUTION);
+  int addSpectralBandsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addUpdateRate(double? UPDATE_RATE) {
-    fbBuilder.addFloat32(9, UPDATE_RATE);
+  int addFieldOfViewOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addDetectionThreshold(double? DETECTION_THRESHOLD) {
-    fbBuilder.addFloat32(10, DETECTION_THRESHOLD);
+  int addFieldOfViewProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addAzimuthScanRate(double? AZIMUTH_SCAN_RATE) {
-    fbBuilder.addFloat32(11, AZIMUTH_SCAN_RATE);
+  int addMountingOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addElevationScanRate(double? ELEVATION_SCAN_RATE) {
-    fbBuilder.addFloat32(12, ELEVATION_SCAN_RATE);
+  int addRfOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addPower(double? POWER) {
-    fbBuilder.addFloat32(13, POWER);
+  int addOpticalOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addFrequency(double? FREQUENCY) {
-    fbBuilder.addFloat32(14, FREQUENCY);
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
-  int addReservedOffset(int? offset) {
+  int addNotesOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
@@ -290,90 +1132,106 @@ class SNRBuilder {
 }
 
 class SNRObjectBuilder extends fb.ObjectBuilder {
-  final int? _TYPE;
-  final int? _MODE;
-  final int? _RESERVED1;
-  final double? _MAX_RANGE;
-  final double? _MIN_RANGE;
-  final double? _FOV_AZIMUTH;
-  final double? _FOV_ELEVATION;
-  final double? _ANGULAR_RESOLUTION;
-  final double? _RANGE_RESOLUTION;
-  final double? _UPDATE_RATE;
-  final double? _DETECTION_THRESHOLD;
-  final double? _AZIMUTH_SCAN_RATE;
-  final double? _ELEVATION_SCAN_RATE;
-  final double? _POWER;
-  final double? _FREQUENCY;
-  final List<int>? _RESERVED;
+  final String? _SENSOR_ID;
+  final String? _NAME;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final String? _SITE_ID;
+  final String? _ENTITY_ID;
+  final SensorType? _TYPE;
+  final snrEmissionMode? _EMISSION;
+  final List<SNRSpectralBandObjectBuilder>? _SPECTRAL_BANDS;
+  final SCVSensorShapeContractObjectBuilder? _FIELD_OF_VIEW;
+  final OPPProvenanceObjectBuilder? _FIELD_OF_VIEW_PROVENANCE;
+  final SNRMountingObjectBuilder? _MOUNTING;
+  final SNRRfParametersObjectBuilder? _RF;
+  final SNROpticalParametersObjectBuilder? _OPTICAL;
+  final OPPProvenanceObjectBuilder? _PROVENANCE;
+  final String? _NOTES;
 
   SNRObjectBuilder({
-    int? TYPE,
-    int? MODE,
-    int? RESERVED1,
-    double? MAX_RANGE,
-    double? maxRange,
-    double? MIN_RANGE,
-    double? minRange,
-    double? FOV_AZIMUTH,
-    double? fovAzimuth,
-    double? FOV_ELEVATION,
-    double? fovElevation,
-    double? ANGULAR_RESOLUTION,
-    double? angularResolution,
-    double? RANGE_RESOLUTION,
-    double? rangeResolution,
-    double? UPDATE_RATE,
-    double? updateRate,
-    double? DETECTION_THRESHOLD,
-    double? detectionThreshold,
-    double? AZIMUTH_SCAN_RATE,
-    double? azimuthScanRate,
-    double? ELEVATION_SCAN_RATE,
-    double? elevationScanRate,
-    double? POWER,
-    double? FREQUENCY,
-    List<int>? RESERVED,
+    String? SENSOR_ID,
+    String? sensorId,
+    String? NAME,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? SITE_ID,
+    String? siteId,
+    String? ENTITY_ID,
+    String? entityId,
+    SensorType? TYPE,
+    snrEmissionMode? EMISSION,
+    List<SNRSpectralBandObjectBuilder>? SPECTRAL_BANDS,
+    List<SNRSpectralBandObjectBuilder>? spectralBands,
+    SCVSensorShapeContractObjectBuilder? FIELD_OF_VIEW,
+    SCVSensorShapeContractObjectBuilder? fieldOfView,
+    OPPProvenanceObjectBuilder? FIELD_OF_VIEW_PROVENANCE,
+    OPPProvenanceObjectBuilder? fieldOfViewProvenance,
+    SNRMountingObjectBuilder? MOUNTING,
+    SNRRfParametersObjectBuilder? RF,
+    SNROpticalParametersObjectBuilder? OPTICAL,
+    OPPProvenanceObjectBuilder? PROVENANCE,
+    String? NOTES,
   })
-      : _TYPE = TYPE,
-        _MODE = MODE,
-        _RESERVED1 = RESERVED1,
-        _MAX_RANGE = maxRange ?? MAX_RANGE,
-        _MIN_RANGE = minRange ?? MIN_RANGE,
-        _FOV_AZIMUTH = fovAzimuth ?? FOV_AZIMUTH,
-        _FOV_ELEVATION = fovElevation ?? FOV_ELEVATION,
-        _ANGULAR_RESOLUTION = angularResolution ?? ANGULAR_RESOLUTION,
-        _RANGE_RESOLUTION = rangeResolution ?? RANGE_RESOLUTION,
-        _UPDATE_RATE = updateRate ?? UPDATE_RATE,
-        _DETECTION_THRESHOLD = detectionThreshold ?? DETECTION_THRESHOLD,
-        _AZIMUTH_SCAN_RATE = azimuthScanRate ?? AZIMUTH_SCAN_RATE,
-        _ELEVATION_SCAN_RATE = elevationScanRate ?? ELEVATION_SCAN_RATE,
-        _POWER = POWER,
-        _FREQUENCY = FREQUENCY,
-        _RESERVED = RESERVED;
+      : _SENSOR_ID = sensorId ?? SENSOR_ID,
+        _NAME = NAME,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _SITE_ID = siteId ?? SITE_ID,
+        _ENTITY_ID = entityId ?? ENTITY_ID,
+        _TYPE = TYPE,
+        _EMISSION = EMISSION,
+        _SPECTRAL_BANDS = spectralBands ?? SPECTRAL_BANDS,
+        _FIELD_OF_VIEW = fieldOfView ?? FIELD_OF_VIEW,
+        _FIELD_OF_VIEW_PROVENANCE = fieldOfViewProvenance ?? FIELD_OF_VIEW_PROVENANCE,
+        _MOUNTING = MOUNTING,
+        _RF = RF,
+        _OPTICAL = OPTICAL,
+        _PROVENANCE = PROVENANCE,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? RESERVEDOffset = _RESERVED == null ? null
-        : fbBuilder.writeListUint8(_RESERVED!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? SITE_IDOffset = _SITE_ID == null ? null
+        : fbBuilder.writeString(_SITE_ID!);
+    final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
+        : fbBuilder.writeString(_ENTITY_ID!);
+    final int? SPECTRAL_BANDSOffset = _SPECTRAL_BANDS == null ? null
+        : fbBuilder.writeList(_SPECTRAL_BANDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? FIELD_OF_VIEWOffset = _FIELD_OF_VIEW?.getOrCreateOffset(fbBuilder);
+    final int? FIELD_OF_VIEW_PROVENANCEOffset = _FIELD_OF_VIEW_PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? MOUNTINGOffset = _MOUNTING?.getOrCreateOffset(fbBuilder);
+    final int? RFOffset = _RF?.getOrCreateOffset(fbBuilder);
+    final int? OPTICALOffset = _OPTICAL?.getOrCreateOffset(fbBuilder);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
     fbBuilder.startTable(16);
-    fbBuilder.addUint8(0, _TYPE);
-    fbBuilder.addUint8(1, _MODE);
-    fbBuilder.addUint16(2, _RESERVED1);
-    fbBuilder.addFloat64(3, _MAX_RANGE);
-    fbBuilder.addFloat64(4, _MIN_RANGE);
-    fbBuilder.addFloat32(5, _FOV_AZIMUTH);
-    fbBuilder.addFloat32(6, _FOV_ELEVATION);
-    fbBuilder.addFloat32(7, _ANGULAR_RESOLUTION);
-    fbBuilder.addFloat32(8, _RANGE_RESOLUTION);
-    fbBuilder.addFloat32(9, _UPDATE_RATE);
-    fbBuilder.addFloat32(10, _DETECTION_THRESHOLD);
-    fbBuilder.addFloat32(11, _AZIMUTH_SCAN_RATE);
-    fbBuilder.addFloat32(12, _ELEVATION_SCAN_RATE);
-    fbBuilder.addFloat32(13, _POWER);
-    fbBuilder.addFloat32(14, _FREQUENCY);
-    fbBuilder.addOffset(15, RESERVEDOffset);
+    fbBuilder.addOffset(0, SENSOR_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addUint32(2, _NORAD_CAT_ID);
+    fbBuilder.addOffset(3, OBJECT_IDOffset);
+    fbBuilder.addOffset(4, SITE_IDOffset);
+    fbBuilder.addOffset(5, ENTITY_IDOffset);
+    fbBuilder.addInt8(6, _TYPE?.value);
+    fbBuilder.addInt8(7, _EMISSION?.value);
+    fbBuilder.addOffset(8, SPECTRAL_BANDSOffset);
+    fbBuilder.addOffset(9, FIELD_OF_VIEWOffset);
+    fbBuilder.addOffset(10, FIELD_OF_VIEW_PROVENANCEOffset);
+    fbBuilder.addOffset(11, MOUNTINGOffset);
+    fbBuilder.addOffset(12, RFOffset);
+    fbBuilder.addOffset(13, OPTICALOffset);
+    fbBuilder.addOffset(14, PROVENANCEOffset);
+    fbBuilder.addOffset(15, NOTESOffset);
     return fbBuilder.endTable();
   }
 

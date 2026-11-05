@@ -6,7 +6,16 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Sensor Systems
+# Sensor definition: the sensor a platform carries. One record is one sensor.
+#
+# UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+# is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+# string, table or vector is absent. A value is never invented, never zero as a
+# placeholder, never copied from another sensor. Hz is the only frequency unit.
+# Display colors are viewer preferences and never travel in this record.
+#
+# Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+# SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 class SNR(object):
     __slots__ = ['_tab']
 
@@ -29,137 +38,173 @@ class SNR(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Stable identifier of this sensor. $SEN.ID of the same sensor.
     # SNR
-    def TYPE(self):
+    def SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # SNR
-    def MODE(self):
+    def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
     # SNR
-    def RESERVED1(self):
+    def NORAD_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
     # SNR
-    def MAX_RANGE(self):
+    def OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # $SIT.ID of the ground site the sensor is at.
     # SNR
-    def MIN_RANGE(self):
+    def SITE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Stable non-catalogue entity key of the platform, for a platform with neither
+    # a catalogue number nor a $SIT.
     # SNR
-    def FOV_AZIMUTH(self):
+    def ENTITY_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # SNR
-    def FOV_ELEVATION(self):
+    def TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 29
 
     # SNR
-    def ANGULAR_RESOLUTION(self):
+    def EMISSION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Spectral bands in Hz. One list serves a radar, a multispectral imager and
+    # a passive RF receiver. Empty = none stated.
     # SNR
-    def RANGE_RESOLUTION(self):
+    def SPECTRAL_BANDS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SNRSpectralBand import SNRSpectralBand
+            obj = SNRSpectralBand()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # SNR
-    def UPDATE_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def DETECTION_THRESHOLD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def AZIMUTH_SCAN_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def ELEVATION_SCAN_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def POWER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def FREQUENCY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SNR
-    def RESERVED(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
-        return 0
-
-    # SNR
-    def RESERVEDAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
-        return 0
-
-    # SNR
-    def RESERVEDLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+    def SPECTRAL_BANDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SNR
-    def RESERVEDIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+    def SPECTRAL_BANDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
+
+    # Field-of-view shape: the same table $SCV analyses use.
+    # SNR
+    def FIELD_OF_VIEW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVSensorShapeContract import SCVSensorShapeContract
+            obj = SCVSensorShapeContract()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+    # SNR
+    def FIELD_OF_VIEW_PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OPPProvenance import OPPProvenance
+            obj = OPPProvenance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SNR
+    def MOUNTING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SNRMounting import SNRMounting
+            obj = SNRMounting()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SNR
+    def RF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SNRRfParameters import SNRRfParameters
+            obj = SNRRfParameters()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SNR
+    def OPTICAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SNROpticalParameters import SNROpticalParameters
+            obj = SNROpticalParameters()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Where the values of this record were read. A published real-world sensor
+    # carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+    # carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+    # for that section.
+    # SNR
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OPPProvenance import OPPProvenance
+            obj = OPPProvenance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SNR
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
 def SNRStart(builder):
     builder.StartObject(16)
@@ -167,117 +212,113 @@ def SNRStart(builder):
 def Start(builder):
     SNRStart(builder)
 
+def SNRAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    SNRAddSENSOR_ID(builder, SENSOR_ID)
+
+def SNRAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    SNRAddNAME(builder, NAME)
+
+def SNRAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    SNRAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def SNRAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
+def AddOBJECT_ID(builder, OBJECT_ID):
+    SNRAddOBJECT_ID(builder, OBJECT_ID)
+
+def SNRAddSITE_ID(builder, SITE_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SITE_ID), 0)
+
+def AddSITE_ID(builder, SITE_ID):
+    SNRAddSITE_ID(builder, SITE_ID)
+
+def SNRAddENTITY_ID(builder, ENTITY_ID):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_ID), 0)
+
+def AddENTITY_ID(builder, ENTITY_ID):
+    SNRAddENTITY_ID(builder, ENTITY_ID)
+
 def SNRAddTYPE(builder, TYPE):
-    builder.PrependUint8Slot(0, TYPE, 0)
+    builder.PrependInt8Slot(6, TYPE, 29)
 
 def AddTYPE(builder, TYPE):
     SNRAddTYPE(builder, TYPE)
 
-def SNRAddMODE(builder, MODE):
-    builder.PrependUint8Slot(1, MODE, 0)
+def SNRAddEMISSION(builder, EMISSION):
+    builder.PrependInt8Slot(7, EMISSION, 0)
 
-def AddMODE(builder, MODE):
-    SNRAddMODE(builder, MODE)
+def AddEMISSION(builder, EMISSION):
+    SNRAddEMISSION(builder, EMISSION)
 
-def SNRAddRESERVED1(builder, RESERVED1):
-    builder.PrependUint16Slot(2, RESERVED1, 0)
+def SNRAddSPECTRAL_BANDS(builder, SPECTRAL_BANDS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_BANDS), 0)
 
-def AddRESERVED1(builder, RESERVED1):
-    SNRAddRESERVED1(builder, RESERVED1)
+def AddSPECTRAL_BANDS(builder, SPECTRAL_BANDS):
+    SNRAddSPECTRAL_BANDS(builder, SPECTRAL_BANDS)
 
-def SNRAddMAX_RANGE(builder, MAX_RANGE):
-    builder.PrependFloat64Slot(3, MAX_RANGE, 0.0)
+def SNRStartSPECTRAL_BANDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
 
-def AddMAX_RANGE(builder, MAX_RANGE):
-    SNRAddMAX_RANGE(builder, MAX_RANGE)
+def StartSPECTRAL_BANDSVector(builder, numElems):
+    return SNRStartSPECTRAL_BANDSVector(builder, numElems)
 
-def SNRAddMIN_RANGE(builder, MIN_RANGE):
-    builder.PrependFloat64Slot(4, MIN_RANGE, 0.0)
+def SNRCreateSPECTRAL_BANDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
 
-def AddMIN_RANGE(builder, MIN_RANGE):
-    SNRAddMIN_RANGE(builder, MIN_RANGE)
+def CreateSPECTRAL_BANDSVector(builder, data):
+    return SNRCreateSPECTRAL_BANDSVector(builder, data)
 
-def SNRAddFOV_AZIMUTH(builder, FOV_AZIMUTH):
-    builder.PrependFloat32Slot(5, FOV_AZIMUTH, 0.0)
+def SNRAddFIELD_OF_VIEW(builder, FIELD_OF_VIEW):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(FIELD_OF_VIEW), 0)
 
-def AddFOV_AZIMUTH(builder, FOV_AZIMUTH):
-    SNRAddFOV_AZIMUTH(builder, FOV_AZIMUTH)
+def AddFIELD_OF_VIEW(builder, FIELD_OF_VIEW):
+    SNRAddFIELD_OF_VIEW(builder, FIELD_OF_VIEW)
 
-def SNRAddFOV_ELEVATION(builder, FOV_ELEVATION):
-    builder.PrependFloat32Slot(6, FOV_ELEVATION, 0.0)
+def SNRAddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(FIELD_OF_VIEW_PROVENANCE), 0)
 
-def AddFOV_ELEVATION(builder, FOV_ELEVATION):
-    SNRAddFOV_ELEVATION(builder, FOV_ELEVATION)
+def AddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCE):
+    SNRAddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCE)
 
-def SNRAddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION):
-    builder.PrependFloat32Slot(7, ANGULAR_RESOLUTION, 0.0)
+def SNRAddMOUNTING(builder, MOUNTING):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MOUNTING), 0)
 
-def AddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION):
-    SNRAddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION)
+def AddMOUNTING(builder, MOUNTING):
+    SNRAddMOUNTING(builder, MOUNTING)
 
-def SNRAddRANGE_RESOLUTION(builder, RANGE_RESOLUTION):
-    builder.PrependFloat32Slot(8, RANGE_RESOLUTION, 0.0)
+def SNRAddRF(builder, RF):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RF), 0)
 
-def AddRANGE_RESOLUTION(builder, RANGE_RESOLUTION):
-    SNRAddRANGE_RESOLUTION(builder, RANGE_RESOLUTION)
+def AddRF(builder, RF):
+    SNRAddRF(builder, RF)
 
-def SNRAddUPDATE_RATE(builder, UPDATE_RATE):
-    builder.PrependFloat32Slot(9, UPDATE_RATE, 0.0)
+def SNRAddOPTICAL(builder, OPTICAL):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(OPTICAL), 0)
 
-def AddUPDATE_RATE(builder, UPDATE_RATE):
-    SNRAddUPDATE_RATE(builder, UPDATE_RATE)
+def AddOPTICAL(builder, OPTICAL):
+    SNRAddOPTICAL(builder, OPTICAL)
 
-def SNRAddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD):
-    builder.PrependFloat32Slot(10, DETECTION_THRESHOLD, 0.0)
+def SNRAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
 
-def AddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD):
-    SNRAddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD)
+def AddPROVENANCE(builder, PROVENANCE):
+    SNRAddPROVENANCE(builder, PROVENANCE)
 
-def SNRAddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE):
-    builder.PrependFloat32Slot(11, AZIMUTH_SCAN_RATE, 0.0)
+def SNRAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
 
-def AddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE):
-    SNRAddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE)
-
-def SNRAddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE):
-    builder.PrependFloat32Slot(12, ELEVATION_SCAN_RATE, 0.0)
-
-def AddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE):
-    SNRAddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE)
-
-def SNRAddPOWER(builder, POWER):
-    builder.PrependFloat32Slot(13, POWER, 0.0)
-
-def AddPOWER(builder, POWER):
-    SNRAddPOWER(builder, POWER)
-
-def SNRAddFREQUENCY(builder, FREQUENCY):
-    builder.PrependFloat32Slot(14, FREQUENCY, 0.0)
-
-def AddFREQUENCY(builder, FREQUENCY):
-    SNRAddFREQUENCY(builder, FREQUENCY)
-
-def SNRAddRESERVED(builder, RESERVED):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(RESERVED), 0)
-
-def AddRESERVED(builder, RESERVED):
-    SNRAddRESERVED(builder, RESERVED)
-
-def SNRStartRESERVEDVector(builder, numElems):
-    return builder.StartVector(1, numElems, 1)
-
-def StartRESERVEDVector(builder, numElems):
-    return SNRStartRESERVEDVector(builder, numElems)
-
-def SNRCreateRESERVEDVector(builder, data):
-    data = list(data)
-    builder.StartVector(1, len(data), 1)
-    for item in reversed(data):
-        builder.PrependUint8(item)
-    return builder.EndVector()
-
-def CreateRESERVEDVector(builder, data):
-    return SNRCreateRESERVEDVector(builder, data)
+def AddNOTES(builder, NOTES):
+    SNRAddNOTES(builder, NOTES)
 
 def SNREnd(builder):
     return builder.EndObject()
@@ -285,8 +326,14 @@ def SNREnd(builder):
 def End(builder):
     return SNREnd(builder)
 
+import OPPProvenance
+import SCVSensorShapeContract
+import SNRMounting
+import SNROpticalParameters
+import SNRRfParameters
+import SNRSpectralBand
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -295,39 +342,39 @@ class SNRT(object):
     # SNRT
     def __init__(
         self,
-        TYPE = 0,
-        MODE = 0,
-        RESERVED1 = 0,
-        MAX_RANGE = 0.0,
-        MIN_RANGE = 0.0,
-        FOV_AZIMUTH = 0.0,
-        FOV_ELEVATION = 0.0,
-        ANGULAR_RESOLUTION = 0.0,
-        RANGE_RESOLUTION = 0.0,
-        UPDATE_RATE = 0.0,
-        DETECTION_THRESHOLD = 0.0,
-        AZIMUTH_SCAN_RATE = 0.0,
-        ELEVATION_SCAN_RATE = 0.0,
-        POWER = 0.0,
-        FREQUENCY = 0.0,
-        RESERVED = None,
+        SENSOR_ID = None,
+        NAME = None,
+        NORAD_CAT_ID = 0,
+        OBJECT_ID = None,
+        SITE_ID = None,
+        ENTITY_ID = None,
+        TYPE = 29,
+        EMISSION = 0,
+        SPECTRAL_BANDS = None,
+        FIELD_OF_VIEW = None,
+        FIELD_OF_VIEW_PROVENANCE = None,
+        MOUNTING = None,
+        RF = None,
+        OPTICAL = None,
+        PROVENANCE = None,
+        NOTES = None,
     ):
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.SITE_ID = SITE_ID  # type: Optional[str]
+        self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
         self.TYPE = TYPE  # type: int
-        self.MODE = MODE  # type: int
-        self.RESERVED1 = RESERVED1  # type: int
-        self.MAX_RANGE = MAX_RANGE  # type: float
-        self.MIN_RANGE = MIN_RANGE  # type: float
-        self.FOV_AZIMUTH = FOV_AZIMUTH  # type: float
-        self.FOV_ELEVATION = FOV_ELEVATION  # type: float
-        self.ANGULAR_RESOLUTION = ANGULAR_RESOLUTION  # type: float
-        self.RANGE_RESOLUTION = RANGE_RESOLUTION  # type: float
-        self.UPDATE_RATE = UPDATE_RATE  # type: float
-        self.DETECTION_THRESHOLD = DETECTION_THRESHOLD  # type: float
-        self.AZIMUTH_SCAN_RATE = AZIMUTH_SCAN_RATE  # type: float
-        self.ELEVATION_SCAN_RATE = ELEVATION_SCAN_RATE  # type: float
-        self.POWER = POWER  # type: float
-        self.FREQUENCY = FREQUENCY  # type: float
-        self.RESERVED = RESERVED  # type: Optional[List[int]]
+        self.EMISSION = EMISSION  # type: int
+        self.SPECTRAL_BANDS = SPECTRAL_BANDS  # type: Optional[List[SNRSpectralBand.SNRSpectralBandT]]
+        self.FIELD_OF_VIEW = FIELD_OF_VIEW  # type: Optional[SCVSensorShapeContract.SCVSensorShapeContractT]
+        self.FIELD_OF_VIEW_PROVENANCE = FIELD_OF_VIEW_PROVENANCE  # type: Optional[OPPProvenance.OPPProvenanceT]
+        self.MOUNTING = MOUNTING  # type: Optional[SNRMounting.SNRMountingT]
+        self.RF = RF  # type: Optional[SNRRfParameters.SNRRfParametersT]
+        self.OPTICAL = OPTICAL  # type: Optional[SNROpticalParameters.SNROpticalParametersT]
+        self.PROVENANCE = PROVENANCE  # type: Optional[OPPProvenance.OPPProvenanceT]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -350,56 +397,99 @@ class SNRT(object):
     def _UnPack(self, SNR):
         if SNR is None:
             return
+        self.SENSOR_ID = SNR.SENSOR_ID()
+        self.NAME = SNR.NAME()
+        self.NORAD_CAT_ID = SNR.NORAD_CAT_ID()
+        self.OBJECT_ID = SNR.OBJECT_ID()
+        self.SITE_ID = SNR.SITE_ID()
+        self.ENTITY_ID = SNR.ENTITY_ID()
         self.TYPE = SNR.TYPE()
-        self.MODE = SNR.MODE()
-        self.RESERVED1 = SNR.RESERVED1()
-        self.MAX_RANGE = SNR.MAX_RANGE()
-        self.MIN_RANGE = SNR.MIN_RANGE()
-        self.FOV_AZIMUTH = SNR.FOV_AZIMUTH()
-        self.FOV_ELEVATION = SNR.FOV_ELEVATION()
-        self.ANGULAR_RESOLUTION = SNR.ANGULAR_RESOLUTION()
-        self.RANGE_RESOLUTION = SNR.RANGE_RESOLUTION()
-        self.UPDATE_RATE = SNR.UPDATE_RATE()
-        self.DETECTION_THRESHOLD = SNR.DETECTION_THRESHOLD()
-        self.AZIMUTH_SCAN_RATE = SNR.AZIMUTH_SCAN_RATE()
-        self.ELEVATION_SCAN_RATE = SNR.ELEVATION_SCAN_RATE()
-        self.POWER = SNR.POWER()
-        self.FREQUENCY = SNR.FREQUENCY()
-        if not SNR.RESERVEDIsNone():
-            if np is None:
-                self.RESERVED = []
-                for i in range(SNR.RESERVEDLength()):
-                    self.RESERVED.append(SNR.RESERVED(i))
-            else:
-                self.RESERVED = SNR.RESERVEDAsNumpy()
+        self.EMISSION = SNR.EMISSION()
+        if not SNR.SPECTRAL_BANDSIsNone():
+            self.SPECTRAL_BANDS = []
+            for i in range(SNR.SPECTRAL_BANDSLength()):
+                if SNR.SPECTRAL_BANDS(i) is None:
+                    self.SPECTRAL_BANDS.append(None)
+                else:
+                    sNRSpectralBand_ = SNRSpectralBand.SNRSpectralBandT.InitFromObj(SNR.SPECTRAL_BANDS(i))
+                    self.SPECTRAL_BANDS.append(sNRSpectralBand_)
+        if SNR.FIELD_OF_VIEW() is not None:
+            self.FIELD_OF_VIEW = SCVSensorShapeContract.SCVSensorShapeContractT.InitFromObj(SNR.FIELD_OF_VIEW())
+        if SNR.FIELD_OF_VIEW_PROVENANCE() is not None:
+            self.FIELD_OF_VIEW_PROVENANCE = OPPProvenance.OPPProvenanceT.InitFromObj(SNR.FIELD_OF_VIEW_PROVENANCE())
+        if SNR.MOUNTING() is not None:
+            self.MOUNTING = SNRMounting.SNRMountingT.InitFromObj(SNR.MOUNTING())
+        if SNR.RF() is not None:
+            self.RF = SNRRfParameters.SNRRfParametersT.InitFromObj(SNR.RF())
+        if SNR.OPTICAL() is not None:
+            self.OPTICAL = SNROpticalParameters.SNROpticalParametersT.InitFromObj(SNR.OPTICAL())
+        if SNR.PROVENANCE() is not None:
+            self.PROVENANCE = OPPProvenance.OPPProvenanceT.InitFromObj(SNR.PROVENANCE())
+        self.NOTES = SNR.NOTES()
 
     # SNRT
     def Pack(self, builder):
-        if self.RESERVED is not None:
-            if np is not None and type(self.RESERVED) is np.ndarray:
-                RESERVED = builder.CreateNumpyVector(self.RESERVED)
-            else:
-                SNRStartRESERVEDVector(builder, len(self.RESERVED))
-                for i in reversed(range(len(self.RESERVED))):
-                    builder.PrependUint8(self.RESERVED[i])
-                RESERVED = builder.EndVector()
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.OBJECT_ID is not None:
+            OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.SITE_ID is not None:
+            SITE_ID = builder.CreateString(self.SITE_ID)
+        if self.ENTITY_ID is not None:
+            ENTITY_ID = builder.CreateString(self.ENTITY_ID)
+        if self.SPECTRAL_BANDS is not None:
+            SPECTRAL_BANDSlist = []
+            for i in range(len(self.SPECTRAL_BANDS)):
+                SPECTRAL_BANDSlist.append(self.SPECTRAL_BANDS[i].Pack(builder))
+            SNRStartSPECTRAL_BANDSVector(builder, len(self.SPECTRAL_BANDS))
+            for i in reversed(range(len(self.SPECTRAL_BANDS))):
+                builder.PrependUOffsetTRelative(SPECTRAL_BANDSlist[i])
+            SPECTRAL_BANDS = builder.EndVector()
+        if self.FIELD_OF_VIEW is not None:
+            FIELD_OF_VIEW = self.FIELD_OF_VIEW.Pack(builder)
+        if self.FIELD_OF_VIEW_PROVENANCE is not None:
+            FIELD_OF_VIEW_PROVENANCE = self.FIELD_OF_VIEW_PROVENANCE.Pack(builder)
+        if self.MOUNTING is not None:
+            MOUNTING = self.MOUNTING.Pack(builder)
+        if self.RF is not None:
+            RF = self.RF.Pack(builder)
+        if self.OPTICAL is not None:
+            OPTICAL = self.OPTICAL.Pack(builder)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         SNRStart(builder)
+        if self.SENSOR_ID is not None:
+            SNRAddSENSOR_ID(builder, SENSOR_ID)
+        if self.NAME is not None:
+            SNRAddNAME(builder, NAME)
+        SNRAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        if self.OBJECT_ID is not None:
+            SNRAddOBJECT_ID(builder, OBJECT_ID)
+        if self.SITE_ID is not None:
+            SNRAddSITE_ID(builder, SITE_ID)
+        if self.ENTITY_ID is not None:
+            SNRAddENTITY_ID(builder, ENTITY_ID)
         SNRAddTYPE(builder, self.TYPE)
-        SNRAddMODE(builder, self.MODE)
-        SNRAddRESERVED1(builder, self.RESERVED1)
-        SNRAddMAX_RANGE(builder, self.MAX_RANGE)
-        SNRAddMIN_RANGE(builder, self.MIN_RANGE)
-        SNRAddFOV_AZIMUTH(builder, self.FOV_AZIMUTH)
-        SNRAddFOV_ELEVATION(builder, self.FOV_ELEVATION)
-        SNRAddANGULAR_RESOLUTION(builder, self.ANGULAR_RESOLUTION)
-        SNRAddRANGE_RESOLUTION(builder, self.RANGE_RESOLUTION)
-        SNRAddUPDATE_RATE(builder, self.UPDATE_RATE)
-        SNRAddDETECTION_THRESHOLD(builder, self.DETECTION_THRESHOLD)
-        SNRAddAZIMUTH_SCAN_RATE(builder, self.AZIMUTH_SCAN_RATE)
-        SNRAddELEVATION_SCAN_RATE(builder, self.ELEVATION_SCAN_RATE)
-        SNRAddPOWER(builder, self.POWER)
-        SNRAddFREQUENCY(builder, self.FREQUENCY)
-        if self.RESERVED is not None:
-            SNRAddRESERVED(builder, RESERVED)
+        SNRAddEMISSION(builder, self.EMISSION)
+        if self.SPECTRAL_BANDS is not None:
+            SNRAddSPECTRAL_BANDS(builder, SPECTRAL_BANDS)
+        if self.FIELD_OF_VIEW is not None:
+            SNRAddFIELD_OF_VIEW(builder, FIELD_OF_VIEW)
+        if self.FIELD_OF_VIEW_PROVENANCE is not None:
+            SNRAddFIELD_OF_VIEW_PROVENANCE(builder, FIELD_OF_VIEW_PROVENANCE)
+        if self.MOUNTING is not None:
+            SNRAddMOUNTING(builder, MOUNTING)
+        if self.RF is not None:
+            SNRAddRF(builder, RF)
+        if self.OPTICAL is not None:
+            SNRAddOPTICAL(builder, OPTICAL)
+        if self.PROVENANCE is not None:
+            SNRAddPROVENANCE(builder, PROVENANCE)
+        if self.NOTES is not None:
+            SNRAddNOTES(builder, NOTES)
         SNR = SNREnd(builder)
         return SNR

@@ -6,6 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
 type SCVSensorShapeContract struct {
 	_tab flatbuffers.Table
 }
@@ -372,8 +375,43 @@ func (rcv *SCVSensorShapeContract) MutatePolygonFrame(n scvCoordinateFrame) bool
 	return rcv.MutatePOLYGON_FRAME(n)
 }
 
+/// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+/// Clips the shape: a direction below the mask is outside the field of view.
+func (rcv *SCVSensorShapeContract) AZ_EL_MASK(obj *SCVAzElMaskPoint, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SCVAzElMaskPoint)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SCVSensorShapeContract) AzElMask(obj *SCVAzElMaskPoint, j int) bool {
+	return rcv.AZ_EL_MASK(obj, j)
+}
+
+func (rcv *SCVSensorShapeContract) AZ_EL_MASKLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SCVSensorShapeContract) AzElMaskLength() int {
+	return rcv.AZ_EL_MASKLength()
+}
+
+/// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+/// Clips the shape: a direction below the mask is outside the field of view.
 func SCVSensorShapeContractStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func SCVSensorShapeContractAddSHAPE_KIND(builder *flatbuffers.Builder, SHAPE_KIND scvSensorShapeKind) {
 	builder.PrependByteSlot(0, byte(SHAPE_KIND), 0)
@@ -476,6 +514,18 @@ func SCVSensorShapeContractAddPOLYGON_FRAME(builder *flatbuffers.Builder, POLYGO
 }
 func SCVSensorShapeContractAddPolygonFrame(builder *flatbuffers.Builder, POLYGON_FRAME scvCoordinateFrame) {
 	SCVSensorShapeContractAddPOLYGON_FRAME(builder, POLYGON_FRAME)
+}
+func SCVSensorShapeContractAddAZ_EL_MASK(builder *flatbuffers.Builder, AZ_EL_MASK flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(AZ_EL_MASK), 0)
+}
+func SCVSensorShapeContractAddAzElMask(builder *flatbuffers.Builder, AZ_EL_MASK flatbuffers.UOffsetT) {
+	SCVSensorShapeContractAddAZ_EL_MASK(builder, AZ_EL_MASK)
+}
+func SCVSensorShapeContractStartAZ_EL_MASKVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SCVSensorShapeContractStartAzElMaskVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCVSensorShapeContractStartAZ_EL_MASKVector(builder, numElems)
 }
 func SCVSensorShapeContractEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

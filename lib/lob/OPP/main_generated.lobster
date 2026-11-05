@@ -23,6 +23,9 @@ enum oppDeterminationMethod:
     /// Taken from the bus design or from a sibling object in the same family
     /// because no per-object value exists. Always an approximation.
     oppDeterminationMethod_INFERRED_FROM_FAMILY = 6
+    /// Entered by a user for a sensor or object they define; no source publishes
+    /// it. Appended 1.278.0.
+    oppDeterminationMethod_USER_DEFINED = 7
 
 /// Aspect convention a radar cross-section value was reported under. Append new
 /// values only; never reorder or reuse existing values.

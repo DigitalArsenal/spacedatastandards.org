@@ -1,9 +1,15 @@
 import * as flatbuffers from 'flatbuffers';
+import { SCVAzElMaskPoint, SCVAzElMaskPointT } from './SCVAzElMaskPoint.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorAxisConvention } from './scvSensorAxisConvention.js';
 import { scvSensorRangeBoundaryKind } from './scvSensorRangeBoundaryKind.js';
 import { scvSensorShapeKind } from './scvSensorShapeKind.js';
+/**
+ * The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+ * carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+ * definition and an analysis request never describe a shape in two types.
+ */
 export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableObject<SCVSensorShapeContractT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -27,6 +33,12 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     POLYGON_VERTICES(index: number, obj?: SCVVec3): SCVVec3 | null;
     polygonVerticesLength(): number;
     POLYGON_FRAME(): scvCoordinateFrame;
+    /**
+     * Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+     * Clips the shape: a direction below the mask is outside the field of view.
+     */
+    AZ_EL_MASK(index: number, obj?: SCVAzElMaskPoint): SCVAzElMaskPoint | null;
+    azElMaskLength(): number;
     static startSCVSensorShapeContract(builder: flatbuffers.Builder): void;
     static addShapeKind(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind): void;
     static addAxisConvention(builder: flatbuffers.Builder, AXIS_CONVENTION: scvSensorAxisConvention): void;
@@ -46,8 +58,11 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     static createPolygonVerticesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startPolygonVerticesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addPolygonFrame(builder: flatbuffers.Builder, POLYGON_FRAME: scvCoordinateFrame): void;
+    static addAzElMask(builder: flatbuffers.Builder, AZ_EL_MASKOffset: flatbuffers.Offset): void;
+    static createAzElMaskVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startAzElMaskVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSCVSensorShapeContract(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createSCVSensorShapeContract(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind, AXIS_CONVENTION: scvSensorAxisConvention, RANGE_BOUNDARY: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG: number, INNER_HALF_ANGLE_DEG: number, MIN_CLOCK_ANGLE_DEG: number, MAX_CLOCK_ANGLE_DEG: number, X_HALF_ANGLE_DEG: number, Y_HALF_ANGLE_DEG: number, INNER_LOOK_ANGLE_DEG: number, OUTER_LOOK_ANGLE_DEG: number, SAR_SAMPLING_DENSITY: number, MIN_RANGE_M: number, MAX_RANGE_M: number, POLYGON_VERTICESOffset: flatbuffers.Offset, POLYGON_FRAME: scvCoordinateFrame): flatbuffers.Offset;
+    static createSCVSensorShapeContract(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind, AXIS_CONVENTION: scvSensorAxisConvention, RANGE_BOUNDARY: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG: number, INNER_HALF_ANGLE_DEG: number, MIN_CLOCK_ANGLE_DEG: number, MAX_CLOCK_ANGLE_DEG: number, X_HALF_ANGLE_DEG: number, Y_HALF_ANGLE_DEG: number, INNER_LOOK_ANGLE_DEG: number, OUTER_LOOK_ANGLE_DEG: number, SAR_SAMPLING_DENSITY: number, MIN_RANGE_M: number, MAX_RANGE_M: number, POLYGON_VERTICESOffset: flatbuffers.Offset, POLYGON_FRAME: scvCoordinateFrame, AZ_EL_MASKOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SCVSensorShapeContractT;
     unpackTo(_o: SCVSensorShapeContractT): void;
 }
@@ -68,7 +83,8 @@ export declare class SCVSensorShapeContractT implements flatbuffers.IGeneratedOb
     MAX_RANGE_M: number;
     POLYGON_VERTICES: (SCVVec3T)[];
     POLYGON_FRAME: scvCoordinateFrame;
-    constructor(SHAPE_KIND?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame);
+    AZ_EL_MASK: (SCVAzElMaskPointT)[];
+    constructor(SHAPE_KIND?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame, AZ_EL_MASK?: (SCVAzElMaskPointT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVSensorShapeContract.d.ts.map

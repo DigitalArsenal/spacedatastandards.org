@@ -6,6 +6,9 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
 class SCVSensorShapeContract extends Table
 {
     /**
@@ -194,22 +197,43 @@ class SCVSensorShapeContract extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvCoordinateFrame::UNKNOWN;
     }
 
+    /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+    /// Clips the shape: a direction below the mask is outside the field of view.
+    /**
+     * @returnVectorOffset
+     */
+    public function getAZ_EL_MASK($j)
+    {
+        $o = $this->__offset(36);
+        $obj = new SCVAzElMaskPoint();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAZ_EL_MASKLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVSensorShapeContract(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVSensorShapeContract
      */
-    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME)
+    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $AZ_EL_MASK)
     {
-        $builder->startObject(16);
+        $builder->startObject(17);
         self::addSHAPE_KIND($builder, $SHAPE_KIND);
         self::addAXIS_CONVENTION($builder, $AXIS_CONVENTION);
         self::addRANGE_BOUNDARY($builder, $RANGE_BOUNDARY);
@@ -226,6 +250,7 @@ class SCVSensorShapeContract extends Table
         self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
         self::addPOLYGON_VERTICES($builder, $POLYGON_VERTICES);
         self::addPOLYGON_FRAME($builder, $POLYGON_FRAME);
+        self::addAZ_EL_MASK($builder, $AZ_EL_MASK);
         $o = $builder->endObject();
         return $o;
     }
@@ -412,6 +437,40 @@ class SCVSensorShapeContract extends Table
     public static function addPOLYGON_FRAME(FlatBufferBuilder $builder, $POLYGON_FRAME)
     {
         $builder->addByteX(15, $POLYGON_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addAZ_EL_MASK(FlatBufferBuilder $builder, $AZ_EL_MASK)
+    {
+        $builder->addOffsetX(16, $AZ_EL_MASK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createAZ_EL_MASKVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startAZ_EL_MASKVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

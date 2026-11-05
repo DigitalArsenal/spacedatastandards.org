@@ -414,6 +414,56 @@ public struct SCVTimeGrid: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   }
 }
 
+///  One point of an azimuth/elevation mask: the lowest elevation at which the
+///  sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+///  polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+///  point to the first across 360 degrees, linearly interpolated in azimuth.
+public struct SCVAzElMaskPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVAzElMaskPoint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let AZIMUTH_DEG: VOffset = 4
+    static let MIN_ELEVATION_DEG: VOffset = 6
+  }
+
+  ///  Azimuth, degrees clockwise from north, in [0, 360).
+  public var AZIMUTH_DEG: Double { let o = _accessor.offset(VT.AZIMUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+  public var MIN_ELEVATION_DEG: Double { let o = _accessor.offset(VT.MIN_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSCVAzElMaskPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(AZIMUTH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_DEG, def: 0.0, at: VT.AZIMUTH_DEG) }
+  public static func add(MIN_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ELEVATION_DEG, def: 0.0, at: VT.MIN_ELEVATION_DEG) }
+  public static func endSCVAzElMaskPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVAzElMaskPoint(
+    _ fbb: inout FlatBufferBuilder,
+    AZIMUTH_DEG: Double = 0.0,
+    MIN_ELEVATION_DEG: Double = 0.0
+  ) -> Offset {
+    let __start = SCVAzElMaskPoint.startSCVAzElMaskPoint(&fbb)
+    SCVAzElMaskPoint.add(AZIMUTH_DEG: AZIMUTH_DEG, &fbb)
+    SCVAzElMaskPoint.add(MIN_ELEVATION_DEG: MIN_ELEVATION_DEG, &fbb)
+    return SCVAzElMaskPoint.endSCVAzElMaskPoint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.AZIMUTH_DEG, fieldName: "AZIMUTH_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_ELEVATION_DEG, fieldName: "MIN_ELEVATION_DEG", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+///  carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+///  definition and an analysis request never describe a shape in two types.
 public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -442,6 +492,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     static let MAX_RANGE_M: VOffset = 30
     static let POLYGON_VERTICES: VOffset = 32
     static let POLYGON_FRAME: VOffset = 34
+    static let AZ_EL_MASK: VOffset = 36
   }
 
   public var SHAPE_KIND: scvSensorShapeKind { let o = _accessor.offset(VT.SHAPE_KIND); return o == 0 ? .conic : scvSensorShapeKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .conic }
@@ -460,7 +511,10 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var POLYGON_VERTICES: FlatbufferVector<SCVVec3> { return _accessor.vector(at: VT.POLYGON_VERTICES, byteSize: 4) }
   public var POLYGON_FRAME: scvCoordinateFrame { let o = _accessor.offset(VT.POLYGON_FRAME); return o == 0 ? .unknown : scvCoordinateFrame(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unknown }
-  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+  ///  Clips the shape: a direction below the mask is outside the field of view.
+  public var AZ_EL_MASK: FlatbufferVector<SCVAzElMaskPoint> { return _accessor.vector(at: VT.AZ_EL_MASK, byteSize: 4) }
+  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(SHAPE_KIND: scvSensorShapeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE_KIND.rawValue, def: 0, at: VT.SHAPE_KIND) }
   public static func add(AXIS_CONVENTION: scvSensorAxisConvention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_CONVENTION.rawValue, def: 0, at: VT.AXIS_CONVENTION) }
   public static func add(RANGE_BOUNDARY: scvSensorRangeBoundaryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BOUNDARY.rawValue, def: 0, at: VT.RANGE_BOUNDARY) }
@@ -477,6 +531,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
   public static func addVectorOf(POLYGON_VERTICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_VERTICES, at: VT.POLYGON_VERTICES) }
   public static func add(POLYGON_FRAME: scvCoordinateFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYGON_FRAME.rawValue, def: 0, at: VT.POLYGON_FRAME) }
+  public static func addVectorOf(AZ_EL_MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AZ_EL_MASK, at: VT.AZ_EL_MASK) }
   public static func endSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVSensorShapeContract(
     _ fbb: inout FlatBufferBuilder,
@@ -495,7 +550,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     MIN_RANGE_M: Double = 0.0,
     MAX_RANGE_M: Double = 0.0,
     POLYGON_VERTICESVectorOffset POLYGON_VERTICES: Offset = Offset(),
-    POLYGON_FRAME: scvCoordinateFrame = .unknown
+    POLYGON_FRAME: scvCoordinateFrame = .unknown,
+    AZ_EL_MASKVectorOffset AZ_EL_MASK: Offset = Offset()
   ) -> Offset {
     let __start = SCVSensorShapeContract.startSCVSensorShapeContract(&fbb)
     SCVSensorShapeContract.add(SHAPE_KIND: SHAPE_KIND, &fbb)
@@ -514,6 +570,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     SCVSensorShapeContract.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
     SCVSensorShapeContract.addVectorOf(POLYGON_VERTICES: POLYGON_VERTICES, &fbb)
     SCVSensorShapeContract.add(POLYGON_FRAME: POLYGON_FRAME, &fbb)
+    SCVSensorShapeContract.addVectorOf(AZ_EL_MASK: AZ_EL_MASK, &fbb)
     return SCVSensorShapeContract.endSCVSensorShapeContract(&fbb, start: __start)
   }
 
@@ -535,6 +592,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.POLYGON_VERTICES, fieldName: "POLYGON_VERTICES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVVec3>, SCVVec3>>.self)
     try _v.visit(field: VT.POLYGON_FRAME, fieldName: "POLYGON_FRAME", required: false, type: scvCoordinateFrame.self)
+    try _v.visit(field: VT.AZ_EL_MASK, fieldName: "AZ_EL_MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVAzElMaskPoint>, SCVAzElMaskPoint>>.self)
     _v.finish()
   }
 }

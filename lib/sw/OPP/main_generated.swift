@@ -33,8 +33,11 @@ public enum oppDeterminationMethod: Int8, FlatbuffersVectorInitializable, Enum, 
   ///  Taken from the bus design or from a sibling object in the same family
   ///  because no per-object value exists. Always an approximation.
   case inferredFromFamily = 6
+  ///  Entered by a user for a sensor or object they define; no source publishes
+  ///  it. Appended 1.278.0.
+  case userDefined = 7
 
-  public static var max: oppDeterminationMethod { return .inferredFromFamily }
+  public static var max: oppDeterminationMethod { return .userDefined }
   public static var min: oppDeterminationMethod { return .unspecified }
 }
 

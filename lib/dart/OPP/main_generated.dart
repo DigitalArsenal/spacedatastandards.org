@@ -15,7 +15,8 @@ enum oppDeterminationMethod {
   ESTIMATED(3),
   DERIVED(4),
   MODEL_DERIVED(5),
-  INFERRED_FROM_FAMILY(6);
+  INFERRED_FROM_FAMILY(6),
+  USER_DEFINED(7);
 
   final int value;
   const oppDeterminationMethod(this.value);
@@ -29,6 +30,7 @@ enum oppDeterminationMethod {
       case 4: return oppDeterminationMethod.DERIVED;
       case 5: return oppDeterminationMethod.MODEL_DERIVED;
       case 6: return oppDeterminationMethod.INFERRED_FROM_FAMILY;
+      case 7: return oppDeterminationMethod.USER_DEFINED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -37,7 +39,7 @@ enum oppDeterminationMethod {
       value == null ? null : oppDeterminationMethod.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<oppDeterminationMethod> reader = _oppDeterminationMethodReader();
 }
 

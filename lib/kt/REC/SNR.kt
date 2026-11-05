@@ -17,7 +17,16 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Sensor Systems
+ * Sensor definition: the sensor a platform carries. One record is one sensor.
+ *
+ * UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+ * is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+ * string, table or vector is absent. A value is never invented, never zero as a
+ * placeholder, never copied from another sensor. Hz is the only frequency unit.
+ * Display colors are viewer preferences and never travel in this record.
+ *
+ * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+ * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  */
 @Suppress("unused")
 class SNR : Table() {
@@ -29,95 +38,186 @@ class SNR : Table() {
         __init(_i, _bb)
         return this
     }
-    val type : UByte
+    /**
+     * Stable identifier of this sensor. $SEN.ID of the same sensor.
+     */
+    val sensorId : String
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                throw AssertionError("No value for (required) field sensorId")
+            }
         }
-    val mode : UByte
+    val sensorIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val name : String?
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val reserved1 : UShort
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+     */
+    val noradCatId : UInt
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val maxRange : Double
+    /**
+     * $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+     */
+    val objectId : String?
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val minRange : Double
+    val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * $SIT.ID of the ground site the sensor is at.
+     */
+    val siteId : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val fovAzimuth : Float
+    val siteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun siteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Stable non-catalogue entity key of the platform, for a platform with neither
+     * a catalogue number nor a $SIT.
+     */
+    val entityId : String?
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val fovElevation : Float
+    val entityIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun entityIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val type : Byte
         get() {
             val o = __offset(16)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+            return if(o != 0) bb.get(o + bb_pos) else 29
         }
-    val angularResolution : Float
+    val emission : Byte
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val rangeResolution : Float
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val updateRate : Float
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val detectionThreshold : Float
-        get() {
-            val o = __offset(24)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val azimuthScanRate : Float
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val elevationScanRate : Float
-        get() {
-            val o = __offset(28)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val power : Float
-        get() {
-            val o = __offset(30)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val frequency : Float
-        get() {
-            val o = __offset(32)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    fun reserved(j: Int) : UByte {
-        val o = __offset(34)
+    /**
+     * Spectral bands in Hz. One list serves a radar, a multispectral imager and
+     * a passive RF receiver. Empty = none stated.
+     */
+    fun spectralBands(j: Int) : SNRSpectralBand? = spectralBands(SNRSpectralBand(), j)
+    fun spectralBands(obj: SNRSpectralBand, j: Int) : SNRSpectralBand? {
+        val o = __offset(20)
         return if (o != 0) {
-            bb.get(__vector(o) + j * 1).toUByte()
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
-            0u
+            null
         }
     }
-    val reservedLength : Int
+    val spectralBandsLength : Int
         get() {
-            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
-    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Field-of-view shape: the same table $SCV analyses use.
+     */
+    val fieldOfView : SCVSensorShapeContract? get() = fieldOfView(SCVSensorShapeContract())
+    fun fieldOfView(obj: SCVSensorShapeContract) : SCVSensorShapeContract? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+     */
+    val fieldOfViewProvenance : OPPProvenance? get() = fieldOfViewProvenance(OPPProvenance())
+    fun fieldOfViewProvenance(obj: OPPProvenance) : OPPProvenance? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val mounting : SNRMounting? get() = mounting(SNRMounting())
+    fun mounting(obj: SNRMounting) : SNRMounting? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val rf : SNRRfParameters? get() = rf(SNRRfParameters())
+    fun rf(obj: SNRRfParameters) : SNRRfParameters? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val optical : SNROpticalParameters? get() = optical(SNROpticalParameters())
+    fun optical(obj: SNROpticalParameters) : SNROpticalParameters? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Where the values of this record were read. A published real-world sensor
+     * carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+     * carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+     * for that section.
+     */
+    val provenance : OPPProvenance? get() = provenance(OPPProvenance())
+    fun provenance(obj: OPPProvenance) : OPPProvenance? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val notes : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSNR(_bb: ByteBuffer): SNR = getRootAsSNR(_bb, SNR())
@@ -126,54 +226,54 @@ class SNR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SNR")
-        fun createSNR(builder: FlatBufferBuilder, type: UByte, mode: UByte, reserved1: UShort, maxRange: Double, minRange: Double, fovAzimuth: Float, fovElevation: Float, angularResolution: Float, rangeResolution: Float, updateRate: Float, detectionThreshold: Float, azimuthScanRate: Float, elevationScanRate: Float, power: Float, frequency: Float, reservedOffset: Int) : Int {
+        fun createSNR(builder: FlatBufferBuilder, sensorIdOffset: Int, nameOffset: Int, noradCatId: UInt, objectIdOffset: Int, siteIdOffset: Int, entityIdOffset: Int, type: Byte, emission: Byte, spectralBandsOffset: Int, fieldOfViewOffset: Int, fieldOfViewProvenanceOffset: Int, mountingOffset: Int, rfOffset: Int, opticalOffset: Int, provenanceOffset: Int, notesOffset: Int) : Int {
             builder.startTable(16)
-            addMINRANGE(builder, minRange)
-            addMAXRANGE(builder, maxRange)
-            addRESERVED(builder, reservedOffset)
-            addFREQUENCY(builder, frequency)
-            addPOWER(builder, power)
-            addELEVATIONSCANRATE(builder, elevationScanRate)
-            addAZIMUTHSCANRATE(builder, azimuthScanRate)
-            addDETECTIONTHRESHOLD(builder, detectionThreshold)
-            addUPDATERATE(builder, updateRate)
-            addRANGERESOLUTION(builder, rangeResolution)
-            addANGULARRESOLUTION(builder, angularResolution)
-            addFOVELEVATION(builder, fovElevation)
-            addFOVAZIMUTH(builder, fovAzimuth)
-            addRESERVED1(builder, reserved1)
-            addMODE(builder, mode)
+            addNOTES(builder, notesOffset)
+            addPROVENANCE(builder, provenanceOffset)
+            addOPTICAL(builder, opticalOffset)
+            addRF(builder, rfOffset)
+            addMOUNTING(builder, mountingOffset)
+            addFIELDOFVIEWPROVENANCE(builder, fieldOfViewProvenanceOffset)
+            addFIELDOFVIEW(builder, fieldOfViewOffset)
+            addSPECTRALBANDS(builder, spectralBandsOffset)
+            addENTITYID(builder, entityIdOffset)
+            addSITEID(builder, siteIdOffset)
+            addOBJECTID(builder, objectIdOffset)
+            addNORADCATID(builder, noradCatId)
+            addNAME(builder, nameOffset)
+            addSENSORID(builder, sensorIdOffset)
+            addEMISSION(builder, emission)
             addTYPE(builder, type)
             return endSNR(builder)
         }
         fun startSNR(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addTYPE(builder: FlatBufferBuilder, type: UByte) = builder.addByte(0, type.toByte(), 0)
-        fun addMODE(builder: FlatBufferBuilder, mode: UByte) = builder.addByte(1, mode.toByte(), 0)
-        fun addRESERVED1(builder: FlatBufferBuilder, reserved1: UShort) = builder.addShort(2, reserved1.toShort(), 0)
-        fun addMAXRANGE(builder: FlatBufferBuilder, maxRange: Double) = builder.addDouble(3, maxRange, 0.0)
-        fun addMINRANGE(builder: FlatBufferBuilder, minRange: Double) = builder.addDouble(4, minRange, 0.0)
-        fun addFOVAZIMUTH(builder: FlatBufferBuilder, fovAzimuth: Float) = builder.addFloat(5, fovAzimuth, 0.0)
-        fun addFOVELEVATION(builder: FlatBufferBuilder, fovElevation: Float) = builder.addFloat(6, fovElevation, 0.0)
-        fun addANGULARRESOLUTION(builder: FlatBufferBuilder, angularResolution: Float) = builder.addFloat(7, angularResolution, 0.0)
-        fun addRANGERESOLUTION(builder: FlatBufferBuilder, rangeResolution: Float) = builder.addFloat(8, rangeResolution, 0.0)
-        fun addUPDATERATE(builder: FlatBufferBuilder, updateRate: Float) = builder.addFloat(9, updateRate, 0.0)
-        fun addDETECTIONTHRESHOLD(builder: FlatBufferBuilder, detectionThreshold: Float) = builder.addFloat(10, detectionThreshold, 0.0)
-        fun addAZIMUTHSCANRATE(builder: FlatBufferBuilder, azimuthScanRate: Float) = builder.addFloat(11, azimuthScanRate, 0.0)
-        fun addELEVATIONSCANRATE(builder: FlatBufferBuilder, elevationScanRate: Float) = builder.addFloat(12, elevationScanRate, 0.0)
-        fun addPOWER(builder: FlatBufferBuilder, power: Float) = builder.addFloat(13, power, 0.0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Float) = builder.addFloat(14, frequency, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(15, reserved, 0)
-        @kotlin.ExperimentalUnsignedTypes
-        fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
-            builder.startVector(1, data.size, 1)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(0, sensorId, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
+        fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(3, objectId, 0)
+        fun addSITEID(builder: FlatBufferBuilder, siteId: Int) = builder.addOffset(4, siteId, 0)
+        fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(5, entityId, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(6, type, 29)
+        fun addEMISSION(builder: FlatBufferBuilder, emission: Byte) = builder.addByte(7, emission, 0)
+        fun addSPECTRALBANDS(builder: FlatBufferBuilder, spectralBands: Int) = builder.addOffset(8, spectralBands, 0)
+        fun createSpectralBandsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
-                builder.addByte(data[i].toByte())
+                builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startReservedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun startSpectralBandsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFIELDOFVIEW(builder: FlatBufferBuilder, fieldOfView: Int) = builder.addOffset(9, fieldOfView, 0)
+        fun addFIELDOFVIEWPROVENANCE(builder: FlatBufferBuilder, fieldOfViewProvenance: Int) = builder.addOffset(10, fieldOfViewProvenance, 0)
+        fun addMOUNTING(builder: FlatBufferBuilder, mounting: Int) = builder.addOffset(11, mounting, 0)
+        fun addRF(builder: FlatBufferBuilder, rf: Int) = builder.addOffset(12, rf, 0)
+        fun addOPTICAL(builder: FlatBufferBuilder, optical: Int) = builder.addOffset(13, optical, 0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(14, provenance, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(15, notes, 0)
         fun endSNR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
+                builder.required(o, 4)
             return o
         }
         fun finishSNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SNR")
