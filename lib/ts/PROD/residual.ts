@@ -7,8 +7,8 @@
 //
 // Layout this module decides where the baseline and tokens.ts leave one open (recorded for docs/products):
 //   The header is one line, the sign convention text P9_SIGN_CONVENTION; no column-name line.
-//   TYPE prints the observation type's enum name (memMeasurementType); a name longer than the A12 field is
-//     refused (field-width:P9.TYPE), never cut: 15 of the 22 names, RIGHT_ASCENSION_DECLINATION among them, do not fit.
+//   TYPE prints the observation type's enum name (memMeasurementType); tokens.ts sizes the field to the longest
+//     name, so every type writes and reads back.
 //   Lines end in '\n', the last one too; trailing blanks are trimmed.
 //
 // Refusals {code, message}: record-missing:EDITED_OBSERVATIONS (no residuals, D6),

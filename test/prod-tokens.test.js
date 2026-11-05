@@ -51,11 +51,11 @@ describe('PROD tokens: the one place a column or a numeric format exists', () =>
   it('lists the P5 tags in the baseline order and every continuous one at round-trip precision', () => {
     const tags = tokensOf('P5').map((t) => t.token);
     const order = ['EPOCH', 'REV', 'J2K_POS_X', 'J2K_VEL_Z', 'ECI_POS_X', 'EFG_VEL_Z', 'GEOPOTENTIAL', 'DRAG_MODEL', 'LUNISOLAR', 'SRP', 'TIDES', 'IN_TRACK_THRUST', 'B', 'BDOT', 'SRP_COEFF', 'EDR',
-      'THRUST_ACCEL', 'CM_OFFSET', 'F10_OBS', 'F10_AVG', 'AP_AVG', 'TAI_UTC', 'UT1_UTC', 'UT1_RATE', 'POLAR_X', 'POLAR_Y', 'NUTATION', 'LEAP_SECOND', 'INTEGRATOR_MODE', 'COORD_SYS',
-      'PARTIALS', 'STEP_MODE', 'INITIAL_STEP', 'ERROR_CONTROL', 'SIGMA_U', 'SIGMA_WD', 'ELSET', 'COV_SIZE', 'WTD_RMS', 'COV'];
+      'THRUST_ACCEL', 'CM_OFFSET', 'OUTGASSING', 'F10_OBS', 'F10_AVG', 'AP_AVG', 'TAI_UTC', 'UT1_UTC', 'UT1_RATE', 'POLAR_X', 'POLAR_Y', 'NUTATION', 'LEAP_SECOND', 'INTEGRATOR_MODE', 'COORD_SYS',
+      'PARTIALS', 'STEP_MODE', 'INITIAL_STEP', 'ERROR_CONTROL', 'SIGMA_U', 'SIGMA_WD', 'ELSET', 'COV_SIZE', 'COV_PARAMETERS', 'WTD_RMS', 'COV'];
     assert.deepEqual(order.map((n) => tags.indexOf(n)), [...order.map((n) => tags.indexOf(n))].sort((a, b) => a - b), 'the baseline 3.5 order');
     for (const t of tokensOf('P5')) if (t.format.startsWith('%')) assert.equal(t.format, PROD.TAG_VALUE_FORMAT, `${t.token} prints at round-trip precision`);
-    assert.deepEqual(PROD.P5_COVARIANCE_SECTION, ['ELSET', 'COV_SIZE', 'WTD_RMS', 'COV']);
+    assert.deepEqual(PROD.P5_COVARIANCE_SECTION, ['ELSET', 'COV_SIZE', 'COV_PARAMETERS', 'WTD_RMS', 'COV']);
   });
 
   it('prints numbers explicitly: fixed, exponent, integer, text, flag; a value that does not fit is refused as null', () => {

@@ -23,7 +23,7 @@ const field = (line, token) => line.slice(token.startColumn - 1, token.startColu
 const triangle = (n) => (n * (n + 1)) / 2;
 
 // The synthetic Records: COV_SIZE 8 (B and BDOT solved, so P3 shows only the 6 x 6 state block), three epochs a
-// minute apart, four fit inputs whose types fit P9's TYPE field.
+// minute apart, four fit inputs (laser ranges and range rates).
 const CHOSEN_PARAMETERS = PARAMETERS.slice(0, 2).map((p) => p[0]);
 function residualOdr() {
   const odr = odrWith(4);
@@ -172,6 +172,23 @@ describe('PROD text writers: P1, P2, P3, P4 and P9 from one Record', () => {
     assert.equal(must(writeResidualRows(back.rows)), text, 'reader -> writer is byte-identical');
   });
 
+  it('P9: every observation type name fits TYPE, AZIMUTH_ELEVATION and RIGHT_ASCENSION_DECLINATION among them; each writes and reads back', () => {
+    const names = Object.keys(ODR.memMeasurementType).filter((k) => Number.isNaN(Number(k)));
+    const odr = odrWith(names.length);
+    for (const [i, o] of odr.EDITED_OBSERVATIONS.entries()) o.OBSERVATION_TYPE = ODR.memMeasurementType[names[i]];
+    const record = must(PROD.fromOcm(ocmWith(CHOSEN_PARAMETERS), odr));
+    const text = must(writeP9(record));
+    const lines = linesOf(text);
+    for (const [i, line] of lines.slice(1).entries()) {
+      assertTokens('P9', line, P9_ROW, `P9 row ${i}`);
+      assert.equal(field(line, tokenOf('P9', 'TYPE')).trimEnd(), names[i], `${names[i]} is printed whole`);
+    }
+    const back = must(readP9(text));
+    assert.deepEqual(back.rows.map((r) => [r.typeName, r.type]), names.map((n) => [n, ODR.memMeasurementType[n]]));
+    assert.ok(names.includes('AZIMUTH_ELEVATION') && names.includes('RIGHT_ASCENSION_DECLINATION'));
+    assert.equal(must(writeResidualRows(back.rows)), text, 'reader -> writer is byte-identical');
+  });
+
   it('cross-product: sigma is the root of the diagonal; P2 row i is P1 epoch i\'s state and P3\'s state row; P4 row i is P1 epoch i\'s and P3\'s sigma row', () => {
     const record = trackingRecord();
     const p1 = linesOf(must(writeP1(record)));
@@ -209,9 +226,8 @@ describe('PROD text writers: P1, P2, P3, P4 and P9 from one Record', () => {
     refused(writeP1({ ...noMean, epochs: noMean.epochs.map((e, i) => ({ ...e, meanElements: i === 2 ? null : e.meanElements })) }), 'record-missing:epochs[2].meanElements');
     const uneven = trackingRecord();
     refused(writeP1({ ...uneven, epochs: uneven.epochs.map((e, i) => ({ ...e, minutes: i === 2 ? 2.5 : e.minutes })) }), 'epoch-grid');
-    // P9 without an $ODR (D6) and with a type name wider than its field.
+    // P9 without an $ODR (D6).
     refused(writeP9(must(PROD.fromOcm(ocmWith(CHOSEN_PARAMETERS)))), 'record-missing:EDITED_OBSERVATIONS');
-    refused(writeP9(must(PROD.fromOcm(ocmWith(CHOSEN_PARAMETERS), odrWith(2)))), 'field-width:P9.TYPE');
     // P3 and P4 without a covariance or a tool version.
     const bare = ocmWith(CHOSEN_PARAMETERS);
     bare.COVARIANCE_DATA = [];

@@ -84,8 +84,7 @@ describe('PROD covariance messages: P5 text and P6 binary', () => {
     const order = P5.P5_TAGS.map((t) => t.token);
     const n = record.covariance.size;
     assert.ok(text.endsWith('\n'));
-    for (const t of PROD.tokensOf('P5')) assert.ok(order.includes(t.token), `${t.token} of tokens.ts is a P5 tag`);
-    assert.equal(order.length, PROD.tokensOf('P5').length + P5.P5_ADDED_TAGS.length);
+    assert.deepEqual(order, PROD.tokensOf('P5').map((t) => t.token), 'the P5 tags are the tokens.ts P5 table, in its order');
     let last = -1;
     for (const { key, value } of lines) {
       const index = order.indexOf(key);
@@ -107,7 +106,7 @@ describe('PROD covariance messages: P5 text and P6 binary', () => {
     assert.equal(covLines.length, n, 'one COV line per row');
     covLines.forEach((l, k) => assert.equal(l.value.split(' ').length, k + 1, `COV row ${k + 1} holds ${k + 1} values`));
     assert.equal(covOf(text).length, triangle(n), 'N(N+1)/2 values');
-    assert.deepEqual(lines.filter((l) => PROD.P5_COVARIANCE_SECTION.includes(l.key) || l.key === 'COV_PARAMETERS').map((l) => l.key).filter((k, i, a) => a.indexOf(k) === i), ['ELSET', 'COV_SIZE', 'COV_PARAMETERS', 'WTD_RMS', 'COV']);
+    assert.deepEqual(lines.filter((l) => PROD.P5_COVARIANCE_SECTION.includes(l.key)).map((l) => l.key).filter((k, i, a) => a.indexOf(k) === i), PROD.P5_COVARIANCE_SECTION);
     assert.equal(valueOf(text, 'ELSET'), P5.P5_ELSET);
     assert.equal(Number(valueOf(text, 'COV_SIZE')), 8);
     assert.equal(valueOf(text, 'COV_PARAMETERS'), SOLVED.join(' '));

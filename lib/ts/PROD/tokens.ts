@@ -16,13 +16,17 @@
 //     at column 1 and the value at column 25; the trailer is the word END.
 //   P3 triangle rows: one leading tab, then %+14.6E values separated by one blank; the sigma row uses the
 //     P1 line-4 sigma columns, so P3's sigma row equals P4's.
-//   P5 tags: KEY = value lines; every continuous value %+.15E (reader/writer round trip to 1e-12).
+//   P5 tags: KEY = value lines; every continuous value %+.15E (reader/writer round trip to 1e-12); beyond the
+//     baseline list, OUTGASSING (%+.15E, km/s**2, after CM_OFFSET) and COV_PARAMETERS (A128, after COV_SIZE: the
+//     solved parameters' names, blank-separated, naming covariance rows 7..COV_SIZE).
 //   P7 two-line form: the public two-line element columns, carried as text fields (the encodings belong
 //     to elset.ts); element-file form: EPOCH S18, a F15.6, af/ag/chi/psi F15.10, L F15.8, fr I3, then
 //     B, BDOT, AGOM, T and OUTGASSING %+14.6E, 16 columns apart.
 //   P8: header EPOCH S18 and WTD_RMS; covariance rows as P3; per epoch MSE F12.6 then six %+14.6E
 //     sensitivity columns 16 apart from column 32.
-//   P9: ID A24, EPOCH S18, TYPE A12, OBSERVED/COMPUTED/RESIDUAL/WEIGHT %+14.6E, ACCEPTED L1, CODE A8.
+//   P9: ID A24 at 2, EPOCH S18 at 27, TYPE A31 at 46 (the longest memMeasurementType name,
+//     FREQUENCY_DIFFERENCE_OF_ARRIVAL, so every observation type name fits), OBSERVED/COMPUTED/RESIDUAL/WEIGHT
+//     %+14.6E at 78/93/108/123, ACCEPTED L1 at 138, CODE A8 at 140.
 //   P6 (binary) has no text tokens: its header, framing and endianness are frozen in covmsg-binary.ts (D1).
 // Calendar form (D7, frozen here): YY/DDD HHMM SS.SSS; two-digit years 57..99 are 1957..1999 and 00..56
 // are 2000..2056 (YEAR_PIVOT = 57, the two-line element set's rule); DDD counts from 001; day 060 of a leap
@@ -146,7 +150,7 @@ export const P3_LINES: readonly string[] = ['VERSION', 'STATE_ROW', 'TITLE', 'TR
 
 const P4: Token[] = [t('P4', 'VERSION', 1, 'A80', 'TEXT'), ...SIGMA_ROW('P4')];
 
-// P5 header tags, in the order of baseline 3.5, then the covariance section.
+// P5 header tags, in the order of baseline 3.5 (OUTGASSING after CM_OFFSET), then the covariance section.
 const tag = (token: string, format: string, kind: TokenKind): Token => t('P5', token, 1, format, kind);
 const triple = (name: string, kind: TokenKind): Token[] => ['X', 'Y', 'Z'].map((c) => tag(`${name}_${c}`, TAG_VALUE_FORMAT, kind));
 const P5: Token[] = [
@@ -158,6 +162,7 @@ const P5: Token[] = [
   tag('LUNISOLAR', 'L1', 'FLAG'), tag('SRP', 'L1', 'FLAG'), tag('TIDES', 'L1', 'FLAG'), tag('IN_TRACK_THRUST', 'L1', 'FLAG'),
   tag('B', TAG_VALUE_FORMAT, 'M2_KG'), tag('BDOT', TAG_VALUE_FORMAT, 'M2_KG_S'), tag('SRP_COEFF', TAG_VALUE_FORMAT, 'M2_KG'),
   tag('EDR', TAG_VALUE_FORMAT, 'W_KG'), tag('THRUST_ACCEL', TAG_VALUE_FORMAT, 'M_S2'), tag('CM_OFFSET', TAG_VALUE_FORMAT, 'KM'),
+  tag('OUTGASSING', TAG_VALUE_FORMAT, 'KM_S2'),
   tag('F10_OBS', TAG_VALUE_FORMAT, 'UNITLESS'), tag('F10_AVG', TAG_VALUE_FORMAT, 'UNITLESS'), tag('AP_AVG', TAG_VALUE_FORMAT, 'UNITLESS'),
   tag('TAI_UTC', TAG_VALUE_FORMAT, 'SECONDS'), tag('UT1_UTC', TAG_VALUE_FORMAT, 'SECONDS'), tag('UT1_RATE', TAG_VALUE_FORMAT, 'S_PER_DAY'),
   tag('POLAR_X', TAG_VALUE_FORMAT, 'ARCSEC'), tag('POLAR_Y', TAG_VALUE_FORMAT, 'ARCSEC'),
@@ -166,11 +171,11 @@ const P5: Token[] = [
   tag('INITIAL_STEP', TAG_VALUE_FORMAT, 'SECONDS'), tag('ERROR_CONTROL', TAG_VALUE_FORMAT, 'UNITLESS'),
   tag('SIGMA_U', TAG_VALUE_FORMAT, 'SIGMA_KM'), tag('SIGMA_V', TAG_VALUE_FORMAT, 'SIGMA_KM'), tag('SIGMA_W', TAG_VALUE_FORMAT, 'SIGMA_KM'),
   tag('SIGMA_UD', TAG_VALUE_FORMAT, 'SIGMA_KM_S'), tag('SIGMA_VD', TAG_VALUE_FORMAT, 'SIGMA_KM_S'), tag('SIGMA_WD', TAG_VALUE_FORMAT, 'SIGMA_KM_S'),
-  tag('ELSET', 'A16', 'TEXT'), tag('COV_SIZE', 'I3', 'INTEGER'), tag('WTD_RMS', TAG_VALUE_FORMAT, 'UNITLESS'),
+  tag('ELSET', 'A16', 'TEXT'), tag('COV_SIZE', 'I3', 'INTEGER'), tag('COV_PARAMETERS', 'A128', 'TEXT'), tag('WTD_RMS', TAG_VALUE_FORMAT, 'UNITLESS'),
   tag('COV', TAG_VALUE_FORMAT, 'COVARIANCE'),
 ];
 export const P5_TAG_SEPARATOR = ' = ';
-export const P5_COVARIANCE_SECTION: readonly string[] = ['ELSET', 'COV_SIZE', 'WTD_RMS', 'COV'];
+export const P5_COVARIANCE_SECTION: readonly string[] = ['ELSET', 'COV_SIZE', 'COV_PARAMETERS', 'WTD_RMS', 'COV'];
 
 // P7: the two-line form's public columns (text fields; elset.ts owns the encodings) and the element-file form.
 const P7: Token[] = [
@@ -205,10 +210,10 @@ export const P8_HEADER_LINE: readonly string[] = ['EPOCH', 'WTD_RMS'];
 export const P8_EPOCH_ROW: readonly string[] = ['MSE', 'SENS1', 'SENS2', 'SENS3', 'SENS4', 'SENS5', 'SENS6'];
 
 const P9: Token[] = [
-  t('P9', 'ID', 2, 'A24', 'TEXT'), t('P9', 'EPOCH', 27, CALENDAR_FORMAT, 'CALENDAR'), t('P9', 'TYPE', 46, 'A12', 'TEXT'),
-  t('P9', 'OBSERVED', 59, COVARIANCE_FORMAT, 'MEASUREMENT'), t('P9', 'COMPUTED', 74, COVARIANCE_FORMAT, 'MEASUREMENT'),
-  t('P9', 'RESIDUAL', 89, COVARIANCE_FORMAT, 'MEASUREMENT'), t('P9', 'WEIGHT', 104, COVARIANCE_FORMAT, 'UNITLESS'),
-  t('P9', 'ACCEPTED', 119, 'L1', 'FLAG'), t('P9', 'CODE', 121, 'A8', 'TEXT'),
+  t('P9', 'ID', 2, 'A24', 'TEXT'), t('P9', 'EPOCH', 27, CALENDAR_FORMAT, 'CALENDAR'), t('P9', 'TYPE', 46, 'A31', 'TEXT'),
+  t('P9', 'OBSERVED', 78, COVARIANCE_FORMAT, 'MEASUREMENT'), t('P9', 'COMPUTED', 93, COVARIANCE_FORMAT, 'MEASUREMENT'),
+  t('P9', 'RESIDUAL', 108, COVARIANCE_FORMAT, 'MEASUREMENT'), t('P9', 'WEIGHT', 123, COVARIANCE_FORMAT, 'UNITLESS'),
+  t('P9', 'ACCEPTED', 138, 'L1', 'FLAG'), t('P9', 'CODE', 140, 'A8', 'TEXT'),
 ];
 export const P9_ROW: readonly string[] = P9.map((x) => x.token);
 

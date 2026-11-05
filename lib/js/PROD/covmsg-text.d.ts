@@ -8,12 +8,9 @@ export declare const P5_STATE_FRAMES: readonly {
     readonly prefix: string;
     readonly frame: string;
 }[];
-/** Tags this module adds to the tokens.ts P5 set, each placed after the named token. */
-export declare const P5_ADDED_TAGS: readonly (Token & {
-    readonly after: string;
-})[];
-/** Every P5 tag in written order: tokens.ts's, with the added ones in place. */
+/** Every P5 tag in written order: the tokens.ts P5 table. */
 export declare const P5_TAGS: readonly Token[];
+/** COV_PARAMETERS is absent when no parameter is solved; the COV rows are checked against COV_SIZE. */
 export declare const P5_REQUIRED_TAGS: readonly string[];
 /** The tag carrying each parameter's value, in the order of record.ts PARAMETERS. */
 export declare const P5_PARAMETER_TAGS: readonly string[];
