@@ -2,8 +2,8 @@
 
 The product codec family writes fixed-format products from one Record. Sources are `lib/ts/PROD`; the package
 ships them compiled as `lib/js/PROD`. `lib/js/PROD/main.js` (the package index exports it as `PROD`) re-exports
-`frames`, `record` and `tokens`; each product's writer and reader is imported from its own module,
-`lib/js/PROD/<module>.js`.
+`frames`, `record`, `tokens` and every product module's writers, readers and constants, one name per export; each
+module is also importable on its own, `lib/js/PROD/<module>.js`.
 
 ## Conformance
 
@@ -21,8 +21,8 @@ Record.
 | [P4](P4.md) | sigma text | text | `covtext.js` | `writeP4(record)` | none |
 | [P5](P5.md) | covariance message | text | `covmsg-text.js` | `writeP5(record)` | `readP5(text, gm)` |
 | [P6](P6.md) | covariance message | binary | `covmsg-binary.js` | `writeP6(record)` | `readP6(bytes)` |
-| [P7](P7.md) | element set, two-line form and element-file form | text | `elset.js` | `elsetTwoLine(record)`, `elsetElementFile(record)` | none (writer only) |
-| [P8](P8.md) | state-transition-matrix ephemeris | text | `stmephemeris.js` | `stmEphemerisText(record)` | none (writer only) |
+| [P7](P7.md) | element set, two-line form and element-file form | text | `elset.js` | `elsetTwoLine(record)`, `elsetElementFile(record)` | `readTwoLine(text)`, `readElementFile(text)` |
+| [P8](P8.md) | state-transition-matrix ephemeris | text | `stmephemeris.js` | `stmEphemerisText(record)` | `readStmEphemeris(text)` |
 | [P9](P9.md) | residual listing | text | `residual.js` | `writeP9(record)` | `readP9(text)` |
 
 Every writer and reader is a pure function. It returns `{ ok: true, value }` or `{ ok: false, refusal: { code,
