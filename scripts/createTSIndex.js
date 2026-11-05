@@ -363,9 +363,22 @@ function flatbuffersEncryptionModule(programs) {
     return parts.join('\n');
 }
 
+// A hand-written lib/ts directory (lib/ts/PROD, the product codec family) is not flatc output: its main.ts
+// starts with this marker line. The generator leaves that main.ts alone, reads no walk programs for the
+// directory (there is no lib/py counterpart) and still exports it from lib/ts/index.ts.
+const HAND_WRITTEN_MARKER = '// hand-written: not generated';
+
+function isHandWritten(folderPath) {
+    const mainPath = path.join(folderPath, 'main.ts');
+    return fs.existsSync(mainPath) && fs.readFileSync(mainPath, 'utf8').split('\n', 1)[0].trim() === HAND_WRITTEN_MARKER;
+}
+
 function ensureFlatbuffersEncryptionRuntime() {
     for (const dirent of fs.readdirSync(directoryPath, { withFileTypes: true })) {
         if (!dirent.isDirectory()) {
+            continue;
+        }
+        if (isHandWritten(path.join(directoryPath, dirent.name))) {
             continue;
         }
         const programs = readEncryptionPrograms(dirent.name);
@@ -408,7 +421,10 @@ fs.readdirSync(directoryPath, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
     .forEach(dirent => {
         const folderName = dirent.name;
-        writeFolderMain(path.join(directoryPath, folderName));
+        const folderPath = path.join(directoryPath, folderName);
+        if (!isHandWritten(folderPath)) {
+            writeFolderMain(folderPath);
+        }
         exports += `export * as ${folderName.toUpperCase()} from './${folderName}/main.js';\n`;
     });
 
