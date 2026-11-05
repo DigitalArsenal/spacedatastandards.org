@@ -49,6 +49,11 @@ struct OmmTleParameters {
     std::optional<double> BSTAR;
     std::optional<double> MEAN_MOTION_DOT;
     std::optional<double> MEAN_MOTION_DDOT;
+    // CCSDS 502.0-B-3 Table 4-3: "BSTAR or BTERM", "MEAN_MOTION_DDOT or AGOM". An SGP4-XP set
+    // (MEAN_ELEMENT_THEORY = SGP4-XP) carries BTERM and AGOM, m**2/kg; the writers emit the
+    // keyword the theory selects, never both of a pair.
+    std::optional<double> BTERM;
+    std::optional<double> AGOM;
     std::vector<std::string> comments;
 };
 

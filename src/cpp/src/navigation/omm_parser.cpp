@@ -98,6 +98,8 @@ OmmMessage parse_omm_kvn(std::string_view text) {
         tp.BSTAR = opt_num(get_kvn_value(tt, "BSTAR"));
         tp.MEAN_MOTION_DOT = opt_num(get_kvn_value(tt, "MEAN_MOTION_DOT"));
         tp.MEAN_MOTION_DDOT = opt_num(get_kvn_value(tt, "MEAN_MOTION_DDOT"));
+        tp.BTERM = opt_num(get_kvn_value(tt, "BTERM"));
+        tp.AGOM = opt_num(get_kvn_value(tt, "AGOM"));
         tp.comments = get_kvn_comments(tt);
         tle_params = std::move(tp);
     }
@@ -180,6 +182,8 @@ OmmMessage parse_omm_xml(std::string_view text) {
         tp.BSTAR = opt_num(get_child_text(*tle_el, "BSTAR"));
         tp.MEAN_MOTION_DOT = opt_num(get_child_text(*tle_el, "MEAN_MOTION_DOT"));
         tp.MEAN_MOTION_DDOT = opt_num(get_child_text(*tle_el, "MEAN_MOTION_DDOT"));
+        tp.BTERM = opt_num(get_child_text(*tle_el, "BTERM"));
+        tp.AGOM = opt_num(get_child_text(*tle_el, "AGOM"));
         tle = std::move(tp);
     }
 
@@ -225,9 +229,13 @@ std::string write_omm_kvn(const OmmMessage& msg) {
         if (t.NORAD_CAT_ID) push_opt_num(e, "NORAD_CAT_ID", static_cast<double>(*t.NORAD_CAT_ID));
         if (t.ELEMENT_SET_NO) push_opt_num(e, "ELEMENT_SET_NO", static_cast<double>(*t.ELEMENT_SET_NO));
         if (t.REV_AT_EPOCH) push_opt_num(e, "REV_AT_EPOCH", static_cast<double>(*t.REV_AT_EPOCH));
-        push_opt_num(e, "BSTAR", t.BSTAR);
+        // CCSDS 502.0-B-3 Table 4-3: "BSTAR or BTERM" and "MEAN_MOTION_DDOT or AGOM". MEAN_ELEMENT_THEORY
+        // selects the keyword of each pair: SGP4-XP writes BTERM and AGOM, every other theory BSTAR and
+        // MEAN_MOTION_DDOT; never both of a pair.
+        const bool xp = msg.metadata.MEAN_ELEMENT_THEORY == "SGP4-XP";
+        push_opt_num(e, xp ? "BTERM" : "BSTAR", xp ? t.BTERM : t.BSTAR);
         push_opt_num(e, "MEAN_MOTION_DOT", t.MEAN_MOTION_DOT);
-        push_opt_num(e, "MEAN_MOTION_DDOT", t.MEAN_MOTION_DDOT);
+        push_opt_num(e, xp ? "AGOM" : "MEAN_MOTION_DDOT", xp ? t.AGOM : t.MEAN_MOTION_DDOT);
         e.push_back(kvn_section_stop("TLE_PARAMETERS"));
     }
 

@@ -1,5 +1,5 @@
-// Hash: df414bec815b6db6660f9454afd9bde3a6268b8afeef31cfa973ceb6aa094943
-// Version: 1.1.6
+// Hash: d39568ddd457fbae2e3f38c8e64b30153009d9817640d86a78b5ab276c98b5a0
+// Version: 1.1.7
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -195,6 +195,22 @@ table covarianceMatrixLine {
   COV_REFERENCE_FRAME:RFM;
 }
 
+/// The orbit determination an ephemeris block descends from. SDS addition:
+/// CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+/// follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+/// states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+/// behind the ephemeris, not of its states).
+table OEMOrbitDetermination {
+  /// Observations the determination used; 0 when not stated.
+  OD_OBSERVATIONS_USED: uint;
+  /// First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  OD_ARC_START: string;
+  /// Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  OD_ARC_STOP: string;
+  /// Method of the determination; empty when not stated.
+  OD_METHOD: string;
+}
+
 /// OEM Ephemeris Data Block
 table ephemerisDataBlock {
   // ─────────────────────────────────────────────────────────────────────────────
@@ -314,6 +330,14 @@ table ephemerisDataBlock {
   /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
   /// (SPK segment centre).
   CENTER_NAIF_ID:int;
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // APPENDED. The determination behind the block. Append-only: never reorder.
+  // ───────────────────────────────────────────────────────────────────────────
+
+  /// Orbit determination this block's states descend from; absent when none
+  /// is stated.
+  ORBIT_DETERMINATION:OEMOrbitDetermination;
 }
 
 /// Orbit Ephemeris Message
