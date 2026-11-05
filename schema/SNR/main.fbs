@@ -1,6 +1,14 @@
-// Hash: 9ec4d51a29649ca1bd414f3fd9ad64f2d79faef9619638958cdd371ccf7a8f45
-// Version: 0.0.2
+// Hash: 27620fd7dca9079faf5500ba9bd51aaf2882cfc17d8dc7f4fe002b9721d45798
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+include "../OPP/main.fbs";
+include "../RFB/main.fbs";
+include "../SCV/main.fbs";
+
+/// What kind of sensor a definition describes. ORDINALS ARE WIRE VALUES: new
+/// members are APPENDED ONLY, so members after ACOUSTIC are out of family order
+/// by design. RADAR_PULSE is 0, a real kind, so TYPE defaults to UNSPECIFIED and
+/// a writer always sets TYPE.
 enum SensorType : byte {
   RADAR_PULSE = 0,        // Pulse radar
   RADAR_DOPPLER = 1,      // Pulse-Doppler radar
@@ -18,46 +26,211 @@ enum SensorType : byte {
   SONAR_ACTIVE = 13,      // Active sonar
   SONAR_PASSIVE = 14,     // Passive sonar
   ACOUSTIC = 15,          // Acoustic sensor
+  OPTICAL_TELESCOPE = 16,          // Imaging or tracking telescope
+  MULTISPECTRAL_IMAGER = 17,       // A few discrete spectral bands
+  HYPERSPECTRAL_IMAGER = 18,       // Many contiguous narrow bands
+  SAR = 19,                        // Synthetic-aperture radar
+  ALTIMETER = 20,                  // Radar or laser altimeter
+  SCATTEROMETER = 21,             // Backscatter (wind/surface) radar
+  RADIOMETER = 22,                 // Passive microwave or infrared radiometer
+  LIDAR = 23,                      // Light detection and ranging
+  PASSIVE_RF_ESM = 24,             // Passive RF electronic-support-measures receiver
+  SIGINT = 25,                     // Signals-intelligence collection payload
+  COMMS_ANTENNA = 26,              // Communications antenna
+  TT_AND_C_ANTENNA = 27,           // Telemetry, tracking and command antenna
+  PHASED_ARRAY_EARLY_WARNING = 28, // Phased-array early-warning radar
+  /// The writer states no kind. The default of TYPE, so an unset TYPE is not
+  /// read as RADAR_PULSE.
+  UNSPECIFIED = 29
 }
 
-enum SensorMode : byte {
-  OFF = 0,
-  STANDBY = 1,
-  SEARCH = 2,
-  ACQUISITION = 3,
-  TRACK = 4,
-  TRACK_WHILE_SCAN = 5,
-  DESIGNATE = 6,
-  JAMMED = 7,
+/// Whether the sensor radiates to sense (ACTIVE) or only receives (PASSIVE).
+enum snrEmissionMode : byte {
+  UNSPECIFIED,
+  ACTIVE,
+  PASSIVE
 }
 
-enum TrackQuality : byte {
-  NONE = 0,
-  TENTATIVE = 1,
-  FIRM = 2,
-  LOCKED = 3,
-  COASTING = 4,
-  LOST = 5,
+/// How a spectral band is used. Matters for antennas and EW receivers whose
+/// transmit and receive bands differ.
+enum snrBandDirection : byte {
+  UNSPECIFIED,
+  RECEIVE,
+  TRANSMIT,
+  TRANSCEIVE
 }
 
-/// Sensor Systems
+/// The frame MOUNTING angles are expressed in.
+enum snrMountingFrame : byte {
+  UNSPECIFIED,
+  /// Fixed to the platform body; the angles are body-axis angles.
+  PLATFORM_BODY,
+  /// Local vertical, local horizontal at the platform: radial, along-track,
+  /// cross-track.
+  LVLH,
+  /// Local east-north-up at a ground site. Azimuth clockwise from north,
+  /// elevation above the local horizontal.
+  LOCAL_ENU
+}
+
+/// Where the sensor points by default.
+enum snrPointingMode : byte {
+  UNSPECIFIED,
+  /// Toward the center of the body the platform orbits.
+  NADIR,
+  /// Fixed at the boresight angles in the mounting frame.
+  FIXED,
+  /// Slews to follow a designated target or object.
+  TRACK,
+  /// Sweeps at the scan rates through the field of regard.
+  SCAN
+}
+
+/// Radiation pattern of an RF antenna. Names follow OrbPro's antenna patterns.
+enum snrAntennaPattern : byte {
+  UNSPECIFIED,
+  ISOTROPIC,
+  HEMISPHERIC,
+  PARABOLIC,
+  GAUSSIAN,
+  PENCIL,
+  HELIX,
+  DIPOLE,
+  RINGED,
+  /// The earth-coverage (teardrop) beam of a geostationary antenna.
+  TEARDROP,
+  TOROIDAL,
+  CARDIOID
+}
+
+/// One spectral band of a sensor, in Hz. Hz is the unit for every band, optical
+/// included; a consumer that wants wavelength converts (lambda = c / f).
+/// Positive quantities use the default 0 for "not stated".
+table SNRSpectralBand {
+  /// The band as its source names it: "UHF", "X-band", "VNIR", "Green".
+  NAME:string;
+  /// The designation exactly as the source states it ("UHF", "X", "Ka", "SWIR").
+  /// Verbatim, never derived from the frequencies. RF designations use $RFB
+  /// rfBandDesignation spellings. Absent when the source states none.
+  DESIGNATION:string;
+  /// Lower edge, Hz. 0 = not stated.
+  FREQ_LOW_HZ:double;
+  /// Upper edge, Hz. 0 = not stated.
+  FREQ_HIGH_HZ:double;
+  DIRECTION:snrBandDirection = UNSPECIFIED;
+  /// Where this band was read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// How the sensor sits on its platform and where it points. Angles are degrees
+/// and signed, so an unset angle is NaN (absent), never 0.
+table SNRMounting {
+  FRAME:snrMountingFrame = UNSPECIFIED;
+  /// Boresight azimuth in FRAME. NaN = not stated.
+  BORESIGHT_AZIMUTH_DEG:double = nan;
+  /// Boresight elevation in FRAME. NaN = not stated.
+  BORESIGHT_ELEVATION_DEG:double = nan;
+  /// Roll about the boresight. NaN = not stated.
+  ROLL_DEG:double = nan;
+  POINTING:snrPointingMode = UNSPECIFIED;
+  /// Azimuth scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  SCAN_AZIMUTH_RATE_DEG_S:double = nan;
+  /// Elevation scan rate, degrees per second, for POINTING SCAN. NaN = not stated.
+  SCAN_ELEVATION_RATE_DEG_S:double = nan;
+  /// Field-of-regard limits in FRAME, degrees. NaN = no limit stated.
+  /// ELEVATION_LIMIT_MIN_DEG is the minimum elevation a ground sensor operates at.
+  AZIMUTH_LIMIT_MIN_DEG:double = nan;
+  AZIMUTH_LIMIT_MAX_DEG:double = nan;
+  ELEVATION_LIMIT_MIN_DEG:double = nan;
+  ELEVATION_LIMIT_MAX_DEG:double = nan;
+  /// Where the mounting was read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Radio-frequency parameters. Positive quantities use 0 for "not stated";
+/// ANTENNA_GAIN_DBI is signed and uses NaN.
+table SNRRfParameters {
+  ANTENNA_PATTERN:snrAntennaPattern = UNSPECIFIED;
+  /// Peak transmit power, W.
+  PEAK_POWER_W:double;
+  /// Antenna gain, dBi. NaN = not stated.
+  ANTENNA_GAIN_DBI:double = nan;
+  /// 3 dB beamwidth in azimuth, degrees.
+  BEAMWIDTH_AZIMUTH_DEG:double;
+  /// 3 dB beamwidth in elevation, degrees.
+  BEAMWIDTH_ELEVATION_DEG:double;
+  /// Instantaneous bandwidth, Hz.
+  BANDWIDTH_HZ:double;
+  POLARIZATION:rfPolarization = UNKNOWN;
+  /// Pulse repetition frequency, Hz (radar).
+  PRF_HZ:double;
+  /// Pulse width, seconds (radar).
+  PULSE_WIDTH_S:double;
+  /// Where these values were read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Optical parameters. Every quantity is positive except LIMITING_MAGNITUDE,
+/// which is signed and uses NaN for "not stated"; 0 means "not stated" elsewhere.
+table SNROpticalParameters {
+  /// Clear aperture diameter, m.
+  APERTURE_M:double;
+  /// Focal length, m.
+  FOCAL_LENGTH_M:double;
+  /// Instantaneous field of view of one detector element, radians.
+  IFOV_RAD:double;
+  /// Ground sample distance, m, at the nadir and nominal altitude the source
+  /// states (qualifiers go in PROVENANCE.NOTES).
+  GSD_M:double;
+  /// Limiting visual magnitude. NaN = not stated.
+  LIMITING_MAGNITUDE:double = nan;
+  /// Detector as the source names it ("CCD", "HgCdTe", "sCMOS").
+  DETECTOR:string;
+  /// Where these values were read, when it differs from the record's PROVENANCE.
+  PROVENANCE:OPPProvenance;
+}
+
+/// Sensor definition: the sensor a platform carries. One record is one sensor.
+///
+/// UNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset
+/// is NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset
+/// string, table or vector is absent. A value is never invented, never zero as a
+/// placeholder, never copied from another sensor. Hz is the only frequency unit.
+/// Display colors are viewer preferences and never travel in this record.
+///
+/// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
+/// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 table SNR {
-  TYPE:ubyte;
-  MODE:ubyte;
-  RESERVED1:ushort;
-  MAX_RANGE:double;
-  MIN_RANGE:double;
-  FOV_AZIMUTH:float;
-  FOV_ELEVATION:float;
-  ANGULAR_RESOLUTION:float;
-  RANGE_RESOLUTION:float;
-  UPDATE_RATE:float;
-  DETECTION_THRESHOLD:float;
-  AZIMUTH_SCAN_RATE:float;
-  ELEVATION_SCAN_RATE:float;
-  POWER:float;
-  FREQUENCY:float;
-  RESERVED:[uint8];
+  /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+  SENSOR_ID:string (required);
+  NAME:string;
+  /// $CAT.NORAD_CAT_ID of the spacecraft that carries the sensor. 0 = none.
+  NORAD_CAT_ID:uint;
+  /// $CAT.OBJECT_ID (COSPAR designator) of the spacecraft that carries it.
+  OBJECT_ID:string;
+  /// $SIT.ID of the ground site the sensor is at.
+  SITE_ID:string;
+  /// Stable non-catalogue entity key of the platform, for a platform with neither
+  /// a catalogue number nor a $SIT.
+  ENTITY_ID:string;
+  TYPE:SensorType = UNSPECIFIED;
+  EMISSION:snrEmissionMode = UNSPECIFIED;
+  /// Spectral bands in Hz. One list serves a radar, a multispectral imager and
+  /// a passive RF receiver. Empty = none stated.
+  SPECTRAL_BANDS:[SNRSpectralBand];
+  /// Field-of-view shape: the same table $SCV analyses use.
+  FIELD_OF_VIEW:SCVSensorShapeContract;
+  /// Where FIELD_OF_VIEW was read, when it differs from PROVENANCE.
+  FIELD_OF_VIEW_PROVENANCE:OPPProvenance;
+  MOUNTING:SNRMounting;
+  RF:SNRRfParameters;
+  OPTICAL:SNROpticalParameters;
+  /// Where the values of this record were read. A published real-world sensor
+  /// carries SOURCE, RETRIEVED_AT, METHOD and LICENSE; a user-defined sensor
+  /// carries METHOD USER_DEFINED. A section's own PROVENANCE supersedes this one
+  /// for that section.
+  PROVENANCE:OPPProvenance;
+  NOTES:string;
 }
 
 root_type SNR;

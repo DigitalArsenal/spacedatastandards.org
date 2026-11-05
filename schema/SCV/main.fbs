@@ -1,5 +1,5 @@
-// Hash: a708974880aa4f2b2a4039241cb3cf8508804f2780a3ac919f241486cb773470
-// Version: 1.101.5
+// Hash: 63b30ae792ef43ea30c63e625212670f333422c2669b4acd9d1036952692eb7d
+// Version: 1.101.6
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -150,6 +150,20 @@ table SCVTimeGrid {
   GRID_INDEX_COUNT:uint32;
 }
 
+/// One point of an azimuth/elevation mask: the lowest elevation at which the
+/// sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+/// polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+/// point to the first across 360 degrees, linearly interpolated in azimuth.
+table SCVAzElMaskPoint {
+  /// Azimuth, degrees clockwise from north, in [0, 360).
+  AZIMUTH_DEG:double;
+  /// Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+  MIN_ELEVATION_DEG:double;
+}
+
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
 table SCVSensorShapeContract {
   SHAPE_KIND:scvSensorShapeKind;
   AXIS_CONVENTION:scvSensorAxisConvention;
@@ -167,6 +181,9 @@ table SCVSensorShapeContract {
   MAX_RANGE_M:double;
   POLYGON_VERTICES:[SCVVec3];
   POLYGON_FRAME:scvCoordinateFrame;
+  /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+  /// Clips the shape: a direction below the mask is outside the field of view.
+  AZ_EL_MASK:[SCVAzElMaskPoint];
 }
 
 table SCVSensor {

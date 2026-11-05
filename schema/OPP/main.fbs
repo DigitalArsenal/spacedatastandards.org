@@ -1,5 +1,5 @@
-// Hash: 88352e6bb4dc5ff1264097a167f8c87f94c747cb444eb7b6e21103727ef3ee91
-// Version: 1.171.1
+// Hash: 6b78b8f34837f81565c7de8b1f3fef8652e8885da02cbd826534c874fa27e402
+// Version: 1.171.2
 // -----------------------------------END_HEADER
 /// How one physical value was determined. Append new values only; never
 /// reorder or reuse existing values.
@@ -22,7 +22,10 @@ enum oppDeterminationMethod : byte {
   MODEL_DERIVED,
   /// Taken from the bus design or from a sibling object in the same family
   /// because no per-object value exists. Always an approximation.
-  INFERRED_FROM_FAMILY
+  INFERRED_FROM_FAMILY,
+  /// Entered by a user for a sensor or object they define; no source publishes
+  /// it. Appended 1.278.0.
+  USER_DEFINED
 }
 
 /// Aspect convention a radar cross-section value was reported under. Append new
