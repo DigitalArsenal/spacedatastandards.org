@@ -1,8 +1,9 @@
-// Hash: 3d34c09d7c9a0d5b93e8bb15f622714c1105da9e05ee8ea8658f269aee31700c
-// Version: 1.202.0
+// Hash: a44c7f6e82f4abcffe4c08277e068395060b3562fe4c104c0b2c43dd8e93b536
+// Version: 1.202.1
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../PCE/main.fbs";
+include "../MEM/main.fbs";
 
 enum odrEstimatorKind : ubyte {
   UNSPECIFIED = 0,
@@ -60,12 +61,30 @@ table ODRIterationStatistics {
   NORMAL_MATRIX_CONDITION_NUMBER: double;
 }
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 table ODREditedObservation {
   OBSERVATION_ID: string (required);
   ITERATION: uint;
   PREFIT_RESIDUAL: double;
   NORMALIZED_RESIDUAL: double;
   REASON: string;
+  /// Epoch of the observation (ISO 8601 UTC).
+  EPOCH: string;
+  /// Measurement class of the observation.
+  OBSERVATION_TYPE: memMeasurementType = UNSPECIFIED;
+  /// The observation as measured, in the unit of its class: km, km/s or deg.
+  OBSERVED_VALUE: double;
+  /// The same quantity computed from the solution at EPOCH, in the same unit.
+  COMPUTED_VALUE: double;
+  /// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+  WEIGHT: double;
+  /// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+  ACCEPTED: bool = false;
+  /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+  PERTURBATION_MODEL_CODE: string;
 }
 
 table ODREstimatedParameter {
