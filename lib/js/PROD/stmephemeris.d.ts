@@ -19,8 +19,14 @@ export interface StmEphemeris {
     readonly ltm: readonly number[];
     readonly epochs: readonly StmEphemerisEpoch[];
 }
+/** The Record fragment P8 prints and its reader returns. */
+export type StmEphemerisText = Omit<StmEphemeris, 'elements' | 'parameters'>;
 /** The P8 content of a Record, before printing. */
 export declare function stmEphemeris(record: Record): Result<StmEphemeris>;
+/** P8 text of a fragment: the header, the equinoctial covariance rows and the sensitivity rows per epoch. */
+export declare function writeStmEphemeris(e: StmEphemerisText): Result<string>;
 /** P8 text: the header, the equinoctial covariance rows and the sensitivity rows per epoch. */
 export declare function stmEphemerisText(record: Record): Result<string>;
+/** Reads P8 back into its fragment; refuses a malformed header, covariance row, epoch line or block. */
+export declare function readStmEphemeris(text: string): Result<StmEphemerisText>;
 //# sourceMappingURL=stmephemeris.d.ts.map

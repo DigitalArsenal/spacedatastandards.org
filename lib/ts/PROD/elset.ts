@@ -34,23 +34,76 @@
 // each parameter OD_DYNAMIC_PARAMETERS carries, solved for or held; an absent parameter leaves its columns
 // blank. Every line of either form ends with one line feed.
 //
+// Fragments. Each form has a Record fragment, the values it prints in the Record's names and units:
+// twoLineElements(record) -> TwoLineElements -> writeTwoLine, elementFileSet(record) -> ElementFileSet ->
+// writeElementFile; elsetTwoLine and elsetElementFile are the two compositions. The readers readTwoLine and
+// readElementFile return the same fragments, so writeTwoLine(readTwoLine(text)) and
+// writeElementFile(readElementFile(text)) return a text either writer wrote byte for byte. The values read are
+// the printed ones: the Record's values to the precision of their fields.
+// Record gaps (record.ts unchanged): the element set number and the revolution number at the set's epoch have
+// no typed home in the Record; the fragment carries them (elementSetNumber, revAtEpoch), null when blank, and
+// a Record-built set prints the first blank and the second from ORB_REVNUM as above. The two-line epoch is
+// carried as epochYear and epochDay (the 1e-8 day grid is finer than the millisecond of MEAN_ELEMENTS.EPOCH,
+// which the fragment also carries); BTERM and AGOM are not in the two-line form and not in its fragment; the
+// element-file form does not print whether a parameter is solved for, so its fragment has no solvedFor.
+// Reader decisions: the two-line reader takes digits or leading blanks in the catalog fields (equal on both
+// lines), a blank or a digit string in the element set number and revolution fields, a sign of blank, '+' or
+// '-' in the n-dot and exponent fields, and a designator YYNNNP[PP] (the year through the tokens.ts pivot) or
+// blank; the element-file reader takes each numeric field in its tokens.ts format, a blank parameter field as
+// absent, fr +1 or -1, and no trailing blank. Columns between fields are blank on both forms.
+//
 // Refusal codes: theory-not-exportable:<THEORY>, record-missing:NORAD_CAT_ID, record-missing:STATE_DATA,
 // record-missing:GM, epoch-form:MEAN_ELEMENTS.EPOCH, field-form:<token>, field-range:<token>,
-// field-overflow:<token>, field-overlap, and the frames.ts codes of the equinoctial conversion (frame-*).
+// field-overflow:<token>, field-overlap, and the frames.ts codes of the equinoctial conversion (frame-*); the
+// readers': p7-empty (no closing line feed), p7-line-count, p7-line:<n> (a non-blank column between fields, a
+// trailing blank), field-form:<token>, field-range:<token>, field-overflow:<token> (a line past its last
+// column), checksum-mismatch:<token>.
 import { meanElementSource } from '../OCM/main.js';
 import {
-  ok, refuse, type Result, type Token, tokenOf, formatToken, formatText, formatFixed, placeFields, isLeapYear,
-  CALENDAR_FIRST_YEAR, CALENDAR_LAST_YEAR, TLE_LINE_LENGTH, P7_LINES,
+  ok, refuse, type Result, type Token, tokenOf, formatToken, formatText, formatFixed, placeFields, isLeapYear, daysInYear, fullYear,
+  endColumn, formatWidth, parseCalendar, calendarToUtcMs, CALENDAR_FIRST_YEAR, CALENDAR_LAST_YEAR, TLE_LINE_LENGTH, P7_LINES,
 } from './tokens.js';
-import { type Record, PARAMETERS } from './record.js';
-import { cartesianToEquinoctial } from './frames.js';
+import { type Record, type RecordMeanElements, type RecordParameter, PARAMETERS } from './record.js';
+import { cartesianToEquinoctial, type Equinoctial } from './frames.js';
 
 export const ELSET_REFUSAL_CODES: readonly string[] = [
   'theory-not-exportable:<THEORY>', 'record-missing:NORAD_CAT_ID', 'record-missing:STATE_DATA', 'record-missing:GM',
   'epoch-form:MEAN_ELEMENTS.EPOCH', 'field-form:<token>', 'field-range:<token>', 'field-overflow:<token>', 'field-overlap',
+  'p7-empty', 'p7-line-count', 'p7-line:<n>', 'checksum-mismatch:<token>',
 ];
 /** The only theory whose mean element set the two-line form carries. */
 export const TWO_LINE_THEORY = meanElementSource.SGP4;
+
+/** The mean element set the two-line form carries: the Record's, without BTERM and AGOM, which it does not print. */
+export type TwoLineMeanElements = Omit<RecordMeanElements, 'bterm' | 'agom'>;
+/** The Record fragment of the two-line form: what the writer prints and the reader returns. */
+export interface TwoLineElements {
+  /** NORAD_CAT_ID. */
+  readonly noradCatId: number;
+  /** HEADER.CLASSIFICATION, one character. */
+  readonly classification: string;
+  /** INTERNATIONAL_DESIGNATOR, YYYY-NNNP[PP]; null when blank. */
+  readonly internationalDesignator: string | null;
+  /** The set's epoch: the full year and the day of the year counted from 1.0 (00:00 UTC of January 1), on the 1e-8 day grid. */
+  readonly epochYear: number;
+  readonly epochDay: number;
+  /** The mean element set; its EPOCH is the ISO 8601 instant of epochYear/epochDay to the millisecond. */
+  readonly meanElements: TwoLineMeanElements;
+  readonly ephemerisType: number;
+  /** No typed home in the Record: null when blank (the Record-built set prints it blank). */
+  readonly elementSetNumber: number | null;
+  /** ORB_REVNUM modulo 100000 when the set's epoch is EPOCH_TZERO; null when blank. */
+  readonly revAtEpoch: number | null;
+}
+/** The Record fragment of the element-file form. */
+export interface ElementFileSet {
+  /** The first state's epoch, UTC milliseconds. */
+  readonly epochMs: number;
+  /** The $OCM EQUINOCTIAL set of the first state: a km, af, ag, L deg, chi, psi, fr. */
+  readonly equinoctial: Equinoctial;
+  /** The parameters OD_DYNAMIC_PARAMETERS carries, in the fixed order (whether solved is not printed). */
+  readonly parameters: readonly Omit<RecordParameter, 'solvedFor'>[];
+}
 
 type Field = { readonly startColumn: number; readonly text: string };
 const DAY_MS = 86400000;
@@ -118,13 +171,21 @@ function designator(value: string | null): Result<string> {
   return ok(`${m[1].slice(2)}${m[2]}${m[3]}`);
 }
 
-/** The two-digit year and DDD.DDDDDDDD of a UTC instant. */
-function epochFields(epochMs: number): Result<{ year: string; day: string }> {
+/** The year and the day of the year (from 1.0) of a UTC instant, on the 1e-8 day grid (a carry rolls into the next year). */
+function epochOf(epochMs: number): Result<{ year: number; day: number }> {
   let year = new Date(epochMs).getUTCFullYear();
   let units = Math.round(((epochMs - Date.UTC(year, 0, 1)) / DAY_MS) * DAY_GRID);
   const yearUnits = (isLeapYear(year) ? 366 : 365) * DAY_GRID;
   if (units >= yearUnits) { units -= yearUnits; year += 1; }
   if (year < CALENDAR_FIRST_YEAR || year > CALENDAR_LAST_YEAR) return refuse('field-overflow:TLE1_EPOCH_YEAR', `the epoch year ${year} is outside ${CALENDAR_FIRST_YEAR}..${CALENDAR_LAST_YEAR}`);
+  return ok({ year, day: 1 + units / DAY_GRID });
+}
+
+/** The two-digit year and DDD.DDDDDDDD of a set's epoch. */
+function epochFields(year: number, dayOfYear: number): Result<{ year: string; day: string }> {
+  if (!Number.isInteger(year) || year < CALENDAR_FIRST_YEAR || year > CALENDAR_LAST_YEAR) return refuse('field-overflow:TLE1_EPOCH_YEAR', `the epoch year ${year} is outside ${CALENDAR_FIRST_YEAR}..${CALENDAR_LAST_YEAR}`);
+  const units = Math.round((dayOfYear - 1) * DAY_GRID);
+  if (!(units >= 0 && units < daysInYear(year) * DAY_GRID)) return refuse('field-range:TLE1_EPOCH_DAY', `day ${dayOfYear} is outside year ${year}`);
   const day = Math.floor(units / DAY_GRID) + 1;
   const fraction = units - (day - 1) * DAY_GRID;
   return ok({ year: String(year % 100).padStart(2, '0'), day: `${String(day).padStart(3, '0')}.${String(fraction).padStart(8, '0')}` });
@@ -141,8 +202,8 @@ function line(checksumToken: string, fields: readonly Result<Field>[]): Result<s
   return ok(padded + String(twoLineChecksum(padded)));
 }
 
-/** P7, two-line form: the Record's SGP4 mean element set as two 69-character lines. */
-export function elsetTwoLine(record: Record): Result<string> {
+/** The two-line form's fragment of a Record: its SGP4 mean element set and the identifiers the lines carry. */
+export function twoLineElements(record: Record): Result<TwoLineElements> {
   const me = record.elements.meanElements;
   if (!me || me.theory !== TWO_LINE_THEORY) {
     const theory = me ? meanElementSource[me.theory] ?? String(me.theory) : record.meta.theory ?? 'UNSPECIFIED';
@@ -150,28 +211,51 @@ export function elsetTwoLine(record: Record): Result<string> {
   }
   const catalog = record.meta.noradCatId;
   if (!(catalog > 0)) return refuse('record-missing:NORAD_CAT_ID', 'the two-line form needs the catalog number');
-  if (catalog > 99999) return refuse('field-overflow:TLE1_CATALOG_NUMBER', `catalog number ${catalog} exceeds five digits`);
   const epochMs = Date.parse(me.epoch);
   if (!Number.isFinite(epochMs)) return refuse('epoch-form:MEAN_ELEMENTS.EPOCH', `MEAN_ELEMENTS.EPOCH is not an ISO 8601 instant: ${me.epoch}`);
-  const epoch = epochFields(epochMs);
+  const epoch = epochOf(epochMs);
   if (!epoch.ok) return epoch;
-  const intl = designator(record.meta.internationalDesignator);
-  if (!intl.ok) return intl;
   const header = record.ocm.HEADER;
   const rawClass = header && header.CLASSIFICATION !== null ? (typeof header.CLASSIFICATION === 'string' ? header.CLASSIFICATION : new TextDecoder().decode(header.CLASSIFICATION)) : '';
-  const classification = rawClass === '' ? 'U' : rawClass;
+  const revnum = record.ocm.ORB_REVNUM;
+  const rev = Number.isFinite(revnum) && revnum > 0 && Number.isInteger(revnum) && epochMs === record.meta.epochMs ? revnum % 100000 : null;
+  return ok({
+    noradCatId: catalog, classification: rawClass === '' ? 'U' : rawClass, internationalDesignator: record.meta.internationalDesignator,
+    epochYear: epoch.value.year, epochDay: epoch.value.day,
+    meanElements: {
+      theory: me.theory, epoch: me.epoch, meanMotion: me.meanMotion, eccentricity: me.eccentricity, inclination: me.inclination,
+      raan: me.raan, argOfPericenter: me.argOfPericenter, meanAnomaly: me.meanAnomaly,
+      bstar: me.bstar, meanMotionDot: me.meanMotionDot, meanMotionDdot: me.meanMotionDdot,
+    },
+    ephemerisType: 0, elementSetNumber: null, revAtEpoch: rev,
+  });
+}
+
+/** Two 69-character lines of a two-line fragment. */
+export function writeTwoLine(set: TwoLineElements): Result<string> {
+  const me = set.meanElements;
+  const catalog = set.noradCatId;
+  if (!(catalog > 0) || !Number.isInteger(catalog)) return refuse('field-range:TLE1_CATALOG_NUMBER', `catalog number ${catalog} is not a positive integer`);
+  if (catalog > 99999) return refuse('field-overflow:TLE1_CATALOG_NUMBER', `catalog number ${catalog} exceeds five digits`);
+  const epoch = epochFields(set.epochYear, set.epochDay);
+  if (!epoch.ok) return epoch;
+  const intl = designator(set.internationalDesignator);
+  if (!intl.ok) return intl;
   const catalogText = String(catalog).padStart(5, '0');
   const eccentricity = Math.round(me.eccentricity * 1e7);
   if (!(me.eccentricity >= 0) || eccentricity >= 1e7) return refuse('field-range:TLE2_ECCENTRICITY', `eccentricity ${me.eccentricity} is outside [0, 1)`);
   const meanMotion = formatFixed(me.meanMotion, 11, 8);
   if (meanMotion === null || !(me.meanMotion > 0)) return refuse('field-overflow:TLE2_MEAN_MOTION', `mean motion ${me.meanMotion} does not fit F11.8 rev/day`);
-  const revnum = record.ocm.ORB_REVNUM;
-  const rev = Number.isFinite(revnum) && revnum > 0 && Number.isInteger(revnum) && epochMs === record.meta.epochMs ? String(revnum % 100000) : '';
+  const integerText = (token: string, value: number | null): Result<Field> => {
+    if (value === null) return textField(token, '', true);
+    if (!Number.isInteger(value) || value < 0) return refuse(`field-range:${token}`, `${token} ${value} is not a non-negative integer`);
+    return textField(token, String(value), true);
+  };
   const first = line('TLE1_CHECKSUM', [
-    textField('TLE1_LINE_NUMBER', '1'), textField('TLE1_CATALOG_NUMBER', catalogText), textField('TLE1_CLASSIFICATION', classification),
+    textField('TLE1_LINE_NUMBER', '1'), textField('TLE1_CATALOG_NUMBER', catalogText), textField('TLE1_CLASSIFICATION', set.classification),
     textField('TLE1_INTERNATIONAL_DESIGNATOR', intl.value), textField('TLE1_EPOCH_YEAR', epoch.value.year), textField('TLE1_EPOCH_DAY', epoch.value.day),
     decimalField('TLE1_MEAN_MOTION_DOT', me.meanMotionDot), exponentField('TLE1_MEAN_MOTION_DDOT', me.meanMotionDdot), exponentField('TLE1_BSTAR', me.bstar),
-    textField('TLE1_EPHEMERIS_TYPE', '0'), textField('TLE1_ELEMENT_SET_NUMBER', '', true),
+    integerText('TLE1_EPHEMERIS_TYPE', set.ephemerisType), integerText('TLE1_ELEMENT_SET_NUMBER', set.elementSetNumber),
   ]);
   if (!first.ok) return first;
   const second = line('TLE2_CHECKSUM', [
@@ -179,13 +263,20 @@ export function elsetTwoLine(record: Record): Result<string> {
     angleField('TLE2_INCLINATION', me.inclination, 0, 180, true), angleField('TLE2_RA_OF_ASC_NODE', me.raan, 0, 360, false),
     textField('TLE2_ECCENTRICITY', String(eccentricity).padStart(7, '0')),
     angleField('TLE2_ARG_OF_PERICENTER', me.argOfPericenter, 0, 360, false), angleField('TLE2_MEAN_ANOMALY', me.meanAnomaly, 0, 360, false),
-    textField('TLE2_MEAN_MOTION', meanMotion), textField('TLE2_REV_AT_EPOCH', rev, true),
+    textField('TLE2_MEAN_MOTION', meanMotion), integerText('TLE2_REV_AT_EPOCH', set.revAtEpoch),
   ]);
   if (!second.ok) return second;
   return ok(`${first.value}\n${second.value}\n`);
 }
 
+/** P7, two-line form: the Record's SGP4 mean element set as two 69-character lines. */
+export function elsetTwoLine(record: Record): Result<string> {
+  const set = twoLineElements(record);
+  return set.ok ? writeTwoLine(set.value) : set;
+}
+
 const ELF_PARAMETER_TOKENS: readonly string[] = PARAMETERS.map((p) => `ELF_${p.symbol}`);
+const ELF_ELEMENT_TOKENS: readonly string[] = ['ELF_SEMI_MAJOR_AXIS', 'ELF_AF', 'ELF_AG', 'ELF_MEAN_LONGITUDE', 'ELF_CHI', 'ELF_PSI', 'ELF_RETROGRADE_FACTOR'];
 
 function numericField(t: Token, value: number): Result<Field> {
   const text = formatToken(t, value);
@@ -193,19 +284,27 @@ function numericField(t: Token, value: number): Result<Field> {
   return ok({ startColumn: t.startColumn, text });
 }
 
-/** P7, element-file form: the equinoctial set at the Record's first state and the parameters it carries, one line. */
-export function elsetElementFile(record: Record): Result<string> {
+/** The element-file form's fragment of a Record: the equinoctial set of its first state and the parameters it carries. */
+export function elementFileSet(record: Record): Result<ElementFileSet> {
   const first = record.epochs[0];
   if (!first) return refuse('record-missing:STATE_DATA', 'the element-file form needs a state');
   if (record.meta.gm === null) return refuse('record-missing:GM', 'the element-file form needs PERTURBATIONS.GM');
   const eq = cartesianToEquinoctial(first.state, record.meta.gm);
   if (!eq.ok) return eq;
-  const [a, af, ag, l, chi, psi, fr] = eq.value;
-  const values: readonly [string, number][] = [
-    ['ELF_EPOCH', first.epochMs], ['ELF_SEMI_MAJOR_AXIS', a], ['ELF_AF', af], ['ELF_AG', ag], ['ELF_MEAN_LONGITUDE', l],
-    ['ELF_CHI', chi], ['ELF_PSI', psi], ['ELF_RETROGRADE_FACTOR', fr],
-    ...record.elements.parameters.map((p): [string, number] => [ELF_PARAMETER_TOKENS[PARAMETERS.findIndex((d) => d.kind === p.kind)], p.value]),
-  ];
+  return ok({
+    epochMs: first.epochMs, equinoctial: eq.value,
+    parameters: record.elements.parameters.map(({ name, symbol, kind, units, value }) => ({ name, symbol, kind, units, value })),
+  });
+}
+
+/** One element-file line of a fragment. */
+export function writeElementFile(set: ElementFileSet): Result<string> {
+  const values: [string, number][] = [['ELF_EPOCH', set.epochMs], ...ELF_ELEMENT_TOKENS.map((token, i): [string, number] => [token, set.equinoctial[i]])];
+  for (const p of set.parameters) {
+    const at = PARAMETERS.findIndex((d) => d.kind === p.kind);
+    if (at < 0) return refuse(`field-form:ELF_${p.symbol}`, `${p.name} is not one of the five parameters`);
+    values.push([ELF_PARAMETER_TOKENS[at], p.value]);
+  }
   const fields: Field[] = [];
   for (const [token, value] of values) {
     if (!P7_LINES.ELF.includes(token)) return refuse(`field-form:${token}`, `${token} is not an element-file column`);
@@ -216,4 +315,165 @@ export function elsetElementFile(record: Record): Result<string> {
   const placed = placeFields(fields);
   if (!placed.ok) return placed;
   return ok(`${placed.value}\n`);
+}
+
+/** P7, element-file form: the equinoctial set at the Record's first state and the parameters it carries, one line. */
+export function elsetElementFile(record: Record): Result<string> {
+  const set = elementFileSet(record);
+  return set.ok ? writeElementFile(set.value) : set;
+}
+
+// ---- readers ------------------------------------------------------------------------------------------------
+
+/** The lines of a P7 text: refused p7-empty without the closing line feed, p7-line-count for another count. */
+function linesOf(text: string, count: number): Result<string[]> {
+  if (!text.endsWith('\n') || text === '\n') return refuse('p7-empty', 'P7 text does not end with a line feed');
+  const lines = text.slice(0, -1).split('\n');
+  if (lines.length !== count) return refuse('p7-line-count', `the form has ${count} line${count === 1 ? '' : 's'}, not ${lines.length}`);
+  return ok(lines);
+}
+/** The columns of a line no token of the form covers must be blank; the line may not run past its last token. */
+function layout(line: string, n: number, tokens: readonly Token[]): Result<true> {
+  const last = tokens[tokens.length - 1];
+  if (line.length > endColumn(last)) return refuse(`field-overflow:${last.token}`, `line ${n} runs past column ${endColumn(last)}`);
+  for (let c = 1; c <= line.length; c++) {
+    if (line[c - 1] !== ' ' && !tokens.some((t) => c >= t.startColumn && c <= endColumn(t))) return refuse(`p7-line:${n}`, `line ${n} column ${c} lies between fields and is not blank`);
+  }
+  return ok(true);
+}
+const columns = (line: string, t: Token): string => line.slice(t.startColumn - 1, t.startColumn - 1 + formatWidth(t.format));
+
+/** Reads the two-line form back into its fragment; refuses a malformed line, field or checksum. */
+export function readTwoLine(text: string): Result<TwoLineElements> {
+  const lines = linesOf(text, 2);
+  if (!lines.ok) return lines;
+  const tok = (name: string) => tokenOf('P7', name);
+  for (const [k, prefix] of (['TLE1', 'TLE2'] as const).entries()) {
+    const l = lines.value[k];
+    const tokens = P7_LINES[prefix].map(tok);
+    const shape = layout(l, k + 1, tokens);
+    if (!shape.ok) return shape;
+    if (l.length < TLE_LINE_LENGTH) return refuse(`field-form:${prefix}_CHECKSUM`, `line ${k + 1} is ${l.length} characters, not ${TLE_LINE_LENGTH}`);
+    if (columns(l, tok(`${prefix}_LINE_NUMBER`)) !== String(k + 1)) return refuse(`field-form:${prefix}_LINE_NUMBER`, `line ${k + 1} does not start with ${k + 1}`);
+    const checksum = columns(l, tok(`${prefix}_CHECKSUM`));
+    if (!/^\d$/.test(checksum)) return refuse(`field-form:${prefix}_CHECKSUM`, `line ${k + 1}'s checksum is not a digit`);
+    if (Number(checksum) !== twoLineChecksum(l)) return refuse(`checksum-mismatch:${prefix}_CHECKSUM`, `line ${k + 1}'s checksum ${checksum} is not ${twoLineChecksum(l)}`);
+  }
+  const [one, two] = lines.value;
+  const f1 = (name: string) => columns(one, tok(name));
+  const f2 = (name: string) => columns(two, tok(name));
+  const form = (token: string, value: string, re: RegExp): Result<RegExpExecArray> => {
+    const m = re.exec(value);
+    return m ? ok(m) : refuse(`field-form:${token}`, `${token} is not in its form: "${value}"`);
+  };
+  const catalog = form('TLE1_CATALOG_NUMBER', f1('TLE1_CATALOG_NUMBER'), /^ *(\d+)$/);
+  if (!catalog.ok) return catalog;
+  const noradCatId = Number(catalog.value[1]);
+  if (noradCatId === 0) return refuse('field-range:TLE1_CATALOG_NUMBER', 'catalog number 0');
+  const catalog2 = form('TLE2_CATALOG_NUMBER', f2('TLE2_CATALOG_NUMBER'), /^ *(\d+)$/);
+  if (!catalog2.ok) return catalog2;
+  if (Number(catalog2.value[1]) !== noradCatId) return refuse('field-form:TLE2_CATALOG_NUMBER', `line 2's catalog number ${catalog2.value[1]} is not line 1's ${noradCatId}`);
+  const classification = form('TLE1_CLASSIFICATION', f1('TLE1_CLASSIFICATION'), /^([A-Z])$/);
+  if (!classification.ok) return classification;
+  const intl = form('TLE1_INTERNATIONAL_DESIGNATOR', f1('TLE1_INTERNATIONAL_DESIGNATOR'), /^(?:(\d{2})(\d{3})([A-Z]{1,3}) *| {8})$/);
+  if (!intl.ok) return intl;
+  const internationalDesignator = intl.value[1] === undefined ? null : `${fullYear(Number(intl.value[1]))}-${intl.value[2]}${intl.value[3]}`;
+  const year = form('TLE1_EPOCH_YEAR', f1('TLE1_EPOCH_YEAR'), /^(\d{2})$/);
+  if (!year.ok) return year;
+  const epochYear = fullYear(Number(year.value[1]));
+  const day = form('TLE1_EPOCH_DAY', f1('TLE1_EPOCH_DAY'), /^ *(\d{1,3})\.(\d{8})$/);
+  if (!day.ok) return day;
+  const dayNumber = Number(day.value[1]);
+  if (dayNumber < 1 || dayNumber > daysInYear(epochYear)) return refuse('field-range:TLE1_EPOCH_DAY', `day ${dayNumber} does not exist in ${epochYear}`);
+  const units = (dayNumber - 1) * DAY_GRID + Number(day.value[2]);
+  const epochMs = Date.UTC(epochYear, 0, 1) + (units * DAY_MS) / DAY_GRID;
+  const ndot = form('TLE1_MEAN_MOTION_DOT', f1('TLE1_MEAN_MOTION_DOT'), /^([ +-])\.(\d{8})$/);
+  if (!ndot.ok) return ndot;
+  const exponent = (token: string): Result<number> => {
+    const m = form(token, f1(token), /^([ +-])(\d{5})([+-])(\d)$/);
+    return m.ok ? ok(Number(`${m.value[1] === '-' ? '-' : ''}0.${m.value[2]}e${m.value[3]}${m.value[4]}`)) : m;
+  };
+  const nddot = exponent('TLE1_MEAN_MOTION_DDOT');
+  if (!nddot.ok) return nddot;
+  const bstar = exponent('TLE1_BSTAR');
+  if (!bstar.ok) return bstar;
+  const ephemerisType = form('TLE1_EPHEMERIS_TYPE', f1('TLE1_EPHEMERIS_TYPE'), /^(\d)$/);
+  if (!ephemerisType.ok) return ephemerisType;
+  const setNumber = form('TLE1_ELEMENT_SET_NUMBER', f1('TLE1_ELEMENT_SET_NUMBER'), /^ *(\d*)$/);
+  if (!setNumber.ok) return setNumber;
+  const angle = (token: string, high: number, closed: boolean): Result<number> => {
+    const m = form(token, f2(token), /^ *(\d+\.\d{4})$/);
+    if (!m.ok) return m;
+    const v = Number(m.value[1]);
+    return (closed ? v <= high : v < high) ? ok(v) : refuse(`field-range:${token}`, `${token} ${v} is outside [0, ${high}${closed ? ']' : ')'}`);
+  };
+  const inclination = angle('TLE2_INCLINATION', 180, true);
+  if (!inclination.ok) return inclination;
+  const raan = angle('TLE2_RA_OF_ASC_NODE', 360, false);
+  if (!raan.ok) return raan;
+  const eccentricity = form('TLE2_ECCENTRICITY', f2('TLE2_ECCENTRICITY'), /^(\d{7})$/);
+  if (!eccentricity.ok) return eccentricity;
+  const argp = angle('TLE2_ARG_OF_PERICENTER', 360, false);
+  if (!argp.ok) return argp;
+  const meanAnomaly = angle('TLE2_MEAN_ANOMALY', 360, false);
+  if (!meanAnomaly.ok) return meanAnomaly;
+  const meanMotion = form('TLE2_MEAN_MOTION', f2('TLE2_MEAN_MOTION'), /^ *(\d+\.\d{8})$/);
+  if (!meanMotion.ok) return meanMotion;
+  if (!(Number(meanMotion.value[1]) > 0)) return refuse('field-range:TLE2_MEAN_MOTION', 'mean motion 0');
+  const rev = form('TLE2_REV_AT_EPOCH', f2('TLE2_REV_AT_EPOCH'), /^ *(\d*)$/);
+  if (!rev.ok) return rev;
+  return ok({
+    noradCatId, classification: classification.value[1], internationalDesignator, epochYear, epochDay: 1 + units / DAY_GRID,
+    meanElements: {
+      theory: TWO_LINE_THEORY, epoch: new Date(Math.round(epochMs)).toISOString(), meanMotion: Number(meanMotion.value[1]),
+      eccentricity: Number(`0.${eccentricity.value[1]}`), inclination: inclination.value, raan: raan.value,
+      argOfPericenter: argp.value, meanAnomaly: meanAnomaly.value, bstar: bstar.value,
+      meanMotionDot: Number(`${ndot.value[1] === '-' ? '-' : ''}0.${ndot.value[2]}`), meanMotionDdot: nddot.value,
+    },
+    ephemerisType: Number(ephemerisType.value[1]),
+    elementSetNumber: setNumber.value[1] === '' ? null : Number(setNumber.value[1]),
+    revAtEpoch: rev.value[1] === '' ? null : Number(rev.value[1]),
+  });
+}
+
+const FIXED = /^ *-?\d+\.\d+$/;
+const EXPONENT = /^ *[+-]\d\.\d+E[+-]\d{2,}$/;
+const INTEGER = /^ *[+-]?\d+$/;
+
+/** Reads the element-file form back into its fragment; refuses a malformed line or field. */
+export function readElementFile(text: string): Result<ElementFileSet> {
+  const lines = linesOf(text, 1);
+  if (!lines.ok) return lines;
+  const l = lines.value[0];
+  const tokens = P7_LINES.ELF.map((name) => tokenOf('P7', name));
+  const shape = layout(l, 1, tokens);
+  if (!shape.ok) return shape;
+  if (l !== l.trimEnd()) return refuse('p7-line:1', 'line 1 ends in a blank');
+  const number = (t: Token): Result<number> => {
+    const value = columns(l, t);
+    const re = t.format.startsWith('F') ? FIXED : t.format.startsWith('I') ? INTEGER : EXPONENT;
+    if (value.length !== formatWidth(t.format) || !re.test(value)) return refuse(`field-form:${t.token}`, `${t.token} is not ${t.format}: "${value}"`);
+    return ok(Number(value));
+  };
+  const epochText = columns(l, tokenOf('P7', 'ELF_EPOCH'));
+  const calendar = parseCalendar(epochText);
+  if (!calendar.ok) return refuse('field-form:ELF_EPOCH', calendar.refusal.message);
+  const epochMs = calendarToUtcMs(calendar.value);
+  if (!epochMs.ok) return refuse('field-form:ELF_EPOCH', epochMs.refusal.message);
+  const elements: number[] = [];
+  for (const name of ELF_ELEMENT_TOKENS) {
+    const v = number(tokenOf('P7', name));
+    if (!v.ok) return v;
+    elements.push(v.value);
+  }
+  if (Math.abs(elements[6]) !== 1) return refuse('field-range:ELF_RETROGRADE_FACTOR', `the retrograde factor ${elements[6]} is not +1 or -1`);
+  const parameters: Omit<RecordParameter, 'solvedFor'>[] = [];
+  for (const [i, definition] of PARAMETERS.entries()) {
+    const t = tokenOf('P7', ELF_PARAMETER_TOKENS[i]);
+    if (columns(l, t).trim() === '') continue;
+    const v = number(t);
+    if (!v.ok) return v;
+    parameters.push({ ...definition, value: v.value });
+  }
+  return ok({ epochMs: epochMs.value, equinoctial: elements as unknown as Equinoctial, parameters });
 }
