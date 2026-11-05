@@ -45,7 +45,7 @@ The Record's views are read-only projections of the `$OCM`:
 | View | Fields |
 | --- | --- |
 | `meta` | object name, designators and catalog number, originator, creation date, message id, theory (`ORB_AVERAGING`, else the mean element set's theory), trajectory and covariance frames, center, time system, epoch (`EPOCH_TZERO`), TAI-UTC, UT1-UTC, next leap second epoch and TAI-UTC, nutation tag (`REDUCTION_THEORY`), EOP source, GM, force model, integrator, tool version (`PROVENANCE.PRODUCER`) |
-| `elements` | the mean element set, the equinoctial set of the first state, the five parameters with value and solved-for flag |
+| `elements` | the mean element set, the equinoctial set of the first state (with GM), the parameters `OD_DYNAMIC_PARAMETERS` carries with value and solved-for flag, in the fixed order |
 | `fit` | observations, tracks, iterations, converged, RMS km, `WEIGHTED_RMS`, `SEDR`, solved-for names, method, arc start and stop |
 | `epochs` | per state: minutes from the epoch, UTC milliseconds, cartesian position and velocity in the trajectory frame, revolution number |
 | `covariance` | frame, type, ordering, size, parameter names and kinds, units, per-epoch LTM and sigmas, per-epoch sensitivities |
