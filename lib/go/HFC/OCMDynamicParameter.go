@@ -84,7 +84,7 @@ func (rcv *OCMDynamicParameter) MutateValue(n float64) bool {
 }
 
 /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-/// m/s**2 for IN_TRACK_ACCELERATION.
+/// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
 func (rcv *OCMDynamicParameter) UNITS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -98,7 +98,7 @@ func (rcv *OCMDynamicParameter) Units() []byte {
 }
 
 /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-/// m/s**2 for IN_TRACK_ACCELERATION.
+/// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
 /// True when the orbit determination solved for the parameter, false when VALUE was held.
 func (rcv *OCMDynamicParameter) SOLVED_FOR() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))

@@ -8005,6 +8005,35 @@
       },
       "additionalProperties": false
     },
+    "OEMOrbitDetermination": {
+      "type": "object",
+      "description": "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+      "properties": {
+        "OD_OBSERVATIONS_USED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Observations the determination used; 0 when not stated.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OD_ARC_START": {
+          "type": "string",
+          "description": "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+          "x-flatbuffer-type": "string"
+        },
+        "OD_ARC_STOP": {
+          "type": "string",
+          "description": "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+          "x-flatbuffer-type": "string"
+        },
+        "OD_METHOD": {
+          "type": "string",
+          "description": "Method of the determination; empty when not stated.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "ephemerisDataBlock": {
       "type": "object",
       "description": "OEM Ephemeris Data Block",
@@ -8213,6 +8242,11 @@
           "maximum": 2147483647,
           "description": "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
           "x-flatbuffer-type": "int"
+        },
+        "ORBIT_DETERMINATION": {
+          "$ref": "#/definitions/OEMOrbitDetermination",
+          "description": "Orbit determination this block's states descend from; absent when none\nis stated.",
+          "x-flatbuffer-type": "OEMOrbitDetermination"
         }
       },
       "additionalProperties": false

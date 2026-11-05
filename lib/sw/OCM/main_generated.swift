@@ -2018,7 +2018,7 @@ public struct OCMDynamicParameter: FlatBufferVerifiableTable, FlatbuffersVectorI
   ///  Value at the solution epoch, in UNITS.
   public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  ///  m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
   public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
   public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
   ///  True when the orbit determination solved for the parameter, false when VALUE was held.
@@ -3212,8 +3212,9 @@ public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Dynamical-model parameters of the solution with their values, solved for or held. An
-  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  ///  OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  ///  row of the covariance, false for a parameter the determination held.
   public var OD_DYNAMIC_PARAMETERS: FlatbufferVector<OCMDynamicParameter> { return _accessor.vector(at: VT.OD_DYNAMIC_PARAMETERS, byteSize: 4) }
   ///  DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
   public var DAYS_SINCE_FIRST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_FIRST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
@@ -3981,7 +3982,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
   public var TRAJ_FRAME_EPOCH: String? { let o = _accessor.offset(VT.TRAJ_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRAJ_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRAJ_FRAME_EPOCH) }
-  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  ///  local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
   public var COV_REF_FRAME: RFM? { let o = _accessor.offset(VT.COV_REF_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
   public var ORB_REVNUM: UInt32 { let o = _accessor.offset(VT.ORB_REVNUM); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
@@ -4005,17 +4007,20 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
   public var COV_TYPE: String? { let o = _accessor.offset(VT.COV_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_TYPE) }
-  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  ///  the product writers (lib/js/PROD) accept.
   public var COV_ORDERING: covarianceOrdering { let o = _accessor.offset(VT.COV_ORDERING); return o == 0 ? .ltm : covarianceOrdering(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ltm }
   ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
   ///  COV_PARAMETERS names.
   public var COV_SIZE: UInt8 { let o = _accessor.offset(VT.COV_SIZE); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  ///  Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  ///  COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  ///  DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  ///  and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
   public var COV_PARAMETERS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_PARAMETERS, byteSize: 4) }
-  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-  ///  dimensionless one.
+  ///  Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  ///  COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  ///  parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
   public var COV_UNITS: FlatbufferVector<String?> { return _accessor.vector(at: VT.COV_UNITS, byteSize: 4) }
   ///  Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
   ///  blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with

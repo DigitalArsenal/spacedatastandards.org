@@ -42,7 +42,7 @@ public final class OCMDynamicParameter extends com.google.flatbuffers.Table {
   public double VALUE() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-   * m/s**2 for IN_TRACK_ACCELERATION.
+   * m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
    */
   public String UNITS() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer UNITSAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

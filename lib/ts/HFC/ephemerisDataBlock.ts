@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CAT, CATT } from './CAT.js';
+import { OEMOrbitDetermination, OEMOrbitDeterminationT } from './OEMOrbitDetermination.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
@@ -262,8 +263,17 @@ CENTER_NAIF_ID():number {
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Orbit determination this block's states descend from; absent when none
+ * is stated.
+ */
+ORBIT_DETERMINATION(obj?:OEMOrbitDetermination):OEMOrbitDetermination|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new OEMOrbitDetermination()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startephemerisDataBlock(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(22);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -403,6 +413,10 @@ static addCenterNaifId(builder:flatbuffers.Builder, CENTER_NAIF_ID:number) {
   builder.addFieldInt32(20, CENTER_NAIF_ID, 0);
 }
 
+static addOrbitDetermination(builder:flatbuffers.Builder, ORBIT_DETERMINATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, ORBIT_DETERMINATIONOffset, 0);
+}
+
 static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -431,7 +445,8 @@ unpack(): ephemerisDataBlockT {
     this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength()),
     this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength()),
     this.OBJECT_NAIF_ID(),
-    this.CENTER_NAIF_ID()
+    this.CENTER_NAIF_ID(),
+    (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null)
   );
 }
 
@@ -458,6 +473,7 @@ unpackTo(_o: ephemerisDataBlockT): void {
   _o.POLYNOMIAL_POSITION_RECORDS = this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength());
   _o.OBJECT_NAIF_ID = this.OBJECT_NAIF_ID();
   _o.CENTER_NAIF_ID = this.CENTER_NAIF_ID();
+  _o.ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION() !== null ? this.ORBIT_DETERMINATION()!.unpack() : null);
 }
 }
 
@@ -483,7 +499,8 @@ constructor(
   public COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[] = [],
   public POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[] = [],
   public OBJECT_NAIF_ID: number = 0,
-  public CENTER_NAIF_ID: number = 0
+  public CENTER_NAIF_ID: number = 0,
+  public ORBIT_DETERMINATION: OEMOrbitDeterminationT|null = null
 ){}
 
 
@@ -503,6 +520,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPHEMERIS_DATA_LINES = ephemerisDataBlock.createEphemerisDataLinesVector(builder, builder.createObjectOffsetList(this.EPHEMERIS_DATA_LINES));
   const COVARIANCE_MATRIX_LINES = ephemerisDataBlock.createCovarianceMatrixLinesVector(builder, builder.createObjectOffsetList(this.COVARIANCE_MATRIX_LINES));
   const POLYNOMIAL_POSITION_RECORDS = ephemerisDataBlock.createPolynomialPositionRecordsVector(builder, builder.createObjectOffsetList(this.POLYNOMIAL_POSITION_RECORDS));
+  const ORBIT_DETERMINATION = (this.ORBIT_DETERMINATION !== null ? this.ORBIT_DETERMINATION!.pack(builder) : 0);
 
   ephemerisDataBlock.startephemerisDataBlock(builder);
   ephemerisDataBlock.addComment(builder, COMMENT);
@@ -526,6 +544,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDS);
   ephemerisDataBlock.addObjectNaifId(builder, this.OBJECT_NAIF_ID);
   ephemerisDataBlock.addCenterNaifId(builder, this.CENTER_NAIF_ID);
+  ephemerisDataBlock.addOrbitDetermination(builder, ORBIT_DETERMINATION);
 
   return ephemerisDataBlock.endephemerisDataBlock(builder);
 }

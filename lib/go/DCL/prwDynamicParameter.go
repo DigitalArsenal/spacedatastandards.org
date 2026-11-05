@@ -10,7 +10,9 @@ import "strconv"
 /// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 /// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 /// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+/// parameter not in SI).
 type prwDynamicParameter byte
 
 const (
@@ -31,6 +33,8 @@ const (
 	prwDynamicParameterECOM2_B1_SIN             prwDynamicParameter = 13
 	prwDynamicParameterECOM2_B3_COS             prwDynamicParameter = 14
 	prwDynamicParameterECOM2_B3_SIN             prwDynamicParameter = 15
+	/// Constant outgassing acceleration an orbit determination solves for, km/s2.
+	prwDynamicParameterOUTGASSING_ACCELERATION  prwDynamicParameter = 16
 )
 
 var EnumNamesprwDynamicParameter = map[prwDynamicParameter]string{
@@ -50,6 +54,7 @@ var EnumNamesprwDynamicParameter = map[prwDynamicParameter]string{
 	prwDynamicParameterECOM2_B1_SIN:             "ECOM2_B1_SIN",
 	prwDynamicParameterECOM2_B3_COS:             "ECOM2_B3_COS",
 	prwDynamicParameterECOM2_B3_SIN:             "ECOM2_B3_SIN",
+	prwDynamicParameterOUTGASSING_ACCELERATION:  "OUTGASSING_ACCELERATION",
 }
 
 var EnumValuesprwDynamicParameter = map[string]prwDynamicParameter{
@@ -69,6 +74,7 @@ var EnumValuesprwDynamicParameter = map[string]prwDynamicParameter{
 	"ECOM2_B1_SIN":             prwDynamicParameterECOM2_B1_SIN,
 	"ECOM2_B3_COS":             prwDynamicParameterECOM2_B3_COS,
 	"ECOM2_B3_SIN":             prwDynamicParameterECOM2_B3_SIN,
+	"OUTGASSING_ACCELERATION":  prwDynamicParameterOUTGASSING_ACCELERATION,
 }
 
 func (v prwDynamicParameter) String() string {

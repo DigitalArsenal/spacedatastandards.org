@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "../FRM/main_generated.h"
+#include "../MEM/main_generated.h"
 #include "../PCE/main_generated.h"
 
 struct ODRSolverConfiguration;
@@ -471,6 +472,10 @@ inline ::flatbuffers::Offset<ODRIterationStatistics> CreateODRIterationStatistic
   return builder_.Finish();
 }
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 struct ODREditedObservation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ODREditedObservationBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -478,7 +483,14 @@ struct ODREditedObservation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     VT_ITERATION = 6,
     VT_PREFIT_RESIDUAL = 8,
     VT_NORMALIZED_RESIDUAL = 10,
-    VT_REASON = 12
+    VT_REASON = 12,
+    VT_EPOCH = 14,
+    VT_OBSERVATION_TYPE = 16,
+    VT_OBSERVED_VALUE = 18,
+    VT_COMPUTED_VALUE = 20,
+    VT_WEIGHT = 22,
+    VT_ACCEPTED = 24,
+    VT_PERTURBATION_MODEL_CODE = 26
   };
   const ::flatbuffers::String *OBSERVATION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATION_ID);
@@ -495,6 +507,34 @@ struct ODREditedObservation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   const ::flatbuffers::String *REASON() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REASON);
   }
+  /// Epoch of the observation (ISO 8601 UTC).
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Measurement class of the observation.
+  memMeasurementType OBSERVATION_TYPE() const {
+    return static_cast<memMeasurementType>(GetField<uint16_t>(VT_OBSERVATION_TYPE, 0));
+  }
+  /// The observation as measured, in the unit of its class: km, km/s or deg.
+  double OBSERVED_VALUE() const {
+    return GetField<double>(VT_OBSERVED_VALUE, 0.0);
+  }
+  /// The same quantity computed from the solution at EPOCH, in the same unit.
+  double COMPUTED_VALUE() const {
+    return GetField<double>(VT_COMPUTED_VALUE, 0.0);
+  }
+  /// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+  double WEIGHT() const {
+    return GetField<double>(VT_WEIGHT, 0.0);
+  }
+  /// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+  bool ACCEPTED() const {
+    return GetField<uint8_t>(VT_ACCEPTED, 0) != 0;
+  }
+  /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+  const ::flatbuffers::String *PERTURBATION_MODEL_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PERTURBATION_MODEL_CODE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -505,6 +545,15 @@ struct ODREditedObservation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
            VerifyField<double>(verifier, VT_NORMALIZED_RESIDUAL, 8) &&
            VerifyOffset(verifier, VT_REASON) &&
            verifier.VerifyString(REASON()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<uint16_t>(verifier, VT_OBSERVATION_TYPE, 2) &&
+           VerifyField<double>(verifier, VT_OBSERVED_VALUE, 8) &&
+           VerifyField<double>(verifier, VT_COMPUTED_VALUE, 8) &&
+           VerifyField<double>(verifier, VT_WEIGHT, 8) &&
+           VerifyField<uint8_t>(verifier, VT_ACCEPTED, 1) &&
+           VerifyOffset(verifier, VT_PERTURBATION_MODEL_CODE) &&
+           verifier.VerifyString(PERTURBATION_MODEL_CODE()) &&
            verifier.EndTable();
   }
 };
@@ -528,6 +577,27 @@ struct ODREditedObservationBuilder {
   void add_REASON(::flatbuffers::Offset<::flatbuffers::String> REASON) {
     fbb_.AddOffset(ODREditedObservation::VT_REASON, REASON);
   }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(ODREditedObservation::VT_EPOCH, EPOCH);
+  }
+  void add_OBSERVATION_TYPE(memMeasurementType OBSERVATION_TYPE) {
+    fbb_.AddElement<uint16_t>(ODREditedObservation::VT_OBSERVATION_TYPE, static_cast<uint16_t>(OBSERVATION_TYPE), 0);
+  }
+  void add_OBSERVED_VALUE(double OBSERVED_VALUE) {
+    fbb_.AddElement<double>(ODREditedObservation::VT_OBSERVED_VALUE, OBSERVED_VALUE, 0.0);
+  }
+  void add_COMPUTED_VALUE(double COMPUTED_VALUE) {
+    fbb_.AddElement<double>(ODREditedObservation::VT_COMPUTED_VALUE, COMPUTED_VALUE, 0.0);
+  }
+  void add_WEIGHT(double WEIGHT) {
+    fbb_.AddElement<double>(ODREditedObservation::VT_WEIGHT, WEIGHT, 0.0);
+  }
+  void add_ACCEPTED(bool ACCEPTED) {
+    fbb_.AddElement<uint8_t>(ODREditedObservation::VT_ACCEPTED, static_cast<uint8_t>(ACCEPTED), 0);
+  }
+  void add_PERTURBATION_MODEL_CODE(::flatbuffers::Offset<::flatbuffers::String> PERTURBATION_MODEL_CODE) {
+    fbb_.AddOffset(ODREditedObservation::VT_PERTURBATION_MODEL_CODE, PERTURBATION_MODEL_CODE);
+  }
   explicit ODREditedObservationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -546,13 +616,27 @@ inline ::flatbuffers::Offset<ODREditedObservation> CreateODREditedObservation(
     uint32_t ITERATION = 0,
     double PREFIT_RESIDUAL = 0.0,
     double NORMALIZED_RESIDUAL = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> REASON = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> REASON = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    memMeasurementType OBSERVATION_TYPE = memMeasurementType_UNSPECIFIED,
+    double OBSERVED_VALUE = 0.0,
+    double COMPUTED_VALUE = 0.0,
+    double WEIGHT = 0.0,
+    bool ACCEPTED = false,
+    ::flatbuffers::Offset<::flatbuffers::String> PERTURBATION_MODEL_CODE = 0) {
   ODREditedObservationBuilder builder_(_fbb);
+  builder_.add_WEIGHT(WEIGHT);
+  builder_.add_COMPUTED_VALUE(COMPUTED_VALUE);
+  builder_.add_OBSERVED_VALUE(OBSERVED_VALUE);
   builder_.add_NORMALIZED_RESIDUAL(NORMALIZED_RESIDUAL);
   builder_.add_PREFIT_RESIDUAL(PREFIT_RESIDUAL);
+  builder_.add_PERTURBATION_MODEL_CODE(PERTURBATION_MODEL_CODE);
+  builder_.add_EPOCH(EPOCH);
   builder_.add_REASON(REASON);
   builder_.add_ITERATION(ITERATION);
   builder_.add_OBSERVATION_ID(OBSERVATION_ID);
+  builder_.add_OBSERVATION_TYPE(OBSERVATION_TYPE);
+  builder_.add_ACCEPTED(ACCEPTED);
   return builder_.Finish();
 }
 
@@ -562,16 +646,32 @@ inline ::flatbuffers::Offset<ODREditedObservation> CreateODREditedObservationDir
     uint32_t ITERATION = 0,
     double PREFIT_RESIDUAL = 0.0,
     double NORMALIZED_RESIDUAL = 0.0,
-    const char *REASON = nullptr) {
+    const char *REASON = nullptr,
+    const char *EPOCH = nullptr,
+    memMeasurementType OBSERVATION_TYPE = memMeasurementType_UNSPECIFIED,
+    double OBSERVED_VALUE = 0.0,
+    double COMPUTED_VALUE = 0.0,
+    double WEIGHT = 0.0,
+    bool ACCEPTED = false,
+    const char *PERTURBATION_MODEL_CODE = nullptr) {
   auto OBSERVATION_ID__ = OBSERVATION_ID ? _fbb.CreateString(OBSERVATION_ID) : 0;
   auto REASON__ = REASON ? _fbb.CreateString(REASON) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto PERTURBATION_MODEL_CODE__ = PERTURBATION_MODEL_CODE ? _fbb.CreateString(PERTURBATION_MODEL_CODE) : 0;
   return CreateODREditedObservation(
       _fbb,
       OBSERVATION_ID__,
       ITERATION,
       PREFIT_RESIDUAL,
       NORMALIZED_RESIDUAL,
-      REASON__);
+      REASON__,
+      EPOCH__,
+      OBSERVATION_TYPE,
+      OBSERVED_VALUE,
+      COMPUTED_VALUE,
+      WEIGHT,
+      ACCEPTED,
+      PERTURBATION_MODEL_CODE__);
 }
 
 struct ODREstimatedParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

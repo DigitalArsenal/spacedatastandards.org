@@ -616,7 +616,9 @@ inline const char *EnumNameprwDensitySpecies(prwDensitySpecies e) {
 /// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 /// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 /// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+/// parameter not in SI).
 enum prwDynamicParameter : uint8_t {
   prwDynamicParameter_UNSPECIFIED = 0,
   prwDynamicParameter_DRAG_AREA_OVER_MASS = 1,
@@ -635,11 +637,13 @@ enum prwDynamicParameter : uint8_t {
   prwDynamicParameter_ECOM2_B1_SIN = 13,
   prwDynamicParameter_ECOM2_B3_COS = 14,
   prwDynamicParameter_ECOM2_B3_SIN = 15,
+  /// Constant outgassing acceleration an orbit determination solves for, km/s2.
+  prwDynamicParameter_OUTGASSING_ACCELERATION = 16,
   prwDynamicParameter_MIN = prwDynamicParameter_UNSPECIFIED,
-  prwDynamicParameter_MAX = prwDynamicParameter_ECOM2_B3_SIN
+  prwDynamicParameter_MAX = prwDynamicParameter_OUTGASSING_ACCELERATION
 };
 
-inline const prwDynamicParameter (&EnumValuesprwDynamicParameter())[16] {
+inline const prwDynamicParameter (&EnumValuesprwDynamicParameter())[17] {
   static const prwDynamicParameter values[] = {
     prwDynamicParameter_UNSPECIFIED,
     prwDynamicParameter_DRAG_AREA_OVER_MASS,
@@ -656,13 +660,14 @@ inline const prwDynamicParameter (&EnumValuesprwDynamicParameter())[16] {
     prwDynamicParameter_ECOM2_B1_COS,
     prwDynamicParameter_ECOM2_B1_SIN,
     prwDynamicParameter_ECOM2_B3_COS,
-    prwDynamicParameter_ECOM2_B3_SIN
+    prwDynamicParameter_ECOM2_B3_SIN,
+    prwDynamicParameter_OUTGASSING_ACCELERATION
   };
   return values;
 }
 
 inline const char * const *EnumNamesprwDynamicParameter() {
-  static const char * const names[17] = {
+  static const char * const names[18] = {
     "UNSPECIFIED",
     "DRAG_AREA_OVER_MASS",
     "DRAG_AREA_OVER_MASS_RATE",
@@ -679,13 +684,14 @@ inline const char * const *EnumNamesprwDynamicParameter() {
     "ECOM2_B1_SIN",
     "ECOM2_B3_COS",
     "ECOM2_B3_SIN",
+    "OUTGASSING_ACCELERATION",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameprwDynamicParameter(prwDynamicParameter e) {
-  if (::flatbuffers::IsOutRange(e, prwDynamicParameter_UNSPECIFIED, prwDynamicParameter_ECOM2_B3_SIN)) return "";
+  if (::flatbuffers::IsOutRange(e, prwDynamicParameter_UNSPECIFIED, prwDynamicParameter_OUTGASSING_ACCELERATION)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesprwDynamicParameter()[index];
 }
@@ -1424,7 +1430,10 @@ inline ::flatbuffers::Offset<PRWInstance> CreatePRWInstanceDirect(
 }
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
-/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+/// request's DYNAMIC_PARAMETERS in order, one row per parameter, each in the
+/// unit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,
+/// m/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
+/// SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).
 /// Covariance entries have row*column units; STM entries row/column units;
 /// an STM's parameter rows are the identity (parameters are constant).
 struct PRWStateMatrix FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

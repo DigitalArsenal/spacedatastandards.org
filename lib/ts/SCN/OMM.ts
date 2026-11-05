@@ -311,7 +311,7 @@ REV_AT_EPOCH():number {
 }
 
 /**
- * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+ * BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
  */
 BSTAR():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -327,7 +327,7 @@ MEAN_MOTION_DOT():number {
 }
 
 /**
- * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+ * MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
  */
 MEAN_MOTION_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
@@ -464,8 +464,28 @@ COV_REALISM(obj?:CVR):CVR|null {
   return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+ * SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+ * MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+ * renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+ */
+BTERM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+ * coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+ */
+AGOM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startOMM(builder:flatbuffers.Builder) {
-  builder.startObject(45);
+  builder.startObject(47);
 }
 
 static addCcsdsOmmVers(builder:flatbuffers.Builder, CCSDS_OMM_VERS:number) {
@@ -677,6 +697,14 @@ static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.
   builder.addFieldOffset(44, COV_REALISMOffset, 0);
 }
 
+static addBterm(builder:flatbuffers.Builder, BTERM:number) {
+  builder.addFieldFloat64(45, BTERM, 0.0);
+}
+
+static addAgom(builder:flatbuffers.Builder, AGOM:number) {
+  builder.addFieldFloat64(46, AGOM, 0.0);
+}
+
 static endOMM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -737,7 +765,9 @@ unpack(): OMMT {
     this.MESSAGE_ID(),
     this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength()),
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
-    (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null)
+    (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null),
+    this.BTERM(),
+    this.AGOM()
   );
 }
 
@@ -788,6 +818,8 @@ unpackTo(_o: OMMT): void {
   _o.USER_DEFINED_PARAMETERS = this.bb!.createObjList<OMMUserDefinedParameter, OMMUserDefinedParameterT>(this.USER_DEFINED_PARAMETERS.bind(this), this.userDefinedParametersLength());
   _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
   _o.COV_REALISM = (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null);
+  _o.BTERM = this.BTERM();
+  _o.AGOM = this.AGOM();
 }
 }
 
@@ -837,7 +869,9 @@ constructor(
   public MESSAGE_ID: string|Uint8Array|null = null,
   public USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[] = [],
   public PROVENANCE: PVNT|null = null,
-  public COV_REALISM: CVRT|null = null
+  public COV_REALISM: CVRT|null = null,
+  public BTERM: number = 0.0,
+  public AGOM: number = 0.0
 ){}
 
 
@@ -908,6 +942,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OMM.addUserDefinedParameters(builder, USER_DEFINED_PARAMETERS);
   OMM.addProvenance(builder, PROVENANCE);
   OMM.addCovRealism(builder, COV_REALISM);
+  OMM.addBterm(builder, this.BTERM);
+  OMM.addAgom(builder, this.AGOM);
 
   return OMM.endOMM(builder);
 }

@@ -5664,7 +5664,8 @@
         "ECOM2_B1_COS",
         "ECOM2_B1_SIN",
         "ECOM2_B3_COS",
-        "ECOM2_B3_SIN"
+        "ECOM2_B3_SIN",
+        "OUTGASSING_ACCELERATION"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -5684,6 +5685,10 @@
         },
         "ECOM2_B3_COS": {
           "value": 14
+        },
+        "OUTGASSING_ACCELERATION": {
+          "value": 16,
+          "description": "Constant outgassing acceleration an orbit determination solves for, km/s2."
         }
       }
     },
@@ -20867,7 +20872,7 @@
     },
     "PRWStateMatrix": {
       "type": "object",
-      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties": {
         "DIMENSION": {
           "type": "integer",

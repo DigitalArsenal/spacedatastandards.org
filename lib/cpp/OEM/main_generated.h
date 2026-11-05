@@ -24,6 +24,9 @@ struct ephemerisDataLineBuilder;
 struct covarianceMatrixLine;
 struct covarianceMatrixLineBuilder;
 
+struct OEMOrbitDetermination;
+struct OEMOrbitDeterminationBuilder;
+
 struct ephemerisDataBlock;
 struct ephemerisDataBlockBuilder;
 
@@ -695,6 +698,107 @@ inline ::flatbuffers::Offset<covarianceMatrixLine> CreatecovarianceMatrixLineDir
       COV_REFERENCE_FRAME);
 }
 
+/// The orbit determination an ephemeris block descends from. SDS addition:
+/// CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+/// follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+/// states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+/// behind the ephemeris, not of its states).
+struct OEMOrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OEMOrbitDeterminationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_OD_OBSERVATIONS_USED = 4,
+    VT_OD_ARC_START = 6,
+    VT_OD_ARC_STOP = 8,
+    VT_OD_METHOD = 10
+  };
+  /// Observations the determination used; 0 when not stated.
+  uint32_t OD_OBSERVATIONS_USED() const {
+    return GetField<uint32_t>(VT_OD_OBSERVATIONS_USED, 0);
+  }
+  /// First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  const ::flatbuffers::String *OD_ARC_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OD_ARC_START);
+  }
+  /// Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  const ::flatbuffers::String *OD_ARC_STOP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OD_ARC_STOP);
+  }
+  /// Method of the determination; empty when not stated.
+  const ::flatbuffers::String *OD_METHOD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OD_METHOD);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_OD_OBSERVATIONS_USED, 4) &&
+           VerifyOffset(verifier, VT_OD_ARC_START) &&
+           verifier.VerifyString(OD_ARC_START()) &&
+           VerifyOffset(verifier, VT_OD_ARC_STOP) &&
+           verifier.VerifyString(OD_ARC_STOP()) &&
+           VerifyOffset(verifier, VT_OD_METHOD) &&
+           verifier.VerifyString(OD_METHOD()) &&
+           verifier.EndTable();
+  }
+};
+
+struct OEMOrbitDeterminationBuilder {
+  typedef OEMOrbitDetermination Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_OD_OBSERVATIONS_USED(uint32_t OD_OBSERVATIONS_USED) {
+    fbb_.AddElement<uint32_t>(OEMOrbitDetermination::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, 0);
+  }
+  void add_OD_ARC_START(::flatbuffers::Offset<::flatbuffers::String> OD_ARC_START) {
+    fbb_.AddOffset(OEMOrbitDetermination::VT_OD_ARC_START, OD_ARC_START);
+  }
+  void add_OD_ARC_STOP(::flatbuffers::Offset<::flatbuffers::String> OD_ARC_STOP) {
+    fbb_.AddOffset(OEMOrbitDetermination::VT_OD_ARC_STOP, OD_ARC_STOP);
+  }
+  void add_OD_METHOD(::flatbuffers::Offset<::flatbuffers::String> OD_METHOD) {
+    fbb_.AddOffset(OEMOrbitDetermination::VT_OD_METHOD, OD_METHOD);
+  }
+  explicit OEMOrbitDeterminationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OEMOrbitDetermination> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OEMOrbitDetermination>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OEMOrbitDetermination> CreateOEMOrbitDetermination(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t OD_OBSERVATIONS_USED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OD_ARC_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OD_ARC_STOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OD_METHOD = 0) {
+  OEMOrbitDeterminationBuilder builder_(_fbb);
+  builder_.add_OD_METHOD(OD_METHOD);
+  builder_.add_OD_ARC_STOP(OD_ARC_STOP);
+  builder_.add_OD_ARC_START(OD_ARC_START);
+  builder_.add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<OEMOrbitDetermination> CreateOEMOrbitDeterminationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t OD_OBSERVATIONS_USED = 0,
+    const char *OD_ARC_START = nullptr,
+    const char *OD_ARC_STOP = nullptr,
+    const char *OD_METHOD = nullptr) {
+  auto OD_ARC_START__ = OD_ARC_START ? _fbb.CreateString(OD_ARC_START) : 0;
+  auto OD_ARC_STOP__ = OD_ARC_STOP ? _fbb.CreateString(OD_ARC_STOP) : 0;
+  auto OD_METHOD__ = OD_METHOD ? _fbb.CreateString(OD_METHOD) : 0;
+  return CreateOEMOrbitDetermination(
+      _fbb,
+      OD_OBSERVATIONS_USED,
+      OD_ARC_START__,
+      OD_ARC_STOP__,
+      OD_METHOD__);
+}
+
 /// OEM Ephemeris Data Block
 struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ephemerisDataBlockBuilder Builder;
@@ -719,7 +823,8 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_COVARIANCE_MATRIX_LINES = 38,
     VT_POLYNOMIAL_POSITION_RECORDS = 40,
     VT_OBJECT_NAIF_ID = 42,
-    VT_CENTER_NAIF_ID = 44
+    VT_CENTER_NAIF_ID = 44,
+    VT_ORBIT_DETERMINATION = 46
   };
   /// Plain-Text Comment
   const ::flatbuffers::String *COMMENT() const {
@@ -825,6 +930,11 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   int32_t CENTER_NAIF_ID() const {
     return GetField<int32_t>(VT_CENTER_NAIF_ID, 0);
   }
+  /// Orbit determination this block's states descend from; absent when none
+  /// is stated.
+  const OEMOrbitDetermination *ORBIT_DETERMINATION() const {
+    return GetPointer<const OEMOrbitDetermination *>(VT_ORBIT_DETERMINATION);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -867,6 +977,8 @@ struct ephemerisDataBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyVectorOfTables(POLYNOMIAL_POSITION_RECORDS()) &&
            VerifyField<int32_t>(verifier, VT_OBJECT_NAIF_ID, 4) &&
            VerifyField<int32_t>(verifier, VT_CENTER_NAIF_ID, 4) &&
+           VerifyOffset(verifier, VT_ORBIT_DETERMINATION) &&
+           verifier.VerifyTable(ORBIT_DETERMINATION()) &&
            verifier.EndTable();
   }
 };
@@ -938,6 +1050,9 @@ struct ephemerisDataBlockBuilder {
   void add_CENTER_NAIF_ID(int32_t CENTER_NAIF_ID) {
     fbb_.AddElement<int32_t>(ephemerisDataBlock::VT_CENTER_NAIF_ID, CENTER_NAIF_ID, 0);
   }
+  void add_ORBIT_DETERMINATION(::flatbuffers::Offset<OEMOrbitDetermination> ORBIT_DETERMINATION) {
+    fbb_.AddOffset(ephemerisDataBlock::VT_ORBIT_DETERMINATION, ORBIT_DETERMINATION);
+  }
   explicit ephemerisDataBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -971,9 +1086,11 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlock(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<covarianceMatrixLine>>> COVARIANCE_MATRIX_LINES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEPositionRecord>>> POLYNOMIAL_POSITION_RECORDS = 0,
     int32_t OBJECT_NAIF_ID = 0,
-    int32_t CENTER_NAIF_ID = 0) {
+    int32_t CENTER_NAIF_ID = 0,
+    ::flatbuffers::Offset<OEMOrbitDetermination> ORBIT_DETERMINATION = 0) {
   ephemerisDataBlockBuilder builder_(_fbb);
   builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_ORBIT_DETERMINATION(ORBIT_DETERMINATION);
   builder_.add_CENTER_NAIF_ID(CENTER_NAIF_ID);
   builder_.add_OBJECT_NAIF_ID(OBJECT_NAIF_ID);
   builder_.add_POLYNOMIAL_POSITION_RECORDS(POLYNOMIAL_POSITION_RECORDS);
@@ -1019,7 +1136,8 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
     const std::vector<::flatbuffers::Offset<covarianceMatrixLine>> *COVARIANCE_MATRIX_LINES = nullptr,
     const std::vector<::flatbuffers::Offset<PPEPositionRecord>> *POLYNOMIAL_POSITION_RECORDS = nullptr,
     int32_t OBJECT_NAIF_ID = 0,
-    int32_t CENTER_NAIF_ID = 0) {
+    int32_t CENTER_NAIF_ID = 0,
+    ::flatbuffers::Offset<OEMOrbitDetermination> ORBIT_DETERMINATION = 0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto REFERENCE_FRAME_EPOCH__ = REFERENCE_FRAME_EPOCH ? _fbb.CreateString(REFERENCE_FRAME_EPOCH) : 0;
@@ -1054,7 +1172,8 @@ inline ::flatbuffers::Offset<ephemerisDataBlock> CreateephemerisDataBlockDirect(
       COVARIANCE_MATRIX_LINES__,
       POLYNOMIAL_POSITION_RECORDS__,
       OBJECT_NAIF_ID,
-      CENTER_NAIF_ID);
+      CENTER_NAIF_ID,
+      ORBIT_DETERMINATION);
 }
 
 /// Orbit Ephemeris Message

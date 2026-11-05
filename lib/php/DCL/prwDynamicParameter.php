@@ -7,7 +7,9 @@
 /// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 /// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 /// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+/// parameter not in SI).
 class prwDynamicParameter
 {
     const UNSPECIFIED = 0;
@@ -27,6 +29,8 @@ class prwDynamicParameter
     const ECOM2_B1_SIN = 13;
     const ECOM2_B3_COS = 14;
     const ECOM2_B3_SIN = 15;
+    /// Constant outgassing acceleration an orbit determination solves for, km/s2.
+    const OUTGASSING_ACCELERATION = 16;
 
     private static $names = array(
         prwDynamicParameter::UNSPECIFIED=>"UNSPECIFIED",
@@ -45,6 +49,7 @@ class prwDynamicParameter
         prwDynamicParameter::ECOM2_B1_SIN=>"ECOM2_B1_SIN",
         prwDynamicParameter::ECOM2_B3_COS=>"ECOM2_B3_COS",
         prwDynamicParameter::ECOM2_B3_SIN=>"ECOM2_B3_SIN",
+        prwDynamicParameter::OUTGASSING_ACCELERATION=>"OUTGASSING_ACCELERATION",
     );
 
     public static function Name($e)

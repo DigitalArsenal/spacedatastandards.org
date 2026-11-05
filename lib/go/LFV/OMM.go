@@ -667,7 +667,7 @@ func (rcv *OMM) MutateRevAtEpoch(n float64) bool {
 	return rcv.MutateREV_AT_EPOCH(n)
 }
 
-/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+/// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
 func (rcv *OMM) BSTAR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -680,7 +680,7 @@ func (rcv *OMM) Bstar() float64 {
 	return rcv.BSTAR()
 }
 
-/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+/// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
 func (rcv *OMM) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
@@ -711,7 +711,7 @@ func (rcv *OMM) MutateMeanMotionDot(n float64) bool {
 	return rcv.MutateMEAN_MOTION_DOT(n)
 }
 
-/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
 func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -724,7 +724,7 @@ func (rcv *OMM) MeanMotionDdot() float64 {
 	return rcv.MEAN_MOTION_DDOT()
 }
 
-/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
 func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
@@ -1007,8 +1007,60 @@ func (rcv *OMM) CovRealism(obj *CVR) *CVR {
 }
 
 /// Realism of COVARIANCE.
+/// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+/// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+/// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+/// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+func (rcv *OMM) BTERM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OMM) Bterm() float64 {
+	return rcv.BTERM()
+}
+
+/// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+/// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+/// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+/// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+func (rcv *OMM) MutateBTERM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *OMM) MutateBterm(n float64) bool {
+	return rcv.MutateBTERM(n)
+}
+
+/// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+/// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+func (rcv *OMM) AGOM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OMM) Agom() float64 {
+	return rcv.AGOM()
+}
+
+/// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+/// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+func (rcv *OMM) MutateAGOM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+func (rcv *OMM) MutateAgom(n float64) bool {
+	return rcv.MutateAGOM(n)
+}
+
 func OMMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(45)
+	builder.StartObject(47)
 }
 func OMMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -1291,6 +1343,18 @@ func OMMAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOf
 }
 func OMMAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
 	OMMAddCOV_REALISM(builder, COV_REALISM)
+}
+func OMMAddBTERM(builder *flatbuffers.Builder, BTERM float64) {
+	builder.PrependFloat64Slot(45, BTERM, 0.0)
+}
+func OMMAddBterm(builder *flatbuffers.Builder, BTERM float64) {
+	OMMAddBTERM(builder, BTERM)
+}
+func OMMAddAGOM(builder *flatbuffers.Builder, AGOM float64) {
+	builder.PrependFloat64Slot(46, AGOM, 0.0)
+}
+func OMMAddAgom(builder *flatbuffers.Builder, AGOM float64) {
+	OMMAddAGOM(builder, AGOM)
 }
 func OMMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

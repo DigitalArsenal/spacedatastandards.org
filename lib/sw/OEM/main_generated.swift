@@ -387,6 +387,71 @@ public struct covarianceMatrixLine: FlatBufferVerifiableTable, FlatbuffersVector
   }
 }
 
+///  The orbit determination an ephemeris block descends from. SDS addition:
+///  CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+///  follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+///  states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+///  behind the ephemeris, not of its states).
+public struct OEMOrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OEM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OEMOrbitDetermination.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OD_OBSERVATIONS_USED: VOffset = 4
+    static let OD_ARC_START: VOffset = 6
+    static let OD_ARC_STOP: VOffset = 8
+    static let OD_METHOD: VOffset = 10
+  }
+
+  ///  Observations the determination used; 0 when not stated.
+  public var OD_OBSERVATIONS_USED: UInt32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  public var OD_ARC_START: String? { let o = _accessor.offset(VT.OD_ARC_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_ARC_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_ARC_START) }
+  ///  Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  public var OD_ARC_STOP: String? { let o = _accessor.offset(VT.OD_ARC_STOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_ARC_STOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_ARC_STOP) }
+  ///  Method of the determination; empty when not stated.
+  public var OD_METHOD: String? { let o = _accessor.offset(VT.OD_METHOD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_METHOD) }
+  public static func startOEMOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(OD_OBSERVATIONS_USED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_OBSERVATIONS_USED, def: 0, at: VT.OD_OBSERVATIONS_USED) }
+  public static func add(OD_ARC_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ARC_START, at: VT.OD_ARC_START) }
+  public static func add(OD_ARC_STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ARC_STOP, at: VT.OD_ARC_STOP) }
+  public static func add(OD_METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_METHOD, at: VT.OD_METHOD) }
+  public static func endOEMOrbitDetermination(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createOEMOrbitDetermination(
+    _ fbb: inout FlatBufferBuilder,
+    OD_OBSERVATIONS_USED: UInt32 = 0,
+    OD_ARC_STARTOffset OD_ARC_START: Offset = Offset(),
+    OD_ARC_STOPOffset OD_ARC_STOP: Offset = Offset(),
+    OD_METHODOffset OD_METHOD: Offset = Offset()
+  ) -> Offset {
+    let __start = OEMOrbitDetermination.startOEMOrbitDetermination(&fbb)
+    OEMOrbitDetermination.add(OD_OBSERVATIONS_USED: OD_OBSERVATIONS_USED, &fbb)
+    OEMOrbitDetermination.add(OD_ARC_START: OD_ARC_START, &fbb)
+    OEMOrbitDetermination.add(OD_ARC_STOP: OD_ARC_STOP, &fbb)
+    OEMOrbitDetermination.add(OD_METHOD: OD_METHOD, &fbb)
+    return OEMOrbitDetermination.endOEMOrbitDetermination(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OD_OBSERVATIONS_USED, fieldName: "OD_OBSERVATIONS_USED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OD_ARC_START, fieldName: "OD_ARC_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_ARC_STOP, fieldName: "OD_ARC_STOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_METHOD, fieldName: "OD_METHOD", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  OEM Ephemeris Data Block
 public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -421,6 +486,7 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let POLYNOMIAL_POSITION_RECORDS: VOffset = 40
     static let OBJECT_NAIF_ID: VOffset = 42
     static let CENTER_NAIF_ID: VOffset = 44
+    static let ORBIT_DETERMINATION: VOffset = 46
   }
 
   ///  Plain-Text Comment
@@ -494,7 +560,10 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  NAIF integer code of the ephemeris centre, matching CENTER_NAME
   ///  (SPK segment centre).
   public var CENTER_NAIF_ID: Int32 { let o = _accessor.offset(VT.CENTER_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Orbit determination this block's states descend from; absent when none
+  ///  is stated.
+  public var ORBIT_DETERMINATION: OEMOrbitDetermination? { let o = _accessor.offset(VT.ORBIT_DETERMINATION); return o == 0 ? nil : OEMOrbitDetermination(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VT.OBJECT) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
@@ -516,6 +585,7 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public static func addVectorOf(POLYNOMIAL_POSITION_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL_POSITION_RECORDS, at: VT.POLYNOMIAL_POSITION_RECORDS) }
   public static func add(OBJECT_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBJECT_NAIF_ID, def: 0, at: VT.OBJECT_NAIF_ID) }
   public static func add(CENTER_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_NAIF_ID, def: 0, at: VT.CENTER_NAIF_ID) }
+  public static func add(ORBIT_DETERMINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT_DETERMINATION, at: VT.ORBIT_DETERMINATION) }
   public static func endephemerisDataBlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createephemerisDataBlock(
     _ fbb: inout FlatBufferBuilder,
@@ -539,7 +609,8 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     COVARIANCE_MATRIX_LINESVectorOffset COVARIANCE_MATRIX_LINES: Offset = Offset(),
     POLYNOMIAL_POSITION_RECORDSVectorOffset POLYNOMIAL_POSITION_RECORDS: Offset = Offset(),
     OBJECT_NAIF_ID: Int32 = 0,
-    CENTER_NAIF_ID: Int32 = 0
+    CENTER_NAIF_ID: Int32 = 0,
+    ORBIT_DETERMINATIONOffset ORBIT_DETERMINATION: Offset = Offset()
   ) -> Offset {
     let __start = ephemerisDataBlock.startephemerisDataBlock(&fbb)
     ephemerisDataBlock.add(COMMENT: COMMENT, &fbb)
@@ -563,6 +634,7 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     ephemerisDataBlock.addVectorOf(POLYNOMIAL_POSITION_RECORDS: POLYNOMIAL_POSITION_RECORDS, &fbb)
     ephemerisDataBlock.add(OBJECT_NAIF_ID: OBJECT_NAIF_ID, &fbb)
     ephemerisDataBlock.add(CENTER_NAIF_ID: CENTER_NAIF_ID, &fbb)
+    ephemerisDataBlock.add(ORBIT_DETERMINATION: ORBIT_DETERMINATION, &fbb)
     return ephemerisDataBlock.endephemerisDataBlock(&fbb, start: __start)
   }
 
@@ -589,6 +661,7 @@ public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.POLYNOMIAL_POSITION_RECORDS, fieldName: "POLYNOMIAL_POSITION_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEPositionRecord>, PPEPositionRecord>>.self)
     try _v.visit(field: VT.OBJECT_NAIF_ID, fieldName: "OBJECT_NAIF_ID", required: false, type: Int32.self)
     try _v.visit(field: VT.CENTER_NAIF_ID, fieldName: "CENTER_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.ORBIT_DETERMINATION, fieldName: "ORBIT_DETERMINATION", required: false, type: ForwardOffset<OEMOrbitDetermination>.self)
     _v.finish()
   }
 }

@@ -7,7 +7,9 @@
  * INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
  * DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
  * REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
- * IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+ * IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+ * OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+ * parameter not in SI).
  */
 @SuppressWarnings("unused")
 public final class prwDynamicParameter {
@@ -31,8 +33,12 @@ public final class prwDynamicParameter {
   public static final int ECOM2_B1_SIN = 13;
   public static final int ECOM2_B3_COS = 14;
   public static final int ECOM2_B3_SIN = 15;
+  /**
+   * Constant outgassing acceleration an orbit determination solves for, km/s2.
+   */
+  public static final int OUTGASSING_ACCELERATION = 16;
 
-  public static final String[] names = { "UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN", };
+  public static final String[] names = { "UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN", "OUTGASSING_ACCELERATION", };
 
   public static String name(int e) { return names[e]; }
 }

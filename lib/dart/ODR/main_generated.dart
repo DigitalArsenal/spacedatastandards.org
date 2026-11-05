@@ -6,6 +6,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 import '../FRM/main_generated.dart';
+import '../MEM/main_generated.dart';
 import '../PCE/main_generated.dart';
 import '../RFM/main_generated.dart';
 
@@ -493,6 +494,10 @@ class ODRIterationStatisticsObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One observation the estimator read: the editing record, then the columns of
+///  a per-input residual listing (P9), one entry per input the fit read, accepted
+///  or not. OBSERVATION_ID is the input identifier; the residual is
+///  OBSERVED_VALUE - COMPUTED_VALUE.
 class ODREditedObservation {
   ODREditedObservation._(this._bc, this._bcOffset);
   factory ODREditedObservation(List<int> bytes) {
@@ -513,10 +518,28 @@ class ODREditedObservation {
   double get NORMALIZED_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get normalizedResidual => NORMALIZED_RESIDUAL;
   String? get REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Epoch of the observation (ISO 8601 UTC).
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Measurement class of the observation.
+  memMeasurementType get OBSERVATION_TYPE => memMeasurementType.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  memMeasurementType get observationType => OBSERVATION_TYPE;
+  ///  The observation as measured, in the unit of its class: km, km/s or deg.
+  double get OBSERVED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get observedValue => OBSERVED_VALUE;
+  ///  The same quantity computed from the solution at EPOCH, in the same unit.
+  double get COMPUTED_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get computedValue => COMPUTED_VALUE;
+  ///  Weight the fit gave the observation in its normal equations; 0 when it gave none.
+  double get WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  True when the observation entered the solution; false when the fit edited it out (REASON says why).
+  bool get ACCEPTED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  ///  Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+  String? get PERTURBATION_MODEL_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get perturbationModelCode => PERTURBATION_MODEL_CODE;
 
   @override
   String toString() {
-    return 'ODREditedObservation{observationId: ${observationId}, ITERATION: ${ITERATION}, prefitResidual: ${prefitResidual}, normalizedResidual: ${normalizedResidual}, REASON: ${REASON}}';
+    return 'ODREditedObservation{observationId: ${observationId}, ITERATION: ${ITERATION}, prefitResidual: ${prefitResidual}, normalizedResidual: ${normalizedResidual}, REASON: ${REASON}, EPOCH: ${EPOCH}, observationType: ${observationType}, observedValue: ${observedValue}, computedValue: ${computedValue}, WEIGHT: ${WEIGHT}, ACCEPTED: ${ACCEPTED}, perturbationModelCode: ${perturbationModelCode}}';
   }
 }
 
@@ -534,7 +557,7 @@ class ODREditedObservationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(12);
   }
 
   int addObservationIdOffset(int? offset) {
@@ -557,6 +580,34 @@ class ODREditedObservationBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addObservationType(memMeasurementType? OBSERVATION_TYPE) {
+    fbBuilder.addUint16(6, OBSERVATION_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addObservedValue(double? OBSERVED_VALUE) {
+    fbBuilder.addFloat64(7, OBSERVED_VALUE);
+    return fbBuilder.offset;
+  }
+  int addComputedValue(double? COMPUTED_VALUE) {
+    fbBuilder.addFloat64(8, COMPUTED_VALUE);
+    return fbBuilder.offset;
+  }
+  int addWeight(double? WEIGHT) {
+    fbBuilder.addFloat64(9, WEIGHT);
+    return fbBuilder.offset;
+  }
+  int addAccepted(bool? ACCEPTED) {
+    fbBuilder.addBool(10, ACCEPTED);
+    return fbBuilder.offset;
+  }
+  int addPerturbationModelCodeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -569,6 +620,13 @@ class ODREditedObservationObjectBuilder extends fb.ObjectBuilder {
   final double? _PREFIT_RESIDUAL;
   final double? _NORMALIZED_RESIDUAL;
   final String? _REASON;
+  final String? _EPOCH;
+  final memMeasurementType? _OBSERVATION_TYPE;
+  final double? _OBSERVED_VALUE;
+  final double? _COMPUTED_VALUE;
+  final double? _WEIGHT;
+  final bool? _ACCEPTED;
+  final String? _PERTURBATION_MODEL_CODE;
 
   ODREditedObservationObjectBuilder({
     String? OBSERVATION_ID,
@@ -579,12 +637,30 @@ class ODREditedObservationObjectBuilder extends fb.ObjectBuilder {
     double? NORMALIZED_RESIDUAL,
     double? normalizedResidual,
     String? REASON,
+    String? EPOCH,
+    memMeasurementType? OBSERVATION_TYPE,
+    memMeasurementType? observationType,
+    double? OBSERVED_VALUE,
+    double? observedValue,
+    double? COMPUTED_VALUE,
+    double? computedValue,
+    double? WEIGHT,
+    bool? ACCEPTED,
+    String? PERTURBATION_MODEL_CODE,
+    String? perturbationModelCode,
   })
       : _OBSERVATION_ID = observationId ?? OBSERVATION_ID,
         _ITERATION = ITERATION,
         _PREFIT_RESIDUAL = prefitResidual ?? PREFIT_RESIDUAL,
         _NORMALIZED_RESIDUAL = normalizedResidual ?? NORMALIZED_RESIDUAL,
-        _REASON = REASON;
+        _REASON = REASON,
+        _EPOCH = EPOCH,
+        _OBSERVATION_TYPE = observationType ?? OBSERVATION_TYPE,
+        _OBSERVED_VALUE = observedValue ?? OBSERVED_VALUE,
+        _COMPUTED_VALUE = computedValue ?? COMPUTED_VALUE,
+        _WEIGHT = WEIGHT,
+        _ACCEPTED = ACCEPTED,
+        _PERTURBATION_MODEL_CODE = perturbationModelCode ?? PERTURBATION_MODEL_CODE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -593,12 +669,23 @@ class ODREditedObservationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBSERVATION_ID!);
     final int? REASONOffset = _REASON == null ? null
         : fbBuilder.writeString(_REASON!);
-    fbBuilder.startTable(5);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? PERTURBATION_MODEL_CODEOffset = _PERTURBATION_MODEL_CODE == null ? null
+        : fbBuilder.writeString(_PERTURBATION_MODEL_CODE!);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, OBSERVATION_IDOffset);
     fbBuilder.addUint32(1, _ITERATION);
     fbBuilder.addFloat64(2, _PREFIT_RESIDUAL);
     fbBuilder.addFloat64(3, _NORMALIZED_RESIDUAL);
     fbBuilder.addOffset(4, REASONOffset);
+    fbBuilder.addOffset(5, EPOCHOffset);
+    fbBuilder.addUint16(6, _OBSERVATION_TYPE?.value);
+    fbBuilder.addFloat64(7, _OBSERVED_VALUE);
+    fbBuilder.addFloat64(8, _COMPUTED_VALUE);
+    fbBuilder.addFloat64(9, _WEIGHT);
+    fbBuilder.addBool(10, _ACCEPTED);
+    fbBuilder.addOffset(11, PERTURBATION_MODEL_CODEOffset);
     return fbBuilder.endTable();
   }
 

@@ -371,7 +371,7 @@
     },
     "prwDynamicParameter" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN"]
+      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN", "OUTGASSING_ACCELERATION"]
     },
     "trajectoryType" : {
       "type" : "string",
@@ -1671,6 +1671,29 @@
       },
       "additionalProperties" : false
     },
+    "OEMOrbitDetermination" : {
+      "type" : "object",
+      "description" : "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+      "properties" : {
+        "OD_OBSERVATIONS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations the determination used; 0 when not stated."
+              },
+        "OD_ARC_START" : {
+                "type" : "string",
+                "description" : "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+              },
+        "OD_ARC_STOP" : {
+                "type" : "string",
+                "description" : "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+              },
+        "OD_METHOD" : {
+                "type" : "string",
+                "description" : "Method of the determination; empty when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
     "ephemerisDataBlock" : {
       "type" : "object",
       "description" : "OEM Ephemeris Data Block",
@@ -1758,6 +1781,10 @@
         "CENTER_NAIF_ID" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+              },
+        "ORBIT_DETERMINATION" : {
+                "$ref" : "#/definitions/OEMOrbitDetermination",
+                "description" : "Orbit determination this block's states descend from; absent when none\nis stated."
               }
       },
       "additionalProperties" : false
@@ -4354,7 +4381,7 @@
     },
     "PRWStateMatrix" : {
       "type" : "object",
-      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties" : {
         "DIMENSION" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255
@@ -6246,7 +6273,7 @@
               },
         "UNITS" : {
                 "type" : "string",
-                "description" : "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+                "description" : "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
               },
         "SOLVED_FOR" : {
                 "type" : "boolean",
@@ -6795,7 +6822,7 @@
               },
         "OD_DYNAMIC_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/OCMDynamicParameter"},
-                "description" : "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+                "description" : "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
               },
         "DAYS_SINCE_FIRST_OBS" : {
                 "type" : "number",
@@ -7138,7 +7165,7 @@
               },
         "COV_REF_FRAME" : {
                 "$ref" : "#/definitions/RFM",
-                "description" : "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+                "description" : "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
               },
         "ORB_REVNUM" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -7166,7 +7193,7 @@
               },
         "COV_ORDERING" : {
                 "$ref" : "#/definitions/covarianceOrdering",
-                "description" : "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+                "description" : "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
               },
         "COV_SIZE" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
@@ -7174,11 +7201,11 @@
               },
         "COV_PARAMETERS" : {
                 "type" : "array", "items" : {"type" : "string"},
-                "description" : "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+                "description" : "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
               },
         "COV_UNITS" : {
                 "type" : "array", "items" : {"type" : "string"},
-                "description" : "Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), \"n/a\" for a\ndimensionless one."
+                "description" : "Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; \"n/a\" for a dimensionless one."
               },
         "TRAJECTORY_BLOCKS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/OCMTrajectoryBlock"},

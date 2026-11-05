@@ -6,6 +6,10 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 public struct ODREditedObservation : IFlatbufferObject
 {
   private Table __p;
@@ -33,28 +37,75 @@ public struct ODREditedObservation : IFlatbufferObject
   public ArraySegment<byte>? GetREASONBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetREASONArray() { return __p.__vector_as_array<byte>(12); }
+  /// Epoch of the observation (ISO 8601 UTC).
+  public string EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(14); }
+  /// Measurement class of the observation.
+  public memMeasurementType OBSERVATION_TYPE { get { int o = __p.__offset(16); return o != 0 ? (memMeasurementType)__p.bb.GetUshort(o + __p.bb_pos) : memMeasurementType.UNSPECIFIED; } }
+  /// The observation as measured, in the unit of its class: km, km/s or deg.
+  public double OBSERVED_VALUE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// The same quantity computed from the solution at EPOCH, in the same unit.
+  public double COMPUTED_VALUE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+  public double WEIGHT { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+  public bool ACCEPTED { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+  public string PERTURBATION_MODEL_CODE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPERTURBATION_MODEL_CODEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetPERTURBATION_MODEL_CODEBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetPERTURBATION_MODEL_CODEArray() { return __p.__vector_as_array<byte>(26); }
 
   public static Offset<ODREditedObservation> CreateODREditedObservation(FlatBufferBuilder builder,
       StringOffset OBSERVATION_IDOffset = default(StringOffset),
       uint ITERATION = 0,
       double PREFIT_RESIDUAL = 0.0,
       double NORMALIZED_RESIDUAL = 0.0,
-      StringOffset REASONOffset = default(StringOffset)) {
-    builder.StartTable(5);
+      StringOffset REASONOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
+      memMeasurementType OBSERVATION_TYPE = memMeasurementType.UNSPECIFIED,
+      double OBSERVED_VALUE = 0.0,
+      double COMPUTED_VALUE = 0.0,
+      double WEIGHT = 0.0,
+      bool ACCEPTED = false,
+      StringOffset PERTURBATION_MODEL_CODEOffset = default(StringOffset)) {
+    builder.StartTable(12);
+    ODREditedObservation.AddWEIGHT(builder, WEIGHT);
+    ODREditedObservation.AddCOMPUTED_VALUE(builder, COMPUTED_VALUE);
+    ODREditedObservation.AddOBSERVED_VALUE(builder, OBSERVED_VALUE);
     ODREditedObservation.AddNORMALIZED_RESIDUAL(builder, NORMALIZED_RESIDUAL);
     ODREditedObservation.AddPREFIT_RESIDUAL(builder, PREFIT_RESIDUAL);
+    ODREditedObservation.AddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODEOffset);
+    ODREditedObservation.AddEPOCH(builder, EPOCHOffset);
     ODREditedObservation.AddREASON(builder, REASONOffset);
     ODREditedObservation.AddITERATION(builder, ITERATION);
     ODREditedObservation.AddOBSERVATION_ID(builder, OBSERVATION_IDOffset);
+    ODREditedObservation.AddOBSERVATION_TYPE(builder, OBSERVATION_TYPE);
+    ODREditedObservation.AddACCEPTED(builder, ACCEPTED);
     return ODREditedObservation.EndODREditedObservation(builder);
   }
 
-  public static void StartODREditedObservation(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartODREditedObservation(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddOBSERVATION_ID(FlatBufferBuilder builder, StringOffset OBSERVATION_IDOffset) { builder.AddOffset(0, OBSERVATION_IDOffset.Value, 0); }
   public static void AddITERATION(FlatBufferBuilder builder, uint ITERATION) { builder.AddUint(1, ITERATION, 0); }
   public static void AddPREFIT_RESIDUAL(FlatBufferBuilder builder, double PREFIT_RESIDUAL) { builder.AddDouble(2, PREFIT_RESIDUAL, 0.0); }
   public static void AddNORMALIZED_RESIDUAL(FlatBufferBuilder builder, double NORMALIZED_RESIDUAL) { builder.AddDouble(3, NORMALIZED_RESIDUAL, 0.0); }
   public static void AddREASON(FlatBufferBuilder builder, StringOffset REASONOffset) { builder.AddOffset(4, REASONOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(5, EPOCHOffset.Value, 0); }
+  public static void AddOBSERVATION_TYPE(FlatBufferBuilder builder, memMeasurementType OBSERVATION_TYPE) { builder.AddUshort(6, (ushort)OBSERVATION_TYPE, 0); }
+  public static void AddOBSERVED_VALUE(FlatBufferBuilder builder, double OBSERVED_VALUE) { builder.AddDouble(7, OBSERVED_VALUE, 0.0); }
+  public static void AddCOMPUTED_VALUE(FlatBufferBuilder builder, double COMPUTED_VALUE) { builder.AddDouble(8, COMPUTED_VALUE, 0.0); }
+  public static void AddWEIGHT(FlatBufferBuilder builder, double WEIGHT) { builder.AddDouble(9, WEIGHT, 0.0); }
+  public static void AddACCEPTED(FlatBufferBuilder builder, bool ACCEPTED) { builder.AddBool(10, ACCEPTED, false); }
+  public static void AddPERTURBATION_MODEL_CODE(FlatBufferBuilder builder, StringOffset PERTURBATION_MODEL_CODEOffset) { builder.AddOffset(11, PERTURBATION_MODEL_CODEOffset.Value, 0); }
   public static Offset<ODREditedObservation> EndODREditedObservation(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // OBSERVATION_ID
@@ -71,18 +122,34 @@ public struct ODREditedObservation : IFlatbufferObject
     _o.PREFIT_RESIDUAL = this.PREFIT_RESIDUAL;
     _o.NORMALIZED_RESIDUAL = this.NORMALIZED_RESIDUAL;
     _o.REASON = this.REASON;
+    _o.EPOCH = this.EPOCH;
+    _o.OBSERVATION_TYPE = this.OBSERVATION_TYPE;
+    _o.OBSERVED_VALUE = this.OBSERVED_VALUE;
+    _o.COMPUTED_VALUE = this.COMPUTED_VALUE;
+    _o.WEIGHT = this.WEIGHT;
+    _o.ACCEPTED = this.ACCEPTED;
+    _o.PERTURBATION_MODEL_CODE = this.PERTURBATION_MODEL_CODE;
   }
   public static Offset<ODREditedObservation> Pack(FlatBufferBuilder builder, ODREditedObservationT _o) {
     if (_o == null) return default(Offset<ODREditedObservation>);
     var _OBSERVATION_ID = _o.OBSERVATION_ID == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATION_ID);
     var _REASON = _o.REASON == null ? default(StringOffset) : builder.CreateString(_o.REASON);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _PERTURBATION_MODEL_CODE = _o.PERTURBATION_MODEL_CODE == null ? default(StringOffset) : builder.CreateString(_o.PERTURBATION_MODEL_CODE);
     return CreateODREditedObservation(
       builder,
       _OBSERVATION_ID,
       _o.ITERATION,
       _o.PREFIT_RESIDUAL,
       _o.NORMALIZED_RESIDUAL,
-      _REASON);
+      _REASON,
+      _EPOCH,
+      _o.OBSERVATION_TYPE,
+      _o.OBSERVED_VALUE,
+      _o.COMPUTED_VALUE,
+      _o.WEIGHT,
+      _o.ACCEPTED,
+      _PERTURBATION_MODEL_CODE);
   }
 }
 
@@ -93,6 +160,13 @@ public class ODREditedObservationT
   public double PREFIT_RESIDUAL { get; set; }
   public double NORMALIZED_RESIDUAL { get; set; }
   public string REASON { get; set; }
+  public string EPOCH { get; set; }
+  public memMeasurementType OBSERVATION_TYPE { get; set; }
+  public double OBSERVED_VALUE { get; set; }
+  public double COMPUTED_VALUE { get; set; }
+  public double WEIGHT { get; set; }
+  public bool ACCEPTED { get; set; }
+  public string PERTURBATION_MODEL_CODE { get; set; }
 
   public ODREditedObservationT() {
     this.OBSERVATION_ID = null;
@@ -100,6 +174,13 @@ public class ODREditedObservationT
     this.PREFIT_RESIDUAL = 0.0;
     this.NORMALIZED_RESIDUAL = 0.0;
     this.REASON = null;
+    this.EPOCH = null;
+    this.OBSERVATION_TYPE = memMeasurementType.UNSPECIFIED;
+    this.OBSERVED_VALUE = 0.0;
+    this.COMPUTED_VALUE = 0.0;
+    this.WEIGHT = 0.0;
+    this.ACCEPTED = false;
+    this.PERTURBATION_MODEL_CODE = null;
   }
 }
 
@@ -114,6 +195,13 @@ static public class ODREditedObservationVerify
       && verifier.VerifyField(tablePos, 8 /*PREFIT_RESIDUAL*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*NORMALIZED_RESIDUAL*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 12 /*REASON*/, false)
+      && verifier.VerifyString(tablePos, 14 /*EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 16 /*OBSERVATION_TYPE*/, 2 /*memMeasurementType*/, 2, false)
+      && verifier.VerifyField(tablePos, 18 /*OBSERVED_VALUE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*COMPUTED_VALUE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*WEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*ACCEPTED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 26 /*PERTURBATION_MODEL_CODE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

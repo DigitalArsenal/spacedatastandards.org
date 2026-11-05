@@ -31,7 +31,7 @@ public struct OCMDynamicParameter : IFlatbufferObject
   /// Value at the solution epoch, in UNITS.
   public double VALUE { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-  /// m/s**2 for IN_TRACK_ACCELERATION.
+  /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
   public string UNITS { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetUNITSBytes() { return __p.__vector_as_span<byte>(8, 1); }

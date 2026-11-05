@@ -1182,11 +1182,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for prwDensitySpecies {}
 pub const ENUM_MIN_PRW_DYNAMIC_PARAMETER: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PRW_DYNAMIC_PARAMETER: u8 = 15;
+pub const ENUM_MAX_PRW_DYNAMIC_PARAMETER: u8 = 16;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 16] = [
+pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 17] = [
     prwDynamicParameter::UNSPECIFIED,
     prwDynamicParameter::DRAG_AREA_OVER_MASS,
     prwDynamicParameter::DRAG_AREA_OVER_MASS_RATE,
@@ -1203,6 +1203,7 @@ pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 16] = [
     prwDynamicParameter::ECOM2_B1_SIN,
     prwDynamicParameter::ECOM2_B3_COS,
     prwDynamicParameter::ECOM2_B3_SIN,
+    prwDynamicParameter::OUTGASSING_ACCELERATION,
 ];
 
 /// Dynamical model parameters a covariance and STM may carry after the state
@@ -1211,7 +1212,9 @@ pub const ENUM_VALUES_PRW_DYNAMIC_PARAMETER: [prwDynamicParameter; 16] = [
 /// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 /// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 /// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+/// parameter not in SI).
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct prwDynamicParameter(pub u8);
@@ -1235,9 +1238,11 @@ impl prwDynamicParameter {
     pub const ECOM2_B1_SIN: Self = Self(13);
     pub const ECOM2_B3_COS: Self = Self(14);
     pub const ECOM2_B3_SIN: Self = Self(15);
+    /// Constant outgassing acceleration an orbit determination solves for, km/s2.
+    pub const OUTGASSING_ACCELERATION: Self = Self(16);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 15;
+    pub const ENUM_MAX: u8 = 16;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::DRAG_AREA_OVER_MASS,
@@ -1255,6 +1260,7 @@ impl prwDynamicParameter {
         Self::ECOM2_B1_SIN,
         Self::ECOM2_B3_COS,
         Self::ECOM2_B3_SIN,
+        Self::OUTGASSING_ACCELERATION,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1276,6 +1282,7 @@ impl prwDynamicParameter {
             Self::ECOM2_B1_SIN => Some("ECOM2_B1_SIN"),
             Self::ECOM2_B3_COS => Some("ECOM2_B3_COS"),
             Self::ECOM2_B3_SIN => Some("ECOM2_B3_SIN"),
+            Self::OUTGASSING_ACCELERATION => Some("OUTGASSING_ACCELERATION"),
             _ => None,
         }
     }
@@ -3085,7 +3092,10 @@ impl PRWInstanceT {
 pub enum PRWStateMatrixOffset {}
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
-/// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+/// request's DYNAMIC_PARAMETERS in order, one row per parameter, each in the
+/// unit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,
+/// m/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
+/// SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).
 /// Covariance entries have row*column units; STM entries row/column units;
 /// an STM's parameter rows are the identity (parameters are constant).
 #[derive(Copy, Clone, PartialEq)]

@@ -117,7 +117,9 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MESSAGE_ID = 86,
     VT_USER_DEFINED_PARAMETERS = 88,
     VT_PROVENANCE = 90,
-    VT_COV_REALISM = 92
+    VT_COV_REALISM = 92,
+    VT_BTERM = 94,
+    VT_AGOM = 96
   };
   /// CCSDS OMM Version
   double CCSDS_OMM_VERS() const {
@@ -253,7 +255,7 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double REV_AT_EPOCH() const {
     return GetField<double>(VT_REV_AT_EPOCH, 0.0);
   }
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+  /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
@@ -261,7 +263,7 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MEAN_MOTION_DOT() const {
     return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
   }
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
   double MEAN_MOTION_DDOT() const {
     return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
   }
@@ -323,6 +325,18 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Realism of COVARIANCE.
   const CVR *COV_REALISM() const {
     return GetPointer<const CVR *>(VT_COV_REALISM);
+  }
+  /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+  /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+  /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+  /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+  double BTERM() const {
+    return GetField<double>(VT_BTERM, 0.0);
+  }
+  /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+  /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+  double AGOM() const {
+    return GetField<double>(VT_AGOM, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -392,6 +406,8 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(PROVENANCE()) &&
            VerifyOffset(verifier, VT_COV_REALISM) &&
            verifier.VerifyTable(COV_REALISM()) &&
+           VerifyField<double>(verifier, VT_BTERM, 8) &&
+           VerifyField<double>(verifier, VT_AGOM, 8) &&
            verifier.EndTable();
   }
 };
@@ -535,6 +551,12 @@ struct OMMBuilder {
   void add_COV_REALISM(::flatbuffers::Offset<CVR> COV_REALISM) {
     fbb_.AddOffset(OMM::VT_COV_REALISM, COV_REALISM);
   }
+  void add_BTERM(double BTERM) {
+    fbb_.AddElement<double>(OMM::VT_BTERM, BTERM, 0.0);
+  }
+  void add_AGOM(double AGOM) {
+    fbb_.AddElement<double>(OMM::VT_AGOM, AGOM, 0.0);
+  }
   explicit OMMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -592,8 +614,12 @@ inline ::flatbuffers::Offset<OMM> CreateOMM(
     ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMMUserDefinedParameter>>> USER_DEFINED_PARAMETERS = 0,
     ::flatbuffers::Offset<PVN> PROVENANCE = 0,
-    ::flatbuffers::Offset<CVR> COV_REALISM = 0) {
+    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
+    double BTERM = 0.0,
+    double AGOM = 0.0) {
   OMMBuilder builder_(_fbb);
+  builder_.add_AGOM(AGOM);
+  builder_.add_BTERM(BTERM);
   builder_.add_USER_DEFINED_MICROSECONDS(USER_DEFINED_MICROSECONDS);
   builder_.add_USER_DEFINED_EPOCH_TIMESTAMP(USER_DEFINED_EPOCH_TIMESTAMP);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
@@ -688,7 +714,9 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
     const char *MESSAGE_ID = nullptr,
     const std::vector<::flatbuffers::Offset<OMMUserDefinedParameter>> *USER_DEFINED_PARAMETERS = nullptr,
     ::flatbuffers::Offset<PVN> PROVENANCE = 0,
-    ::flatbuffers::Offset<CVR> COV_REALISM = 0) {
+    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
+    double BTERM = 0.0,
+    double AGOM = 0.0) {
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
@@ -750,7 +778,9 @@ inline ::flatbuffers::Offset<OMM> CreateOMMDirect(
       MESSAGE_ID__,
       USER_DEFINED_PARAMETERS__,
       PROVENANCE,
-      COV_REALISM);
+      COV_REALISM,
+      BTERM,
+      AGOM);
 }
 
 /// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML

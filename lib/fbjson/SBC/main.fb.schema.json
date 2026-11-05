@@ -5633,7 +5633,8 @@
         "ECOM2_B1_COS",
         "ECOM2_B1_SIN",
         "ECOM2_B3_COS",
-        "ECOM2_B3_SIN"
+        "ECOM2_B3_SIN",
+        "OUTGASSING_ACCELERATION"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -5653,6 +5654,10 @@
         },
         "ECOM2_B3_COS": {
           "value": 14
+        },
+        "OUTGASSING_ACCELERATION": {
+          "value": 16,
+          "description": "Constant outgassing acceleration an orbit determination solves for, km/s2."
         }
       }
     },
@@ -20288,7 +20293,7 @@
     },
     "PRWStateMatrix": {
       "type": "object",
-      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+      "description": "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties": {
         "DIMENSION": {
           "type": "integer",
@@ -23268,7 +23273,7 @@
         },
         "UNITS": {
           "type": "string",
-          "description": "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+          "description": "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
           "x-flatbuffer-type": "string"
         },
         "SOLVED_FOR": {
@@ -23298,6 +23303,10 @@
             },
             "ECOM2_B3_COS": {
               "value": 14
+            },
+            "OUTGASSING_ACCELERATION": {
+              "value": 16,
+              "description": "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -24251,7 +24260,7 @@
           "items": {
             "$ref": "#/definitions/OCMDynamicParameter"
           },
-          "description": "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+          "description": "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
           "x-flatbuffer-type": "[OCMDynamicParameter]"
         },
         "DAYS_SINCE_FIRST_OBS": {
@@ -24805,7 +24814,7 @@
         },
         "COV_REF_FRAME": {
           "$ref": "#/definitions/RFM",
-          "description": "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+          "description": "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
           "x-flatbuffer-type": "RFM"
         },
         "ORB_REVNUM": {
@@ -24861,7 +24870,7 @@
         },
         "COV_ORDERING": {
           "$ref": "#/definitions/covarianceOrdering",
-          "description": "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+          "description": "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -24901,7 +24910,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+          "description": "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
           "x-flatbuffer-type": "[string]"
         },
         "COV_UNITS": {
@@ -24909,7 +24918,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), \"n/a\" for a\ndimensionless one.",
+          "description": "Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; \"n/a\" for a dimensionless one.",
           "x-flatbuffer-type": "[string]"
         },
         "TRAJECTORY_BLOCKS": {
@@ -25310,7 +25319,7 @@
         },
         "BSTAR": {
           "type": "number",
-          "description": "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+          "description": "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DOT": {
@@ -25320,7 +25329,7 @@
         },
         "MEAN_MOTION_DDOT": {
           "type": "number",
-          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+          "description": "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
           "x-flatbuffer-type": "double"
         },
         "COV_REFERENCE_FRAME": {
@@ -25390,6 +25399,16 @@
           "$ref": "#/definitions/CVR",
           "description": "Realism of COVARIANCE.",
           "x-flatbuffer-type": "CVR"
+        },
+        "BTERM": {
+          "type": "number",
+          "description": "BTERM (CCSDS 502.0-B-3 Table 4-3, \"BSTAR or BTERM\"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.",
+          "x-flatbuffer-type": "double"
+        },
+        "AGOM": {
+          "type": "number",
+          "description": "AGOM (CCSDS 502.0-B-3 Table 4-3, \"MEAN_MOTION_DDOT or AGOM\"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false

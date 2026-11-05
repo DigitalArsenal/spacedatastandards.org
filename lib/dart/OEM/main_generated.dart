@@ -671,6 +671,127 @@ class covarianceMatrixLineObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  The orbit determination an ephemeris block descends from. SDS addition:
+///  CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+///  follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+///  states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+///  behind the ephemeris, not of its states).
+class OEMOrbitDetermination {
+  OEMOrbitDetermination._(this._bc, this._bcOffset);
+  factory OEMOrbitDetermination(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OEMOrbitDetermination> reader = _OEMOrbitDeterminationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Observations the determination used; 0 when not stated.
+  int get OD_OBSERVATIONS_USED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get odObservationsUsed => OD_OBSERVATIONS_USED;
+  ///  First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  String? get OD_ARC_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get odArcStart => OD_ARC_START;
+  ///  Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  String? get OD_ARC_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get odArcStop => OD_ARC_STOP;
+  ///  Method of the determination; empty when not stated.
+  String? get OD_METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get odMethod => OD_METHOD;
+
+  @override
+  String toString() {
+    return 'OEMOrbitDetermination{odObservationsUsed: ${odObservationsUsed}, odArcStart: ${odArcStart}, odArcStop: ${odArcStop}, odMethod: ${odMethod}}';
+  }
+}
+
+class _OEMOrbitDeterminationReader extends fb.TableReader<OEMOrbitDetermination> {
+  const _OEMOrbitDeterminationReader();
+
+  @override
+  OEMOrbitDetermination createObject(fb.BufferContext bc, int offset) =>
+    OEMOrbitDetermination._(bc, offset);
+}
+
+class OEMOrbitDeterminationBuilder {
+  OEMOrbitDeterminationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addOdObservationsUsed(int? OD_OBSERVATIONS_USED) {
+    fbBuilder.addUint32(0, OD_OBSERVATIONS_USED);
+    return fbBuilder.offset;
+  }
+  int addOdArcStartOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOdArcStopOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOdMethodOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OEMOrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
+  final int? _OD_OBSERVATIONS_USED;
+  final String? _OD_ARC_START;
+  final String? _OD_ARC_STOP;
+  final String? _OD_METHOD;
+
+  OEMOrbitDeterminationObjectBuilder({
+    int? OD_OBSERVATIONS_USED,
+    int? odObservationsUsed,
+    String? OD_ARC_START,
+    String? odArcStart,
+    String? OD_ARC_STOP,
+    String? odArcStop,
+    String? OD_METHOD,
+    String? odMethod,
+  })
+      : _OD_OBSERVATIONS_USED = odObservationsUsed ?? OD_OBSERVATIONS_USED,
+        _OD_ARC_START = odArcStart ?? OD_ARC_START,
+        _OD_ARC_STOP = odArcStop ?? OD_ARC_STOP,
+        _OD_METHOD = odMethod ?? OD_METHOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OD_ARC_STARTOffset = _OD_ARC_START == null ? null
+        : fbBuilder.writeString(_OD_ARC_START!);
+    final int? OD_ARC_STOPOffset = _OD_ARC_STOP == null ? null
+        : fbBuilder.writeString(_OD_ARC_STOP!);
+    final int? OD_METHODOffset = _OD_METHOD == null ? null
+        : fbBuilder.writeString(_OD_METHOD!);
+    fbBuilder.startTable(4);
+    fbBuilder.addUint32(0, _OD_OBSERVATIONS_USED);
+    fbBuilder.addOffset(1, OD_ARC_STARTOffset);
+    fbBuilder.addOffset(2, OD_ARC_STOPOffset);
+    fbBuilder.addOffset(3, OD_METHODOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  OEM Ephemeris Data Block
 class ephemerisDataBlock {
   ephemerisDataBlock._(this._bc, this._bcOffset);
@@ -764,10 +885,14 @@ class ephemerisDataBlock {
   ///  (SPK segment centre).
   int get CENTER_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 44, 0);
   int get centerNaifId => CENTER_NAIF_ID;
+  ///  Orbit determination this block's states descend from; absent when none
+  ///  is stated.
+  OEMOrbitDetermination? get ORBIT_DETERMINATION => OEMOrbitDetermination.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  OEMOrbitDetermination? get orbitDetermination => ORBIT_DETERMINATION;
 
   @override
   String toString() {
-    return 'ephemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, covReferenceFrame: ${covReferenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, useableStartTime: ${useableStartTime}, useableStopTime: ${useableStopTime}, stopTime: ${stopTime}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, stepSize: ${stepSize}, stateVectorSize: ${stateVectorSize}, ephemerisData: ${ephemerisData}, ephemerisDataLines: ${ephemerisDataLines}, covarianceMatrixLines: ${covarianceMatrixLines}, polynomialPositionRecords: ${polynomialPositionRecords}, objectNaifId: ${objectNaifId}, centerNaifId: ${centerNaifId}}';
+    return 'ephemerisDataBlock{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, covReferenceFrame: ${covReferenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, useableStartTime: ${useableStartTime}, useableStopTime: ${useableStopTime}, stopTime: ${stopTime}, INTERPOLATION: ${INTERPOLATION}, interpolationDegree: ${interpolationDegree}, stepSize: ${stepSize}, stateVectorSize: ${stateVectorSize}, ephemerisData: ${ephemerisData}, ephemerisDataLines: ${ephemerisDataLines}, covarianceMatrixLines: ${covarianceMatrixLines}, polynomialPositionRecords: ${polynomialPositionRecords}, objectNaifId: ${objectNaifId}, centerNaifId: ${centerNaifId}, orbitDetermination: ${orbitDetermination}}';
   }
 }
 
@@ -785,7 +910,7 @@ class ephemerisDataBlockBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(22);
   }
 
   int addCommentOffset(int? offset) {
@@ -872,6 +997,10 @@ class ephemerisDataBlockBuilder {
     fbBuilder.addInt32(20, CENTER_NAIF_ID);
     return fbBuilder.offset;
   }
+  int addOrbitDeterminationOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -900,6 +1029,7 @@ class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
   final List<PPEPositionRecordObjectBuilder>? _POLYNOMIAL_POSITION_RECORDS;
   final int? _OBJECT_NAIF_ID;
   final int? _CENTER_NAIF_ID;
+  final OEMOrbitDeterminationObjectBuilder? _ORBIT_DETERMINATION;
 
   ephemerisDataBlockObjectBuilder({
     String? COMMENT,
@@ -941,6 +1071,8 @@ class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     int? objectNaifId,
     int? CENTER_NAIF_ID,
     int? centerNaifId,
+    OEMOrbitDeterminationObjectBuilder? ORBIT_DETERMINATION,
+    OEMOrbitDeterminationObjectBuilder? orbitDetermination,
   })
       : _COMMENT = COMMENT,
         _OBJECT = OBJECT,
@@ -962,7 +1094,8 @@ class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         _COVARIANCE_MATRIX_LINES = covarianceMatrixLines ?? COVARIANCE_MATRIX_LINES,
         _POLYNOMIAL_POSITION_RECORDS = polynomialPositionRecords ?? POLYNOMIAL_POSITION_RECORDS,
         _OBJECT_NAIF_ID = objectNaifId ?? OBJECT_NAIF_ID,
-        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID;
+        _CENTER_NAIF_ID = centerNaifId ?? CENTER_NAIF_ID,
+        _ORBIT_DETERMINATION = orbitDetermination ?? ORBIT_DETERMINATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -994,7 +1127,8 @@ class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_COVARIANCE_MATRIX_LINES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? POLYNOMIAL_POSITION_RECORDSOffset = _POLYNOMIAL_POSITION_RECORDS == null ? null
         : fbBuilder.writeList(_POLYNOMIAL_POSITION_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(21);
+    final int? ORBIT_DETERMINATIONOffset = _ORBIT_DETERMINATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
@@ -1016,6 +1150,7 @@ class ephemerisDataBlockObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(18, POLYNOMIAL_POSITION_RECORDSOffset);
     fbBuilder.addInt32(19, _OBJECT_NAIF_ID);
     fbBuilder.addInt32(20, _CENTER_NAIF_ID);
+    fbBuilder.addOffset(21, ORBIT_DETERMINATIONOffset);
     return fbBuilder.endTable();
   }
 

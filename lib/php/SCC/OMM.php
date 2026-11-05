@@ -326,7 +326,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+    /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
     /**
      * @return double
      */
@@ -346,7 +346,7 @@ class OMM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
     /**
      * @return double
      */
@@ -489,22 +489,46 @@ class OMM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+    /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+    /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+    /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+    /**
+     * @return double
+     */
+    public function getBTERM()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+    /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+    /**
+     * @return double
+     */
+    public function getAGOM()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOMM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(45);
+        $builder->StartObject(47);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OMM
      */
-    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS, $CLASSIFICATION, $MESSAGE_ID, $USER_DEFINED_PARAMETERS, $PROVENANCE, $COV_REALISM)
+    public static function createOMM(FlatBufferBuilder $builder, $CCSDS_OMM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $TIME_SYSTEM, $MEAN_ELEMENT_THEORY, $COMMENT, $EPOCH, $SEMI_MAJOR_AXIS, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $GM, $MASS, $SOLAR_RAD_AREA, $SOLAR_RAD_COEFF, $DRAG_AREA, $DRAG_COEFF, $EPHEMERIS_TYPE, $CLASSIFICATION_TYPE, $NORAD_CAT_ID, $ELEMENT_SET_NO, $REV_AT_EPOCH, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $COV_REFERENCE_FRAME, $COVARIANCE, $USER_DEFINED_BIP_0044_TYPE, $USER_DEFINED_OBJECT_DESIGNATOR, $USER_DEFINED_EARTH_MODEL, $USER_DEFINED_EPOCH_TIMESTAMP, $USER_DEFINED_MICROSECONDS, $CLASSIFICATION, $MESSAGE_ID, $USER_DEFINED_PARAMETERS, $PROVENANCE, $COV_REALISM, $BTERM, $AGOM)
     {
-        $builder->startObject(45);
+        $builder->startObject(47);
         self::addCCSDS_OMM_VERS($builder, $CCSDS_OMM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -550,6 +574,8 @@ class OMM extends Table
         self::addUSER_DEFINED_PARAMETERS($builder, $USER_DEFINED_PARAMETERS);
         self::addPROVENANCE($builder, $PROVENANCE);
         self::addCOV_REALISM($builder, $COV_REALISM);
+        self::addBTERM($builder, $BTERM);
+        self::addAGOM($builder, $AGOM);
         $o = $builder->endObject();
         return $o;
     }
@@ -1050,6 +1076,26 @@ class OMM extends Table
     public static function addCOV_REALISM(FlatBufferBuilder $builder, $COV_REALISM)
     {
         $builder->addOffsetX(44, $COV_REALISM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBTERM(FlatBufferBuilder $builder, $BTERM)
+    {
+        $builder->addDoubleX(45, $BTERM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAGOM(FlatBufferBuilder $builder, $AGOM)
+    {
+        $builder->addDoubleX(46, $AGOM, 0.0);
     }
 
     /**

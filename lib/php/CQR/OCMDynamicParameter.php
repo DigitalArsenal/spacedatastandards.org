@@ -62,7 +62,7 @@ class OCMDynamicParameter extends Table
     }
 
     /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-    /// m/s**2 for IN_TRACK_ACCELERATION.
+    /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
     public function getUNITS()
     {
         $o = $this->__offset(8);

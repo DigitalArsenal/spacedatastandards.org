@@ -16,6 +16,12 @@ import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * One observation the estimator read: the editing record, then the columns of
+ * a per-input residual listing (P9), one entry per input the fit read, accepted
+ * or not. OBSERVATION_ID is the input identifier; the residual is
+ * OBSERVED_VALUE - COMPUTED_VALUE.
+ */
 @SuppressWarnings("unused")
 public final class ODREditedObservation extends com.google.flatbuffers.Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
@@ -33,28 +39,81 @@ public final class ODREditedObservation extends com.google.flatbuffers.Table {
   public String REASON() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REASONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer REASONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Epoch of the observation (ISO 8601 UTC).
+   */
+  public String EPOCH() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Measurement class of the observation.
+   */
+  public int OBSERVATION_TYPE() { int o = __offset(16); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * The observation as measured, in the unit of its class: km, km/s or deg.
+   */
+  public double OBSERVED_VALUE() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * The same quantity computed from the solution at EPOCH, in the same unit.
+   */
+  public double COMPUTED_VALUE() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Weight the fit gave the observation in its normal equations; 0 when it gave none.
+   */
+  public double WEIGHT() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when the observation entered the solution; false when the fit edited it out (REASON says why).
+   */
+  public boolean ACCEPTED() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+   */
+  public String PERTURBATION_MODEL_CODE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PERTURBATION_MODEL_CODEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer PERTURBATION_MODEL_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
 
   public static int createODREditedObservation(FlatBufferBuilder builder,
       int OBSERVATION_IDOffset,
       long ITERATION,
       double PREFIT_RESIDUAL,
       double NORMALIZED_RESIDUAL,
-      int REASONOffset) {
-    builder.startTable(5);
+      int REASONOffset,
+      int EPOCHOffset,
+      int OBSERVATION_TYPE,
+      double OBSERVED_VALUE,
+      double COMPUTED_VALUE,
+      double WEIGHT,
+      boolean ACCEPTED,
+      int PERTURBATION_MODEL_CODEOffset) {
+    builder.startTable(12);
+    ODREditedObservation.addWeight(builder, WEIGHT);
+    ODREditedObservation.addComputedValue(builder, COMPUTED_VALUE);
+    ODREditedObservation.addObservedValue(builder, OBSERVED_VALUE);
     ODREditedObservation.addNormalizedResidual(builder, NORMALIZED_RESIDUAL);
     ODREditedObservation.addPrefitResidual(builder, PREFIT_RESIDUAL);
+    ODREditedObservation.addPerturbationModelCode(builder, PERTURBATION_MODEL_CODEOffset);
+    ODREditedObservation.addEpoch(builder, EPOCHOffset);
     ODREditedObservation.addReason(builder, REASONOffset);
     ODREditedObservation.addIteration(builder, ITERATION);
     ODREditedObservation.addObservationId(builder, OBSERVATION_IDOffset);
+    ODREditedObservation.addObservationType(builder, OBSERVATION_TYPE);
+    ODREditedObservation.addAccepted(builder, ACCEPTED);
     return ODREditedObservation.endODREditedObservation(builder);
   }
 
-  public static void startODREditedObservation(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startODREditedObservation(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addObservationId(FlatBufferBuilder builder, int OBSERVATION_IDOffset) { builder.addOffset(0, OBSERVATION_IDOffset, 0); }
   public static void addIteration(FlatBufferBuilder builder, long ITERATION) { builder.addInt(1, (int) ITERATION, (int) 0L); }
   public static void addPrefitResidual(FlatBufferBuilder builder, double PREFIT_RESIDUAL) { builder.addDouble(2, PREFIT_RESIDUAL, 0.0); }
   public static void addNormalizedResidual(FlatBufferBuilder builder, double NORMALIZED_RESIDUAL) { builder.addDouble(3, NORMALIZED_RESIDUAL, 0.0); }
   public static void addReason(FlatBufferBuilder builder, int REASONOffset) { builder.addOffset(4, REASONOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(5, EPOCHOffset, 0); }
+  public static void addObservationType(FlatBufferBuilder builder, int OBSERVATION_TYPE) { builder.addShort(6, (short) OBSERVATION_TYPE, (short) 0); }
+  public static void addObservedValue(FlatBufferBuilder builder, double OBSERVED_VALUE) { builder.addDouble(7, OBSERVED_VALUE, 0.0); }
+  public static void addComputedValue(FlatBufferBuilder builder, double COMPUTED_VALUE) { builder.addDouble(8, COMPUTED_VALUE, 0.0); }
+  public static void addWeight(FlatBufferBuilder builder, double WEIGHT) { builder.addDouble(9, WEIGHT, 0.0); }
+  public static void addAccepted(FlatBufferBuilder builder, boolean ACCEPTED) { builder.addBoolean(10, ACCEPTED, false); }
+  public static void addPerturbationModelCode(FlatBufferBuilder builder, int PERTURBATION_MODEL_CODEOffset) { builder.addOffset(11, PERTURBATION_MODEL_CODEOffset, 0); }
   public static int endODREditedObservation(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // OBSERVATION_ID

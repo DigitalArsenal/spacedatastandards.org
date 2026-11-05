@@ -287,7 +287,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+    # BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
     # OMM
     def BSTAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -303,7 +303,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+    # MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
     # OMM
     def MEAN_MOTION_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -468,8 +468,28 @@ class OMM(object):
             return obj
         return None
 
+    # BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+    # SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+    # MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+    # renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+    # OMM
+    def BTERM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+    # coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+    # OMM
+    def AGOM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def OMMStart(builder):
-    builder.StartObject(45)
+    builder.StartObject(47)
 
 def Start(builder):
     OMMStart(builder)
@@ -772,6 +792,18 @@ def OMMAddCOV_REALISM(builder, COV_REALISM):
 def AddCOV_REALISM(builder, COV_REALISM):
     OMMAddCOV_REALISM(builder, COV_REALISM)
 
+def OMMAddBTERM(builder, BTERM):
+    builder.PrependFloat64Slot(45, BTERM, 0.0)
+
+def AddBTERM(builder, BTERM):
+    OMMAddBTERM(builder, BTERM)
+
+def OMMAddAGOM(builder, AGOM):
+    builder.PrependFloat64Slot(46, AGOM, 0.0)
+
+def AddAGOM(builder, AGOM):
+    OMMAddAGOM(builder, AGOM)
+
 def OMMEnd(builder):
     return builder.EndObject()
 
@@ -837,6 +869,8 @@ class OMMT(object):
         USER_DEFINED_PARAMETERS = None,
         PROVENANCE = None,
         COV_REALISM = None,
+        BTERM = 0.0,
+        AGOM = 0.0,
     ):
         self.CCSDS_OMM_VERS = CCSDS_OMM_VERS  # type: float
         self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
@@ -883,6 +917,8 @@ class OMMT(object):
         self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[OMMUserDefinedParameter.OMMUserDefinedParameterT]]
         self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
         self.COV_REALISM = COV_REALISM  # type: Optional[CVR.CVRT]
+        self.BTERM = BTERM  # type: float
+        self.AGOM = AGOM  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -967,6 +1003,8 @@ class OMMT(object):
             self.PROVENANCE = PVN.PVNT.InitFromObj(OMM.PROVENANCE())
         if OMM.COV_REALISM() is not None:
             self.COV_REALISM = CVR.CVRT.InitFromObj(OMM.COV_REALISM())
+        self.BTERM = OMM.BTERM()
+        self.AGOM = OMM.AGOM()
 
     # OMMT
     def Pack(self, builder):
@@ -1085,5 +1123,7 @@ class OMMT(object):
             OMMAddPROVENANCE(builder, PROVENANCE)
         if self.COV_REALISM is not None:
             OMMAddCOV_REALISM(builder, COV_REALISM)
+        OMMAddBTERM(builder, self.BTERM)
+        OMMAddAGOM(builder, self.AGOM)
         OMM = OMMEnd(builder)
         return OMM

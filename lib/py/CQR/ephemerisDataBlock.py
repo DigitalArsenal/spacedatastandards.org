@@ -303,8 +303,21 @@ class ephemerisDataBlock(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
+    # Orbit determination this block's states descend from; absent when none
+    # is stated.
+    # ephemerisDataBlock
+    def ORBIT_DETERMINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OEMOrbitDetermination import OEMOrbitDetermination
+            obj = OEMOrbitDetermination()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def ephemerisDataBlockStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(22)
 
 def Start(builder):
     ephemerisDataBlockStart(builder)
@@ -487,6 +500,12 @@ def ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID):
 def AddCENTER_NAIF_ID(builder, CENTER_NAIF_ID):
     ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID)
 
+def ephemerisDataBlockAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_DETERMINATION), 0)
+
+def AddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
+    ephemerisDataBlockAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
+
 def ephemerisDataBlockEnd(builder):
     return builder.EndObject()
 
@@ -494,6 +513,7 @@ def End(builder):
     return ephemerisDataBlockEnd(builder)
 
 import CAT
+import OEMOrbitDetermination
 import PPEPositionRecord
 import RFM
 import covarianceMatrixLine
@@ -529,6 +549,7 @@ class ephemerisDataBlockT(object):
         POLYNOMIAL_POSITION_RECORDS = None,
         OBJECT_NAIF_ID = 0,
         CENTER_NAIF_ID = 0,
+        ORBIT_DETERMINATION = None,
     ):
         self.COMMENT = COMMENT  # type: Optional[str]
         self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
@@ -551,6 +572,7 @@ class ephemerisDataBlockT(object):
         self.POLYNOMIAL_POSITION_RECORDS = POLYNOMIAL_POSITION_RECORDS  # type: Optional[List[PPEPositionRecord.PPEPositionRecordT]]
         self.OBJECT_NAIF_ID = OBJECT_NAIF_ID  # type: int
         self.CENTER_NAIF_ID = CENTER_NAIF_ID  # type: int
+        self.ORBIT_DETERMINATION = ORBIT_DETERMINATION  # type: Optional[OEMOrbitDetermination.OEMOrbitDeterminationT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -624,6 +646,8 @@ class ephemerisDataBlockT(object):
                     self.POLYNOMIAL_POSITION_RECORDS.append(pPEPositionRecord_)
         self.OBJECT_NAIF_ID = ephemerisDataBlock.OBJECT_NAIF_ID()
         self.CENTER_NAIF_ID = ephemerisDataBlock.CENTER_NAIF_ID()
+        if ephemerisDataBlock.ORBIT_DETERMINATION() is not None:
+            self.ORBIT_DETERMINATION = OEMOrbitDetermination.OEMOrbitDeterminationT.InitFromObj(ephemerisDataBlock.ORBIT_DETERMINATION())
 
     # ephemerisDataBlockT
     def Pack(self, builder):
@@ -681,6 +705,8 @@ class ephemerisDataBlockT(object):
             for i in reversed(range(len(self.POLYNOMIAL_POSITION_RECORDS))):
                 builder.PrependUOffsetTRelative(POLYNOMIAL_POSITION_RECORDSlist[i])
             POLYNOMIAL_POSITION_RECORDS = builder.EndVector()
+        if self.ORBIT_DETERMINATION is not None:
+            ORBIT_DETERMINATION = self.ORBIT_DETERMINATION.Pack(builder)
         ephemerisDataBlockStart(builder)
         if self.COMMENT is not None:
             ephemerisDataBlockAddCOMMENT(builder, COMMENT)
@@ -718,5 +744,7 @@ class ephemerisDataBlockT(object):
             ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
         ephemerisDataBlockAddOBJECT_NAIF_ID(builder, self.OBJECT_NAIF_ID)
         ephemerisDataBlockAddCENTER_NAIF_ID(builder, self.CENTER_NAIF_ID)
+        if self.ORBIT_DETERMINATION is not None:
+            ephemerisDataBlockAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
         ephemerisDataBlock = ephemerisDataBlockEnd(builder)
         return ephemerisDataBlock

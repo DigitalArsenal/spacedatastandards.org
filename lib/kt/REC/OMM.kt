@@ -342,7 +342,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+     * BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
      */
     val bstar : Double
         get() {
@@ -358,7 +358,7 @@ class OMM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+     * MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
      */
     val meanMotionDdot : Double
         get() {
@@ -525,6 +525,26 @@ class OMM : Table() {
             null
         }
     }
+    /**
+     * BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+     * SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+     * MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+     * renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+     */
+    val bterm : Double
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+     * coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+     */
+    val agom : Double
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOMM(_bb: ByteBuffer): OMM = getRootAsOMM(_bb, OMM())
@@ -533,8 +553,10 @@ class OMM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OMM")
-        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
-            builder.startTable(45)
+        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int, provenanceOffset: Int, covRealismOffset: Int, bterm: Double, agom: Double) : Int {
+            builder.startTable(47)
+            addAGOM(builder, agom)
+            addBTERM(builder, bterm)
             addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
             addUSERDEFINEDEPOCHTIMESTAMP(builder, userDefinedEpochTimestamp)
             addMEANMOTIONDDOT(builder, meanMotionDdot)
@@ -582,7 +604,7 @@ class OMM : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endOMM(builder)
         }
-        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(45)
+        fun startOMM(builder: FlatBufferBuilder) = builder.startTable(47)
         fun addCCSDSOMMVERS(builder: FlatBufferBuilder, ccsdsOmmVers: Double) = builder.addDouble(0, ccsdsOmmVers, 0.0)
         fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -644,6 +666,8 @@ class OMM : Table() {
         fun startUserDefinedParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(43, provenance, 0)
         fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(44, covRealism, 0)
+        fun addBTERM(builder: FlatBufferBuilder, bterm: Double) = builder.addDouble(45, bterm, 0.0)
+        fun addAGOM(builder: FlatBufferBuilder, agom: Double) = builder.addDouble(46, agom, 0.0)
         fun endOMM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

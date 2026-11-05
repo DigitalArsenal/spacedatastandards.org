@@ -167,6 +167,12 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
    * (SPK segment centre).
    */
   public int CENTER_NAIF_ID() { int o = __offset(44); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Orbit determination this block's states descend from; absent when none
+   * is stated.
+   */
+  public OEMOrbitDetermination ORBIT_DETERMINATION() { return ORBIT_DETERMINATION(new OEMOrbitDetermination()); }
+  public OEMOrbitDetermination ORBIT_DETERMINATION(OEMOrbitDetermination obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createephemerisDataBlock(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -189,9 +195,11 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
       int COVARIANCE_MATRIX_LINESOffset,
       int POLYNOMIAL_POSITION_RECORDSOffset,
       int OBJECT_NAIF_ID,
-      int CENTER_NAIF_ID) {
-    builder.startTable(21);
+      int CENTER_NAIF_ID,
+      int ORBIT_DETERMINATIONOffset) {
+    builder.startTable(22);
     ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
+    ephemerisDataBlock.addOrbitDetermination(builder, ORBIT_DETERMINATIONOffset);
     ephemerisDataBlock.addCenterNaifId(builder, CENTER_NAIF_ID);
     ephemerisDataBlock.addObjectNaifId(builder, OBJECT_NAIF_ID);
     ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDSOffset);
@@ -215,7 +223,7 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
     return ephemerisDataBlock.endephemerisDataBlock(builder);
   }
 
-  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(2, CENTER_NAMEOffset, 0); }
@@ -245,6 +253,7 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
   public static void startPolynomialPositionRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addObjectNaifId(FlatBufferBuilder builder, int OBJECT_NAIF_ID) { builder.addInt(19, OBJECT_NAIF_ID, 0); }
   public static void addCenterNaifId(FlatBufferBuilder builder, int CENTER_NAIF_ID) { builder.addInt(20, CENTER_NAIF_ID, 0); }
+  public static void addOrbitDetermination(FlatBufferBuilder builder, int ORBIT_DETERMINATIONOffset) { builder.addOffset(21, ORBIT_DETERMINATIONOffset, 0); }
   public static int endephemerisDataBlock(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

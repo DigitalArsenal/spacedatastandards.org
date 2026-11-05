@@ -182,6 +182,8 @@ impl<'a> OMM<'a> {
     pub const VT_USER_DEFINED_PARAMETERS: ::flatbuffers::VOffsetT = 88;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 90;
     pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 92;
+    pub const VT_BTERM: ::flatbuffers::VOffsetT = 94;
+    pub const VT_AGOM: ::flatbuffers::VOffsetT = 96;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -194,6 +196,8 @@ impl<'a> OMM<'a> {
         args: &'args OMMArgs<'args>
     ) -> ::flatbuffers::WIPOffset<OMM<'bldr>> {
         let mut builder = OMMBuilder::new(_fbb);
+        builder.add_AGOM(args.AGOM);
+        builder.add_BTERM(args.BTERM);
         builder.add_USER_DEFINED_MICROSECONDS(args.USER_DEFINED_MICROSECONDS);
         builder.add_USER_DEFINED_EPOCH_TIMESTAMP(args.USER_DEFINED_EPOCH_TIMESTAMP);
         builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
@@ -326,6 +330,8 @@ impl<'a> OMM<'a> {
         let COV_REALISM = self.COV_REALISM().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let BTERM = self.BTERM();
+        let AGOM = self.AGOM();
         OMMT {
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -372,6 +378,8 @@ impl<'a> OMM<'a> {
             USER_DEFINED_PARAMETERS,
             PROVENANCE,
             COV_REALISM,
+            BTERM,
+            AGOM,
         }
     }
 
@@ -659,7 +667,7 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
     }
 
-    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+    /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
     #[inline]
     pub fn BSTAR(&self) -> f64 {
         // Safety:
@@ -677,7 +685,7 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
     }
 
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
     #[inline]
     pub fn MEAN_MOTION_DDOT(&self) -> f64 {
         // Safety:
@@ -804,6 +812,28 @@ impl<'a> OMM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CVR>>(OMM::VT_COV_REALISM, None)}
     }
+
+    /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+    /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+    /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+    /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+    #[inline]
+    pub fn BTERM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OMM::VT_BTERM, Some(0.0)).unwrap()}
+    }
+
+    /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+    /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+    #[inline]
+    pub fn AGOM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(OMM::VT_AGOM, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OMM<'_> {
@@ -857,6 +887,8 @@ impl ::flatbuffers::Verifiable for OMM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter>>>>("USER_DEFINED_PARAMETERS", Self::VT_USER_DEFINED_PARAMETERS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
+            .visit_field::<f64>("BTERM", Self::VT_BTERM, false)?
+            .visit_field::<f64>("AGOM", Self::VT_AGOM, false)?
             .finish();
         Ok(())
     }
@@ -908,6 +940,8 @@ pub struct OMMArgs<'a> {
     pub USER_DEFINED_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMMUserDefinedParameter<'a>>>>>,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
     pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
+    pub BTERM: f64,
+    pub AGOM: f64,
 }
 
 impl<'a> Default for OMMArgs<'a> {
@@ -959,6 +993,8 @@ impl<'a> Default for OMMArgs<'a> {
             USER_DEFINED_PARAMETERS: None,
             PROVENANCE: None,
             COV_REALISM: None,
+            BTERM: 0.0,
+            AGOM: 0.0,
         }
     }
 }
@@ -1195,6 +1231,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OMMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_BTERM(&mut self, BTERM: f64) {
+        self.fbb_.push_slot::<f64>(OMM::VT_BTERM, BTERM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_AGOM(&mut self, AGOM: f64) {
+        self.fbb_.push_slot::<f64>(OMM::VT_AGOM, AGOM, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OMMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OMMBuilder {
@@ -1258,6 +1304,8 @@ impl ::core::fmt::Debug for OMM<'_> {
         ds.field("USER_DEFINED_PARAMETERS", &self.USER_DEFINED_PARAMETERS());
         ds.field("PROVENANCE", &self.PROVENANCE());
         ds.field("COV_REALISM", &self.COV_REALISM());
+        ds.field("BTERM", &self.BTERM());
+        ds.field("AGOM", &self.AGOM());
         ds.finish()
     }
 }
@@ -1310,6 +1358,8 @@ pub struct OMMT {
     pub USER_DEFINED_PARAMETERS: Option<alloc::vec::Vec<OMMUserDefinedParameterT>>,
     pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
     pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
+    pub BTERM: f64,
+    pub AGOM: f64,
 }
 
 impl Default for OMMT {
@@ -1360,6 +1410,8 @@ impl Default for OMMT {
             USER_DEFINED_PARAMETERS: None,
             PROVENANCE: None,
             COV_REALISM: None,
+            BTERM: 0.0,
+            AGOM: 0.0,
         }
     }
 }
@@ -1452,6 +1504,8 @@ impl OMMT {
         let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let BTERM = self.BTERM;
+        let AGOM = self.AGOM;
         OMM::create(_fbb, &OMMArgs{
             CCSDS_OMM_VERS,
             CREATION_DATE,
@@ -1498,6 +1552,8 @@ impl OMMT {
             USER_DEFINED_PARAMETERS,
             PROVENANCE,
             COV_REALISM,
+            BTERM,
+            AGOM,
         })
     }
 }

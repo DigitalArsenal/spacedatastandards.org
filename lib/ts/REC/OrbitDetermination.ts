@@ -297,8 +297,9 @@ WEIGHTED_RMS():number {
 
 /**
  * Dynamical-model parameters of the solution with their values, solved for or held. An
- * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
- * COV_PARAMETERS names in the covariance are entries of this list.
+ * IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+ * OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+ * row of the covariance, false for a parameter the determination held.
  */
 OD_DYNAMIC_PARAMETERS(index: number, obj?:OCMDynamicParameter):OCMDynamicParameter|null {
   const offset = this.bb!.__offset(this.bb_pos, 54);

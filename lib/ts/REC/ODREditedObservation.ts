@@ -4,8 +4,15 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { memMeasurementType } from './memMeasurementType.js';
 
 
+/**
+ * One observation the estimator read: the editing record, then the columns of
+ * a per-input residual listing (P9), one entry per input the fit read, accepted
+ * or not. OBSERVATION_ID is the input identifier; the residual is
+ * OBSERVED_VALUE - COMPUTED_VALUE.
+ */
 export class ODREditedObservation implements flatbuffers.IUnpackableObject<ODREditedObservationT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;
@@ -53,8 +60,68 @@ REASON(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Epoch of the observation (ISO 8601 UTC).
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Measurement class of the observation.
+ */
+OBSERVATION_TYPE():memMeasurementType {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : memMeasurementType.UNSPECIFIED;
+}
+
+/**
+ * The observation as measured, in the unit of its class: km, km/s or deg.
+ */
+OBSERVED_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * The same quantity computed from the solution at EPOCH, in the same unit.
+ */
+COMPUTED_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Weight the fit gave the observation in its normal equations; 0 when it gave none.
+ */
+WEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when the observation entered the solution; false when the fit edited it out (REASON says why).
+ */
+ACCEPTED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+ */
+PERTURBATION_MODEL_CODE():string|null
+PERTURBATION_MODEL_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PERTURBATION_MODEL_CODE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startODREditedObservation(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(12);
 }
 
 static addObservationId(builder:flatbuffers.Builder, OBSERVATION_IDOffset:flatbuffers.Offset) {
@@ -77,19 +144,54 @@ static addReason(builder:flatbuffers.Builder, REASONOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, REASONOffset, 0);
 }
 
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, EPOCHOffset, 0);
+}
+
+static addObservationType(builder:flatbuffers.Builder, OBSERVATION_TYPE:memMeasurementType) {
+  builder.addFieldInt16(6, OBSERVATION_TYPE, memMeasurementType.UNSPECIFIED);
+}
+
+static addObservedValue(builder:flatbuffers.Builder, OBSERVED_VALUE:number) {
+  builder.addFieldFloat64(7, OBSERVED_VALUE, 0.0);
+}
+
+static addComputedValue(builder:flatbuffers.Builder, COMPUTED_VALUE:number) {
+  builder.addFieldFloat64(8, COMPUTED_VALUE, 0.0);
+}
+
+static addWeight(builder:flatbuffers.Builder, WEIGHT:number) {
+  builder.addFieldFloat64(9, WEIGHT, 0.0);
+}
+
+static addAccepted(builder:flatbuffers.Builder, ACCEPTED:boolean) {
+  builder.addFieldInt8(10, +ACCEPTED, +false);
+}
+
+static addPerturbationModelCode(builder:flatbuffers.Builder, PERTURBATION_MODEL_CODEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, PERTURBATION_MODEL_CODEOffset, 0);
+}
+
 static endODREditedObservation(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // OBSERVATION_ID
   return offset;
 }
 
-static createODREditedObservation(builder:flatbuffers.Builder, OBSERVATION_IDOffset:flatbuffers.Offset, ITERATION:number, PREFIT_RESIDUAL:number, NORMALIZED_RESIDUAL:number, REASONOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createODREditedObservation(builder:flatbuffers.Builder, OBSERVATION_IDOffset:flatbuffers.Offset, ITERATION:number, PREFIT_RESIDUAL:number, NORMALIZED_RESIDUAL:number, REASONOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, OBSERVATION_TYPE:memMeasurementType, OBSERVED_VALUE:number, COMPUTED_VALUE:number, WEIGHT:number, ACCEPTED:boolean, PERTURBATION_MODEL_CODEOffset:flatbuffers.Offset):flatbuffers.Offset {
   ODREditedObservation.startODREditedObservation(builder);
   ODREditedObservation.addObservationId(builder, OBSERVATION_IDOffset);
   ODREditedObservation.addIteration(builder, ITERATION);
   ODREditedObservation.addPrefitResidual(builder, PREFIT_RESIDUAL);
   ODREditedObservation.addNormalizedResidual(builder, NORMALIZED_RESIDUAL);
   ODREditedObservation.addReason(builder, REASONOffset);
+  ODREditedObservation.addEpoch(builder, EPOCHOffset);
+  ODREditedObservation.addObservationType(builder, OBSERVATION_TYPE);
+  ODREditedObservation.addObservedValue(builder, OBSERVED_VALUE);
+  ODREditedObservation.addComputedValue(builder, COMPUTED_VALUE);
+  ODREditedObservation.addWeight(builder, WEIGHT);
+  ODREditedObservation.addAccepted(builder, ACCEPTED);
+  ODREditedObservation.addPerturbationModelCode(builder, PERTURBATION_MODEL_CODEOffset);
   return ODREditedObservation.endODREditedObservation(builder);
 }
 
@@ -99,7 +201,14 @@ unpack(): ODREditedObservationT {
     this.ITERATION(),
     this.PREFIT_RESIDUAL(),
     this.NORMALIZED_RESIDUAL(),
-    this.REASON()
+    this.REASON(),
+    this.EPOCH(),
+    this.OBSERVATION_TYPE(),
+    this.OBSERVED_VALUE(),
+    this.COMPUTED_VALUE(),
+    this.WEIGHT(),
+    this.ACCEPTED(),
+    this.PERTURBATION_MODEL_CODE()
   );
 }
 
@@ -110,6 +219,13 @@ unpackTo(_o: ODREditedObservationT): void {
   _o.PREFIT_RESIDUAL = this.PREFIT_RESIDUAL();
   _o.NORMALIZED_RESIDUAL = this.NORMALIZED_RESIDUAL();
   _o.REASON = this.REASON();
+  _o.EPOCH = this.EPOCH();
+  _o.OBSERVATION_TYPE = this.OBSERVATION_TYPE();
+  _o.OBSERVED_VALUE = this.OBSERVED_VALUE();
+  _o.COMPUTED_VALUE = this.COMPUTED_VALUE();
+  _o.WEIGHT = this.WEIGHT();
+  _o.ACCEPTED = this.ACCEPTED();
+  _o.PERTURBATION_MODEL_CODE = this.PERTURBATION_MODEL_CODE();
 }
 }
 
@@ -119,20 +235,36 @@ constructor(
   public ITERATION: number = 0,
   public PREFIT_RESIDUAL: number = 0.0,
   public NORMALIZED_RESIDUAL: number = 0.0,
-  public REASON: string|Uint8Array|null = null
+  public REASON: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
+  public OBSERVATION_TYPE: memMeasurementType = memMeasurementType.UNSPECIFIED,
+  public OBSERVED_VALUE: number = 0.0,
+  public COMPUTED_VALUE: number = 0.0,
+  public WEIGHT: number = 0.0,
+  public ACCEPTED: boolean = false,
+  public PERTURBATION_MODEL_CODE: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBSERVATION_ID = (this.OBSERVATION_ID !== null ? builder.createString(this.OBSERVATION_ID!) : 0);
   const REASON = (this.REASON !== null ? builder.createString(this.REASON!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const PERTURBATION_MODEL_CODE = (this.PERTURBATION_MODEL_CODE !== null ? builder.createString(this.PERTURBATION_MODEL_CODE!) : 0);
 
   return ODREditedObservation.createODREditedObservation(builder,
     OBSERVATION_ID,
     this.ITERATION,
     this.PREFIT_RESIDUAL,
     this.NORMALIZED_RESIDUAL,
-    REASON
+    REASON,
+    EPOCH,
+    this.OBSERVATION_TYPE,
+    this.OBSERVED_VALUE,
+    this.COMPUTED_VALUE,
+    this.WEIGHT,
+    this.ACCEPTED,
+    PERTURBATION_MODEL_CODE
   );
 }
 }

@@ -281,22 +281,31 @@ class ephemerisDataBlock extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
+    /// Orbit determination this block's states descend from; absent when none
+    /// is stated.
+    public function getORBIT_DETERMINATION()
+    {
+        $obj = new OEMOrbitDetermination();
+        $o = $this->__offset(46);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startephemerisDataBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ephemerisDataBlock
      */
-    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES, $POLYNOMIAL_POSITION_RECORDS, $OBJECT_NAIF_ID, $CENTER_NAIF_ID)
+    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES, $POLYNOMIAL_POSITION_RECORDS, $OBJECT_NAIF_ID, $CENTER_NAIF_ID, $ORBIT_DETERMINATION)
     {
-        $builder->startObject(21);
+        $builder->startObject(22);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addCENTER_NAME($builder, $CENTER_NAME);
@@ -318,6 +327,7 @@ class ephemerisDataBlock extends Table
         self::addPOLYNOMIAL_POSITION_RECORDS($builder, $POLYNOMIAL_POSITION_RECORDS);
         self::addOBJECT_NAIF_ID($builder, $OBJECT_NAIF_ID);
         self::addCENTER_NAIF_ID($builder, $CENTER_NAIF_ID);
+        self::addORBIT_DETERMINATION($builder, $ORBIT_DETERMINATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -626,6 +636,16 @@ class ephemerisDataBlock extends Table
     public static function addCENTER_NAIF_ID(FlatBufferBuilder $builder, $CENTER_NAIF_ID)
     {
         $builder->addIntX(20, $CENTER_NAIF_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addORBIT_DETERMINATION(FlatBufferBuilder $builder, $ORBIT_DETERMINATION)
+    {
+        $builder->addOffsetX(21, $ORBIT_DETERMINATION, 0);
     }
 
     /**

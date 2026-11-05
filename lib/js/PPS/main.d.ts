@@ -35,6 +35,7 @@ export * from './legacyCountryCode.js';
 export * from './maneuverableFlag.js';
 export * from './massCategory.js';
 export * from './OEM.js';
+export * from './OEMOrbitDetermination.js';
 export * from './operationalState.js';
 export * from './OrbitFrame.js';
 export * from './OrbitFrameWrapper.js';

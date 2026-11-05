@@ -237,6 +237,10 @@ public struct ODRIterationStatistics: FlatBufferVerifiableTable, FlatbuffersVect
   }
 }
 
+///  One observation the estimator read: the editing record, then the columns of
+///  a per-input residual listing (P9), one entry per input the fit read, accepted
+///  or not. OBSERVATION_ID is the input identifier; the residual is
+///  OBSERVED_VALUE - COMPUTED_VALUE.
 public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -254,6 +258,13 @@ public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVector
     static let PREFIT_RESIDUAL: VOffset = 8
     static let NORMALIZED_RESIDUAL: VOffset = 10
     static let REASON: VOffset = 12
+    static let EPOCH: VOffset = 14
+    static let OBSERVATION_TYPE: VOffset = 16
+    static let OBSERVED_VALUE: VOffset = 18
+    static let COMPUTED_VALUE: VOffset = 20
+    static let WEIGHT: VOffset = 22
+    static let ACCEPTED: VOffset = 24
+    static let PERTURBATION_MODEL_CODE: VOffset = 26
   }
 
   public var OBSERVATION_ID: String! { let o = _accessor.offset(VT.OBSERVATION_ID); return _accessor.string(at: o) }
@@ -263,12 +274,36 @@ public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVector
   public var NORMALIZED_RESIDUAL: Double { let o = _accessor.offset(VT.NORMALIZED_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var REASON: String? { let o = _accessor.offset(VT.REASON); return o == 0 ? nil : _accessor.string(at: o) }
   public var REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REASON) }
-  public static func startODREditedObservation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Epoch of the observation (ISO 8601 UTC).
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Measurement class of the observation.
+  public var OBSERVATION_TYPE: memMeasurementType { let o = _accessor.offset(VT.OBSERVATION_TYPE); return o == 0 ? .unspecified : memMeasurementType(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  ///  The observation as measured, in the unit of its class: km, km/s or deg.
+  public var OBSERVED_VALUE: Double { let o = _accessor.offset(VT.OBSERVED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The same quantity computed from the solution at EPOCH, in the same unit.
+  public var COMPUTED_VALUE: Double { let o = _accessor.offset(VT.COMPUTED_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Weight the fit gave the observation in its normal equations; 0 when it gave none.
+  public var WEIGHT: Double { let o = _accessor.offset(VT.WEIGHT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when the observation entered the solution; false when the fit edited it out (REASON says why).
+  public var ACCEPTED: Bool { let o = _accessor.offset(VT.ACCEPTED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+  public var PERTURBATION_MODEL_CODE: String? { let o = _accessor.offset(VT.PERTURBATION_MODEL_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PERTURBATION_MODEL_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PERTURBATION_MODEL_CODE) }
+  public static func startODREditedObservation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(OBSERVATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATION_ID, at: VT.OBSERVATION_ID) }
   public static func add(ITERATION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITERATION, def: 0, at: VT.ITERATION) }
   public static func add(PREFIT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREFIT_RESIDUAL, def: 0.0, at: VT.PREFIT_RESIDUAL) }
   public static func add(NORMALIZED_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORMALIZED_RESIDUAL, def: 0.0, at: VT.NORMALIZED_RESIDUAL) }
   public static func add(REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REASON, at: VT.REASON) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(OBSERVATION_TYPE: memMeasurementType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATION_TYPE.rawValue, def: 0, at: VT.OBSERVATION_TYPE) }
+  public static func add(OBSERVED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVED_VALUE, def: 0.0, at: VT.OBSERVED_VALUE) }
+  public static func add(COMPUTED_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPUTED_VALUE, def: 0.0, at: VT.COMPUTED_VALUE) }
+  public static func add(WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT, def: 0.0, at: VT.WEIGHT) }
+  public static func add(ACCEPTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTED, def: false,
+   at: VT.ACCEPTED) }
+  public static func add(PERTURBATION_MODEL_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PERTURBATION_MODEL_CODE, at: VT.PERTURBATION_MODEL_CODE) }
   public static func endODREditedObservation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createODREditedObservation(
     _ fbb: inout FlatBufferBuilder,
@@ -276,7 +311,14 @@ public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVector
     ITERATION: UInt32 = 0,
     PREFIT_RESIDUAL: Double = 0.0,
     NORMALIZED_RESIDUAL: Double = 0.0,
-    REASONOffset REASON: Offset = Offset()
+    REASONOffset REASON: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    OBSERVATION_TYPE: memMeasurementType = .unspecified,
+    OBSERVED_VALUE: Double = 0.0,
+    COMPUTED_VALUE: Double = 0.0,
+    WEIGHT: Double = 0.0,
+    ACCEPTED: Bool = false,
+    PERTURBATION_MODEL_CODEOffset PERTURBATION_MODEL_CODE: Offset = Offset()
   ) -> Offset {
     let __start = ODREditedObservation.startODREditedObservation(&fbb)
     ODREditedObservation.add(OBSERVATION_ID: OBSERVATION_ID, &fbb)
@@ -284,6 +326,13 @@ public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVector
     ODREditedObservation.add(PREFIT_RESIDUAL: PREFIT_RESIDUAL, &fbb)
     ODREditedObservation.add(NORMALIZED_RESIDUAL: NORMALIZED_RESIDUAL, &fbb)
     ODREditedObservation.add(REASON: REASON, &fbb)
+    ODREditedObservation.add(EPOCH: EPOCH, &fbb)
+    ODREditedObservation.add(OBSERVATION_TYPE: OBSERVATION_TYPE, &fbb)
+    ODREditedObservation.add(OBSERVED_VALUE: OBSERVED_VALUE, &fbb)
+    ODREditedObservation.add(COMPUTED_VALUE: COMPUTED_VALUE, &fbb)
+    ODREditedObservation.add(WEIGHT: WEIGHT, &fbb)
+    ODREditedObservation.add(ACCEPTED: ACCEPTED, &fbb)
+    ODREditedObservation.add(PERTURBATION_MODEL_CODE: PERTURBATION_MODEL_CODE, &fbb)
     return ODREditedObservation.endODREditedObservation(&fbb, start: __start)
   }
 
@@ -294,6 +343,13 @@ public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVector
     try _v.visit(field: VT.PREFIT_RESIDUAL, fieldName: "PREFIT_RESIDUAL", required: false, type: Double.self)
     try _v.visit(field: VT.NORMALIZED_RESIDUAL, fieldName: "NORMALIZED_RESIDUAL", required: false, type: Double.self)
     try _v.visit(field: VT.REASON, fieldName: "REASON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSERVATION_TYPE, fieldName: "OBSERVATION_TYPE", required: false, type: memMeasurementType.self)
+    try _v.visit(field: VT.OBSERVED_VALUE, fieldName: "OBSERVED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.COMPUTED_VALUE, fieldName: "COMPUTED_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.WEIGHT, fieldName: "WEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VT.ACCEPTED, fieldName: "ACCEPTED", required: false, type: Bool.self)
+    try _v.visit(field: VT.PERTURBATION_MODEL_CODE, fieldName: "PERTURBATION_MODEL_CODE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -359,7 +359,7 @@
     },
     "prwDynamicParameter" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN"]
+      "enum": ["UNSPECIFIED", "DRAG_AREA_OVER_MASS", "DRAG_AREA_OVER_MASS_RATE", "SRP_AREA_OVER_MASS", "IN_TRACK_ACCELERATION", "ECOM2_D0", "ECOM2_Y0", "ECOM2_B0", "ECOM2_D2_COS", "ECOM2_D2_SIN", "ECOM2_D4_COS", "ECOM2_D4_SIN", "ECOM2_B1_COS", "ECOM2_B1_SIN", "ECOM2_B3_COS", "ECOM2_B3_SIN", "OUTGASSING_ACCELERATION"]
     },
     "meanElementSource" : {
       "type" : "string",
@@ -3897,7 +3897,7 @@
     },
     "PRWStateMatrix" : {
       "type" : "object",
-      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+      "description" : "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
       "properties" : {
         "DIMENSION" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255
@@ -5163,7 +5163,7 @@
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+                "description" : "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
               },
         "MEAN_MOTION_DOT" : {
                 "type" : "number",
@@ -5171,7 +5171,7 @@
               },
         "MEAN_MOTION_DDOT" : {
                 "type" : "number",
-                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
               },
         "COV_REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",
@@ -5220,6 +5220,14 @@
         "COV_REALISM" : {
                 "$ref" : "#/definitions/CVR",
                 "description" : "Realism of COVARIANCE."
+              },
+        "BTERM" : {
+                "type" : "number",
+                "description" : "BTERM (CCSDS 502.0-B-3 Table 4-3, \"BSTAR or BTERM\"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4."
+              },
+        "AGOM" : {
+                "type" : "number",
+                "description" : "AGOM (CCSDS 502.0-B-3 Table 4-3, \"MEAN_MOTION_DDOT or AGOM\"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4."
               }
       },
       "additionalProperties" : false
@@ -5425,6 +5433,29 @@
       },
       "additionalProperties" : false
     },
+    "OEMOrbitDetermination" : {
+      "type" : "object",
+      "description" : "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+      "properties" : {
+        "OD_OBSERVATIONS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations the determination used; 0 when not stated."
+              },
+        "OD_ARC_START" : {
+                "type" : "string",
+                "description" : "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+              },
+        "OD_ARC_STOP" : {
+                "type" : "string",
+                "description" : "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+              },
+        "OD_METHOD" : {
+                "type" : "string",
+                "description" : "Method of the determination; empty when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
     "ephemerisDataBlock" : {
       "type" : "object",
       "description" : "OEM Ephemeris Data Block",
@@ -5512,6 +5543,10 @@
         "CENTER_NAIF_ID" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
                 "description" : "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+              },
+        "ORBIT_DETERMINATION" : {
+                "$ref" : "#/definitions/OEMOrbitDetermination",
+                "description" : "Orbit determination this block's states descend from; absent when none\nis stated."
               }
       },
       "additionalProperties" : false

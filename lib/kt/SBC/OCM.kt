@@ -291,7 +291,8 @@ class OCM : Table() {
     val trajFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
     fun trajFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
-     * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+     * Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+     * local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
      */
     val covRefFrame : RFM? get() = covRefFrame(RFM())
     fun covRefFrame(obj: RFM) : RFM? {
@@ -383,7 +384,8 @@ class OCM : Table() {
     val covTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
     fun covTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     /**
-     * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+     * Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+     * the product writers (lib/js/PROD) accept.
      */
     val covOrdering : Byte
         get() {
@@ -400,9 +402,10 @@ class OCM : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
         }
     /**
-     * Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-     * by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-     * matrix reaches). A row the orbit determination did not solve for is zero.
+     * Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+     * COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+     * DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+     * and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
      */
     fun covParameters(j: Int) : String? {
         val o = __offset(58)
@@ -417,8 +420,9 @@ class OCM : Table() {
             val o = __offset(58); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-     * dimensionless one.
+     * Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+     * COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+     * parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
      */
     fun covUnits(j: Int) : String? {
         val o = __offset(60)

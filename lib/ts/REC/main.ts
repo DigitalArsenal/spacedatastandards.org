@@ -1184,6 +1184,7 @@ export * from './odrProcessNoiseKind.js';
 export * from './ODRSolverConfiguration.js';
 export * from './odSensorContribution.js';
 export * from './OEM.js';
+export * from './OEMOrbitDetermination.js';
 export * from './OIL.js';
 export * from './OILConflict.js';
 export * from './oilConflictShape.js';

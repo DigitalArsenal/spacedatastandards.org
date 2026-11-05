@@ -3501,7 +3501,7 @@ class OCMDynamicParameter {
   ///  Value at the solution epoch, in UNITS.
   double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-  ///  m/s**2 for IN_TRACK_ACCELERATION.
+  ///  m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
   String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  True when the orbit determination solved for the parameter, false when VALUE was held.
   bool get SOLVED_FOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
@@ -5489,8 +5489,9 @@ class OrbitDetermination {
   double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
   double get weightedRms => WEIGHTED_RMS;
   ///  Dynamical-model parameters of the solution with their values, solved for or held. An
-  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-  ///  COV_PARAMETERS names in the covariance are entries of this list.
+  ///  IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  ///  OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  ///  row of the covariance, false for a parameter the determination held.
   List<OCMDynamicParameter>? get OD_DYNAMIC_PARAMETERS => const fb.ListReader<OCMDynamicParameter>(OCMDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 54);
   List<OCMDynamicParameter>? get odDynamicParameters => OD_DYNAMIC_PARAMETERS;
   ///  DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
@@ -6871,7 +6872,8 @@ class OCM {
   ///  (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
   String? get TRAJ_FRAME_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
   String? get trajFrameEpoch => TRAJ_FRAME_EPOCH;
-  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  ///  Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  ///  local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
   RFM? get COV_REF_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 40);
   RFM? get covRefFrame => COV_REF_FRAME;
   ///  Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
@@ -6899,20 +6901,23 @@ class OCM {
   ///  TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
   String? get COV_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
   String? get covType => COV_TYPE;
-  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  ///  Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  ///  the product writers (lib/js/PROD) accept.
   covarianceOrdering get COV_ORDERING => covarianceOrdering.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 54, 0));
   covarianceOrdering get covOrdering => COV_ORDERING;
   ///  Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
   ///  COV_PARAMETERS names.
   int get COV_SIZE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 56, 6);
   int get covSize => COV_SIZE;
-  ///  Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-  ///  by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-  ///  matrix reaches). A row the orbit determination did not solve for is zero.
+  ///  Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  ///  COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  ///  DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  ///  and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
   List<String>? get COV_PARAMETERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
   List<String>? get covParameters => COV_PARAMETERS;
-  ///  Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-  ///  dimensionless one.
+  ///  Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  ///  COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  ///  parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
   List<String>? get COV_UNITS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
   List<String>? get covUnits => COV_UNITS;
   ///  Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START

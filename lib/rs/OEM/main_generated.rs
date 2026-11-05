@@ -1402,6 +1402,238 @@ impl covarianceMatrixLineT {
     }
 }
 
+pub enum OEMOrbitDeterminationOffset {}
+
+/// The orbit determination an ephemeris block descends from. SDS addition:
+/// CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+/// follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+/// states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+/// behind the ephemeris, not of its states).
+#[derive(Copy, Clone, PartialEq)]
+pub struct OEMOrbitDetermination<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for OEMOrbitDetermination<'a> {
+    type Inner = OEMOrbitDetermination<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> OEMOrbitDetermination<'a> {
+    pub const VT_OD_OBSERVATIONS_USED: ::flatbuffers::VOffsetT = 4;
+    pub const VT_OD_ARC_START: ::flatbuffers::VOffsetT = 6;
+    pub const VT_OD_ARC_STOP: ::flatbuffers::VOffsetT = 8;
+    pub const VT_OD_METHOD: ::flatbuffers::VOffsetT = 10;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        OEMOrbitDetermination { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args OEMOrbitDeterminationArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<OEMOrbitDetermination<'bldr>> {
+        let mut builder = OEMOrbitDeterminationBuilder::new(_fbb);
+        if let Some(x) = args.OD_METHOD { builder.add_OD_METHOD(x); }
+        if let Some(x) = args.OD_ARC_STOP { builder.add_OD_ARC_STOP(x); }
+        if let Some(x) = args.OD_ARC_START { builder.add_OD_ARC_START(x); }
+        builder.add_OD_OBSERVATIONS_USED(args.OD_OBSERVATIONS_USED);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> OEMOrbitDeterminationT {
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED();
+        let OD_ARC_START = self.OD_ARC_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OD_ARC_STOP = self.OD_ARC_STOP().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OD_METHOD = self.OD_METHOD().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        OEMOrbitDeterminationT {
+            OD_OBSERVATIONS_USED,
+            OD_ARC_START,
+            OD_ARC_STOP,
+            OD_METHOD,
+        }
+    }
+
+    /// Observations the determination used; 0 when not stated.
+    #[inline]
+    pub fn OD_OBSERVATIONS_USED(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(OEMOrbitDetermination::VT_OD_OBSERVATIONS_USED, Some(0)).unwrap()}
+    }
+
+    /// First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+    #[inline]
+    pub fn OD_ARC_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEMOrbitDetermination::VT_OD_ARC_START, None)}
+    }
+
+    /// Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+    #[inline]
+    pub fn OD_ARC_STOP(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEMOrbitDetermination::VT_OD_ARC_STOP, None)}
+    }
+
+    /// Method of the determination; empty when not stated.
+    #[inline]
+    pub fn OD_METHOD(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OEMOrbitDetermination::VT_OD_METHOD, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for OEMOrbitDetermination<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u32>("OD_OBSERVATIONS_USED", Self::VT_OD_OBSERVATIONS_USED, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_ARC_START", Self::VT_OD_ARC_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_ARC_STOP", Self::VT_OD_ARC_STOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_METHOD", Self::VT_OD_METHOD, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct OEMOrbitDeterminationArgs<'a> {
+    pub OD_OBSERVATIONS_USED: u32,
+    pub OD_ARC_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_ARC_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for OEMOrbitDeterminationArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        OEMOrbitDeterminationArgs {
+            OD_OBSERVATIONS_USED: 0,
+            OD_ARC_START: None,
+            OD_ARC_STOP: None,
+            OD_METHOD: None,
+        }
+    }
+}
+
+pub struct OEMOrbitDeterminationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OEMOrbitDeterminationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_OD_OBSERVATIONS_USED(&mut self, OD_OBSERVATIONS_USED: u32) {
+        self.fbb_.push_slot::<u32>(OEMOrbitDetermination::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, 0);
+    }
+
+    #[inline]
+    pub fn add_OD_ARC_START(&mut self, OD_ARC_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEMOrbitDetermination::VT_OD_ARC_START, OD_ARC_START);
+    }
+
+    #[inline]
+    pub fn add_OD_ARC_STOP(&mut self, OD_ARC_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEMOrbitDetermination::VT_OD_ARC_STOP, OD_ARC_STOP);
+    }
+
+    #[inline]
+    pub fn add_OD_METHOD(&mut self, OD_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OEMOrbitDetermination::VT_OD_METHOD, OD_METHOD);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OEMOrbitDeterminationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        OEMOrbitDeterminationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<OEMOrbitDetermination<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for OEMOrbitDetermination<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("OEMOrbitDetermination");
+        ds.field("OD_OBSERVATIONS_USED", &self.OD_OBSERVATIONS_USED());
+        ds.field("OD_ARC_START", &self.OD_ARC_START());
+        ds.field("OD_ARC_STOP", &self.OD_ARC_STOP());
+        ds.field("OD_METHOD", &self.OD_METHOD());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct OEMOrbitDeterminationT {
+    pub OD_OBSERVATIONS_USED: u32,
+    pub OD_ARC_START: Option<alloc::string::String>,
+    pub OD_ARC_STOP: Option<alloc::string::String>,
+    pub OD_METHOD: Option<alloc::string::String>,
+}
+
+impl Default for OEMOrbitDeterminationT {
+    fn default() -> Self {
+        Self {
+            OD_OBSERVATIONS_USED: 0,
+            OD_ARC_START: None,
+            OD_ARC_STOP: None,
+            OD_METHOD: None,
+        }
+    }
+}
+
+impl OEMOrbitDeterminationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<OEMOrbitDetermination<'b>> {
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED;
+        let OD_ARC_START = self.OD_ARC_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OD_ARC_STOP = self.OD_ARC_STOP.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OD_METHOD = self.OD_METHOD.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        OEMOrbitDetermination::create(_fbb, &OEMOrbitDeterminationArgs{
+            OD_OBSERVATIONS_USED,
+            OD_ARC_START,
+            OD_ARC_STOP,
+            OD_METHOD,
+        })
+    }
+}
+
 pub enum ephemerisDataBlockOffset {}
 
 /// OEM Ephemeris Data Block
@@ -1441,6 +1673,7 @@ impl<'a> ephemerisDataBlock<'a> {
     pub const VT_POLYNOMIAL_POSITION_RECORDS: ::flatbuffers::VOffsetT = 40;
     pub const VT_OBJECT_NAIF_ID: ::flatbuffers::VOffsetT = 42;
     pub const VT_CENTER_NAIF_ID: ::flatbuffers::VOffsetT = 44;
+    pub const VT_ORBIT_DETERMINATION: ::flatbuffers::VOffsetT = 46;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1454,6 +1687,7 @@ impl<'a> ephemerisDataBlock<'a> {
     ) -> ::flatbuffers::WIPOffset<ephemerisDataBlock<'bldr>> {
         let mut builder = ephemerisDataBlockBuilder::new(_fbb);
         builder.add_STEP_SIZE(args.STEP_SIZE);
+        if let Some(x) = args.ORBIT_DETERMINATION { builder.add_ORBIT_DETERMINATION(x); }
         builder.add_CENTER_NAIF_ID(args.CENTER_NAIF_ID);
         builder.add_OBJECT_NAIF_ID(args.OBJECT_NAIF_ID);
         if let Some(x) = args.POLYNOMIAL_POSITION_RECORDS { builder.add_POLYNOMIAL_POSITION_RECORDS(x); }
@@ -1529,6 +1763,9 @@ impl<'a> ephemerisDataBlock<'a> {
         });
         let OBJECT_NAIF_ID = self.OBJECT_NAIF_ID();
         let CENTER_NAIF_ID = self.CENTER_NAIF_ID();
+        let ORBIT_DETERMINATION = self.ORBIT_DETERMINATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         ephemerisDataBlockT {
             COMMENT,
             OBJECT,
@@ -1551,6 +1788,7 @@ impl<'a> ephemerisDataBlock<'a> {
             POLYNOMIAL_POSITION_RECORDS,
             OBJECT_NAIF_ID,
             CENTER_NAIF_ID,
+            ORBIT_DETERMINATION,
         }
     }
 
@@ -1762,6 +2000,16 @@ impl<'a> ephemerisDataBlock<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<i32>(ephemerisDataBlock::VT_CENTER_NAIF_ID, Some(0)).unwrap()}
     }
+
+    /// Orbit determination this block's states descend from; absent when none
+    /// is stated.
+    #[inline]
+    pub fn ORBIT_DETERMINATION(&self) -> Option<OEMOrbitDetermination<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OEMOrbitDetermination>>(ephemerisDataBlock::VT_ORBIT_DETERMINATION, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ephemerisDataBlock<'_> {
@@ -1791,6 +2039,7 @@ impl ::flatbuffers::Verifiable for ephemerisDataBlock<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PPEPositionRecord>>>>("POLYNOMIAL_POSITION_RECORDS", Self::VT_POLYNOMIAL_POSITION_RECORDS, false)?
             .visit_field::<i32>("OBJECT_NAIF_ID", Self::VT_OBJECT_NAIF_ID, false)?
             .visit_field::<i32>("CENTER_NAIF_ID", Self::VT_CENTER_NAIF_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<OEMOrbitDetermination>>("ORBIT_DETERMINATION", Self::VT_ORBIT_DETERMINATION, false)?
             .finish();
         Ok(())
     }
@@ -1818,6 +2067,7 @@ pub struct ephemerisDataBlockArgs<'a> {
     pub POLYNOMIAL_POSITION_RECORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEPositionRecord<'a>>>>>,
     pub OBJECT_NAIF_ID: i32,
     pub CENTER_NAIF_ID: i32,
+    pub ORBIT_DETERMINATION: Option<::flatbuffers::WIPOffset<OEMOrbitDetermination<'a>>>,
 }
 
 impl<'a> Default for ephemerisDataBlockArgs<'a> {
@@ -1845,6 +2095,7 @@ impl<'a> Default for ephemerisDataBlockArgs<'a> {
             POLYNOMIAL_POSITION_RECORDS: None,
             OBJECT_NAIF_ID: 0,
             CENTER_NAIF_ID: 0,
+            ORBIT_DETERMINATION: None,
         }
     }
 }
@@ -1961,6 +2212,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ephemerisDataBlockBuilder<'a,
     }
 
     #[inline]
+    pub fn add_ORBIT_DETERMINATION(&mut self, ORBIT_DETERMINATION: ::flatbuffers::WIPOffset<OEMOrbitDetermination<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<OEMOrbitDetermination>>(ephemerisDataBlock::VT_ORBIT_DETERMINATION, ORBIT_DETERMINATION);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ephemerisDataBlockBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ephemerisDataBlockBuilder {
@@ -2000,6 +2256,7 @@ impl ::core::fmt::Debug for ephemerisDataBlock<'_> {
         ds.field("POLYNOMIAL_POSITION_RECORDS", &self.POLYNOMIAL_POSITION_RECORDS());
         ds.field("OBJECT_NAIF_ID", &self.OBJECT_NAIF_ID());
         ds.field("CENTER_NAIF_ID", &self.CENTER_NAIF_ID());
+        ds.field("ORBIT_DETERMINATION", &self.ORBIT_DETERMINATION());
         ds.finish()
     }
 }
@@ -2028,6 +2285,7 @@ pub struct ephemerisDataBlockT {
     pub POLYNOMIAL_POSITION_RECORDS: Option<alloc::vec::Vec<PPEPositionRecordT>>,
     pub OBJECT_NAIF_ID: i32,
     pub CENTER_NAIF_ID: i32,
+    pub ORBIT_DETERMINATION: Option<alloc::boxed::Box<OEMOrbitDeterminationT>>,
 }
 
 impl Default for ephemerisDataBlockT {
@@ -2054,6 +2312,7 @@ impl Default for ephemerisDataBlockT {
             POLYNOMIAL_POSITION_RECORDS: None,
             OBJECT_NAIF_ID: 0,
             CENTER_NAIF_ID: 0,
+            ORBIT_DETERMINATION: None,
         }
     }
 }
@@ -2114,6 +2373,9 @@ impl ephemerisDataBlockT {
         });
         let OBJECT_NAIF_ID = self.OBJECT_NAIF_ID;
         let CENTER_NAIF_ID = self.CENTER_NAIF_ID;
+        let ORBIT_DETERMINATION = self.ORBIT_DETERMINATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         ephemerisDataBlock::create(_fbb, &ephemerisDataBlockArgs{
             COMMENT,
             OBJECT,
@@ -2136,6 +2398,7 @@ impl ephemerisDataBlockT {
             POLYNOMIAL_POSITION_RECORDS,
             OBJECT_NAIF_ID,
             CENTER_NAIF_ID,
+            ORBIT_DETERMINATION,
         })
     }
 }

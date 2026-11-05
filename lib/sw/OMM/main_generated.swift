@@ -86,6 +86,8 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let USER_DEFINED_PARAMETERS: VOffset = 88
     static let PROVENANCE: VOffset = 90
     static let COV_REALISM: VOffset = 92
+    static let BTERM: VOffset = 94
+    static let AGOM: VOffset = 96
   }
 
   ///  CCSDS OMM Version
@@ -171,11 +173,11 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VT.ELEMENT_SET_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   public var REV_AT_EPOCH: Double { let o = _accessor.offset(VT.REV_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+  ///  BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
   public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   ///  COV_REF_FRAME reference frame for covariance [C if covariance given]
@@ -217,7 +219,15 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Realism of COVARIANCE.
   public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
+  ///  BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+  ///  SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+  ///  MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+  ///  renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+  public var BTERM: Double { let o = _accessor.offset(VT.BTERM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+  ///  coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+  public var AGOM: Double { let o = _accessor.offset(VT.AGOM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startOMM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
   public static func add(CCSDS_OMM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OMM_VERS, def: 0.0, at: VT.CCSDS_OMM_VERS) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VT.CREATION_DATE) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -263,6 +273,8 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(USER_DEFINED_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USER_DEFINED_PARAMETERS, at: VT.USER_DEFINED_PARAMETERS) }
   public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func add(BTERM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BTERM, def: 0.0, at: VT.BTERM) }
+  public static func add(AGOM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGOM, def: 0.0, at: VT.AGOM) }
   public static func endOMM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOMM(
     _ fbb: inout FlatBufferBuilder,
@@ -310,7 +322,9 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MESSAGE_IDOffset MESSAGE_ID: Offset = Offset(),
     USER_DEFINED_PARAMETERSVectorOffset USER_DEFINED_PARAMETERS: Offset = Offset(),
     PROVENANCEOffset PROVENANCE: Offset = Offset(),
-    COV_REALISMOffset COV_REALISM: Offset = Offset()
+    COV_REALISMOffset COV_REALISM: Offset = Offset(),
+    BTERM: Double = 0.0,
+    AGOM: Double = 0.0
   ) -> Offset {
     let __start = OMM.startOMM(&fbb)
     OMM.add(CCSDS_OMM_VERS: CCSDS_OMM_VERS, &fbb)
@@ -358,6 +372,8 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OMM.addVectorOf(USER_DEFINED_PARAMETERS: USER_DEFINED_PARAMETERS, &fbb)
     OMM.add(PROVENANCE: PROVENANCE, &fbb)
     OMM.add(COV_REALISM: COV_REALISM, &fbb)
+    OMM.add(BTERM: BTERM, &fbb)
+    OMM.add(AGOM: AGOM, &fbb)
     return OMM.endOMM(&fbb, start: __start)
   }
 
@@ -408,6 +424,8 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.USER_DEFINED_PARAMETERS, fieldName: "USER_DEFINED_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<OMMUserDefinedParameter>, OMMUserDefinedParameter>>.self)
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
+    try _v.visit(field: VT.BTERM, fieldName: "BTERM", required: false, type: Double.self)
+    try _v.visit(field: VT.AGOM, fieldName: "AGOM", required: false, type: Double.self)
     _v.finish()
   }
 }

@@ -6,6 +6,10 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
+# One observation the estimator read: the editing record, then the columns of
+# a per-input residual listing (P9), one entry per input the fit read, accepted
+# or not. OBSERVATION_ID is the input identifier; the residual is
+# OBSERVED_VALUE - COMPUTED_VALUE.
 class ODREditedObservation(object):
     __slots__ = ['_tab']
 
@@ -63,8 +67,64 @@ class ODREditedObservation(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Epoch of the observation (ISO 8601 UTC).
+    # ODREditedObservation
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Measurement class of the observation.
+    # ODREditedObservation
+    def OBSERVATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # The observation as measured, in the unit of its class: km, km/s or deg.
+    # ODREditedObservation
+    def OBSERVED_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # The same quantity computed from the solution at EPOCH, in the same unit.
+    # ODREditedObservation
+    def COMPUTED_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Weight the fit gave the observation in its normal equations; 0 when it gave none.
+    # ODREditedObservation
+    def WEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when the observation entered the solution; false when the fit edited it out (REASON says why).
+    # ODREditedObservation
+    def ACCEPTED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+    # ODREditedObservation
+    def PERTURBATION_MODEL_CODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def ODREditedObservationStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(12)
 
 def Start(builder):
     ODREditedObservationStart(builder)
@@ -99,6 +159,48 @@ def ODREditedObservationAddREASON(builder, REASON):
 def AddREASON(builder, REASON):
     ODREditedObservationAddREASON(builder, REASON)
 
+def ODREditedObservationAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    ODREditedObservationAddEPOCH(builder, EPOCH)
+
+def ODREditedObservationAddOBSERVATION_TYPE(builder, OBSERVATION_TYPE):
+    builder.PrependUint16Slot(6, OBSERVATION_TYPE, 0)
+
+def AddOBSERVATION_TYPE(builder, OBSERVATION_TYPE):
+    ODREditedObservationAddOBSERVATION_TYPE(builder, OBSERVATION_TYPE)
+
+def ODREditedObservationAddOBSERVED_VALUE(builder, OBSERVED_VALUE):
+    builder.PrependFloat64Slot(7, OBSERVED_VALUE, 0.0)
+
+def AddOBSERVED_VALUE(builder, OBSERVED_VALUE):
+    ODREditedObservationAddOBSERVED_VALUE(builder, OBSERVED_VALUE)
+
+def ODREditedObservationAddCOMPUTED_VALUE(builder, COMPUTED_VALUE):
+    builder.PrependFloat64Slot(8, COMPUTED_VALUE, 0.0)
+
+def AddCOMPUTED_VALUE(builder, COMPUTED_VALUE):
+    ODREditedObservationAddCOMPUTED_VALUE(builder, COMPUTED_VALUE)
+
+def ODREditedObservationAddWEIGHT(builder, WEIGHT):
+    builder.PrependFloat64Slot(9, WEIGHT, 0.0)
+
+def AddWEIGHT(builder, WEIGHT):
+    ODREditedObservationAddWEIGHT(builder, WEIGHT)
+
+def ODREditedObservationAddACCEPTED(builder, ACCEPTED):
+    builder.PrependBoolSlot(10, ACCEPTED, 0)
+
+def AddACCEPTED(builder, ACCEPTED):
+    ODREditedObservationAddACCEPTED(builder, ACCEPTED)
+
+def ODREditedObservationAddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PERTURBATION_MODEL_CODE), 0)
+
+def AddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODE):
+    ODREditedObservationAddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODE)
+
 def ODREditedObservationEnd(builder):
     return builder.EndObject()
 
@@ -116,12 +218,26 @@ class ODREditedObservationT(object):
         PREFIT_RESIDUAL = 0.0,
         NORMALIZED_RESIDUAL = 0.0,
         REASON = None,
+        EPOCH = None,
+        OBSERVATION_TYPE = 0,
+        OBSERVED_VALUE = 0.0,
+        COMPUTED_VALUE = 0.0,
+        WEIGHT = 0.0,
+        ACCEPTED = False,
+        PERTURBATION_MODEL_CODE = None,
     ):
         self.OBSERVATION_ID = OBSERVATION_ID  # type: Optional[str]
         self.ITERATION = ITERATION  # type: int
         self.PREFIT_RESIDUAL = PREFIT_RESIDUAL  # type: float
         self.NORMALIZED_RESIDUAL = NORMALIZED_RESIDUAL  # type: float
         self.REASON = REASON  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.OBSERVATION_TYPE = OBSERVATION_TYPE  # type: int
+        self.OBSERVED_VALUE = OBSERVED_VALUE  # type: float
+        self.COMPUTED_VALUE = COMPUTED_VALUE  # type: float
+        self.WEIGHT = WEIGHT  # type: float
+        self.ACCEPTED = ACCEPTED  # type: bool
+        self.PERTURBATION_MODEL_CODE = PERTURBATION_MODEL_CODE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -149,6 +265,13 @@ class ODREditedObservationT(object):
         self.PREFIT_RESIDUAL = ODREditedObservation.PREFIT_RESIDUAL()
         self.NORMALIZED_RESIDUAL = ODREditedObservation.NORMALIZED_RESIDUAL()
         self.REASON = ODREditedObservation.REASON()
+        self.EPOCH = ODREditedObservation.EPOCH()
+        self.OBSERVATION_TYPE = ODREditedObservation.OBSERVATION_TYPE()
+        self.OBSERVED_VALUE = ODREditedObservation.OBSERVED_VALUE()
+        self.COMPUTED_VALUE = ODREditedObservation.COMPUTED_VALUE()
+        self.WEIGHT = ODREditedObservation.WEIGHT()
+        self.ACCEPTED = ODREditedObservation.ACCEPTED()
+        self.PERTURBATION_MODEL_CODE = ODREditedObservation.PERTURBATION_MODEL_CODE()
 
     # ODREditedObservationT
     def Pack(self, builder):
@@ -156,6 +279,10 @@ class ODREditedObservationT(object):
             OBSERVATION_ID = builder.CreateString(self.OBSERVATION_ID)
         if self.REASON is not None:
             REASON = builder.CreateString(self.REASON)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.PERTURBATION_MODEL_CODE is not None:
+            PERTURBATION_MODEL_CODE = builder.CreateString(self.PERTURBATION_MODEL_CODE)
         ODREditedObservationStart(builder)
         if self.OBSERVATION_ID is not None:
             ODREditedObservationAddOBSERVATION_ID(builder, OBSERVATION_ID)
@@ -164,5 +291,14 @@ class ODREditedObservationT(object):
         ODREditedObservationAddNORMALIZED_RESIDUAL(builder, self.NORMALIZED_RESIDUAL)
         if self.REASON is not None:
             ODREditedObservationAddREASON(builder, REASON)
+        if self.EPOCH is not None:
+            ODREditedObservationAddEPOCH(builder, EPOCH)
+        ODREditedObservationAddOBSERVATION_TYPE(builder, self.OBSERVATION_TYPE)
+        ODREditedObservationAddOBSERVED_VALUE(builder, self.OBSERVED_VALUE)
+        ODREditedObservationAddCOMPUTED_VALUE(builder, self.COMPUTED_VALUE)
+        ODREditedObservationAddWEIGHT(builder, self.WEIGHT)
+        ODREditedObservationAddACCEPTED(builder, self.ACCEPTED)
+        if self.PERTURBATION_MODEL_CODE is not None:
+            ODREditedObservationAddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODE)
         ODREditedObservation = ODREditedObservationEnd(builder)
         return ODREditedObservation

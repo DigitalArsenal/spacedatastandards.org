@@ -13,6 +13,8 @@ class ephemerisDataLine
 
 class covarianceMatrixLine
 
+class OEMOrbitDetermination
+
 class ephemerisDataBlock
 
 class OEM
@@ -316,6 +318,47 @@ struct covarianceMatrixLineBuilder:
     def end():
         return b_.EndObject()
 
+/// The orbit determination an ephemeris block descends from. SDS addition:
+/// CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+/// follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+/// states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+/// behind the ephemeris, not of its states).
+class OEMOrbitDetermination : flatbuffers.handle
+    /// Observations the determination used; 0 when not stated.
+    def OD_OBSERVATIONS_USED() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+    def OD_ARC_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+    def OD_ARC_STOP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Method of the determination; empty when not stated.
+    def OD_METHOD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsOEMOrbitDetermination(buf:string): return OEMOrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
+
+struct OEMOrbitDeterminationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED:int):
+        b_.PrependUint32Slot(0, OD_OBSERVATIONS_USED, 0)
+        return this
+    def add_OD_ARC_START(OD_ARC_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, OD_ARC_START)
+        return this
+    def add_OD_ARC_STOP(OD_ARC_STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, OD_ARC_STOP)
+        return this
+    def add_OD_METHOD(OD_METHOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, OD_METHOD)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// OEM Ephemeris Data Block
 class ephemerisDataBlock : flatbuffers.handle
     /// Plain-Text Comment
@@ -412,13 +455,18 @@ class ephemerisDataBlock : flatbuffers.handle
     /// (SPK segment centre).
     def CENTER_NAIF_ID() -> int:
         return flatbuffers.field_int32(buf_, pos_, 44, 0)
+    /// Orbit determination this block's states descend from; absent when none
+    /// is stated.
+    def ORBIT_DETERMINATION() -> OEMOrbitDetermination?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: OEMOrbitDetermination { buf_, o } else: nil
 
 def GetRootAsephemerisDataBlock(buf:string): return ephemerisDataBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct ephemerisDataBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(22)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -482,6 +530,9 @@ struct ephemerisDataBlockBuilder:
         return this
     def add_CENTER_NAIF_ID(CENTER_NAIF_ID:int):
         b_.PrependInt32Slot(20, CENTER_NAIF_ID, 0)
+        return this
+    def add_ORBIT_DETERMINATION(ORBIT_DETERMINATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, ORBIT_DETERMINATION)
         return this
     def end():
         return b_.EndObject()

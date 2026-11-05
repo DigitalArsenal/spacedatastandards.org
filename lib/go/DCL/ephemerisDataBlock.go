@@ -522,8 +522,29 @@ func (rcv *ephemerisDataBlock) MutateCenterNaifId(n int32) bool {
 	return rcv.MutateCENTER_NAIF_ID(n)
 }
 
+/// Orbit determination this block's states descend from; absent when none
+/// is stated.
+func (rcv *ephemerisDataBlock) ORBIT_DETERMINATION(obj *OEMOrbitDetermination) *OEMOrbitDetermination {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(OEMOrbitDetermination)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *ephemerisDataBlock) OrbitDetermination(obj *OEMOrbitDetermination) *OEMOrbitDetermination {
+	return rcv.ORBIT_DETERMINATION(obj)
+}
+
+/// Orbit determination this block's states descend from; absent when none
+/// is stated.
 func ephemerisDataBlockStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(22)
 }
 func ephemerisDataBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -674,6 +695,12 @@ func ephemerisDataBlockAddCENTER_NAIF_ID(builder *flatbuffers.Builder, CENTER_NA
 }
 func ephemerisDataBlockAddCenterNaifId(builder *flatbuffers.Builder, CENTER_NAIF_ID int32) {
 	ephemerisDataBlockAddCENTER_NAIF_ID(builder, CENTER_NAIF_ID)
+}
+func ephemerisDataBlockAddORBIT_DETERMINATION(builder *flatbuffers.Builder, ORBIT_DETERMINATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ORBIT_DETERMINATION), 0)
+}
+func ephemerisDataBlockAddOrbitDetermination(builder *flatbuffers.Builder, ORBIT_DETERMINATION flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
 }
 func ephemerisDataBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

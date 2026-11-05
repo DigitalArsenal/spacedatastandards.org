@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
+import { OEMOrbitDetermination, OEMOrbitDeterminationT } from './OEMOrbitDetermination.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
@@ -131,6 +132,11 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
      * (SPK segment centre).
      */
     CENTER_NAIF_ID(): number;
+    /**
+     * Orbit determination this block's states descend from; absent when none
+     * is stated.
+     */
+    ORBIT_DETERMINATION(obj?: OEMOrbitDetermination): OEMOrbitDetermination | null;
     static startephemerisDataBlock(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
@@ -165,6 +171,7 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     static startPolynomialPositionRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addObjectNaifId(builder: flatbuffers.Builder, OBJECT_NAIF_ID: number): void;
     static addCenterNaifId(builder: flatbuffers.Builder, CENTER_NAIF_ID: number): void;
+    static addOrbitDetermination(builder: flatbuffers.Builder, ORBIT_DETERMINATIONOffset: flatbuffers.Offset): void;
     static endephemerisDataBlock(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ephemerisDataBlockT;
     unpackTo(_o: ephemerisDataBlockT): void;
@@ -191,7 +198,8 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[];
     OBJECT_NAIF_ID: number;
     CENTER_NAIF_ID: number;
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], OBJECT_NAIF_ID?: number, CENTER_NAIF_ID?: number);
+    ORBIT_DETERMINATION: OEMOrbitDeterminationT | null;
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], OBJECT_NAIF_ID?: number, CENTER_NAIF_ID?: number, ORBIT_DETERMINATION?: OEMOrbitDeterminationT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ephemerisDataBlock.d.ts.map

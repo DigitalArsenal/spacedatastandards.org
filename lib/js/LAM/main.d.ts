@@ -123,6 +123,7 @@ export * from './ocmStepSelection.js';
 export * from './ocmTrajectoryBasis.js';
 export * from './OCMTrajectoryBlock.js';
 export * from './OEM.js';
+export * from './OEMOrbitDetermination.js';
 export * from './operationalState.js';
 export * from './OrbitDetermination.js';
 export * from './OrbitFrame.js';

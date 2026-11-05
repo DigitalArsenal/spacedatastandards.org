@@ -6,6 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 type ODREditedObservation struct {
 	_tab flatbuffers.Table
 }
@@ -125,8 +129,146 @@ func (rcv *ODREditedObservation) Reason() []byte {
 	return rcv.REASON()
 }
 
+/// Epoch of the observation (ISO 8601 UTC).
+func (rcv *ODREditedObservation) EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ODREditedObservation) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
+/// Epoch of the observation (ISO 8601 UTC).
+/// Measurement class of the observation.
+func (rcv *ODREditedObservation) OBSERVATION_TYPE() memMeasurementType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return memMeasurementType(rcv._tab.GetUint16(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *ODREditedObservation) ObservationType() memMeasurementType {
+	return rcv.OBSERVATION_TYPE()
+}
+
+/// Measurement class of the observation.
+func (rcv *ODREditedObservation) MutateOBSERVATION_TYPE(n memMeasurementType) bool {
+	return rcv._tab.MutateUint16Slot(16, uint16(n))
+}
+
+func (rcv *ODREditedObservation) MutateObservationType(n memMeasurementType) bool {
+	return rcv.MutateOBSERVATION_TYPE(n)
+}
+
+/// The observation as measured, in the unit of its class: km, km/s or deg.
+func (rcv *ODREditedObservation) OBSERVED_VALUE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ODREditedObservation) ObservedValue() float64 {
+	return rcv.OBSERVED_VALUE()
+}
+
+/// The observation as measured, in the unit of its class: km, km/s or deg.
+func (rcv *ODREditedObservation) MutateOBSERVED_VALUE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *ODREditedObservation) MutateObservedValue(n float64) bool {
+	return rcv.MutateOBSERVED_VALUE(n)
+}
+
+/// The same quantity computed from the solution at EPOCH, in the same unit.
+func (rcv *ODREditedObservation) COMPUTED_VALUE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ODREditedObservation) ComputedValue() float64 {
+	return rcv.COMPUTED_VALUE()
+}
+
+/// The same quantity computed from the solution at EPOCH, in the same unit.
+func (rcv *ODREditedObservation) MutateCOMPUTED_VALUE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *ODREditedObservation) MutateComputedValue(n float64) bool {
+	return rcv.MutateCOMPUTED_VALUE(n)
+}
+
+/// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+func (rcv *ODREditedObservation) WEIGHT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ODREditedObservation) Weight() float64 {
+	return rcv.WEIGHT()
+}
+
+/// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+func (rcv *ODREditedObservation) MutateWEIGHT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *ODREditedObservation) MutateWeight(n float64) bool {
+	return rcv.MutateWEIGHT(n)
+}
+
+/// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+func (rcv *ODREditedObservation) ACCEPTED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ODREditedObservation) Accepted() bool {
+	return rcv.ACCEPTED()
+}
+
+/// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+func (rcv *ODREditedObservation) MutateACCEPTED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ODREditedObservation) MutateAccepted(n bool) bool {
+	return rcv.MutateACCEPTED(n)
+}
+
+/// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+func (rcv *ODREditedObservation) PERTURBATION_MODEL_CODE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ODREditedObservation) PerturbationModelCode() []byte {
+	return rcv.PERTURBATION_MODEL_CODE()
+}
+
+/// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
 func ODREditedObservationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(12)
 }
 func ODREditedObservationAddOBSERVATION_ID(builder *flatbuffers.Builder, OBSERVATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBSERVATION_ID), 0)
@@ -157,6 +299,48 @@ func ODREditedObservationAddREASON(builder *flatbuffers.Builder, REASON flatbuff
 }
 func ODREditedObservationAddReason(builder *flatbuffers.Builder, REASON flatbuffers.UOffsetT) {
 	ODREditedObservationAddREASON(builder, REASON)
+}
+func ODREditedObservationAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func ODREditedObservationAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ODREditedObservationAddEPOCH(builder, EPOCH)
+}
+func ODREditedObservationAddOBSERVATION_TYPE(builder *flatbuffers.Builder, OBSERVATION_TYPE memMeasurementType) {
+	builder.PrependUint16Slot(6, uint16(OBSERVATION_TYPE), 0)
+}
+func ODREditedObservationAddObservationType(builder *flatbuffers.Builder, OBSERVATION_TYPE memMeasurementType) {
+	ODREditedObservationAddOBSERVATION_TYPE(builder, OBSERVATION_TYPE)
+}
+func ODREditedObservationAddOBSERVED_VALUE(builder *flatbuffers.Builder, OBSERVED_VALUE float64) {
+	builder.PrependFloat64Slot(7, OBSERVED_VALUE, 0.0)
+}
+func ODREditedObservationAddObservedValue(builder *flatbuffers.Builder, OBSERVED_VALUE float64) {
+	ODREditedObservationAddOBSERVED_VALUE(builder, OBSERVED_VALUE)
+}
+func ODREditedObservationAddCOMPUTED_VALUE(builder *flatbuffers.Builder, COMPUTED_VALUE float64) {
+	builder.PrependFloat64Slot(8, COMPUTED_VALUE, 0.0)
+}
+func ODREditedObservationAddComputedValue(builder *flatbuffers.Builder, COMPUTED_VALUE float64) {
+	ODREditedObservationAddCOMPUTED_VALUE(builder, COMPUTED_VALUE)
+}
+func ODREditedObservationAddWEIGHT(builder *flatbuffers.Builder, WEIGHT float64) {
+	builder.PrependFloat64Slot(9, WEIGHT, 0.0)
+}
+func ODREditedObservationAddWeight(builder *flatbuffers.Builder, WEIGHT float64) {
+	ODREditedObservationAddWEIGHT(builder, WEIGHT)
+}
+func ODREditedObservationAddACCEPTED(builder *flatbuffers.Builder, ACCEPTED bool) {
+	builder.PrependBoolSlot(10, ACCEPTED, false)
+}
+func ODREditedObservationAddAccepted(builder *flatbuffers.Builder, ACCEPTED bool) {
+	ODREditedObservationAddACCEPTED(builder, ACCEPTED)
+}
+func ODREditedObservationAddPERTURBATION_MODEL_CODE(builder *flatbuffers.Builder, PERTURBATION_MODEL_CODE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(PERTURBATION_MODEL_CODE), 0)
+}
+func ODREditedObservationAddPerturbationModelCode(builder *flatbuffers.Builder, PERTURBATION_MODEL_CODE flatbuffers.UOffsetT) {
+	ODREditedObservationAddPERTURBATION_MODEL_CODE(builder, PERTURBATION_MODEL_CODE)
 }
 func ODREditedObservationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

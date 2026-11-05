@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.276.0+1793767506254",
+  version: "1.277.0+1793851676398",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: f2481e45b6a46761ea28c2e4629626fbdae6fe73aca8d279f22e4b1aef14a3be
@@ -1266,7 +1266,7 @@ file_identifier "$CAT";`,
       ]
     },
     ODR: {
-      IDL: '// Hash: 3d34c09d7c9a0d5b93e8bb15f622714c1105da9e05ee8ea8658f269aee31700c\n// Version: 1.202.0\n// -----------------------------------END_HEADER\ninclude "../FRM/main.fbs";\ninclude "../PCE/main.fbs";\n\nenum odrEstimatorKind : ubyte {\n  UNSPECIFIED = 0,\n  BATCH_WEIGHTED_LEAST_SQUARES = 1,\n  EXTENDED_KALMAN_FILTER = 2,\n  UNSCENTED_KALMAN_FILTER = 3,\n  EXTENDED_KALMAN_FILTER_WITH_SMOOTHER = 4\n}\n\nenum odrProcessNoiseKind : ubyte {\n  UNSPECIFIED = 0,\n  NONE = 1,\n  STATE_NOISE_COMPENSATION = 2,\n  DYNAMIC_MODEL_COMPENSATION = 3\n}\n\nenum odrConvergenceReason : ubyte {\n  UNSPECIFIED = 0,\n  CONVERGED = 1,\n  MAXIMUM_ITERATIONS = 2,\n  SINGULAR_NORMAL_MATRIX = 3,\n  DIVERGED = 4,\n  INSUFFICIENT_OBSERVATIONS = 5,\n  INVALID_INPUT = 6\n}\n\nenum odrParameterDisposition : ubyte {\n  UNSPECIFIED = 0,\n  ESTIMATED = 1,\n  CONSIDERED = 2,\n  FIXED = 3\n}\n\ntable ODRSolverConfiguration {\n  ESTIMATOR: odrEstimatorKind = UNSPECIFIED;\n  MAXIMUM_ITERATIONS: uint;\n  STATE_CONVERGENCE_TOLERANCE: double;\n  RMS_CONVERGENCE_TOLERANCE: double;\n  SIGMA_EDIT_THRESHOLD: double;\n  PROCESS_NOISE: odrProcessNoiseKind = UNSPECIFIED;\n  PROCESS_NOISE_SPECTRAL_DENSITY: [double];\n  DYNAMIC_MODEL_CORRELATION_TIME_SECONDS: double;\n  PROPAGATOR_PORT_ID: string (required);\n  PROPAGATOR_CAPABILITY: string (required);\n}\n\ntable ODRIterationStatistics {\n  ITERATION: uint;\n  ACCEPTED_OBSERVATION_COUNT: uint;\n  REJECTED_OBSERVATION_COUNT: uint;\n  PREFIT_RMS: double;\n  POSTFIT_RMS: double;\n  WEIGHTED_RMS: double;\n  STATE_CORRECTION_NORM: double;\n  NORMAL_MATRIX_CONDITION_NUMBER: double;\n}\n\ntable ODREditedObservation {\n  OBSERVATION_ID: string (required);\n  ITERATION: uint;\n  PREFIT_RESIDUAL: double;\n  NORMALIZED_RESIDUAL: double;\n  REASON: string;\n}\n\ntable ODREstimatedParameter {\n  PARAMETER: PCEParameterRef;\n  DISPOSITION: odrParameterDisposition = UNSPECIFIED;\n  A_PRIORI_VALUE: double;\n  A_PRIORI_SIGMA: double;\n  FINAL_VALUE: double;\n  FINAL_SIGMA: double;\n  UNIT: pceUnit = UNSPECIFIED;\n}\n\ntable ODRFilterEpoch {\n  EPOCH: string;\n  FILTERED_STATE: FRMStateVector;\n  FILTERED_COVARIANCE: [double];\n  SMOOTHED_STATE: FRMStateVector;\n  SMOOTHED_COVARIANCE: [double];\n  NORMALIZED_INNOVATION_SQUARED: double;\n}\n\ntable ODRAttestation {\n  SIGNING_PUBLIC_KEY: string (required);\n  SIGNED_AT: string;\n  SIGNATURE: [ubyte] (required);\n  CANONICAL_JSON_SIGNATURE: [ubyte] (required);\n}\n\n/// Estimation Run Report. This is the canonical estimation-family result\n/// model. STATE_COVARIANCE is row-major with COVARIANCE_DIMENSION squared\n/// entries and is also published as the $OCM named by OCM_CONTENT_ID. The\n/// estimator report never substitutes a propagator name for its input port.\ntable ODR {\n  RUN_ID: string (required);\n  STARTED_AT: string;\n  COMPLETED_AT: string;\n  CONFIGURATION: ODRSolverConfiguration;\n  CONVERGENCE_REASON: odrConvergenceReason = UNSPECIFIED;\n  ITERATIONS: [ODRIterationStatistics];\n  EDITED_OBSERVATIONS: [ODREditedObservation];\n  ESTIMATED_PARAMETERS: [ODREstimatedParameter];\n  ESTIMATED_EPOCH_STATE: FRMStateVector;\n  COVARIANCE_DIMENSION: uint;\n  STATE_COVARIANCE: [double];\n  OCM_CONTENT_ID: string (required);\n  FILTER_HISTORY: [ODRFilterEpoch];\n  RESIDUAL_RMS: double;\n  TRACE_ID: string;\n  ATTESTATION: ODRAttestation;\n}\n\nroot_type ODR;\nfile_identifier "$ODR";',
+      IDL: '// Hash: a44c7f6e82f4abcffe4c08277e068395060b3562fe4c104c0b2c43dd8e93b536\n// Version: 1.202.1\n// -----------------------------------END_HEADER\ninclude "../FRM/main.fbs";\ninclude "../PCE/main.fbs";\ninclude "../MEM/main.fbs";\n\nenum odrEstimatorKind : ubyte {\n  UNSPECIFIED = 0,\n  BATCH_WEIGHTED_LEAST_SQUARES = 1,\n  EXTENDED_KALMAN_FILTER = 2,\n  UNSCENTED_KALMAN_FILTER = 3,\n  EXTENDED_KALMAN_FILTER_WITH_SMOOTHER = 4\n}\n\nenum odrProcessNoiseKind : ubyte {\n  UNSPECIFIED = 0,\n  NONE = 1,\n  STATE_NOISE_COMPENSATION = 2,\n  DYNAMIC_MODEL_COMPENSATION = 3\n}\n\nenum odrConvergenceReason : ubyte {\n  UNSPECIFIED = 0,\n  CONVERGED = 1,\n  MAXIMUM_ITERATIONS = 2,\n  SINGULAR_NORMAL_MATRIX = 3,\n  DIVERGED = 4,\n  INSUFFICIENT_OBSERVATIONS = 5,\n  INVALID_INPUT = 6\n}\n\nenum odrParameterDisposition : ubyte {\n  UNSPECIFIED = 0,\n  ESTIMATED = 1,\n  CONSIDERED = 2,\n  FIXED = 3\n}\n\ntable ODRSolverConfiguration {\n  ESTIMATOR: odrEstimatorKind = UNSPECIFIED;\n  MAXIMUM_ITERATIONS: uint;\n  STATE_CONVERGENCE_TOLERANCE: double;\n  RMS_CONVERGENCE_TOLERANCE: double;\n  SIGMA_EDIT_THRESHOLD: double;\n  PROCESS_NOISE: odrProcessNoiseKind = UNSPECIFIED;\n  PROCESS_NOISE_SPECTRAL_DENSITY: [double];\n  DYNAMIC_MODEL_CORRELATION_TIME_SECONDS: double;\n  PROPAGATOR_PORT_ID: string (required);\n  PROPAGATOR_CAPABILITY: string (required);\n}\n\ntable ODRIterationStatistics {\n  ITERATION: uint;\n  ACCEPTED_OBSERVATION_COUNT: uint;\n  REJECTED_OBSERVATION_COUNT: uint;\n  PREFIT_RMS: double;\n  POSTFIT_RMS: double;\n  WEIGHTED_RMS: double;\n  STATE_CORRECTION_NORM: double;\n  NORMAL_MATRIX_CONDITION_NUMBER: double;\n}\n\n/// One observation the estimator read: the editing record, then the columns of\n/// a per-input residual listing (P9), one entry per input the fit read, accepted\n/// or not. OBSERVATION_ID is the input identifier; the residual is\n/// OBSERVED_VALUE - COMPUTED_VALUE.\ntable ODREditedObservation {\n  OBSERVATION_ID: string (required);\n  ITERATION: uint;\n  PREFIT_RESIDUAL: double;\n  NORMALIZED_RESIDUAL: double;\n  REASON: string;\n  /// Epoch of the observation (ISO 8601 UTC).\n  EPOCH: string;\n  /// Measurement class of the observation.\n  OBSERVATION_TYPE: memMeasurementType = UNSPECIFIED;\n  /// The observation as measured, in the unit of its class: km, km/s or deg.\n  OBSERVED_VALUE: double;\n  /// The same quantity computed from the solution at EPOCH, in the same unit.\n  COMPUTED_VALUE: double;\n  /// Weight the fit gave the observation in its normal equations; 0 when it gave none.\n  WEIGHT: double;\n  /// True when the observation entered the solution; false when the fit edited it out (REASON says why).\n  ACCEPTED: bool = false;\n  /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.\n  PERTURBATION_MODEL_CODE: string;\n}\n\ntable ODREstimatedParameter {\n  PARAMETER: PCEParameterRef;\n  DISPOSITION: odrParameterDisposition = UNSPECIFIED;\n  A_PRIORI_VALUE: double;\n  A_PRIORI_SIGMA: double;\n  FINAL_VALUE: double;\n  FINAL_SIGMA: double;\n  UNIT: pceUnit = UNSPECIFIED;\n}\n\ntable ODRFilterEpoch {\n  EPOCH: string;\n  FILTERED_STATE: FRMStateVector;\n  FILTERED_COVARIANCE: [double];\n  SMOOTHED_STATE: FRMStateVector;\n  SMOOTHED_COVARIANCE: [double];\n  NORMALIZED_INNOVATION_SQUARED: double;\n}\n\ntable ODRAttestation {\n  SIGNING_PUBLIC_KEY: string (required);\n  SIGNED_AT: string;\n  SIGNATURE: [ubyte] (required);\n  CANONICAL_JSON_SIGNATURE: [ubyte] (required);\n}\n\n/// Estimation Run Report. This is the canonical estimation-family result\n/// model. STATE_COVARIANCE is row-major with COVARIANCE_DIMENSION squared\n/// entries and is also published as the $OCM named by OCM_CONTENT_ID. The\n/// estimator report never substitutes a propagator name for its input port.\ntable ODR {\n  RUN_ID: string (required);\n  STARTED_AT: string;\n  COMPLETED_AT: string;\n  CONFIGURATION: ODRSolverConfiguration;\n  CONVERGENCE_REASON: odrConvergenceReason = UNSPECIFIED;\n  ITERATIONS: [ODRIterationStatistics];\n  EDITED_OBSERVATIONS: [ODREditedObservation];\n  ESTIMATED_PARAMETERS: [ODREstimatedParameter];\n  ESTIMATED_EPOCH_STATE: FRMStateVector;\n  COVARIANCE_DIMENSION: uint;\n  STATE_COVARIANCE: [double];\n  OCM_CONTENT_ID: string (required);\n  FILTER_HISTORY: [ODRFilterEpoch];\n  RESIDUAL_RMS: double;\n  TRACE_ID: string;\n  ATTESTATION: ODRAttestation;\n}\n\nroot_type ODR;\nfile_identifier "$ODR";',
       files: [
         "./dist/ODR/ODR.sw.tar.gz",
         "./dist/ODR/ODR.py.tar.gz",
@@ -13419,8 +13419,8 @@ file_identifier "$WXF";`,
       ]
     },
     OEM: {
-      IDL: `// Hash: df414bec815b6db6660f9454afd9bde3a6268b8afeef31cfa973ceb6aa094943
-// Version: 1.1.6
+      IDL: `// Hash: d39568ddd457fbae2e3f38c8e64b30153009d9817640d86a78b5ab276c98b5a0
+// Version: 1.1.7
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -13616,6 +13616,22 @@ table covarianceMatrixLine {
   COV_REFERENCE_FRAME:RFM;
 }
 
+/// The orbit determination an ephemeris block descends from. SDS addition:
+/// CCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings
+/// follow the OD_ fields of $OCM OrbitDetermination, which a fit of these
+/// states copies forward (OD_OBSERVATIONS_USED is the count of the observations
+/// behind the ephemeris, not of its states).
+table OEMOrbitDetermination {
+  /// Observations the determination used; 0 when not stated.
+  OD_OBSERVATIONS_USED: uint;
+  /// First epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  OD_ARC_START: string;
+  /// Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.
+  OD_ARC_STOP: string;
+  /// Method of the determination; empty when not stated.
+  OD_METHOD: string;
+}
+
 /// OEM Ephemeris Data Block
 table ephemerisDataBlock {
   // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -13735,6 +13751,14 @@ table ephemerisDataBlock {
   /// NAIF integer code of the ephemeris centre, matching CENTER_NAME
   /// (SPK segment centre).
   CENTER_NAIF_ID:int;
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // APPENDED. The determination behind the block. Append-only: never reorder.
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+  /// Orbit determination this block's states descend from; absent when none
+  /// is stated.
+  ORBIT_DETERMINATION:OEMOrbitDetermination;
 }
 
 /// Orbit Ephemeris Message
@@ -17315,8 +17339,8 @@ file_identifier "$ABA";`,
       ]
     },
     OMM: {
-      IDL: `// Hash: e556fe7f5374fe31d7be192907f72ef4b39c53cf39f1a1a33153373fe966a234
-// Version: 2.0.7
+      IDL: `// Hash: d75a87f32efada08a12bc0a686a9cddec67cecee1ce0785cd6e62a781e7cb7ee
+// Version: 2.0.8
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -17427,11 +17451,11 @@ table OMM {
   ELEMENT_SET_NO:uint32;
   /// REV_AT_EPOCH [O if SGP/SGP4]
   REV_AT_EPOCH:double;
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+  /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
   BSTAR:double;
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   MEAN_MOTION_DOT:double;
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
   MEAN_MOTION_DDOT:double;
 
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -17471,6 +17495,14 @@ table OMM {
   PROVENANCE:PVN;
   /// Realism of COVARIANCE.
   COV_REALISM:CVR;
+  /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+  /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+  /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+  /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+  BTERM:double;
+  /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+  /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+  AGOM:double;
 }
 
 /// One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
@@ -19666,7 +19698,7 @@ file_identifier "$CVR";`,
       ]
     },
     PRW: {
-      IDL: '// Hash: 3b0b800e60af9acb12b6822a50e98a2fdee03401398dfeec6b9fdced792a081f\n// Version: 1.219.7\n// -----------------------------------END_HEADER\ninclude "../FRM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../PCE/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../NCD/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../PCF/main.fbs";\n\n/// Propagator Runtime Wire \u2014 arena-addressed init / batch request / batch\n/// response envelopes for orbital propagators that produce state vectors\n/// into a shared memory arena.\n///\n/// Data interchange for the underlying content (state vectors, covariance,\n/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,\n/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +\n/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those\n/// across a JS \u2194 WASM boundary, not a substitute for any of them.\n///\n/// The integrator settings and the force model a propagation runs under are\n/// `PCF`\'s tables (PCFIntegratorSettings, PCFForceModel and their enums); PRW\n/// carries them and does not define them, so a configuration and a request\n/// share one definition of each.\n\n/// Runtime state-flag bitfield (sized to match a single uint).\n/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;\n/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining\n/// flags live here because they describe runtime propagation health, not\n/// a persisted record.\nenum propagatorStateFlags : uint (bit_flags) {\n  /// State vector data is valid.\n  VALID,\n  /// Satellite is in Earth\'s shadow at this epoch.\n  IN_ECLIPSE,\n  /// Orbit has decayed (re-entry imminent or complete).\n  DECAYED,\n  /// Propagation extrapolated beyond the input epoch.\n  EXTRAPOLATED,\n  /// Reserved.\n  RESERVED_4,\n  /// Reserved.\n  RESERVED_5,\n  /// Reserved.\n  RESERVED_6,\n  /// Reserved.\n  RESERVED_7\n}\n\n/// Error codes surfaced by runtime propagation calls.\nenum propagatorErrorCode : int {\n  /// No error.\n  OK,\n  /// Unknown / unspecified error.\n  UNKNOWN,\n  /// One or more entity handles not found.\n  UNKNOWN_ENTITY,\n  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).\n  INVALID_EPOCH,\n  /// Output buffer too small for the requested count.\n  OUTPUT_BUFFER_OVERFLOW,\n  /// Propagator not initialized.\n  NOT_INITIALIZED\n}\n\n/// Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\n/// polynomial inputs to entity handles.\n///\n/// The actual per-entity source record is carried inline as raw bytes\n/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.\n/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\n/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to\n/// consume them.\ntable PRWInit {\n  /// Entity handles to assign results to (same order as SOURCES[]).\n  ENTITY_HANDLES:[uint];\n  /// Per-entity source records, encoded as SDS FlatBuffers.\n  SOURCES:[PRWInitSource];\n}\n\nenum prwSourceKind : ubyte {\n  /// Source is an OMM (CCSDS mean elements) FlatBuffer.\n  OMM,\n  /// Source is a raw TLE line pair (3LE supported via NAME).\n  TLE,\n  /// Source is an OCM FlatBuffer.\n  OCM,\n  /// Source is an OEM FlatBuffer.\n  OEM,\n  /// Source is a PPE (polynomial ephemeris) FlatBuffer.\n  PPE,\n  /// Source is a single classical Keplerian element set.\n  KEPLERIAN\n}\n\ntable PRWKeplerianElements {\n  /// Gravitational parameter of the central body (km^3 / s^2).\n  MU:double;\n  /// Semi-major axis (km).\n  SEMI_MAJOR_AXIS:double;\n  /// Eccentricity (0 = circular, <1 = ellipse).\n  ECCENTRICITY:double;\n  /// Inclination (radians).\n  INCLINATION:double;\n  /// Right ascension of the ascending node (radians).\n  RAAN:double;\n  /// Argument of periapsis (radians).\n  ARG_PERIAPSIS:double;\n  /// True anomaly (radians).\n  TRUE_ANOMALY:double;\n  /// Epoch as Julian date.\n  EPOCH:double;\n}\n\ntable PRWTleLines {\n  /// TLE line 1 (69 characters).\n  LINE1:string;\n  /// TLE line 2 (69 characters).\n  LINE2:string;\n  /// Satellite name (optional, line 0 of 3LE).\n  NAME:string;\n  /// NORAD catalog number parsed from the TLE.\n  NORAD_ID:uint;\n}\n\ntable PRWInitSource {\n  /// Wire kind identifier for BYTES.\n  KIND:prwSourceKind;\n  /// Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).\n  FILE_IDENTIFIER:string;\n  /// Encoded source record as a FlatBuffer (consumed per KIND).\n  BYTES:[uint8];\n  /// Convenience inline form when KIND == KEPLERIAN.\n  KEPLERIAN:PRWKeplerianElements;\n  /// Convenience inline form when KIND == TLE.\n  TLE:PRWTleLines;\n}\n\n/// Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\n/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\n/// shared arena.\ntable PRWBatchRequest {\n  /// Target epoch as a Julian date (TIME_SYSTEM is configured on the host).\n  EPOCH:double;\n  /// Entity handles to propagate (empty = all initialized entities).\n  ENTITY_HANDLES:[uint];\n  /// Output buffer offset in the arena where the StateVector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Maximum entities to process in this call (0 = unbounded).\n  MAX_COUNT:uint;\n  /// Target reference frame for the output state stream. Matches enum\n  /// values in SDS `RFM`. If zero, the propagator chooses its native frame.\n  TARGET_FRAME:string;\n}\n\n/// Batch propagation response header \u2014 describes the stream written to\n/// OUTPUT_OFFSET and reports errors. The stream itself is\n/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.\ntable PRWBatchResponse {\n  /// Number of state vectors written.\n  COUNT:uint;\n  /// Offset in the arena where the state-vector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.\n  STATE_VECTOR_SIZE:uint8;\n  /// Reference frame for the stream (SDS `RFM`-compatible string tag).\n  REFERENCE_FRAME:string;\n  /// Per-entity status flags (same cardinality as COUNT).\n  FLAGS:[propagatorStateFlags];\n  /// Error code (0 == OK).\n  ERROR_CODE:propagatorErrorCode;\n  /// Optional error message when ERROR_CODE != OK.\n  ERROR_MESSAGE:string;\n}\n\nenum prwDerivativeTechnique : ubyte {\n  UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2\n}\nenum prwDensityTreatment : ubyte {\n  UNSPECIFIED = 0, NEGLECTED = 1, FINITE_DIFFERENCE = 2\n}\nenum prwSteeringBasis : ubyte {\n  UNSPECIFIED = 0, INTEGRATION_FRAME = 1, RTN_AXES = 2, VNC_AXES = 3,\n  ALONG_VELOCITY = 4, OPPOSITE_VELOCITY = 5\n}\nenum prwThrustPrescription : ubyte {\n  UNSPECIFIED = 0, FORCE = 1, ACCELERATION = 2\n}\nenum prwQualityEvidence : ubyte {\n  UNMEASURED = 0, SAMPLED_RESIDUAL = 1, PROVEN_BOUND = 2\n}\n/// Process noise added to a propagated covariance. WHITE_ACCELERATION is\n/// zero-mean white acceleration noise (state noise compensation): over each\n/// discretization interval h it adds, per axis with spectral density q,\n/// q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the\n/// linearized dynamics then carry forward with the covariance.\nenum prwProcessNoiseModel : ubyte {\n  UNSPECIFIED = 0, NONE = 1, WHITE_ACCELERATION = 2\n}\n/// Axes of the process noise spectral densities.\nenum prwProcessNoiseAxes : ubyte {\n  UNSPECIFIED = 0, INERTIAL = 1, RADIAL_TRANSVERSE_NORMAL = 2\n}\nenum prwDensitySpecies : ubyte {\n  UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,\n  MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,\n  ANOMALOUS_OXYGEN = 8\n}\n/// Dynamical model parameters a covariance and STM may carry after the state\n/// (a VCM\'s B, BDOT, AGOM and T). Values are the request\'s FORCES, in SI:\n/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /\n/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,\n/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,\n/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);\n/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).\nenum prwDynamicParameter : ubyte {\n  UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,\n  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,\n  /// ECOM2 coefficients (PCFEcom2), in their order there.\n  ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,\n  ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,\n  ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15\n}\n\n/// Instance identity is host-provided, opaque, and not a physical quantity.\ntable PRWInstance {\n  MODULE_ID:string (required);\n  INSTANCE_ID:string (required);\n  /// Incremented on reinitialization or configuration invalidation.\n  GENERATION:ulong;\n}\n\n/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\n/// request\'s DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\n/// Covariance entries have row*column units; STM entries row/column units;\n/// an STM\'s parameter rows are the identity (parameters are constant).\ntable PRWStateMatrix {\n  DIMENSION:ubyte;\n  VALUES:[double] (required);\n}\n\n/// The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.\ntable PRWProcessNoise {\n  MODEL:prwProcessNoiseModel = UNSPECIFIED;\n  AXES:prwProcessNoiseAxes = UNSPECIFIED;\n  /// Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.\n  SPECTRAL_DENSITY_M2_S3:[double];\n  /// Interval over which each noise increment enters, seconds.\n  DISCRETIZATION_SECONDS:double;\n}\n\n/// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.\ntable PRWResidentState {\n  INSTANCE:PRWInstance;\n  ENTITY_HANDLE:uint;\n  CATALOG_NUMBER:uint;\n  OBJECT_ID:string;\n  STATE:FRMStateVector (required);\n  COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n  COVARIANCE:PRWStateMatrix;\n  /// Optional initial dynamical mass in kg; distinct from a missing mass.\n  MASS_KG:double;\n  /// True when MASS_KG carries a value; false means absent.\n  HAS_MASS_KG:bool = false;\n  /// Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy\n  /// ignored/underspecified coefficients; require a caller-provided mapping.\n  DRAG_AREA_OVER_MASS_M2_KG:double;\n  /// True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_M2_KG:bool = false;\n  SRP_AREA_OVER_MASS_M2_KG:double;\n  /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_SRP_AREA_OVER_MASS_M2_KG:bool = false;\n  VALID:bool = true;\n  /// Process noise for COVARIANCE: on input, what propagation adds; on\n  /// output, what the propagated COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE\'s epoch\n  /// (the BDOT of a VCM).\n  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;\n  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;\n  /// Constant in-track acceleration, m/s2, as PCFForceModel\'s.\n  IN_TRACK_ACCELERATION_M_S2:double;\n  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;\n}\n\n/// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.\ntable PRWImpulse {\n  EPOCH:TIMInstant (required);\n  DELTA_V:FRMVector3 (required);\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n}\n\n/// Piecewise-linear throttle. Clock is seconds from initial propagation epoch.\ntable PRWThrottlePoint {\n  ELAPSED_SECONDS:double;\n  FRACTION:double;\n}\n\n/// Scheduled time gates an optional condition. At least one must be present.\ntable PRWBurnBoundary {\n  ELAPSED_SECONDS:double;\n  /// True when ELAPSED_SECONDS carries a value; false means absent.\n  HAS_ELAPSED_SECONDS:bool = false;\n  /// SI PCE predicate; direction and goal tolerance explicitly populated.\n  CONDITION:PCEParameterCondition;\n}\n\n/// Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).\n/// VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).\ntable PRWFiniteBurn {\n  START:PRWBurnBoundary (required);\n  STOP:PRWBurnBoundary (required);\n  THRUST_LAW:prwThrustPrescription = UNSPECIFIED;\n  FORCE_NEWTONS:double;\n  /// True when FORCE_NEWTONS carries a value; false means absent.\n  HAS_FORCE_NEWTONS:bool = false;\n  ACCELERATION_M_S2:double;\n  /// True when ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_ACCELERATION_M_S2:bool = false;\n  SPECIFIC_IMPULSE_SECONDS:double;\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n  /// Dimensionless components; normalized after adding elapsed*time rate.\n  DIRECTION:FRMVector3;\n  /// Direction-component change per second, not radians/second.\n  DIRECTION_RATE:FRMVector3;\n  THROTTLE:[PRWThrottlePoint];\n}\n\n/// A located event.\ntable PRWEventRecord {\n  /// Index into the request\'s EVENTS.\n  EVENT_INDEX:uint;\n  /// The event function that crossed zero.\n  KIND:pcfEventKind = UNSPECIFIED;\n  /// The way g crossed zero: INCREASING or DECREASING.\n  DIRECTION:pcfEventDirection = ANY;\n  /// Epoch of the crossing.\n  EPOCH:TIMInstant (required);\n  /// Seconds from the request\'s initial epoch, negative for a backward propagation.\n  ELAPSED_SECONDS:double;\n  /// The state at EPOCH in the request\'s axes.\n  STATE:PRWResidentState (required);\n  /// g at EPOCH.\n  RESIDUAL:double;\n  /// Refinement steps taken.\n  ITERATIONS:uint;\n}\n\n/// Fixed endpoint propagation. Provider selected by the host\'s connected port.\ntable PRWExecutionRequest {\n  INITIAL:PRWResidentState (required);\n  TARGET_EPOCH:TIMInstant (required);\n  INTEGRATOR:PCFIntegratorSettings (required);\n  FORCES:PCFForceModel (required);\n  INCLUDE_STM:bool = false;\n  STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;\n  DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;\n  INITIAL_COVARIANCE:PRWStateMatrix;\n  INITIAL_MASS_COVARIANCE:PRWStateMatrix;\n  SAMPLE_EPOCHS:[TIMInstant];\n  IMPULSES:[PRWImpulse];\n  /// Explicitly selects 7-state integration even if FINITE_BURNS is empty.\n  INCLUDE_MASS_DYNAMICS:bool = false;\n  FINITE_BURNS:[PRWFiniteBurn];\n  /// Process noise added to the propagated covariance. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Model parameters appended, in this order and without repeats, to\n  /// INITIAL_COVARIANCE and to every sample\'s STM and COVARIANCE, so a\n  /// covariance carries their uncertainty and correlation (a VCM\'s 7x7 to\n  /// 10x10). Each must be active in FORCES. Empty means the state alone.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).\n  /// They apply to a plain state propagation (no STM, covariance, samples, impulses\n  /// or burns) by an integrator with a continuous extension; any other request that\n  /// names events is refused. Default empty.\n  EVENTS:[PCFEventDefinition];\n}\n\n/// Burn times absent until reached; zero means an actual edge at initial epoch.\ntable PRWBurnReport {\n  BURN_INDEX:uint;\n  STARTED:bool;\n  STOPPED:bool;\n  START_BY_EVENT:bool;\n  STOP_BY_EVENT:bool;\n  START_SECONDS:double;\n  /// True when START_SECONDS carries a value; false means absent.\n  HAS_START_SECONDS:bool = false;\n  STOP_SECONDS:double;\n  /// True when STOP_SECONDS carries a value; false means absent.\n  HAS_STOP_SECONDS:bool = false;\n  START_EPOCH:TIMInstant;\n  STOP_EPOCH:TIMInstant;\n  /// Integral of thrust acceleration magnitude, m/s; not vector net delta-v.\n  DELTA_V_M_S:double;\n  PROPELLANT_KG:double;\n}\n\ntable PRWPropagationSample {\n  STATE:PRWResidentState (required);\n  /// Both STMs cumulative from request initial epoch; SI state units.\n  STM:PRWStateMatrix;\n  MASS_STM:PRWStateMatrix;\n  COVARIANCE:PRWStateMatrix;\n  MASS_COVARIANCE:PRWStateMatrix;\n  ACCEPTED_STEPS:ulong;\n  REJECTED_STEPS:ulong;\n  BURNS:[PRWBurnReport];\n  /// The process noise COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n}\n\ntable PRWExecutionResult {\n  FINAL_SAMPLE:PRWPropagationSample (required);\n  SAMPLES:[PRWPropagationSample];\n  ELAPSED_SECONDS:double;\n  EPHEMERIS_SOURCE:string (required);\n  STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;\n  DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;\n  /// The parameters the samples\' STM and COVARIANCE carry after the state.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n  /// The located events with ACTION RECORD or STOP, in time order of propagation.\n  EVENTS:[PRWEventRecord];\n  /// Per request EVENTS entry, the qualifying crossings the propagation passed.\n  EVENT_OCCURRENCES:[uint];\n  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.\n  STOPPED_BY_EVENT:int = -1;\n}\n\n/// Portable batch request: no output pointer; state records returned via TAB.\ntable PRWResidentRequest {\n  INSTANCE:PRWInstance (required);\n  TARGET_EPOCH:TIMInstant (required);\n  ENTITY_HANDLES:[uint];\n  MAXIMUM_COUNT:uint;\n  TARGET_COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n}\n\n/// All epochs explicit; duration seconds >=0; empty handles means all resident.\ntable PRWPrepareRequest {\n  INSTANCE:PRWInstance (required);\n  CATALOG_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n  START_EPOCH:TIMInstant (required);\n  DURATION_SECONDS:double;\n  /// Provider-advertised profile name; unrecognized nonempty values fail.\n  PROFILE:string;\n}\n\ntable PRWFitQuality {\n  EVIDENCE_KIND:prwQualityEvidence = UNMEASURED;\n  /// SI metres and metres/second; absent when UNMEASURED.\n  MAXIMUM_POSITION_ERROR_M:double;\n  /// True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.\n  HAS_MAXIMUM_POSITION_ERROR_M:bool = false;\n  MAXIMUM_VELOCITY_ERROR_M_S:double;\n  /// True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.\n  HAS_MAXIMUM_VELOCITY_ERROR_M_S:bool = false;\n  METHOD:string;\n  REFERENCE_CONTENT_ID:string;\n}\n\ntable PRWPrepareResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  COVERAGE_COMPLETE:bool;\n  QUALITY:PRWFitQuality (required);\n}\n\ntable PRWDescribeRequest {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n}\n\n/// Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.\ntable PRWTrajectorySource {\n  SOURCE_HANDLE:uint;\n  OBJECT_ID:string;\n  EPHEMERIS:PPE (required);\n  /// One quality record per PPE.POSITION_RECORDS entry, same order.\n  SEGMENT_QUALITY:[PRWFitQuality];\n}\n\ntable PRWDescribeResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCES:[PRWTrajectorySource];\n  /// Chunking indexes SOURCES; no partial polynomial coefficient vector.\n  SOURCE_OFFSET:ulong;\n  FINAL_CHUNK:bool = true;\n}\n\n/// Native container bytes wholly inside the FlatBuffer; not an NCD trailer.\ntable PRWNativeInput {\n  DESCRIPTOR:NCD (required);\n  /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.\n  CONTENT:[ubyte] (required);\n}\n\n/// Earth orientation for a propagation: one instantaneous row, or daily rows\n/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with\n/// strictly increasing MJD that cover the arc. A provider interpolates as\n/// published by the series and does not extrapolate.\ntable PRWEarthOrientation {\n  ROWS:[EOP] (required);\n}\n\n/// Daily space weather for a propagation, as published (`SPW`), with strictly\n/// increasing DATE covering the arc plus what the atmosphere model reads\n/// before it (NRLMSISE-00 reads the previous day\'s F10.7). A provider derives\n/// its model inputs from these rows and reports which ones it reads.\ntable PRWSpaceWeatherTable {\n  ROWS:[SPW] (required);\n}\n\n/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes\n/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their\n/// 81-day centred averages, reported at 12 UT of DATE, and the hourly\n/// Dst-derived exospheric temperature change. A provider applies the model\'s\n/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier\n/// rows, and states how it interpolates between them.\ntable PRWJB2008Indices {\n  /// ISO 8601 calendar date (UTC) the row\'s values apply to.\n  DATE:string (required);\n  F10:double;\n  F10_CENTRED_81:double;\n  S10:double;\n  S10_CENTRED_81:double;\n  M10:double;\n  M10_CENTRED_81:double;\n  Y10:double;\n  Y10_CENTRED_81:double;\n  /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.\n  DTC_HOURLY_K:[double];\n  /// Source flags as published (SOLFSMY Ssrc), e.g. "4B".\n  SOURCE_FLAGS:string;\n}\n\n/// JB2008 drivers for a propagation: daily rows with strictly increasing\n/// DATE covering the arc plus the days the model\'s lags read before it.\ntable PRWJB2008IndicesTable {\n  ROWS:[PRWJB2008Indices] (required);\n}\n\n/// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.\ntable PRWEphemerisRequest {\n  EPOCH:TIMInstant (required);\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int = 399;\n}\n\ntable PRWEphemerisResult {\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int;\n  /// Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.\n  STATE:PRWResidentState (required);\n  EPHEMERIS_SOURCE:string (required);\n}\n\n/// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.\ntable PRWAtmosphereRequest {\n  ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;\n  EPOCH:TIMInstant (required);\n  ALTITUDE_M:double;\n  LATITUDE_RAD:double;\n  LONGITUDE_RAD:double;\n  /// Optional local solar time; hours [0,24); absent derives from UTC/longitude.\n  LOCAL_SOLAR_TIME_HOURS:double;\n  /// True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.\n  HAS_LOCAL_SOLAR_TIME_HOURS:bool = false;\n  F107:double = 150;\n  F107_AVERAGE:double = 150;\n  AP_INDEX:double = 4;\n  INCLUDE_ANOMALOUS_OXYGEN:bool = false;\n}\n\ntable PRWSpeciesDensity {\n  CONSTITUENT:prwDensitySpecies = UNSPECIFIED;\n  NUMBER_PER_M3:double;\n}\n\ntable PRWAtmosphereResult {\n  ATMOSPHERE_MODEL:pcfAtmosphereFamily = UNSPECIFIED;\n  VARIANT:string;\n  ALTITUDE_M:double;\n  DENSITY_KG_M3:double;\n  TEMPERATURE_K:double;\n  /// True when TEMPERATURE_K carries a value; false means absent.\n  HAS_TEMPERATURE_K:bool = false;\n  EXOSPHERIC_TEMPERATURE_K:double;\n  /// True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.\n  HAS_EXOSPHERIC_TEMPERATURE_K:bool = false;\n  SCALE_HEIGHT_M:double;\n  /// True when SCALE_HEIGHT_M carries a value; false means absent.\n  HAS_SCALE_HEIGHT_M:bool = false;\n  NUMBER_DENSITIES:[PRWSpeciesDensity];\n}\n\n/// Runtime diagnostic version; PLG remains the authoritative manifest identity.\ntable PRWVersionResult {\n  VERSION:string (required);\n  MODULE_ID:string (required);\n}\n\n/// One propagation window: propagate one source (an element set, an\n/// initialized entity or a resident handle) from START to STOP, sampling at\n/// most STEP_SECONDS apart with the last sample exactly at STOP. The answer is\n/// one $OEM data block per query, in SEQUENCE order, covering [START, STOP];\n/// a provider that cannot answer returns an empty block whose COMMENT begins\n/// "REFUSED" and reports the reason in PRWWindowReport.\ntable PRWWindowQuery {\n  /// Position of the query in the request, 0-based; answers keep this order.\n  SEQUENCE:uint;\n  /// 0-based index of the source record among the source records passed\n  /// with the request (e.g. the $OMM element sets, across all frames, in input\n  /// order). Ignored when ENTITY_HANDLE is used.\n  SET_INDEX:uint;\n  /// Entity handle of an initialized or resident source; 0 = use SET_INDEX.\n  ENTITY_HANDLE:uint;\n  /// Object key of the source as the requester names it (e.g. "NORAD:25544");\n  /// the answer block must be of this object.\n  OBJECT_KEY:string;\n  /// NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies\n  /// it).\n  NORAD_CAT_ID:uint;\n  /// International designator or provider object identifier; empty = none.\n  OBJECT_ID:string;\n  /// Epoch of the source record, for reference; absent = not stated.\n  SOURCE_EPOCH:TIMInstant;\n  /// First and last instants of the window (UTC unless TIME_SYSTEM says\n  /// otherwise).\n  START:TIMInstant (required);\n  STOP:TIMInstant (required);\n  /// Largest sample spacing, seconds (> 0).\n  STEP_SECONDS:double;\n}\n\n/// A batch of propagation windows. Existing BATCH_REQUEST propagates every\n/// entity to one EPOCH; a window request propagates each query\'s source over\n/// its own [START, STOP] at STEP_SECONDS.\ntable PRWWindowRequest {\n  QUERIES:[PRWWindowQuery];\n  /// Port of the propagator expected to answer; empty = the host\'s default.\n  PROPAGATOR_PORT_ID:string;\n  /// Neighbouring source records each window spans on either side (context\n  /// for the requester\'s replay); 0 = not stated.\n  NEIGHBOUR_SETS:uint;\n  /// Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");\n  /// empty = the provider\'s native frame.\n  TARGET_FRAME:string;\n  /// How to answer, human-readable.\n  INSTRUCTIONS:string;\n}\n\n/// A window the provider refused.\ntable PRWWindowRefusal {\n  /// The query\'s SEQUENCE.\n  SEQUENCE:uint;\n  /// The query\'s SET_INDEX.\n  SET_INDEX:uint;\n  /// Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",\n  /// "invalid-span", "span-too-long", "sgp4-propagate".\n  REASON:string;\n}\n\n/// Summary of the answers to a window request.\ntable PRWWindowReport {\n  /// Queries received, answered and refused.\n  QUERIES:uint;\n  ANSWERED:uint;\n  REFUSED:uint;\n  /// Source records received.\n  SOURCE_RECORDS:uint;\n  REFUSALS:[PRWWindowRefusal];\n  /// The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,\n  /// opsmode i; TEME, UTC, km and km/s".\n  PROVIDER:string;\n}\n\n/// Exactly one arm per envelope. Existing three arms keep their ordinals.\ntable PRW {\n  INIT:PRWInit;\n  BATCH_REQUEST:PRWBatchRequest;\n  BATCH_RESPONSE:PRWBatchResponse;\n  /// Appended portable arms; each method names its permitted arm.\n  EXECUTION_REQUEST:PRWExecutionRequest;\n  EXECUTION_RESULT:PRWExecutionResult;\n  RESIDENT_STATE:PRWResidentState;\n  RESIDENT_REQUEST:PRWResidentRequest;\n  PREPARE_REQUEST:PRWPrepareRequest;\n  PREPARE_RESULT:PRWPrepareResult;\n  DESCRIBE_REQUEST:PRWDescribeRequest;\n  DESCRIBE_RESULT:PRWDescribeResult;\n  NATIVE_INPUT:PRWNativeInput;\n  EPHEMERIS_REQUEST:PRWEphemerisRequest;\n  EPHEMERIS_RESULT:PRWEphemerisResult;\n  ATMOSPHERE_REQUEST:PRWAtmosphereRequest;\n  ATMOSPHERE_RESULT:PRWAtmosphereResult;\n  VERSION_QUERY:bool = false;\n  VERSION_RESULT:PRWVersionResult;\n  EARTH_ORIENTATION:PRWEarthOrientation;\n  SPACE_WEATHER:PRWSpaceWeatherTable;\n  JB2008_INDICES:PRWJB2008IndicesTable;\n  /// Propagation over windows: one $OEM block per query answers it.\n  WINDOW_REQUEST:PRWWindowRequest;\n  WINDOW_REPORT:PRWWindowReport;\n}\n\nroot_type PRW;\nfile_identifier "$PRW";',
+      IDL: '// Hash: 1e79cc3c039f8930c16eeb28f837cccbbd9a9ff60df9ac7004fe5741849712b4\n// Version: 1.219.8\n// -----------------------------------END_HEADER\ninclude "../FRM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../PCE/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../NCD/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../PCF/main.fbs";\n\n/// Propagator Runtime Wire \u2014 arena-addressed init / batch request / batch\n/// response envelopes for orbital propagators that produce state vectors\n/// into a shared memory arena.\n///\n/// Data interchange for the underlying content (state vectors, covariance,\n/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,\n/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +\n/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those\n/// across a JS \u2194 WASM boundary, not a substitute for any of them.\n///\n/// The integrator settings and the force model a propagation runs under are\n/// `PCF`\'s tables (PCFIntegratorSettings, PCFForceModel and their enums); PRW\n/// carries them and does not define them, so a configuration and a request\n/// share one definition of each.\n\n/// Runtime state-flag bitfield (sized to match a single uint).\n/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;\n/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining\n/// flags live here because they describe runtime propagation health, not\n/// a persisted record.\nenum propagatorStateFlags : uint (bit_flags) {\n  /// State vector data is valid.\n  VALID,\n  /// Satellite is in Earth\'s shadow at this epoch.\n  IN_ECLIPSE,\n  /// Orbit has decayed (re-entry imminent or complete).\n  DECAYED,\n  /// Propagation extrapolated beyond the input epoch.\n  EXTRAPOLATED,\n  /// Reserved.\n  RESERVED_4,\n  /// Reserved.\n  RESERVED_5,\n  /// Reserved.\n  RESERVED_6,\n  /// Reserved.\n  RESERVED_7\n}\n\n/// Error codes surfaced by runtime propagation calls.\nenum propagatorErrorCode : int {\n  /// No error.\n  OK,\n  /// Unknown / unspecified error.\n  UNKNOWN,\n  /// One or more entity handles not found.\n  UNKNOWN_ENTITY,\n  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).\n  INVALID_EPOCH,\n  /// Output buffer too small for the requested count.\n  OUTPUT_BUFFER_OVERFLOW,\n  /// Propagator not initialized.\n  NOT_INITIALIZED\n}\n\n/// Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\n/// polynomial inputs to entity handles.\n///\n/// The actual per-entity source record is carried inline as raw bytes\n/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.\n/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\n/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to\n/// consume them.\ntable PRWInit {\n  /// Entity handles to assign results to (same order as SOURCES[]).\n  ENTITY_HANDLES:[uint];\n  /// Per-entity source records, encoded as SDS FlatBuffers.\n  SOURCES:[PRWInitSource];\n}\n\nenum prwSourceKind : ubyte {\n  /// Source is an OMM (CCSDS mean elements) FlatBuffer.\n  OMM,\n  /// Source is a raw TLE line pair (3LE supported via NAME).\n  TLE,\n  /// Source is an OCM FlatBuffer.\n  OCM,\n  /// Source is an OEM FlatBuffer.\n  OEM,\n  /// Source is a PPE (polynomial ephemeris) FlatBuffer.\n  PPE,\n  /// Source is a single classical Keplerian element set.\n  KEPLERIAN\n}\n\ntable PRWKeplerianElements {\n  /// Gravitational parameter of the central body (km^3 / s^2).\n  MU:double;\n  /// Semi-major axis (km).\n  SEMI_MAJOR_AXIS:double;\n  /// Eccentricity (0 = circular, <1 = ellipse).\n  ECCENTRICITY:double;\n  /// Inclination (radians).\n  INCLINATION:double;\n  /// Right ascension of the ascending node (radians).\n  RAAN:double;\n  /// Argument of periapsis (radians).\n  ARG_PERIAPSIS:double;\n  /// True anomaly (radians).\n  TRUE_ANOMALY:double;\n  /// Epoch as Julian date.\n  EPOCH:double;\n}\n\ntable PRWTleLines {\n  /// TLE line 1 (69 characters).\n  LINE1:string;\n  /// TLE line 2 (69 characters).\n  LINE2:string;\n  /// Satellite name (optional, line 0 of 3LE).\n  NAME:string;\n  /// NORAD catalog number parsed from the TLE.\n  NORAD_ID:uint;\n}\n\ntable PRWInitSource {\n  /// Wire kind identifier for BYTES.\n  KIND:prwSourceKind;\n  /// Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).\n  FILE_IDENTIFIER:string;\n  /// Encoded source record as a FlatBuffer (consumed per KIND).\n  BYTES:[uint8];\n  /// Convenience inline form when KIND == KEPLERIAN.\n  KEPLERIAN:PRWKeplerianElements;\n  /// Convenience inline form when KIND == TLE.\n  TLE:PRWTleLines;\n}\n\n/// Batch propagation request \u2014 propagate every entity in ENTITY_HANDLES[] to\n/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the\n/// shared arena.\ntable PRWBatchRequest {\n  /// Target epoch as a Julian date (TIME_SYSTEM is configured on the host).\n  EPOCH:double;\n  /// Entity handles to propagate (empty = all initialized entities).\n  ENTITY_HANDLES:[uint];\n  /// Output buffer offset in the arena where the StateVector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Maximum entities to process in this call (0 = unbounded).\n  MAX_COUNT:uint;\n  /// Target reference frame for the output state stream. Matches enum\n  /// values in SDS `RFM`. If zero, the propagator chooses its native frame.\n  TARGET_FRAME:string;\n}\n\n/// Batch propagation response header \u2014 describes the stream written to\n/// OUTPUT_OFFSET and reports errors. The stream itself is\n/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.\ntable PRWBatchResponse {\n  /// Number of state vectors written.\n  COUNT:uint;\n  /// Offset in the arena where the state-vector stream begins.\n  OUTPUT_OFFSET:uint;\n  /// Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.\n  STATE_VECTOR_SIZE:uint8;\n  /// Reference frame for the stream (SDS `RFM`-compatible string tag).\n  REFERENCE_FRAME:string;\n  /// Per-entity status flags (same cardinality as COUNT).\n  FLAGS:[propagatorStateFlags];\n  /// Error code (0 == OK).\n  ERROR_CODE:propagatorErrorCode;\n  /// Optional error message when ERROR_CODE != OK.\n  ERROR_MESSAGE:string;\n}\n\nenum prwDerivativeTechnique : ubyte {\n  UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2\n}\nenum prwDensityTreatment : ubyte {\n  UNSPECIFIED = 0, NEGLECTED = 1, FINITE_DIFFERENCE = 2\n}\nenum prwSteeringBasis : ubyte {\n  UNSPECIFIED = 0, INTEGRATION_FRAME = 1, RTN_AXES = 2, VNC_AXES = 3,\n  ALONG_VELOCITY = 4, OPPOSITE_VELOCITY = 5\n}\nenum prwThrustPrescription : ubyte {\n  UNSPECIFIED = 0, FORCE = 1, ACCELERATION = 2\n}\nenum prwQualityEvidence : ubyte {\n  UNMEASURED = 0, SAMPLED_RESIDUAL = 1, PROVEN_BOUND = 2\n}\n/// Process noise added to a propagated covariance. WHITE_ACCELERATION is\n/// zero-mean white acceleration noise (state noise compensation): over each\n/// discretization interval h it adds, per axis with spectral density q,\n/// q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the\n/// linearized dynamics then carry forward with the covariance.\nenum prwProcessNoiseModel : ubyte {\n  UNSPECIFIED = 0, NONE = 1, WHITE_ACCELERATION = 2\n}\n/// Axes of the process noise spectral densities.\nenum prwProcessNoiseAxes : ubyte {\n  UNSPECIFIED = 0, INERTIAL = 1, RADIAL_TRANSVERSE_NORMAL = 2\n}\nenum prwDensitySpecies : ubyte {\n  UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,\n  MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,\n  ANOMALOUS_OXYGEN = 8\n}\n/// Dynamical model parameters a covariance and STM may carry after the state\n/// (a VCM\'s B, BDOT, AGOM and T). Values are the request\'s FORCES, in SI:\n/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /\n/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,\n/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,\n/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);\n/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);\n/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one\n/// parameter not in SI).\nenum prwDynamicParameter : ubyte {\n  UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,\n  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,\n  /// ECOM2 coefficients (PCFEcom2), in their order there.\n  ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,\n  ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,\n  ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15,\n  /// Constant outgassing acceleration an orbit determination solves for, km/s2.\n  OUTGASSING_ACCELERATION = 16\n}\n\n/// Instance identity is host-provided, opaque, and not a physical quantity.\ntable PRWInstance {\n  MODULE_ID:string (required);\n  INSTANCE_ID:string (required);\n  /// Incremented on reinitialization or configuration invalidation.\n  GENERATION:ulong;\n}\n\n/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\n/// request\'s DYNAMIC_PARAMETERS in order, one row per parameter, each in the\n/// unit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\n/// m/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\n/// SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\n/// Covariance entries have row*column units; STM entries row/column units;\n/// an STM\'s parameter rows are the identity (parameters are constant).\ntable PRWStateMatrix {\n  DIMENSION:ubyte;\n  VALUES:[double] (required);\n}\n\n/// The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.\ntable PRWProcessNoise {\n  MODEL:prwProcessNoiseModel = UNSPECIFIED;\n  AXES:prwProcessNoiseAxes = UNSPECIFIED;\n  /// Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.\n  SPECTRAL_DENSITY_M2_S3:[double];\n  /// Interval over which each noise increment enters, seconds.\n  DISCRETIZATION_SECONDS:double;\n}\n\n/// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.\ntable PRWResidentState {\n  INSTANCE:PRWInstance;\n  ENTITY_HANDLE:uint;\n  CATALOG_NUMBER:uint;\n  OBJECT_ID:string;\n  STATE:FRMStateVector (required);\n  COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n  COVARIANCE:PRWStateMatrix;\n  /// Optional initial dynamical mass in kg; distinct from a missing mass.\n  MASS_KG:double;\n  /// True when MASS_KG carries a value; false means absent.\n  HAS_MASS_KG:bool = false;\n  /// Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy\n  /// ignored/underspecified coefficients; require a caller-provided mapping.\n  DRAG_AREA_OVER_MASS_M2_KG:double;\n  /// True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_M2_KG:bool = false;\n  SRP_AREA_OVER_MASS_M2_KG:double;\n  /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.\n  HAS_SRP_AREA_OVER_MASS_M2_KG:bool = false;\n  VALID:bool = true;\n  /// Process noise for COVARIANCE: on input, what propagation adds; on\n  /// output, what the propagated COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE\'s epoch\n  /// (the BDOT of a VCM).\n  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;\n  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.\n  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;\n  /// Constant in-track acceleration, m/s2, as PCFForceModel\'s.\n  IN_TRACK_ACCELERATION_M_S2:double;\n  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;\n}\n\n/// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.\ntable PRWImpulse {\n  EPOCH:TIMInstant (required);\n  DELTA_V:FRMVector3 (required);\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n}\n\n/// Piecewise-linear throttle. Clock is seconds from initial propagation epoch.\ntable PRWThrottlePoint {\n  ELAPSED_SECONDS:double;\n  FRACTION:double;\n}\n\n/// Scheduled time gates an optional condition. At least one must be present.\ntable PRWBurnBoundary {\n  ELAPSED_SECONDS:double;\n  /// True when ELAPSED_SECONDS carries a value; false means absent.\n  HAS_ELAPSED_SECONDS:bool = false;\n  /// SI PCE predicate; direction and goal tolerance explicitly populated.\n  CONDITION:PCEParameterCondition;\n}\n\n/// Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).\n/// VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).\ntable PRWFiniteBurn {\n  START:PRWBurnBoundary (required);\n  STOP:PRWBurnBoundary (required);\n  THRUST_LAW:prwThrustPrescription = UNSPECIFIED;\n  FORCE_NEWTONS:double;\n  /// True when FORCE_NEWTONS carries a value; false means absent.\n  HAS_FORCE_NEWTONS:bool = false;\n  ACCELERATION_M_S2:double;\n  /// True when ACCELERATION_M_S2 carries a value; false means absent.\n  HAS_ACCELERATION_M_S2:bool = false;\n  SPECIFIC_IMPULSE_SECONDS:double;\n  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;\n  /// Dimensionless components; normalized after adding elapsed*time rate.\n  DIRECTION:FRMVector3;\n  /// Direction-component change per second, not radians/second.\n  DIRECTION_RATE:FRMVector3;\n  THROTTLE:[PRWThrottlePoint];\n}\n\n/// A located event.\ntable PRWEventRecord {\n  /// Index into the request\'s EVENTS.\n  EVENT_INDEX:uint;\n  /// The event function that crossed zero.\n  KIND:pcfEventKind = UNSPECIFIED;\n  /// The way g crossed zero: INCREASING or DECREASING.\n  DIRECTION:pcfEventDirection = ANY;\n  /// Epoch of the crossing.\n  EPOCH:TIMInstant (required);\n  /// Seconds from the request\'s initial epoch, negative for a backward propagation.\n  ELAPSED_SECONDS:double;\n  /// The state at EPOCH in the request\'s axes.\n  STATE:PRWResidentState (required);\n  /// g at EPOCH.\n  RESIDUAL:double;\n  /// Refinement steps taken.\n  ITERATIONS:uint;\n}\n\n/// Fixed endpoint propagation. Provider selected by the host\'s connected port.\ntable PRWExecutionRequest {\n  INITIAL:PRWResidentState (required);\n  TARGET_EPOCH:TIMInstant (required);\n  INTEGRATOR:PCFIntegratorSettings (required);\n  FORCES:PCFForceModel (required);\n  INCLUDE_STM:bool = false;\n  STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;\n  DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;\n  INITIAL_COVARIANCE:PRWStateMatrix;\n  INITIAL_MASS_COVARIANCE:PRWStateMatrix;\n  SAMPLE_EPOCHS:[TIMInstant];\n  IMPULSES:[PRWImpulse];\n  /// Explicitly selects 7-state integration even if FINITE_BURNS is empty.\n  INCLUDE_MASS_DYNAMICS:bool = false;\n  FINITE_BURNS:[PRWFiniteBurn];\n  /// Process noise added to the propagated covariance. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n  /// Model parameters appended, in this order and without repeats, to\n  /// INITIAL_COVARIANCE and to every sample\'s STM and COVARIANCE, so a\n  /// covariance carries their uncertainty and correlation (a VCM\'s 7x7 to\n  /// 10x10). Each must be active in FORCES. Empty means the state alone.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).\n  /// They apply to a plain state propagation (no STM, covariance, samples, impulses\n  /// or burns) by an integrator with a continuous extension; any other request that\n  /// names events is refused. Default empty.\n  EVENTS:[PCFEventDefinition];\n}\n\n/// Burn times absent until reached; zero means an actual edge at initial epoch.\ntable PRWBurnReport {\n  BURN_INDEX:uint;\n  STARTED:bool;\n  STOPPED:bool;\n  START_BY_EVENT:bool;\n  STOP_BY_EVENT:bool;\n  START_SECONDS:double;\n  /// True when START_SECONDS carries a value; false means absent.\n  HAS_START_SECONDS:bool = false;\n  STOP_SECONDS:double;\n  /// True when STOP_SECONDS carries a value; false means absent.\n  HAS_STOP_SECONDS:bool = false;\n  START_EPOCH:TIMInstant;\n  STOP_EPOCH:TIMInstant;\n  /// Integral of thrust acceleration magnitude, m/s; not vector net delta-v.\n  DELTA_V_M_S:double;\n  PROPELLANT_KG:double;\n}\n\ntable PRWPropagationSample {\n  STATE:PRWResidentState (required);\n  /// Both STMs cumulative from request initial epoch; SI state units.\n  STM:PRWStateMatrix;\n  MASS_STM:PRWStateMatrix;\n  COVARIANCE:PRWStateMatrix;\n  MASS_COVARIANCE:PRWStateMatrix;\n  ACCEPTED_STEPS:ulong;\n  REJECTED_STEPS:ulong;\n  BURNS:[PRWBurnReport];\n  /// The process noise COVARIANCE includes. Absent means none.\n  PROCESS_NOISE:PRWProcessNoise;\n}\n\ntable PRWExecutionResult {\n  FINAL_SAMPLE:PRWPropagationSample (required);\n  SAMPLES:[PRWPropagationSample];\n  ELAPSED_SECONDS:double;\n  EPHEMERIS_SOURCE:string (required);\n  STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;\n  DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;\n  /// The parameters the samples\' STM and COVARIANCE carry after the state.\n  DYNAMIC_PARAMETERS:[prwDynamicParameter];\n  /// The located events with ACTION RECORD or STOP, in time order of propagation.\n  EVENTS:[PRWEventRecord];\n  /// Per request EVENTS entry, the qualifying crossings the propagation passed.\n  EVENT_OCCURRENCES:[uint];\n  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.\n  STOPPED_BY_EVENT:int = -1;\n}\n\n/// Portable batch request: no output pointer; state records returned via TAB.\ntable PRWResidentRequest {\n  INSTANCE:PRWInstance (required);\n  TARGET_EPOCH:TIMInstant (required);\n  ENTITY_HANDLES:[uint];\n  MAXIMUM_COUNT:uint;\n  TARGET_COORDINATE_SYSTEM:RFMCoordinateSystem (required);\n}\n\n/// All epochs explicit; duration seconds >=0; empty handles means all resident.\ntable PRWPrepareRequest {\n  INSTANCE:PRWInstance (required);\n  CATALOG_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n  START_EPOCH:TIMInstant (required);\n  DURATION_SECONDS:double;\n  /// Provider-advertised profile name; unrecognized nonempty values fail.\n  PROFILE:string;\n}\n\ntable PRWFitQuality {\n  EVIDENCE_KIND:prwQualityEvidence = UNMEASURED;\n  /// SI metres and metres/second; absent when UNMEASURED.\n  MAXIMUM_POSITION_ERROR_M:double;\n  /// True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.\n  HAS_MAXIMUM_POSITION_ERROR_M:bool = false;\n  MAXIMUM_VELOCITY_ERROR_M_S:double;\n  /// True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.\n  HAS_MAXIMUM_VELOCITY_ERROR_M_S:bool = false;\n  METHOD:string;\n  REFERENCE_CONTENT_ID:string;\n}\n\ntable PRWPrepareResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  COVERAGE_COMPLETE:bool;\n  QUALITY:PRWFitQuality (required);\n}\n\ntable PRWDescribeRequest {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCE_HANDLES:[uint];\n}\n\n/// Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.\ntable PRWTrajectorySource {\n  SOURCE_HANDLE:uint;\n  OBJECT_ID:string;\n  EPHEMERIS:PPE (required);\n  /// One quality record per PPE.POSITION_RECORDS entry, same order.\n  SEGMENT_QUALITY:[PRWFitQuality];\n}\n\ntable PRWDescribeResult {\n  INSTANCE:PRWInstance (required);\n  SEGMENT_SET_HANDLE:uint;\n  SOURCES:[PRWTrajectorySource];\n  /// Chunking indexes SOURCES; no partial polynomial coefficient vector.\n  SOURCE_OFFSET:ulong;\n  FINAL_CHUNK:bool = true;\n}\n\n/// Native container bytes wholly inside the FlatBuffer; not an NCD trailer.\ntable PRWNativeInput {\n  DESCRIPTOR:NCD (required);\n  /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.\n  CONTENT:[ubyte] (required);\n}\n\n/// Earth orientation for a propagation: one instantaneous row, or daily rows\n/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with\n/// strictly increasing MJD that cover the arc. A provider interpolates as\n/// published by the series and does not extrapolate.\ntable PRWEarthOrientation {\n  ROWS:[EOP] (required);\n}\n\n/// Daily space weather for a propagation, as published (`SPW`), with strictly\n/// increasing DATE covering the arc plus what the atmosphere model reads\n/// before it (NRLMSISE-00 reads the previous day\'s F10.7). A provider derives\n/// its model inputs from these rows and reports which ones it reads.\ntable PRWSpaceWeatherTable {\n  ROWS:[SPW] (required);\n}\n\n/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes\n/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their\n/// 81-day centred averages, reported at 12 UT of DATE, and the hourly\n/// Dst-derived exospheric temperature change. A provider applies the model\'s\n/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier\n/// rows, and states how it interpolates between them.\ntable PRWJB2008Indices {\n  /// ISO 8601 calendar date (UTC) the row\'s values apply to.\n  DATE:string (required);\n  F10:double;\n  F10_CENTRED_81:double;\n  S10:double;\n  S10_CENTRED_81:double;\n  M10:double;\n  M10_CENTRED_81:double;\n  Y10:double;\n  Y10_CENTRED_81:double;\n  /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.\n  DTC_HOURLY_K:[double];\n  /// Source flags as published (SOLFSMY Ssrc), e.g. "4B".\n  SOURCE_FLAGS:string;\n}\n\n/// JB2008 drivers for a propagation: daily rows with strictly increasing\n/// DATE covering the arc plus the days the model\'s lags read before it.\ntable PRWJB2008IndicesTable {\n  ROWS:[PRWJB2008Indices] (required);\n}\n\n/// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.\ntable PRWEphemerisRequest {\n  EPOCH:TIMInstant (required);\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int = 399;\n}\n\ntable PRWEphemerisResult {\n  TARGET_NAIF_ID:int;\n  CENTER_NAIF_ID:int;\n  /// Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.\n  STATE:PRWResidentState (required);\n  EPHEMERIS_SOURCE:string (required);\n}\n\n/// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.\ntable PRWAtmosphereRequest {\n  ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;\n  EPOCH:TIMInstant (required);\n  ALTITUDE_M:double;\n  LATITUDE_RAD:double;\n  LONGITUDE_RAD:double;\n  /// Optional local solar time; hours [0,24); absent derives from UTC/longitude.\n  LOCAL_SOLAR_TIME_HOURS:double;\n  /// True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.\n  HAS_LOCAL_SOLAR_TIME_HOURS:bool = false;\n  F107:double = 150;\n  F107_AVERAGE:double = 150;\n  AP_INDEX:double = 4;\n  INCLUDE_ANOMALOUS_OXYGEN:bool = false;\n}\n\ntable PRWSpeciesDensity {\n  CONSTITUENT:prwDensitySpecies = UNSPECIFIED;\n  NUMBER_PER_M3:double;\n}\n\ntable PRWAtmosphereResult {\n  ATMOSPHERE_MODEL:pcfAtmosphereFamily = UNSPECIFIED;\n  VARIANT:string;\n  ALTITUDE_M:double;\n  DENSITY_KG_M3:double;\n  TEMPERATURE_K:double;\n  /// True when TEMPERATURE_K carries a value; false means absent.\n  HAS_TEMPERATURE_K:bool = false;\n  EXOSPHERIC_TEMPERATURE_K:double;\n  /// True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.\n  HAS_EXOSPHERIC_TEMPERATURE_K:bool = false;\n  SCALE_HEIGHT_M:double;\n  /// True when SCALE_HEIGHT_M carries a value; false means absent.\n  HAS_SCALE_HEIGHT_M:bool = false;\n  NUMBER_DENSITIES:[PRWSpeciesDensity];\n}\n\n/// Runtime diagnostic version; PLG remains the authoritative manifest identity.\ntable PRWVersionResult {\n  VERSION:string (required);\n  MODULE_ID:string (required);\n}\n\n/// One propagation window: propagate one source (an element set, an\n/// initialized entity or a resident handle) from START to STOP, sampling at\n/// most STEP_SECONDS apart with the last sample exactly at STOP. The answer is\n/// one $OEM data block per query, in SEQUENCE order, covering [START, STOP];\n/// a provider that cannot answer returns an empty block whose COMMENT begins\n/// "REFUSED" and reports the reason in PRWWindowReport.\ntable PRWWindowQuery {\n  /// Position of the query in the request, 0-based; answers keep this order.\n  SEQUENCE:uint;\n  /// 0-based index of the source record among the source records passed\n  /// with the request (e.g. the $OMM element sets, across all frames, in input\n  /// order). Ignored when ENTITY_HANDLE is used.\n  SET_INDEX:uint;\n  /// Entity handle of an initialized or resident source; 0 = use SET_INDEX.\n  ENTITY_HANDLE:uint;\n  /// Object key of the source as the requester names it (e.g. "NORAD:25544");\n  /// the answer block must be of this object.\n  OBJECT_KEY:string;\n  /// NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies\n  /// it).\n  NORAD_CAT_ID:uint;\n  /// International designator or provider object identifier; empty = none.\n  OBJECT_ID:string;\n  /// Epoch of the source record, for reference; absent = not stated.\n  SOURCE_EPOCH:TIMInstant;\n  /// First and last instants of the window (UTC unless TIME_SYSTEM says\n  /// otherwise).\n  START:TIMInstant (required);\n  STOP:TIMInstant (required);\n  /// Largest sample spacing, seconds (> 0).\n  STEP_SECONDS:double;\n}\n\n/// A batch of propagation windows. Existing BATCH_REQUEST propagates every\n/// entity to one EPOCH; a window request propagates each query\'s source over\n/// its own [START, STOP] at STEP_SECONDS.\ntable PRWWindowRequest {\n  QUERIES:[PRWWindowQuery];\n  /// Port of the propagator expected to answer; empty = the host\'s default.\n  PROPAGATOR_PORT_ID:string;\n  /// Neighbouring source records each window spans on either side (context\n  /// for the requester\'s replay); 0 = not stated.\n  NEIGHBOUR_SETS:uint;\n  /// Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");\n  /// empty = the provider\'s native frame.\n  TARGET_FRAME:string;\n  /// How to answer, human-readable.\n  INSTRUCTIONS:string;\n}\n\n/// A window the provider refused.\ntable PRWWindowRefusal {\n  /// The query\'s SEQUENCE.\n  SEQUENCE:uint;\n  /// The query\'s SET_INDEX.\n  SET_INDEX:uint;\n  /// Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",\n  /// "invalid-span", "span-too-long", "sgp4-propagate".\n  REASON:string;\n}\n\n/// Summary of the answers to a window request.\ntable PRWWindowReport {\n  /// Queries received, answered and refused.\n  QUERIES:uint;\n  ANSWERED:uint;\n  REFUSED:uint;\n  /// Source records received.\n  SOURCE_RECORDS:uint;\n  REFUSALS:[PRWWindowRefusal];\n  /// The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,\n  /// opsmode i; TEME, UTC, km and km/s".\n  PROVIDER:string;\n}\n\n/// Exactly one arm per envelope. Existing three arms keep their ordinals.\ntable PRW {\n  INIT:PRWInit;\n  BATCH_REQUEST:PRWBatchRequest;\n  BATCH_RESPONSE:PRWBatchResponse;\n  /// Appended portable arms; each method names its permitted arm.\n  EXECUTION_REQUEST:PRWExecutionRequest;\n  EXECUTION_RESULT:PRWExecutionResult;\n  RESIDENT_STATE:PRWResidentState;\n  RESIDENT_REQUEST:PRWResidentRequest;\n  PREPARE_REQUEST:PRWPrepareRequest;\n  PREPARE_RESULT:PRWPrepareResult;\n  DESCRIBE_REQUEST:PRWDescribeRequest;\n  DESCRIBE_RESULT:PRWDescribeResult;\n  NATIVE_INPUT:PRWNativeInput;\n  EPHEMERIS_REQUEST:PRWEphemerisRequest;\n  EPHEMERIS_RESULT:PRWEphemerisResult;\n  ATMOSPHERE_REQUEST:PRWAtmosphereRequest;\n  ATMOSPHERE_RESULT:PRWAtmosphereResult;\n  VERSION_QUERY:bool = false;\n  VERSION_RESULT:PRWVersionResult;\n  EARTH_ORIENTATION:PRWEarthOrientation;\n  SPACE_WEATHER:PRWSpaceWeatherTable;\n  JB2008_INDICES:PRWJB2008IndicesTable;\n  /// Propagation over windows: one $OEM block per query answers it.\n  WINDOW_REQUEST:PRWWindowRequest;\n  WINDOW_REPORT:PRWWindowReport;\n}\n\nroot_type PRW;\nfile_identifier "$PRW";',
       files: [
         "./dist/PRW/PRW.sw.tar.gz",
         "./dist/PRW/PRW.py.tar.gz",
@@ -28297,8 +28329,8 @@ file_identifier "$TDM";`,
       ]
     },
     OCM: {
-      IDL: `// Hash: 283cbc4de88139de7603bf68d4411c865c1b48e1008e69c79307d8ea14c27195
-// Version: 2.1.9
+      IDL: `// Hash: 6d519a40b28ad67713b5f4b7f74dd4609e49aed7e41f94cf883065ec2be4f2fa
+// Version: 2.1.10
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -28980,7 +29012,7 @@ table OCMDynamicParameter {
   /// Value at the solution epoch, in UNITS.
   VALUE: double;
   /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-  /// m/s**2 for IN_TRACK_ACCELERATION.
+  /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
   UNITS: string;
   /// True when the orbit determination solved for the parameter, false when VALUE was held.
   SOLVED_FOR: bool = false;
@@ -29305,8 +29337,9 @@ table OrbitDetermination {
   /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   WEIGHTED_RMS: double;
   /// Dynamical-model parameters of the solution with their values, solved for or held. An
-  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-  /// COV_PARAMETERS names in the covariance are entries of this list.
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  /// row of the covariance, false for a parameter the determination held.
   OD_DYNAMIC_PARAMETERS: [OCMDynamicParameter];
   /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
   DAYS_SINCE_FIRST_OBS: double = nan;
@@ -29519,7 +29552,8 @@ table OCM {
   /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
   /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
   TRAJ_FRAME_EPOCH: string;
-  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
   COV_REF_FRAME: RFM;
   /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
   ORB_REVNUM: uint;
@@ -29540,17 +29574,20 @@ table OCM {
   /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
   /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
   COV_TYPE: string;
-  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  /// the product writers (lib/js/PROD) accept.
   COV_ORDERING: covarianceOrdering = LTM;
   /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
   /// COV_PARAMETERS names.
   COV_SIZE: uint8 = 6;
-  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
   COV_PARAMETERS: [string];
-  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-  /// dimensionless one.
+  /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
   COV_UNITS: [string];
   /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
   /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
@@ -40061,6 +40098,74 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             "PROVIDER_DEFINED"
           ]
         },
+        memMeasurementType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RANGE",
+            "RANGE_RATE",
+            "DOPPLER",
+            "AZIMUTH_ELEVATION",
+            "X_EAST_Y_NORTH",
+            "X_SOUTH_Y_EAST",
+            "RIGHT_ASCENSION_DECLINATION",
+            "POSITION_VECTOR",
+            "SEQUENTIAL_RANGE",
+            "PSEUDONOISE_RANGE",
+            "TIME_CORRELATED_PHASE",
+            "RELAY_RANGE",
+            "RELAY_DOPPLER",
+            "RELAY_DIFFERENCED_DOPPLER",
+            "BISTATIC_RANGE",
+            "SKIN_RANGE",
+            "CROSSLINK_RANGE",
+            "CROSSLINK_RANGE_RATE",
+            "LASER_RANGE",
+            "TIME_DIFFERENCE_OF_ARRIVAL",
+            "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+          ]
+        },
+        memEditingAction: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ACCEPT",
+            "REJECT"
+          ]
+        },
+        memEditingReason: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ACCEPTED",
+            "OUTSIDE_EPOCH_WINDOW",
+            "OUTSIDE_VALUE_WINDOW",
+            "SIGMA_THRESHOLD",
+            "INVALID_GEOMETRY",
+            "MISSING_MEDIA_INPUT",
+            "HARDWARE_UNAVAILABLE",
+            "DUPLICATE",
+            "PROVIDER_FLAGGED"
+          ]
+        },
+        memTroposphereModel: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NONE",
+            "HOPFIELD_SAASTAMOINEN",
+            "MARINI"
+          ]
+        },
+        memIonosphereModel: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NONE",
+            "TOTAL_ELECTRON_CONTENT",
+            "REFERENCE_PROFILE"
+          ]
+        },
         odrEstimatorKind: {
           type: "string",
           enum: [
@@ -41115,6 +41220,155 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
           },
           additionalProperties: false
         },
+        MEMErrorModel: {
+          type: "object",
+          description: "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+          properties: {
+            MODEL_ID: {
+              type: "string"
+            },
+            MEASUREMENT_TYPE: {
+              $ref: "#/definitions/memMeasurementType"
+            },
+            NOISE_SIGMA: {
+              type: "number"
+            },
+            BIAS: {
+              type: "number"
+            },
+            BIAS_SIGMA: {
+              type: "number"
+            },
+            CORRELATION_TIME_SECONDS: {
+              type: "number"
+            },
+            MINIMUM_ACCEPTED_VALUE: {
+              type: "number"
+            },
+            MAXIMUM_ACCEPTED_VALUE: {
+              type: "number"
+            },
+            SIGMA_EDIT_THRESHOLD: {
+              type: "number"
+            },
+            ACCEPT_START_EPOCH: {
+              type: "string"
+            },
+            ACCEPT_STOP_EPOCH: {
+              type: "string"
+            },
+            TROPOSPHERE_MODEL: {
+              $ref: "#/definitions/memTroposphereModel"
+            },
+            IONOSPHERE_MODEL: {
+              $ref: "#/definitions/memIonosphereModel"
+            },
+            APPLY_LIGHT_TIME: {
+              type: "boolean"
+            },
+            APPLY_BODY_ROTATION: {
+              type: "boolean"
+            }
+          },
+          required: [
+            "MODEL_ID"
+          ],
+          additionalProperties: false
+        },
+        MEMEditingDecision: {
+          type: "object",
+          description: "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+          properties: {
+            OBSERVATION_ID: {
+              type: "string"
+            },
+            ACTION: {
+              $ref: "#/definitions/memEditingAction"
+            },
+            REASON: {
+              $ref: "#/definitions/memEditingReason"
+            },
+            PREFIT_RESIDUAL: {
+              type: "number"
+            },
+            NORMALIZED_RESIDUAL: {
+              type: "number"
+            },
+            ITERATION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            }
+          },
+          required: [
+            "OBSERVATION_ID"
+          ],
+          additionalProperties: false
+        },
+        MEMAttestation: {
+          type: "object",
+          description: "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+          properties: {
+            SIGNING_PUBLIC_KEY: {
+              type: "string"
+            },
+            SIGNED_AT: {
+              type: "string"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              }
+            },
+            CANONICAL_JSON_SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              }
+            }
+          },
+          required: [
+            "SIGNING_PUBLIC_KEY",
+            "SIGNATURE",
+            "CANONICAL_JSON_SIGNATURE"
+          ],
+          additionalProperties: false
+        },
+        MEM: {
+          type: "object",
+          description: "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+          properties: {
+            ERROR_MODELS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MEMErrorModel"
+              }
+            },
+            EDITING_LEDGER: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MEMEditingDecision"
+              }
+            },
+            RANDOM_SEED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            TRACE_ID: {
+              type: "string"
+            },
+            ATTESTATION: {
+              $ref: "#/definitions/MEMAttestation"
+            }
+          },
+          additionalProperties: false
+        },
         ODRSolverConfiguration: {
           type: "object",
           properties: {
@@ -41198,6 +41452,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         ODREditedObservation: {
           type: "object",
+          description: "One observation the estimator read: the editing record, then the columns of\na per-input residual listing (P9), one entry per input the fit read, accepted\nor not. OBSERVATION_ID is the input identifier; the residual is\nOBSERVED_VALUE - COMPUTED_VALUE.",
           properties: {
             OBSERVATION_ID: {
               type: "string"
@@ -41215,6 +41470,34 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             },
             REASON: {
               type: "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the observation (ISO 8601 UTC)."
+            },
+            OBSERVATION_TYPE: {
+              $ref: "#/definitions/memMeasurementType",
+              description: "Measurement class of the observation."
+            },
+            OBSERVED_VALUE: {
+              type: "number",
+              description: "The observation as measured, in the unit of its class: km, km/s or deg."
+            },
+            COMPUTED_VALUE: {
+              type: "number",
+              description: "The same quantity computed from the solution at EPOCH, in the same unit."
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Weight the fit gave the observation in its normal equations; 0 when it gave none."
+            },
+            ACCEPTED: {
+              type: "boolean",
+              description: "True when the observation entered the solution; false when the fit edited it out (REASON says why)."
+            },
+            PERTURBATION_MODEL_CODE: {
+              type: "string",
+              description: "Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it."
             }
           },
           required: [
@@ -53986,7 +54269,7 @@ Decoding applies the inverses from the last back.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -53994,7 +54277,7 @@ Decoding applies the inverses from the last back.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -54051,6 +54334,14 @@ Decoding applies the inverses from the last back.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -56291,7 +56582,8 @@ Decoding applies the inverses from the last back.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         trajectoryType: {
@@ -60519,7 +60811,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -62712,7 +63004,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -63393,7 +63685,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -63782,7 +64074,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -63815,7 +64107,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -63828,14 +64120,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -64033,7 +64325,7 @@ stated.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -64041,7 +64333,7 @@ stated.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -64098,6 +64390,14 @@ stated.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -72899,7 +73199,8 @@ turned into a number.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         trajectoryType: {
@@ -74424,6 +74725,31 @@ turned into a number.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -74531,6 +74857,10 @@ turned into a number.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -77459,7 +77789,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -79652,7 +79982,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -80333,7 +80663,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -80722,7 +81052,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -80755,7 +81085,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -80768,14 +81098,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -85695,7 +86025,8 @@ verbatim what that source states about itself.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         meanElementSource: {
@@ -89739,7 +90070,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -91234,7 +91565,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -91242,7 +91573,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -91299,6 +91630,14 @@ empty = the provider's native frame.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -91516,6 +91855,31 @@ empty = the provider's native frame.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -91623,6 +91987,10 @@ empty = the provider's native frame.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -101126,7 +101494,8 @@ provider's reviewed register). Never free text.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         trajectoryType: {
@@ -102892,6 +103261,31 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -102999,6 +103393,10 @@ provider's reviewed register). Never free text.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -105927,7 +106325,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -108120,7 +108518,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -108801,7 +109199,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -109190,7 +109588,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -109223,7 +109621,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -109236,14 +109634,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -116592,7 +116990,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -116600,7 +116998,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -116657,6 +117055,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -129609,6 +130015,31 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -129716,6 +130147,10 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -139493,6 +139928,31 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -139600,6 +140060,10 @@ Decoding applies the inverses from the last back.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -143981,7 +144445,8 @@ format class are named by $NCD's container format.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         trajectoryType: {
@@ -145556,6 +146021,31 @@ format class are named by $NCD's container format.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -145663,6 +146153,10 @@ format class are named by $NCD's container format.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -148591,7 +149085,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -150784,7 +151278,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -151465,7 +151959,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -151854,7 +152348,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -151887,7 +152381,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -151900,14 +152394,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -159251,7 +159745,8 @@ stated.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         meanElementSource: {
@@ -180971,7 +181466,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -182466,7 +182961,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -182474,7 +182969,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -182531,6 +183026,14 @@ empty = the provider's native frame.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -182748,6 +183251,31 @@ empty = the provider's native frame.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -182855,6 +183383,10 @@ empty = the provider's native frame.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -183848,7 +184380,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -184529,7 +185061,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -184918,7 +185450,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -184951,7 +185483,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -184964,14 +185496,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -214964,6 +215496,7 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
         },
         ODREditedObservation: {
           type: "object",
+          description: "One observation the estimator read: the editing record, then the columns of\na per-input residual listing (P9), one entry per input the fit read, accepted\nor not. OBSERVATION_ID is the input identifier; the residual is\nOBSERVED_VALUE - COMPUTED_VALUE.",
           properties: {
             OBSERVATION_ID: {
               type: "string"
@@ -214981,6 +215514,34 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             },
             REASON: {
               type: "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the observation (ISO 8601 UTC)."
+            },
+            OBSERVATION_TYPE: {
+              $ref: "#/definitions/memMeasurementType",
+              description: "Measurement class of the observation."
+            },
+            OBSERVED_VALUE: {
+              type: "number",
+              description: "The observation as measured, in the unit of its class: km, km/s or deg."
+            },
+            COMPUTED_VALUE: {
+              type: "number",
+              description: "The same quantity computed from the solution at EPOCH, in the same unit."
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Weight the fit gave the observation in its normal equations; 0 when it gave none."
+            },
+            ACCEPTED: {
+              type: "boolean",
+              description: "True when the observation entered the solution; false when the fit edited it out (REASON says why)."
+            },
+            PERTURBATION_MODEL_CODE: {
+              type: "string",
+              description: "Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it."
             }
           },
           required: [
@@ -249973,7 +250534,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -249981,7 +250542,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -250038,6 +250599,14 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -261154,7 +261723,8 @@ balance service's own rate.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         RFMOrigin: {
@@ -265109,7 +265679,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -274863,6 +275433,31 @@ serves the request, e.g. "bulk", "query", "status", "activity",
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -274970,6 +275565,10 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -289020,6 +289619,31 @@ compressed). Nothing hashes the payload before the protocol hash.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -289127,6 +289751,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -296692,7 +297320,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         meanElementSource: {
@@ -300970,7 +301599,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -302465,7 +303094,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -302473,7 +303102,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -302530,6 +303159,14 @@ empty = the provider's native frame.`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -302747,6 +303384,31 @@ empty = the provider's native frame.`
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated."
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated."
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated."
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -302854,6 +303516,10 @@ empty = the provider's native frame.`
               minimum: -2147483648,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre)."
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated."
             }
           },
           additionalProperties: false
@@ -303864,7 +304530,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -304545,7 +305211,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -304934,7 +305600,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -304967,7 +305633,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -304980,14 +305646,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -314079,7 +314745,7 @@ assumptions".`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -314087,7 +314753,7 @@ assumptions".`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -314144,6 +314810,14 @@ assumptions".`
             COV_REALISM: {
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE."
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.'
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.'
             }
           },
           additionalProperties: false
@@ -326209,7 +326883,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         trajectoryType: {
@@ -330401,7 +331076,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -332594,7 +333269,7 @@ stated.`
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION."
             },
             SOLVED_FOR: {
               type: "boolean",
@@ -333275,7 +333950,7 @@ stated.`
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held."
             },
             DAYS_SINCE_FIRST_OBS: {
               type: "number",
@@ -333664,7 +334339,7 @@ stated.`
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes."
             },
             ORB_REVNUM: {
               type: "integer",
@@ -333697,7 +334372,7 @@ stated.`
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept."
             },
             COV_SIZE: {
               type: "integer",
@@ -333710,14 +334385,14 @@ stated.`
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held."
             },
             COV_UNITS: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.'
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.'
             },
             TRAJECTORY_BLOCKS: {
               type: "array",
@@ -347945,7 +348620,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ]
         },
         xmtPairVerdict: {
@@ -352676,7 +353352,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -379108,6 +379784,223 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             }
           }
         },
+        memMeasurementType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RANGE",
+            "RANGE_RATE",
+            "DOPPLER",
+            "AZIMUTH_ELEVATION",
+            "X_EAST_Y_NORTH",
+            "X_SOUTH_Y_EAST",
+            "RIGHT_ASCENSION_DECLINATION",
+            "POSITION_VECTOR",
+            "SEQUENTIAL_RANGE",
+            "PSEUDONOISE_RANGE",
+            "TIME_CORRELATED_PHASE",
+            "RELAY_RANGE",
+            "RELAY_DOPPLER",
+            "RELAY_DIFFERENCED_DOPPLER",
+            "BISTATIC_RANGE",
+            "SKIN_RANGE",
+            "CROSSLINK_RANGE",
+            "CROSSLINK_RANGE_RATE",
+            "LASER_RANGE",
+            "TIME_DIFFERENCE_OF_ARRIVAL",
+            "FREQUENCY_DIFFERENCE_OF_ARRIVAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RANGE: {
+              value: 1
+            },
+            RANGE_RATE: {
+              value: 2
+            },
+            DOPPLER: {
+              value: 3
+            },
+            AZIMUTH_ELEVATION: {
+              value: 4
+            },
+            X_EAST_Y_NORTH: {
+              value: 5
+            },
+            X_SOUTH_Y_EAST: {
+              value: 6
+            },
+            RIGHT_ASCENSION_DECLINATION: {
+              value: 7
+            },
+            POSITION_VECTOR: {
+              value: 8
+            },
+            SEQUENTIAL_RANGE: {
+              value: 9
+            },
+            PSEUDONOISE_RANGE: {
+              value: 10
+            },
+            TIME_CORRELATED_PHASE: {
+              value: 11
+            },
+            RELAY_RANGE: {
+              value: 12
+            },
+            RELAY_DOPPLER: {
+              value: 13
+            },
+            RELAY_DIFFERENCED_DOPPLER: {
+              value: 14
+            },
+            BISTATIC_RANGE: {
+              value: 15
+            },
+            SKIN_RANGE: {
+              value: 16
+            },
+            CROSSLINK_RANGE: {
+              value: 17
+            },
+            CROSSLINK_RANGE_RATE: {
+              value: 18
+            },
+            LASER_RANGE: {
+              value: 19
+            },
+            TIME_DIFFERENCE_OF_ARRIVAL: {
+              value: 20
+            },
+            FREQUENCY_DIFFERENCE_OF_ARRIVAL: {
+              value: 21
+            }
+          }
+        },
+        memEditingAction: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ACCEPT",
+            "REJECT"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ACCEPT: {
+              value: 1
+            },
+            REJECT: {
+              value: 2
+            }
+          }
+        },
+        memEditingReason: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ACCEPTED",
+            "OUTSIDE_EPOCH_WINDOW",
+            "OUTSIDE_VALUE_WINDOW",
+            "SIGMA_THRESHOLD",
+            "INVALID_GEOMETRY",
+            "MISSING_MEDIA_INPUT",
+            "HARDWARE_UNAVAILABLE",
+            "DUPLICATE",
+            "PROVIDER_FLAGGED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ACCEPTED: {
+              value: 1
+            },
+            OUTSIDE_EPOCH_WINDOW: {
+              value: 2
+            },
+            OUTSIDE_VALUE_WINDOW: {
+              value: 3
+            },
+            SIGMA_THRESHOLD: {
+              value: 4
+            },
+            INVALID_GEOMETRY: {
+              value: 5
+            },
+            MISSING_MEDIA_INPUT: {
+              value: 6
+            },
+            HARDWARE_UNAVAILABLE: {
+              value: 7
+            },
+            DUPLICATE: {
+              value: 8
+            },
+            PROVIDER_FLAGGED: {
+              value: 9
+            }
+          }
+        },
+        memTroposphereModel: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NONE",
+            "HOPFIELD_SAASTAMOINEN",
+            "MARINI"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            NONE: {
+              value: 1
+            },
+            HOPFIELD_SAASTAMOINEN: {
+              value: 2
+            },
+            MARINI: {
+              value: 3
+            }
+          }
+        },
+        memIonosphereModel: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "NONE",
+            "TOTAL_ELECTRON_CONTENT",
+            "REFERENCE_PROFILE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            NONE: {
+              value: 1
+            },
+            TOTAL_ELECTRON_CONTENT: {
+              value: 2
+            },
+            REFERENCE_PROFILE: {
+              value: 3
+            }
+          }
+        },
         odrEstimatorKind: {
           type: "string",
           enum: [
@@ -384939,6 +385832,341 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
           },
           additionalProperties: false
         },
+        MEMErrorModel: {
+          type: "object",
+          description: "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+          properties: {
+            MODEL_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            MEASUREMENT_TYPE: {
+              $ref: "#/definitions/memMeasurementType",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RANGE: {
+                  value: 1
+                },
+                RANGE_RATE: {
+                  value: 2
+                },
+                DOPPLER: {
+                  value: 3
+                },
+                AZIMUTH_ELEVATION: {
+                  value: 4
+                },
+                X_EAST_Y_NORTH: {
+                  value: 5
+                },
+                X_SOUTH_Y_EAST: {
+                  value: 6
+                },
+                RIGHT_ASCENSION_DECLINATION: {
+                  value: 7
+                },
+                POSITION_VECTOR: {
+                  value: 8
+                },
+                SEQUENTIAL_RANGE: {
+                  value: 9
+                },
+                PSEUDONOISE_RANGE: {
+                  value: 10
+                },
+                TIME_CORRELATED_PHASE: {
+                  value: 11
+                },
+                RELAY_RANGE: {
+                  value: 12
+                },
+                RELAY_DOPPLER: {
+                  value: 13
+                },
+                RELAY_DIFFERENCED_DOPPLER: {
+                  value: 14
+                },
+                BISTATIC_RANGE: {
+                  value: 15
+                },
+                SKIN_RANGE: {
+                  value: 16
+                },
+                CROSSLINK_RANGE: {
+                  value: 17
+                },
+                CROSSLINK_RANGE_RATE: {
+                  value: 18
+                },
+                LASER_RANGE: {
+                  value: 19
+                },
+                TIME_DIFFERENCE_OF_ARRIVAL: {
+                  value: 20
+                },
+                FREQUENCY_DIFFERENCE_OF_ARRIVAL: {
+                  value: 21
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NOISE_SIGMA: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            BIAS: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            BIAS_SIGMA: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            CORRELATION_TIME_SECONDS: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MINIMUM_ACCEPTED_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MAXIMUM_ACCEPTED_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            SIGMA_EDIT_THRESHOLD: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ACCEPT_START_EPOCH: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            ACCEPT_STOP_EPOCH: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TROPOSPHERE_MODEL: {
+              $ref: "#/definitions/memTroposphereModel",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                NONE: {
+                  value: 1
+                },
+                HOPFIELD_SAASTAMOINEN: {
+                  value: 2
+                },
+                MARINI: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            IONOSPHERE_MODEL: {
+              $ref: "#/definitions/memIonosphereModel",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                NONE: {
+                  value: 1
+                },
+                TOTAL_ELECTRON_CONTENT: {
+                  value: 2
+                },
+                REFERENCE_PROFILE: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            APPLY_LIGHT_TIME: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            APPLY_BODY_ROTATION: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          required: [
+            "MODEL_ID"
+          ],
+          additionalProperties: false
+        },
+        MEMEditingDecision: {
+          type: "object",
+          description: "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+          properties: {
+            OBSERVATION_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ACTION: {
+              $ref: "#/definitions/memEditingAction",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ACCEPT: {
+                  value: 1
+                },
+                REJECT: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REASON: {
+              $ref: "#/definitions/memEditingReason",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ACCEPTED: {
+                  value: 1
+                },
+                OUTSIDE_EPOCH_WINDOW: {
+                  value: 2
+                },
+                OUTSIDE_VALUE_WINDOW: {
+                  value: 3
+                },
+                SIGMA_THRESHOLD: {
+                  value: 4
+                },
+                INVALID_GEOMETRY: {
+                  value: 5
+                },
+                MISSING_MEDIA_INPUT: {
+                  value: 6
+                },
+                HARDWARE_UNAVAILABLE: {
+                  value: 7
+                },
+                DUPLICATE: {
+                  value: 8
+                },
+                PROVIDER_FLAGGED: {
+                  value: 9
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PREFIT_RESIDUAL: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            NORMALIZED_RESIDUAL: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ITERATION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint"
+            }
+          },
+          required: [
+            "OBSERVATION_ID"
+          ],
+          additionalProperties: false
+        },
+        MEMAttestation: {
+          type: "object",
+          description: "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+          properties: {
+            SIGNING_PUBLIC_KEY: {
+              type: "string",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SIGNED_AT: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              "x-flatbuffer-type": "[ubyte]",
+              "x-flatbuffer-required": true
+            },
+            CANONICAL_JSON_SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              "x-flatbuffer-type": "[ubyte]",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "SIGNING_PUBLIC_KEY",
+            "SIGNATURE",
+            "CANONICAL_JSON_SIGNATURE"
+          ],
+          additionalProperties: false
+        },
+        MEM: {
+          type: "object",
+          description: "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+          properties: {
+            ERROR_MODELS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MEMErrorModel"
+              },
+              "x-flatbuffer-type": "[MEMErrorModel]"
+            },
+            EDITING_LEDGER: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MEMEditingDecision"
+              },
+              "x-flatbuffer-type": "[MEMEditingDecision]"
+            },
+            RANDOM_SEED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            TRACE_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            ATTESTATION: {
+              $ref: "#/definitions/MEMAttestation",
+              "x-flatbuffer-type": "MEMAttestation"
+            }
+          },
+          additionalProperties: false
+        },
         ODRSolverConfiguration: {
           type: "object",
           properties: {
@@ -385077,6 +386305,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         ODREditedObservation: {
           type: "object",
+          description: "One observation the estimator read: the editing record, then the columns of\na per-input residual listing (P9), one entry per input the fit read, accepted\nor not. OBSERVATION_ID is the input identifier; the residual is\nOBSERVED_VALUE - COMPUTED_VALUE.",
           properties: {
             OBSERVATION_ID: {
               type: "string",
@@ -385099,6 +386328,112 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             },
             REASON: {
               type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the observation (ISO 8601 UTC).",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVATION_TYPE: {
+              $ref: "#/definitions/memMeasurementType",
+              description: "Measurement class of the observation.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RANGE: {
+                  value: 1
+                },
+                RANGE_RATE: {
+                  value: 2
+                },
+                DOPPLER: {
+                  value: 3
+                },
+                AZIMUTH_ELEVATION: {
+                  value: 4
+                },
+                X_EAST_Y_NORTH: {
+                  value: 5
+                },
+                X_SOUTH_Y_EAST: {
+                  value: 6
+                },
+                RIGHT_ASCENSION_DECLINATION: {
+                  value: 7
+                },
+                POSITION_VECTOR: {
+                  value: 8
+                },
+                SEQUENTIAL_RANGE: {
+                  value: 9
+                },
+                PSEUDONOISE_RANGE: {
+                  value: 10
+                },
+                TIME_CORRELATED_PHASE: {
+                  value: 11
+                },
+                RELAY_RANGE: {
+                  value: 12
+                },
+                RELAY_DOPPLER: {
+                  value: 13
+                },
+                RELAY_DIFFERENCED_DOPPLER: {
+                  value: 14
+                },
+                BISTATIC_RANGE: {
+                  value: 15
+                },
+                SKIN_RANGE: {
+                  value: 16
+                },
+                CROSSLINK_RANGE: {
+                  value: 17
+                },
+                CROSSLINK_RANGE_RATE: {
+                  value: 18
+                },
+                LASER_RANGE: {
+                  value: 19
+                },
+                TIME_DIFFERENCE_OF_ARRIVAL: {
+                  value: 20
+                },
+                FREQUENCY_DIFFERENCE_OF_ARRIVAL: {
+                  value: 21
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            OBSERVED_VALUE: {
+              type: "number",
+              description: "The observation as measured, in the unit of its class: km, km/s or deg.",
+              "x-flatbuffer-type": "double"
+            },
+            COMPUTED_VALUE: {
+              type: "number",
+              description: "The same quantity computed from the solution at EPOCH, in the same unit.",
+              "x-flatbuffer-type": "double"
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Weight the fit gave the observation in its normal equations; 0 when it gave none.",
+              "x-flatbuffer-type": "double"
+            },
+            ACCEPTED: {
+              type: "boolean",
+              description: "True when the observation entered the solution; false when the fit edited it out (REASON says why).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            PERTURBATION_MODEL_CODE: {
+              type: "string",
+              description: "Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -413424,7 +414759,7 @@ Decoding applies the inverses from the last back.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -413434,7 +414769,7 @@ Decoding applies the inverses from the last back.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -413504,6 +414839,16 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -420301,7 +421646,8 @@ Decoding applies the inverses from the last back.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -420321,6 +421667,10 @@ Decoding applies the inverses from the last back.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -434958,7 +436308,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -437952,7 +439302,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -437982,6 +439332,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -438935,7 +440289,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -439489,7 +440843,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -439545,7 +440899,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -439585,7 +440939,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -439593,7 +440947,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -439994,7 +441348,7 @@ stated.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -440004,7 +441358,7 @@ stated.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -440074,6 +441428,16 @@ stated.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -459837,7 +461201,8 @@ turned into a number.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -459857,6 +461222,10 @@ turned into a number.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -464686,6 +466055,35 @@ turned into a number.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -464894,6 +466292,11 @@ turned into a number.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -474939,7 +476342,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -477933,7 +479336,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -477963,6 +479366,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -478916,7 +480323,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -479470,7 +480877,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -479526,7 +480933,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -479566,7 +480973,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -479574,7 +480981,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -492422,7 +493829,8 @@ verbatim what that source states about itself.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -492442,6 +493850,10 @@ verbatim what that source states about itself.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -506651,7 +508063,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -508914,7 +510326,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -508924,7 +510336,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -508994,6 +510406,16 @@ empty = the provider's native frame.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -509257,6 +510679,35 @@ empty = the provider's native frame.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -509465,6 +510916,11 @@ empty = the provider's native frame.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -541653,7 +543109,8 @@ provider's reviewed register). Never free text.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -541673,6 +543130,10 @@ provider's reviewed register). Never free text.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -547197,6 +548658,35 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -547405,6 +548895,11 @@ provider's reviewed register). Never free text.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -557450,7 +558945,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -560444,7 +561939,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -560474,6 +561969,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -561427,7 +562926,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -561981,7 +563480,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -562037,7 +563536,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -562077,7 +563576,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -562085,7 +563584,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -576244,7 +577743,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -576254,7 +577753,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -576324,6 +577823,16 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -603444,6 +604953,35 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -603652,6 +605190,11 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -625106,6 +626649,35 @@ Decoding applies the inverses from the last back.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -625314,6 +626886,11 @@ Decoding applies the inverses from the last back.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -635863,7 +637440,8 @@ format class are named by $NCD's container format.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -635883,6 +637461,10 @@ format class are named by $NCD's container format.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -640857,6 +642439,35 @@ format class are named by $NCD's container format.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -641065,6 +642676,11 @@ format class are named by $NCD's container format.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -651110,7 +652726,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -654104,7 +655720,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -654134,6 +655750,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -655087,7 +656707,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -655641,7 +657261,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -655697,7 +657317,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -655737,7 +657357,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -655745,7 +657365,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -674505,7 +676125,8 @@ stated.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -674525,6 +676146,10 @@ stated.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -726725,7 +728350,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -728988,7 +730613,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -728998,7 +730623,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -729068,6 +730693,16 @@ empty = the provider's native frame.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -729331,6 +730966,35 @@ empty = the provider's native frame.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -729539,6 +731203,11 @@ empty = the provider's native frame.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -730843,7 +732512,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -730873,6 +732542,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -731826,7 +733499,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -732380,7 +734053,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -732436,7 +734109,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -732476,7 +734149,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -732484,7 +734157,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -776541,6 +778214,7 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
         },
         ODREditedObservation: {
           type: "object",
+          description: "One observation the estimator read: the editing record, then the columns of\na per-input residual listing (P9), one entry per input the fit read, accepted\nor not. OBSERVATION_ID is the input identifier; the residual is\nOBSERVED_VALUE - COMPUTED_VALUE.",
           properties: {
             OBSERVATION_ID: {
               type: "string",
@@ -776563,6 +778237,112 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             },
             REASON: {
               type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the observation (ISO 8601 UTC).",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVATION_TYPE: {
+              $ref: "#/definitions/memMeasurementType",
+              description: "Measurement class of the observation.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ushort",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RANGE: {
+                  value: 1
+                },
+                RANGE_RATE: {
+                  value: 2
+                },
+                DOPPLER: {
+                  value: 3
+                },
+                AZIMUTH_ELEVATION: {
+                  value: 4
+                },
+                X_EAST_Y_NORTH: {
+                  value: 5
+                },
+                X_SOUTH_Y_EAST: {
+                  value: 6
+                },
+                RIGHT_ASCENSION_DECLINATION: {
+                  value: 7
+                },
+                POSITION_VECTOR: {
+                  value: 8
+                },
+                SEQUENTIAL_RANGE: {
+                  value: 9
+                },
+                PSEUDONOISE_RANGE: {
+                  value: 10
+                },
+                TIME_CORRELATED_PHASE: {
+                  value: 11
+                },
+                RELAY_RANGE: {
+                  value: 12
+                },
+                RELAY_DOPPLER: {
+                  value: 13
+                },
+                RELAY_DIFFERENCED_DOPPLER: {
+                  value: 14
+                },
+                BISTATIC_RANGE: {
+                  value: 15
+                },
+                SKIN_RANGE: {
+                  value: 16
+                },
+                CROSSLINK_RANGE: {
+                  value: 17
+                },
+                CROSSLINK_RANGE_RATE: {
+                  value: 18
+                },
+                LASER_RANGE: {
+                  value: 19
+                },
+                TIME_DIFFERENCE_OF_ARRIVAL: {
+                  value: 20
+                },
+                FREQUENCY_DIFFERENCE_OF_ARRIVAL: {
+                  value: 21
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            OBSERVED_VALUE: {
+              type: "number",
+              description: "The observation as measured, in the unit of its class: km, km/s or deg.",
+              "x-flatbuffer-type": "double"
+            },
+            COMPUTED_VALUE: {
+              type: "number",
+              description: "The same quantity computed from the solution at EPOCH, in the same unit.",
+              "x-flatbuffer-type": "double"
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Weight the fit gave the observation in its normal equations; 0 when it gave none.",
+              "x-flatbuffer-type": "double"
+            },
+            ACCEPTED: {
+              type: "boolean",
+              description: "True when the observation entered the solution; false when the fit edited it out (REASON says why).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            PERTURBATION_MODEL_CODE: {
+              type: "string",
+              description: "Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -842374,7 +844154,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -842384,7 +844164,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -842454,6 +844234,16 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -865593,7 +867383,8 @@ balance service's own rate.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -865613,6 +867404,10 @@ balance service's own rate.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -879487,7 +881282,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -907778,6 +909573,35 @@ serves the request, e.g. "bulk", "query", "status", "activity",
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -907986,6 +909810,11 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -935265,6 +937094,35 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -935473,6 +937331,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -954964,7 +956827,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -954984,6 +956848,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -969825,7 +971693,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -972088,7 +973956,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -972098,7 +973966,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -972168,6 +974036,16 @@ empty = the provider's native frame.`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -972431,6 +974309,35 @@ empty = the provider's native frame.`,
           },
           additionalProperties: false
         },
+        OEMOrbitDetermination: {
+          type: "object",
+          description: "The orbit determination an ephemeris block descends from. SDS addition:\nCCSDS 502.0-B-3 OEM states no determination statistics. Names and meanings\nfollow the OD_ fields of $OCM OrbitDetermination, which a fit of these\nstates copies forward (OD_OBSERVATIONS_USED is the count of the observations\nbehind the ephemeris, not of its states).",
+          properties: {
+            OD_OBSERVATIONS_USED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Observations the determination used; 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            OD_ARC_START: {
+              type: "string",
+              description: "First epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_ARC_STOP: {
+              type: "string",
+              description: "Last epoch of the observation arc (ISO 8601 UTC); empty when not stated.",
+              "x-flatbuffer-type": "string"
+            },
+            OD_METHOD: {
+              type: "string",
+              description: "Method of the determination; empty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         ephemerisDataBlock: {
           type: "object",
           description: "OEM Ephemeris Data Block",
@@ -972639,6 +974546,11 @@ empty = the provider's native frame.`,
               maximum: 2147483647,
               description: "NAIF integer code of the ephemeris centre, matching CENTER_NAME\n(SPK segment centre).",
               "x-flatbuffer-type": "int"
+            },
+            ORBIT_DETERMINATION: {
+              $ref: "#/definitions/OEMOrbitDetermination",
+              description: "Orbit determination this block's states descend from; absent when none\nis stated.",
+              "x-flatbuffer-type": "OEMOrbitDetermination"
             }
           },
           additionalProperties: false
@@ -974033,7 +975945,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -974063,6 +975975,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -975016,7 +976932,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -975570,7 +977486,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -975626,7 +977542,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -975666,7 +977582,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -975674,7 +977590,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -991636,7 +993552,7 @@ assumptions".`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
+              description: "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -991646,7 +993562,7 @@ assumptions".`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -991716,6 +993632,16 @@ assumptions".`,
               $ref: "#/definitions/CVR",
               description: "Realism of COVARIANCE.",
               "x-flatbuffer-type": "CVR"
+            },
+            BTERM: {
+              type: "number",
+              description: 'BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: 'AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.',
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -1018067,7 +1019993,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -1018087,6 +1020014,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -1032608,7 +1034539,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -1035602,7 +1037533,7 @@ stated.`,
             },
             UNITS: {
               type: "string",
-              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION.",
+              description: "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.",
               "x-flatbuffer-type": "string"
             },
             SOLVED_FOR: {
@@ -1035632,6 +1037563,10 @@ stated.`,
                 },
                 ECOM2_B3_COS: {
                   value: 14
+                },
+                OUTGASSING_ACCELERATION: {
+                  value: 16,
+                  description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -1036585,7 +1038520,7 @@ stated.`,
               items: {
                 $ref: "#/definitions/OCMDynamicParameter"
               },
-              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list.",
+              description: "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.\nOD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every\nrow of the covariance, false for a parameter the determination held.",
               "x-flatbuffer-type": "[OCMDynamicParameter]"
             },
             DAYS_SINCE_FIRST_OBS: {
@@ -1037139,7 +1039074,7 @@ stated.`,
             },
             COV_REF_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).",
+              description: "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a\nlocal-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.",
               "x-flatbuffer-type": "RFM"
             },
             ORB_REVNUM: {
@@ -1037195,7 +1039130,7 @@ stated.`,
             },
             COV_ORDERING: {
               $ref: "#/definitions/covarianceOrdering",
-              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).",
+              description: "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering\nthe product writers (lib/js/PROD) accept.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "byte",
               "x-flatbuffer-enum-values": {
@@ -1037235,7 +1039170,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero.",
+              description: "Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.\nCOV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,\nDRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM\nand T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.",
               "x-flatbuffer-type": "[string]"
             },
             COV_UNITS: {
@@ -1037243,7 +1039178,7 @@ stated.`,
               items: {
                 type: "string"
               },
-              description: 'Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a\ndimensionless one.',
+              description: 'Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly\nCOV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the\nparameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.',
               "x-flatbuffer-type": "[string]"
             },
             TRAJECTORY_BLOCKS: {
@@ -1067435,7 +1069370,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "ECOM2_B1_COS",
             "ECOM2_B1_SIN",
             "ECOM2_B3_COS",
-            "ECOM2_B3_SIN"
+            "ECOM2_B3_SIN",
+            "OUTGASSING_ACCELERATION"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -1067455,6 +1069391,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             ECOM2_B3_COS: {
               value: 14
+            },
+            OUTGASSING_ACCELERATION: {
+              value: 16,
+              description: "Constant outgassing acceleration an orbit determination solves for, km/s2."
             }
           }
         },
@@ -1082640,7 +1084580,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PRWStateMatrix: {
           type: "object",
-          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
+          description: "Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution\nrequest's DYNAMIC_PARAMETERS in order, one row per parameter, each in the\nunit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,\nm/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).\nCovariance entries have row*column units; STM entries row/column units;\nan STM's parameter rows are the identity (parameters are constant).",
           properties: {
             DIMENSION: {
               type: "integer",
@@ -1089139,7 +1091079,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

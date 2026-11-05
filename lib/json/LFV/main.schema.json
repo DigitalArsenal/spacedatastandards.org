@@ -802,7 +802,7 @@
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
+                "description" : "BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both."
               },
         "MEAN_MOTION_DOT" : {
                 "type" : "number",
@@ -810,7 +810,7 @@
               },
         "MEAN_MOTION_DDOT" : {
                 "type" : "number",
-                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both."
               },
         "COV_REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",
@@ -859,6 +859,14 @@
         "COV_REALISM" : {
                 "$ref" : "#/definitions/CVR",
                 "description" : "Realism of COVARIANCE."
+              },
+        "BTERM" : {
+                "type" : "number",
+                "description" : "BTERM (CCSDS 502.0-B-3 Table 4-3, \"BSTAR or BTERM\"): the drag-like ballistic coefficient of an\nSGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and\nMEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML\nrenderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4."
+              },
+        "AGOM" : {
+                "type" : "number",
+                "description" : "AGOM (CCSDS 502.0-B-3 Table 4-3, \"MEAN_MOTION_DDOT or AGOM\"): the solar radiation pressure\ncoefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4."
               }
       },
       "additionalProperties" : false

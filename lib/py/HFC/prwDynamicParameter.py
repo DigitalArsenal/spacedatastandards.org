@@ -8,7 +8,9 @@
 # INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 # DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 # REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-# IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+# IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+# OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+# parameter not in SI).
 class prwDynamicParameter(object):
     UNSPECIFIED = 0
     DRAG_AREA_OVER_MASS = 1
@@ -27,3 +29,5 @@ class prwDynamicParameter(object):
     ECOM2_B1_SIN = 13
     ECOM2_B3_COS = 14
     ECOM2_B3_SIN = 15
+    # Constant outgassing acceleration an orbit determination solves for, km/s2.
+    OUTGASSING_ACCELERATION = 16

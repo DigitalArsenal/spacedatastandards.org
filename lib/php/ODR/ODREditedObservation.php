@@ -6,6 +6,10 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 class ODREditedObservation extends Table
 {
     /**
@@ -79,27 +83,98 @@ class ODREditedObservation extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Epoch of the observation (ISO 8601 UTC).
+    public function getEPOCH()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Measurement class of the observation.
+    /**
+     * @return ushort
+     */
+    public function getOBSERVATION_TYPE()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : \memMeasurementType::UNSPECIFIED;
+    }
+
+    /// The observation as measured, in the unit of its class: km, km/s or deg.
+    /**
+     * @return double
+     */
+    public function getOBSERVED_VALUE()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// The same quantity computed from the solution at EPOCH, in the same unit.
+    /**
+     * @return double
+     */
+    public function getCOMPUTED_VALUE()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+    /**
+     * @return double
+     */
+    public function getWEIGHT()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+    /**
+     * @return bool
+     */
+    public function getACCEPTED()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+    public function getPERTURBATION_MODEL_CODE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startODREditedObservation(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ODREditedObservation
      */
-    public static function createODREditedObservation(FlatBufferBuilder $builder, $OBSERVATION_ID, $ITERATION, $PREFIT_RESIDUAL, $NORMALIZED_RESIDUAL, $REASON)
+    public static function createODREditedObservation(FlatBufferBuilder $builder, $OBSERVATION_ID, $ITERATION, $PREFIT_RESIDUAL, $NORMALIZED_RESIDUAL, $REASON, $EPOCH, $OBSERVATION_TYPE, $OBSERVED_VALUE, $COMPUTED_VALUE, $WEIGHT, $ACCEPTED, $PERTURBATION_MODEL_CODE)
     {
-        $builder->startObject(5);
+        $builder->startObject(12);
         self::addOBSERVATION_ID($builder, $OBSERVATION_ID);
         self::addITERATION($builder, $ITERATION);
         self::addPREFIT_RESIDUAL($builder, $PREFIT_RESIDUAL);
         self::addNORMALIZED_RESIDUAL($builder, $NORMALIZED_RESIDUAL);
         self::addREASON($builder, $REASON);
+        self::addEPOCH($builder, $EPOCH);
+        self::addOBSERVATION_TYPE($builder, $OBSERVATION_TYPE);
+        self::addOBSERVED_VALUE($builder, $OBSERVED_VALUE);
+        self::addCOMPUTED_VALUE($builder, $COMPUTED_VALUE);
+        self::addWEIGHT($builder, $WEIGHT);
+        self::addACCEPTED($builder, $ACCEPTED);
+        self::addPERTURBATION_MODEL_CODE($builder, $PERTURBATION_MODEL_CODE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // OBSERVATION_ID
         return $o;
@@ -153,6 +228,76 @@ class ODREditedObservation extends Table
     public static function addREASON(FlatBufferBuilder $builder, $REASON)
     {
         $builder->addOffsetX(4, $REASON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(5, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addOBSERVATION_TYPE(FlatBufferBuilder $builder, $OBSERVATION_TYPE)
+    {
+        $builder->addUshortX(6, $OBSERVATION_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOBSERVED_VALUE(FlatBufferBuilder $builder, $OBSERVED_VALUE)
+    {
+        $builder->addDoubleX(7, $OBSERVED_VALUE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOMPUTED_VALUE(FlatBufferBuilder $builder, $COMPUTED_VALUE)
+    {
+        $builder->addDoubleX(8, $COMPUTED_VALUE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWEIGHT(FlatBufferBuilder $builder, $WEIGHT)
+    {
+        $builder->addDoubleX(9, $WEIGHT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addACCEPTED(FlatBufferBuilder $builder, $ACCEPTED)
+    {
+        $builder->addBoolX(10, $ACCEPTED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPERTURBATION_MODEL_CODE(FlatBufferBuilder $builder, $PERTURBATION_MODEL_CODE)
+    {
+        $builder->addOffsetX(11, $PERTURBATION_MODEL_CODE, 0);
     }
 
     /**

@@ -116,7 +116,8 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetTRAJ_FRAME_EPOCHBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
   public byte[] GetTRAJ_FRAME_EPOCHArray() { return __p.__vector_as_array<byte>(38); }
-  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
   public RFM? COV_REF_FRAME { get { int o = __p.__offset(40); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
   public uint ORB_REVNUM { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
@@ -156,18 +157,21 @@ public struct OCM : IFlatbufferObject
   public ArraySegment<byte>? GetCOV_TYPEBytes() { return __p.__vector_as_arraysegment(52); }
 #endif
   public byte[] GetCOV_TYPEArray() { return __p.__vector_as_array<byte>(52); }
-  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  /// the product writers (lib/js/PROD) accept.
   public covarianceOrdering COV_ORDERING { get { int o = __p.__offset(54); return o != 0 ? (covarianceOrdering)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceOrdering.LTM; } }
   /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
   /// COV_PARAMETERS names.
   public byte COV_SIZE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
-  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
   public string COV_PARAMETERS(int j) { int o = __p.__offset(58); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int COV_PARAMETERSLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-  /// dimensionless one.
+  /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
   public string COV_UNITS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int COV_UNITSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START

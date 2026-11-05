@@ -489,7 +489,9 @@ class _prwDensitySpeciesReader extends fb.Reader<prwDensitySpecies> {
 ///  INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
 ///  DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
 ///  REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
-///  IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2).
+///  IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+///  OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+///  parameter not in SI).
 enum prwDynamicParameter {
   UNSPECIFIED(0),
   DRAG_AREA_OVER_MASS(1),
@@ -506,7 +508,8 @@ enum prwDynamicParameter {
   ECOM2_B1_COS(12),
   ECOM2_B1_SIN(13),
   ECOM2_B3_COS(14),
-  ECOM2_B3_SIN(15);
+  ECOM2_B3_SIN(15),
+  OUTGASSING_ACCELERATION(16);
 
   final int value;
   const prwDynamicParameter(this.value);
@@ -529,6 +532,7 @@ enum prwDynamicParameter {
       case 13: return prwDynamicParameter.ECOM2_B1_SIN;
       case 14: return prwDynamicParameter.ECOM2_B3_COS;
       case 15: return prwDynamicParameter.ECOM2_B3_SIN;
+      case 16: return prwDynamicParameter.OUTGASSING_ACCELERATION;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -537,7 +541,7 @@ enum prwDynamicParameter {
       value == null ? null : prwDynamicParameter.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 15;
+  static const int maxValue = 16;
   static const fb.Reader<prwDynamicParameter> reader = _prwDynamicParameterReader();
 }
 
@@ -1405,7 +1409,10 @@ class PRWInstanceObjectBuilder extends fb.ObjectBuilder {
   }
 }
 ///  Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
-///  request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
+///  request's DYNAMIC_PARAMETERS in order, one row per parameter, each in the
+///  unit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,
+///  m/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
+///  SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).
 ///  Covariance entries have row*column units; STM entries row/column units;
 ///  an STM's parameter rows are the identity (parameters are constant).
 class PRWStateMatrix {

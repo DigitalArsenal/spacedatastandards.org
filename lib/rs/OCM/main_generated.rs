@@ -7732,7 +7732,7 @@ impl<'a> OCMDynamicParameter<'a> {
     }
 
     /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-    /// m/s**2 for IN_TRACK_ACCELERATION.
+    /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
     #[inline]
     pub fn UNITS(&self) -> Option<&'a str> {
         // Safety:
@@ -12121,8 +12121,9 @@ impl<'a> OrbitDetermination<'a> {
     }
 
     /// Dynamical-model parameters of the solution with their values, solved for or held. An
-    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-    /// COV_PARAMETERS names in the covariance are entries of this list.
+    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+    /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+    /// row of the covariance, false for a parameter the determination held.
     #[inline]
     pub fn OD_DYNAMIC_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMDynamicParameter<'a>>>> {
         // Safety:
@@ -14984,7 +14985,8 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_TRAJ_FRAME_EPOCH, None)}
     }
 
-    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+    /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
     #[inline]
     pub fn COV_REF_FRAME(&self) -> Option<RFM<'a>> {
         // Safety:
@@ -15054,7 +15056,8 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OCM::VT_COV_TYPE, None)}
     }
 
-    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+    /// the product writers (lib/js/PROD) accept.
     #[inline]
     pub fn COV_ORDERING(&self) -> covarianceOrdering {
         // Safety:
@@ -15073,9 +15076,10 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<u8>(OCM::VT_COV_SIZE, Some(6)).unwrap()}
     }
 
-    /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-    /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-    /// matrix reaches). A row the orbit determination did not solve for is zero.
+    /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+    /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+    /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+    /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
     #[inline]
     pub fn COV_PARAMETERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
         // Safety:
@@ -15084,8 +15088,9 @@ impl<'a> OCM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(OCM::VT_COV_PARAMETERS, None)}
     }
 
-    /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-    /// dimensionless one.
+    /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+    /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+    /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
     #[inline]
     pub fn COV_UNITS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
         // Safety:

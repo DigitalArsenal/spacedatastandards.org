@@ -129,13 +129,13 @@ class OMM : flatbuffers.handle
     /// REV_AT_EPOCH [O if SGP/SGP4]
     def REV_AT_EPOCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
-    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+    /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
     def BSTAR() -> float:
         return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
     /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
     def MEAN_MOTION_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
     def MEAN_MOTION_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -192,13 +192,23 @@ class OMM : flatbuffers.handle
     def COV_REALISM() -> CVR?:
         let o = flatbuffers.field_table(buf_, pos_, 92)
         return if o: CVR { buf_, o } else: nil
+    /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+    /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+    /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+    /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+    def BTERM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 94, 0.0)
+    /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+    /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+    def AGOM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 96, 0.0)
 
 def GetRootAsOMM(buf:string): return OMM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OMMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(45)
+        b_.StartObject(47)
         return this
     def add_CCSDS_OMM_VERS(CCSDS_OMM_VERS:float):
         b_.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
@@ -334,6 +344,12 @@ struct OMMBuilder:
         return this
     def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(44, COV_REALISM)
+        return this
+    def add_BTERM(BTERM:float):
+        b_.PrependFloat64Slot(45, BTERM, 0.0)
+        return this
+    def add_AGOM(AGOM:float):
+        b_.PrependFloat64Slot(46, AGOM, 0.0)
         return this
     def end():
         return b_.EndObject()

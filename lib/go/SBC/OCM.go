@@ -538,7 +538,8 @@ func (rcv *OCM) TrajFrameEpoch() []byte {
 
 /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
 /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
-/// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+/// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+/// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
 func (rcv *OCM) COV_REF_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -556,7 +557,8 @@ func (rcv *OCM) CovRefFrame(obj *RFM) *RFM {
 	return rcv.COV_REF_FRAME(obj)
 }
 
-/// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+/// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+/// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
 /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
 func (rcv *OCM) ORB_REVNUM() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
@@ -684,7 +686,8 @@ func (rcv *OCM) CovType() []byte {
 /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
 /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
 /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
-/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+/// the product writers (lib/js/PROD) accept.
 func (rcv *OCM) COV_ORDERING() covarianceOrdering {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -697,7 +700,8 @@ func (rcv *OCM) CovOrdering() covarianceOrdering {
 	return rcv.COV_ORDERING()
 }
 
-/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+/// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+/// the product writers (lib/js/PROD) accept.
 func (rcv *OCM) MutateCOV_ORDERING(n covarianceOrdering) bool {
 	return rcv._tab.MutateInt8Slot(54, int8(n))
 }
@@ -730,9 +734,10 @@ func (rcv *OCM) MutateCovSize(n byte) bool {
 	return rcv.MutateCOV_SIZE(n)
 }
 
-/// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-/// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-/// matrix reaches). A row the orbit determination did not solve for is zero.
+/// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+/// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+/// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+/// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
 func (rcv *OCM) COV_PARAMETERS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -758,11 +763,13 @@ func (rcv *OCM) CovParametersLength() int {
 	return rcv.COV_PARAMETERSLength()
 }
 
-/// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-/// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-/// matrix reaches). A row the orbit determination did not solve for is zero.
-/// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-/// dimensionless one.
+/// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+/// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+/// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+/// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
+/// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+/// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+/// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
 func (rcv *OCM) COV_UNITS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -788,8 +795,9 @@ func (rcv *OCM) CovUnitsLength() int {
 	return rcv.COV_UNITSLength()
 }
 
-/// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-/// dimensionless one.
+/// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+/// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+/// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
 /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
 /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
 /// them above state the first block's CARTPV or CARTPVA states.

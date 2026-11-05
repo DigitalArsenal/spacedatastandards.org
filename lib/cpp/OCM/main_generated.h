@@ -3742,7 +3742,7 @@ struct OCMDynamicParameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
     return GetField<double>(VT_VALUE, 0.0);
   }
   /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-  /// m/s**2 for IN_TRACK_ACCELERATION.
+  /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
   const ::flatbuffers::String *UNITS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_UNITS);
   }
@@ -5642,8 +5642,9 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     return GetField<double>(VT_WEIGHTED_RMS, 0.0);
   }
   /// Dynamical-model parameters of the solution with their values, solved for or held. An
-  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-  /// COV_PARAMETERS names in the covariance are entries of this list.
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  /// row of the covariance, false for a parameter the determination held.
   const ::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>> *OD_DYNAMIC_PARAMETERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OCMDynamicParameter>> *>(VT_OD_DYNAMIC_PARAMETERS);
   }
@@ -7029,7 +7030,8 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRAJ_FRAME_EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRAJ_FRAME_EPOCH);
   }
-  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
   const RFM *COV_REF_FRAME() const {
     return GetPointer<const RFM *>(VT_COV_REF_FRAME);
   }
@@ -7064,7 +7066,8 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COV_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_TYPE);
   }
-  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  /// the product writers (lib/js/PROD) accept.
   covarianceOrdering COV_ORDERING() const {
     return static_cast<covarianceOrdering>(GetField<int8_t>(VT_COV_ORDERING, 0));
   }
@@ -7073,14 +7076,16 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint8_t COV_SIZE() const {
     return GetField<uint8_t>(VT_COV_SIZE, 6);
   }
-  /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-  /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-  /// matrix reaches). A row the orbit determination did not solve for is zero.
+  /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_PARAMETERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV_PARAMETERS);
   }
-  /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-  /// dimensionless one.
+  /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV_UNITS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV_UNITS);
   }

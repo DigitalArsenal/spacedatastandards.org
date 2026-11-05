@@ -182,7 +182,7 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public double REV_AT_EPOCH() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+   * BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
    */
   public double BSTAR() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -190,7 +190,7 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public double MEAN_MOTION_DOT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+   * MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
    */
   public double MEAN_MOTION_DDOT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -272,6 +272,18 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public CVR COV_REALISM() { return COV_REALISM(new CVR()); }
   public CVR COV_REALISM(CVR obj) { int o = __offset(92); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+   * SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+   * MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+   * renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+   */
+  public double BTERM() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+   * coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+   */
+  public double AGOM() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS,
@@ -318,8 +330,12 @@ public final class OMM extends com.google.flatbuffers.Table {
       int MESSAGE_IDOffset,
       int USER_DEFINED_PARAMETERSOffset,
       int PROVENANCEOffset,
-      int COV_REALISMOffset) {
-    builder.startTable(45);
+      int COV_REALISMOffset,
+      double BTERM,
+      double AGOM) {
+    builder.startTable(47);
+    OMM.addAgom(builder, AGOM);
+    OMM.addBterm(builder, BTERM);
     OMM.addUserDefinedMicroseconds(builder, USER_DEFINED_MICROSECONDS);
     OMM.addUserDefinedEpochTimestamp(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.addMeanMotionDdot(builder, MEAN_MOTION_DDOT);
@@ -368,7 +384,7 @@ public final class OMM extends com.google.flatbuffers.Table {
     return OMM.endOMM(builder);
   }
 
-  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(45); }
+  public static void startOMM(FlatBufferBuilder builder) { builder.startTable(47); }
   public static void addCcsdsOmmVers(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.addDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -418,6 +434,8 @@ public final class OMM extends com.google.flatbuffers.Table {
   public static void startUserDefinedParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(43, PROVENANCEOffset, 0); }
   public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(44, COV_REALISMOffset, 0); }
+  public static void addBterm(FlatBufferBuilder builder, double BTERM) { builder.addDouble(45, BTERM, 0.0); }
+  public static void addAgom(FlatBufferBuilder builder, double AGOM) { builder.addDouble(46, AGOM, 0.0); }
   public static int endOMM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

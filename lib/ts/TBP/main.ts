@@ -70,6 +70,7 @@ export * from './mplTrajectory.js';
 export * from './mplTransferRequest.js';
 export * from './mplWaypoint.js';
 export * from './OEM.js';
+export * from './OEMOrbitDetermination.js';
 export * from './operationalState.js';
 export * from './OrbitFrame.js';
 export * from './OrbitFrameWrapper.js';

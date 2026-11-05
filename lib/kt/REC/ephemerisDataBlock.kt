@@ -310,6 +310,19 @@ class ephemerisDataBlock : Table() {
             val o = __offset(44)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
+    /**
+     * Orbit determination this block's states descend from; absent when none
+     * is stated.
+     */
+    val orbitDetermination : OEMOrbitDetermination? get() = orbitDetermination(OEMOrbitDetermination())
+    fun orbitDetermination(obj: OEMOrbitDetermination) : OEMOrbitDetermination? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer): ephemerisDataBlock = getRootAsephemerisDataBlock(_bb, ephemerisDataBlock())
@@ -317,9 +330,10 @@ class ephemerisDataBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataBlock(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, covReferenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, stopTimeOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, stepSize: Double, stateVectorSize: UByte, ephemerisDataOffset: Int, ephemerisDataLinesOffset: Int, covarianceMatrixLinesOffset: Int, polynomialPositionRecordsOffset: Int, objectNaifId: Int, centerNaifId: Int) : Int {
-            builder.startTable(21)
+        fun createephemerisDataBlock(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, covReferenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, stopTimeOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, stepSize: Double, stateVectorSize: UByte, ephemerisDataOffset: Int, ephemerisDataLinesOffset: Int, covarianceMatrixLinesOffset: Int, polynomialPositionRecordsOffset: Int, objectNaifId: Int, centerNaifId: Int, orbitDeterminationOffset: Int) : Int {
+            builder.startTable(22)
             addSTEPSIZE(builder, stepSize)
+            addORBITDETERMINATION(builder, orbitDeterminationOffset)
             addCENTERNAIFID(builder, centerNaifId)
             addOBJECTNAIFID(builder, objectNaifId)
             addPOLYNOMIALPOSITIONRECORDS(builder, polynomialPositionRecordsOffset)
@@ -342,7 +356,7 @@ class ephemerisDataBlock : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endephemerisDataBlock(builder)
         }
-        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(1, `object`, 0)
         fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
@@ -396,6 +410,7 @@ class ephemerisDataBlock : Table() {
         fun startPolynomialPositionRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addOBJECTNAIFID(builder: FlatBufferBuilder, objectNaifId: Int) = builder.addInt(19, objectNaifId, 0)
         fun addCENTERNAIFID(builder: FlatBufferBuilder, centerNaifId: Int) = builder.addInt(20, centerNaifId, 0)
+        fun addORBITDETERMINATION(builder: FlatBufferBuilder, orbitDetermination: Int) = builder.addOffset(21, orbitDetermination, 0)
         fun endephemerisDataBlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

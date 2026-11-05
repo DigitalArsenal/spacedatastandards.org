@@ -85,6 +85,26 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "POSITION_X", "POSITION_Y", "POSITION_Z", "VELOCITY_X", "VELOCITY_Y", "VELOCITY_Z", "POSITION_MAGNITUDE", "VELOCITY_MAGNITUDE", "RIGHT_ASCENSION", "DECLINATION", "VELOCITY_RIGHT_ASCENSION", "VELOCITY_DECLINATION", "FLIGHT_PATH_ANGLE", "AZIMUTH_ANGLE", "HORIZONTAL_FLIGHT_PATH_ANGLE", "RADIAL_VELOCITY", "ANGULAR_MOMENTUM_MAGNITUDE", "ANGULAR_MOMENTUM_X", "ANGULAR_MOMENTUM_Y", "ANGULAR_MOMENTUM_Z", "SEMI_MAJOR_AXIS", "ECCENTRICITY", "INCLINATION", "RIGHT_ASCENSION_OF_ASCENDING_NODE", "ARGUMENT_OF_PERIAPSIS", "TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY", "HYPERBOLIC_ANOMALY", "RADIUS_OF_PERIAPSIS", "RADIUS_OF_APOAPSIS", "ALTITUDE_OF_PERIAPSIS", "ALTITUDE_OF_APOAPSIS", "SEMILATUS_RECTUM", "ORBIT_PERIOD", "MEAN_MOTION", "SPECIFIC_ORBITAL_ENERGY", "CHARACTERISTIC_ENERGY", "VELOCITY_AT_PERIAPSIS", "VELOCITY_AT_APOAPSIS", "ARGUMENT_OF_LATITUDE", "TRUE_LONGITUDE", "MEAN_LONGITUDE", "BETA_ANGLE", "ECCENTRICITY_VECTOR_X", "ECCENTRICITY_VECTOR_Y", "ECCENTRICITY_VECTOR_Z", "SEMI_MINOR_AXIS", "EQUINOCTIAL_H", "EQUINOCTIAL_K", "EQUINOCTIAL_P", "EQUINOCTIAL_Q", "EQUINOCTIAL_MEAN_LONGITUDE", "MODIFIED_EQUINOCTIAL_F", "MODIFIED_EQUINOCTIAL_G", "MODIFIED_EQUINOCTIAL_H", "MODIFIED_EQUINOCTIAL_K", "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE", "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM", "ALTERNATE_EQUINOCTIAL_P", "ALTERNATE_EQUINOCTIAL_Q", "ALTERNATE_EQUINOCTIAL_MEAN_MOTION", "DELAUNAY_MEAN_ANOMALY", "DELAUNAY_ARGUMENT_OF_PERIAPSIS", "DELAUNAY_ASCENDING_NODE", "DELAUNAY_ACTION_TOTAL", "DELAUNAY_ACTION_ANGULAR_MOMENTUM", "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM", "GEODETIC_LATITUDE", "GEODETIC_LONGITUDE", "GEODETIC_ALTITUDE", "GEOCENTRIC_LATITUDE", "PLANETODETIC_RADIUS_MAGNITUDE", "PLANETODETIC_VELOCITY_MAGNITUDE", "PLANETODETIC_AZIMUTH", "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE", "LOCAL_SIDEREAL_TIME", "PRIME_MERIDIAN_HOUR_ANGLE", "B_DOT_T", "B_DOT_R", "B_VECTOR_MAGNITUDE", "B_VECTOR_ANGLE", "DECLINATION_OF_DEPARTURE_ASYMPTOTE", "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE", "INCOMING_RADIUS_OF_PERIAPSIS", "INCOMING_CHARACTERISTIC_ENERGY", "INCOMING_ASYMPTOTE_RIGHT_ASCENSION", "INCOMING_ASYMPTOTE_DECLINATION", "INCOMING_B_VECTOR_AZIMUTH", "OUTGOING_RADIUS_OF_PERIAPSIS", "OUTGOING_CHARACTERISTIC_ENERGY", "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION", "OUTGOING_ASYMPTOTE_DECLINATION", "OUTGOING_B_VECTOR_AZIMUTH", "HYPERBOLIC_EXCESS_VELOCITY", "BROUWER_SHORT_SEMI_MAJOR_AXIS", "BROUWER_SHORT_ECCENTRICITY", "BROUWER_SHORT_INCLINATION", "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS", "BROUWER_SHORT_MEAN_ANOMALY", "BROUWER_LONG_SEMI_MAJOR_AXIS", "BROUWER_LONG_ECCENTRICITY", "BROUWER_LONG_INCLINATION", "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS", "BROUWER_LONG_MEAN_ANOMALY", "ORBIT_STATE_TRANSITION_MATRIX", "ORBIT_STATE_TRANSITION_MATRIX_A", "ORBIT_STATE_TRANSITION_MATRIX_B", "ORBIT_STATE_TRANSITION_MATRIX_C", "ORBIT_STATE_TRANSITION_MATRIX_D", "ORBIT_ERROR_COVARIANCE_MATRIX", "EPOCH_A1_GREGORIAN", "EPOCH_A1_MODIFIED_JULIAN", "EPOCH_TAI_GREGORIAN", "EPOCH_TAI_MODIFIED_JULIAN", "EPOCH_TT_GREGORIAN", "EPOCH_TT_MODIFIED_JULIAN", "EPOCH_TDB_GREGORIAN", "EPOCH_TDB_MODIFIED_JULIAN", "EPOCH_UTC_GREGORIAN", "EPOCH_UTC_MODIFIED_JULIAN", "EPOCH_UT1_GREGORIAN", "EPOCH_UT1_MODIFIED_JULIAN", "EPOCH_GPS_GREGORIAN", "EPOCH_GPS_MODIFIED_JULIAN", "ELAPSED_DAYS", "ELAPSED_SECONDS", "DRY_MASS", "TOTAL_MASS", "DRAG_COEFFICIENT", "DRAG_AREA", "REFLECTIVITY_COEFFICIENT", "SOLAR_RADIATION_PRESSURE_AREA", "ATMOSPHERIC_DENSITY_SCALE_FACTOR", "DRAG_SCALE_FACTOR", "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR", "BALLISTIC_COEFFICIENT", "AREA_TO_MASS_RATIO", "CENTER_OF_MASS_X", "CENTER_OF_MASS_Y", "CENTER_OF_MASS_Z", "MOMENT_OF_INERTIA_MATRIX", "ATTITUDE_QUATERNION_1", "ATTITUDE_QUATERNION_2", "ATTITUDE_QUATERNION_3", "ATTITUDE_QUATERNION_4", "ATTITUDE_DIRECTION_COSINE_MATRIX", "EULER_ANGLE_1", "EULER_ANGLE_2", "EULER_ANGLE_3", "EULER_ANGLE_RATE_1", "EULER_ANGLE_RATE_2", "EULER_ANGLE_RATE_3", "MODIFIED_RODRIGUES_PARAMETER_1", "MODIFIED_RODRIGUES_PARAMETER_2", "MODIFIED_RODRIGUES_PARAMETER_3", "ANGULAR_VELOCITY_X", "ANGULAR_VELOCITY_Y", "ANGULAR_VELOCITY_Z", "EULER_AXIS_X", "EULER_AXIS_Y", "EULER_AXIS_Z", "PRINCIPAL_ROTATION_ANGLE", "TANK_FUEL_MASS", "TANK_PRESSURE", "TANK_TEMPERATURE", "TANK_REFERENCE_TEMPERATURE", "TANK_VOLUME", "TANK_FUEL_DENSITY", "THRUSTER_DUTY_CYCLE", "THRUSTER_THRUST_SCALE_FACTOR", "THRUSTER_GRAVITATIONAL_ACCELERATION", "THRUSTER_MIXTURE_RATIO", "THRUSTER_SPECIFIC_IMPULSE", "THRUSTER_THRUST_MAGNITUDE", "THRUSTER_MASS_FLOW_RATE", "THRUSTER_DIRECTION_X", "THRUSTER_DIRECTION_Y", "THRUSTER_DIRECTION_Z", "THRUSTER_THRUST_COEFFICIENTS", "THRUSTER_IMPULSE_COEFFICIENTS", "IMPULSIVE_BURN_ELEMENT_1", "IMPULSIVE_BURN_ELEMENT_2", "IMPULSIVE_BURN_ELEMENT_3", "IMPULSIVE_BURN_DELTA_V_MAGNITUDE", "IMPULSIVE_BURN_MASS_CONSUMED", "FINITE_BURN_THRUST_MAGNITUDE", "FINITE_BURN_MASS_FLOW_RATE", "FINITE_BURN_THRUST_X", "FINITE_BURN_THRUST_Y", "FINITE_BURN_THRUST_Z", "FINITE_BURN_ACCELERATION_MAGNITUDE", "FINITE_BURN_MASS_CONSUMED", "TOTAL_POWER_AVAILABLE", "REQUIRED_BUS_POWER", "THRUST_POWER_AVAILABLE", "GENERATED_POWER", "TOTAL_TORQUE_X", "TOTAL_TORQUE_Y", "TOTAL_TORQUE_Z", "TOTAL_TORQUE_MAGNITUDE", "SOLVER_STATUS", "SOLVER_ITERATION_COUNT", "SOLVER_OBJECTIVE_VALUE", "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION", "RELATIVE_RANGE", "RELATIVE_RANGE_RATE", "RELATIVE_POSITION_X", "RELATIVE_POSITION_Y", "RELATIVE_POSITION_Z", "RELATIVE_VELOCITY_X", "RELATIVE_VELOCITY_Y", "RELATIVE_VELOCITY_Z", "TOPOCENTRIC_AZIMUTH", "TOPOCENTRIC_ELEVATION", "ANGULAR_SEPARATION", "SOLAR_PHASE_ANGLE", "LOCAL_SOLAR_ELEVATION_ANGLE", "ILLUMINATION_FRACTION", "LIGHT_TIME_DELAY", "PROVIDER_DEFINED"]
     },
+    "memMeasurementType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RANGE", "RANGE_RATE", "DOPPLER", "AZIMUTH_ELEVATION", "X_EAST_Y_NORTH", "X_SOUTH_Y_EAST", "RIGHT_ASCENSION_DECLINATION", "POSITION_VECTOR", "SEQUENTIAL_RANGE", "PSEUDONOISE_RANGE", "TIME_CORRELATED_PHASE", "RELAY_RANGE", "RELAY_DOPPLER", "RELAY_DIFFERENCED_DOPPLER", "BISTATIC_RANGE", "SKIN_RANGE", "CROSSLINK_RANGE", "CROSSLINK_RANGE_RATE", "LASER_RANGE", "TIME_DIFFERENCE_OF_ARRIVAL", "FREQUENCY_DIFFERENCE_OF_ARRIVAL"]
+    },
+    "memEditingAction" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPT", "REJECT"]
+    },
+    "memEditingReason" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPTED", "OUTSIDE_EPOCH_WINDOW", "OUTSIDE_VALUE_WINDOW", "SIGMA_THRESHOLD", "INVALID_GEOMETRY", "MISSING_MEDIA_INPUT", "HARDWARE_UNAVAILABLE", "DUPLICATE", "PROVIDER_FLAGGED"]
+    },
+    "memTroposphereModel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NONE", "HOPFIELD_SAASTAMOINEN", "MARINI"]
+    },
+    "memIonosphereModel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NONE", "TOTAL_ELECTRON_CONTENT", "REFERENCE_PROFILE"]
+    },
     "odrEstimatorKind" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "BATCH_WEIGHTED_LEAST_SQUARES", "EXTENDED_KALMAN_FILTER", "UNSCENTED_KALMAN_FILTER", "EXTENDED_KALMAN_FILTER_WITH_SMOOTHER"]
@@ -1006,6 +1026,127 @@
       },
       "additionalProperties" : false
     },
+    "MEMErrorModel" : {
+      "type" : "object",
+      "description" : "Noise, bias and editing rules for one observable. Standard deviations and\nbiases use the observable's SI unit. ANGLE observables use radians.",
+      "properties" : {
+        "MODEL_ID" : {
+                "type" : "string"
+              },
+        "MEASUREMENT_TYPE" : {
+                "$ref" : "#/definitions/memMeasurementType"
+              },
+        "NOISE_SIGMA" : {
+                "type" : "number"
+              },
+        "BIAS" : {
+                "type" : "number"
+              },
+        "BIAS_SIGMA" : {
+                "type" : "number"
+              },
+        "CORRELATION_TIME_SECONDS" : {
+                "type" : "number"
+              },
+        "MINIMUM_ACCEPTED_VALUE" : {
+                "type" : "number"
+              },
+        "MAXIMUM_ACCEPTED_VALUE" : {
+                "type" : "number"
+              },
+        "SIGMA_EDIT_THRESHOLD" : {
+                "type" : "number"
+              },
+        "ACCEPT_START_EPOCH" : {
+                "type" : "string"
+              },
+        "ACCEPT_STOP_EPOCH" : {
+                "type" : "string"
+              },
+        "TROPOSPHERE_MODEL" : {
+                "$ref" : "#/definitions/memTroposphereModel"
+              },
+        "IONOSPHERE_MODEL" : {
+                "$ref" : "#/definitions/memIonosphereModel"
+              },
+        "APPLY_LIGHT_TIME" : {
+                "type" : "boolean"
+              },
+        "APPLY_BODY_ROTATION" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["MODEL_ID"],
+      "additionalProperties" : false
+    },
+    "MEMEditingDecision" : {
+      "type" : "object",
+      "description" : "One deterministic editing decision. The observation identity is carried\nfrom the tracking-data input so rejected sets can be compared exactly.",
+      "properties" : {
+        "OBSERVATION_ID" : {
+                "type" : "string"
+              },
+        "ACTION" : {
+                "$ref" : "#/definitions/memEditingAction"
+              },
+        "REASON" : {
+                "$ref" : "#/definitions/memEditingReason"
+              },
+        "PREFIT_RESIDUAL" : {
+                "type" : "number"
+              },
+        "NORMALIZED_RESIDUAL" : {
+                "type" : "number"
+              },
+        "ITERATION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "required" : ["OBSERVATION_ID"],
+      "additionalProperties" : false
+    },
+    "MEMAttestation" : {
+      "type" : "object",
+      "description" : "Dual-form signature. Presence means both signatures are required and both\nMUST verify independently; an invalid member rejects the record rather\nthan downgrading it to unsigned.",
+      "properties" : {
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string"
+              },
+        "SIGNED_AT" : {
+                "type" : "string"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "CANONICAL_JSON_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "required" : ["SIGNING_PUBLIC_KEY", "SIGNATURE", "CANONICAL_JSON_SIGNATURE"],
+      "additionalProperties" : false
+    },
+    "MEM" : {
+      "type" : "object",
+      "description" : "Measurement Error Model. JSON projections preserve these IDL-capitalized\nfield names exactly. The FlatBuffer signature covers the size-prefixed\nbuffer with both signature vectors zeroed; the canonical-JSON signature\ncovers RFC 8785 canonical JSON with both signature fields omitted.",
+      "properties" : {
+        "ERROR_MODELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MEMErrorModel"}
+              },
+        "EDITING_LEDGER" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MEMEditingDecision"}
+              },
+        "RANDOM_SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "TRACE_ID" : {
+                "type" : "string"
+              },
+        "ATTESTATION" : {
+                "$ref" : "#/definitions/MEMAttestation"
+              }
+      },
+      "additionalProperties" : false
+    },
     "ODRSolverConfiguration" : {
       "type" : "object",
       "properties" : {
@@ -1075,6 +1216,7 @@
     },
     "ODREditedObservation" : {
       "type" : "object",
+      "description" : "One observation the estimator read: the editing record, then the columns of\na per-input residual listing (P9), one entry per input the fit read, accepted\nor not. OBSERVATION_ID is the input identifier; the residual is\nOBSERVED_VALUE - COMPUTED_VALUE.",
       "properties" : {
         "OBSERVATION_ID" : {
                 "type" : "string"
@@ -1090,6 +1232,34 @@
               },
         "REASON" : {
                 "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the observation (ISO 8601 UTC)."
+              },
+        "OBSERVATION_TYPE" : {
+                "$ref" : "#/definitions/memMeasurementType",
+                "description" : "Measurement class of the observation."
+              },
+        "OBSERVED_VALUE" : {
+                "type" : "number",
+                "description" : "The observation as measured, in the unit of its class: km, km/s or deg."
+              },
+        "COMPUTED_VALUE" : {
+                "type" : "number",
+                "description" : "The same quantity computed from the solution at EPOCH, in the same unit."
+              },
+        "WEIGHT" : {
+                "type" : "number",
+                "description" : "Weight the fit gave the observation in its normal equations; 0 when it gave none."
+              },
+        "ACCEPTED" : {
+                "type" : "boolean",
+                "description" : "True when the observation entered the solution; false when the fit edited it out (REASON says why)."
+              },
+        "PERTURBATION_MODEL_CODE" : {
+                "type" : "string",
+                "description" : "Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it."
               }
       },
       "required" : ["OBSERVATION_ID"],

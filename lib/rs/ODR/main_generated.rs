@@ -3,6 +3,7 @@
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1125,6 +1126,10 @@ impl ODRIterationStatisticsT {
 
 pub enum ODREditedObservationOffset {}
 
+/// One observation the estimator read: the editing record, then the columns of
+/// a per-input residual listing (P9), one entry per input the fit read, accepted
+/// or not. OBSERVATION_ID is the input identifier; the residual is
+/// OBSERVED_VALUE - COMPUTED_VALUE.
 #[derive(Copy, Clone, PartialEq)]
 pub struct ODREditedObservation<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1145,6 +1150,13 @@ impl<'a> ODREditedObservation<'a> {
     pub const VT_PREFIT_RESIDUAL: ::flatbuffers::VOffsetT = 8;
     pub const VT_NORMALIZED_RESIDUAL: ::flatbuffers::VOffsetT = 10;
     pub const VT_REASON: ::flatbuffers::VOffsetT = 12;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 14;
+    pub const VT_OBSERVATION_TYPE: ::flatbuffers::VOffsetT = 16;
+    pub const VT_OBSERVED_VALUE: ::flatbuffers::VOffsetT = 18;
+    pub const VT_COMPUTED_VALUE: ::flatbuffers::VOffsetT = 20;
+    pub const VT_WEIGHT: ::flatbuffers::VOffsetT = 22;
+    pub const VT_ACCEPTED: ::flatbuffers::VOffsetT = 24;
+    pub const VT_PERTURBATION_MODEL_CODE: ::flatbuffers::VOffsetT = 26;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1157,11 +1169,18 @@ impl<'a> ODREditedObservation<'a> {
         args: &'args ODREditedObservationArgs<'args>
     ) -> ::flatbuffers::WIPOffset<ODREditedObservation<'bldr>> {
         let mut builder = ODREditedObservationBuilder::new(_fbb);
+        builder.add_WEIGHT(args.WEIGHT);
+        builder.add_COMPUTED_VALUE(args.COMPUTED_VALUE);
+        builder.add_OBSERVED_VALUE(args.OBSERVED_VALUE);
         builder.add_NORMALIZED_RESIDUAL(args.NORMALIZED_RESIDUAL);
         builder.add_PREFIT_RESIDUAL(args.PREFIT_RESIDUAL);
+        if let Some(x) = args.PERTURBATION_MODEL_CODE { builder.add_PERTURBATION_MODEL_CODE(x); }
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
         if let Some(x) = args.REASON { builder.add_REASON(x); }
         builder.add_ITERATION(args.ITERATION);
         if let Some(x) = args.OBSERVATION_ID { builder.add_OBSERVATION_ID(x); }
+        builder.add_OBSERVATION_TYPE(args.OBSERVATION_TYPE);
+        builder.add_ACCEPTED(args.ACCEPTED);
         builder.finish()
     }
 
@@ -1176,12 +1195,30 @@ impl<'a> ODREditedObservation<'a> {
         let REASON = self.REASON().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let EPOCH = self.EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OBSERVATION_TYPE = self.OBSERVATION_TYPE();
+        let OBSERVED_VALUE = self.OBSERVED_VALUE();
+        let COMPUTED_VALUE = self.COMPUTED_VALUE();
+        let WEIGHT = self.WEIGHT();
+        let ACCEPTED = self.ACCEPTED();
+        let PERTURBATION_MODEL_CODE = self.PERTURBATION_MODEL_CODE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         ODREditedObservationT {
             OBSERVATION_ID,
             ITERATION,
             PREFIT_RESIDUAL,
             NORMALIZED_RESIDUAL,
             REASON,
+            EPOCH,
+            OBSERVATION_TYPE,
+            OBSERVED_VALUE,
+            COMPUTED_VALUE,
+            WEIGHT,
+            ACCEPTED,
+            PERTURBATION_MODEL_CODE,
         }
     }
 
@@ -1224,6 +1261,69 @@ impl<'a> ODREditedObservation<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ODREditedObservation::VT_REASON, None)}
     }
+
+    /// Epoch of the observation (ISO 8601 UTC).
+    #[inline]
+    pub fn EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ODREditedObservation::VT_EPOCH, None)}
+    }
+
+    /// Measurement class of the observation.
+    #[inline]
+    pub fn OBSERVATION_TYPE(&self) -> memMeasurementType {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<memMeasurementType>(ODREditedObservation::VT_OBSERVATION_TYPE, Some(memMeasurementType::UNSPECIFIED)).unwrap()}
+    }
+
+    /// The observation as measured, in the unit of its class: km, km/s or deg.
+    #[inline]
+    pub fn OBSERVED_VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ODREditedObservation::VT_OBSERVED_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// The same quantity computed from the solution at EPOCH, in the same unit.
+    #[inline]
+    pub fn COMPUTED_VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ODREditedObservation::VT_COMPUTED_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// Weight the fit gave the observation in its normal equations; 0 when it gave none.
+    #[inline]
+    pub fn WEIGHT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ODREditedObservation::VT_WEIGHT, Some(0.0)).unwrap()}
+    }
+
+    /// True when the observation entered the solution; false when the fit edited it out (REASON says why).
+    #[inline]
+    pub fn ACCEPTED(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ODREditedObservation::VT_ACCEPTED, Some(false)).unwrap()}
+    }
+
+    /// Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+    #[inline]
+    pub fn PERTURBATION_MODEL_CODE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ODREditedObservation::VT_PERTURBATION_MODEL_CODE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ODREditedObservation<'_> {
@@ -1237,6 +1337,13 @@ impl ::flatbuffers::Verifiable for ODREditedObservation<'_> {
             .visit_field::<f64>("PREFIT_RESIDUAL", Self::VT_PREFIT_RESIDUAL, false)?
             .visit_field::<f64>("NORMALIZED_RESIDUAL", Self::VT_NORMALIZED_RESIDUAL, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REASON", Self::VT_REASON, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+            .visit_field::<memMeasurementType>("OBSERVATION_TYPE", Self::VT_OBSERVATION_TYPE, false)?
+            .visit_field::<f64>("OBSERVED_VALUE", Self::VT_OBSERVED_VALUE, false)?
+            .visit_field::<f64>("COMPUTED_VALUE", Self::VT_COMPUTED_VALUE, false)?
+            .visit_field::<f64>("WEIGHT", Self::VT_WEIGHT, false)?
+            .visit_field::<bool>("ACCEPTED", Self::VT_ACCEPTED, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PERTURBATION_MODEL_CODE", Self::VT_PERTURBATION_MODEL_CODE, false)?
             .finish();
         Ok(())
     }
@@ -1248,6 +1355,13 @@ pub struct ODREditedObservationArgs<'a> {
     pub PREFIT_RESIDUAL: f64,
     pub NORMALIZED_RESIDUAL: f64,
     pub REASON: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBSERVATION_TYPE: memMeasurementType,
+    pub OBSERVED_VALUE: f64,
+    pub COMPUTED_VALUE: f64,
+    pub WEIGHT: f64,
+    pub ACCEPTED: bool,
+    pub PERTURBATION_MODEL_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for ODREditedObservationArgs<'a> {
@@ -1259,6 +1373,13 @@ impl<'a> Default for ODREditedObservationArgs<'a> {
             PREFIT_RESIDUAL: 0.0,
             NORMALIZED_RESIDUAL: 0.0,
             REASON: None,
+            EPOCH: None,
+            OBSERVATION_TYPE: memMeasurementType::UNSPECIFIED,
+            OBSERVED_VALUE: 0.0,
+            COMPUTED_VALUE: 0.0,
+            WEIGHT: 0.0,
+            ACCEPTED: false,
+            PERTURBATION_MODEL_CODE: None,
         }
     }
 }
@@ -1295,6 +1416,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ODREditedObservationBuilder<'
     }
 
     #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ODREditedObservation::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_OBSERVATION_TYPE(&mut self, OBSERVATION_TYPE: memMeasurementType) {
+        self.fbb_.push_slot::<memMeasurementType>(ODREditedObservation::VT_OBSERVATION_TYPE, OBSERVATION_TYPE, memMeasurementType::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_OBSERVED_VALUE(&mut self, OBSERVED_VALUE: f64) {
+        self.fbb_.push_slot::<f64>(ODREditedObservation::VT_OBSERVED_VALUE, OBSERVED_VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_COMPUTED_VALUE(&mut self, COMPUTED_VALUE: f64) {
+        self.fbb_.push_slot::<f64>(ODREditedObservation::VT_COMPUTED_VALUE, COMPUTED_VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_WEIGHT(&mut self, WEIGHT: f64) {
+        self.fbb_.push_slot::<f64>(ODREditedObservation::VT_WEIGHT, WEIGHT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ACCEPTED(&mut self, ACCEPTED: bool) {
+        self.fbb_.push_slot::<bool>(ODREditedObservation::VT_ACCEPTED, ACCEPTED, false);
+    }
+
+    #[inline]
+    pub fn add_PERTURBATION_MODEL_CODE(&mut self, PERTURBATION_MODEL_CODE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ODREditedObservation::VT_PERTURBATION_MODEL_CODE, PERTURBATION_MODEL_CODE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ODREditedObservationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ODREditedObservationBuilder {
@@ -1319,6 +1475,13 @@ impl ::core::fmt::Debug for ODREditedObservation<'_> {
         ds.field("PREFIT_RESIDUAL", &self.PREFIT_RESIDUAL());
         ds.field("NORMALIZED_RESIDUAL", &self.NORMALIZED_RESIDUAL());
         ds.field("REASON", &self.REASON());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("OBSERVATION_TYPE", &self.OBSERVATION_TYPE());
+        ds.field("OBSERVED_VALUE", &self.OBSERVED_VALUE());
+        ds.field("COMPUTED_VALUE", &self.COMPUTED_VALUE());
+        ds.field("WEIGHT", &self.WEIGHT());
+        ds.field("ACCEPTED", &self.ACCEPTED());
+        ds.field("PERTURBATION_MODEL_CODE", &self.PERTURBATION_MODEL_CODE());
         ds.finish()
     }
 }
@@ -1331,6 +1494,13 @@ pub struct ODREditedObservationT {
     pub PREFIT_RESIDUAL: f64,
     pub NORMALIZED_RESIDUAL: f64,
     pub REASON: Option<alloc::string::String>,
+    pub EPOCH: Option<alloc::string::String>,
+    pub OBSERVATION_TYPE: memMeasurementType,
+    pub OBSERVED_VALUE: f64,
+    pub COMPUTED_VALUE: f64,
+    pub WEIGHT: f64,
+    pub ACCEPTED: bool,
+    pub PERTURBATION_MODEL_CODE: Option<alloc::string::String>,
 }
 
 impl Default for ODREditedObservationT {
@@ -1341,6 +1511,13 @@ impl Default for ODREditedObservationT {
             PREFIT_RESIDUAL: 0.0,
             NORMALIZED_RESIDUAL: 0.0,
             REASON: None,
+            EPOCH: None,
+            OBSERVATION_TYPE: memMeasurementType::UNSPECIFIED,
+            OBSERVED_VALUE: 0.0,
+            COMPUTED_VALUE: 0.0,
+            WEIGHT: 0.0,
+            ACCEPTED: false,
+            PERTURBATION_MODEL_CODE: None,
         }
     }
 }
@@ -1360,12 +1537,30 @@ impl ODREditedObservationT {
         let REASON = self.REASON.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let EPOCH = self.EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OBSERVATION_TYPE = self.OBSERVATION_TYPE;
+        let OBSERVED_VALUE = self.OBSERVED_VALUE;
+        let COMPUTED_VALUE = self.COMPUTED_VALUE;
+        let WEIGHT = self.WEIGHT;
+        let ACCEPTED = self.ACCEPTED;
+        let PERTURBATION_MODEL_CODE = self.PERTURBATION_MODEL_CODE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         ODREditedObservation::create(_fbb, &ODREditedObservationArgs{
             OBSERVATION_ID,
             ITERATION,
             PREFIT_RESIDUAL,
             NORMALIZED_RESIDUAL,
             REASON,
+            EPOCH,
+            OBSERVATION_TYPE,
+            OBSERVED_VALUE,
+            COMPUTED_VALUE,
+            WEIGHT,
+            ACCEPTED,
+            PERTURBATION_MODEL_CODE,
         })
     }
 }

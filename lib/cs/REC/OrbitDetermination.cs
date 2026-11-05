@@ -173,8 +173,9 @@ public struct OrbitDetermination : IFlatbufferObject
   /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
   public double WEIGHTED_RMS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Dynamical-model parameters of the solution with their values, solved for or held. An
-  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-  /// COV_PARAMETERS names in the covariance are entries of this list.
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  /// row of the covariance, false for a parameter the determination held.
   public OCMDynamicParameter? OD_DYNAMIC_PARAMETERS(int j) { int o = __p.__offset(54); return o != 0 ? (OCMDynamicParameter?)(new OCMDynamicParameter()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int OD_DYNAMIC_PARAMETERSLength { get { int o = __p.__offset(54); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.

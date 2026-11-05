@@ -147,11 +147,11 @@ public struct OMM : IFlatbufferObject
   public uint ELEMENT_SET_NO { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// REV_AT_EPOCH [O if SGP/SGP4]
   public double REV_AT_EPOCH { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+  /// BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
   public double BSTAR { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public double MEAN_MOTION_DOT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]
@@ -220,6 +220,14 @@ public struct OMM : IFlatbufferObject
   public PVN? PROVENANCE { get { int o = __p.__offset(90); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Realism of COVARIANCE.
   public CVR? COV_REALISM { get { int o = __p.__offset(92); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+  /// SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+  /// MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+  /// renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+  public double BTERM { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+  /// coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+  public double AGOM { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<OMM> CreateOMM(FlatBufferBuilder builder,
       double CCSDS_OMM_VERS = 0.0,
@@ -266,8 +274,12 @@ public struct OMM : IFlatbufferObject
       StringOffset MESSAGE_IDOffset = default(StringOffset),
       VectorOffset USER_DEFINED_PARAMETERSOffset = default(VectorOffset),
       Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
-      Offset<CVR> COV_REALISMOffset = default(Offset<CVR>)) {
-    builder.StartTable(45);
+      Offset<CVR> COV_REALISMOffset = default(Offset<CVR>),
+      double BTERM = 0.0,
+      double AGOM = 0.0) {
+    builder.StartTable(47);
+    OMM.AddAGOM(builder, AGOM);
+    OMM.AddBTERM(builder, BTERM);
     OMM.AddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS);
     OMM.AddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP);
     OMM.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
@@ -316,7 +328,7 @@ public struct OMM : IFlatbufferObject
     return OMM.EndOMM(builder);
   }
 
-  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(45); }
+  public static void StartOMM(FlatBufferBuilder builder) { builder.StartTable(47); }
   public static void AddCCSDS_OMM_VERS(FlatBufferBuilder builder, double CCSDS_OMM_VERS) { builder.AddDouble(0, CCSDS_OMM_VERS, 0.0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -372,6 +384,8 @@ public struct OMM : IFlatbufferObject
   public static void StartUSER_DEFINED_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(43, PROVENANCEOffset.Value, 0); }
   public static void AddCOV_REALISM(FlatBufferBuilder builder, Offset<CVR> COV_REALISMOffset) { builder.AddOffset(44, COV_REALISMOffset.Value, 0); }
+  public static void AddBTERM(FlatBufferBuilder builder, double BTERM) { builder.AddDouble(45, BTERM, 0.0); }
+  public static void AddAGOM(FlatBufferBuilder builder, double AGOM) { builder.AddDouble(46, AGOM, 0.0); }
   public static Offset<OMM> EndOMM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OMM>(o);
@@ -431,6 +445,8 @@ public struct OMM : IFlatbufferObject
     for (var _j = 0; _j < this.USER_DEFINED_PARAMETERSLength; ++_j) {_o.USER_DEFINED_PARAMETERS.Add(this.USER_DEFINED_PARAMETERS(_j).HasValue ? this.USER_DEFINED_PARAMETERS(_j).Value.UnPack() : null);}
     _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
     _o.COV_REALISM = this.COV_REALISM.HasValue ? this.COV_REALISM.Value.UnPack() : null;
+    _o.BTERM = this.BTERM;
+    _o.AGOM = this.AGOM;
   }
   public static Offset<OMM> Pack(FlatBufferBuilder builder, OMMT _o) {
     if (_o == null) return default(Offset<OMM>);
@@ -508,7 +524,9 @@ public struct OMM : IFlatbufferObject
       _MESSAGE_ID,
       _USER_DEFINED_PARAMETERS,
       _PROVENANCE,
-      _COV_REALISM);
+      _COV_REALISM,
+      _o.BTERM,
+      _o.AGOM);
   }
 }
 
@@ -559,6 +577,8 @@ public class OMMT
   public List<OMMUserDefinedParameterT> USER_DEFINED_PARAMETERS { get; set; }
   public PVNT PROVENANCE { get; set; }
   public CVRT COV_REALISM { get; set; }
+  public double BTERM { get; set; }
+  public double AGOM { get; set; }
 
   public OMMT() {
     this.CCSDS_OMM_VERS = 0.0;
@@ -606,6 +626,8 @@ public class OMMT
     this.USER_DEFINED_PARAMETERS = null;
     this.PROVENANCE = null;
     this.COV_REALISM = null;
+    this.BTERM = 0.0;
+    this.AGOM = 0.0;
   }
   public static OMMT DeserializeFromBinary(byte[] fbBuffer) {
     return OMM.GetRootAsOMM(new ByteBuffer(fbBuffer)).UnPack();
@@ -668,6 +690,8 @@ static public class OMMVerify
       && verifier.VerifyVectorOfTables(tablePos, 88 /*USER_DEFINED_PARAMETERS*/, OMMUserDefinedParameterVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 90 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 92 /*COV_REALISM*/, CVRVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 94 /*BTERM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*AGOM*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

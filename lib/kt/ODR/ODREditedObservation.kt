@@ -16,6 +16,12 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.sign
 
+/**
+ * One observation the estimator read: the editing record, then the columns of
+ * a per-input residual listing (P9), one entry per input the fit read, accepted
+ * or not. OBSERVATION_ID is the input identifier; the residual is
+ * OBSERVED_VALUE - COMPUTED_VALUE.
+ */
 @Suppress("unused")
 class ODREditedObservation : Table() {
 
@@ -63,6 +69,74 @@ class ODREditedObservation : Table() {
         }
     val reasonAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun reasonInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Epoch of the observation (ISO 8601 UTC).
+     */
+    val epoch : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Measurement class of the observation.
+     */
+    val observationType : UShort
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * The observation as measured, in the unit of its class: km, km/s or deg.
+     */
+    val observedValue : Double
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * The same quantity computed from the solution at EPOCH, in the same unit.
+     */
+    val computedValue : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Weight the fit gave the observation in its normal equations; 0 when it gave none.
+     */
+    val weight : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when the observation entered the solution; false when the fit edited it out (REASON says why).
+     */
+    val accepted : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Code of the perturbation model COMPUTED_VALUE was computed under, as the listing prints it.
+     */
+    val perturbationModelCode : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val perturbationModelCodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun perturbationModelCodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsODREditedObservation(_bb: ByteBuffer): ODREditedObservation = getRootAsODREditedObservation(_bb, ODREditedObservation())
@@ -70,21 +144,35 @@ class ODREditedObservation : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createODREditedObservation(builder: FlatBufferBuilder, observationIdOffset: Int, iteration: UInt, prefitResidual: Double, normalizedResidual: Double, reasonOffset: Int) : Int {
-            builder.startTable(5)
+        fun createODREditedObservation(builder: FlatBufferBuilder, observationIdOffset: Int, iteration: UInt, prefitResidual: Double, normalizedResidual: Double, reasonOffset: Int, epochOffset: Int, observationType: UShort, observedValue: Double, computedValue: Double, weight: Double, accepted: Boolean, perturbationModelCodeOffset: Int) : Int {
+            builder.startTable(12)
+            addWEIGHT(builder, weight)
+            addCOMPUTEDVALUE(builder, computedValue)
+            addOBSERVEDVALUE(builder, observedValue)
             addNORMALIZEDRESIDUAL(builder, normalizedResidual)
             addPREFITRESIDUAL(builder, prefitResidual)
+            addPERTURBATIONMODELCODE(builder, perturbationModelCodeOffset)
+            addEPOCH(builder, epochOffset)
             addREASON(builder, reasonOffset)
             addITERATION(builder, iteration)
             addOBSERVATIONID(builder, observationIdOffset)
+            addOBSERVATIONTYPE(builder, observationType)
+            addACCEPTED(builder, accepted)
             return endODREditedObservation(builder)
         }
-        fun startODREditedObservation(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startODREditedObservation(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addOBSERVATIONID(builder: FlatBufferBuilder, observationId: Int) = builder.addOffset(0, observationId, 0)
         fun addITERATION(builder: FlatBufferBuilder, iteration: UInt) = builder.addInt(1, iteration.toInt(), 0)
         fun addPREFITRESIDUAL(builder: FlatBufferBuilder, prefitResidual: Double) = builder.addDouble(2, prefitResidual, 0.0)
         fun addNORMALIZEDRESIDUAL(builder: FlatBufferBuilder, normalizedResidual: Double) = builder.addDouble(3, normalizedResidual, 0.0)
         fun addREASON(builder: FlatBufferBuilder, reason: Int) = builder.addOffset(4, reason, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(5, epoch, 0)
+        fun addOBSERVATIONTYPE(builder: FlatBufferBuilder, observationType: UShort) = builder.addShort(6, observationType.toShort(), 0)
+        fun addOBSERVEDVALUE(builder: FlatBufferBuilder, observedValue: Double) = builder.addDouble(7, observedValue, 0.0)
+        fun addCOMPUTEDVALUE(builder: FlatBufferBuilder, computedValue: Double) = builder.addDouble(8, computedValue, 0.0)
+        fun addWEIGHT(builder: FlatBufferBuilder, weight: Double) = builder.addDouble(9, weight, 0.0)
+        fun addACCEPTED(builder: FlatBufferBuilder, accepted: Boolean) = builder.addBoolean(10, accepted, false)
+        fun addPERTURBATIONMODELCODE(builder: FlatBufferBuilder, perturbationModelCode: Int) = builder.addOffset(11, perturbationModelCode, 0)
         fun endODREditedObservation(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -160,7 +160,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     REV_AT_EPOCH(): number;
     /**
-     * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+     * BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
      */
     BSTAR(): number;
     /**
@@ -168,7 +168,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     MEAN_MOTION_DOT(): number;
     /**
-     * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+     * MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
      */
     MEAN_MOTION_DDOT(): number;
     /**
@@ -237,6 +237,18 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      * Realism of COVARIANCE.
      */
     COV_REALISM(obj?: CVR): CVR | null;
+    /**
+     * BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+     * SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+     * MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+     * renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+     */
+    BTERM(): number;
+    /**
+     * AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+     * coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+     */
+    AGOM(): number;
     static startOMM(builder: flatbuffers.Builder): void;
     static addCcsdsOmmVers(builder: flatbuffers.Builder, CCSDS_OMM_VERS: number): void;
     static addCreationDate(builder: flatbuffers.Builder, CREATION_DATEOffset: flatbuffers.Offset): void;
@@ -291,6 +303,8 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     static startUserDefinedParametersVector(builder: flatbuffers.Builder, numElems: number): void;
     static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static addCovRealism(builder: flatbuffers.Builder, COV_REALISMOffset: flatbuffers.Offset): void;
+    static addBterm(builder: flatbuffers.Builder, BTERM: number): void;
+    static addAgom(builder: flatbuffers.Builder, AGOM: number): void;
     static endOMM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOMMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -343,7 +357,9 @@ export declare class OMMT implements flatbuffers.IGeneratedObject {
     USER_DEFINED_PARAMETERS: (OMMUserDefinedParameterT)[];
     PROVENANCE: PVNT | null;
     COV_REALISM: CVRT | null;
-    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number, CLASSIFICATION?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, USER_DEFINED_PARAMETERS?: (OMMUserDefinedParameterT)[], PROVENANCE?: PVNT | null, COV_REALISM?: CVRT | null);
+    BTERM: number;
+    AGOM: number;
+    constructor(CCSDS_OMM_VERS?: number, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, TIME_SYSTEM?: timingStandard, MEAN_ELEMENT_THEORY?: meanElementSource, COMMENT?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SEMI_MAJOR_AXIS?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, GM?: number, MASS?: number, SOLAR_RAD_AREA?: number, SOLAR_RAD_COEFF?: number, DRAG_AREA?: number, DRAG_COEFF?: number, EPHEMERIS_TYPE?: ephemerisFormat, CLASSIFICATION_TYPE?: string | Uint8Array | null, NORAD_CAT_ID?: number, ELEMENT_SET_NO?: number, REV_AT_EPOCH?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, COV_REFERENCE_FRAME?: RFMT | null, COVARIANCE?: (number)[], USER_DEFINED_BIP_0044_TYPE?: number, USER_DEFINED_OBJECT_DESIGNATOR?: string | Uint8Array | null, USER_DEFINED_EARTH_MODEL?: string | Uint8Array | null, USER_DEFINED_EPOCH_TIMESTAMP?: number, USER_DEFINED_MICROSECONDS?: number, CLASSIFICATION?: string | Uint8Array | null, MESSAGE_ID?: string | Uint8Array | null, USER_DEFINED_PARAMETERS?: (OMMUserDefinedParameterT)[], PROVENANCE?: PVNT | null, COV_REALISM?: CVRT | null, BTERM?: number, AGOM?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OMM.d.ts.map

@@ -1722,7 +1722,7 @@ class OCMDynamicParameter : flatbuffers.handle
     def VALUE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
-    /// m/s**2 for IN_TRACK_ACCELERATION.
+    /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
     def UNITS() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// True when the orbit determination solved for the parameter, false when VALUE was held.
@@ -2870,8 +2870,9 @@ class OrbitDetermination : flatbuffers.handle
     def WEIGHTED_RMS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
     /// Dynamical-model parameters of the solution with their values, solved for or held. An
-    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows
-    /// COV_PARAMETERS names in the covariance are entries of this list.
+    /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+    /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+    /// row of the covariance, false for a parameter the determination held.
     def OD_DYNAMIC_PARAMETERS(i:int) -> OCMDynamicParameter:
         return OCMDynamicParameter { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 54) + i * 4) }
     def OD_DYNAMIC_PARAMETERS_length() -> int:
@@ -3541,7 +3542,8 @@ class OCM : flatbuffers.handle
     /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
     def TRAJ_FRAME_EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 38)
-    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME).
+    /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+    /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
     def COV_REF_FRAME() -> RFM?:
         let o = flatbuffers.field_table(buf_, pos_, 40)
         return if o: RFM { buf_, o } else: nil
@@ -3572,22 +3574,25 @@ class OCM : flatbuffers.handle
     /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
     def COV_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 52)
-    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+    /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+    /// the product writers (lib/js/PROD) accept.
     def COV_ORDERING() -> covarianceOrdering:
         return covarianceOrdering(flatbuffers.field_int8(buf_, pos_, 54, 0))
     /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
     /// COV_PARAMETERS names.
     def COV_SIZE() -> int:
         return flatbuffers.field_uint8(buf_, pos_, 56, 6)
-    /// Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,
-    /// by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its
-    /// matrix reaches). A row the orbit determination did not solve for is zero.
+    /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+    /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+    /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+    /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
     def COV_PARAMETERS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 58) + i * 4)
     def COV_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 58)
-    /// Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), "n/a" for a
-    /// dimensionless one.
+    /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+    /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+    /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
     def COV_UNITS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 4)
     def COV_UNITS_length() -> int:

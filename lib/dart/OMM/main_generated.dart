@@ -161,12 +161,12 @@ class OMM {
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   double get REV_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
   double get revAtEpoch => REV_AT_EPOCH;
-  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
+  ///  BSTAR in 1/Earth radii [C: MEAN_ELEMENT_THEORY SGP4]. An SGP4-XP set carries BTERM instead, never both.
   double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
   ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
   double get meanMotionDot => MEAN_MOTION_DOT;
-  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 [C: SGP or PPT3]. An SGP4-XP set carries AGOM instead, never both.
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
   double get meanMotionDdot => MEAN_MOTION_DDOT;
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -213,10 +213,18 @@ class OMM {
   ///  Realism of COVARIANCE.
   CVR? get COV_REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 92);
   CVR? get covRealism => COV_REALISM;
+  ///  BTERM (CCSDS 502.0-B-3 Table 4-3, "BSTAR or BTERM"): the drag-like ballistic coefficient of an
+  ///  SGP4-XP set, Cd*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. A writer sets BSTAR and
+  ///  MEAN_MOTION_DDOT for SGP4 and BTERM and AGOM for SGP4-XP, never both pairs; the KVN and XML
+  ///  renderers write the keyword MEAN_ELEMENT_THEORY selects. 0 for SGP4.
+  double get BTERM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
+  ///  AGOM (CCSDS 502.0-B-3 Table 4-3, "MEAN_MOTION_DDOT or AGOM"): the solar radiation pressure
+  ///  coefficient of an SGP4-XP set, gamma*A/m in m**2/kg [C: MEAN_ELEMENT_THEORY SGP4-XP]. 0 for SGP4.
+  double get AGOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
 
   @override
   String toString() {
-    return 'OMM{ccsdsOmmVers: ${ccsdsOmmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, timeSystem: ${timeSystem}, meanElementTheory: ${meanElementTheory}, COMMENT: ${COMMENT}, EPOCH: ${EPOCH}, semiMajorAxis: ${semiMajorAxis}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, GM: ${GM}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}, ephemerisType: ${ephemerisType}, classificationType: ${classificationType}, noradCatId: ${noradCatId}, elementSetNo: ${elementSetNo}, revAtEpoch: ${revAtEpoch}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, covReferenceFrame: ${covReferenceFrame}, COVARIANCE: ${COVARIANCE}, userDefinedBip0044Type: ${userDefinedBip0044Type}, userDefinedObjectDesignator: ${userDefinedObjectDesignator}, userDefinedEarthModel: ${userDefinedEarthModel}, userDefinedEpochTimestamp: ${userDefinedEpochTimestamp}, userDefinedMicroseconds: ${userDefinedMicroseconds}, CLASSIFICATION: ${CLASSIFICATION}, messageId: ${messageId}, userDefinedParameters: ${userDefinedParameters}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}}';
+    return 'OMM{ccsdsOmmVers: ${ccsdsOmmVers}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, objectId: ${objectId}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, referenceFrameEpoch: ${referenceFrameEpoch}, timeSystem: ${timeSystem}, meanElementTheory: ${meanElementTheory}, COMMENT: ${COMMENT}, EPOCH: ${EPOCH}, semiMajorAxis: ${semiMajorAxis}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, GM: ${GM}, MASS: ${MASS}, solarRadArea: ${solarRadArea}, solarRadCoeff: ${solarRadCoeff}, dragArea: ${dragArea}, dragCoeff: ${dragCoeff}, ephemerisType: ${ephemerisType}, classificationType: ${classificationType}, noradCatId: ${noradCatId}, elementSetNo: ${elementSetNo}, revAtEpoch: ${revAtEpoch}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, covReferenceFrame: ${covReferenceFrame}, COVARIANCE: ${COVARIANCE}, userDefinedBip0044Type: ${userDefinedBip0044Type}, userDefinedObjectDesignator: ${userDefinedObjectDesignator}, userDefinedEarthModel: ${userDefinedEarthModel}, userDefinedEpochTimestamp: ${userDefinedEpochTimestamp}, userDefinedMicroseconds: ${userDefinedMicroseconds}, CLASSIFICATION: ${CLASSIFICATION}, messageId: ${messageId}, userDefinedParameters: ${userDefinedParameters}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}, BTERM: ${BTERM}, AGOM: ${AGOM}}';
   }
 }
 
@@ -234,7 +242,7 @@ class OMMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(45);
+    fbBuilder.startTable(47);
   }
 
   int addCcsdsOmmVers(double? CCSDS_OMM_VERS) {
@@ -417,6 +425,14 @@ class OMMBuilder {
     fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
+  int addBterm(double? BTERM) {
+    fbBuilder.addFloat64(45, BTERM);
+    return fbBuilder.offset;
+  }
+  int addAgom(double? AGOM) {
+    fbBuilder.addFloat64(46, AGOM);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -469,6 +485,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
   final List<OMMUserDefinedParameterObjectBuilder>? _USER_DEFINED_PARAMETERS;
   final PVNObjectBuilder? _PROVENANCE;
   final CVRObjectBuilder? _COV_REALISM;
+  final double? _BTERM;
+  final double? _AGOM;
 
   OMMObjectBuilder({
     double? CCSDS_OMM_VERS,
@@ -550,6 +568,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     PVNObjectBuilder? PROVENANCE,
     CVRObjectBuilder? COV_REALISM,
     CVRObjectBuilder? covRealism,
+    double? BTERM,
+    double? AGOM,
   })
       : _CCSDS_OMM_VERS = ccsdsOmmVers ?? CCSDS_OMM_VERS,
         _CREATION_DATE = creationDate ?? CREATION_DATE,
@@ -595,7 +615,9 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         _MESSAGE_ID = messageId ?? MESSAGE_ID,
         _USER_DEFINED_PARAMETERS = userDefinedParameters ?? USER_DEFINED_PARAMETERS,
         _PROVENANCE = PROVENANCE,
-        _COV_REALISM = covRealism ?? COV_REALISM;
+        _COV_REALISM = covRealism ?? COV_REALISM,
+        _BTERM = BTERM,
+        _AGOM = AGOM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -634,7 +656,7 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_USER_DEFINED_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
     final int? COV_REALISMOffset = _COV_REALISM?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(45);
+    fbBuilder.startTable(47);
     fbBuilder.addFloat64(0, _CCSDS_OMM_VERS);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -680,6 +702,8 @@ class OMMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(42, USER_DEFINED_PARAMETERSOffset);
     fbBuilder.addOffset(43, PROVENANCEOffset);
     fbBuilder.addOffset(44, COV_REALISMOffset);
+    fbBuilder.addFloat64(45, _BTERM);
+    fbBuilder.addFloat64(46, _AGOM);
     return fbBuilder.endTable();
   }
 
