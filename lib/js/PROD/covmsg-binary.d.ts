@@ -1,4 +1,5 @@
 import { type Result } from './tokens.js';
+import { type Record } from './record.js';
 export declare const P6_LITTLE_ENDIAN = true;
 export declare const P6_MARKER_BYTES = 4;
 export declare const P6_HEADER_BYTES = 20;
@@ -25,4 +26,6 @@ export interface P6Message {
 }
 /** Reads a P6 message; refuses any deviation from the frozen layout. */
 export declare function readP6(bytes: Uint8Array): Result<P6Message>;
+/** P6 of a Record: the first epoch's covariance, state block in UVW; refuses a Record without the required fields. */
+export declare function writeP6(record: Record): Result<Uint8Array>;
 //# sourceMappingURL=covmsg-binary.d.ts.map
