@@ -84,6 +84,11 @@ table PVN {
   /// Number of source bytes SOURCE_SHA256 covers: the length of the prefix when
   /// the source was fetched by range. 0 when not stated.
   SOURCE_BYTES: uint64;
+  /// SHA-256 of the build of PRODUCER that made the product (its dist
+  /// module.wasm), 64 lowercase hexadecimal characters. Stamped by the host
+  /// that loaded the producing module: a module cannot hash its own bytes.
+  /// Empty when not stated.
+  PRODUCER_SHA256: string;
 }
 
 root_type PVN;

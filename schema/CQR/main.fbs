@@ -148,6 +148,19 @@ enum cqrVolumeAnchor : ubyte {
   BOTH = 3
 }
 
+/// One covariance-producing build whose covariance realism was verified. A
+/// collision probability uses AP covariance only when the covariance's PVN
+/// names a listed build.
+table CQRVerifiedCovarianceProducer {
+  /// PVN.PRODUCER verbatim: the module identifier and its version.
+  PRODUCER:string (required);
+  /// SHA-256 of the producing build's dist module.wasm, 64 lowercase
+  /// hexadecimal characters (PVN.PRODUCER_SHA256).
+  PRODUCER_SHA256:string (required);
+  /// Identifier of the record whose covariance realism E2E verified the build.
+  VERIFICATION_REFERENCE:string;
+}
+
 /// Explicit UTC search window and positive resolution, SI seconds/metres.
 table CQRScreeningControls {
   START_EPOCH:TIMInstant (required);
@@ -177,6 +190,9 @@ table CQRScreeningControls {
   /// BOTH tests each object's volume independently and admits their union.
   /// UNSPECIFIED is invalid; degenerate RTN axes are an error for non-spheres.
   VOLUME_CENTER:cqrVolumeAnchor = PRIMARY;
+  /// Builds whose AP covariance a collision probability may use. An empty or
+  /// absent list means no collision probability from AP covariance.
+  VERIFIED_COVARIANCE_PRODUCERS:[CQRVerifiedCovarianceProducer];
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
@@ -338,6 +354,10 @@ table CQREvent {
   /// Volume(s) containing the other object at TCA; BOTH means both tests passed.
   /// UNSPECIFIED means admission provenance was not reported.
   ADMITTED_BY:cqrVolumeAnchor = UNSPECIFIED;
+  /// Why PROBABILITY is absent for an event that carries covariance, for
+  /// example an AP covariance whose producer is not in
+  /// VERIFIED_COVARIANCE_PRODUCERS. Empty when no probability was refused.
+  PROBABILITY_REFUSAL:string;
 }
 
 table CQRScreeningStatistics {
