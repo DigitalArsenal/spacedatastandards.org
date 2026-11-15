@@ -13651,7 +13651,13 @@
                         "CloudOpticalDepth",
                         "CloudEffectiveRadius",
                         "CloudEmissivity",
-                        "AuroraProbability"
+                        "AuroraProbability",
+                        "CloudWaterMixingRatio",
+                        "CloudIceMixingRatio",
+                        "RainMixingRatio",
+                        "SnowMixingRatio",
+                        "GraupelMixingRatio",
+                        "RadarReflectivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -103672,7 +103678,13 @@
                         "CloudOpticalDepth",
                         "CloudEffectiveRadius",
                         "CloudEmissivity",
-                        "AuroraProbability"
+                        "AuroraProbability",
+                        "CloudWaterMixingRatio",
+                        "CloudIceMixingRatio",
+                        "RainMixingRatio",
+                        "SnowMixingRatio",
+                        "GraupelMixingRatio",
+                        "RadarReflectivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -129688,7 +129700,13 @@
                         "CloudOpticalDepth",
                         "CloudEffectiveRadius",
                         "CloudEmissivity",
-                        "AuroraProbability"
+                        "AuroraProbability",
+                        "CloudWaterMixingRatio",
+                        "CloudIceMixingRatio",
+                        "RainMixingRatio",
+                        "SnowMixingRatio",
+                        "GraupelMixingRatio",
+                        "RadarReflectivity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -324381,7 +324399,13 @@
                         "CloudOpticalDepth",
                         "CloudEffectiveRadius",
                         "CloudEmissivity",
-                        "AuroraProbability"
+                        "AuroraProbability",
+                        "CloudWaterMixingRatio",
+                        "CloudIceMixingRatio",
+                        "RainMixingRatio",
+                        "SnowMixingRatio",
+                        "GraupelMixingRatio",
+                        "RadarReflectivity"
                     ]
                 },
                 "wxfLevelKind": {

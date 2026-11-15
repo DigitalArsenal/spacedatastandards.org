@@ -107,6 +107,28 @@ const (
 	wxfVariableCloudEmissivity                       wxfVariable = 37
 	/// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
 	wxfVariableAuroraProbability                     wxfVariable = 38
+	/// Cloud liquid water mixing ratio: mass of cloud liquid water per mass of
+	/// moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category
+	/// 1, number 22), as GFS and HRRR publish on pressure levels.
+	wxfVariableCloudWaterMixingRatio                 wxfVariable = 39
+	/// Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg
+	/// (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as
+	/// GFS and HRRR publish on pressure levels.
+	wxfVariableCloudIceMixingRatio                   wxfVariable = 40
+	/// Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units
+	/// "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).
+	wxfVariableRainMixingRatio                       wxfVariable = 41
+	/// Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units
+	/// "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).
+	wxfVariableSnowMixingRatio                       wxfVariable = 42
+	/// Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg
+	/// (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).
+	wxfVariableGraupelMixingRatio                    wxfVariable = 43
+	/// Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a
+	/// radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD
+	/// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
+	/// EntireAtmosphere). VARIABLE_NAME says which.
+	wxfVariableRadarReflectivity                     wxfVariable = 44
 )
 
 var EnumNameswxfVariable = map[wxfVariable]string{
@@ -149,6 +171,12 @@ var EnumNameswxfVariable = map[wxfVariable]string{
 	wxfVariableCloudEffectiveRadius:                  "CloudEffectiveRadius",
 	wxfVariableCloudEmissivity:                       "CloudEmissivity",
 	wxfVariableAuroraProbability:                     "AuroraProbability",
+	wxfVariableCloudWaterMixingRatio:                 "CloudWaterMixingRatio",
+	wxfVariableCloudIceMixingRatio:                   "CloudIceMixingRatio",
+	wxfVariableRainMixingRatio:                       "RainMixingRatio",
+	wxfVariableSnowMixingRatio:                       "SnowMixingRatio",
+	wxfVariableGraupelMixingRatio:                    "GraupelMixingRatio",
+	wxfVariableRadarReflectivity:                     "RadarReflectivity",
 }
 
 var EnumValueswxfVariable = map[string]wxfVariable{
@@ -191,6 +219,12 @@ var EnumValueswxfVariable = map[string]wxfVariable{
 	"CloudEffectiveRadius":                  wxfVariableCloudEffectiveRadius,
 	"CloudEmissivity":                       wxfVariableCloudEmissivity,
 	"AuroraProbability":                     wxfVariableAuroraProbability,
+	"CloudWaterMixingRatio":                 wxfVariableCloudWaterMixingRatio,
+	"CloudIceMixingRatio":                   wxfVariableCloudIceMixingRatio,
+	"RainMixingRatio":                       wxfVariableRainMixingRatio,
+	"SnowMixingRatio":                       wxfVariableSnowMixingRatio,
+	"GraupelMixingRatio":                    wxfVariableGraupelMixingRatio,
+	"RadarReflectivity":                     wxfVariableRadarReflectivity,
 }
 
 func (v wxfVariable) String() string {

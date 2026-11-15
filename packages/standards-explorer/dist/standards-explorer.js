@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.279.0+1793905746591",
+  version: "1.281.0+1794753248859",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
@@ -13166,8 +13166,8 @@ file_identifier "$RDM";`,
       ]
     },
     WXF: {
-      IDL: `// Hash: c55cd2e08ef6d9155394a1dc6c9c6babe9ceaffd811a057cc63f76c955bb7ce0
-// Version: 1.208.6
+      IDL: `// Hash: 69c52760fa2b36b6a7d272f07177d8181584d44534835afd306eb7f51742fc4b
+// Version: 1.208.8
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -13337,7 +13337,29 @@ enum wxfVariable : byte {
   /// Cloud-top emissivity at CHANNEL_WAVELENGTH_UM, [0, 1].
   CloudEmissivity,
   /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
-  AuroraProbability
+  AuroraProbability,
+  /// Cloud liquid water mixing ratio: mass of cloud liquid water per mass of
+  /// moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category
+  /// 1, number 22), as GFS and HRRR publish on pressure levels.
+  CloudWaterMixingRatio,
+  /// Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg
+  /// (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as
+  /// GFS and HRRR publish on pressure levels.
+  CloudIceMixingRatio,
+  /// Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units
+  /// "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).
+  RainMixingRatio,
+  /// Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units
+  /// "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).
+  SnowMixingRatio,
+  /// Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg
+  /// (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).
+  GraupelMixingRatio,
+  /// Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a
+  /// radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD
+  /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
+  /// EntireAtmosphere). VARIABLE_NAME says which.
+  RadarReflectivity
 }
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -48243,7 +48265,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ]
         },
         wxfLevelKind: {
@@ -138442,7 +138470,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ]
         },
         wxfLevelKind: {
@@ -164486,7 +164520,13 @@ stated.`
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ]
         },
         wxfLevelKind: {
@@ -359454,7 +359494,13 @@ empty = the provider's native frame.`
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ]
         },
         wxfLevelKind: {
@@ -404161,7 +404207,13 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -404321,6 +404373,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             AuroraProbability: {
               value: 38,
               description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+            },
+            CloudWaterMixingRatio: {
+              value: 39,
+              description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+            },
+            CloudIceMixingRatio: {
+              value: 40,
+              description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+            },
+            RainMixingRatio: {
+              value: 41,
+              description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+            },
+            SnowMixingRatio: {
+              value: 42,
+              description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+            },
+            GraupelMixingRatio: {
+              value: 43,
+              description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+            },
+            RadarReflectivity: {
+              value: 44,
+              description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
             }
           }
         },
@@ -405040,6 +405116,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 AuroraProbability: {
                   value: 38,
                   description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+                },
+                CloudWaterMixingRatio: {
+                  value: 39,
+                  description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+                },
+                CloudIceMixingRatio: {
+                  value: 40,
+                  description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+                },
+                RainMixingRatio: {
+                  value: 41,
+                  description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+                },
+                SnowMixingRatio: {
+                  value: 42,
+                  description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+                },
+                GraupelMixingRatio: {
+                  value: 43,
+                  description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+                },
+                RadarReflectivity: {
+                  value: 44,
+                  description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -621681,7 +621781,13 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -621841,6 +621947,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             AuroraProbability: {
               value: 38,
               description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+            },
+            CloudWaterMixingRatio: {
+              value: 39,
+              description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+            },
+            CloudIceMixingRatio: {
+              value: 40,
+              description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+            },
+            RainMixingRatio: {
+              value: 41,
+              description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+            },
+            SnowMixingRatio: {
+              value: 42,
+              description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+            },
+            GraupelMixingRatio: {
+              value: 43,
+              description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+            },
+            RadarReflectivity: {
+              value: 44,
+              description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
             }
           }
         },
@@ -622414,6 +622544,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 AuroraProbability: {
                   value: 38,
                   description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+                },
+                CloudWaterMixingRatio: {
+                  value: 39,
+                  description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+                },
+                CloudIceMixingRatio: {
+                  value: 40,
+                  description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+                },
+                RainMixingRatio: {
+                  value: 41,
+                  description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+                },
+                SnowMixingRatio: {
+                  value: 42,
+                  description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+                },
+                GraupelMixingRatio: {
+                  value: 43,
+                  description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+                },
+                RadarReflectivity: {
+                  value: 44,
+                  description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -689383,7 +689537,13 @@ stated.`,
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -689543,6 +689703,30 @@ stated.`,
             AuroraProbability: {
               value: 38,
               description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+            },
+            CloudWaterMixingRatio: {
+              value: 39,
+              description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+            },
+            CloudIceMixingRatio: {
+              value: 40,
+              description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+            },
+            RainMixingRatio: {
+              value: 41,
+              description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+            },
+            SnowMixingRatio: {
+              value: 42,
+              description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+            },
+            GraupelMixingRatio: {
+              value: 43,
+              description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+            },
+            RadarReflectivity: {
+              value: 44,
+              description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
             }
           }
         },
@@ -764582,6 +764766,30 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 AuroraProbability: {
                   value: 38,
                   description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+                },
+                CloudWaterMixingRatio: {
+                  value: 39,
+                  description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+                },
+                CloudIceMixingRatio: {
+                  value: 40,
+                  description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+                },
+                RainMixingRatio: {
+                  value: 41,
+                  description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+                },
+                SnowMixingRatio: {
+                  value: 42,
+                  description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+                },
+                GraupelMixingRatio: {
+                  value: 43,
+                  description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+                },
+                RadarReflectivity: {
+                  value: 44,
+                  description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -1097374,7 +1097582,13 @@ empty = the provider's native frame.`,
             "CloudOpticalDepth",
             "CloudEffectiveRadius",
             "CloudEmissivity",
-            "AuroraProbability"
+            "AuroraProbability",
+            "CloudWaterMixingRatio",
+            "CloudIceMixingRatio",
+            "RainMixingRatio",
+            "SnowMixingRatio",
+            "GraupelMixingRatio",
+            "RadarReflectivity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -1097534,6 +1097748,30 @@ empty = the provider's native frame.`,
             AuroraProbability: {
               value: 38,
               description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+            },
+            CloudWaterMixingRatio: {
+              value: 39,
+              description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+            },
+            CloudIceMixingRatio: {
+              value: 40,
+              description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+            },
+            RainMixingRatio: {
+              value: 41,
+              description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+            },
+            SnowMixingRatio: {
+              value: 42,
+              description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+            },
+            GraupelMixingRatio: {
+              value: 43,
+              description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+            },
+            RadarReflectivity: {
+              value: 44,
+              description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
             }
           }
         },
@@ -1098320,6 +1098558,30 @@ empty = the provider's native frame.`,
                 AuroraProbability: {
                   value: 38,
                   description: "Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime)."
+                },
+                CloudWaterMixingRatio: {
+                  value: 39,
+                  description: 'Cloud liquid water mixing ratio: mass of cloud liquid water per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category 1, number 22), as GFS and HRRR publish on pressure levels.'
+                },
+                CloudIceMixingRatio: {
+                  value: 40,
+                  description: 'Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as GFS and HRRR publish on pressure levels.'
+                },
+                RainMixingRatio: {
+                  value: 41,
+                  description: 'Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).'
+                },
+                SnowMixingRatio: {
+                  value: 42,
+                  description: 'Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).'
+                },
+                GraupelMixingRatio: {
+                  value: 43,
+                  description: 'Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).'
+                },
+                RadarReflectivity: {
+                  value: 44,
+                  description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -1100175,7 +1100437,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {
