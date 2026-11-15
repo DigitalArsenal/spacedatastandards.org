@@ -304,11 +304,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfMemberKind {}
 pub const ENUM_MIN_WXF_VARIABLE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_VARIABLE: i8 = 38;
+pub const ENUM_MAX_WXF_VARIABLE: i8 = 44;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 39] = [
+pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 45] = [
     wxfVariable::Unspecified,
     wxfVariable::Temperature2m,
     wxfVariable::DewpointTemperature2m,
@@ -348,6 +348,12 @@ pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 39] = [
     wxfVariable::CloudEffectiveRadius,
     wxfVariable::CloudEmissivity,
     wxfVariable::AuroraProbability,
+    wxfVariable::CloudWaterMixingRatio,
+    wxfVariable::CloudIceMixingRatio,
+    wxfVariable::RainMixingRatio,
+    wxfVariable::SnowMixingRatio,
+    wxfVariable::GraupelMixingRatio,
+    wxfVariable::RadarReflectivity,
 ];
 
 /// Meteorological variable carried by the field. Append new values only;
@@ -456,9 +462,31 @@ impl wxfVariable {
     pub const CloudEmissivity: Self = Self(37);
     /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
     pub const AuroraProbability: Self = Self(38);
+    /// Cloud liquid water mixing ratio: mass of cloud liquid water per mass of
+    /// moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category
+    /// 1, number 22), as GFS and HRRR publish on pressure levels.
+    pub const CloudWaterMixingRatio: Self = Self(39);
+    /// Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg
+    /// (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as
+    /// GFS and HRRR publish on pressure levels.
+    pub const CloudIceMixingRatio: Self = Self(40);
+    /// Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units
+    /// "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).
+    pub const RainMixingRatio: Self = Self(41);
+    /// Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units
+    /// "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).
+    pub const SnowMixingRatio: Self = Self(42);
+    /// Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg
+    /// (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).
+    pub const GraupelMixingRatio: Self = Self(43);
+    /// Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a
+    /// radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD
+    /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
+    /// EntireAtmosphere). VARIABLE_NAME says which.
+    pub const RadarReflectivity: Self = Self(44);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 38;
+    pub const ENUM_MAX: i8 = 44;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Temperature2m,
@@ -499,6 +527,12 @@ impl wxfVariable {
         Self::CloudEffectiveRadius,
         Self::CloudEmissivity,
         Self::AuroraProbability,
+        Self::CloudWaterMixingRatio,
+        Self::CloudIceMixingRatio,
+        Self::RainMixingRatio,
+        Self::SnowMixingRatio,
+        Self::GraupelMixingRatio,
+        Self::RadarReflectivity,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -543,6 +577,12 @@ impl wxfVariable {
             Self::CloudEffectiveRadius => Some("CloudEffectiveRadius"),
             Self::CloudEmissivity => Some("CloudEmissivity"),
             Self::AuroraProbability => Some("AuroraProbability"),
+            Self::CloudWaterMixingRatio => Some("CloudWaterMixingRatio"),
+            Self::CloudIceMixingRatio => Some("CloudIceMixingRatio"),
+            Self::RainMixingRatio => Some("RainMixingRatio"),
+            Self::SnowMixingRatio => Some("SnowMixingRatio"),
+            Self::GraupelMixingRatio => Some("GraupelMixingRatio"),
+            Self::RadarReflectivity => Some("RadarReflectivity"),
             _ => None,
         }
     }

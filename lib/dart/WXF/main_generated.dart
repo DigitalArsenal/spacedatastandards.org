@@ -167,7 +167,13 @@ enum wxfVariable {
   CloudOpticalDepth(35),
   CloudEffectiveRadius(36),
   CloudEmissivity(37),
-  AuroraProbability(38);
+  AuroraProbability(38),
+  CloudWaterMixingRatio(39),
+  CloudIceMixingRatio(40),
+  RainMixingRatio(41),
+  SnowMixingRatio(42),
+  GraupelMixingRatio(43),
+  RadarReflectivity(44);
 
   final int value;
   const wxfVariable(this.value);
@@ -213,6 +219,12 @@ enum wxfVariable {
       case 36: return wxfVariable.CloudEffectiveRadius;
       case 37: return wxfVariable.CloudEmissivity;
       case 38: return wxfVariable.AuroraProbability;
+      case 39: return wxfVariable.CloudWaterMixingRatio;
+      case 40: return wxfVariable.CloudIceMixingRatio;
+      case 41: return wxfVariable.RainMixingRatio;
+      case 42: return wxfVariable.SnowMixingRatio;
+      case 43: return wxfVariable.GraupelMixingRatio;
+      case 44: return wxfVariable.RadarReflectivity;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -221,7 +233,7 @@ enum wxfVariable {
       value == null ? null : wxfVariable.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 38;
+  static const int maxValue = 44;
   static const fb.Reader<wxfVariable> reader = _wxfVariableReader();
 }
 

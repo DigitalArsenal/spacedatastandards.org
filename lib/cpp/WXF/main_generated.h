@@ -271,11 +271,33 @@ enum wxfVariable : int8_t {
   wxfVariable_CloudEmissivity = 37,
   /// Probability of visible aurora, percent 0 to 100 (e.g. OVATION Prime).
   wxfVariable_AuroraProbability = 38,
+  /// Cloud liquid water mixing ratio: mass of cloud liquid water per mass of
+  /// moist air, kg/kg (units "kg kg-1"). GRIB2 CLMR (discipline 0, category
+  /// 1, number 22), as GFS and HRRR publish on pressure levels.
+  wxfVariable_CloudWaterMixingRatio = 39,
+  /// Cloud ice mixing ratio: mass of cloud ice per mass of moist air, kg/kg
+  /// (units "kg kg-1"). GRIB2 ICMR (discipline 0, category 1, number 23), as
+  /// GFS and HRRR publish on pressure levels.
+  wxfVariable_CloudIceMixingRatio = 40,
+  /// Rain mixing ratio: mass of rain per mass of moist air, kg/kg (units
+  /// "kg kg-1"). GRIB2 RWMR (discipline 0, category 1, number 24).
+  wxfVariable_RainMixingRatio = 41,
+  /// Snow mixing ratio: mass of snow per mass of moist air, kg/kg (units
+  /// "kg kg-1"). GRIB2 SNMR (discipline 0, category 1, number 25).
+  wxfVariable_SnowMixingRatio = 42,
+  /// Graupel mixing ratio: mass of graupel per mass of moist air, kg/kg
+  /// (units "kg kg-1"). GRIB2 GRLE (discipline 0, category 1, number 32).
+  wxfVariable_GraupelMixingRatio = 43,
+  /// Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a
+  /// radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD
+  /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
+  /// EntireAtmosphere). VARIABLE_NAME says which.
+  wxfVariable_RadarReflectivity = 44,
   wxfVariable_MIN = wxfVariable_Unspecified,
-  wxfVariable_MAX = wxfVariable_AuroraProbability
+  wxfVariable_MAX = wxfVariable_RadarReflectivity
 };
 
-inline const wxfVariable (&EnumValueswxfVariable())[39] {
+inline const wxfVariable (&EnumValueswxfVariable())[45] {
   static const wxfVariable values[] = {
     wxfVariable_Unspecified,
     wxfVariable_Temperature2m,
@@ -315,13 +337,19 @@ inline const wxfVariable (&EnumValueswxfVariable())[39] {
     wxfVariable_CloudOpticalDepth,
     wxfVariable_CloudEffectiveRadius,
     wxfVariable_CloudEmissivity,
-    wxfVariable_AuroraProbability
+    wxfVariable_AuroraProbability,
+    wxfVariable_CloudWaterMixingRatio,
+    wxfVariable_CloudIceMixingRatio,
+    wxfVariable_RainMixingRatio,
+    wxfVariable_SnowMixingRatio,
+    wxfVariable_GraupelMixingRatio,
+    wxfVariable_RadarReflectivity
   };
   return values;
 }
 
 inline const char * const *EnumNameswxfVariable() {
-  static const char * const names[40] = {
+  static const char * const names[46] = {
     "Unspecified",
     "Temperature2m",
     "DewpointTemperature2m",
@@ -361,13 +389,19 @@ inline const char * const *EnumNameswxfVariable() {
     "CloudEffectiveRadius",
     "CloudEmissivity",
     "AuroraProbability",
+    "CloudWaterMixingRatio",
+    "CloudIceMixingRatio",
+    "RainMixingRatio",
+    "SnowMixingRatio",
+    "GraupelMixingRatio",
+    "RadarReflectivity",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamewxfVariable(wxfVariable e) {
-  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_AuroraProbability)) return "";
+  if (::flatbuffers::IsOutRange(e, wxfVariable_Unspecified, wxfVariable_RadarReflectivity)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameswxfVariable()[index];
 }
