@@ -304,11 +304,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for wxfMemberKind {}
 pub const ENUM_MIN_WXF_VARIABLE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_WXF_VARIABLE: i8 = 44;
+pub const ENUM_MAX_WXF_VARIABLE: i8 = 48;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 45] = [
+pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 49] = [
     wxfVariable::Unspecified,
     wxfVariable::Temperature2m,
     wxfVariable::DewpointTemperature2m,
@@ -354,6 +354,10 @@ pub const ENUM_VALUES_WXF_VARIABLE: [wxfVariable; 45] = [
     wxfVariable::SnowMixingRatio,
     wxfVariable::GraupelMixingRatio,
     wxfVariable::RadarReflectivity,
+    wxfVariable::LightningFlashDensity,
+    wxfVariable::UpdraftHelicity,
+    wxfVariable::MaximumHailDiameter,
+    wxfVariable::StormRelativeHelicity,
 ];
 
 /// Meteorological variable carried by the field. Append new values only;
@@ -484,9 +488,27 @@ impl wxfVariable {
     /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
     /// EntireAtmosphere). VARIABLE_NAME says which.
     pub const RadarReflectivity: Self = Self(44);
+    /// Lightning flashes per unit area per unit time, counted at each flash's
+    /// centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units
+    /// "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND
+    /// EntireAtmosphere.
+    pub const LightningFlashDensity: Self = Self(45);
+    /// Updraft helicity: vertical velocity times vertical vorticity integrated
+    /// over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km
+    /// unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is
+    /// its maximum over ACCUMULATION_HOURS.
+    pub const UpdraftHelicity: Self = Self(46);
+    /// Largest hail diameter in the column, metres (units "m"): a model's
+    /// diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at
+    /// LEVEL_KIND EntireAtmosphere unless the producer says otherwise.
+    pub const MaximumHailDiameter: Self = Self(47);
+    /// Storm-relative helicity over a layer above ground, m2/s2 (units
+    /// "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g.
+    /// "HLCY 0-3000 m").
+    pub const StormRelativeHelicity: Self = Self(48);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 44;
+    pub const ENUM_MAX: i8 = 48;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Temperature2m,
@@ -533,6 +555,10 @@ impl wxfVariable {
         Self::SnowMixingRatio,
         Self::GraupelMixingRatio,
         Self::RadarReflectivity,
+        Self::LightningFlashDensity,
+        Self::UpdraftHelicity,
+        Self::MaximumHailDiameter,
+        Self::StormRelativeHelicity,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -583,6 +609,10 @@ impl wxfVariable {
             Self::SnowMixingRatio => Some("SnowMixingRatio"),
             Self::GraupelMixingRatio => Some("GraupelMixingRatio"),
             Self::RadarReflectivity => Some("RadarReflectivity"),
+            Self::LightningFlashDensity => Some("LightningFlashDensity"),
+            Self::UpdraftHelicity => Some("UpdraftHelicity"),
+            Self::MaximumHailDiameter => Some("MaximumHailDiameter"),
+            Self::StormRelativeHelicity => Some("StormRelativeHelicity"),
             _ => None,
         }
     }

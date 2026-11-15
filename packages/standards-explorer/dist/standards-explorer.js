@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.281.0+1794753248859",
+  version: "1.282.0+1794755039602",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
@@ -13166,8 +13166,8 @@ file_identifier "$RDM";`,
       ]
     },
     WXF: {
-      IDL: `// Hash: 69c52760fa2b36b6a7d272f07177d8181584d44534835afd306eb7f51742fc4b
-// Version: 1.208.8
+      IDL: `// Hash: 7e9d061edcdcc7f2c9c48b3998100f2d823d503593d0ed001708551cee436196
+// Version: 1.208.9
 // -----------------------------------END_HEADER
 /// Weather Forecast Field (WXF)
 /// Description
@@ -13359,7 +13359,25 @@ enum wxfVariable : byte {
   /// radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD
   /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
   /// EntireAtmosphere). VARIABLE_NAME says which.
-  RadarReflectivity
+  RadarReflectivity,
+  /// Lightning flashes per unit area per unit time, counted at each flash's
+  /// centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units
+  /// "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND
+  /// EntireAtmosphere.
+  LightningFlashDensity,
+  /// Updraft helicity: vertical velocity times vertical vorticity integrated
+  /// over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km
+  /// unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is
+  /// its maximum over ACCUMULATION_HOURS.
+  UpdraftHelicity,
+  /// Largest hail diameter in the column, metres (units "m"): a model's
+  /// diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at
+  /// LEVEL_KIND EntireAtmosphere unless the producer says otherwise.
+  MaximumHailDiameter,
+  /// Storm-relative helicity over a layer above ground, m2/s2 (units
+  /// "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g.
+  /// "HLCY 0-3000 m").
+  StormRelativeHelicity
 }
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
@@ -48271,7 +48289,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ]
         },
         wxfLevelKind: {
@@ -138476,7 +138498,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ]
         },
         wxfLevelKind: {
@@ -164526,7 +164552,11 @@ stated.`
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ]
         },
         wxfLevelKind: {
@@ -359500,7 +359530,11 @@ empty = the provider's native frame.`
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ]
         },
         wxfLevelKind: {
@@ -404213,7 +404247,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -404397,6 +404435,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RadarReflectivity: {
               value: 44,
               description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+            },
+            LightningFlashDensity: {
+              value: 45,
+              description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+            },
+            UpdraftHelicity: {
+              value: 46,
+              description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+            },
+            MaximumHailDiameter: {
+              value: 47,
+              description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+            },
+            StormRelativeHelicity: {
+              value: 48,
+              description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
             }
           }
         },
@@ -405140,6 +405194,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 RadarReflectivity: {
                   value: 44,
                   description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+                },
+                LightningFlashDensity: {
+                  value: 45,
+                  description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+                },
+                UpdraftHelicity: {
+                  value: 46,
+                  description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+                },
+                MaximumHailDiameter: {
+                  value: 47,
+                  description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+                },
+                StormRelativeHelicity: {
+                  value: 48,
+                  description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -621787,7 +621857,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -621971,6 +622045,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RadarReflectivity: {
               value: 44,
               description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+            },
+            LightningFlashDensity: {
+              value: 45,
+              description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+            },
+            UpdraftHelicity: {
+              value: 46,
+              description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+            },
+            MaximumHailDiameter: {
+              value: 47,
+              description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+            },
+            StormRelativeHelicity: {
+              value: 48,
+              description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
             }
           }
         },
@@ -622568,6 +622658,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 RadarReflectivity: {
                   value: 44,
                   description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+                },
+                LightningFlashDensity: {
+                  value: 45,
+                  description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+                },
+                UpdraftHelicity: {
+                  value: 46,
+                  description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+                },
+                MaximumHailDiameter: {
+                  value: 47,
+                  description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+                },
+                StormRelativeHelicity: {
+                  value: 48,
+                  description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -689543,7 +689649,11 @@ stated.`,
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -689727,6 +689837,22 @@ stated.`,
             RadarReflectivity: {
               value: 44,
               description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+            },
+            LightningFlashDensity: {
+              value: 45,
+              description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+            },
+            UpdraftHelicity: {
+              value: 46,
+              description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+            },
+            MaximumHailDiameter: {
+              value: 47,
+              description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+            },
+            StormRelativeHelicity: {
+              value: 48,
+              description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
             }
           }
         },
@@ -764790,6 +764916,22 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 RadarReflectivity: {
                   value: 44,
                   description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+                },
+                LightningFlashDensity: {
+                  value: 45,
+                  description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+                },
+                UpdraftHelicity: {
+                  value: 46,
+                  description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+                },
+                MaximumHailDiameter: {
+                  value: 47,
+                  description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+                },
+                StormRelativeHelicity: {
+                  value: 48,
+                  description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -1097588,7 +1097730,11 @@ empty = the provider's native frame.`,
             "RainMixingRatio",
             "SnowMixingRatio",
             "GraupelMixingRatio",
-            "RadarReflectivity"
+            "RadarReflectivity",
+            "LightningFlashDensity",
+            "UpdraftHelicity",
+            "MaximumHailDiameter",
+            "StormRelativeHelicity"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -1097772,6 +1097918,22 @@ empty = the provider's native frame.`,
             RadarReflectivity: {
               value: 44,
               description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+            },
+            LightningFlashDensity: {
+              value: 45,
+              description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+            },
+            UpdraftHelicity: {
+              value: 46,
+              description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+            },
+            MaximumHailDiameter: {
+              value: 47,
+              description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+            },
+            StormRelativeHelicity: {
+              value: 48,
+              description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
             }
           }
         },
@@ -1098582,6 +1098744,22 @@ empty = the provider's native frame.`,
                 RadarReflectivity: {
                   value: 44,
                   description: 'Equivalent radar reflectivity factor, dBZ (units "dBZ"), observed by a radar or simulated by a model from its hydrometeors (NCEP GRIB2 REFD 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND EntireAtmosphere). VARIABLE_NAME says which.'
+                },
+                LightningFlashDensity: {
+                  value: 45,
+                  description: `Lightning flashes per unit area per unit time, counted at each flash's centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND EntireAtmosphere.`
+                },
+                UpdraftHelicity: {
+                  value: 46,
+                  description: 'Updraft helicity: vertical velocity times vertical vorticity integrated over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is its maximum over ACCUMULATION_HOURS.'
+                },
+                MaximumHailDiameter: {
+                  value: 47,
+                  description: `Largest hail diameter in the column, metres (units "m"): a model's diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at LEVEL_KIND EntireAtmosphere unless the producer says otherwise.`
+                },
+                StormRelativeHelicity: {
+                  value: 48,
+                  description: 'Storm-relative helicity over a layer above ground, m2/s2 (units "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g. "HLCY 0-3000 m").'
                 }
               },
               "x-flatbuffer-default": "Unspecified"
