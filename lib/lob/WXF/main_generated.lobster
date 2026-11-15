@@ -189,6 +189,24 @@ enum wxfVariable:
     /// 0/16/195 on a level; REFC 0/16/196 is the column maximum, at LEVEL_KIND
     /// EntireAtmosphere). VARIABLE_NAME says which.
     wxfVariable_RadarReflectivity = 44
+    /// Lightning flashes per unit area per unit time, counted at each flash's
+    /// centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units
+    /// "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND
+    /// EntireAtmosphere.
+    wxfVariable_LightningFlashDensity = 45
+    /// Updraft helicity: vertical velocity times vertical vorticity integrated
+    /// over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km
+    /// unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is
+    /// its maximum over ACCUMULATION_HOURS.
+    wxfVariable_UpdraftHelicity = 46
+    /// Largest hail diameter in the column, metres (units "m"): a model's
+    /// diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at
+    /// LEVEL_KIND EntireAtmosphere unless the producer says otherwise.
+    wxfVariable_MaximumHailDiameter = 47
+    /// Storm-relative helicity over a layer above ground, m2/s2 (units
+    /// "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g.
+    /// "HLCY 0-3000 m").
+    wxfVariable_StormRelativeHelicity = 48
 
 /// Vertical coordinate of the field. Append new values only; never reorder or
 /// reuse existing values.

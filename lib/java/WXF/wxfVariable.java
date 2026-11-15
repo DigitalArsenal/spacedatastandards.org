@@ -217,8 +217,34 @@ public final class wxfVariable {
    * EntireAtmosphere). VARIABLE_NAME says which.
    */
   public static final byte RadarReflectivity = 44;
+  /**
+   * Lightning flashes per unit area per unit time, counted at each flash's
+   * centroid over ACCUMULATION_HOURS ending at VALID_TIME_MS (units
+   * "km-2 min-1"; e.g. GOES GLM L2 LCFA flashes gridded), at LEVEL_KIND
+   * EntireAtmosphere.
+   */
+  public static final byte LightningFlashDensity = 45;
+  /**
+   * Updraft helicity: vertical velocity times vertical vorticity integrated
+   * over a layer above ground, m2/s2 (units "m2 s-2"); the layer is 2-5 km
+   * unless VARIABLE_NAME says otherwise. HRRR MXUPHL (NCEP local 0/7/199) is
+   * its maximum over ACCUMULATION_HOURS.
+   */
+  public static final byte UpdraftHelicity = 46;
+  /**
+   * Largest hail diameter in the column, metres (units "m"): a model's
+   * diagnosis (HRRR HAIL, GRIB2 0/1/31) or a radar estimate (MESH), at
+   * LEVEL_KIND EntireAtmosphere unless the producer says otherwise.
+   */
+  public static final byte MaximumHailDiameter = 47;
+  /**
+   * Storm-relative helicity over a layer above ground, m2/s2 (units
+   * "m2 s-2"; GRIB2 HLCY 0/7/8); the layer is in VARIABLE_NAME (e.g.
+   * "HLCY 0-3000 m").
+   */
+  public static final byte StormRelativeHelicity = 48;
 
-  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", "AuroraProbability", "CloudWaterMixingRatio", "CloudIceMixingRatio", "RainMixingRatio", "SnowMixingRatio", "GraupelMixingRatio", "RadarReflectivity", };
+  public static final String[] names = { "Unspecified", "Temperature2m", "DewpointTemperature2m", "WindU10m", "WindV10m", "WindSpeed10m", "WindU100m", "WindV100m", "WindSpeed100m", "MeanSeaLevelPressure", "SeaSurfaceTemperature", "TotalCloudCover", "HighCloudCover", "MediumCloudCover", "LowCloudCover", "SurfaceSolarRadiationDownwards", "TotalSkyDirectSolarRadiationAtSurface", "TotalPrecipitation", "TotalPrecipitationSatelliteBlended", "TotalPrecipitationExperimental", "Geopotential", "Temperature", "SpecificHumidity", "WindU", "WindV", "VerticalVelocity", "PrecipitationRate", "RelativeHumidity", "TotalColumnWaterVapour", "SurfacePressure", "GeopotentialHeight", "BrightnessTemperature", "Reflectance", "CloudMask", "CloudPhase", "CloudOpticalDepth", "CloudEffectiveRadius", "CloudEmissivity", "AuroraProbability", "CloudWaterMixingRatio", "CloudIceMixingRatio", "RainMixingRatio", "SnowMixingRatio", "GraupelMixingRatio", "RadarReflectivity", "LightningFlashDensity", "UpdraftHelicity", "MaximumHailDiameter", "StormRelativeHelicity", };
 
   public static String name(int e) { return names[e]; }
 }

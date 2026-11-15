@@ -13657,7 +13657,11 @@
                         "RainMixingRatio",
                         "SnowMixingRatio",
                         "GraupelMixingRatio",
-                        "RadarReflectivity"
+                        "RadarReflectivity",
+                        "LightningFlashDensity",
+                        "UpdraftHelicity",
+                        "MaximumHailDiameter",
+                        "StormRelativeHelicity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -103684,7 +103688,11 @@
                         "RainMixingRatio",
                         "SnowMixingRatio",
                         "GraupelMixingRatio",
-                        "RadarReflectivity"
+                        "RadarReflectivity",
+                        "LightningFlashDensity",
+                        "UpdraftHelicity",
+                        "MaximumHailDiameter",
+                        "StormRelativeHelicity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -129706,7 +129714,11 @@
                         "RainMixingRatio",
                         "SnowMixingRatio",
                         "GraupelMixingRatio",
-                        "RadarReflectivity"
+                        "RadarReflectivity",
+                        "LightningFlashDensity",
+                        "UpdraftHelicity",
+                        "MaximumHailDiameter",
+                        "StormRelativeHelicity"
                     ]
                 },
                 "wxfLevelKind": {
@@ -324405,7 +324417,11 @@
                         "RainMixingRatio",
                         "SnowMixingRatio",
                         "GraupelMixingRatio",
-                        "RadarReflectivity"
+                        "RadarReflectivity",
+                        "LightningFlashDensity",
+                        "UpdraftHelicity",
+                        "MaximumHailDiameter",
+                        "StormRelativeHelicity"
                     ]
                 },
                 "wxfLevelKind": {
