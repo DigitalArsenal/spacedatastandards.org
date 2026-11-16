@@ -70,8 +70,8 @@ public struct CLGInterval : IFlatbufferObject
   }
   public static Offset<CLGInterval> Pack(FlatBufferBuilder builder, CLGIntervalT _o) {
     if (_o == null) return default(Offset<CLGInterval>);
-    var _PAIR_INDEX_VALUE = _o.PAIRINDEX.VALUE;
-    var _PAIR_INDEX_HAS_VALUE = _o.PAIRINDEX.HASVALUE;
+    var _PAIR_INDEX_VALUE = _o.PAIR_INDEX.VALUE;
+    var _PAIR_INDEX_HAS_VALUE = _o.PAIR_INDEX.HASVALUE;
     var _START_BOUNDARY_INDEX_VALUE = _o.STARTBOUNDARYINDEX.VALUE;
     var _START_BOUNDARY_INDEX_HAS_VALUE = _o.STARTBOUNDARYINDEX.HASVALUE;
     var _STOP_BOUNDARY_INDEX_VALUE = _o.STOPBOUNDARYINDEX.VALUE;

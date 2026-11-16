@@ -50,10 +50,10 @@ public struct CLGPair : IFlatbufferObject
   }
   public static Offset<CLGPair> Pack(FlatBufferBuilder builder, CLGPairT _o) {
     if (_o == null) return default(Offset<CLGPair>);
-    var _TERMINAL_A_VALUE = _o.TERMINALA.VALUE;
-    var _TERMINAL_A_HAS_VALUE = _o.TERMINALA.HASVALUE;
-    var _TERMINAL_B_VALUE = _o.TERMINALB.VALUE;
-    var _TERMINAL_B_HAS_VALUE = _o.TERMINALB.HASVALUE;
+    var _TERMINAL_A_VALUE = _o.TERMINAL_A.VALUE;
+    var _TERMINAL_A_HAS_VALUE = _o.TERMINAL_A.HASVALUE;
+    var _TERMINAL_B_VALUE = _o.TERMINAL_B.VALUE;
+    var _TERMINAL_B_HAS_VALUE = _o.TERMINAL_B.HASVALUE;
     return CreateCLGPair(
       builder,
       _TERMINAL_A_VALUE,

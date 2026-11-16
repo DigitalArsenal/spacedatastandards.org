@@ -54,8 +54,8 @@ public struct CLGTransition : IFlatbufferObject
   }
   public static Offset<CLGTransition> Pack(FlatBufferBuilder builder, CLGTransitionT _o) {
     if (_o == null) return default(Offset<CLGTransition>);
-    var _LINK_INDEX_VALUE = _o.LINKINDEX.VALUE;
-    var _LINK_INDEX_HAS_VALUE = _o.LINKINDEX.HASVALUE;
+    var _LINK_INDEX_VALUE = _o.LINK_INDEX.VALUE;
+    var _LINK_INDEX_HAS_VALUE = _o.LINK_INDEX.HASVALUE;
     return CreateCLGTransition(
       builder,
       _o.TIME_S,

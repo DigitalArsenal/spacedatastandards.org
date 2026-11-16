@@ -46,12 +46,12 @@ public struct CLGLink : IFlatbufferObject
   }
   public static Offset<CLGLink> Pack(FlatBufferBuilder builder, CLGLinkT _o) {
     if (_o == null) return default(Offset<CLGLink>);
-    var _PAIR_INDEX_VALUE = _o.PAIRINDEX.VALUE;
-    var _PAIR_INDEX_HAS_VALUE = _o.PAIRINDEX.HASVALUE;
-    var _SLOT_A_VALUE = _o.SLOTA.VALUE;
-    var _SLOT_A_HAS_VALUE = _o.SLOTA.HASVALUE;
-    var _SLOT_B_VALUE = _o.SLOTB.VALUE;
-    var _SLOT_B_HAS_VALUE = _o.SLOTB.HASVALUE;
+    var _PAIR_INDEX_VALUE = _o.PAIR_INDEX.VALUE;
+    var _PAIR_INDEX_HAS_VALUE = _o.PAIR_INDEX.HASVALUE;
+    var _SLOT_A_VALUE = _o.SLOT_A.VALUE;
+    var _SLOT_A_HAS_VALUE = _o.SLOT_A.HASVALUE;
+    var _SLOT_B_VALUE = _o.SLOT_B.VALUE;
+    var _SLOT_B_HAS_VALUE = _o.SLOT_B.HASVALUE;
     return CreateCLGLink(
       builder,
       _PAIR_INDEX_VALUE,

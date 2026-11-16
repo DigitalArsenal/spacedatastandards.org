@@ -50,8 +50,8 @@ public struct CLGCause : IFlatbufferObject
   }
   public static Offset<CLGCause> Pack(FlatBufferBuilder builder, CLGCauseT _o) {
     if (_o == null) return default(Offset<CLGCause>);
-    var _BODY_INDEX_VALUE = _o.BODY_INDEX.VALUE;
-    var _BODY_INDEX_HAS_VALUE = _o.BODY_INDEX.HASVALUE;
+    var _BODY_INDEX_VALUE = _o.BODYINDEX.VALUE;
+    var _BODY_INDEX_HAS_VALUE = _o.BODYINDEX.HASVALUE;
     return CreateCLGCause(
       builder,
       _o.KIND,

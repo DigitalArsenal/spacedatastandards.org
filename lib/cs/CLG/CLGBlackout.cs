@@ -43,8 +43,8 @@ public struct CLGBlackout : IFlatbufferObject
   }
   public static Offset<CLGBlackout> Pack(FlatBufferBuilder builder, CLGBlackoutT _o) {
     if (_o == null) return default(Offset<CLGBlackout>);
-    var _TERMINAL_INDEX_VALUE = _o.TERMINALINDEX.VALUE;
-    var _TERMINAL_INDEX_HAS_VALUE = _o.TERMINALINDEX.HASVALUE;
+    var _TERMINAL_INDEX_VALUE = _o.TERMINAL_INDEX.VALUE;
+    var _TERMINAL_INDEX_HAS_VALUE = _o.TERMINAL_INDEX.HASVALUE;
     return CreateCLGBlackout(
       builder,
       _TERMINAL_INDEX_VALUE,
