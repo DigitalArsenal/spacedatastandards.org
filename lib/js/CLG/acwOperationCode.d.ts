@@ -1,0 +1,32 @@
+/**
+ * ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+ * Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+ * does not apply to ACW enumerations as a group.
+ */
+export declare enum acwOperationCode {
+    UNKNOWN = 0,
+    /**
+     * Compute access windows from pre-sampled target Cartesian states.
+     */
+    COMPUTE_ACCESS_WINDOWS = 1,
+    /**
+     * Simulate sensor observations of TARGETS by SENSORS: schedule tracks
+     * inside the ACCESS windows (computed per sensor and target by
+     * COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
+     * measurement from the
+     * truth states with its MEMErrorModel noise and bias, apply the detection
+     * test, and add false alarms. The observations are emitted as separate
+     * $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
+     * records; the result lists the tracks.
+     */
+    SIMULATE_OBSERVATIONS = 2,
+    /**
+     * Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+     */
+    COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY = 3,
+    /**
+     * Only runtime simulation operation in body-aware modules; body required.
+     */
+    SIMULATE_OBSERVATIONS_EXPLICIT_BODY = 4
+}
+//# sourceMappingURL=acwOperationCode.d.ts.map

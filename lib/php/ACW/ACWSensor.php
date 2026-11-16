@@ -116,7 +116,7 @@ class ACWSensor extends Table
     }
 
     /// Shortest time between the end of one track of a target and the start
-    /// of the next, seconds.
+    /// of the following, seconds.
     /**
      * @return double
      */
@@ -239,22 +239,158 @@ class ACWSensor extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_PHENOMENOLOGY()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_OBSERVATION_INTERVAL_S()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_TRACK_DURATION_S()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_REVISIT_INTERVAL_S()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MAX_SIMULTANEOUS_TRACKS()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_REFERENCE_SNR_DB()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_REFERENCE_RANGE_M()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_REFERENCE_RCS_M2()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_DETECTION_THRESHOLD_DB()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_RECEIVER_G_OVER_T_DB_PER_K()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_RECEIVER_BANDWIDTH_HZ()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_LIMITING_MAGNITUDE()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MAX_HOST_SUN_ELEVATION_RAD()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_FALSE_ALARM_RATE_PER_HOUR()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_TRANSMIT_FREQUENCY_HZ()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWSensor(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(34);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWSensor
      */
-    public static function createACWSensor(FlatBufferBuilder $builder, $SENSOR_ID, $HOST_ID, $PHENOMENOLOGY, $ERROR_MODELS, $CONSTRAINTS, $OBSERVATION_INTERVAL_S, $TRACK_DURATION_S, $REVISIT_INTERVAL_S, $MAX_SIMULTANEOUS_TRACKS, $REFERENCE_SNR_DB, $REFERENCE_RANGE_M, $REFERENCE_RCS_M2, $DETECTION_THRESHOLD_DB, $RECEIVER_G_OVER_T_DB_PER_K, $RECEIVER_BANDWIDTH_HZ, $LIMITING_MAGNITUDE, $MAX_HOST_SUN_ELEVATION_RAD, $FALSE_ALARM_RATE_PER_HOUR, $TRANSMIT_FREQUENCY_HZ)
+    public static function createACWSensor(FlatBufferBuilder $builder, $SENSOR_ID, $HOST_ID, $PHENOMENOLOGY, $ERROR_MODELS, $CONSTRAINTS, $OBSERVATION_INTERVAL_S, $TRACK_DURATION_S, $REVISIT_INTERVAL_S, $MAX_SIMULTANEOUS_TRACKS, $REFERENCE_SNR_DB, $REFERENCE_RANGE_M, $REFERENCE_RCS_M2, $DETECTION_THRESHOLD_DB, $RECEIVER_G_OVER_T_DB_PER_K, $RECEIVER_BANDWIDTH_HZ, $LIMITING_MAGNITUDE, $MAX_HOST_SUN_ELEVATION_RAD, $FALSE_ALARM_RATE_PER_HOUR, $TRANSMIT_FREQUENCY_HZ, $HAS_PHENOMENOLOGY, $HAS_OBSERVATION_INTERVAL_S, $HAS_TRACK_DURATION_S, $HAS_REVISIT_INTERVAL_S, $HAS_MAX_SIMULTANEOUS_TRACKS, $HAS_REFERENCE_SNR_DB, $HAS_REFERENCE_RANGE_M, $HAS_REFERENCE_RCS_M2, $HAS_DETECTION_THRESHOLD_DB, $HAS_RECEIVER_G_OVER_T_DB_PER_K, $HAS_RECEIVER_BANDWIDTH_HZ, $HAS_LIMITING_MAGNITUDE, $HAS_MAX_HOST_SUN_ELEVATION_RAD, $HAS_FALSE_ALARM_RATE_PER_HOUR, $HAS_TRANSMIT_FREQUENCY_HZ)
     {
-        $builder->startObject(19);
+        $builder->startObject(34);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addHOST_ID($builder, $HOST_ID);
         self::addPHENOMENOLOGY($builder, $PHENOMENOLOGY);
@@ -274,6 +410,21 @@ class ACWSensor extends Table
         self::addMAX_HOST_SUN_ELEVATION_RAD($builder, $MAX_HOST_SUN_ELEVATION_RAD);
         self::addFALSE_ALARM_RATE_PER_HOUR($builder, $FALSE_ALARM_RATE_PER_HOUR);
         self::addTRANSMIT_FREQUENCY_HZ($builder, $TRANSMIT_FREQUENCY_HZ);
+        self::addHAS_PHENOMENOLOGY($builder, $HAS_PHENOMENOLOGY);
+        self::addHAS_OBSERVATION_INTERVAL_S($builder, $HAS_OBSERVATION_INTERVAL_S);
+        self::addHAS_TRACK_DURATION_S($builder, $HAS_TRACK_DURATION_S);
+        self::addHAS_REVISIT_INTERVAL_S($builder, $HAS_REVISIT_INTERVAL_S);
+        self::addHAS_MAX_SIMULTANEOUS_TRACKS($builder, $HAS_MAX_SIMULTANEOUS_TRACKS);
+        self::addHAS_REFERENCE_SNR_DB($builder, $HAS_REFERENCE_SNR_DB);
+        self::addHAS_REFERENCE_RANGE_M($builder, $HAS_REFERENCE_RANGE_M);
+        self::addHAS_REFERENCE_RCS_M2($builder, $HAS_REFERENCE_RCS_M2);
+        self::addHAS_DETECTION_THRESHOLD_DB($builder, $HAS_DETECTION_THRESHOLD_DB);
+        self::addHAS_RECEIVER_G_OVER_T_DB_PER_K($builder, $HAS_RECEIVER_G_OVER_T_DB_PER_K);
+        self::addHAS_RECEIVER_BANDWIDTH_HZ($builder, $HAS_RECEIVER_BANDWIDTH_HZ);
+        self::addHAS_LIMITING_MAGNITUDE($builder, $HAS_LIMITING_MAGNITUDE);
+        self::addHAS_MAX_HOST_SUN_ELEVATION_RAD($builder, $HAS_MAX_HOST_SUN_ELEVATION_RAD);
+        self::addHAS_FALSE_ALARM_RATE_PER_HOUR($builder, $HAS_FALSE_ALARM_RATE_PER_HOUR);
+        self::addHAS_TRANSMIT_FREQUENCY_HZ($builder, $HAS_TRANSMIT_FREQUENCY_HZ);
         $o = $builder->endObject();
         return $o;
     }
@@ -490,6 +641,156 @@ class ACWSensor extends Table
     public static function addTRANSMIT_FREQUENCY_HZ(FlatBufferBuilder $builder, $TRANSMIT_FREQUENCY_HZ)
     {
         $builder->addDoubleX(18, $TRANSMIT_FREQUENCY_HZ, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_PHENOMENOLOGY(FlatBufferBuilder $builder, $HAS_PHENOMENOLOGY)
+    {
+        $builder->addBoolX(19, $HAS_PHENOMENOLOGY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_OBSERVATION_INTERVAL_S(FlatBufferBuilder $builder, $HAS_OBSERVATION_INTERVAL_S)
+    {
+        $builder->addBoolX(20, $HAS_OBSERVATION_INTERVAL_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_TRACK_DURATION_S(FlatBufferBuilder $builder, $HAS_TRACK_DURATION_S)
+    {
+        $builder->addBoolX(21, $HAS_TRACK_DURATION_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_REVISIT_INTERVAL_S(FlatBufferBuilder $builder, $HAS_REVISIT_INTERVAL_S)
+    {
+        $builder->addBoolX(22, $HAS_REVISIT_INTERVAL_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAX_SIMULTANEOUS_TRACKS(FlatBufferBuilder $builder, $HAS_MAX_SIMULTANEOUS_TRACKS)
+    {
+        $builder->addBoolX(23, $HAS_MAX_SIMULTANEOUS_TRACKS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_REFERENCE_SNR_DB(FlatBufferBuilder $builder, $HAS_REFERENCE_SNR_DB)
+    {
+        $builder->addBoolX(24, $HAS_REFERENCE_SNR_DB, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_REFERENCE_RANGE_M(FlatBufferBuilder $builder, $HAS_REFERENCE_RANGE_M)
+    {
+        $builder->addBoolX(25, $HAS_REFERENCE_RANGE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_REFERENCE_RCS_M2(FlatBufferBuilder $builder, $HAS_REFERENCE_RCS_M2)
+    {
+        $builder->addBoolX(26, $HAS_REFERENCE_RCS_M2, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DETECTION_THRESHOLD_DB(FlatBufferBuilder $builder, $HAS_DETECTION_THRESHOLD_DB)
+    {
+        $builder->addBoolX(27, $HAS_DETECTION_THRESHOLD_DB, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_RECEIVER_G_OVER_T_DB_PER_K(FlatBufferBuilder $builder, $HAS_RECEIVER_G_OVER_T_DB_PER_K)
+    {
+        $builder->addBoolX(28, $HAS_RECEIVER_G_OVER_T_DB_PER_K, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_RECEIVER_BANDWIDTH_HZ(FlatBufferBuilder $builder, $HAS_RECEIVER_BANDWIDTH_HZ)
+    {
+        $builder->addBoolX(29, $HAS_RECEIVER_BANDWIDTH_HZ, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_LIMITING_MAGNITUDE(FlatBufferBuilder $builder, $HAS_LIMITING_MAGNITUDE)
+    {
+        $builder->addBoolX(30, $HAS_LIMITING_MAGNITUDE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAX_HOST_SUN_ELEVATION_RAD(FlatBufferBuilder $builder, $HAS_MAX_HOST_SUN_ELEVATION_RAD)
+    {
+        $builder->addBoolX(31, $HAS_MAX_HOST_SUN_ELEVATION_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_FALSE_ALARM_RATE_PER_HOUR(FlatBufferBuilder $builder, $HAS_FALSE_ALARM_RATE_PER_HOUR)
+    {
+        $builder->addBoolX(32, $HAS_FALSE_ALARM_RATE_PER_HOUR, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_TRANSMIT_FREQUENCY_HZ(FlatBufferBuilder $builder, $HAS_TRANSMIT_FREQUENCY_HZ)
+    {
+        $builder->addBoolX(33, $HAS_TRANSMIT_FREQUENCY_HZ, false);
     }
 
     /**

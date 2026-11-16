@@ -95,7 +95,7 @@ TRACK_DURATION_S():number {
 
 /**
  * Shortest time between the end of one track of a target and the start
- * of the next, seconds.
+ * of the following, seconds.
  */
 REVISIT_INTERVAL_S():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -187,8 +187,86 @@ TRANSMIT_FREQUENCY_HZ():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_PHENOMENOLOGY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_OBSERVATION_INTERVAL_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_TRACK_DURATION_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_REVISIT_INTERVAL_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MAX_SIMULTANEOUS_TRACKS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_REFERENCE_SNR_DB():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_REFERENCE_RANGE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_REFERENCE_RCS_M2():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_DETECTION_THRESHOLD_DB():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_RECEIVER_G_OVER_T_DB_PER_K():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_RECEIVER_BANDWIDTH_HZ():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_LIMITING_MAGNITUDE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MAX_HOST_SUN_ELEVATION_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_FALSE_ALARM_RATE_PER_HOUR():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_TRANSMIT_FREQUENCY_HZ():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWSensor(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(34);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
@@ -279,6 +357,66 @@ static addTransmitFrequencyHz(builder:flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ
   builder.addFieldFloat64(18, TRANSMIT_FREQUENCY_HZ, 0.0);
 }
 
+static addHasPhenomenology(builder:flatbuffers.Builder, HAS_PHENOMENOLOGY:boolean) {
+  builder.addFieldInt8(19, +HAS_PHENOMENOLOGY, +false);
+}
+
+static addHasObservationIntervalS(builder:flatbuffers.Builder, HAS_OBSERVATION_INTERVAL_S:boolean) {
+  builder.addFieldInt8(20, +HAS_OBSERVATION_INTERVAL_S, +false);
+}
+
+static addHasTrackDurationS(builder:flatbuffers.Builder, HAS_TRACK_DURATION_S:boolean) {
+  builder.addFieldInt8(21, +HAS_TRACK_DURATION_S, +false);
+}
+
+static addHasRevisitIntervalS(builder:flatbuffers.Builder, HAS_REVISIT_INTERVAL_S:boolean) {
+  builder.addFieldInt8(22, +HAS_REVISIT_INTERVAL_S, +false);
+}
+
+static addHasMaxSimultaneousTracks(builder:flatbuffers.Builder, HAS_MAX_SIMULTANEOUS_TRACKS:boolean) {
+  builder.addFieldInt8(23, +HAS_MAX_SIMULTANEOUS_TRACKS, +false);
+}
+
+static addHasReferenceSnrDb(builder:flatbuffers.Builder, HAS_REFERENCE_SNR_DB:boolean) {
+  builder.addFieldInt8(24, +HAS_REFERENCE_SNR_DB, +false);
+}
+
+static addHasReferenceRangeM(builder:flatbuffers.Builder, HAS_REFERENCE_RANGE_M:boolean) {
+  builder.addFieldInt8(25, +HAS_REFERENCE_RANGE_M, +false);
+}
+
+static addHasReferenceRcsM2(builder:flatbuffers.Builder, HAS_REFERENCE_RCS_M2:boolean) {
+  builder.addFieldInt8(26, +HAS_REFERENCE_RCS_M2, +false);
+}
+
+static addHasDetectionThresholdDb(builder:flatbuffers.Builder, HAS_DETECTION_THRESHOLD_DB:boolean) {
+  builder.addFieldInt8(27, +HAS_DETECTION_THRESHOLD_DB, +false);
+}
+
+static addHasReceiverGOverTDbPerK(builder:flatbuffers.Builder, HAS_RECEIVER_G_OVER_T_DB_PER_K:boolean) {
+  builder.addFieldInt8(28, +HAS_RECEIVER_G_OVER_T_DB_PER_K, +false);
+}
+
+static addHasReceiverBandwidthHz(builder:flatbuffers.Builder, HAS_RECEIVER_BANDWIDTH_HZ:boolean) {
+  builder.addFieldInt8(29, +HAS_RECEIVER_BANDWIDTH_HZ, +false);
+}
+
+static addHasLimitingMagnitude(builder:flatbuffers.Builder, HAS_LIMITING_MAGNITUDE:boolean) {
+  builder.addFieldInt8(30, +HAS_LIMITING_MAGNITUDE, +false);
+}
+
+static addHasMaxHostSunElevationRad(builder:flatbuffers.Builder, HAS_MAX_HOST_SUN_ELEVATION_RAD:boolean) {
+  builder.addFieldInt8(31, +HAS_MAX_HOST_SUN_ELEVATION_RAD, +false);
+}
+
+static addHasFalseAlarmRatePerHour(builder:flatbuffers.Builder, HAS_FALSE_ALARM_RATE_PER_HOUR:boolean) {
+  builder.addFieldInt8(32, +HAS_FALSE_ALARM_RATE_PER_HOUR, +false);
+}
+
+static addHasTransmitFrequencyHz(builder:flatbuffers.Builder, HAS_TRANSMIT_FREQUENCY_HZ:boolean) {
+  builder.addFieldInt8(33, +HAS_TRANSMIT_FREQUENCY_HZ, +false);
+}
+
 static endACWSensor(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -305,7 +443,22 @@ unpack(): ACWSensorT {
     this.LIMITING_MAGNITUDE(),
     this.MAX_HOST_SUN_ELEVATION_RAD(),
     this.FALSE_ALARM_RATE_PER_HOUR(),
-    this.TRANSMIT_FREQUENCY_HZ()
+    this.TRANSMIT_FREQUENCY_HZ(),
+    this.HAS_PHENOMENOLOGY(),
+    this.HAS_OBSERVATION_INTERVAL_S(),
+    this.HAS_TRACK_DURATION_S(),
+    this.HAS_REVISIT_INTERVAL_S(),
+    this.HAS_MAX_SIMULTANEOUS_TRACKS(),
+    this.HAS_REFERENCE_SNR_DB(),
+    this.HAS_REFERENCE_RANGE_M(),
+    this.HAS_REFERENCE_RCS_M2(),
+    this.HAS_DETECTION_THRESHOLD_DB(),
+    this.HAS_RECEIVER_G_OVER_T_DB_PER_K(),
+    this.HAS_RECEIVER_BANDWIDTH_HZ(),
+    this.HAS_LIMITING_MAGNITUDE(),
+    this.HAS_MAX_HOST_SUN_ELEVATION_RAD(),
+    this.HAS_FALSE_ALARM_RATE_PER_HOUR(),
+    this.HAS_TRANSMIT_FREQUENCY_HZ()
   );
 }
 
@@ -330,6 +483,21 @@ unpackTo(_o: ACWSensorT): void {
   _o.MAX_HOST_SUN_ELEVATION_RAD = this.MAX_HOST_SUN_ELEVATION_RAD();
   _o.FALSE_ALARM_RATE_PER_HOUR = this.FALSE_ALARM_RATE_PER_HOUR();
   _o.TRANSMIT_FREQUENCY_HZ = this.TRANSMIT_FREQUENCY_HZ();
+  _o.HAS_PHENOMENOLOGY = this.HAS_PHENOMENOLOGY();
+  _o.HAS_OBSERVATION_INTERVAL_S = this.HAS_OBSERVATION_INTERVAL_S();
+  _o.HAS_TRACK_DURATION_S = this.HAS_TRACK_DURATION_S();
+  _o.HAS_REVISIT_INTERVAL_S = this.HAS_REVISIT_INTERVAL_S();
+  _o.HAS_MAX_SIMULTANEOUS_TRACKS = this.HAS_MAX_SIMULTANEOUS_TRACKS();
+  _o.HAS_REFERENCE_SNR_DB = this.HAS_REFERENCE_SNR_DB();
+  _o.HAS_REFERENCE_RANGE_M = this.HAS_REFERENCE_RANGE_M();
+  _o.HAS_REFERENCE_RCS_M2 = this.HAS_REFERENCE_RCS_M2();
+  _o.HAS_DETECTION_THRESHOLD_DB = this.HAS_DETECTION_THRESHOLD_DB();
+  _o.HAS_RECEIVER_G_OVER_T_DB_PER_K = this.HAS_RECEIVER_G_OVER_T_DB_PER_K();
+  _o.HAS_RECEIVER_BANDWIDTH_HZ = this.HAS_RECEIVER_BANDWIDTH_HZ();
+  _o.HAS_LIMITING_MAGNITUDE = this.HAS_LIMITING_MAGNITUDE();
+  _o.HAS_MAX_HOST_SUN_ELEVATION_RAD = this.HAS_MAX_HOST_SUN_ELEVATION_RAD();
+  _o.HAS_FALSE_ALARM_RATE_PER_HOUR = this.HAS_FALSE_ALARM_RATE_PER_HOUR();
+  _o.HAS_TRANSMIT_FREQUENCY_HZ = this.HAS_TRANSMIT_FREQUENCY_HZ();
 }
 }
 
@@ -353,7 +521,22 @@ constructor(
   public LIMITING_MAGNITUDE: number = 0.0,
   public MAX_HOST_SUN_ELEVATION_RAD: number = 0.0,
   public FALSE_ALARM_RATE_PER_HOUR: number = 0.0,
-  public TRANSMIT_FREQUENCY_HZ: number = 0.0
+  public TRANSMIT_FREQUENCY_HZ: number = 0.0,
+  public HAS_PHENOMENOLOGY: boolean = false,
+  public HAS_OBSERVATION_INTERVAL_S: boolean = false,
+  public HAS_TRACK_DURATION_S: boolean = false,
+  public HAS_REVISIT_INTERVAL_S: boolean = false,
+  public HAS_MAX_SIMULTANEOUS_TRACKS: boolean = false,
+  public HAS_REFERENCE_SNR_DB: boolean = false,
+  public HAS_REFERENCE_RANGE_M: boolean = false,
+  public HAS_REFERENCE_RCS_M2: boolean = false,
+  public HAS_DETECTION_THRESHOLD_DB: boolean = false,
+  public HAS_RECEIVER_G_OVER_T_DB_PER_K: boolean = false,
+  public HAS_RECEIVER_BANDWIDTH_HZ: boolean = false,
+  public HAS_LIMITING_MAGNITUDE: boolean = false,
+  public HAS_MAX_HOST_SUN_ELEVATION_RAD: boolean = false,
+  public HAS_FALSE_ALARM_RATE_PER_HOUR: boolean = false,
+  public HAS_TRANSMIT_FREQUENCY_HZ: boolean = false
 ){}
 
 
@@ -383,6 +566,21 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWSensor.addMaxHostSunElevationRad(builder, this.MAX_HOST_SUN_ELEVATION_RAD);
   ACWSensor.addFalseAlarmRatePerHour(builder, this.FALSE_ALARM_RATE_PER_HOUR);
   ACWSensor.addTransmitFrequencyHz(builder, this.TRANSMIT_FREQUENCY_HZ);
+  ACWSensor.addHasPhenomenology(builder, this.HAS_PHENOMENOLOGY);
+  ACWSensor.addHasObservationIntervalS(builder, this.HAS_OBSERVATION_INTERVAL_S);
+  ACWSensor.addHasTrackDurationS(builder, this.HAS_TRACK_DURATION_S);
+  ACWSensor.addHasRevisitIntervalS(builder, this.HAS_REVISIT_INTERVAL_S);
+  ACWSensor.addHasMaxSimultaneousTracks(builder, this.HAS_MAX_SIMULTANEOUS_TRACKS);
+  ACWSensor.addHasReferenceSnrDb(builder, this.HAS_REFERENCE_SNR_DB);
+  ACWSensor.addHasReferenceRangeM(builder, this.HAS_REFERENCE_RANGE_M);
+  ACWSensor.addHasReferenceRcsM2(builder, this.HAS_REFERENCE_RCS_M2);
+  ACWSensor.addHasDetectionThresholdDb(builder, this.HAS_DETECTION_THRESHOLD_DB);
+  ACWSensor.addHasReceiverGOverTDbPerK(builder, this.HAS_RECEIVER_G_OVER_T_DB_PER_K);
+  ACWSensor.addHasReceiverBandwidthHz(builder, this.HAS_RECEIVER_BANDWIDTH_HZ);
+  ACWSensor.addHasLimitingMagnitude(builder, this.HAS_LIMITING_MAGNITUDE);
+  ACWSensor.addHasMaxHostSunElevationRad(builder, this.HAS_MAX_HOST_SUN_ELEVATION_RAD);
+  ACWSensor.addHasFalseAlarmRatePerHour(builder, this.HAS_FALSE_ALARM_RATE_PER_HOUR);
+  ACWSensor.addHasTransmitFrequencyHz(builder, this.HAS_TRANSMIT_FREQUENCY_HZ);
 
   return ACWSensor.endACWSensor(builder);
 }

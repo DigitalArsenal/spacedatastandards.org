@@ -95,7 +95,7 @@ func (rcv *ACWRequest) GroundStationsLength() int {
 }
 
 /// Candidate ground stations.
-/// Pre-sampled target Earth-fixed Cartesian states.
+/// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
 func (rcv *ACWRequest) STATES(obj *ACWStateSample, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -127,7 +127,7 @@ func (rcv *ACWRequest) StatesLength() int {
 	return rcv.STATESLength()
 }
 
-/// Pre-sampled target Earth-fixed Cartesian states.
+/// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
 /// Optional target station id. Empty means all stations when supported.
 func (rcv *ACWRequest) TARGET_STATION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -230,7 +230,7 @@ func (rcv *ACWRequest) RefractionModel(obj *ACWRefractionModel) *ACWRefractionMo
 }
 
 /// Optional apparent-elevation refraction model.
-/// Optional constraint composition. When absent the legacy behaviour holds:
+/// Optional constraint composition. When absent the station constraints apply:
 /// every ground station's MIN_ELEVATION_RAD (or the override) plus
 /// ELEVATION_MASK, all required.
 func (rcv *ACWRequest) CONSTRAINTS(obj *ACWConstraintSet) *ACWConstraintSet {
@@ -250,7 +250,7 @@ func (rcv *ACWRequest) Constraints(obj *ACWConstraintSet) *ACWConstraintSet {
 	return rcv.CONSTRAINTS(obj)
 }
 
-/// Optional constraint composition. When absent the legacy behaviour holds:
+/// Optional constraint composition. When absent the station constraints apply:
 /// every ground station's MIN_ELEVATION_RAD (or the override) plus
 /// ELEVATION_MASK, all required.
 /// Optional moving observers (satellite-to-satellite access). Each observer
@@ -606,8 +606,150 @@ func (rcv *ACWRequest) MutateEndJulianDateTt(n float64) bool {
 	return rcv.MutateEND_JULIAN_DATE_TT(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWRequest) HAS_OPERATION() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasOperation() bool {
+	return rcv.HAS_OPERATION()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWRequest) MutateHAS_OPERATION(n bool) bool {
+	return rcv._tab.MutateBoolSlot(46, n)
+}
+
+func (rcv *ACWRequest) MutateHasOperation(n bool) bool {
+	return rcv.MutateHAS_OPERATION(n)
+}
+
+func (rcv *ACWRequest) HAS_MIN_ELEVATION_OVERRIDE_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasMinElevationOverrideRad() bool {
+	return rcv.HAS_MIN_ELEVATION_OVERRIDE_RAD()
+}
+
+func (rcv *ACWRequest) MutateHAS_MIN_ELEVATION_OVERRIDE_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(48, n)
+}
+
+func (rcv *ACWRequest) MutateHasMinElevationOverrideRad(n bool) bool {
+	return rcv.MutateHAS_MIN_ELEVATION_OVERRIDE_RAD(n)
+}
+
+func (rcv *ACWRequest) HAS_EVALUATION_MODE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasEvaluationMode() bool {
+	return rcv.HAS_EVALUATION_MODE()
+}
+
+func (rcv *ACWRequest) MutateHAS_EVALUATION_MODE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(50, n)
+}
+
+func (rcv *ACWRequest) MutateHasEvaluationMode(n bool) bool {
+	return rcv.MutateHAS_EVALUATION_MODE(n)
+}
+
+func (rcv *ACWRequest) HAS_ROOT_TOLERANCE_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasRootToleranceS() bool {
+	return rcv.HAS_ROOT_TOLERANCE_S()
+}
+
+func (rcv *ACWRequest) MutateHAS_ROOT_TOLERANCE_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(52, n)
+}
+
+func (rcv *ACWRequest) MutateHasRootToleranceS(n bool) bool {
+	return rcv.MutateHAS_ROOT_TOLERANCE_S(n)
+}
+
+func (rcv *ACWRequest) HAS_RANDOM_SEED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasRandomSeed() bool {
+	return rcv.HAS_RANDOM_SEED()
+}
+
+func (rcv *ACWRequest) MutateHAS_RANDOM_SEED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(54, n)
+}
+
+func (rcv *ACWRequest) MutateHasRandomSeed(n bool) bool {
+	return rcv.MutateHAS_RANDOM_SEED(n)
+}
+
+func (rcv *ACWRequest) HAS_START_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasStartJulianDateTt() bool {
+	return rcv.HAS_START_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWRequest) MutateHAS_START_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(56, n)
+}
+
+func (rcv *ACWRequest) MutateHasStartJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_START_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWRequest) HAS_END_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRequest) HasEndJulianDateTt() bool {
+	return rcv.HAS_END_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWRequest) MutateHAS_END_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(58, n)
+}
+
+func (rcv *ACWRequest) MutateHasEndJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_END_JULIAN_DATE_TT(n)
+}
+
 func ACWRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(28)
 }
 func ACWRequestAddOPERATION(builder *flatbuffers.Builder, OPERATION acwOperationCode) {
 	builder.PrependInt8Slot(0, int8(OPERATION), 0)
@@ -794,6 +936,48 @@ func ACWRequestAddEND_JULIAN_DATE_TT(builder *flatbuffers.Builder, END_JULIAN_DA
 }
 func ACWRequestAddEndJulianDateTt(builder *flatbuffers.Builder, END_JULIAN_DATE_TT float64) {
 	ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
+}
+func ACWRequestAddHAS_OPERATION(builder *flatbuffers.Builder, HAS_OPERATION bool) {
+	builder.PrependBoolSlot(21, HAS_OPERATION, false)
+}
+func ACWRequestAddHasOperation(builder *flatbuffers.Builder, HAS_OPERATION bool) {
+	ACWRequestAddHAS_OPERATION(builder, HAS_OPERATION)
+}
+func ACWRequestAddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder *flatbuffers.Builder, HAS_MIN_ELEVATION_OVERRIDE_RAD bool) {
+	builder.PrependBoolSlot(22, HAS_MIN_ELEVATION_OVERRIDE_RAD, false)
+}
+func ACWRequestAddHasMinElevationOverrideRad(builder *flatbuffers.Builder, HAS_MIN_ELEVATION_OVERRIDE_RAD bool) {
+	ACWRequestAddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD)
+}
+func ACWRequestAddHAS_EVALUATION_MODE(builder *flatbuffers.Builder, HAS_EVALUATION_MODE bool) {
+	builder.PrependBoolSlot(23, HAS_EVALUATION_MODE, false)
+}
+func ACWRequestAddHasEvaluationMode(builder *flatbuffers.Builder, HAS_EVALUATION_MODE bool) {
+	ACWRequestAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE)
+}
+func ACWRequestAddHAS_ROOT_TOLERANCE_S(builder *flatbuffers.Builder, HAS_ROOT_TOLERANCE_S bool) {
+	builder.PrependBoolSlot(24, HAS_ROOT_TOLERANCE_S, false)
+}
+func ACWRequestAddHasRootToleranceS(builder *flatbuffers.Builder, HAS_ROOT_TOLERANCE_S bool) {
+	ACWRequestAddHAS_ROOT_TOLERANCE_S(builder, HAS_ROOT_TOLERANCE_S)
+}
+func ACWRequestAddHAS_RANDOM_SEED(builder *flatbuffers.Builder, HAS_RANDOM_SEED bool) {
+	builder.PrependBoolSlot(25, HAS_RANDOM_SEED, false)
+}
+func ACWRequestAddHasRandomSeed(builder *flatbuffers.Builder, HAS_RANDOM_SEED bool) {
+	ACWRequestAddHAS_RANDOM_SEED(builder, HAS_RANDOM_SEED)
+}
+func ACWRequestAddHAS_START_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(26, HAS_START_JULIAN_DATE_TT, false)
+}
+func ACWRequestAddHasStartJulianDateTt(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	ACWRequestAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+}
+func ACWRequestAddHAS_END_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(27, HAS_END_JULIAN_DATE_TT, false)
+}
+func ACWRequestAddHasEndJulianDateTt(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	ACWRequestAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
 }
 func ACWRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

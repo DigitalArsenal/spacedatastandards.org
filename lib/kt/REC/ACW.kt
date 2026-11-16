@@ -47,6 +47,24 @@ class ACW : Table() {
             null
         }
     }
+    /**
+     * Appended slot 2. Mandatory in every new request and successful result.
+     * Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+     * these codes. Missing body fails acw-body-required; absence never means
+     * Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+     * Result must echo the exact descriptor field values, including optional
+     * presence; requester rejects a missing/different echo. Raw table offsets
+     * are not identity. Explicit one-time archive conversion is outside runtime.
+     */
+    val centralBody : BodyDescriptor? get() = centralBody(BodyDescriptor())
+    fun centralBody(obj: BodyDescriptor) : BodyDescriptor? {
+        val o = __offset(8)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACW(_bb: ByteBuffer): ACW = getRootAsACW(_bb, ACW())
@@ -55,15 +73,17 @@ class ACW : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACW")
-        fun createACW(builder: FlatBufferBuilder, requestOffset: Int, resultOffset: Int) : Int {
-            builder.startTable(2)
+        fun createACW(builder: FlatBufferBuilder, requestOffset: Int, resultOffset: Int, centralBodyOffset: Int) : Int {
+            builder.startTable(3)
+            addCENTRALBODY(builder, centralBodyOffset)
             addRESULT(builder, resultOffset)
             addREQUEST(builder, requestOffset)
             return endACW(builder)
         }
-        fun startACW(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startACW(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addREQUEST(builder: FlatBufferBuilder, request: Int) = builder.addOffset(0, request, 0)
         fun addRESULT(builder: FlatBufferBuilder, result: Int) = builder.addOffset(1, result, 0)
+        fun addCENTRALBODY(builder: FlatBufferBuilder, centralBody: Int) = builder.addOffset(2, centralBody, 0)
         fun endACW(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

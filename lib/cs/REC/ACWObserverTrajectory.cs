@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 public struct ACWObserverTrajectory : IFlatbufferObject
 {

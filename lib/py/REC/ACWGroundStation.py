@@ -59,7 +59,11 @@ class ACWGroundStation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Height above the WGS-84 ellipsoid, meters.
+    # Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+    # docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+    # finite segment blocks; tangent contact is clear. At height <= 0, including
+    # zero, use the supporting plane, without an own-ellipsoid intersection test.
+    # The user elevation mask and supplied terrain apply separately at all heights.
     # ACWGroundStation
     def ALTITUDE_M(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -67,7 +71,7 @@ class ACWGroundStation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Default minimum visible elevation, radians.
+    # Explicit minimum visible elevation, radians; HAS flag required.
     # ACWGroundStation
     def MIN_ELEVATION_RAD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -109,8 +113,44 @@ class ACWGroundStation(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWGroundStation
+    def HAS_LATITUDE_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWGroundStation
+    def HAS_LONGITUDE_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWGroundStation
+    def HAS_ALTITUDE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWGroundStation
+    def HAS_MIN_ELEVATION_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWGroundStation
+    def HAS_CHANNEL_CAPACITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWGroundStationStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(13)
 
 def Start(builder):
     ACWGroundStationStart(builder)
@@ -175,6 +215,36 @@ def ACWGroundStationCreateBLACKOUT_WINDOWSVector(builder, data):
 def CreateBLACKOUT_WINDOWSVector(builder, data):
     return ACWGroundStationCreateBLACKOUT_WINDOWSVector(builder, data)
 
+def ACWGroundStationAddHAS_LATITUDE_RAD(builder, HAS_LATITUDE_RAD):
+    builder.PrependBoolSlot(8, HAS_LATITUDE_RAD, 0)
+
+def AddHAS_LATITUDE_RAD(builder, HAS_LATITUDE_RAD):
+    ACWGroundStationAddHAS_LATITUDE_RAD(builder, HAS_LATITUDE_RAD)
+
+def ACWGroundStationAddHAS_LONGITUDE_RAD(builder, HAS_LONGITUDE_RAD):
+    builder.PrependBoolSlot(9, HAS_LONGITUDE_RAD, 0)
+
+def AddHAS_LONGITUDE_RAD(builder, HAS_LONGITUDE_RAD):
+    ACWGroundStationAddHAS_LONGITUDE_RAD(builder, HAS_LONGITUDE_RAD)
+
+def ACWGroundStationAddHAS_ALTITUDE_M(builder, HAS_ALTITUDE_M):
+    builder.PrependBoolSlot(10, HAS_ALTITUDE_M, 0)
+
+def AddHAS_ALTITUDE_M(builder, HAS_ALTITUDE_M):
+    ACWGroundStationAddHAS_ALTITUDE_M(builder, HAS_ALTITUDE_M)
+
+def ACWGroundStationAddHAS_MIN_ELEVATION_RAD(builder, HAS_MIN_ELEVATION_RAD):
+    builder.PrependBoolSlot(11, HAS_MIN_ELEVATION_RAD, 0)
+
+def AddHAS_MIN_ELEVATION_RAD(builder, HAS_MIN_ELEVATION_RAD):
+    ACWGroundStationAddHAS_MIN_ELEVATION_RAD(builder, HAS_MIN_ELEVATION_RAD)
+
+def ACWGroundStationAddHAS_CHANNEL_CAPACITY(builder, HAS_CHANNEL_CAPACITY):
+    builder.PrependBoolSlot(12, HAS_CHANNEL_CAPACITY, 0)
+
+def AddHAS_CHANNEL_CAPACITY(builder, HAS_CHANNEL_CAPACITY):
+    ACWGroundStationAddHAS_CHANNEL_CAPACITY(builder, HAS_CHANNEL_CAPACITY)
+
 def ACWGroundStationEnd(builder):
     return builder.EndObject()
 
@@ -200,6 +270,11 @@ class ACWGroundStationT(object):
         MIN_ELEVATION_RAD = 0.0,
         CHANNEL_CAPACITY = 0,
         BLACKOUT_WINDOWS = None,
+        HAS_LATITUDE_RAD = False,
+        HAS_LONGITUDE_RAD = False,
+        HAS_ALTITUDE_M = False,
+        HAS_MIN_ELEVATION_RAD = False,
+        HAS_CHANNEL_CAPACITY = False,
     ):
         self.STATION_ID = STATION_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -209,6 +284,11 @@ class ACWGroundStationT(object):
         self.MIN_ELEVATION_RAD = MIN_ELEVATION_RAD  # type: float
         self.CHANNEL_CAPACITY = CHANNEL_CAPACITY  # type: int
         self.BLACKOUT_WINDOWS = BLACKOUT_WINDOWS  # type: Optional[List[ACWBlackoutWindow.ACWBlackoutWindowT]]
+        self.HAS_LATITUDE_RAD = HAS_LATITUDE_RAD  # type: bool
+        self.HAS_LONGITUDE_RAD = HAS_LONGITUDE_RAD  # type: bool
+        self.HAS_ALTITUDE_M = HAS_ALTITUDE_M  # type: bool
+        self.HAS_MIN_ELEVATION_RAD = HAS_MIN_ELEVATION_RAD  # type: bool
+        self.HAS_CHANNEL_CAPACITY = HAS_CHANNEL_CAPACITY  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -246,6 +326,11 @@ class ACWGroundStationT(object):
                 else:
                     aCWBlackoutWindow_ = ACWBlackoutWindow.ACWBlackoutWindowT.InitFromObj(ACWGroundStation.BLACKOUT_WINDOWS(i))
                     self.BLACKOUT_WINDOWS.append(aCWBlackoutWindow_)
+        self.HAS_LATITUDE_RAD = ACWGroundStation.HAS_LATITUDE_RAD()
+        self.HAS_LONGITUDE_RAD = ACWGroundStation.HAS_LONGITUDE_RAD()
+        self.HAS_ALTITUDE_M = ACWGroundStation.HAS_ALTITUDE_M()
+        self.HAS_MIN_ELEVATION_RAD = ACWGroundStation.HAS_MIN_ELEVATION_RAD()
+        self.HAS_CHANNEL_CAPACITY = ACWGroundStation.HAS_CHANNEL_CAPACITY()
 
     # ACWGroundStationT
     def Pack(self, builder):
@@ -273,5 +358,10 @@ class ACWGroundStationT(object):
         ACWGroundStationAddCHANNEL_CAPACITY(builder, self.CHANNEL_CAPACITY)
         if self.BLACKOUT_WINDOWS is not None:
             ACWGroundStationAddBLACKOUT_WINDOWS(builder, BLACKOUT_WINDOWS)
+        ACWGroundStationAddHAS_LATITUDE_RAD(builder, self.HAS_LATITUDE_RAD)
+        ACWGroundStationAddHAS_LONGITUDE_RAD(builder, self.HAS_LONGITUDE_RAD)
+        ACWGroundStationAddHAS_ALTITUDE_M(builder, self.HAS_ALTITUDE_M)
+        ACWGroundStationAddHAS_MIN_ELEVATION_RAD(builder, self.HAS_MIN_ELEVATION_RAD)
+        ACWGroundStationAddHAS_CHANNEL_CAPACITY(builder, self.HAS_CHANNEL_CAPACITY)
         ACWGroundStation = ACWGroundStationEnd(builder)
         return ACWGroundStation

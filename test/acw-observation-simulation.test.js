@@ -23,6 +23,8 @@ describe("ACW observation simulation (SIMULATE_OBSERVATIONS)", () => {
   it("numbers operations and phenomenologies append-only", () => {
     assert.equal(ACW.acwOperationCode.COMPUTE_ACCESS_WINDOWS, 1);
     assert.equal(ACW.acwOperationCode.SIMULATE_OBSERVATIONS, 2);
+    assert.equal(ACW.acwOperationCode.COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY, 3);
+    assert.equal(ACW.acwOperationCode.SIMULATE_OBSERVATIONS_EXPLICIT_BODY, 4);
     const p = ACW.acwSensorPhenomenology;
     assert.deepEqual([p.RADAR, p.OPTICAL, p.PASSIVE_RF, p.LASER_RANGING], [1, 2, 3, 4]);
   });
@@ -90,8 +92,10 @@ describe("ACW observation simulation (SIMULATE_OBSERVATIONS)", () => {
     assert.equal(back.TARGETS[0].SIGNATURE.RCS_M2, 2.5);
     assert.equal(back.SENSORS[0].ERROR_MODELS[0].MEASUREMENT_TYPE, ACW.memMeasurementType.RANGE);
     assert.equal(back.SENSORS[0].ERROR_MODELS[0].NOISE_SIGMA, 15);
-    assert.equal(back.SENSORS[0].MAX_SIMULTANEOUS_TRACKS, 1, "one track at a time by default");
-    assert.equal(back.SENSORS[0].REFERENCE_RCS_M2, 1, "1 m^2 reference target by default");
+    assert.equal(back.SENSORS[0].MAX_SIMULTANEOUS_TRACKS, 1, "historical wire default");
+    assert.equal(back.SENSORS[0].HAS_MAX_SIMULTANEOUS_TRACKS, false, "wire default is absent");
+    assert.equal(back.SENSORS[0].REFERENCE_RCS_M2, 1, "historical wire default");
+    assert.equal(back.SENSORS[0].HAS_REFERENCE_RCS_M2, false, "wire default is absent");
     assert.equal(back.EARTH_ORIENTATION[0].UT1_MINUS_UTC_SECONDS_HP, 0.0415);
     assert.equal(back.RANDOM_SEED, 42n);
     assert.equal(back.ACCESS[0].TARGET_ID, "sat-1");
@@ -118,12 +122,13 @@ describe("ACW observation simulation (SIMULATE_OBSERVATIONS)", () => {
     assert.equal(back.OBSERVATION_COUNT, 41);
   });
 
-  it("reads an access-window sample without velocity as zero velocity", () => {
+  it("reads the historical zero velocity wire default with absent presence", () => {
     const message = new ACW.ACWT();
     message.REQUEST = new ACW.ACWRequestT();
     message.REQUEST.STATES = [sample(2461313.5, [7000000, 0, 0])];
     const back = roundTrip(message).REQUEST.STATES[0];
     assert.equal(back.POSITION_X_M, 7000000);
     assert.equal(back.VELOCITY_X_MPS, 0);
+    assert.equal(back.HAS_VELOCITY_X_MPS, false);
   });
 });

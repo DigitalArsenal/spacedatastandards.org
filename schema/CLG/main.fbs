@@ -1,0 +1,497 @@
+// Hash: adf9750e606ec5c5e17f683ce0f2fd1bb1fdca4d6805f8b0b85a01416b245918
+// Version: 1.282.0
+// -----------------------------------END_HEADER
+include "../ACW/main.fbs";
+include "../SCV/main.fbs";
+include "../PVN/main.fbs";
+
+// Table scalars use HAS_<FIELD>, not defaults, to establish presence.
+// Struct atomic-group flags are specified in docs/clg-scalar-presence.md.
+// Every CLG enum declared here has UNSPECIFIED (0), invalid when applicable.
+// Included ACW enums retain their own domains and legitimate zero values;
+// docs/clg-contract.md section 3 and docs/clg-scalar-presence.md define their per-field HAS rules.
+// Readers reject every unimplemented enum value and analysis scope.
+enum clgPayloadClass : ubyte { UNSPECIFIED = 0, DEFINITION, STATE_BLOCK, RESULT }
+enum clgNodeCategory : ubyte { UNSPECIFIED = 0, SPACECRAFT, SURFACE_STATION }
+enum clgTerminalMedium : ubyte { UNSPECIFIED = 0, RF, OPTICAL }
+enum clgTerminalCapability : ubyte { UNSPECIFIED = 0, TRANSMIT, RECEIVE, TRANSMIT_RECEIVE }
+enum clgLinkDirection : ubyte { UNSPECIFIED = 0, BIDIRECTIONAL, A_TO_B, B_TO_A }
+enum clgRayDirection : ubyte { UNSPECIFIED = 0, SIMULTANEOUS, A_TO_B, B_TO_A }
+enum clgSteeringClass : ubyte { UNSPECIFIED = 0, MECHANICAL, FIXED_BEAM, ELECTRONIC }
+enum clgPointingArchitecture : ubyte { UNSPECIFIED = 0, COMMON_AXIS, SPLIT_TX_RX }
+enum clgRegardGeometry : ubyte { UNSPECIFIED = 0, ALL_DIRECTIONS, SCV_SHAPE }
+enum clgSourceCategory : ubyte { UNSPECIFIED = 0, ELEMENTS, SAMPLED_STATES, BODY_EPHEMERIS, FIXED_SITE }
+enum clgOwnerCategory : ubyte { UNSPECIFIED = 0, NODE, BODY }
+enum clgAttitudeLaw : ubyte { UNSPECIFIED = 0, SUPPLIED_SERIES, NADIR_LVLH, INERTIALLY_FIXED, STATION_ENU }
+enum clgElevationGate : ubyte { UNSPECIFIED = 0, NONE, MIN_ELEVATION }
+enum clgPropagationTiming : ubyte { UNSPECIFIED = 0, SIMULTANEOUS, RETARDED_VACUUM }
+enum clgClearanceMode : ubyte { UNSPECIFIED = 0, ELLIPSOID_AXIS_OFFSET, TERRAIN }
+enum clgSelectionPolicy : ubyte { UNSPECIFIED = 0, RETAIN_THEN_GREEDY }
+enum clgComputationState : ubyte { UNSPECIFIED = 0, ACCEPTED, COMPLETE, FAILED, CANCELLED }
+enum clgAnalysisScope : ubyte { UNSPECIFIED = 0, GEOMETRIC_TERMINAL_FEASIBILITY }
+enum clgSnapshotOrigin : ubyte { UNSPECIFIED = 0, REQUESTED, EVENT, TOPOLOGY }
+enum clgBoundaryCause : ubyte {
+  UNSPECIFIED = 0, SPAN_BOUNDARY, OCCULTATION, RANGE_NEAR, RANGE_FAR,
+  REGARD_A, REGARD_B, RATE_A, RATE_B, ACCELERATION_A, ACCELERATION_B,
+  ELEVATION_A, ELEVATION_B, BLACKOUT, ACQUISITION, POINT_AHEAD_A, POINT_AHEAD_B,
+  HORIZON_A, HORIZON_B, TERRAIN_A, TERRAIN_B
+}
+enum clgTransitionStage : ubyte { UNSPECIFIED = 0, SLEW, ACQUIRE, ACTIVE, DRAIN, RELEASE }
+
+// Structs cannot declare scalar defaults. Each packed index has its own HAS
+// bit (false is omitted); explicit index zero requires HAS_VALUE=true.
+struct CLGIndex { VALUE:uint; HAS_VALUE:bool; }
+// Whole vector/quaternion presence is the containing optional struct pointer.
+// Components are mandatory together; all-zero quaternion is invalid.
+struct CLGVector3 { X:double; Y:double; Z:double; HAS_VALUES:bool; }
+struct CLGQuaternion { X:double; Y:double; Z:double; W:double; HAS_VALUES:bool; }
+
+/// Same identity/hash rules as BodyRecordRef, docs/clg-contract.md section 2.
+table CLGRecordRef {
+  STANDARD:string (required);
+  RECORD_ID:string (required);
+  SHA256:string (required);
+  URI:string;
+}
+
+table CLGSource {
+  CATEGORY:clgSourceCategory;
+  RECORD:CLGRecordRef (required);
+  THEORY:string (required);
+  PROVIDER_ID:string;
+  PROVIDER_VERSION:string;
+  PROVIDER_SHA256:string;
+  CONFIGURATION:CLGRecordRef;
+  ATTITUDE:CLGRecordRef;
+  AUXILIARY:[CLGRecordRef];
+  INTERPOLATION_ID:string (required);
+  /// HAS_<FIELD> controls presence; applicable bounds must be finite >=0.
+  POSITION_ERROR_M:double = nan;
+  VELOCITY_ERROR_MPS:double = nan;
+  ACCELERATION_ERROR_MPS2:double = nan;
+  JERK_ERROR_MPS3:double = nan;
+  ATTITUDE_ERROR_RAD:double = nan;
+  ANGULAR_RATE_ERROR_RAD_S:double = nan;
+  ANGULAR_ACCELERATION_ERROR_RAD_S2:double = nan;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_CATEGORY:bool = false;
+  HAS_POSITION_ERROR_M:bool = false;
+  HAS_VELOCITY_ERROR_MPS:bool = false;
+  HAS_ACCELERATION_ERROR_MPS2:bool = false;
+  HAS_JERK_ERROR_MPS3:bool = false;
+  HAS_ATTITUDE_ERROR_RAD:bool = false;
+  HAS_ANGULAR_RATE_ERROR_RAD_S:bool = false;
+  HAS_ANGULAR_ACCELERATION_ERROR_RAD_S2:bool = false;
+}
+
+table CLGBody {
+  MODEL:BodyDescriptor (required);
+  /// Missing HAS_MOTION_SOURCE_INDEX is allowed only with explicitly supplied
+  /// FRAME_STATIONARY=true and exact identity
+  /// with the definition's fixed frame. Otherwise a valid source is required.
+  MOTION_SOURCE_INDEX:int = -1;
+  FRAME_STATIONARY:bool = false;
+  CLEARANCE:clgClearanceMode;
+  /// Presence flag required; finite >=0, added to EACH semiaxis only when BOTH
+  /// endpoints are SPACECRAFT. BodyDescriptor always describes true surface.
+  SPACE_SPACE_SKIM_MARGIN_M:double = nan;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_MOTION_SOURCE_INDEX:bool = false;
+  HAS_FRAME_STATIONARY:bool = false;
+  HAS_CLEARANCE:bool = false;
+  HAS_SPACE_SPACE_SKIM_MARGIN_M:bool = false;
+}
+
+table CLGNode {
+  NODE_ID:string (required);
+  CATEGORY:clgNodeCategory;
+  /// All indices require their HAS flag; -1 remains an invalid wire default.
+  BODY_INDEX:int = -1;
+  IDENTITY:CLGRecordRef;
+  STATE_SOURCE_INDEX:int = -1;
+  MAX_SIMULTANEOUS_LINKS:int = -1;
+  /// Stations: Cartesian fixed-frame meters and ellipsoid-normal unit up.
+  SITE_POSITION_M:CLGVector3;
+  SITE_UP:CLGVector3;
+  /// Stations require MIN_ELEVATION; spacecraft require NONE and absent angle.
+  ELEVATION_GATE:clgElevationGate;
+  MIN_ELEVATION_RAD:double = nan;
+  /// Stations require STATION_ENU. Spacecraft explicitly select one other law.
+  ATTITUDE_LAW:clgAttitudeLaw;
+  /// Required only for INERTIALLY_FIXED, node -> declared inertial frame.
+  FIXED_ATTITUDE:CLGQuaternion;
+  ATTITUDE_FRAME:RFMCoordinateSystem;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_CATEGORY:bool = false;
+  HAS_BODY_INDEX:bool = false;
+  HAS_STATE_SOURCE_INDEX:bool = false;
+  HAS_MAX_SIMULTANEOUS_LINKS:bool = false;
+  HAS_ELEVATION_GATE:bool = false;
+  HAS_MIN_ELEVATION_RAD:bool = false;
+  HAS_ATTITUDE_LAW:bool = false;
+}
+
+table CLGTerminalProfile {
+  PROFILE_ID:string (required);
+  MEDIUM:clgTerminalMedium;
+  CAPABILITY:clgTerminalCapability;
+  COMPATIBILITY_CLASS:string (required);
+  DEFINITION_REFS:[CLGRecordRef];
+  STEERING:clgSteeringClass;
+  REGARD:clgRegardGeometry;
+  /// Mount +Z boresight, +X right, +Y up. SCV angles are degrees.
+  /// Shape radial fields zero; bounds below are authoritative SI values.
+  SHAPE:SCVSensorShapeContract;
+  MIN_RANGE_M:double = nan;
+  MAX_RANGE_M:double = nan;
+  /// MECHANICAL only: finite positive rates/acceleration with true HAS flags.
+  MAX_SLEW_RATE_RAD_S:double = nan;
+  MAX_ANGULAR_ACCELERATION_RAD_S2:double = nan;
+  ACQUISITION_MAX_RATE_RAD_S:double = nan;
+  /// MECHANICAL only: finite >=0; explicit zero has a true HAS flag.
+  ACQUISITION_TIME_S:double = nan;
+  SETTLE_TIME_S:double = nan;
+  /// ELECTRONIC only: HAS_BEAM_SWITCH_TIME_S=false requests no modeled delay;
+  /// a true flag with zero specifies
+  /// zero delay. Applicability and omission are preserved in provenance.
+  BEAM_SWITCH_TIME_S:double = nan;
+  MAX_SIMULTANEOUS_LINKS:int = -1;
+  INDEPENDENT_BEAMS:bool = false;
+  POINTING:clgPointingArchitecture;
+  /// Bidirectional retarded COMMON_AXIS requires finite positive separation
+  /// tolerance stated by user, backed by DEFINITION_REFS. No implied zero.
+  /// Retarded COMMON_AXIS profiles require positive value even in a one-way run.
+  MAX_POINT_AHEAD_RAD:double = nan;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_MEDIUM:bool = false;
+  HAS_CAPABILITY:bool = false;
+  HAS_STEERING:bool = false;
+  HAS_REGARD:bool = false;
+  HAS_MIN_RANGE_M:bool = false;
+  HAS_MAX_RANGE_M:bool = false;
+  HAS_MAX_SLEW_RATE_RAD_S:bool = false;
+  HAS_MAX_ANGULAR_ACCELERATION_RAD_S2:bool = false;
+  HAS_ACQUISITION_MAX_RATE_RAD_S:bool = false;
+  HAS_ACQUISITION_TIME_S:bool = false;
+  HAS_SETTLE_TIME_S:bool = false;
+  HAS_BEAM_SWITCH_TIME_S:bool = false;
+  HAS_MAX_SIMULTANEOUS_LINKS:bool = false;
+  HAS_INDEPENDENT_BEAMS:bool = false;
+  HAS_POINTING:bool = false;
+  HAS_MAX_POINT_AHEAD_RAD:bool = false;
+}
+
+table CLGTerminal {
+  TERMINAL_ID:string (required);
+  NODE_INDEX:int = -1;
+  PROFILE_INDEX:int = -1;
+  MOUNT_TO_NODE:CLGQuaternion;
+  /// Mechanical initial direction; fixed beam requires exactly mount +Z.
+  INITIAL_DIRECTION:CLGVector3;
+  INITIAL_AT_REST:bool = false;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_NODE_INDEX:bool = false;
+  HAS_PROFILE_INDEX:bool = false;
+  HAS_INITIAL_AT_REST:bool = false;
+}
+
+struct CLGBlackout {
+  TERMINAL_INDEX:CLGIndex;
+  START_S:double;
+  STOP_S:double;
+  HAS_TIMES:bool;
+}
+
+table CLGControls {
+  TIMING:clgPropagationTiming;
+  /// Required service direction relative to canonical endpoint identities,
+  /// never relative to arrival/storage order; docs/clg-contract.md section 4.
+  DIRECTION:clgLinkDirection;
+  MAX_LIGHT_TIME_S:double = nan;
+  /// No default is a valid tolerance. Every applicable value is explicit.
+  REQUESTED_TIME_ACCURACY_S:double = nan;
+  ROOT_TOLERANCE_S:double = nan;
+  LIGHT_TIME_TOLERANCE_S:double = nan;
+  ISOLATION_FLOOR_S:double = nan;
+  RANGE_EXTREMUM_TOLERANCE_M:double = nan;
+  /// Normalized-rotation continuity: geodesic angle and angular derivatives.
+  ATTITUDE_JOIN_TOLERANCE_RAD:double = nan;
+  RATE_JOIN_TOLERANCE_RAD_S:double = nan;
+  ACCELERATION_JOIN_TOLERANCE_RAD_S2:double = nan;
+  POSITION_JOIN_TOLERANCE_M:double = nan;
+  VELOCITY_JOIN_TOLERANCE_MPS:double = nan;
+  ACCELERATION_JOIN_TOLERANCE_MPS2:double = nan;
+  POLICY:clgSelectionPolicy;
+  MIN_HOLD_TIME_S:double = nan;
+  MIN_ACTIVE_TIME_S:double = nan;
+  DECISION_STEP_S:double = nan;
+  OUTPUT_EPOCHS_S:[double] (required);
+  /// Required explicit opt-in/out; HAS_EMIT_EVENT_SNAPSHOTS must be true.
+  EMIT_EVENT_SNAPSHOTS:bool = false;
+  THREAD_COUNT:int = -1;
+  /// Resource bounds require true HAS flags and finite positive values.
+  MAX_WORKING_BYTES:long = -1;
+  MAX_RESULT_BYTES:long = -1;
+  MAX_CANDIDATE_PAIRS:long = -1;
+  MAX_INPUT_BYTES:long = -1;
+  MAX_SPOOL_BYTES:long = -1;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_TIMING:bool = false;
+  HAS_DIRECTION:bool = false;
+  HAS_MAX_LIGHT_TIME_S:bool = false;
+  HAS_REQUESTED_TIME_ACCURACY_S:bool = false;
+  HAS_ROOT_TOLERANCE_S:bool = false;
+  HAS_LIGHT_TIME_TOLERANCE_S:bool = false;
+  HAS_ISOLATION_FLOOR_S:bool = false;
+  HAS_RANGE_EXTREMUM_TOLERANCE_M:bool = false;
+  HAS_ATTITUDE_JOIN_TOLERANCE_RAD:bool = false;
+  HAS_RATE_JOIN_TOLERANCE_RAD_S:bool = false;
+  HAS_ACCELERATION_JOIN_TOLERANCE_RAD_S2:bool = false;
+  HAS_POSITION_JOIN_TOLERANCE_M:bool = false;
+  HAS_VELOCITY_JOIN_TOLERANCE_MPS:bool = false;
+  HAS_ACCELERATION_JOIN_TOLERANCE_MPS2:bool = false;
+  HAS_POLICY:bool = false;
+  HAS_MIN_HOLD_TIME_S:bool = false;
+  HAS_MIN_ACTIVE_TIME_S:bool = false;
+  HAS_DECISION_STEP_S:bool = false;
+  HAS_EMIT_EVENT_SNAPSHOTS:bool = false;
+  HAS_THREAD_COUNT:bool = false;
+  HAS_MAX_WORKING_BYTES:bool = false;
+  HAS_MAX_RESULT_BYTES:bool = false;
+  HAS_MAX_CANDIDATE_PAIRS:bool = false;
+  HAS_MAX_INPUT_BYTES:bool = false;
+  HAS_MAX_SPOOL_BYTES:bool = false;
+}
+
+table CLGDefinition {
+  /// Two-part JD TT, integer noon-based day plus seconds [0,86400).
+  EPOCH_JD_TT_DAY:long = -1;
+  EPOCH_JD_TT_SECONDS:double = nan;
+  /// ALL offsets incl. source halos satisfy abs(offset)<2^22 seconds.
+  /// Longer analyses split/re-epoch definitions; never use year-long doubles.
+  START_OFFSET_S:double = nan;
+  STOP_OFFSET_S:double = nan;
+  /// SIMULTANEOUS may use fixed axes. RETARDED requires SSB/ICRF inertial
+  /// coordinates or a declared constant-velocity inertial transform thereof.
+  /// GCRS-like local approximation needs certified model error; rotating
+  /// body-fixed axes and a moving body center are not inertial ray coordinates.
+  WORKING_FRAME:RFMCoordinateSystem (required);
+  BODIES:[CLGBody] (required);
+  SOURCES:[CLGSource] (required);
+  /// Dense index = vector position; ascending exact UTF-8 NODE_ID bytes.
+  /// Immutable for the graph, including all state blocks and result chunks.
+  NODES:[CLGNode] (required);
+  PROFILES:[CLGTerminalProfile] (required);
+  /// Ascending (NODE_INDEX, exact UTF-8 TERMINAL_ID bytes); unique IDs.
+  TERMINALS:[CLGTerminal] (required);
+  BLACKOUTS:[CLGBlackout];
+  CONTROLS:CLGControls (required);
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_EPOCH_JD_TT_DAY:bool = false;
+  HAS_EPOCH_JD_TT_SECONDS:bool = false;
+  HAS_START_OFFSET_S:bool = false;
+  HAS_STOP_OFFSET_S:bool = false;
+}
+
+/// u=(t-START_S)/(STOP_S-START_S), ascending power coefficients axis-major.
+/// Position length=3*(DEGREE+1), SI. Quaternion length=4*(DEGREE+1), xyzw,
+/// required for bodies and SUPPLIED_SERIES nodes; absent for evaluated laws.
+/// Q/||Q|| defines rotation. Sign-continuous representative, normalized C2
+/// rotation and angular derivatives checked using explicit join tolerances.
+table CLGPoseSegment {
+  OWNER:clgOwnerCategory;
+  OWNER_INDEX:int = -1;
+  START_S:double = nan;
+  STOP_S:double = nan;
+  DEGREE:int = -1;
+  POSITION_COEFFICIENTS:[double] (required);
+  QUATERNION_COEFFICIENTS:[double];
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_OWNER:bool = false;
+  HAS_OWNER_INDEX:bool = false;
+  HAS_START_S:bool = false;
+  HAS_STOP_S:bool = false;
+  HAS_DEGREE:bool = false;
+}
+
+table CLGStateBlock {
+  SEQUENCE:int = -1;
+  SEGMENTS:[CLGPoseSegment] (required);
+  FINAL_BLOCK:bool = false;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_SEQUENCE:bool = false;
+  HAS_FINAL_BLOCK:bool = false;
+}
+
+/// A is the endpoint with the lexicographically smaller (NODE_ID,TERMINAL_ID)
+/// exact UTF-8 byte tuple, B the larger; distinct nodes, canonical A<B indexes.
+/// Reversed fields or noncanonical dictionaries fail, never reverse direction.
+/// Sorted by (A,B,DIRECTION); requested direction only.
+struct CLGPair {
+  TERMINAL_A:CLGIndex;
+  TERMINAL_B:CLGIndex;
+  DIRECTION:clgLinkDirection;
+  HAS_DIRECTION:bool;
+}
+
+/// All co-causes retained, sorted by enum ordinal, ray direction, body index.
+/// BODY_INDEX supplied for OCCULTATION, HORIZON_A/B and TERRAIN_A/B only.
+/// No ambiguous zero body.
+struct CLGCause {
+  KIND:clgBoundaryCause;
+  DIRECTION:clgRayDirection;
+  BODY_INDEX:CLGIndex;
+  HAS_KIND:bool;
+  HAS_DIRECTION:bool;
+}
+
+/// One demanded ray at an interval boundary, TT offsets from graph epoch.
+/// Emission equals boundary OFFSET_S. Reception bracket encloses the mapped
+/// emission bracket and light-time solve error; SIMULTANEOUS uses equal times.
+struct CLGRayTimes {
+  DIRECTION:clgRayDirection;
+  EMISSION_S:double;
+  RECEPTION_S:double;
+  RECEPTION_BRACKET_LO_S:double;
+  RECEPTION_BRACKET_HI_S:double;
+  HAS_VALUES:bool;
+}
+
+/// Local to a result chunk. Distinct event clusters never merged by tolerance.
+/// Certified root brackets overlap only for a proved common event, otherwise
+/// refine to disjoint brackets or fail. A common event retains every cause.
+table CLGBoundary {
+  PAIR_INDEX:CLGIndex;
+  /// Emission clock for every demanded ray, including both duplex rays.
+  OFFSET_S:double = nan;
+  BRACKET_LO_S:double = nan;
+  BRACKET_HI_S:double = nan;
+  CAUSES:[CLGCause] (required);
+  /// Exactly the demanded direction(s), A_TO_B before B_TO_A; no duplicates.
+  RAY_TIMES:[CLGRayTimes] (required);
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_OFFSET_S:bool = false;
+  HAS_BRACKET_LO_S:bool = false;
+  HAS_BRACKET_HI_S:bool = false;
+}
+
+/// START/STOP/READY_FROM are emission TT offsets (docs/clg-contract.md section 3a).
+/// Packed scalars are present iff HAS_VALUES=true, otherwise invalid.
+/// READY_FROM_S is present iff HAS_READY_FROM=true (no silent zero readiness).
+struct CLGInterval {
+  START_S:double;
+  STOP_S:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  READY_FROM_S:double;
+  PAIR_INDEX:CLGIndex;
+  START_BOUNDARY_INDEX:CLGIndex;
+  STOP_BOUNDARY_INDEX:CLGIndex;
+  HAS_VALUES:bool;
+  HAS_READY_FROM:bool;
+}
+
+/// Deduplicated tuple (PAIR_INDEX,SLOT_A,SLOT_B), reused across acquisitions.
+struct CLGLink { PAIR_INDEX:CLGIndex; SLOT_A:CLGIndex; SLOT_B:CLGIndex; }
+struct CLGTransition {
+  /// Physical scheduling event in TT. ACTIVE/DRAIN bound emission service;
+  /// retarded RELEASE follows the latest demanded reception, including tails.
+  TIME_S:double;
+  LINK_INDEX:CLGIndex;
+  STAGE:clgTransitionStage;
+  CAUSE:clgBoundaryCause;
+  HAS_TIME:bool;
+  HAS_STAGE:bool;
+  HAS_CAUSE:bool;
+}
+
+table CLGAdjacency {
+  /// Common emission query in TT; equal-time transitions already applied.
+  EPOCH_S:double = nan;
+  ORIGIN:clgSnapshotOrigin;
+  /// Exactly N+1 entries, starting zero and ending at arc count.
+  ROW_OFFSETS:[uint] (required);
+  /// One outgoing arc per directed ACTIVE link, two per bidirectional link.
+  NEIGHBOR_NODE_INDEXES:[uint] (required);
+  LINK_INDEXES:[uint] (required);
+  /// Parallel to arcs; computed natively for that directed ray at EPOCH_S.
+  /// SIMULTANEOUS: same-epoch range and range/c; reception epoch equals EPOCH_S.
+  /// RETARDED: null-path range, coordinate vacuum flight time, reception TT.
+  RANGES_M:[double] (required);
+  LIGHT_TIMES_S:[double] (required);
+  RECEPTION_EPOCHS_S:[double] (required);
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_EPOCH_S:bool = false;
+  HAS_ORIGIN:bool = false;
+}
+
+/// Module-known values only; host identity is separate PVN on CLGResult.
+table CLGProvenance {
+  DEFINITION_SHA256:string (required);
+  /// One 64-character lowercase hex digest per block in sequence order.
+  STATE_BLOCK_SHA256:[string] (required);
+  ALGORITHM_ID:string (required);
+  ROOT_ERROR_BOUND_S:double = nan;
+  SOURCE_ERROR_BOUND_S:double = nan;
+  FRAME_TIME_ERROR_BOUND_S:double = nan;
+  RANGE_ERROR_BOUND_M:double = nan;
+  /// Mandatory, >= max compatible range/c for SIMULTANEOUS, and increased
+  /// when needed to bound actual model discrepancy; interbody simultaneous fails.
+  MODEL_ERROR_BOUND_S:double = nan;
+  ANALYSIS_SCOPE:clgAnalysisScope;
+  TIMING:clgPropagationTiming;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_ROOT_ERROR_BOUND_S:bool = false;
+  HAS_SOURCE_ERROR_BOUND_S:bool = false;
+  HAS_FRAME_TIME_ERROR_BOUND_S:bool = false;
+  HAS_RANGE_ERROR_BOUND_M:bool = false;
+  HAS_MODEL_ERROR_BOUND_S:bool = false;
+  HAS_ANALYSIS_SCOPE:bool = false;
+  HAS_TIMING:bool = false;
+}
+
+table CLGResult {
+  STATUS:clgComputationState;
+  ERROR_CODE:string;
+  ERROR_MESSAGE:string;
+  CHUNK_INDEX:int = -1;
+  CHUNK_COUNT:int = -1;
+  DEFINITION_REF:CLGRecordRef;
+  /// Global dictionaries in chunk zero only, bounded to 64 MiB together.
+  PAIRS:[CLGPair];
+  LINKS:[CLGLink];
+  /// Each interval and its boundary records live together in exactly one chunk.
+  BOUNDARIES:[CLGBoundary];
+  INTERVALS:[CLGInterval];
+  TRANSITIONS:[CLGTransition];
+  ADJACENCY:[CLGAdjacency];
+  /// Sorted unique TT emission epochs where the directed (src,dst,link) set
+  /// changes after atomic transitions; always includes START_OFFSET_S.
+  /// Each has a mandatory adjacency, independent of EMIT_EVENT_SNAPSHOTS.
+  /// Chunk-local entries correspond to this chunk's snapshots; concatenate.
+  TOPOLOGY_CHANGE_EPOCHS_S:[double];
+  PROVENANCE:CLGProvenance;
+  /// Host stamps PRODUCER_SHA256 from loaded artifact before durable COMPLETE.
+  PRODUCER:PVN;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_STATUS:bool = false;
+  HAS_CHUNK_INDEX:bool = false;
+  HAS_CHUNK_COUNT:bool = false;
+}
+
+/// Exactly one payload; every frame uses the same GRAPH_ID. COMPLETE requires
+/// all chunks, definition, implemented scope/enums and host-stamped producer.
+table CLG {
+  /// Globally unique across exchanging producers/stores; names one dictionary
+  /// forever. A known ID with a different definition SHA256 is rejected,
+  /// never merged or rebound. docs/clg-contract.md section 2 defines allocation and hashing.
+  GRAPH_ID:string (required);
+  PAYLOAD:clgPayloadClass;
+  DEFINITION:CLGDefinition;
+  STATE_BLOCK:CLGStateBlock;
+  RESULT:CLGResult;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_PAYLOAD:bool = false;
+}
+root_type CLG;
+file_identifier "$CLG";

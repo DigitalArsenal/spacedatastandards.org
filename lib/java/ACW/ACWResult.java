@@ -65,6 +65,12 @@ public final class ACWResult extends com.google.flatbuffers.Table {
    * Observations emitted, including false alarms.
    */
   public long OBSERVATION_COUNT() { int o = __offset(18); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_STATUS() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_EVALUATION_MODE() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_OBSERVATION_COUNT() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWResult(FlatBufferBuilder builder,
       byte STATUS,
@@ -74,20 +80,26 @@ public final class ACWResult extends com.google.flatbuffers.Table {
       byte EVALUATION_MODE,
       int CONSTRAINT_LABELSOffset,
       int TRACKSOffset,
-      long OBSERVATION_COUNT) {
-    builder.startTable(8);
+      long OBSERVATION_COUNT,
+      boolean HAS_STATUS,
+      boolean HAS_EVALUATION_MODE,
+      boolean HAS_OBSERVATION_COUNT) {
+    builder.startTable(11);
     ACWResult.addObservationCount(builder, OBSERVATION_COUNT);
     ACWResult.addTracks(builder, TRACKSOffset);
     ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
     ACWResult.addTraceId(builder, TRACE_IDOffset);
     ACWResult.addWindows(builder, WINDOWSOffset);
     ACWResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
+    ACWResult.addHasObservationCount(builder, HAS_OBSERVATION_COUNT);
+    ACWResult.addHasEvaluationMode(builder, HAS_EVALUATION_MODE);
+    ACWResult.addHasStatus(builder, HAS_STATUS);
     ACWResult.addEvaluationMode(builder, EVALUATION_MODE);
     ACWResult.addStatus(builder, STATUS);
     return ACWResult.endACWResult(builder);
   }
 
-  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startACWResult(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addErrorMessage(FlatBufferBuilder builder, int ERROR_MESSAGEOffset) { builder.addOffset(1, ERROR_MESSAGEOffset, 0); }
   public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(2, WINDOWSOffset, 0); }
@@ -102,6 +114,9 @@ public final class ACWResult extends com.google.flatbuffers.Table {
   public static int createTracksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTracksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addObservationCount(FlatBufferBuilder builder, long OBSERVATION_COUNT) { builder.addInt(7, (int) OBSERVATION_COUNT, (int) 0L); }
+  public static void addHasStatus(FlatBufferBuilder builder, boolean HAS_STATUS) { builder.addBoolean(8, HAS_STATUS, false); }
+  public static void addHasEvaluationMode(FlatBufferBuilder builder, boolean HAS_EVALUATION_MODE) { builder.addBoolean(9, HAS_EVALUATION_MODE, false); }
+  public static void addHasObservationCount(FlatBufferBuilder builder, boolean HAS_OBSERVATION_COUNT) { builder.addBoolean(10, HAS_OBSERVATION_COUNT, false); }
   public static int endACWResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

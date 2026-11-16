@@ -41,9 +41,45 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "IAU_2000A", "IAU_2000B", "IAU_2006"]
     },
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", "GALACTIC"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
     "acwOperationCode" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS", "SIMULATE_OBSERVATIONS"]
+      "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS", "SIMULATE_OBSERVATIONS", "COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY", "SIMULATE_OBSERVATIONS_EXPLICIT_BODY"]
     },
     "acwResultStatus" : {
       "type" : "string",
@@ -388,9 +424,340 @@
       },
       "additionalProperties" : false
     },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              },
+        "GALCEN_RA_DEG" : {
+                "type" : "number",
+                "description" : "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DEC_DEG" : {
+                "type" : "number",
+                "description" : "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DISTANCE_PC" : {
+                "type" : "number",
+                "description" : "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10)."
+              },
+        "Z_SUN_PC" : {
+                "type" : "number",
+                "description" : "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417)."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default."
+              },
+        "V_SUN_KMS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BodyRecordRef" : {
+      "type" : "object",
+      "description" : "Immutable reference. STANDARD matches REC.standard (e.g. \"DTT\", no \"$\"),\nor \"MODEL\" for a manifest. SHA256 is 64 lowercase hexadecimal characters.\nHash exact standalone root bytes WITHOUT size prefix, WITH file identifier;\nMODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.\nRECORD_ID is the selector specified in docs/clg-contract.md section 2; \"root\" selects\nthe complete root. URI is advisory and never fetched by a module.",
+      "properties" : {
+        "STANDARD" : {
+                "type" : "string"
+              },
+        "RECORD_ID" : {
+                "type" : "string"
+              },
+        "SHA256" : {
+                "type" : "string"
+              },
+        "URI" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["STANDARD", "RECORD_ID", "SHA256"],
+      "additionalProperties" : false
+    },
+    "BodyDescriptor" : {
+      "type" : "object",
+      "description" : "Shared body descriptor, usable by ACW, CLG and future SCV revisions.\nNo absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.\nSCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.",
+      "properties" : {
+        "NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid."
+              },
+        "FIXED_FRAME" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              },
+        "SEMI_AXIS_X_M" : {
+                "type" : "number",
+                "description" : "Each axis requires its HAS flag and a finite positive value."
+              },
+        "SEMI_AXIS_Y_M" : {
+                "type" : "number"
+              },
+        "SEMI_AXIS_Z_M" : {
+                "type" : "number"
+              },
+        "MODEL_ID" : {
+                "type" : "string"
+              },
+        "MODEL_SHA256" : {
+                "type" : "string",
+                "description" : "Exact model-manifest bytes, 64 lowercase hexadecimal characters."
+              },
+        "ATMOSPHERE_MODEL_ID" : {
+                "type" : "string",
+                "description" : "Required explicit assertion, \"NONE\" or a supported model identifier."
+              },
+        "TERRAIN" : {
+                "$ref" : "#/definitions/BodyRecordRef",
+                "description" : "Absent means no terrain supplied; elevation remains mandatory for sites."
+              },
+        "GRAVITY" : {
+                "$ref" : "#/definitions/BodyRecordRef",
+                "description" : "Optional SHC or MODEL reference; its radius is not the shape radius."
+              },
+        "LIGHTING_SPHERE_RADIUS_M" : {
+                "type" : "number",
+                "description" : "True HAS flag, positive radius and name required for non-ANY lighting.\nThis is a named spherical-shadow approximation, not ellipsoidal lighting."
+              },
+        "LIGHTING_MODEL_ID" : {
+                "type" : "string"
+              },
+        "HAS_NAIF_ID" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_SEMI_AXIS_X_M" : {
+                "type" : "boolean"
+              },
+        "HAS_SEMI_AXIS_Y_M" : {
+                "type" : "boolean"
+              },
+        "HAS_SEMI_AXIS_Z_M" : {
+                "type" : "boolean"
+              },
+        "HAS_LIGHTING_SPHERE_RADIUS_M" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["FIXED_FRAME", "MODEL_ID", "MODEL_SHA256", "ATMOSPHERE_MODEL_ID"],
+      "additionalProperties" : false
+    },
     "ACWStateSample" : {
       "type" : "object",
-      "description" : "Target Cartesian state sample in an Earth-fixed frame.",
+      "description" : "Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.",
       "properties" : {
         "JULIAN_DATE_TT" : {
                 "type" : "number",
@@ -398,25 +765,47 @@
               },
         "POSITION_X_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed X position, meters."
+                "description" : "Fixed-frame X position, meters."
               },
         "POSITION_Y_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed Y position, meters."
+                "description" : "Fixed-frame Y position, meters."
               },
         "POSITION_Z_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed Z position, meters."
+                "description" : "Fixed-frame Z position, meters."
               },
         "VELOCITY_X_MPS" : {
                 "type" : "number",
-                "description" : "Earth-fixed velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
+                "description" : "Fixed-frame velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
               },
         "VELOCITY_Y_MPS" : {
                 "type" : "number"
               },
         "VELOCITY_Z_MPS" : {
                 "type" : "number"
+              },
+        "HAS_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_POSITION_X_M" : {
+                "type" : "boolean"
+              },
+        "HAS_POSITION_Y_M" : {
+                "type" : "boolean"
+              },
+        "HAS_POSITION_Z_M" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_X_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_Y_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_Z_MPS" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -432,6 +821,13 @@
         "ELEVATION_RAD" : {
                 "type" : "number",
                 "description" : "Minimum visible elevation at the azimuth, radians."
+              },
+        "HAS_AZIMUTH_RAD" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_ELEVATION_RAD" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -450,6 +846,16 @@
         "TEMPERATURE_K" : {
                 "type" : "number",
                 "description" : "Local temperature in kelvin."
+              },
+        "HAS_MODEL_KIND" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_PRESSURE_PA" : {
+                "type" : "boolean"
+              },
+        "HAS_TEMPERATURE_K" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -465,6 +871,13 @@
         "END_JULIAN_DATE_TT" : {
                 "type" : "number",
                 "description" : "Interval end as Julian Date in TT."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -489,11 +902,11 @@
               },
         "ALTITUDE_M" : {
                 "type" : "number",
-                "description" : "Height above the WGS-84 ellipsoid, meters."
+                "description" : "Height along the outward normal of CENTRAL_BODY ellipsoid, meters.\ndocs/clg-contract.md section 4: at height > 0, own-body interior penetration of the\nfinite segment blocks; tangent contact is clear. At height <= 0, including\nzero, use the supporting plane, without an own-ellipsoid intersection test.\nThe user elevation mask and supplied terrain apply separately at all heights."
               },
         "MIN_ELEVATION_RAD" : {
                 "type" : "number",
-                "description" : "Default minimum visible elevation, radians."
+                "description" : "Explicit minimum visible elevation, radians; HAS flag required."
               },
         "CHANNEL_CAPACITY" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -502,6 +915,22 @@
         "BLACKOUT_WINDOWS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWBlackoutWindow"},
                 "description" : "Station-specific unavailable intervals."
+              },
+        "HAS_LATITUDE_RAD" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_LONGITUDE_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_ALTITUDE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_CHANNEL_CAPACITY" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -530,7 +959,7 @@
               },
         "OCCULTATION_ATMOSPHERE_HEIGHT_M" : {
                 "type" : "number",
-                "description" : "Central-body radius offset for line-of-sight occultation, meters\n(LINE_OF_SIGHT); 0 grazes the ellipsoid surface."
+                "description" : "Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space\nLOS only; not geodetic altitude. Never applied to a surface-station pair."
               },
         "MASK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWElevationMaskPoint"},
@@ -539,6 +968,25 @@
         "LABEL" : {
                 "type" : "string",
                 "description" : "Producer label echoed in window attribution."
+              },
+        "HAS_KIND" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_THRESHOLD_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_LIGHTING" : {
+                "type" : "boolean"
+              },
+        "HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -559,13 +1007,17 @@
               },
         "LABEL" : {
                 "type" : "string"
+              },
+        "HAS_OPERATOR" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
               }
       },
       "additionalProperties" : false
     },
     "ACWObserverTrajectory" : {
       "type" : "object",
-      "description" : "A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
+      "description" : "A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
       "properties" : {
         "OBSERVER_ID" : {
                 "type" : "string"
@@ -604,6 +1056,22 @@
               },
         "EMITTER_EIRP_DBW" : {
                 "type" : "number"
+              },
+        "HAS_RCS_M2" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_DIAMETER_M" : {
+                "type" : "boolean"
+              },
+        "HAS_GEOMETRIC_ALBEDO" : {
+                "type" : "boolean"
+              },
+        "HAS_EMITTER_FREQUENCY_HZ" : {
+                "type" : "boolean"
+              },
+        "HAS_EMITTER_EIRP_DBW" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -624,10 +1092,14 @@
               },
         "STATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
-                "description" : "Truth Earth-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
+                "description" : "Truth central-body-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
               },
         "SIGNATURE" : {
                 "$ref" : "#/definitions/ACWTargetSignature"
+              },
+        "HAS_NORAD_CAT_ID" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
               }
       },
       "additionalProperties" : false
@@ -664,7 +1136,7 @@
               },
         "REVISIT_INTERVAL_S" : {
                 "type" : "number",
-                "description" : "Shortest time between the end of one track of a target and the start\nof the next, seconds."
+                "description" : "Shortest time between the end of one track of a target and the start\nof the following, seconds."
               },
         "MAX_SIMULTANEOUS_TRACKS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -706,6 +1178,52 @@
         "TRANSMIT_FREQUENCY_HZ" : {
                 "type" : "number",
                 "description" : "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value."
+              },
+        "HAS_PHENOMENOLOGY" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_OBSERVATION_INTERVAL_S" : {
+                "type" : "boolean"
+              },
+        "HAS_TRACK_DURATION_S" : {
+                "type" : "boolean"
+              },
+        "HAS_REVISIT_INTERVAL_S" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SIMULTANEOUS_TRACKS" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_SNR_DB" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_RCS_M2" : {
+                "type" : "boolean"
+              },
+        "HAS_DETECTION_THRESHOLD_DB" : {
+                "type" : "boolean"
+              },
+        "HAS_RECEIVER_G_OVER_T_DB_PER_K" : {
+                "type" : "boolean"
+              },
+        "HAS_RECEIVER_BANDWIDTH_HZ" : {
+                "type" : "boolean"
+              },
+        "HAS_LIMITING_MAGNITUDE" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_HOST_SUN_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_FALSE_ALARM_RATE_PER_HOUR" : {
+                "type" : "boolean"
+              },
+        "HAS_TRANSMIT_FREQUENCY_HZ" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -753,6 +1271,19 @@
         "LOSS_REASON" : {
                 "type" : "string",
                 "description" : "Why scheduled observations were not detected (for example \"SNR\",\n\"MAGNITUDE\"); empty when all were."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_SCHEDULED_COUNT" : {
+                "type" : "boolean"
+              },
+        "HAS_DETECTED_COUNT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -770,7 +1301,7 @@
               },
         "STATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
-                "description" : "Pre-sampled target Earth-fixed Cartesian states."
+                "description" : "Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME."
               },
         "TARGET_STATION_ID" : {
                 "type" : "string",
@@ -794,7 +1325,7 @@
               },
         "CONSTRAINTS" : {
                 "$ref" : "#/definitions/ACWConstraintSet",
-                "description" : "Optional constraint composition. When absent the legacy behaviour holds:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required."
+                "description" : "Optional constraint composition. When absent the station constraints apply:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required."
               },
         "OBSERVERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWObserverTrajectory"},
@@ -842,6 +1373,28 @@
               },
         "END_JULIAN_DATE_TT" : {
                 "type" : "number"
+              },
+        "HAS_OPERATION" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_MIN_ELEVATION_OVERRIDE_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_EVALUATION_MODE" : {
+                "type" : "boolean"
+              },
+        "HAS_ROOT_TOLERANCE_S" : {
+                "type" : "boolean"
+              },
+        "HAS_RANDOM_SEED" : {
+                "type" : "boolean"
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -875,11 +1428,11 @@
               },
         "START_LIMITING_CONSTRAINT_INDEX" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window; -1 when the window starts at the\nfirst sample."
+                "description" : "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window. A clipped start has no limiting\nconstraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present\nindex is nonnegative and in range; the retained wire default is not a sentinel."
               },
         "END_LIMITING_CONSTRAINT_INDEX" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Index of the constraint whose transition closes the window; -1 when the\nwindow ends at the last sample."
+                "description" : "Index of the constraint whose transition closes the window. A clipped end\nhas HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative\nand in range; the retained wire default is not a sentinel."
               },
         "START_LIMITING_CONSTRAINT_LABEL" : {
                 "type" : "string",
@@ -898,6 +1451,34 @@
         "EDGES_REFINED" : {
                 "type" : "boolean",
                 "description" : "True when edges were root-refined (CONTINUOUS); false when they are samples."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_SAMPLE_COUNT" : {
+                "type" : "boolean"
+              },
+        "HAS_START_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_END_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_EDGES_REFINED" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -934,6 +1515,16 @@
         "OBSERVATION_COUNT" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Observations emitted, including false alarms."
+              },
+        "HAS_STATUS" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_EVALUATION_MODE" : {
+                "type" : "boolean"
+              },
+        "HAS_OBSERVATION_COUNT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -947,6 +1538,10 @@
               },
         "RESULT" : {
                 "$ref" : "#/definitions/ACWResult"
+              },
+        "CENTRAL_BODY" : {
+                "$ref" : "#/definitions/BodyDescriptor",
+                "description" : "Appended slot 2. Mandatory in every new request and successful result.\nRequest OPERATION must be 3 (access) or 4 (simulation); old modules reject\nthese codes. Missing body fails acw-body-required; absence never means\nEarth. Operations 1/2 are archival only and are rejected by new runtimes.\nResult must echo the exact descriptor field values, including optional\npresence; requester rejects a missing/different echo. Raw table offsets\nare not identity. Explicit one-time archive conversion is outside runtime."
               }
       },
       "additionalProperties" : false

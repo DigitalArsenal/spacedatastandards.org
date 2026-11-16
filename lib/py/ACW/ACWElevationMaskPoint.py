@@ -45,8 +45,23 @@ class ACWElevationMaskPoint(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWElevationMaskPoint
+    def HAS_AZIMUTH_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWElevationMaskPoint
+    def HAS_ELEVATION_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWElevationMaskPointStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(4)
 
 def Start(builder):
     ACWElevationMaskPointStart(builder)
@@ -63,6 +78,18 @@ def ACWElevationMaskPointAddELEVATION_RAD(builder, ELEVATION_RAD):
 def AddELEVATION_RAD(builder, ELEVATION_RAD):
     ACWElevationMaskPointAddELEVATION_RAD(builder, ELEVATION_RAD)
 
+def ACWElevationMaskPointAddHAS_AZIMUTH_RAD(builder, HAS_AZIMUTH_RAD):
+    builder.PrependBoolSlot(2, HAS_AZIMUTH_RAD, 0)
+
+def AddHAS_AZIMUTH_RAD(builder, HAS_AZIMUTH_RAD):
+    ACWElevationMaskPointAddHAS_AZIMUTH_RAD(builder, HAS_AZIMUTH_RAD)
+
+def ACWElevationMaskPointAddHAS_ELEVATION_RAD(builder, HAS_ELEVATION_RAD):
+    builder.PrependBoolSlot(3, HAS_ELEVATION_RAD, 0)
+
+def AddHAS_ELEVATION_RAD(builder, HAS_ELEVATION_RAD):
+    ACWElevationMaskPointAddHAS_ELEVATION_RAD(builder, HAS_ELEVATION_RAD)
+
 def ACWElevationMaskPointEnd(builder):
     return builder.EndObject()
 
@@ -77,9 +104,13 @@ class ACWElevationMaskPointT(object):
         self,
         AZIMUTH_RAD = 0.0,
         ELEVATION_RAD = 0.0,
+        HAS_AZIMUTH_RAD = False,
+        HAS_ELEVATION_RAD = False,
     ):
         self.AZIMUTH_RAD = AZIMUTH_RAD  # type: float
         self.ELEVATION_RAD = ELEVATION_RAD  # type: float
+        self.HAS_AZIMUTH_RAD = HAS_AZIMUTH_RAD  # type: bool
+        self.HAS_ELEVATION_RAD = HAS_ELEVATION_RAD  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -104,11 +135,15 @@ class ACWElevationMaskPointT(object):
             return
         self.AZIMUTH_RAD = ACWElevationMaskPoint.AZIMUTH_RAD()
         self.ELEVATION_RAD = ACWElevationMaskPoint.ELEVATION_RAD()
+        self.HAS_AZIMUTH_RAD = ACWElevationMaskPoint.HAS_AZIMUTH_RAD()
+        self.HAS_ELEVATION_RAD = ACWElevationMaskPoint.HAS_ELEVATION_RAD()
 
     # ACWElevationMaskPointT
     def Pack(self, builder):
         ACWElevationMaskPointStart(builder)
         ACWElevationMaskPointAddAZIMUTH_RAD(builder, self.AZIMUTH_RAD)
         ACWElevationMaskPointAddELEVATION_RAD(builder, self.ELEVATION_RAD)
+        ACWElevationMaskPointAddHAS_AZIMUTH_RAD(builder, self.HAS_AZIMUTH_RAD)
+        ACWElevationMaskPointAddHAS_ELEVATION_RAD(builder, self.HAS_ELEVATION_RAD)
         ACWElevationMaskPoint = ACWElevationMaskPointEnd(builder)
         return ACWElevationMaskPoint

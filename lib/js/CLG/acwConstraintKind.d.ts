@@ -1,0 +1,46 @@
+/**
+ * Kind of access constraint. Append only.
+ */
+export declare enum acwConstraintKind {
+    UNSPECIFIED = 0,
+    /**
+     * Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
+     */
+    MIN_ELEVATION = 1,
+    /**
+     * Azimuth-dependent minimum elevation from MASK.
+     */
+    ELEVATION_MASK = 2,
+    /**
+     * Observer-to-target range at or below MAX_RANGE_M.
+     */
+    MAX_RANGE = 3,
+    /**
+     * Observer-to-target range at or above MIN_RANGE_M.
+     */
+    MIN_RANGE = 4,
+    /**
+     * Angle between the observer-to-target and observer-to-Sun directions at
+     * or above THRESHOLD_RAD (solar exclusion).
+     */
+    SUN_EXCLUSION = 5,
+    /**
+     * Angle between the observer-to-target and observer-to-Moon directions at
+     * or above THRESHOLD_RAD (lunar exclusion).
+     */
+    MOON_EXCLUSION = 6,
+    /**
+     * Target illumination state matches LIGHTING.
+     */
+    TARGET_LIGHTING = 7,
+    /**
+     * Straight-line visibility between observer and target not occulted by the
+     * central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+     */
+    LINE_OF_SIGHT = 8,
+    /**
+     * Outside every observer blackout window.
+     */
+    BLACKOUT = 9
+}
+//# sourceMappingURL=acwConstraintKind.d.ts.map

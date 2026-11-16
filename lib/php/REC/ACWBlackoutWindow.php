@@ -61,24 +61,45 @@ class ACWBlackoutWindow extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_START_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_END_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWBlackoutWindow(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(2);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWBlackoutWindow
      */
-    public static function createACWBlackoutWindow(FlatBufferBuilder $builder, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT)
+    public static function createACWBlackoutWindow(FlatBufferBuilder $builder, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $HAS_START_JULIAN_DATE_TT, $HAS_END_JULIAN_DATE_TT)
     {
-        $builder->startObject(2);
+        $builder->startObject(4);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
+        self::addHAS_START_JULIAN_DATE_TT($builder, $HAS_START_JULIAN_DATE_TT);
+        self::addHAS_END_JULIAN_DATE_TT($builder, $HAS_END_JULIAN_DATE_TT);
         $o = $builder->endObject();
         return $o;
     }
@@ -101,6 +122,26 @@ class ACWBlackoutWindow extends Table
     public static function addEND_JULIAN_DATE_TT(FlatBufferBuilder $builder, $END_JULIAN_DATE_TT)
     {
         $builder->addDoubleX(1, $END_JULIAN_DATE_TT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_START_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_START_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(2, $HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_END_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_END_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(3, $HAS_END_JULIAN_DATE_TT, false);
     }
 
     /**

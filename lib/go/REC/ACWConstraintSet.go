@@ -138,8 +138,30 @@ func (rcv *ACWConstraintSet) Label() []byte {
 	return rcv.LABEL()
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWConstraintSet) HAS_OPERATOR() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraintSet) HasOperator() bool {
+	return rcv.HAS_OPERATOR()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWConstraintSet) MutateHAS_OPERATOR(n bool) bool {
+	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *ACWConstraintSet) MutateHasOperator(n bool) bool {
+	return rcv.MutateHAS_OPERATOR(n)
+}
+
 func ACWConstraintSetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(5)
 }
 func ACWConstraintSetAddOPERATOR(builder *flatbuffers.Builder, OPERATOR acwConstraintOperator) {
 	builder.PrependInt8Slot(0, int8(OPERATOR), 0)
@@ -176,6 +198,12 @@ func ACWConstraintSetAddLABEL(builder *flatbuffers.Builder, LABEL flatbuffers.UO
 }
 func ACWConstraintSetAddLabel(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
 	ACWConstraintSetAddLABEL(builder, LABEL)
+}
+func ACWConstraintSetAddHAS_OPERATOR(builder *flatbuffers.Builder, HAS_OPERATOR bool) {
+	builder.PrependBoolSlot(4, HAS_OPERATOR, false)
+}
+func ACWConstraintSetAddHasOperator(builder *flatbuffers.Builder, HAS_OPERATOR bool) {
+	ACWConstraintSetAddHAS_OPERATOR(builder, HAS_OPERATOR)
 }
 func ACWConstraintSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

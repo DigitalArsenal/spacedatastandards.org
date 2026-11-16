@@ -55,24 +55,39 @@ class ACW extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Appended slot 2. Mandatory in every new request and successful result.
+    /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+    /// these codes. Missing body fails acw-body-required; absence never means
+    /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+    /// Result must echo the exact descriptor field values, including optional
+    /// presence; requester rejects a missing/different echo. Raw table offsets
+    /// are not identity. Explicit one-time archive conversion is outside runtime.
+    public function getCENTRAL_BODY()
+    {
+        $obj = new BodyDescriptor();
+        $o = $this->__offset(8);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACW(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(2);
+        $builder->StartObject(3);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACW
      */
-    public static function createACW(FlatBufferBuilder $builder, $REQUEST, $RESULT)
+    public static function createACW(FlatBufferBuilder $builder, $REQUEST, $RESULT, $CENTRAL_BODY)
     {
-        $builder->startObject(2);
+        $builder->startObject(3);
         self::addREQUEST($builder, $REQUEST);
         self::addRESULT($builder, $RESULT);
+        self::addCENTRAL_BODY($builder, $CENTRAL_BODY);
         $o = $builder->endObject();
         return $o;
     }
@@ -95,6 +110,16 @@ class ACW extends Table
     public static function addRESULT(FlatBufferBuilder $builder, $RESULT)
     {
         $builder->addOffsetX(1, $RESULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCENTRAL_BODY(FlatBufferBuilder $builder, $CENTRAL_BODY)
+    {
+        $builder->addOffsetX(2, $CENTRAL_BODY, 0);
     }
 
     /**

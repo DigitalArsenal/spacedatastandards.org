@@ -3,7 +3,11 @@ import flatbuffers
 import EOP.main_generated
 import MEM.main_generated
 import PVN.main_generated
+import RFM.main_generated
 
+/// ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+/// Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+/// does not apply to ACW enumerations as a group.
 enum acwOperationCode:
     acwOperationCode_UNKNOWN = 0
     /// Compute access windows from pre-sampled target Cartesian states.
@@ -17,6 +21,10 @@ enum acwOperationCode:
     /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
     /// records; the result lists the tracks.
     acwOperationCode_SIMULATE_OBSERVATIONS = 2
+    /// Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+    acwOperationCode_COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY = 3
+    /// Only runtime simulation operation in body-aware modules; body required.
+    acwOperationCode_SIMULATE_OBSERVATIONS_EXPLICIT_BODY = 4
 
 enum acwResultStatus:
     /// Operation completed.
@@ -94,6 +102,10 @@ enum acwSensorPhenomenology:
     /// Satellite laser ranging: two-way range.
     acwSensorPhenomenology_LASER_RANGING = 4
 
+class BodyRecordRef
+
+class BodyDescriptor
+
 class ACWStateSample
 
 class ACWElevationMaskPoint
@@ -128,21 +140,171 @@ class ACWResult
 
 class ACW
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+/// or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+/// Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+/// MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+/// RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+/// the complete root. URI is advisory and never fetched by a module.
+class BodyRecordRef : flatbuffers.handle
+    def STANDARD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def RECORD_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def URI() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsBodyRecordRef(buf:string): return BodyRecordRef { buf, flatbuffers.indirect(buf, 0) }
+
+struct BodyRecordRefBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_STANDARD(STANDARD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, STANDARD)
+        return this
+    def add_RECORD_ID(RECORD_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, RECORD_ID)
+        return this
+    def add_SHA256(SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SHA256)
+        return this
+    def add_URI(URI:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, URI)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+/// No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+/// SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+class BodyDescriptor : flatbuffers.handle
+    /// Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+    def NAIF_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 4, 0)
+    def FIXED_FRAME() -> RFMCoordinateSystem:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return RFMCoordinateSystem { buf_, assert o }
+    /// Each axis requires its HAS flag and a finite positive value.
+    def SEMI_AXIS_X_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, nan)
+    def SEMI_AXIS_Y_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, nan)
+    def SEMI_AXIS_Z_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, nan)
+    def MODEL_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+    def MODEL_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Required explicit assertion, "NONE" or a supported model identifier.
+    def ATMOSPHERE_MODEL_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Absent means no terrain supplied; elevation remains mandatory for sites.
+    def TERRAIN() -> BodyRecordRef?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: BodyRecordRef { buf_, o } else: nil
+    /// Optional SHC or MODEL reference; its radius is not the shape radius.
+    def GRAVITY() -> BodyRecordRef?:
+        let o = flatbuffers.field_table(buf_, pos_, 22)
+        return if o: BodyRecordRef { buf_, o } else: nil
+    /// True HAS flag, positive radius and name required for non-ANY lighting.
+    /// This is a named spherical-shadow approximation, not ellipsoidal lighting.
+    def LIGHTING_SPHERE_RADIUS_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, nan)
+    def LIGHTING_MODEL_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_NAIF_ID() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    def HAS_SEMI_AXIS_X_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
+    def HAS_SEMI_AXIS_Y_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    def HAS_SEMI_AXIS_Z_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 34, 0))
+    def HAS_LIGHTING_SPHERE_RADIUS_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 36, 0))
+
+def GetRootAsBodyDescriptor(buf:string): return BodyDescriptor { buf, flatbuffers.indirect(buf, 0) }
+
+struct BodyDescriptorBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(17)
+        return this
+    def add_NAIF_ID(NAIF_ID:int):
+        b_.PrependInt32Slot(0, NAIF_ID, 0)
+        return this
+    def add_FIXED_FRAME(FIXED_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, FIXED_FRAME)
+        return this
+    def add_SEMI_AXIS_X_M(SEMI_AXIS_X_M:float):
+        b_.PrependFloat64Slot(2, SEMI_AXIS_X_M, nan)
+        return this
+    def add_SEMI_AXIS_Y_M(SEMI_AXIS_Y_M:float):
+        b_.PrependFloat64Slot(3, SEMI_AXIS_Y_M, nan)
+        return this
+    def add_SEMI_AXIS_Z_M(SEMI_AXIS_Z_M:float):
+        b_.PrependFloat64Slot(4, SEMI_AXIS_Z_M, nan)
+        return this
+    def add_MODEL_ID(MODEL_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, MODEL_ID)
+        return this
+    def add_MODEL_SHA256(MODEL_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MODEL_SHA256)
+        return this
+    def add_ATMOSPHERE_MODEL_ID(ATMOSPHERE_MODEL_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, ATMOSPHERE_MODEL_ID)
+        return this
+    def add_TERRAIN(TERRAIN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, TERRAIN)
+        return this
+    def add_GRAVITY(GRAVITY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, GRAVITY)
+        return this
+    def add_LIGHTING_SPHERE_RADIUS_M(LIGHTING_SPHERE_RADIUS_M:float):
+        b_.PrependFloat64Slot(10, LIGHTING_SPHERE_RADIUS_M, nan)
+        return this
+    def add_LIGHTING_MODEL_ID(LIGHTING_MODEL_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, LIGHTING_MODEL_ID)
+        return this
+    def add_HAS_NAIF_ID(HAS_NAIF_ID:bool):
+        b_.PrependBoolSlot(12, HAS_NAIF_ID, 0)
+        return this
+    def add_HAS_SEMI_AXIS_X_M(HAS_SEMI_AXIS_X_M:bool):
+        b_.PrependBoolSlot(13, HAS_SEMI_AXIS_X_M, 0)
+        return this
+    def add_HAS_SEMI_AXIS_Y_M(HAS_SEMI_AXIS_Y_M:bool):
+        b_.PrependBoolSlot(14, HAS_SEMI_AXIS_Y_M, 0)
+        return this
+    def add_HAS_SEMI_AXIS_Z_M(HAS_SEMI_AXIS_Z_M:bool):
+        b_.PrependBoolSlot(15, HAS_SEMI_AXIS_Z_M, 0)
+        return this
+    def add_HAS_LIGHTING_SPHERE_RADIUS_M(HAS_LIGHTING_SPHERE_RADIUS_M:bool):
+        b_.PrependBoolSlot(16, HAS_LIGHTING_SPHERE_RADIUS_M, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 class ACWStateSample : flatbuffers.handle
     /// Sample epoch as Julian Date in TT.
     def JULIAN_DATE_TT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    /// Earth-fixed X position, meters.
+    /// Fixed-frame X position, meters.
     def POSITION_X_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
-    /// Earth-fixed Y position, meters.
+    /// Fixed-frame Y position, meters.
     def POSITION_Y_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
-    /// Earth-fixed Z position, meters.
+    /// Fixed-frame Z position, meters.
     def POSITION_Z_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// Earth-fixed velocity, meters per second. Required for range-rate,
+    /// Fixed-frame velocity, meters per second. Required for range-rate,
     /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
     def VELOCITY_X_MPS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
@@ -150,13 +312,28 @@ class ACWStateSample : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     def VELOCITY_Z_MPS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    def HAS_POSITION_X_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_POSITION_Y_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    def HAS_POSITION_Z_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def HAS_VELOCITY_X_MPS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
+    def HAS_VELOCITY_Y_MPS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    def HAS_VELOCITY_Z_MPS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
 
 def GetRootAsACWStateSample(buf:string): return ACWStateSample { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWStateSampleBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(14)
         return this
     def add_JULIAN_DATE_TT(JULIAN_DATE_TT:float):
         b_.PrependFloat64Slot(0, JULIAN_DATE_TT, 0.0)
@@ -179,6 +356,27 @@ struct ACWStateSampleBuilder:
     def add_VELOCITY_Z_MPS(VELOCITY_Z_MPS:float):
         b_.PrependFloat64Slot(6, VELOCITY_Z_MPS, 0.0)
         return this
+    def add_HAS_JULIAN_DATE_TT(HAS_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(7, HAS_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_POSITION_X_M(HAS_POSITION_X_M:bool):
+        b_.PrependBoolSlot(8, HAS_POSITION_X_M, 0)
+        return this
+    def add_HAS_POSITION_Y_M(HAS_POSITION_Y_M:bool):
+        b_.PrependBoolSlot(9, HAS_POSITION_Y_M, 0)
+        return this
+    def add_HAS_POSITION_Z_M(HAS_POSITION_Z_M:bool):
+        b_.PrependBoolSlot(10, HAS_POSITION_Z_M, 0)
+        return this
+    def add_HAS_VELOCITY_X_MPS(HAS_VELOCITY_X_MPS:bool):
+        b_.PrependBoolSlot(11, HAS_VELOCITY_X_MPS, 0)
+        return this
+    def add_HAS_VELOCITY_Y_MPS(HAS_VELOCITY_Y_MPS:bool):
+        b_.PrependBoolSlot(12, HAS_VELOCITY_Y_MPS, 0)
+        return this
+    def add_HAS_VELOCITY_Z_MPS(HAS_VELOCITY_Z_MPS:bool):
+        b_.PrependBoolSlot(13, HAS_VELOCITY_Z_MPS, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -190,19 +388,30 @@ class ACWElevationMaskPoint : flatbuffers.handle
     /// Minimum visible elevation at the azimuth, radians.
     def ELEVATION_RAD() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_AZIMUTH_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    def HAS_ELEVATION_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
 
 def GetRootAsACWElevationMaskPoint(buf:string): return ACWElevationMaskPoint { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWElevationMaskPointBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(2)
+        b_.StartObject(4)
         return this
     def add_AZIMUTH_RAD(AZIMUTH_RAD:float):
         b_.PrependFloat64Slot(0, AZIMUTH_RAD, 0.0)
         return this
     def add_ELEVATION_RAD(ELEVATION_RAD:float):
         b_.PrependFloat64Slot(1, ELEVATION_RAD, 0.0)
+        return this
+    def add_HAS_AZIMUTH_RAD(HAS_AZIMUTH_RAD:bool):
+        b_.PrependBoolSlot(2, HAS_AZIMUTH_RAD, 0)
+        return this
+    def add_HAS_ELEVATION_RAD(HAS_ELEVATION_RAD:bool):
+        b_.PrependBoolSlot(3, HAS_ELEVATION_RAD, 0)
         return this
     def end():
         return b_.EndObject()
@@ -217,13 +426,20 @@ class ACWRefractionModel : flatbuffers.handle
     /// Local temperature in kelvin.
     def TEMPERATURE_K() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 283.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_MODEL_KIND() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    def HAS_PRESSURE_PA() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    def HAS_TEMPERATURE_K() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
 
 def GetRootAsACWRefractionModel(buf:string): return ACWRefractionModel { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWRefractionModelBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(6)
         return this
     def add_MODEL_KIND(MODEL_KIND:acwRefractionModelKind):
         b_.PrependInt8Slot(0, MODEL_KIND, 0)
@@ -233,6 +449,15 @@ struct ACWRefractionModelBuilder:
         return this
     def add_TEMPERATURE_K(TEMPERATURE_K:float):
         b_.PrependFloat64Slot(2, TEMPERATURE_K, 283.0)
+        return this
+    def add_HAS_MODEL_KIND(HAS_MODEL_KIND:bool):
+        b_.PrependBoolSlot(3, HAS_MODEL_KIND, 0)
+        return this
+    def add_HAS_PRESSURE_PA(HAS_PRESSURE_PA:bool):
+        b_.PrependBoolSlot(4, HAS_PRESSURE_PA, 0)
+        return this
+    def add_HAS_TEMPERATURE_K(HAS_TEMPERATURE_K:bool):
+        b_.PrependBoolSlot(5, HAS_TEMPERATURE_K, 0)
         return this
     def end():
         return b_.EndObject()
@@ -245,19 +470,30 @@ class ACWBlackoutWindow : flatbuffers.handle
     /// Interval end as Julian Date in TT.
     def END_JULIAN_DATE_TT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_START_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    def HAS_END_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
 
 def GetRootAsACWBlackoutWindow(buf:string): return ACWBlackoutWindow { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWBlackoutWindowBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(2)
+        b_.StartObject(4)
         return this
     def add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT:float):
         b_.PrependFloat64Slot(0, START_JULIAN_DATE_TT, 0.0)
         return this
     def add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT:float):
         b_.PrependFloat64Slot(1, END_JULIAN_DATE_TT, 0.0)
+        return this
+    def add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(2, HAS_START_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(3, HAS_END_JULIAN_DATE_TT, 0)
         return this
     def end():
         return b_.EndObject()
@@ -274,10 +510,14 @@ class ACWGroundStation : flatbuffers.handle
     /// Geodetic longitude, radians.
     def LONGITUDE_RAD() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// Height above the WGS-84 ellipsoid, meters.
+    /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+    /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+    /// finite segment blocks; tangent contact is clear. At height <= 0, including
+    /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+    /// The user elevation mask and supplied terrain apply separately at all heights.
     def ALTITUDE_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
-    /// Default minimum visible elevation, radians.
+    /// Explicit minimum visible elevation, radians; HAS flag required.
     def MIN_ELEVATION_RAD() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Number of simultaneous contacts this station can schedule.
@@ -288,13 +528,24 @@ class ACWGroundStation : flatbuffers.handle
         return ACWBlackoutWindow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
     def BLACKOUT_WINDOWS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_LATITUDE_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_LONGITUDE_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    def HAS_ALTITUDE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def HAS_MIN_ELEVATION_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
+    def HAS_CHANNEL_CAPACITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
 
 def GetRootAsACWGroundStation(buf:string): return ACWGroundStation { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWGroundStationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(13)
         return this
     def add_STATION_ID(STATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, STATION_ID)
@@ -319,6 +570,21 @@ struct ACWGroundStationBuilder:
         return this
     def add_BLACKOUT_WINDOWS(BLACKOUT_WINDOWS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, BLACKOUT_WINDOWS)
+        return this
+    def add_HAS_LATITUDE_RAD(HAS_LATITUDE_RAD:bool):
+        b_.PrependBoolSlot(8, HAS_LATITUDE_RAD, 0)
+        return this
+    def add_HAS_LONGITUDE_RAD(HAS_LONGITUDE_RAD:bool):
+        b_.PrependBoolSlot(9, HAS_LONGITUDE_RAD, 0)
+        return this
+    def add_HAS_ALTITUDE_M(HAS_ALTITUDE_M:bool):
+        b_.PrependBoolSlot(10, HAS_ALTITUDE_M, 0)
+        return this
+    def add_HAS_MIN_ELEVATION_RAD(HAS_MIN_ELEVATION_RAD:bool):
+        b_.PrependBoolSlot(11, HAS_MIN_ELEVATION_RAD, 0)
+        return this
+    def add_HAS_CHANNEL_CAPACITY(HAS_CHANNEL_CAPACITY:bool):
+        b_.PrependBoolSlot(12, HAS_CHANNEL_CAPACITY, 0)
         return this
     def end():
         return b_.EndObject()
@@ -345,8 +611,8 @@ class ACWConstraint : flatbuffers.handle
     /// Required target lighting (TARGET_LIGHTING).
     def LIGHTING() -> acwLightingCondition:
         return acwLightingCondition(flatbuffers.field_int8(buf_, pos_, 12, 0))
-    /// Central-body radius offset for line-of-sight occultation, meters
-    /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+    /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+    /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
     def OCCULTATION_ATMOSPHERE_HEIGHT_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
     /// Azimuth-dependent mask (ELEVATION_MASK).
@@ -357,13 +623,26 @@ class ACWConstraint : flatbuffers.handle
     /// Producer label echoed in window attribution.
     def LABEL() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_KIND() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_THRESHOLD_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    def HAS_MIN_RANGE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def HAS_MAX_RANGE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
+    def HAS_LIGHTING() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    def HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
 
 def GetRootAsACWConstraint(buf:string): return ACWConstraint { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWConstraintBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(14)
         return this
     def add_KIND(KIND:acwConstraintKind):
         b_.PrependInt8Slot(0, KIND, 0)
@@ -388,6 +667,24 @@ struct ACWConstraintBuilder:
         return this
     def add_LABEL(LABEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, LABEL)
+        return this
+    def add_HAS_KIND(HAS_KIND:bool):
+        b_.PrependBoolSlot(8, HAS_KIND, 0)
+        return this
+    def add_HAS_THRESHOLD_RAD(HAS_THRESHOLD_RAD:bool):
+        b_.PrependBoolSlot(9, HAS_THRESHOLD_RAD, 0)
+        return this
+    def add_HAS_MIN_RANGE_M(HAS_MIN_RANGE_M:bool):
+        b_.PrependBoolSlot(10, HAS_MIN_RANGE_M, 0)
+        return this
+    def add_HAS_MAX_RANGE_M(HAS_MAX_RANGE_M:bool):
+        b_.PrependBoolSlot(11, HAS_MAX_RANGE_M, 0)
+        return this
+    def add_HAS_LIGHTING(HAS_LIGHTING:bool):
+        b_.PrependBoolSlot(12, HAS_LIGHTING, 0)
+        return this
+    def add_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M:bool):
+        b_.PrependBoolSlot(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, 0)
         return this
     def end():
         return b_.EndObject()
@@ -414,13 +711,16 @@ class ACWConstraintSet : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 8)
     def LABEL() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_OPERATOR() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
 
 def GetRootAsACWConstraintSet(buf:string): return ACWConstraintSet { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWConstraintSetBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(5)
         return this
     def add_OPERATOR(OPERATOR:acwConstraintOperator):
         b_.PrependInt8Slot(0, OPERATOR, 0)
@@ -433,6 +733,9 @@ struct ACWConstraintSetBuilder:
         return this
     def add_LABEL(LABEL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, LABEL)
+        return this
+    def add_HAS_OPERATOR(HAS_OPERATOR:bool):
+        b_.PrependBoolSlot(4, HAS_OPERATOR, 0)
         return this
     def end():
         return b_.EndObject()
@@ -451,7 +754,7 @@ def ACWConstraintSetCreateSETSVector(b_:flatbuffers.builder, v_:[flatbuffers.off
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 class ACWObserverTrajectory : flatbuffers.handle
     def OBSERVER_ID() -> string:
@@ -521,13 +824,24 @@ class ACWTargetSignature : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
     def EMITTER_EIRP_DBW() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_RCS_M2() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    def HAS_DIAMETER_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    def HAS_GEOMETRIC_ALBEDO() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    def HAS_EMITTER_FREQUENCY_HZ() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_EMITTER_EIRP_DBW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
 
 def GetRootAsACWTargetSignature(buf:string): return ACWTargetSignature { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWTargetSignatureBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(5)
+        b_.StartObject(10)
         return this
     def add_RCS_M2(RCS_M2:float):
         b_.PrependFloat64Slot(0, RCS_M2, 0.0)
@@ -544,6 +858,21 @@ struct ACWTargetSignatureBuilder:
     def add_EMITTER_EIRP_DBW(EMITTER_EIRP_DBW:float):
         b_.PrependFloat64Slot(4, EMITTER_EIRP_DBW, 0.0)
         return this
+    def add_HAS_RCS_M2(HAS_RCS_M2:bool):
+        b_.PrependBoolSlot(5, HAS_RCS_M2, 0)
+        return this
+    def add_HAS_DIAMETER_M(HAS_DIAMETER_M:bool):
+        b_.PrependBoolSlot(6, HAS_DIAMETER_M, 0)
+        return this
+    def add_HAS_GEOMETRIC_ALBEDO(HAS_GEOMETRIC_ALBEDO:bool):
+        b_.PrependBoolSlot(7, HAS_GEOMETRIC_ALBEDO, 0)
+        return this
+    def add_HAS_EMITTER_FREQUENCY_HZ(HAS_EMITTER_FREQUENCY_HZ:bool):
+        b_.PrependBoolSlot(8, HAS_EMITTER_FREQUENCY_HZ, 0)
+        return this
+    def add_HAS_EMITTER_EIRP_DBW(HAS_EMITTER_EIRP_DBW:bool):
+        b_.PrependBoolSlot(9, HAS_EMITTER_EIRP_DBW, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -556,7 +885,7 @@ class ACWTarget : flatbuffers.handle
     /// International designator.
     def OBJECT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Truth Earth-fixed states with velocity, in the frame and time scale of
+    /// Truth central-body-fixed states with velocity, in the frame and time scale of
     /// ACWRequest.STATES.
     def STATES(i:int) -> ACWStateSample:
         return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
@@ -565,13 +894,16 @@ class ACWTarget : flatbuffers.handle
     def SIGNATURE() -> ACWTargetSignature?:
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: ACWTargetSignature { buf_, o } else: nil
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_NORAD_CAT_ID() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
 
 def GetRootAsACWTarget(buf:string): return ACWTarget { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWTargetBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(5)
+        b_.StartObject(6)
         return this
     def add_TARGET_ID(TARGET_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, TARGET_ID)
@@ -587,6 +919,9 @@ struct ACWTargetBuilder:
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, SIGNATURE)
+        return this
+    def add_HAS_NORAD_CAT_ID(HAS_NORAD_CAT_ID:bool):
+        b_.PrependBoolSlot(5, HAS_NORAD_CAT_ID, 0)
         return this
     def end():
         return b_.EndObject()
@@ -627,7 +962,7 @@ class ACWSensor : flatbuffers.handle
     def TRACK_DURATION_S() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// Shortest time between the end of one track of a target and the start
-    /// of the next, seconds.
+    /// of the following, seconds.
     def REVISIT_INTERVAL_S() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
     /// Targets tracked at once.
@@ -666,13 +1001,44 @@ class ACWSensor : flatbuffers.handle
     /// DOPPLER with DOPPLER_FREQUENCY set to this value.
     def TRANSMIT_FREQUENCY_HZ() -> float:
         return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_PHENOMENOLOGY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    def HAS_OBSERVATION_INTERVAL_S() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 44, 0))
+    def HAS_TRACK_DURATION_S() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 46, 0))
+    def HAS_REVISIT_INTERVAL_S() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 48, 0))
+    def HAS_MAX_SIMULTANEOUS_TRACKS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 50, 0))
+    def HAS_REFERENCE_SNR_DB() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 52, 0))
+    def HAS_REFERENCE_RANGE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 54, 0))
+    def HAS_REFERENCE_RCS_M2() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 56, 0))
+    def HAS_DETECTION_THRESHOLD_DB() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 58, 0))
+    def HAS_RECEIVER_G_OVER_T_DB_PER_K() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 60, 0))
+    def HAS_RECEIVER_BANDWIDTH_HZ() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 62, 0))
+    def HAS_LIMITING_MAGNITUDE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 64, 0))
+    def HAS_MAX_HOST_SUN_ELEVATION_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 66, 0))
+    def HAS_FALSE_ALARM_RATE_PER_HOUR() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 68, 0))
+    def HAS_TRANSMIT_FREQUENCY_HZ() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 70, 0))
 
 def GetRootAsACWSensor(buf:string): return ACWSensor { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWSensorBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(19)
+        b_.StartObject(34)
         return this
     def add_SENSOR_ID(SENSOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SENSOR_ID)
@@ -730,6 +1096,51 @@ struct ACWSensorBuilder:
         return this
     def add_TRANSMIT_FREQUENCY_HZ(TRANSMIT_FREQUENCY_HZ:float):
         b_.PrependFloat64Slot(18, TRANSMIT_FREQUENCY_HZ, 0.0)
+        return this
+    def add_HAS_PHENOMENOLOGY(HAS_PHENOMENOLOGY:bool):
+        b_.PrependBoolSlot(19, HAS_PHENOMENOLOGY, 0)
+        return this
+    def add_HAS_OBSERVATION_INTERVAL_S(HAS_OBSERVATION_INTERVAL_S:bool):
+        b_.PrependBoolSlot(20, HAS_OBSERVATION_INTERVAL_S, 0)
+        return this
+    def add_HAS_TRACK_DURATION_S(HAS_TRACK_DURATION_S:bool):
+        b_.PrependBoolSlot(21, HAS_TRACK_DURATION_S, 0)
+        return this
+    def add_HAS_REVISIT_INTERVAL_S(HAS_REVISIT_INTERVAL_S:bool):
+        b_.PrependBoolSlot(22, HAS_REVISIT_INTERVAL_S, 0)
+        return this
+    def add_HAS_MAX_SIMULTANEOUS_TRACKS(HAS_MAX_SIMULTANEOUS_TRACKS:bool):
+        b_.PrependBoolSlot(23, HAS_MAX_SIMULTANEOUS_TRACKS, 0)
+        return this
+    def add_HAS_REFERENCE_SNR_DB(HAS_REFERENCE_SNR_DB:bool):
+        b_.PrependBoolSlot(24, HAS_REFERENCE_SNR_DB, 0)
+        return this
+    def add_HAS_REFERENCE_RANGE_M(HAS_REFERENCE_RANGE_M:bool):
+        b_.PrependBoolSlot(25, HAS_REFERENCE_RANGE_M, 0)
+        return this
+    def add_HAS_REFERENCE_RCS_M2(HAS_REFERENCE_RCS_M2:bool):
+        b_.PrependBoolSlot(26, HAS_REFERENCE_RCS_M2, 0)
+        return this
+    def add_HAS_DETECTION_THRESHOLD_DB(HAS_DETECTION_THRESHOLD_DB:bool):
+        b_.PrependBoolSlot(27, HAS_DETECTION_THRESHOLD_DB, 0)
+        return this
+    def add_HAS_RECEIVER_G_OVER_T_DB_PER_K(HAS_RECEIVER_G_OVER_T_DB_PER_K:bool):
+        b_.PrependBoolSlot(28, HAS_RECEIVER_G_OVER_T_DB_PER_K, 0)
+        return this
+    def add_HAS_RECEIVER_BANDWIDTH_HZ(HAS_RECEIVER_BANDWIDTH_HZ:bool):
+        b_.PrependBoolSlot(29, HAS_RECEIVER_BANDWIDTH_HZ, 0)
+        return this
+    def add_HAS_LIMITING_MAGNITUDE(HAS_LIMITING_MAGNITUDE:bool):
+        b_.PrependBoolSlot(30, HAS_LIMITING_MAGNITUDE, 0)
+        return this
+    def add_HAS_MAX_HOST_SUN_ELEVATION_RAD(HAS_MAX_HOST_SUN_ELEVATION_RAD:bool):
+        b_.PrependBoolSlot(31, HAS_MAX_HOST_SUN_ELEVATION_RAD, 0)
+        return this
+    def add_HAS_FALSE_ALARM_RATE_PER_HOUR(HAS_FALSE_ALARM_RATE_PER_HOUR:bool):
+        b_.PrependBoolSlot(32, HAS_FALSE_ALARM_RATE_PER_HOUR, 0)
+        return this
+    def add_HAS_TRANSMIT_FREQUENCY_HZ(HAS_TRANSMIT_FREQUENCY_HZ:bool):
+        b_.PrependBoolSlot(33, HAS_TRANSMIT_FREQUENCY_HZ, 0)
         return this
     def end():
         return b_.EndObject()
@@ -798,13 +1209,22 @@ class ACWTrack : flatbuffers.handle
     /// "MAGNITUDE"); empty when all were.
     def LOSS_REASON() -> string:
         return flatbuffers.field_string(buf_, pos_, 16)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_START_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    def HAS_END_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_SCHEDULED_COUNT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    def HAS_DETECTED_COUNT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
 
 def GetRootAsACWTrack(buf:string): return ACWTrack { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWTrackBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(11)
         return this
     def add_SENSOR_ID(SENSOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SENSOR_ID)
@@ -827,6 +1247,18 @@ struct ACWTrackBuilder:
     def add_LOSS_REASON(LOSS_REASON:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, LOSS_REASON)
         return this
+    def add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(7, HAS_START_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(8, HAS_END_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_SCHEDULED_COUNT(HAS_SCHEDULED_COUNT:bool):
+        b_.PrependBoolSlot(9, HAS_SCHEDULED_COUNT, 0)
+        return this
+    def add_HAS_DETECTED_COUNT(HAS_DETECTED_COUNT:bool):
+        b_.PrependBoolSlot(10, HAS_DETECTED_COUNT, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -839,7 +1271,7 @@ class ACWRequest : flatbuffers.handle
         return ACWGroundStation { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
     def GROUND_STATIONS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 6)
-    /// Pre-sampled target Earth-fixed Cartesian states.
+    /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
     def STATES(i:int) -> ACWStateSample:
         return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
     def STATES_length() -> int:
@@ -862,7 +1294,7 @@ class ACWRequest : flatbuffers.handle
     def REFRACTION_MODEL() -> ACWRefractionModel?:
         let o = flatbuffers.field_table(buf_, pos_, 18)
         return if o: ACWRefractionModel { buf_, o } else: nil
-    /// Optional constraint composition. When absent the legacy behaviour holds:
+    /// Optional constraint composition. When absent the station constraints apply:
     /// every ground station's MIN_ELEVATION_RAD (or the override) plus
     /// ELEVATION_MASK, all required.
     def CONSTRAINTS() -> ACWConstraintSet?:
@@ -924,13 +1356,28 @@ class ACWRequest : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     def END_JULIAN_DATE_TT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_OPERATION() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 46, 0))
+    def HAS_MIN_ELEVATION_OVERRIDE_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 48, 0))
+    def HAS_EVALUATION_MODE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 50, 0))
+    def HAS_ROOT_TOLERANCE_S() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 52, 0))
+    def HAS_RANDOM_SEED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 54, 0))
+    def HAS_START_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 56, 0))
+    def HAS_END_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 58, 0))
 
 def GetRootAsACWRequest(buf:string): return ACWRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(28)
         return this
     def add_OPERATION(OPERATION:acwOperationCode):
         b_.PrependInt8Slot(0, OPERATION, 0)
@@ -994,6 +1441,27 @@ struct ACWRequestBuilder:
         return this
     def add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT:float):
         b_.PrependFloat64Slot(20, END_JULIAN_DATE_TT, 0.0)
+        return this
+    def add_HAS_OPERATION(HAS_OPERATION:bool):
+        b_.PrependBoolSlot(21, HAS_OPERATION, 0)
+        return this
+    def add_HAS_MIN_ELEVATION_OVERRIDE_RAD(HAS_MIN_ELEVATION_OVERRIDE_RAD:bool):
+        b_.PrependBoolSlot(22, HAS_MIN_ELEVATION_OVERRIDE_RAD, 0)
+        return this
+    def add_HAS_EVALUATION_MODE(HAS_EVALUATION_MODE:bool):
+        b_.PrependBoolSlot(23, HAS_EVALUATION_MODE, 0)
+        return this
+    def add_HAS_ROOT_TOLERANCE_S(HAS_ROOT_TOLERANCE_S:bool):
+        b_.PrependBoolSlot(24, HAS_ROOT_TOLERANCE_S, 0)
+        return this
+    def add_HAS_RANDOM_SEED(HAS_RANDOM_SEED:bool):
+        b_.PrependBoolSlot(25, HAS_RANDOM_SEED, 0)
+        return this
+    def add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(26, HAS_START_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(27, HAS_END_JULIAN_DATE_TT, 0)
         return this
     def end():
         return b_.EndObject()
@@ -1089,12 +1557,14 @@ class ACWAccessWindow : flatbuffers.handle
     def OBSERVER_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
     /// Index into the flattened, depth-first constraint list of the constraint
-    /// whose transition opens the window; -1 when the window starts at the
-    /// first sample.
+    /// whose transition opens the window. A clipped start has no limiting
+    /// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+    /// index is nonnegative and in range; the retained wire default is not a sentinel.
     def START_LIMITING_CONSTRAINT_INDEX() -> int:
         return flatbuffers.field_int32(buf_, pos_, 16, -1)
-    /// Index of the constraint whose transition closes the window; -1 when the
-    /// window ends at the last sample.
+    /// Index of the constraint whose transition closes the window. A clipped end
+    /// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+    /// and in range; the retained wire default is not a sentinel.
     def END_LIMITING_CONSTRAINT_INDEX() -> int:
         return flatbuffers.field_int32(buf_, pos_, 18, -1)
     /// Labels of those constraints, when the producer set them.
@@ -1110,13 +1580,32 @@ class ACWAccessWindow : flatbuffers.handle
     /// True when edges were root-refined (CONTINUOUS); false when they are samples.
     def EDGES_REFINED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_START_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
+    def HAS_END_JULIAN_DATE_TT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    def HAS_MAX_ELEVATION_RAD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 34, 0))
+    def HAS_SAMPLE_COUNT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    def HAS_START_LIMITING_CONSTRAINT_INDEX() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 38, 0))
+    def HAS_END_LIMITING_CONSTRAINT_INDEX() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 40, 0))
+    def HAS_MIN_RANGE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    def HAS_MAX_RANGE_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 44, 0))
+    def HAS_EDGES_REFINED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 46, 0))
 
 def GetRootAsACWAccessWindow(buf:string): return ACWAccessWindow { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWAccessWindowBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(22)
         return this
     def add_STATION_ID(STATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, STATION_ID)
@@ -1157,6 +1646,33 @@ struct ACWAccessWindowBuilder:
     def add_EDGES_REFINED(EDGES_REFINED:bool):
         b_.PrependBoolSlot(12, EDGES_REFINED, 0)
         return this
+    def add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(13, HAS_START_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT:bool):
+        b_.PrependBoolSlot(14, HAS_END_JULIAN_DATE_TT, 0)
+        return this
+    def add_HAS_MAX_ELEVATION_RAD(HAS_MAX_ELEVATION_RAD:bool):
+        b_.PrependBoolSlot(15, HAS_MAX_ELEVATION_RAD, 0)
+        return this
+    def add_HAS_SAMPLE_COUNT(HAS_SAMPLE_COUNT:bool):
+        b_.PrependBoolSlot(16, HAS_SAMPLE_COUNT, 0)
+        return this
+    def add_HAS_START_LIMITING_CONSTRAINT_INDEX(HAS_START_LIMITING_CONSTRAINT_INDEX:bool):
+        b_.PrependBoolSlot(17, HAS_START_LIMITING_CONSTRAINT_INDEX, 0)
+        return this
+    def add_HAS_END_LIMITING_CONSTRAINT_INDEX(HAS_END_LIMITING_CONSTRAINT_INDEX:bool):
+        b_.PrependBoolSlot(18, HAS_END_LIMITING_CONSTRAINT_INDEX, 0)
+        return this
+    def add_HAS_MIN_RANGE_M(HAS_MIN_RANGE_M:bool):
+        b_.PrependBoolSlot(19, HAS_MIN_RANGE_M, 0)
+        return this
+    def add_HAS_MAX_RANGE_M(HAS_MAX_RANGE_M:bool):
+        b_.PrependBoolSlot(20, HAS_MAX_RANGE_M, 0)
+        return this
+    def add_HAS_EDGES_REFINED(HAS_EDGES_REFINED:bool):
+        b_.PrependBoolSlot(21, HAS_EDGES_REFINED, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1189,13 +1705,20 @@ class ACWResult : flatbuffers.handle
     /// Observations emitted, including false alarms.
     def OBSERVATION_COUNT() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    /// Value presence: false means omitted; true precedes value validation.
+    def HAS_STATUS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    def HAS_EVALUATION_MODE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    def HAS_OBSERVATION_COUNT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
 
 def GetRootAsACWResult(buf:string): return ACWResult { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWResultBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(11)
         return this
     def add_STATUS(STATUS:acwResultStatus):
         b_.PrependInt8Slot(0, STATUS, 0)
@@ -1220,6 +1743,15 @@ struct ACWResultBuilder:
         return this
     def add_OBSERVATION_COUNT(OBSERVATION_COUNT:int):
         b_.PrependUint32Slot(7, OBSERVATION_COUNT, 0)
+        return this
+    def add_HAS_STATUS(HAS_STATUS:bool):
+        b_.PrependBoolSlot(8, HAS_STATUS, 0)
+        return this
+    def add_HAS_EVALUATION_MODE(HAS_EVALUATION_MODE:bool):
+        b_.PrependBoolSlot(9, HAS_EVALUATION_MODE, 0)
+        return this
+    def add_HAS_OBSERVATION_COUNT(HAS_OBSERVATION_COUNT:bool):
+        b_.PrependBoolSlot(10, HAS_OBSERVATION_COUNT, 0)
         return this
     def end():
         return b_.EndObject()
@@ -1253,19 +1785,32 @@ class ACW : flatbuffers.handle
     def RESULT() -> ACWResult?:
         let o = flatbuffers.field_table(buf_, pos_, 6)
         return if o: ACWResult { buf_, o } else: nil
+    /// Appended slot 2. Mandatory in every new request and successful result.
+    /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+    /// these codes. Missing body fails acw-body-required; absence never means
+    /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+    /// Result must echo the exact descriptor field values, including optional
+    /// presence; requester rejects a missing/different echo. Raw table offsets
+    /// are not identity. Explicit one-time archive conversion is outside runtime.
+    def CENTRAL_BODY() -> BodyDescriptor?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: BodyDescriptor { buf_, o } else: nil
 
 def GetRootAsACW(buf:string): return ACW { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(2)
+        b_.StartObject(3)
         return this
     def add_REQUEST(REQUEST:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, REQUEST)
         return this
     def add_RESULT(RESULT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, RESULT)
+        return this
+    def add_CENTRAL_BODY(CENTRAL_BODY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CENTRAL_BODY)
         return this
     def end():
         return b_.EndObject()

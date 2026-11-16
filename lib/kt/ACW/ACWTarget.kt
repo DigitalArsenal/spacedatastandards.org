@@ -60,7 +60,7 @@ class ACWTarget : Table() {
     val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Truth Earth-fixed states with velocity, in the frame and time scale of
+     * Truth central-body-fixed states with velocity, in the frame and time scale of
      * ACWRequest.STATES.
      */
     fun states(j: Int) : ACWStateSample? = states(ACWStateSample(), j)
@@ -85,6 +85,14 @@ class ACWTarget : Table() {
             null
         }
     }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasNoradCatId : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWTarget(_bb: ByteBuffer): ACWTarget = getRootAsACWTarget(_bb, ACWTarget())
@@ -92,16 +100,17 @@ class ACWTarget : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWTarget(builder: FlatBufferBuilder, targetIdOffset: Int, noradCatId: UInt, objectIdOffset: Int, statesOffset: Int, signatureOffset: Int) : Int {
-            builder.startTable(5)
+        fun createACWTarget(builder: FlatBufferBuilder, targetIdOffset: Int, noradCatId: UInt, objectIdOffset: Int, statesOffset: Int, signatureOffset: Int, hasNoradCatId: Boolean) : Int {
+            builder.startTable(6)
             addSIGNATURE(builder, signatureOffset)
             addSTATES(builder, statesOffset)
             addOBJECTID(builder, objectIdOffset)
             addNORADCATID(builder, noradCatId)
             addTARGETID(builder, targetIdOffset)
+            addHASNORADCATID(builder, hasNoradCatId)
             return endACWTarget(builder)
         }
-        fun startACWTarget(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startACWTarget(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addTARGETID(builder: FlatBufferBuilder, targetId: Int) = builder.addOffset(0, targetId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(1, noradCatId.toInt(), 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(2, objectId, 0)
@@ -115,6 +124,7 @@ class ACWTarget : Table() {
         }
         fun startStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(4, signature, 0)
+        fun addHASNORADCATID(builder: FlatBufferBuilder, hasNoradCatId: Boolean) = builder.addBoolean(5, hasNoradCatId, false)
         fun endACWTarget(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

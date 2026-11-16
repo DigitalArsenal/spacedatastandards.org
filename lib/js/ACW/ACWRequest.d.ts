@@ -27,7 +27,7 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
     GROUND_STATIONS(index: number, obj?: ACWGroundStation): ACWGroundStation | null;
     groundStationsLength(): number;
     /**
-     * Pre-sampled target Earth-fixed Cartesian states.
+     * Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
      */
     STATES(index: number, obj?: ACWStateSample): ACWStateSample | null;
     statesLength(): number;
@@ -55,7 +55,7 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
      */
     REFRACTION_MODEL(obj?: ACWRefractionModel): ACWRefractionModel | null;
     /**
-     * Optional constraint composition. When absent the legacy behaviour holds:
+     * Optional constraint composition. When absent the station constraints apply:
      * every ground station's MIN_ELEVATION_RAD (or the override) plus
      * ELEVATION_MASK, all required.
      */
@@ -119,6 +119,16 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
      */
     START_JULIAN_DATE_TT(): number;
     END_JULIAN_DATE_TT(): number;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_OPERATION(): boolean;
+    HAS_MIN_ELEVATION_OVERRIDE_RAD(): boolean;
+    HAS_EVALUATION_MODE(): boolean;
+    HAS_ROOT_TOLERANCE_S(): boolean;
+    HAS_RANDOM_SEED(): boolean;
+    HAS_START_JULIAN_DATE_TT(): boolean;
+    HAS_END_JULIAN_DATE_TT(): boolean;
     static startACWRequest(builder: flatbuffers.Builder): void;
     static addOperation(builder: flatbuffers.Builder, OPERATION: acwOperationCode): void;
     static addGroundStations(builder: flatbuffers.Builder, GROUND_STATIONSOffset: flatbuffers.Offset): void;
@@ -161,6 +171,13 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
     static addRandomSeed(builder: flatbuffers.Builder, RANDOM_SEED: bigint): void;
     static addStartJulianDateTt(builder: flatbuffers.Builder, START_JULIAN_DATE_TT: number): void;
     static addEndJulianDateTt(builder: flatbuffers.Builder, END_JULIAN_DATE_TT: number): void;
+    static addHasOperation(builder: flatbuffers.Builder, HAS_OPERATION: boolean): void;
+    static addHasMinElevationOverrideRad(builder: flatbuffers.Builder, HAS_MIN_ELEVATION_OVERRIDE_RAD: boolean): void;
+    static addHasEvaluationMode(builder: flatbuffers.Builder, HAS_EVALUATION_MODE: boolean): void;
+    static addHasRootToleranceS(builder: flatbuffers.Builder, HAS_ROOT_TOLERANCE_S: boolean): void;
+    static addHasRandomSeed(builder: flatbuffers.Builder, HAS_RANDOM_SEED: boolean): void;
+    static addHasStartJulianDateTt(builder: flatbuffers.Builder, HAS_START_JULIAN_DATE_TT: boolean): void;
+    static addHasEndJulianDateTt(builder: flatbuffers.Builder, HAS_END_JULIAN_DATE_TT: boolean): void;
     static endACWRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ACWRequestT;
     unpackTo(_o: ACWRequestT): void;
@@ -187,7 +204,14 @@ export declare class ACWRequestT implements flatbuffers.IGeneratedObject {
     RANDOM_SEED: bigint;
     START_JULIAN_DATE_TT: number;
     END_JULIAN_DATE_TT: number;
-    constructor(OPERATION?: acwOperationCode, GROUND_STATIONS?: (ACWGroundStationT)[], STATES?: (ACWStateSampleT)[], TARGET_STATION_ID?: string | Uint8Array | null, MIN_ELEVATION_OVERRIDE_RAD?: number, TRACE_ID?: string | Uint8Array | null, ELEVATION_MASK?: (ACWElevationMaskPointT)[], REFRACTION_MODEL?: ACWRefractionModelT | null, CONSTRAINTS?: ACWConstraintSetT | null, OBSERVERS?: (ACWObserverTrajectoryT)[], EVALUATION_MODE?: acwEvaluationMode, ROOT_TOLERANCE_S?: number, SUN_STATES?: (ACWStateSampleT)[], MOON_STATES?: (ACWStateSampleT)[], TARGETS?: (ACWTargetT)[], SENSORS?: (ACWSensorT)[], ACCESS?: (ACWSensorAccessT)[], EARTH_ORIENTATION?: (EOPT)[], RANDOM_SEED?: bigint, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number);
+    HAS_OPERATION: boolean;
+    HAS_MIN_ELEVATION_OVERRIDE_RAD: boolean;
+    HAS_EVALUATION_MODE: boolean;
+    HAS_ROOT_TOLERANCE_S: boolean;
+    HAS_RANDOM_SEED: boolean;
+    HAS_START_JULIAN_DATE_TT: boolean;
+    HAS_END_JULIAN_DATE_TT: boolean;
+    constructor(OPERATION?: acwOperationCode, GROUND_STATIONS?: (ACWGroundStationT)[], STATES?: (ACWStateSampleT)[], TARGET_STATION_ID?: string | Uint8Array | null, MIN_ELEVATION_OVERRIDE_RAD?: number, TRACE_ID?: string | Uint8Array | null, ELEVATION_MASK?: (ACWElevationMaskPointT)[], REFRACTION_MODEL?: ACWRefractionModelT | null, CONSTRAINTS?: ACWConstraintSetT | null, OBSERVERS?: (ACWObserverTrajectoryT)[], EVALUATION_MODE?: acwEvaluationMode, ROOT_TOLERANCE_S?: number, SUN_STATES?: (ACWStateSampleT)[], MOON_STATES?: (ACWStateSampleT)[], TARGETS?: (ACWTargetT)[], SENSORS?: (ACWSensorT)[], ACCESS?: (ACWSensorAccessT)[], EARTH_ORIENTATION?: (EOPT)[], RANDOM_SEED?: bigint, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, HAS_OPERATION?: boolean, HAS_MIN_ELEVATION_OVERRIDE_RAD?: boolean, HAS_EVALUATION_MODE?: boolean, HAS_ROOT_TOLERANCE_S?: boolean, HAS_RANDOM_SEED?: boolean, HAS_START_JULIAN_DATE_TT?: boolean, HAS_END_JULIAN_DATE_TT?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWRequest.d.ts.map

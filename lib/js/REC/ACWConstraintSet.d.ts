@@ -20,6 +20,10 @@ export declare class ACWConstraintSet implements flatbuffers.IUnpackableObject<A
     setsLength(): number;
     LABEL(): string | null;
     LABEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_OPERATOR(): boolean;
     static startACWConstraintSet(builder: flatbuffers.Builder): void;
     static addOperator(builder: flatbuffers.Builder, OPERATOR: acwConstraintOperator): void;
     static addConstraints(builder: flatbuffers.Builder, CONSTRAINTSOffset: flatbuffers.Offset): void;
@@ -29,8 +33,9 @@ export declare class ACWConstraintSet implements flatbuffers.IUnpackableObject<A
     static createSetsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSetsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addLabel(builder: flatbuffers.Builder, LABELOffset: flatbuffers.Offset): void;
+    static addHasOperator(builder: flatbuffers.Builder, HAS_OPERATOR: boolean): void;
     static endACWConstraintSet(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWConstraintSet(builder: flatbuffers.Builder, OPERATOR: acwConstraintOperator, CONSTRAINTSOffset: flatbuffers.Offset, SETSOffset: flatbuffers.Offset, LABELOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createACWConstraintSet(builder: flatbuffers.Builder, OPERATOR: acwConstraintOperator, CONSTRAINTSOffset: flatbuffers.Offset, SETSOffset: flatbuffers.Offset, LABELOffset: flatbuffers.Offset, HAS_OPERATOR: boolean): flatbuffers.Offset;
     unpack(): ACWConstraintSetT;
     unpackTo(_o: ACWConstraintSetT): void;
 }
@@ -39,7 +44,8 @@ export declare class ACWConstraintSetT implements flatbuffers.IGeneratedObject {
     CONSTRAINTS: (ACWConstraintT)[];
     SETS: (ACWConstraintSetT)[];
     LABEL: string | Uint8Array | null;
-    constructor(OPERATOR?: acwConstraintOperator, CONSTRAINTS?: (ACWConstraintT)[], SETS?: (ACWConstraintSetT)[], LABEL?: string | Uint8Array | null);
+    HAS_OPERATOR: boolean;
+    constructor(OPERATOR?: acwConstraintOperator, CONSTRAINTS?: (ACWConstraintT)[], SETS?: (ACWConstraintSetT)[], LABEL?: string | Uint8Array | null, HAS_OPERATOR?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWConstraintSet.d.ts.map

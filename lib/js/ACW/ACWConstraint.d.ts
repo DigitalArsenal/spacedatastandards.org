@@ -26,8 +26,8 @@ export declare class ACWConstraint implements flatbuffers.IUnpackableObject<ACWC
      */
     LIGHTING(): acwLightingCondition;
     /**
-     * Central-body radius offset for line-of-sight occultation, meters
-     * (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+     * Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+     * LOS only; not geodetic altitude. Never applied to a surface-station pair.
      */
     OCCULTATION_ATMOSPHERE_HEIGHT_M(): number;
     /**
@@ -40,6 +40,15 @@ export declare class ACWConstraint implements flatbuffers.IUnpackableObject<ACWC
      */
     LABEL(): string | null;
     LABEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_KIND(): boolean;
+    HAS_THRESHOLD_RAD(): boolean;
+    HAS_MIN_RANGE_M(): boolean;
+    HAS_MAX_RANGE_M(): boolean;
+    HAS_LIGHTING(): boolean;
+    HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(): boolean;
     static startACWConstraint(builder: flatbuffers.Builder): void;
     static addKind(builder: flatbuffers.Builder, KIND: acwConstraintKind): void;
     static addThresholdRad(builder: flatbuffers.Builder, THRESHOLD_RAD: number): void;
@@ -51,8 +60,14 @@ export declare class ACWConstraint implements flatbuffers.IUnpackableObject<ACWC
     static createMaskVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMaskVector(builder: flatbuffers.Builder, numElems: number): void;
     static addLabel(builder: flatbuffers.Builder, LABELOffset: flatbuffers.Offset): void;
+    static addHasKind(builder: flatbuffers.Builder, HAS_KIND: boolean): void;
+    static addHasThresholdRad(builder: flatbuffers.Builder, HAS_THRESHOLD_RAD: boolean): void;
+    static addHasMinRangeM(builder: flatbuffers.Builder, HAS_MIN_RANGE_M: boolean): void;
+    static addHasMaxRangeM(builder: flatbuffers.Builder, HAS_MAX_RANGE_M: boolean): void;
+    static addHasLighting(builder: flatbuffers.Builder, HAS_LIGHTING: boolean): void;
+    static addHasOccultationAtmosphereHeightM(builder: flatbuffers.Builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: boolean): void;
     static endACWConstraint(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWConstraint(builder: flatbuffers.Builder, KIND: acwConstraintKind, THRESHOLD_RAD: number, MIN_RANGE_M: number, MAX_RANGE_M: number, LIGHTING: acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M: number, MASKOffset: flatbuffers.Offset, LABELOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createACWConstraint(builder: flatbuffers.Builder, KIND: acwConstraintKind, THRESHOLD_RAD: number, MIN_RANGE_M: number, MAX_RANGE_M: number, LIGHTING: acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M: number, MASKOffset: flatbuffers.Offset, LABELOffset: flatbuffers.Offset, HAS_KIND: boolean, HAS_THRESHOLD_RAD: boolean, HAS_MIN_RANGE_M: boolean, HAS_MAX_RANGE_M: boolean, HAS_LIGHTING: boolean, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: boolean): flatbuffers.Offset;
     unpack(): ACWConstraintT;
     unpackTo(_o: ACWConstraintT): void;
 }
@@ -65,7 +80,13 @@ export declare class ACWConstraintT implements flatbuffers.IGeneratedObject {
     OCCULTATION_ATMOSPHERE_HEIGHT_M: number;
     MASK: (ACWElevationMaskPointT)[];
     LABEL: string | Uint8Array | null;
-    constructor(KIND?: acwConstraintKind, THRESHOLD_RAD?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, LIGHTING?: acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M?: number, MASK?: (ACWElevationMaskPointT)[], LABEL?: string | Uint8Array | null);
+    HAS_KIND: boolean;
+    HAS_THRESHOLD_RAD: boolean;
+    HAS_MIN_RANGE_M: boolean;
+    HAS_MAX_RANGE_M: boolean;
+    HAS_LIGHTING: boolean;
+    HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: boolean;
+    constructor(KIND?: acwConstraintKind, THRESHOLD_RAD?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, LIGHTING?: acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M?: number, MASK?: (ACWElevationMaskPointT)[], LABEL?: string | Uint8Array | null, HAS_KIND?: boolean, HAS_THRESHOLD_RAD?: boolean, HAS_MIN_RANGE_M?: boolean, HAS_MAX_RANGE_M?: boolean, HAS_LIGHTING?: boolean, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWConstraint.d.ts.map

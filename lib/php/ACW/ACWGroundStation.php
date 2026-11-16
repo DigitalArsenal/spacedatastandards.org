@@ -73,7 +73,11 @@ class ACWGroundStation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Height above the WGS-84 ellipsoid, meters.
+    /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+    /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+    /// finite segment blocks; tangent contact is clear. At height <= 0, including
+    /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+    /// The user elevation mask and supplied terrain apply separately at all heights.
     /**
      * @return double
      */
@@ -83,7 +87,7 @@ class ACWGroundStation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Default minimum visible elevation, radians.
+    /// Explicit minimum visible elevation, radians; HAS flag required.
     /**
      * @return double
      */
@@ -123,22 +127,68 @@ class ACWGroundStation extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_LATITUDE_RAD()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_LONGITUDE_RAD()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_ALTITUDE_M()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MIN_ELEVATION_RAD()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_CHANNEL_CAPACITY()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWGroundStation(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWGroundStation
      */
-    public static function createACWGroundStation(FlatBufferBuilder $builder, $STATION_ID, $NAME, $LATITUDE_RAD, $LONGITUDE_RAD, $ALTITUDE_M, $MIN_ELEVATION_RAD, $CHANNEL_CAPACITY, $BLACKOUT_WINDOWS)
+    public static function createACWGroundStation(FlatBufferBuilder $builder, $STATION_ID, $NAME, $LATITUDE_RAD, $LONGITUDE_RAD, $ALTITUDE_M, $MIN_ELEVATION_RAD, $CHANNEL_CAPACITY, $BLACKOUT_WINDOWS, $HAS_LATITUDE_RAD, $HAS_LONGITUDE_RAD, $HAS_ALTITUDE_M, $HAS_MIN_ELEVATION_RAD, $HAS_CHANNEL_CAPACITY)
     {
-        $builder->startObject(8);
+        $builder->startObject(13);
         self::addSTATION_ID($builder, $STATION_ID);
         self::addNAME($builder, $NAME);
         self::addLATITUDE_RAD($builder, $LATITUDE_RAD);
@@ -147,6 +197,11 @@ class ACWGroundStation extends Table
         self::addMIN_ELEVATION_RAD($builder, $MIN_ELEVATION_RAD);
         self::addCHANNEL_CAPACITY($builder, $CHANNEL_CAPACITY);
         self::addBLACKOUT_WINDOWS($builder, $BLACKOUT_WINDOWS);
+        self::addHAS_LATITUDE_RAD($builder, $HAS_LATITUDE_RAD);
+        self::addHAS_LONGITUDE_RAD($builder, $HAS_LONGITUDE_RAD);
+        self::addHAS_ALTITUDE_M($builder, $HAS_ALTITUDE_M);
+        self::addHAS_MIN_ELEVATION_RAD($builder, $HAS_MIN_ELEVATION_RAD);
+        self::addHAS_CHANNEL_CAPACITY($builder, $HAS_CHANNEL_CAPACITY);
         $o = $builder->endObject();
         return $o;
     }
@@ -253,6 +308,56 @@ class ACWGroundStation extends Table
     public static function startBLACKOUT_WINDOWSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_LATITUDE_RAD(FlatBufferBuilder $builder, $HAS_LATITUDE_RAD)
+    {
+        $builder->addBoolX(8, $HAS_LATITUDE_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_LONGITUDE_RAD(FlatBufferBuilder $builder, $HAS_LONGITUDE_RAD)
+    {
+        $builder->addBoolX(9, $HAS_LONGITUDE_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_ALTITUDE_M(FlatBufferBuilder $builder, $HAS_ALTITUDE_M)
+    {
+        $builder->addBoolX(10, $HAS_ALTITUDE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MIN_ELEVATION_RAD(FlatBufferBuilder $builder, $HAS_MIN_ELEVATION_RAD)
+    {
+        $builder->addBoolX(11, $HAS_MIN_ELEVATION_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_CHANNEL_CAPACITY(FlatBufferBuilder $builder, $HAS_CHANNEL_CAPACITY)
+    {
+        $builder->addBoolX(12, $HAS_CHANNEL_CAPACITY, false);
     }
 
     /**

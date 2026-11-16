@@ -148,8 +148,8 @@ func (rcv *ACWConstraint) MutateLighting(n acwLightingCondition) bool {
 	return rcv.MutateLIGHTING(n)
 }
 
-/// Central-body radius offset for line-of-sight occultation, meters
-/// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+/// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+/// LOS only; not geodetic altitude. Never applied to a surface-station pair.
 func (rcv *ACWConstraint) OCCULTATION_ATMOSPHERE_HEIGHT_M() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -162,8 +162,8 @@ func (rcv *ACWConstraint) OccultationAtmosphereHeightM() float64 {
 	return rcv.OCCULTATION_ATMOSPHERE_HEIGHT_M()
 }
 
-/// Central-body radius offset for line-of-sight occultation, meters
-/// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+/// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+/// LOS only; not geodetic altitude. Never applied to a surface-station pair.
 func (rcv *ACWConstraint) MutateOCCULTATION_ATMOSPHERE_HEIGHT_M(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -219,8 +219,130 @@ func (rcv *ACWConstraint) Label() []byte {
 }
 
 /// Producer label echoed in window attribution.
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWConstraint) HAS_KIND() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasKind() bool {
+	return rcv.HAS_KIND()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWConstraint) MutateHAS_KIND(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWConstraint) MutateHasKind(n bool) bool {
+	return rcv.MutateHAS_KIND(n)
+}
+
+func (rcv *ACWConstraint) HAS_THRESHOLD_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasThresholdRad() bool {
+	return rcv.HAS_THRESHOLD_RAD()
+}
+
+func (rcv *ACWConstraint) MutateHAS_THRESHOLD_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWConstraint) MutateHasThresholdRad(n bool) bool {
+	return rcv.MutateHAS_THRESHOLD_RAD(n)
+}
+
+func (rcv *ACWConstraint) HAS_MIN_RANGE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasMinRangeM() bool {
+	return rcv.HAS_MIN_RANGE_M()
+}
+
+func (rcv *ACWConstraint) MutateHAS_MIN_RANGE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ACWConstraint) MutateHasMinRangeM(n bool) bool {
+	return rcv.MutateHAS_MIN_RANGE_M(n)
+}
+
+func (rcv *ACWConstraint) HAS_MAX_RANGE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasMaxRangeM() bool {
+	return rcv.HAS_MAX_RANGE_M()
+}
+
+func (rcv *ACWConstraint) MutateHAS_MAX_RANGE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *ACWConstraint) MutateHasMaxRangeM(n bool) bool {
+	return rcv.MutateHAS_MAX_RANGE_M(n)
+}
+
+func (rcv *ACWConstraint) HAS_LIGHTING() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasLighting() bool {
+	return rcv.HAS_LIGHTING()
+}
+
+func (rcv *ACWConstraint) MutateHAS_LIGHTING(n bool) bool {
+	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *ACWConstraint) MutateHasLighting(n bool) bool {
+	return rcv.MutateHAS_LIGHTING(n)
+}
+
+func (rcv *ACWConstraint) HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWConstraint) HasOccultationAtmosphereHeightM() bool {
+	return rcv.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M()
+}
+
+func (rcv *ACWConstraint) MutateHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *ACWConstraint) MutateHasOccultationAtmosphereHeightM(n bool) bool {
+	return rcv.MutateHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(n)
+}
+
 func ACWConstraintStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(14)
 }
 func ACWConstraintAddKIND(builder *flatbuffers.Builder, KIND acwConstraintKind) {
 	builder.PrependInt8Slot(0, int8(KIND), 0)
@@ -275,6 +397,42 @@ func ACWConstraintAddLABEL(builder *flatbuffers.Builder, LABEL flatbuffers.UOffs
 }
 func ACWConstraintAddLabel(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
 	ACWConstraintAddLABEL(builder, LABEL)
+}
+func ACWConstraintAddHAS_KIND(builder *flatbuffers.Builder, HAS_KIND bool) {
+	builder.PrependBoolSlot(8, HAS_KIND, false)
+}
+func ACWConstraintAddHasKind(builder *flatbuffers.Builder, HAS_KIND bool) {
+	ACWConstraintAddHAS_KIND(builder, HAS_KIND)
+}
+func ACWConstraintAddHAS_THRESHOLD_RAD(builder *flatbuffers.Builder, HAS_THRESHOLD_RAD bool) {
+	builder.PrependBoolSlot(9, HAS_THRESHOLD_RAD, false)
+}
+func ACWConstraintAddHasThresholdRad(builder *flatbuffers.Builder, HAS_THRESHOLD_RAD bool) {
+	ACWConstraintAddHAS_THRESHOLD_RAD(builder, HAS_THRESHOLD_RAD)
+}
+func ACWConstraintAddHAS_MIN_RANGE_M(builder *flatbuffers.Builder, HAS_MIN_RANGE_M bool) {
+	builder.PrependBoolSlot(10, HAS_MIN_RANGE_M, false)
+}
+func ACWConstraintAddHasMinRangeM(builder *flatbuffers.Builder, HAS_MIN_RANGE_M bool) {
+	ACWConstraintAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M)
+}
+func ACWConstraintAddHAS_MAX_RANGE_M(builder *flatbuffers.Builder, HAS_MAX_RANGE_M bool) {
+	builder.PrependBoolSlot(11, HAS_MAX_RANGE_M, false)
+}
+func ACWConstraintAddHasMaxRangeM(builder *flatbuffers.Builder, HAS_MAX_RANGE_M bool) {
+	ACWConstraintAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M)
+}
+func ACWConstraintAddHAS_LIGHTING(builder *flatbuffers.Builder, HAS_LIGHTING bool) {
+	builder.PrependBoolSlot(12, HAS_LIGHTING, false)
+}
+func ACWConstraintAddHasLighting(builder *flatbuffers.Builder, HAS_LIGHTING bool) {
+	ACWConstraintAddHAS_LIGHTING(builder, HAS_LIGHTING)
+}
+func ACWConstraintAddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder *flatbuffers.Builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M bool) {
+	builder.PrependBoolSlot(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false)
+}
+func ACWConstraintAddHasOccultationAtmosphereHeightM(builder *flatbuffers.Builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M bool) {
+	ACWConstraintAddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M)
 }
 func ACWConstraintEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

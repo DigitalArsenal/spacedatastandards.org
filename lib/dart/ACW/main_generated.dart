@@ -8,11 +8,17 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 import '../EOP/main_generated.dart';
 import '../MEM/main_generated.dart';
 import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
 
+///  ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+///  Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+///  does not apply to ACW enumerations as a group.
 enum acwOperationCode {
   UNKNOWN(0),
   COMPUTE_ACCESS_WINDOWS(1),
-  SIMULATE_OBSERVATIONS(2);
+  SIMULATE_OBSERVATIONS(2),
+  COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY(3),
+  SIMULATE_OBSERVATIONS_EXPLICIT_BODY(4);
 
   final int value;
   const acwOperationCode(this.value);
@@ -22,6 +28,8 @@ enum acwOperationCode {
       case 0: return acwOperationCode.UNKNOWN;
       case 1: return acwOperationCode.COMPUTE_ACCESS_WINDOWS;
       case 2: return acwOperationCode.SIMULATE_OBSERVATIONS;
+      case 3: return acwOperationCode.COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY;
+      case 4: return acwOperationCode.SIMULATE_OBSERVATIONS_EXPLICIT_BODY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -30,7 +38,7 @@ enum acwOperationCode {
       value == null ? null : acwOperationCode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 4;
   static const fb.Reader<acwOperationCode> reader = _acwOperationCodeReader();
 }
 
@@ -319,7 +327,389 @@ class _acwSensorPhenomenologyReader extends fb.Reader<acwSensorPhenomenology> {
       acwSensorPhenomenology.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Target Cartesian state sample in an Earth-fixed frame.
+///  Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+///  or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+///  Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+///  MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+///  RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+///  the complete root. URI is advisory and never fetched by a module.
+class BodyRecordRef {
+  BodyRecordRef._(this._bc, this._bcOffset);
+  factory BodyRecordRef(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BodyRecordRef> reader = _BodyRecordRefReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get RECORD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get recordId => RECORD_ID;
+  String? get SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'BodyRecordRef{STANDARD: ${STANDARD}, recordId: ${recordId}, SHA256: ${SHA256}, URI: ${URI}}';
+  }
+}
+
+class _BodyRecordRefReader extends fb.TableReader<BodyRecordRef> {
+  const _BodyRecordRefReader();
+
+  @override
+  BodyRecordRef createObject(fb.BufferContext bc, int offset) =>
+    BodyRecordRef._(bc, offset);
+}
+
+class BodyRecordRefBuilder {
+  BodyRecordRefBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addStandardOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addRecordIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSha256Offset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addUriOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BodyRecordRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _STANDARD;
+  final String? _RECORD_ID;
+  final String? _SHA256;
+  final String? _URI;
+
+  BodyRecordRefObjectBuilder({
+    String? STANDARD,
+    String? RECORD_ID,
+    String? recordId,
+    String? SHA256,
+    String? URI,
+  })
+      : _STANDARD = STANDARD,
+        _RECORD_ID = recordId ?? RECORD_ID,
+        _SHA256 = SHA256,
+        _URI = URI;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STANDARDOffset = _STANDARD == null ? null
+        : fbBuilder.writeString(_STANDARD!);
+    final int? RECORD_IDOffset = _RECORD_ID == null ? null
+        : fbBuilder.writeString(_RECORD_ID!);
+    final int? SHA256Offset = _SHA256 == null ? null
+        : fbBuilder.writeString(_SHA256!);
+    final int? URIOffset = _URI == null ? null
+        : fbBuilder.writeString(_URI!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, STANDARDOffset);
+    fbBuilder.addOffset(1, RECORD_IDOffset);
+    fbBuilder.addOffset(2, SHA256Offset);
+    fbBuilder.addOffset(3, URIOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+///  No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+///  SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+class BodyDescriptor {
+  BodyDescriptor._(this._bc, this._bcOffset);
+  factory BodyDescriptor(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BodyDescriptor> reader = _BodyDescriptorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+  int get NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get naifId => NAIF_ID;
+  RFMCoordinateSystem? get FIXED_FRAME => RFMCoordinateSystem.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  RFMCoordinateSystem? get fixedFrame => FIXED_FRAME;
+  ///  Each axis requires its HAS flag and a finite positive value.
+  double get SEMI_AXIS_X_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, double.nan);
+  double get semiAxisXM => SEMI_AXIS_X_M;
+  double get SEMI_AXIS_Y_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, double.nan);
+  double get semiAxisYM => SEMI_AXIS_Y_M;
+  double get SEMI_AXIS_Z_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get semiAxisZM => SEMI_AXIS_Z_M;
+  String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get modelId => MODEL_ID;
+  ///  Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+  String? get MODEL_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get modelSha256 => MODEL_SHA256;
+  ///  Required explicit assertion, "NONE" or a supported model identifier.
+  String? get ATMOSPHERE_MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get atmosphereModelId => ATMOSPHERE_MODEL_ID;
+  ///  Absent means no terrain supplied; elevation remains mandatory for sites.
+  BodyRecordRef? get TERRAIN => BodyRecordRef.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Optional SHC or MODEL reference; its radius is not the shape radius.
+  BodyRecordRef? get GRAVITY => BodyRecordRef.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  True HAS flag, positive radius and name required for non-ANY lighting.
+  ///  This is a named spherical-shadow approximation, not ellipsoidal lighting.
+  double get LIGHTING_SPHERE_RADIUS_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
+  double get lightingSphereRadiusM => LIGHTING_SPHERE_RADIUS_M;
+  String? get LIGHTING_MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get lightingModelId => LIGHTING_MODEL_ID;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_NAIF_ID => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasNaifId => HAS_NAIF_ID;
+  bool get HAS_SEMI_AXIS_X_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get hasSemiAxisXM => HAS_SEMI_AXIS_X_M;
+  bool get HAS_SEMI_AXIS_Y_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get hasSemiAxisYM => HAS_SEMI_AXIS_Y_M;
+  bool get HAS_SEMI_AXIS_Z_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
+  bool get hasSemiAxisZM => HAS_SEMI_AXIS_Z_M;
+  bool get HAS_LIGHTING_SPHERE_RADIUS_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get hasLightingSphereRadiusM => HAS_LIGHTING_SPHERE_RADIUS_M;
+
+  @override
+  String toString() {
+    return 'BodyDescriptor{naifId: ${naifId}, fixedFrame: ${fixedFrame}, semiAxisXM: ${semiAxisXM}, semiAxisYM: ${semiAxisYM}, semiAxisZM: ${semiAxisZM}, modelId: ${modelId}, modelSha256: ${modelSha256}, atmosphereModelId: ${atmosphereModelId}, TERRAIN: ${TERRAIN}, GRAVITY: ${GRAVITY}, lightingSphereRadiusM: ${lightingSphereRadiusM}, lightingModelId: ${lightingModelId}, hasNaifId: ${hasNaifId}, hasSemiAxisXM: ${hasSemiAxisXM}, hasSemiAxisYM: ${hasSemiAxisYM}, hasSemiAxisZM: ${hasSemiAxisZM}, hasLightingSphereRadiusM: ${hasLightingSphereRadiusM}}';
+  }
+}
+
+class _BodyDescriptorReader extends fb.TableReader<BodyDescriptor> {
+  const _BodyDescriptorReader();
+
+  @override
+  BodyDescriptor createObject(fb.BufferContext bc, int offset) =>
+    BodyDescriptor._(bc, offset);
+}
+
+class BodyDescriptorBuilder {
+  BodyDescriptorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(17);
+  }
+
+  int addNaifId(int? NAIF_ID) {
+    fbBuilder.addInt32(0, NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addFixedFrameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSemiAxisXM(double? SEMI_AXIS_X_M) {
+    fbBuilder.addFloat64(2, SEMI_AXIS_X_M);
+    return fbBuilder.offset;
+  }
+  int addSemiAxisYM(double? SEMI_AXIS_Y_M) {
+    fbBuilder.addFloat64(3, SEMI_AXIS_Y_M);
+    return fbBuilder.offset;
+  }
+  int addSemiAxisZM(double? SEMI_AXIS_Z_M) {
+    fbBuilder.addFloat64(4, SEMI_AXIS_Z_M);
+    return fbBuilder.offset;
+  }
+  int addModelIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModelSha256Offset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereModelIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTerrainOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addGravityOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addLightingSphereRadiusM(double? LIGHTING_SPHERE_RADIUS_M) {
+    fbBuilder.addFloat64(10, LIGHTING_SPHERE_RADIUS_M);
+    return fbBuilder.offset;
+  }
+  int addLightingModelIdOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addHasNaifId(bool? HAS_NAIF_ID) {
+    fbBuilder.addBool(12, HAS_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addHasSemiAxisXM(bool? HAS_SEMI_AXIS_X_M) {
+    fbBuilder.addBool(13, HAS_SEMI_AXIS_X_M);
+    return fbBuilder.offset;
+  }
+  int addHasSemiAxisYM(bool? HAS_SEMI_AXIS_Y_M) {
+    fbBuilder.addBool(14, HAS_SEMI_AXIS_Y_M);
+    return fbBuilder.offset;
+  }
+  int addHasSemiAxisZM(bool? HAS_SEMI_AXIS_Z_M) {
+    fbBuilder.addBool(15, HAS_SEMI_AXIS_Z_M);
+    return fbBuilder.offset;
+  }
+  int addHasLightingSphereRadiusM(bool? HAS_LIGHTING_SPHERE_RADIUS_M) {
+    fbBuilder.addBool(16, HAS_LIGHTING_SPHERE_RADIUS_M);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BodyDescriptorObjectBuilder extends fb.ObjectBuilder {
+  final int? _NAIF_ID;
+  final RFMCoordinateSystemObjectBuilder? _FIXED_FRAME;
+  final double? _SEMI_AXIS_X_M;
+  final double? _SEMI_AXIS_Y_M;
+  final double? _SEMI_AXIS_Z_M;
+  final String? _MODEL_ID;
+  final String? _MODEL_SHA256;
+  final String? _ATMOSPHERE_MODEL_ID;
+  final BodyRecordRefObjectBuilder? _TERRAIN;
+  final BodyRecordRefObjectBuilder? _GRAVITY;
+  final double? _LIGHTING_SPHERE_RADIUS_M;
+  final String? _LIGHTING_MODEL_ID;
+  final bool? _HAS_NAIF_ID;
+  final bool? _HAS_SEMI_AXIS_X_M;
+  final bool? _HAS_SEMI_AXIS_Y_M;
+  final bool? _HAS_SEMI_AXIS_Z_M;
+  final bool? _HAS_LIGHTING_SPHERE_RADIUS_M;
+
+  BodyDescriptorObjectBuilder({
+    int? NAIF_ID,
+    int? naifId,
+    RFMCoordinateSystemObjectBuilder? FIXED_FRAME,
+    RFMCoordinateSystemObjectBuilder? fixedFrame,
+    double? SEMI_AXIS_X_M,
+    double? semiAxisXM,
+    double? SEMI_AXIS_Y_M,
+    double? semiAxisYM,
+    double? SEMI_AXIS_Z_M,
+    double? semiAxisZM,
+    String? MODEL_ID,
+    String? modelId,
+    String? MODEL_SHA256,
+    String? modelSha256,
+    String? ATMOSPHERE_MODEL_ID,
+    String? atmosphereModelId,
+    BodyRecordRefObjectBuilder? TERRAIN,
+    BodyRecordRefObjectBuilder? GRAVITY,
+    double? LIGHTING_SPHERE_RADIUS_M,
+    double? lightingSphereRadiusM,
+    String? LIGHTING_MODEL_ID,
+    String? lightingModelId,
+    bool? HAS_NAIF_ID,
+    bool? hasNaifId,
+    bool? HAS_SEMI_AXIS_X_M,
+    bool? hasSemiAxisXM,
+    bool? HAS_SEMI_AXIS_Y_M,
+    bool? hasSemiAxisYM,
+    bool? HAS_SEMI_AXIS_Z_M,
+    bool? hasSemiAxisZM,
+    bool? HAS_LIGHTING_SPHERE_RADIUS_M,
+    bool? hasLightingSphereRadiusM,
+  })
+      : _NAIF_ID = naifId ?? NAIF_ID,
+        _FIXED_FRAME = fixedFrame ?? FIXED_FRAME,
+        _SEMI_AXIS_X_M = semiAxisXM ?? SEMI_AXIS_X_M,
+        _SEMI_AXIS_Y_M = semiAxisYM ?? SEMI_AXIS_Y_M,
+        _SEMI_AXIS_Z_M = semiAxisZM ?? SEMI_AXIS_Z_M,
+        _MODEL_ID = modelId ?? MODEL_ID,
+        _MODEL_SHA256 = modelSha256 ?? MODEL_SHA256,
+        _ATMOSPHERE_MODEL_ID = atmosphereModelId ?? ATMOSPHERE_MODEL_ID,
+        _TERRAIN = TERRAIN,
+        _GRAVITY = GRAVITY,
+        _LIGHTING_SPHERE_RADIUS_M = lightingSphereRadiusM ?? LIGHTING_SPHERE_RADIUS_M,
+        _LIGHTING_MODEL_ID = lightingModelId ?? LIGHTING_MODEL_ID,
+        _HAS_NAIF_ID = hasNaifId ?? HAS_NAIF_ID,
+        _HAS_SEMI_AXIS_X_M = hasSemiAxisXM ?? HAS_SEMI_AXIS_X_M,
+        _HAS_SEMI_AXIS_Y_M = hasSemiAxisYM ?? HAS_SEMI_AXIS_Y_M,
+        _HAS_SEMI_AXIS_Z_M = hasSemiAxisZM ?? HAS_SEMI_AXIS_Z_M,
+        _HAS_LIGHTING_SPHERE_RADIUS_M = hasLightingSphereRadiusM ?? HAS_LIGHTING_SPHERE_RADIUS_M;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FIXED_FRAMEOffset = _FIXED_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? MODEL_IDOffset = _MODEL_ID == null ? null
+        : fbBuilder.writeString(_MODEL_ID!);
+    final int? MODEL_SHA256Offset = _MODEL_SHA256 == null ? null
+        : fbBuilder.writeString(_MODEL_SHA256!);
+    final int? ATMOSPHERE_MODEL_IDOffset = _ATMOSPHERE_MODEL_ID == null ? null
+        : fbBuilder.writeString(_ATMOSPHERE_MODEL_ID!);
+    final int? TERRAINOffset = _TERRAIN?.getOrCreateOffset(fbBuilder);
+    final int? GRAVITYOffset = _GRAVITY?.getOrCreateOffset(fbBuilder);
+    final int? LIGHTING_MODEL_IDOffset = _LIGHTING_MODEL_ID == null ? null
+        : fbBuilder.writeString(_LIGHTING_MODEL_ID!);
+    fbBuilder.startTable(17);
+    fbBuilder.addInt32(0, _NAIF_ID);
+    fbBuilder.addOffset(1, FIXED_FRAMEOffset);
+    fbBuilder.addFloat64(2, _SEMI_AXIS_X_M);
+    fbBuilder.addFloat64(3, _SEMI_AXIS_Y_M);
+    fbBuilder.addFloat64(4, _SEMI_AXIS_Z_M);
+    fbBuilder.addOffset(5, MODEL_IDOffset);
+    fbBuilder.addOffset(6, MODEL_SHA256Offset);
+    fbBuilder.addOffset(7, ATMOSPHERE_MODEL_IDOffset);
+    fbBuilder.addOffset(8, TERRAINOffset);
+    fbBuilder.addOffset(9, GRAVITYOffset);
+    fbBuilder.addFloat64(10, _LIGHTING_SPHERE_RADIUS_M);
+    fbBuilder.addOffset(11, LIGHTING_MODEL_IDOffset);
+    fbBuilder.addBool(12, _HAS_NAIF_ID);
+    fbBuilder.addBool(13, _HAS_SEMI_AXIS_X_M);
+    fbBuilder.addBool(14, _HAS_SEMI_AXIS_Y_M);
+    fbBuilder.addBool(15, _HAS_SEMI_AXIS_Z_M);
+    fbBuilder.addBool(16, _HAS_LIGHTING_SPHERE_RADIUS_M);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 class ACWStateSample {
   ACWStateSample._(this._bc, this._bcOffset);
   factory ACWStateSample(List<int> bytes) {
@@ -335,16 +725,16 @@ class ACWStateSample {
   ///  Sample epoch as Julian Date in TT.
   double get JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
   double get julianDateTt => JULIAN_DATE_TT;
-  ///  Earth-fixed X position, meters.
+  ///  Fixed-frame X position, meters.
   double get POSITION_X_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get positionXM => POSITION_X_M;
-  ///  Earth-fixed Y position, meters.
+  ///  Fixed-frame Y position, meters.
   double get POSITION_Y_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   double get positionYM => POSITION_Y_M;
-  ///  Earth-fixed Z position, meters.
+  ///  Fixed-frame Z position, meters.
   double get POSITION_Z_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get positionZM => POSITION_Z_M;
-  ///  Earth-fixed velocity, meters per second. Required for range-rate,
+  ///  Fixed-frame velocity, meters per second. Required for range-rate,
   ///  Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
   double get VELOCITY_X_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get velocityXMps => VELOCITY_X_MPS;
@@ -352,10 +742,25 @@ class ACWStateSample {
   double get velocityYMps => VELOCITY_Y_MPS;
   double get VELOCITY_Z_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   double get velocityZMps => VELOCITY_Z_MPS;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasJulianDateTt => HAS_JULIAN_DATE_TT;
+  bool get HAS_POSITION_X_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasPositionXM => HAS_POSITION_X_M;
+  bool get HAS_POSITION_Y_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasPositionYM => HAS_POSITION_Y_M;
+  bool get HAS_POSITION_Z_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasPositionZM => HAS_POSITION_Z_M;
+  bool get HAS_VELOCITY_X_MPS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get hasVelocityXMps => HAS_VELOCITY_X_MPS;
+  bool get HAS_VELOCITY_Y_MPS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasVelocityYMps => HAS_VELOCITY_Y_MPS;
+  bool get HAS_VELOCITY_Z_MPS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get hasVelocityZMps => HAS_VELOCITY_Z_MPS;
 
   @override
   String toString() {
-    return 'ACWStateSample{julianDateTt: ${julianDateTt}, positionXM: ${positionXM}, positionYM: ${positionYM}, positionZM: ${positionZM}, velocityXMps: ${velocityXMps}, velocityYMps: ${velocityYMps}, velocityZMps: ${velocityZMps}}';
+    return 'ACWStateSample{julianDateTt: ${julianDateTt}, positionXM: ${positionXM}, positionYM: ${positionYM}, positionZM: ${positionZM}, velocityXMps: ${velocityXMps}, velocityYMps: ${velocityYMps}, velocityZMps: ${velocityZMps}, hasJulianDateTt: ${hasJulianDateTt}, hasPositionXM: ${hasPositionXM}, hasPositionYM: ${hasPositionYM}, hasPositionZM: ${hasPositionZM}, hasVelocityXMps: ${hasVelocityXMps}, hasVelocityYMps: ${hasVelocityYMps}, hasVelocityZMps: ${hasVelocityZMps}}';
   }
 }
 
@@ -373,7 +778,7 @@ class ACWStateSampleBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(14);
   }
 
   int addJulianDateTt(double? JULIAN_DATE_TT) {
@@ -404,6 +809,34 @@ class ACWStateSampleBuilder {
     fbBuilder.addFloat64(6, VELOCITY_Z_MPS);
     return fbBuilder.offset;
   }
+  int addHasJulianDateTt(bool? HAS_JULIAN_DATE_TT) {
+    fbBuilder.addBool(7, HAS_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasPositionXM(bool? HAS_POSITION_X_M) {
+    fbBuilder.addBool(8, HAS_POSITION_X_M);
+    return fbBuilder.offset;
+  }
+  int addHasPositionYM(bool? HAS_POSITION_Y_M) {
+    fbBuilder.addBool(9, HAS_POSITION_Y_M);
+    return fbBuilder.offset;
+  }
+  int addHasPositionZM(bool? HAS_POSITION_Z_M) {
+    fbBuilder.addBool(10, HAS_POSITION_Z_M);
+    return fbBuilder.offset;
+  }
+  int addHasVelocityXMps(bool? HAS_VELOCITY_X_MPS) {
+    fbBuilder.addBool(11, HAS_VELOCITY_X_MPS);
+    return fbBuilder.offset;
+  }
+  int addHasVelocityYMps(bool? HAS_VELOCITY_Y_MPS) {
+    fbBuilder.addBool(12, HAS_VELOCITY_Y_MPS);
+    return fbBuilder.offset;
+  }
+  int addHasVelocityZMps(bool? HAS_VELOCITY_Z_MPS) {
+    fbBuilder.addBool(13, HAS_VELOCITY_Z_MPS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -418,6 +851,13 @@ class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
   final double? _VELOCITY_X_MPS;
   final double? _VELOCITY_Y_MPS;
   final double? _VELOCITY_Z_MPS;
+  final bool? _HAS_JULIAN_DATE_TT;
+  final bool? _HAS_POSITION_X_M;
+  final bool? _HAS_POSITION_Y_M;
+  final bool? _HAS_POSITION_Z_M;
+  final bool? _HAS_VELOCITY_X_MPS;
+  final bool? _HAS_VELOCITY_Y_MPS;
+  final bool? _HAS_VELOCITY_Z_MPS;
 
   ACWStateSampleObjectBuilder({
     double? JULIAN_DATE_TT,
@@ -434,6 +874,20 @@ class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
     double? velocityYMps,
     double? VELOCITY_Z_MPS,
     double? velocityZMps,
+    bool? HAS_JULIAN_DATE_TT,
+    bool? hasJulianDateTt,
+    bool? HAS_POSITION_X_M,
+    bool? hasPositionXM,
+    bool? HAS_POSITION_Y_M,
+    bool? hasPositionYM,
+    bool? HAS_POSITION_Z_M,
+    bool? hasPositionZM,
+    bool? HAS_VELOCITY_X_MPS,
+    bool? hasVelocityXMps,
+    bool? HAS_VELOCITY_Y_MPS,
+    bool? hasVelocityYMps,
+    bool? HAS_VELOCITY_Z_MPS,
+    bool? hasVelocityZMps,
   })
       : _JULIAN_DATE_TT = julianDateTt ?? JULIAN_DATE_TT,
         _POSITION_X_M = positionXM ?? POSITION_X_M,
@@ -441,12 +895,19 @@ class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
         _POSITION_Z_M = positionZM ?? POSITION_Z_M,
         _VELOCITY_X_MPS = velocityXMps ?? VELOCITY_X_MPS,
         _VELOCITY_Y_MPS = velocityYMps ?? VELOCITY_Y_MPS,
-        _VELOCITY_Z_MPS = velocityZMps ?? VELOCITY_Z_MPS;
+        _VELOCITY_Z_MPS = velocityZMps ?? VELOCITY_Z_MPS,
+        _HAS_JULIAN_DATE_TT = hasJulianDateTt ?? HAS_JULIAN_DATE_TT,
+        _HAS_POSITION_X_M = hasPositionXM ?? HAS_POSITION_X_M,
+        _HAS_POSITION_Y_M = hasPositionYM ?? HAS_POSITION_Y_M,
+        _HAS_POSITION_Z_M = hasPositionZM ?? HAS_POSITION_Z_M,
+        _HAS_VELOCITY_X_MPS = hasVelocityXMps ?? HAS_VELOCITY_X_MPS,
+        _HAS_VELOCITY_Y_MPS = hasVelocityYMps ?? HAS_VELOCITY_Y_MPS,
+        _HAS_VELOCITY_Z_MPS = hasVelocityZMps ?? HAS_VELOCITY_Z_MPS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(14);
     fbBuilder.addFloat64(0, _JULIAN_DATE_TT);
     fbBuilder.addFloat64(1, _POSITION_X_M);
     fbBuilder.addFloat64(2, _POSITION_Y_M);
@@ -454,6 +915,13 @@ class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(4, _VELOCITY_X_MPS);
     fbBuilder.addFloat64(5, _VELOCITY_Y_MPS);
     fbBuilder.addFloat64(6, _VELOCITY_Z_MPS);
+    fbBuilder.addBool(7, _HAS_JULIAN_DATE_TT);
+    fbBuilder.addBool(8, _HAS_POSITION_X_M);
+    fbBuilder.addBool(9, _HAS_POSITION_Y_M);
+    fbBuilder.addBool(10, _HAS_POSITION_Z_M);
+    fbBuilder.addBool(11, _HAS_VELOCITY_X_MPS);
+    fbBuilder.addBool(12, _HAS_VELOCITY_Y_MPS);
+    fbBuilder.addBool(13, _HAS_VELOCITY_Z_MPS);
     return fbBuilder.endTable();
   }
 
@@ -484,10 +952,15 @@ class ACWElevationMaskPoint {
   ///  Minimum visible elevation at the azimuth, radians.
   double get ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get elevationRad => ELEVATION_RAD;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_AZIMUTH_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get hasAzimuthRad => HAS_AZIMUTH_RAD;
+  bool get HAS_ELEVATION_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get hasElevationRad => HAS_ELEVATION_RAD;
 
   @override
   String toString() {
-    return 'ACWElevationMaskPoint{azimuthRad: ${azimuthRad}, elevationRad: ${elevationRad}}';
+    return 'ACWElevationMaskPoint{azimuthRad: ${azimuthRad}, elevationRad: ${elevationRad}, hasAzimuthRad: ${hasAzimuthRad}, hasElevationRad: ${hasElevationRad}}';
   }
 }
 
@@ -505,7 +978,7 @@ class ACWElevationMaskPointBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
   }
 
   int addAzimuthRad(double? AZIMUTH_RAD) {
@@ -514,6 +987,14 @@ class ACWElevationMaskPointBuilder {
   }
   int addElevationRad(double? ELEVATION_RAD) {
     fbBuilder.addFloat64(1, ELEVATION_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasAzimuthRad(bool? HAS_AZIMUTH_RAD) {
+    fbBuilder.addBool(2, HAS_AZIMUTH_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasElevationRad(bool? HAS_ELEVATION_RAD) {
+    fbBuilder.addBool(3, HAS_ELEVATION_RAD);
     return fbBuilder.offset;
   }
 
@@ -525,22 +1006,32 @@ class ACWElevationMaskPointBuilder {
 class ACWElevationMaskPointObjectBuilder extends fb.ObjectBuilder {
   final double? _AZIMUTH_RAD;
   final double? _ELEVATION_RAD;
+  final bool? _HAS_AZIMUTH_RAD;
+  final bool? _HAS_ELEVATION_RAD;
 
   ACWElevationMaskPointObjectBuilder({
     double? AZIMUTH_RAD,
     double? azimuthRad,
     double? ELEVATION_RAD,
     double? elevationRad,
+    bool? HAS_AZIMUTH_RAD,
+    bool? hasAzimuthRad,
+    bool? HAS_ELEVATION_RAD,
+    bool? hasElevationRad,
   })
       : _AZIMUTH_RAD = azimuthRad ?? AZIMUTH_RAD,
-        _ELEVATION_RAD = elevationRad ?? ELEVATION_RAD;
+        _ELEVATION_RAD = elevationRad ?? ELEVATION_RAD,
+        _HAS_AZIMUTH_RAD = hasAzimuthRad ?? HAS_AZIMUTH_RAD,
+        _HAS_ELEVATION_RAD = hasElevationRad ?? HAS_ELEVATION_RAD;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
     fbBuilder.addFloat64(0, _AZIMUTH_RAD);
     fbBuilder.addFloat64(1, _ELEVATION_RAD);
+    fbBuilder.addBool(2, _HAS_AZIMUTH_RAD);
+    fbBuilder.addBool(3, _HAS_ELEVATION_RAD);
     return fbBuilder.endTable();
   }
 
@@ -573,10 +1064,17 @@ class ACWRefractionModel {
   ///  Local temperature in kelvin.
   double get TEMPERATURE_K => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 283.0);
   double get temperatureK => TEMPERATURE_K;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_MODEL_KIND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get hasModelKind => HAS_MODEL_KIND;
+  bool get HAS_PRESSURE_PA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasPressurePa => HAS_PRESSURE_PA;
+  bool get HAS_TEMPERATURE_K => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasTemperatureK => HAS_TEMPERATURE_K;
 
   @override
   String toString() {
-    return 'ACWRefractionModel{modelKind: ${modelKind}, pressurePa: ${pressurePa}, temperatureK: ${temperatureK}}';
+    return 'ACWRefractionModel{modelKind: ${modelKind}, pressurePa: ${pressurePa}, temperatureK: ${temperatureK}, hasModelKind: ${hasModelKind}, hasPressurePa: ${hasPressurePa}, hasTemperatureK: ${hasTemperatureK}}';
   }
 }
 
@@ -594,7 +1092,7 @@ class ACWRefractionModelBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(6);
   }
 
   int addModelKind(acwRefractionModelKind? MODEL_KIND) {
@@ -609,6 +1107,18 @@ class ACWRefractionModelBuilder {
     fbBuilder.addFloat64(2, TEMPERATURE_K);
     return fbBuilder.offset;
   }
+  int addHasModelKind(bool? HAS_MODEL_KIND) {
+    fbBuilder.addBool(3, HAS_MODEL_KIND);
+    return fbBuilder.offset;
+  }
+  int addHasPressurePa(bool? HAS_PRESSURE_PA) {
+    fbBuilder.addBool(4, HAS_PRESSURE_PA);
+    return fbBuilder.offset;
+  }
+  int addHasTemperatureK(bool? HAS_TEMPERATURE_K) {
+    fbBuilder.addBool(5, HAS_TEMPERATURE_K);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -619,6 +1129,9 @@ class ACWRefractionModelObjectBuilder extends fb.ObjectBuilder {
   final acwRefractionModelKind? _MODEL_KIND;
   final double? _PRESSURE_PA;
   final double? _TEMPERATURE_K;
+  final bool? _HAS_MODEL_KIND;
+  final bool? _HAS_PRESSURE_PA;
+  final bool? _HAS_TEMPERATURE_K;
 
   ACWRefractionModelObjectBuilder({
     acwRefractionModelKind? MODEL_KIND,
@@ -627,18 +1140,30 @@ class ACWRefractionModelObjectBuilder extends fb.ObjectBuilder {
     double? pressurePa,
     double? TEMPERATURE_K,
     double? temperatureK,
+    bool? HAS_MODEL_KIND,
+    bool? hasModelKind,
+    bool? HAS_PRESSURE_PA,
+    bool? hasPressurePa,
+    bool? HAS_TEMPERATURE_K,
+    bool? hasTemperatureK,
   })
       : _MODEL_KIND = modelKind ?? MODEL_KIND,
         _PRESSURE_PA = pressurePa ?? PRESSURE_PA,
-        _TEMPERATURE_K = temperatureK ?? TEMPERATURE_K;
+        _TEMPERATURE_K = temperatureK ?? TEMPERATURE_K,
+        _HAS_MODEL_KIND = hasModelKind ?? HAS_MODEL_KIND,
+        _HAS_PRESSURE_PA = hasPressurePa ?? HAS_PRESSURE_PA,
+        _HAS_TEMPERATURE_K = hasTemperatureK ?? HAS_TEMPERATURE_K;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(6);
     fbBuilder.addInt8(0, _MODEL_KIND?.value);
     fbBuilder.addFloat64(1, _PRESSURE_PA);
     fbBuilder.addFloat64(2, _TEMPERATURE_K);
+    fbBuilder.addBool(3, _HAS_MODEL_KIND);
+    fbBuilder.addBool(4, _HAS_PRESSURE_PA);
+    fbBuilder.addBool(5, _HAS_TEMPERATURE_K);
     return fbBuilder.endTable();
   }
 
@@ -669,10 +1194,15 @@ class ACWBlackoutWindow {
   ///  Interval end as Julian Date in TT.
   double get END_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get endJulianDateTt => END_JULIAN_DATE_TT;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_START_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get hasStartJulianDateTt => HAS_START_JULIAN_DATE_TT;
+  bool get HAS_END_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get hasEndJulianDateTt => HAS_END_JULIAN_DATE_TT;
 
   @override
   String toString() {
-    return 'ACWBlackoutWindow{startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}}';
+    return 'ACWBlackoutWindow{startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, hasStartJulianDateTt: ${hasStartJulianDateTt}, hasEndJulianDateTt: ${hasEndJulianDateTt}}';
   }
 }
 
@@ -690,7 +1220,7 @@ class ACWBlackoutWindowBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
   }
 
   int addStartJulianDateTt(double? START_JULIAN_DATE_TT) {
@@ -699,6 +1229,14 @@ class ACWBlackoutWindowBuilder {
   }
   int addEndJulianDateTt(double? END_JULIAN_DATE_TT) {
     fbBuilder.addFloat64(1, END_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasStartJulianDateTt(bool? HAS_START_JULIAN_DATE_TT) {
+    fbBuilder.addBool(2, HAS_START_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasEndJulianDateTt(bool? HAS_END_JULIAN_DATE_TT) {
+    fbBuilder.addBool(3, HAS_END_JULIAN_DATE_TT);
     return fbBuilder.offset;
   }
 
@@ -710,22 +1248,32 @@ class ACWBlackoutWindowBuilder {
 class ACWBlackoutWindowObjectBuilder extends fb.ObjectBuilder {
   final double? _START_JULIAN_DATE_TT;
   final double? _END_JULIAN_DATE_TT;
+  final bool? _HAS_START_JULIAN_DATE_TT;
+  final bool? _HAS_END_JULIAN_DATE_TT;
 
   ACWBlackoutWindowObjectBuilder({
     double? START_JULIAN_DATE_TT,
     double? startJulianDateTt,
     double? END_JULIAN_DATE_TT,
     double? endJulianDateTt,
+    bool? HAS_START_JULIAN_DATE_TT,
+    bool? hasStartJulianDateTt,
+    bool? HAS_END_JULIAN_DATE_TT,
+    bool? hasEndJulianDateTt,
   })
       : _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
-        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT;
+        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT,
+        _HAS_START_JULIAN_DATE_TT = hasStartJulianDateTt ?? HAS_START_JULIAN_DATE_TT,
+        _HAS_END_JULIAN_DATE_TT = hasEndJulianDateTt ?? HAS_END_JULIAN_DATE_TT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(4);
     fbBuilder.addFloat64(0, _START_JULIAN_DATE_TT);
     fbBuilder.addFloat64(1, _END_JULIAN_DATE_TT);
+    fbBuilder.addBool(2, _HAS_START_JULIAN_DATE_TT);
+    fbBuilder.addBool(3, _HAS_END_JULIAN_DATE_TT);
     return fbBuilder.endTable();
   }
 
@@ -759,10 +1307,14 @@ class ACWGroundStation {
   ///  Geodetic longitude, radians.
   double get LONGITUDE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get longitudeRad => LONGITUDE_RAD;
-  ///  Height above the WGS-84 ellipsoid, meters.
+  ///  Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+  ///  docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+  ///  finite segment blocks; tangent contact is clear. At height <= 0, including
+  ///  zero, use the supporting plane, without an own-ellipsoid intersection test.
+  ///  The user elevation mask and supplied terrain apply separately at all heights.
   double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get altitudeM => ALTITUDE_M;
-  ///  Default minimum visible elevation, radians.
+  ///  Explicit minimum visible elevation, radians; HAS flag required.
   double get MIN_ELEVATION_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get minElevationRad => MIN_ELEVATION_RAD;
   ///  Number of simultaneous contacts this station can schedule.
@@ -771,10 +1323,21 @@ class ACWGroundStation {
   ///  Station-specific unavailable intervals.
   List<ACWBlackoutWindow>? get BLACKOUT_WINDOWS => const fb.ListReader<ACWBlackoutWindow>(ACWBlackoutWindow.reader).vTableGetNullable(_bc, _bcOffset, 18);
   List<ACWBlackoutWindow>? get blackoutWindows => BLACKOUT_WINDOWS;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_LATITUDE_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasLatitudeRad => HAS_LATITUDE_RAD;
+  bool get HAS_LONGITUDE_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasLongitudeRad => HAS_LONGITUDE_RAD;
+  bool get HAS_ALTITUDE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasAltitudeM => HAS_ALTITUDE_M;
+  bool get HAS_MIN_ELEVATION_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get hasMinElevationRad => HAS_MIN_ELEVATION_RAD;
+  bool get HAS_CHANNEL_CAPACITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasChannelCapacity => HAS_CHANNEL_CAPACITY;
 
   @override
   String toString() {
-    return 'ACWGroundStation{stationId: ${stationId}, NAME: ${NAME}, latitudeRad: ${latitudeRad}, longitudeRad: ${longitudeRad}, altitudeM: ${altitudeM}, minElevationRad: ${minElevationRad}, channelCapacity: ${channelCapacity}, blackoutWindows: ${blackoutWindows}}';
+    return 'ACWGroundStation{stationId: ${stationId}, NAME: ${NAME}, latitudeRad: ${latitudeRad}, longitudeRad: ${longitudeRad}, altitudeM: ${altitudeM}, minElevationRad: ${minElevationRad}, channelCapacity: ${channelCapacity}, blackoutWindows: ${blackoutWindows}, hasLatitudeRad: ${hasLatitudeRad}, hasLongitudeRad: ${hasLongitudeRad}, hasAltitudeM: ${hasAltitudeM}, hasMinElevationRad: ${hasMinElevationRad}, hasChannelCapacity: ${hasChannelCapacity}}';
   }
 }
 
@@ -792,7 +1355,7 @@ class ACWGroundStationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(13);
   }
 
   int addStationIdOffset(int? offset) {
@@ -827,6 +1390,26 @@ class ACWGroundStationBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
+  int addHasLatitudeRad(bool? HAS_LATITUDE_RAD) {
+    fbBuilder.addBool(8, HAS_LATITUDE_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasLongitudeRad(bool? HAS_LONGITUDE_RAD) {
+    fbBuilder.addBool(9, HAS_LONGITUDE_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasAltitudeM(bool? HAS_ALTITUDE_M) {
+    fbBuilder.addBool(10, HAS_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addHasMinElevationRad(bool? HAS_MIN_ELEVATION_RAD) {
+    fbBuilder.addBool(11, HAS_MIN_ELEVATION_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasChannelCapacity(bool? HAS_CHANNEL_CAPACITY) {
+    fbBuilder.addBool(12, HAS_CHANNEL_CAPACITY);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -842,6 +1425,11 @@ class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
   final double? _MIN_ELEVATION_RAD;
   final int? _CHANNEL_CAPACITY;
   final List<ACWBlackoutWindowObjectBuilder>? _BLACKOUT_WINDOWS;
+  final bool? _HAS_LATITUDE_RAD;
+  final bool? _HAS_LONGITUDE_RAD;
+  final bool? _HAS_ALTITUDE_M;
+  final bool? _HAS_MIN_ELEVATION_RAD;
+  final bool? _HAS_CHANNEL_CAPACITY;
 
   ACWGroundStationObjectBuilder({
     String? STATION_ID,
@@ -859,6 +1447,16 @@ class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
     int? channelCapacity,
     List<ACWBlackoutWindowObjectBuilder>? BLACKOUT_WINDOWS,
     List<ACWBlackoutWindowObjectBuilder>? blackoutWindows,
+    bool? HAS_LATITUDE_RAD,
+    bool? hasLatitudeRad,
+    bool? HAS_LONGITUDE_RAD,
+    bool? hasLongitudeRad,
+    bool? HAS_ALTITUDE_M,
+    bool? hasAltitudeM,
+    bool? HAS_MIN_ELEVATION_RAD,
+    bool? hasMinElevationRad,
+    bool? HAS_CHANNEL_CAPACITY,
+    bool? hasChannelCapacity,
   })
       : _STATION_ID = stationId ?? STATION_ID,
         _NAME = NAME,
@@ -867,7 +1465,12 @@ class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
         _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
         _MIN_ELEVATION_RAD = minElevationRad ?? MIN_ELEVATION_RAD,
         _CHANNEL_CAPACITY = channelCapacity ?? CHANNEL_CAPACITY,
-        _BLACKOUT_WINDOWS = blackoutWindows ?? BLACKOUT_WINDOWS;
+        _BLACKOUT_WINDOWS = blackoutWindows ?? BLACKOUT_WINDOWS,
+        _HAS_LATITUDE_RAD = hasLatitudeRad ?? HAS_LATITUDE_RAD,
+        _HAS_LONGITUDE_RAD = hasLongitudeRad ?? HAS_LONGITUDE_RAD,
+        _HAS_ALTITUDE_M = hasAltitudeM ?? HAS_ALTITUDE_M,
+        _HAS_MIN_ELEVATION_RAD = hasMinElevationRad ?? HAS_MIN_ELEVATION_RAD,
+        _HAS_CHANNEL_CAPACITY = hasChannelCapacity ?? HAS_CHANNEL_CAPACITY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -878,7 +1481,7 @@ class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_NAME!);
     final int? BLACKOUT_WINDOWSOffset = _BLACKOUT_WINDOWS == null ? null
         : fbBuilder.writeList(_BLACKOUT_WINDOWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, STATION_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addFloat64(2, _LATITUDE_RAD);
@@ -887,6 +1490,11 @@ class ACWGroundStationObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(5, _MIN_ELEVATION_RAD);
     fbBuilder.addUint32(6, _CHANNEL_CAPACITY);
     fbBuilder.addOffset(7, BLACKOUT_WINDOWSOffset);
+    fbBuilder.addBool(8, _HAS_LATITUDE_RAD);
+    fbBuilder.addBool(9, _HAS_LONGITUDE_RAD);
+    fbBuilder.addBool(10, _HAS_ALTITUDE_M);
+    fbBuilder.addBool(11, _HAS_MIN_ELEVATION_RAD);
+    fbBuilder.addBool(12, _HAS_CHANNEL_CAPACITY);
     return fbBuilder.endTable();
   }
 
@@ -922,18 +1530,31 @@ class ACWConstraint {
   double get maxRangeM => MAX_RANGE_M;
   ///  Required target lighting (TARGET_LIGHTING).
   acwLightingCondition get LIGHTING => acwLightingCondition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  ///  Central-body radius offset for line-of-sight occultation, meters
-  ///  (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  ///  Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+  ///  LOS only; not geodetic altitude. Never applied to a surface-station pair.
   double get OCCULTATION_ATMOSPHERE_HEIGHT_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get occultationAtmosphereHeightM => OCCULTATION_ATMOSPHERE_HEIGHT_M;
   ///  Azimuth-dependent mask (ELEVATION_MASK).
   List<ACWElevationMaskPoint>? get MASK => const fb.ListReader<ACWElevationMaskPoint>(ACWElevationMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 16);
   ///  Producer label echoed in window attribution.
   String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_KIND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasKind => HAS_KIND;
+  bool get HAS_THRESHOLD_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasThresholdRad => HAS_THRESHOLD_RAD;
+  bool get HAS_MIN_RANGE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasMinRangeM => HAS_MIN_RANGE_M;
+  bool get HAS_MAX_RANGE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get hasMaxRangeM => HAS_MAX_RANGE_M;
+  bool get HAS_LIGHTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  bool get hasLighting => HAS_LIGHTING;
+  bool get HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get hasOccultationAtmosphereHeightM => HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M;
 
   @override
   String toString() {
-    return 'ACWConstraint{KIND: ${KIND}, thresholdRad: ${thresholdRad}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, LIGHTING: ${LIGHTING}, occultationAtmosphereHeightM: ${occultationAtmosphereHeightM}, MASK: ${MASK}, LABEL: ${LABEL}}';
+    return 'ACWConstraint{KIND: ${KIND}, thresholdRad: ${thresholdRad}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, LIGHTING: ${LIGHTING}, occultationAtmosphereHeightM: ${occultationAtmosphereHeightM}, MASK: ${MASK}, LABEL: ${LABEL}, hasKind: ${hasKind}, hasThresholdRad: ${hasThresholdRad}, hasMinRangeM: ${hasMinRangeM}, hasMaxRangeM: ${hasMaxRangeM}, hasLighting: ${hasLighting}, hasOccultationAtmosphereHeightM: ${hasOccultationAtmosphereHeightM}}';
   }
 }
 
@@ -951,7 +1572,7 @@ class ACWConstraintBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(14);
   }
 
   int addKind(acwConstraintKind? KIND) {
@@ -986,6 +1607,30 @@ class ACWConstraintBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
+  int addHasKind(bool? HAS_KIND) {
+    fbBuilder.addBool(8, HAS_KIND);
+    return fbBuilder.offset;
+  }
+  int addHasThresholdRad(bool? HAS_THRESHOLD_RAD) {
+    fbBuilder.addBool(9, HAS_THRESHOLD_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasMinRangeM(bool? HAS_MIN_RANGE_M) {
+    fbBuilder.addBool(10, HAS_MIN_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addHasMaxRangeM(bool? HAS_MAX_RANGE_M) {
+    fbBuilder.addBool(11, HAS_MAX_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addHasLighting(bool? HAS_LIGHTING) {
+    fbBuilder.addBool(12, HAS_LIGHTING);
+    return fbBuilder.offset;
+  }
+  int addHasOccultationAtmosphereHeightM(bool? HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) {
+    fbBuilder.addBool(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1001,6 +1646,12 @@ class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
   final double? _OCCULTATION_ATMOSPHERE_HEIGHT_M;
   final List<ACWElevationMaskPointObjectBuilder>? _MASK;
   final String? _LABEL;
+  final bool? _HAS_KIND;
+  final bool? _HAS_THRESHOLD_RAD;
+  final bool? _HAS_MIN_RANGE_M;
+  final bool? _HAS_MAX_RANGE_M;
+  final bool? _HAS_LIGHTING;
+  final bool? _HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M;
 
   ACWConstraintObjectBuilder({
     acwConstraintKind? KIND,
@@ -1015,6 +1666,18 @@ class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
     double? occultationAtmosphereHeightM,
     List<ACWElevationMaskPointObjectBuilder>? MASK,
     String? LABEL,
+    bool? HAS_KIND,
+    bool? hasKind,
+    bool? HAS_THRESHOLD_RAD,
+    bool? hasThresholdRad,
+    bool? HAS_MIN_RANGE_M,
+    bool? hasMinRangeM,
+    bool? HAS_MAX_RANGE_M,
+    bool? hasMaxRangeM,
+    bool? HAS_LIGHTING,
+    bool? hasLighting,
+    bool? HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M,
+    bool? hasOccultationAtmosphereHeightM,
   })
       : _KIND = KIND,
         _THRESHOLD_RAD = thresholdRad ?? THRESHOLD_RAD,
@@ -1023,7 +1686,13 @@ class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
         _LIGHTING = LIGHTING,
         _OCCULTATION_ATMOSPHERE_HEIGHT_M = occultationAtmosphereHeightM ?? OCCULTATION_ATMOSPHERE_HEIGHT_M,
         _MASK = MASK,
-        _LABEL = LABEL;
+        _LABEL = LABEL,
+        _HAS_KIND = hasKind ?? HAS_KIND,
+        _HAS_THRESHOLD_RAD = hasThresholdRad ?? HAS_THRESHOLD_RAD,
+        _HAS_MIN_RANGE_M = hasMinRangeM ?? HAS_MIN_RANGE_M,
+        _HAS_MAX_RANGE_M = hasMaxRangeM ?? HAS_MAX_RANGE_M,
+        _HAS_LIGHTING = hasLighting ?? HAS_LIGHTING,
+        _HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = hasOccultationAtmosphereHeightM ?? HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1032,7 +1701,7 @@ class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? LABELOffset = _LABEL == null ? null
         : fbBuilder.writeString(_LABEL!);
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(14);
     fbBuilder.addInt8(0, _KIND?.value);
     fbBuilder.addFloat64(1, _THRESHOLD_RAD);
     fbBuilder.addFloat64(2, _MIN_RANGE_M);
@@ -1041,6 +1710,12 @@ class ACWConstraintObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(5, _OCCULTATION_ATMOSPHERE_HEIGHT_M);
     fbBuilder.addOffset(6, MASKOffset);
     fbBuilder.addOffset(7, LABELOffset);
+    fbBuilder.addBool(8, _HAS_KIND);
+    fbBuilder.addBool(9, _HAS_THRESHOLD_RAD);
+    fbBuilder.addBool(10, _HAS_MIN_RANGE_M);
+    fbBuilder.addBool(11, _HAS_MAX_RANGE_M);
+    fbBuilder.addBool(12, _HAS_LIGHTING);
+    fbBuilder.addBool(13, _HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
     return fbBuilder.endTable();
   }
 
@@ -1070,10 +1745,13 @@ class ACWConstraintSet {
   ///  Nested sets, combined with the same OPERATOR.
   List<ACWConstraintSet>? get SETS => const fb.ListReader<ACWConstraintSet>(ACWConstraintSet.reader).vTableGetNullable(_bc, _bcOffset, 8);
   String? get LABEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_OPERATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasOperator => HAS_OPERATOR;
 
   @override
   String toString() {
-    return 'ACWConstraintSet{OPERATOR: ${OPERATOR}, CONSTRAINTS: ${CONSTRAINTS}, SETS: ${SETS}, LABEL: ${LABEL}}';
+    return 'ACWConstraintSet{OPERATOR: ${OPERATOR}, CONSTRAINTS: ${CONSTRAINTS}, SETS: ${SETS}, LABEL: ${LABEL}, hasOperator: ${hasOperator}}';
   }
 }
 
@@ -1091,7 +1769,7 @@ class ACWConstraintSetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addOperator(acwConstraintOperator? OPERATOR) {
@@ -1110,6 +1788,10 @@ class ACWConstraintSetBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addHasOperator(bool? HAS_OPERATOR) {
+    fbBuilder.addBool(4, HAS_OPERATOR);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1121,17 +1803,21 @@ class ACWConstraintSetObjectBuilder extends fb.ObjectBuilder {
   final List<ACWConstraintObjectBuilder>? _CONSTRAINTS;
   final List<ACWConstraintSetObjectBuilder>? _SETS;
   final String? _LABEL;
+  final bool? _HAS_OPERATOR;
 
   ACWConstraintSetObjectBuilder({
     acwConstraintOperator? OPERATOR,
     List<ACWConstraintObjectBuilder>? CONSTRAINTS,
     List<ACWConstraintSetObjectBuilder>? SETS,
     String? LABEL,
+    bool? HAS_OPERATOR,
+    bool? hasOperator,
   })
       : _OPERATOR = OPERATOR,
         _CONSTRAINTS = CONSTRAINTS,
         _SETS = SETS,
-        _LABEL = LABEL;
+        _LABEL = LABEL,
+        _HAS_OPERATOR = hasOperator ?? HAS_OPERATOR;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1142,11 +1828,12 @@ class ACWConstraintSetObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_SETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? LABELOffset = _LABEL == null ? null
         : fbBuilder.writeString(_LABEL!);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addInt8(0, _OPERATOR?.value);
     fbBuilder.addOffset(1, CONSTRAINTSOffset);
     fbBuilder.addOffset(2, SETSOffset);
     fbBuilder.addOffset(3, LABELOffset);
+    fbBuilder.addBool(4, _HAS_OPERATOR);
     return fbBuilder.endTable();
   }
 
@@ -1158,7 +1845,7 @@ class ACWConstraintSetObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+///  A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 ///  the same frame and time scale as ACWRequest.STATES.
 class ACWObserverTrajectory {
   ACWObserverTrajectory._(this._bc, this._bcOffset);
@@ -1299,10 +1986,21 @@ class ACWTargetSignature {
   double get emitterFrequencyHz => EMITTER_FREQUENCY_HZ;
   double get EMITTER_EIRP_DBW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get emitterEirpDbw => EMITTER_EIRP_DBW;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_RCS_M2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasRcsM2 => HAS_RCS_M2;
+  bool get HAS_DIAMETER_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get hasDiameterM => HAS_DIAMETER_M;
+  bool get HAS_GEOMETRIC_ALBEDO => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasGeometricAlbedo => HAS_GEOMETRIC_ALBEDO;
+  bool get HAS_EMITTER_FREQUENCY_HZ => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasEmitterFrequencyHz => HAS_EMITTER_FREQUENCY_HZ;
+  bool get HAS_EMITTER_EIRP_DBW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasEmitterEirpDbw => HAS_EMITTER_EIRP_DBW;
 
   @override
   String toString() {
-    return 'ACWTargetSignature{rcsM2: ${rcsM2}, diameterM: ${diameterM}, geometricAlbedo: ${geometricAlbedo}, emitterFrequencyHz: ${emitterFrequencyHz}, emitterEirpDbw: ${emitterEirpDbw}}';
+    return 'ACWTargetSignature{rcsM2: ${rcsM2}, diameterM: ${diameterM}, geometricAlbedo: ${geometricAlbedo}, emitterFrequencyHz: ${emitterFrequencyHz}, emitterEirpDbw: ${emitterEirpDbw}, hasRcsM2: ${hasRcsM2}, hasDiameterM: ${hasDiameterM}, hasGeometricAlbedo: ${hasGeometricAlbedo}, hasEmitterFrequencyHz: ${hasEmitterFrequencyHz}, hasEmitterEirpDbw: ${hasEmitterEirpDbw}}';
   }
 }
 
@@ -1320,7 +2018,7 @@ class ACWTargetSignatureBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(10);
   }
 
   int addRcsM2(double? RCS_M2) {
@@ -1343,6 +2041,26 @@ class ACWTargetSignatureBuilder {
     fbBuilder.addFloat64(4, EMITTER_EIRP_DBW);
     return fbBuilder.offset;
   }
+  int addHasRcsM2(bool? HAS_RCS_M2) {
+    fbBuilder.addBool(5, HAS_RCS_M2);
+    return fbBuilder.offset;
+  }
+  int addHasDiameterM(bool? HAS_DIAMETER_M) {
+    fbBuilder.addBool(6, HAS_DIAMETER_M);
+    return fbBuilder.offset;
+  }
+  int addHasGeometricAlbedo(bool? HAS_GEOMETRIC_ALBEDO) {
+    fbBuilder.addBool(7, HAS_GEOMETRIC_ALBEDO);
+    return fbBuilder.offset;
+  }
+  int addHasEmitterFrequencyHz(bool? HAS_EMITTER_FREQUENCY_HZ) {
+    fbBuilder.addBool(8, HAS_EMITTER_FREQUENCY_HZ);
+    return fbBuilder.offset;
+  }
+  int addHasEmitterEirpDbw(bool? HAS_EMITTER_EIRP_DBW) {
+    fbBuilder.addBool(9, HAS_EMITTER_EIRP_DBW);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1355,6 +2073,11 @@ class ACWTargetSignatureObjectBuilder extends fb.ObjectBuilder {
   final double? _GEOMETRIC_ALBEDO;
   final double? _EMITTER_FREQUENCY_HZ;
   final double? _EMITTER_EIRP_DBW;
+  final bool? _HAS_RCS_M2;
+  final bool? _HAS_DIAMETER_M;
+  final bool? _HAS_GEOMETRIC_ALBEDO;
+  final bool? _HAS_EMITTER_FREQUENCY_HZ;
+  final bool? _HAS_EMITTER_EIRP_DBW;
 
   ACWTargetSignatureObjectBuilder({
     double? RCS_M2,
@@ -1367,22 +2090,42 @@ class ACWTargetSignatureObjectBuilder extends fb.ObjectBuilder {
     double? emitterFrequencyHz,
     double? EMITTER_EIRP_DBW,
     double? emitterEirpDbw,
+    bool? HAS_RCS_M2,
+    bool? hasRcsM2,
+    bool? HAS_DIAMETER_M,
+    bool? hasDiameterM,
+    bool? HAS_GEOMETRIC_ALBEDO,
+    bool? hasGeometricAlbedo,
+    bool? HAS_EMITTER_FREQUENCY_HZ,
+    bool? hasEmitterFrequencyHz,
+    bool? HAS_EMITTER_EIRP_DBW,
+    bool? hasEmitterEirpDbw,
   })
       : _RCS_M2 = rcsM2 ?? RCS_M2,
         _DIAMETER_M = diameterM ?? DIAMETER_M,
         _GEOMETRIC_ALBEDO = geometricAlbedo ?? GEOMETRIC_ALBEDO,
         _EMITTER_FREQUENCY_HZ = emitterFrequencyHz ?? EMITTER_FREQUENCY_HZ,
-        _EMITTER_EIRP_DBW = emitterEirpDbw ?? EMITTER_EIRP_DBW;
+        _EMITTER_EIRP_DBW = emitterEirpDbw ?? EMITTER_EIRP_DBW,
+        _HAS_RCS_M2 = hasRcsM2 ?? HAS_RCS_M2,
+        _HAS_DIAMETER_M = hasDiameterM ?? HAS_DIAMETER_M,
+        _HAS_GEOMETRIC_ALBEDO = hasGeometricAlbedo ?? HAS_GEOMETRIC_ALBEDO,
+        _HAS_EMITTER_FREQUENCY_HZ = hasEmitterFrequencyHz ?? HAS_EMITTER_FREQUENCY_HZ,
+        _HAS_EMITTER_EIRP_DBW = hasEmitterEirpDbw ?? HAS_EMITTER_EIRP_DBW;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(10);
     fbBuilder.addFloat64(0, _RCS_M2);
     fbBuilder.addFloat64(1, _DIAMETER_M);
     fbBuilder.addFloat64(2, _GEOMETRIC_ALBEDO);
     fbBuilder.addFloat64(3, _EMITTER_FREQUENCY_HZ);
     fbBuilder.addFloat64(4, _EMITTER_EIRP_DBW);
+    fbBuilder.addBool(5, _HAS_RCS_M2);
+    fbBuilder.addBool(6, _HAS_DIAMETER_M);
+    fbBuilder.addBool(7, _HAS_GEOMETRIC_ALBEDO);
+    fbBuilder.addBool(8, _HAS_EMITTER_FREQUENCY_HZ);
+    fbBuilder.addBool(9, _HAS_EMITTER_EIRP_DBW);
     return fbBuilder.endTable();
   }
 
@@ -1414,14 +2157,17 @@ class ACWTarget {
   ///  International designator.
   String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get objectId => OBJECT_ID;
-  ///  Truth Earth-fixed states with velocity, in the frame and time scale of
+  ///  Truth central-body-fixed states with velocity, in the frame and time scale of
   ///  ACWRequest.STATES.
   List<ACWStateSample>? get STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 10);
   ACWTargetSignature? get SIGNATURE => ACWTargetSignature.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_NORAD_CAT_ID => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get hasNoradCatId => HAS_NORAD_CAT_ID;
 
   @override
   String toString() {
-    return 'ACWTarget{targetId: ${targetId}, noradCatId: ${noradCatId}, objectId: ${objectId}, STATES: ${STATES}, SIGNATURE: ${SIGNATURE}}';
+    return 'ACWTarget{targetId: ${targetId}, noradCatId: ${noradCatId}, objectId: ${objectId}, STATES: ${STATES}, SIGNATURE: ${SIGNATURE}, hasNoradCatId: ${hasNoradCatId}}';
   }
 }
 
@@ -1439,7 +2185,7 @@ class ACWTargetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
   int addTargetIdOffset(int? offset) {
@@ -1462,6 +2208,10 @@ class ACWTargetBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addHasNoradCatId(bool? HAS_NORAD_CAT_ID) {
+    fbBuilder.addBool(5, HAS_NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1474,6 +2224,7 @@ class ACWTargetObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_ID;
   final List<ACWStateSampleObjectBuilder>? _STATES;
   final ACWTargetSignatureObjectBuilder? _SIGNATURE;
+  final bool? _HAS_NORAD_CAT_ID;
 
   ACWTargetObjectBuilder({
     String? TARGET_ID,
@@ -1484,12 +2235,15 @@ class ACWTargetObjectBuilder extends fb.ObjectBuilder {
     String? objectId,
     List<ACWStateSampleObjectBuilder>? STATES,
     ACWTargetSignatureObjectBuilder? SIGNATURE,
+    bool? HAS_NORAD_CAT_ID,
+    bool? hasNoradCatId,
   })
       : _TARGET_ID = targetId ?? TARGET_ID,
         _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
         _OBJECT_ID = objectId ?? OBJECT_ID,
         _STATES = STATES,
-        _SIGNATURE = SIGNATURE;
+        _SIGNATURE = SIGNATURE,
+        _HAS_NORAD_CAT_ID = hasNoradCatId ?? HAS_NORAD_CAT_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1501,12 +2255,13 @@ class ACWTargetObjectBuilder extends fb.ObjectBuilder {
     final int? STATESOffset = _STATES == null ? null
         : fbBuilder.writeList(_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? SIGNATUREOffset = _SIGNATURE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, TARGET_IDOffset);
     fbBuilder.addUint32(1, _NORAD_CAT_ID);
     fbBuilder.addOffset(2, OBJECT_IDOffset);
     fbBuilder.addOffset(3, STATESOffset);
     fbBuilder.addOffset(4, SIGNATUREOffset);
+    fbBuilder.addBool(5, _HAS_NORAD_CAT_ID);
     return fbBuilder.endTable();
   }
 
@@ -1553,7 +2308,7 @@ class ACWSensor {
   double get TRACK_DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   double get trackDurationS => TRACK_DURATION_S;
   ///  Shortest time between the end of one track of a target and the start
-  ///  of the next, seconds.
+  ///  of the following, seconds.
   double get REVISIT_INTERVAL_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   double get revisitIntervalS => REVISIT_INTERVAL_S;
   ///  Targets tracked at once.
@@ -1592,10 +2347,41 @@ class ACWSensor {
   ///  DOPPLER with DOPPLER_FREQUENCY set to this value.
   double get TRANSMIT_FREQUENCY_HZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
   double get transmitFrequencyHz => TRANSMIT_FREQUENCY_HZ;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_PHENOMENOLOGY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  bool get hasPhenomenology => HAS_PHENOMENOLOGY;
+  bool get HAS_OBSERVATION_INTERVAL_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 44, false);
+  bool get hasObservationIntervalS => HAS_OBSERVATION_INTERVAL_S;
+  bool get HAS_TRACK_DURATION_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 46, false);
+  bool get hasTrackDurationS => HAS_TRACK_DURATION_S;
+  bool get HAS_REVISIT_INTERVAL_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 48, false);
+  bool get hasRevisitIntervalS => HAS_REVISIT_INTERVAL_S;
+  bool get HAS_MAX_SIMULTANEOUS_TRACKS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 50, false);
+  bool get hasMaxSimultaneousTracks => HAS_MAX_SIMULTANEOUS_TRACKS;
+  bool get HAS_REFERENCE_SNR_DB => const fb.BoolReader().vTableGet(_bc, _bcOffset, 52, false);
+  bool get hasReferenceSnrDb => HAS_REFERENCE_SNR_DB;
+  bool get HAS_REFERENCE_RANGE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasReferenceRangeM => HAS_REFERENCE_RANGE_M;
+  bool get HAS_REFERENCE_RCS_M2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get hasReferenceRcsM2 => HAS_REFERENCE_RCS_M2;
+  bool get HAS_DETECTION_THRESHOLD_DB => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  bool get hasDetectionThresholdDb => HAS_DETECTION_THRESHOLD_DB;
+  bool get HAS_RECEIVER_G_OVER_T_DB_PER_K => const fb.BoolReader().vTableGet(_bc, _bcOffset, 60, false);
+  bool get hasReceiverGOverTDbPerK => HAS_RECEIVER_G_OVER_T_DB_PER_K;
+  bool get HAS_RECEIVER_BANDWIDTH_HZ => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
+  bool get hasReceiverBandwidthHz => HAS_RECEIVER_BANDWIDTH_HZ;
+  bool get HAS_LIMITING_MAGNITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
+  bool get hasLimitingMagnitude => HAS_LIMITING_MAGNITUDE;
+  bool get HAS_MAX_HOST_SUN_ELEVATION_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
+  bool get hasMaxHostSunElevationRad => HAS_MAX_HOST_SUN_ELEVATION_RAD;
+  bool get HAS_FALSE_ALARM_RATE_PER_HOUR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 68, false);
+  bool get hasFalseAlarmRatePerHour => HAS_FALSE_ALARM_RATE_PER_HOUR;
+  bool get HAS_TRANSMIT_FREQUENCY_HZ => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
+  bool get hasTransmitFrequencyHz => HAS_TRANSMIT_FREQUENCY_HZ;
 
   @override
   String toString() {
-    return 'ACWSensor{sensorId: ${sensorId}, hostId: ${hostId}, PHENOMENOLOGY: ${PHENOMENOLOGY}, errorModels: ${errorModels}, CONSTRAINTS: ${CONSTRAINTS}, observationIntervalS: ${observationIntervalS}, trackDurationS: ${trackDurationS}, revisitIntervalS: ${revisitIntervalS}, maxSimultaneousTracks: ${maxSimultaneousTracks}, referenceSnrDb: ${referenceSnrDb}, referenceRangeM: ${referenceRangeM}, referenceRcsM2: ${referenceRcsM2}, detectionThresholdDb: ${detectionThresholdDb}, receiverGOverTDbPerK: ${receiverGOverTDbPerK}, receiverBandwidthHz: ${receiverBandwidthHz}, limitingMagnitude: ${limitingMagnitude}, maxHostSunElevationRad: ${maxHostSunElevationRad}, falseAlarmRatePerHour: ${falseAlarmRatePerHour}, transmitFrequencyHz: ${transmitFrequencyHz}}';
+    return 'ACWSensor{sensorId: ${sensorId}, hostId: ${hostId}, PHENOMENOLOGY: ${PHENOMENOLOGY}, errorModels: ${errorModels}, CONSTRAINTS: ${CONSTRAINTS}, observationIntervalS: ${observationIntervalS}, trackDurationS: ${trackDurationS}, revisitIntervalS: ${revisitIntervalS}, maxSimultaneousTracks: ${maxSimultaneousTracks}, referenceSnrDb: ${referenceSnrDb}, referenceRangeM: ${referenceRangeM}, referenceRcsM2: ${referenceRcsM2}, detectionThresholdDb: ${detectionThresholdDb}, receiverGOverTDbPerK: ${receiverGOverTDbPerK}, receiverBandwidthHz: ${receiverBandwidthHz}, limitingMagnitude: ${limitingMagnitude}, maxHostSunElevationRad: ${maxHostSunElevationRad}, falseAlarmRatePerHour: ${falseAlarmRatePerHour}, transmitFrequencyHz: ${transmitFrequencyHz}, hasPhenomenology: ${hasPhenomenology}, hasObservationIntervalS: ${hasObservationIntervalS}, hasTrackDurationS: ${hasTrackDurationS}, hasRevisitIntervalS: ${hasRevisitIntervalS}, hasMaxSimultaneousTracks: ${hasMaxSimultaneousTracks}, hasReferenceSnrDb: ${hasReferenceSnrDb}, hasReferenceRangeM: ${hasReferenceRangeM}, hasReferenceRcsM2: ${hasReferenceRcsM2}, hasDetectionThresholdDb: ${hasDetectionThresholdDb}, hasReceiverGOverTDbPerK: ${hasReceiverGOverTDbPerK}, hasReceiverBandwidthHz: ${hasReceiverBandwidthHz}, hasLimitingMagnitude: ${hasLimitingMagnitude}, hasMaxHostSunElevationRad: ${hasMaxHostSunElevationRad}, hasFalseAlarmRatePerHour: ${hasFalseAlarmRatePerHour}, hasTransmitFrequencyHz: ${hasTransmitFrequencyHz}}';
   }
 }
 
@@ -1613,7 +2399,7 @@ class ACWSensorBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(34);
   }
 
   int addSensorIdOffset(int? offset) {
@@ -1692,6 +2478,66 @@ class ACWSensorBuilder {
     fbBuilder.addFloat64(18, TRANSMIT_FREQUENCY_HZ);
     return fbBuilder.offset;
   }
+  int addHasPhenomenology(bool? HAS_PHENOMENOLOGY) {
+    fbBuilder.addBool(19, HAS_PHENOMENOLOGY);
+    return fbBuilder.offset;
+  }
+  int addHasObservationIntervalS(bool? HAS_OBSERVATION_INTERVAL_S) {
+    fbBuilder.addBool(20, HAS_OBSERVATION_INTERVAL_S);
+    return fbBuilder.offset;
+  }
+  int addHasTrackDurationS(bool? HAS_TRACK_DURATION_S) {
+    fbBuilder.addBool(21, HAS_TRACK_DURATION_S);
+    return fbBuilder.offset;
+  }
+  int addHasRevisitIntervalS(bool? HAS_REVISIT_INTERVAL_S) {
+    fbBuilder.addBool(22, HAS_REVISIT_INTERVAL_S);
+    return fbBuilder.offset;
+  }
+  int addHasMaxSimultaneousTracks(bool? HAS_MAX_SIMULTANEOUS_TRACKS) {
+    fbBuilder.addBool(23, HAS_MAX_SIMULTANEOUS_TRACKS);
+    return fbBuilder.offset;
+  }
+  int addHasReferenceSnrDb(bool? HAS_REFERENCE_SNR_DB) {
+    fbBuilder.addBool(24, HAS_REFERENCE_SNR_DB);
+    return fbBuilder.offset;
+  }
+  int addHasReferenceRangeM(bool? HAS_REFERENCE_RANGE_M) {
+    fbBuilder.addBool(25, HAS_REFERENCE_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addHasReferenceRcsM2(bool? HAS_REFERENCE_RCS_M2) {
+    fbBuilder.addBool(26, HAS_REFERENCE_RCS_M2);
+    return fbBuilder.offset;
+  }
+  int addHasDetectionThresholdDb(bool? HAS_DETECTION_THRESHOLD_DB) {
+    fbBuilder.addBool(27, HAS_DETECTION_THRESHOLD_DB);
+    return fbBuilder.offset;
+  }
+  int addHasReceiverGOverTDbPerK(bool? HAS_RECEIVER_G_OVER_T_DB_PER_K) {
+    fbBuilder.addBool(28, HAS_RECEIVER_G_OVER_T_DB_PER_K);
+    return fbBuilder.offset;
+  }
+  int addHasReceiverBandwidthHz(bool? HAS_RECEIVER_BANDWIDTH_HZ) {
+    fbBuilder.addBool(29, HAS_RECEIVER_BANDWIDTH_HZ);
+    return fbBuilder.offset;
+  }
+  int addHasLimitingMagnitude(bool? HAS_LIMITING_MAGNITUDE) {
+    fbBuilder.addBool(30, HAS_LIMITING_MAGNITUDE);
+    return fbBuilder.offset;
+  }
+  int addHasMaxHostSunElevationRad(bool? HAS_MAX_HOST_SUN_ELEVATION_RAD) {
+    fbBuilder.addBool(31, HAS_MAX_HOST_SUN_ELEVATION_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasFalseAlarmRatePerHour(bool? HAS_FALSE_ALARM_RATE_PER_HOUR) {
+    fbBuilder.addBool(32, HAS_FALSE_ALARM_RATE_PER_HOUR);
+    return fbBuilder.offset;
+  }
+  int addHasTransmitFrequencyHz(bool? HAS_TRANSMIT_FREQUENCY_HZ) {
+    fbBuilder.addBool(33, HAS_TRANSMIT_FREQUENCY_HZ);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1718,6 +2564,21 @@ class ACWSensorObjectBuilder extends fb.ObjectBuilder {
   final double? _MAX_HOST_SUN_ELEVATION_RAD;
   final double? _FALSE_ALARM_RATE_PER_HOUR;
   final double? _TRANSMIT_FREQUENCY_HZ;
+  final bool? _HAS_PHENOMENOLOGY;
+  final bool? _HAS_OBSERVATION_INTERVAL_S;
+  final bool? _HAS_TRACK_DURATION_S;
+  final bool? _HAS_REVISIT_INTERVAL_S;
+  final bool? _HAS_MAX_SIMULTANEOUS_TRACKS;
+  final bool? _HAS_REFERENCE_SNR_DB;
+  final bool? _HAS_REFERENCE_RANGE_M;
+  final bool? _HAS_REFERENCE_RCS_M2;
+  final bool? _HAS_DETECTION_THRESHOLD_DB;
+  final bool? _HAS_RECEIVER_G_OVER_T_DB_PER_K;
+  final bool? _HAS_RECEIVER_BANDWIDTH_HZ;
+  final bool? _HAS_LIMITING_MAGNITUDE;
+  final bool? _HAS_MAX_HOST_SUN_ELEVATION_RAD;
+  final bool? _HAS_FALSE_ALARM_RATE_PER_HOUR;
+  final bool? _HAS_TRANSMIT_FREQUENCY_HZ;
 
   ACWSensorObjectBuilder({
     String? SENSOR_ID,
@@ -1756,6 +2617,36 @@ class ACWSensorObjectBuilder extends fb.ObjectBuilder {
     double? falseAlarmRatePerHour,
     double? TRANSMIT_FREQUENCY_HZ,
     double? transmitFrequencyHz,
+    bool? HAS_PHENOMENOLOGY,
+    bool? hasPhenomenology,
+    bool? HAS_OBSERVATION_INTERVAL_S,
+    bool? hasObservationIntervalS,
+    bool? HAS_TRACK_DURATION_S,
+    bool? hasTrackDurationS,
+    bool? HAS_REVISIT_INTERVAL_S,
+    bool? hasRevisitIntervalS,
+    bool? HAS_MAX_SIMULTANEOUS_TRACKS,
+    bool? hasMaxSimultaneousTracks,
+    bool? HAS_REFERENCE_SNR_DB,
+    bool? hasReferenceSnrDb,
+    bool? HAS_REFERENCE_RANGE_M,
+    bool? hasReferenceRangeM,
+    bool? HAS_REFERENCE_RCS_M2,
+    bool? hasReferenceRcsM2,
+    bool? HAS_DETECTION_THRESHOLD_DB,
+    bool? hasDetectionThresholdDb,
+    bool? HAS_RECEIVER_G_OVER_T_DB_PER_K,
+    bool? hasReceiverGOverTDbPerK,
+    bool? HAS_RECEIVER_BANDWIDTH_HZ,
+    bool? hasReceiverBandwidthHz,
+    bool? HAS_LIMITING_MAGNITUDE,
+    bool? hasLimitingMagnitude,
+    bool? HAS_MAX_HOST_SUN_ELEVATION_RAD,
+    bool? hasMaxHostSunElevationRad,
+    bool? HAS_FALSE_ALARM_RATE_PER_HOUR,
+    bool? hasFalseAlarmRatePerHour,
+    bool? HAS_TRANSMIT_FREQUENCY_HZ,
+    bool? hasTransmitFrequencyHz,
   })
       : _SENSOR_ID = sensorId ?? SENSOR_ID,
         _HOST_ID = hostId ?? HOST_ID,
@@ -1775,7 +2666,22 @@ class ACWSensorObjectBuilder extends fb.ObjectBuilder {
         _LIMITING_MAGNITUDE = limitingMagnitude ?? LIMITING_MAGNITUDE,
         _MAX_HOST_SUN_ELEVATION_RAD = maxHostSunElevationRad ?? MAX_HOST_SUN_ELEVATION_RAD,
         _FALSE_ALARM_RATE_PER_HOUR = falseAlarmRatePerHour ?? FALSE_ALARM_RATE_PER_HOUR,
-        _TRANSMIT_FREQUENCY_HZ = transmitFrequencyHz ?? TRANSMIT_FREQUENCY_HZ;
+        _TRANSMIT_FREQUENCY_HZ = transmitFrequencyHz ?? TRANSMIT_FREQUENCY_HZ,
+        _HAS_PHENOMENOLOGY = hasPhenomenology ?? HAS_PHENOMENOLOGY,
+        _HAS_OBSERVATION_INTERVAL_S = hasObservationIntervalS ?? HAS_OBSERVATION_INTERVAL_S,
+        _HAS_TRACK_DURATION_S = hasTrackDurationS ?? HAS_TRACK_DURATION_S,
+        _HAS_REVISIT_INTERVAL_S = hasRevisitIntervalS ?? HAS_REVISIT_INTERVAL_S,
+        _HAS_MAX_SIMULTANEOUS_TRACKS = hasMaxSimultaneousTracks ?? HAS_MAX_SIMULTANEOUS_TRACKS,
+        _HAS_REFERENCE_SNR_DB = hasReferenceSnrDb ?? HAS_REFERENCE_SNR_DB,
+        _HAS_REFERENCE_RANGE_M = hasReferenceRangeM ?? HAS_REFERENCE_RANGE_M,
+        _HAS_REFERENCE_RCS_M2 = hasReferenceRcsM2 ?? HAS_REFERENCE_RCS_M2,
+        _HAS_DETECTION_THRESHOLD_DB = hasDetectionThresholdDb ?? HAS_DETECTION_THRESHOLD_DB,
+        _HAS_RECEIVER_G_OVER_T_DB_PER_K = hasReceiverGOverTDbPerK ?? HAS_RECEIVER_G_OVER_T_DB_PER_K,
+        _HAS_RECEIVER_BANDWIDTH_HZ = hasReceiverBandwidthHz ?? HAS_RECEIVER_BANDWIDTH_HZ,
+        _HAS_LIMITING_MAGNITUDE = hasLimitingMagnitude ?? HAS_LIMITING_MAGNITUDE,
+        _HAS_MAX_HOST_SUN_ELEVATION_RAD = hasMaxHostSunElevationRad ?? HAS_MAX_HOST_SUN_ELEVATION_RAD,
+        _HAS_FALSE_ALARM_RATE_PER_HOUR = hasFalseAlarmRatePerHour ?? HAS_FALSE_ALARM_RATE_PER_HOUR,
+        _HAS_TRANSMIT_FREQUENCY_HZ = hasTransmitFrequencyHz ?? HAS_TRANSMIT_FREQUENCY_HZ;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1787,7 +2693,7 @@ class ACWSensorObjectBuilder extends fb.ObjectBuilder {
     final int? ERROR_MODELSOffset = _ERROR_MODELS == null ? null
         : fbBuilder.writeList(_ERROR_MODELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? CONSTRAINTSOffset = _CONSTRAINTS?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(34);
     fbBuilder.addOffset(0, SENSOR_IDOffset);
     fbBuilder.addOffset(1, HOST_IDOffset);
     fbBuilder.addUint8(2, _PHENOMENOLOGY?.value);
@@ -1807,6 +2713,21 @@ class ACWSensorObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(16, _MAX_HOST_SUN_ELEVATION_RAD);
     fbBuilder.addFloat64(17, _FALSE_ALARM_RATE_PER_HOUR);
     fbBuilder.addFloat64(18, _TRANSMIT_FREQUENCY_HZ);
+    fbBuilder.addBool(19, _HAS_PHENOMENOLOGY);
+    fbBuilder.addBool(20, _HAS_OBSERVATION_INTERVAL_S);
+    fbBuilder.addBool(21, _HAS_TRACK_DURATION_S);
+    fbBuilder.addBool(22, _HAS_REVISIT_INTERVAL_S);
+    fbBuilder.addBool(23, _HAS_MAX_SIMULTANEOUS_TRACKS);
+    fbBuilder.addBool(24, _HAS_REFERENCE_SNR_DB);
+    fbBuilder.addBool(25, _HAS_REFERENCE_RANGE_M);
+    fbBuilder.addBool(26, _HAS_REFERENCE_RCS_M2);
+    fbBuilder.addBool(27, _HAS_DETECTION_THRESHOLD_DB);
+    fbBuilder.addBool(28, _HAS_RECEIVER_G_OVER_T_DB_PER_K);
+    fbBuilder.addBool(29, _HAS_RECEIVER_BANDWIDTH_HZ);
+    fbBuilder.addBool(30, _HAS_LIMITING_MAGNITUDE);
+    fbBuilder.addBool(31, _HAS_MAX_HOST_SUN_ELEVATION_RAD);
+    fbBuilder.addBool(32, _HAS_FALSE_ALARM_RATE_PER_HOUR);
+    fbBuilder.addBool(33, _HAS_TRANSMIT_FREQUENCY_HZ);
     return fbBuilder.endTable();
   }
 
@@ -1949,10 +2870,19 @@ class ACWTrack {
   ///  "MAGNITUDE"); empty when all were.
   String? get LOSS_REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   String? get lossReason => LOSS_REASON;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_START_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasStartJulianDateTt => HAS_START_JULIAN_DATE_TT;
+  bool get HAS_END_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasEndJulianDateTt => HAS_END_JULIAN_DATE_TT;
+  bool get HAS_SCHEDULED_COUNT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasScheduledCount => HAS_SCHEDULED_COUNT;
+  bool get HAS_DETECTED_COUNT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasDetectedCount => HAS_DETECTED_COUNT;
 
   @override
   String toString() {
-    return 'ACWTrack{sensorId: ${sensorId}, targetId: ${targetId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, scheduledCount: ${scheduledCount}, detectedCount: ${detectedCount}, lossReason: ${lossReason}}';
+    return 'ACWTrack{sensorId: ${sensorId}, targetId: ${targetId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, scheduledCount: ${scheduledCount}, detectedCount: ${detectedCount}, lossReason: ${lossReason}, hasStartJulianDateTt: ${hasStartJulianDateTt}, hasEndJulianDateTt: ${hasEndJulianDateTt}, hasScheduledCount: ${hasScheduledCount}, hasDetectedCount: ${hasDetectedCount}}';
   }
 }
 
@@ -1970,7 +2900,7 @@ class ACWTrackBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(11);
   }
 
   int addSensorIdOffset(int? offset) {
@@ -2001,6 +2931,22 @@ class ACWTrackBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addHasStartJulianDateTt(bool? HAS_START_JULIAN_DATE_TT) {
+    fbBuilder.addBool(7, HAS_START_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasEndJulianDateTt(bool? HAS_END_JULIAN_DATE_TT) {
+    fbBuilder.addBool(8, HAS_END_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasScheduledCount(bool? HAS_SCHEDULED_COUNT) {
+    fbBuilder.addBool(9, HAS_SCHEDULED_COUNT);
+    return fbBuilder.offset;
+  }
+  int addHasDetectedCount(bool? HAS_DETECTED_COUNT) {
+    fbBuilder.addBool(10, HAS_DETECTED_COUNT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2015,6 +2961,10 @@ class ACWTrackObjectBuilder extends fb.ObjectBuilder {
   final int? _SCHEDULED_COUNT;
   final int? _DETECTED_COUNT;
   final String? _LOSS_REASON;
+  final bool? _HAS_START_JULIAN_DATE_TT;
+  final bool? _HAS_END_JULIAN_DATE_TT;
+  final bool? _HAS_SCHEDULED_COUNT;
+  final bool? _HAS_DETECTED_COUNT;
 
   ACWTrackObjectBuilder({
     String? SENSOR_ID,
@@ -2031,6 +2981,14 @@ class ACWTrackObjectBuilder extends fb.ObjectBuilder {
     int? detectedCount,
     String? LOSS_REASON,
     String? lossReason,
+    bool? HAS_START_JULIAN_DATE_TT,
+    bool? hasStartJulianDateTt,
+    bool? HAS_END_JULIAN_DATE_TT,
+    bool? hasEndJulianDateTt,
+    bool? HAS_SCHEDULED_COUNT,
+    bool? hasScheduledCount,
+    bool? HAS_DETECTED_COUNT,
+    bool? hasDetectedCount,
   })
       : _SENSOR_ID = sensorId ?? SENSOR_ID,
         _TARGET_ID = targetId ?? TARGET_ID,
@@ -2038,7 +2996,11 @@ class ACWTrackObjectBuilder extends fb.ObjectBuilder {
         _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT,
         _SCHEDULED_COUNT = scheduledCount ?? SCHEDULED_COUNT,
         _DETECTED_COUNT = detectedCount ?? DETECTED_COUNT,
-        _LOSS_REASON = lossReason ?? LOSS_REASON;
+        _LOSS_REASON = lossReason ?? LOSS_REASON,
+        _HAS_START_JULIAN_DATE_TT = hasStartJulianDateTt ?? HAS_START_JULIAN_DATE_TT,
+        _HAS_END_JULIAN_DATE_TT = hasEndJulianDateTt ?? HAS_END_JULIAN_DATE_TT,
+        _HAS_SCHEDULED_COUNT = hasScheduledCount ?? HAS_SCHEDULED_COUNT,
+        _HAS_DETECTED_COUNT = hasDetectedCount ?? HAS_DETECTED_COUNT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2049,7 +3011,7 @@ class ACWTrackObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TARGET_ID!);
     final int? LOSS_REASONOffset = _LOSS_REASON == null ? null
         : fbBuilder.writeString(_LOSS_REASON!);
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(11);
     fbBuilder.addOffset(0, SENSOR_IDOffset);
     fbBuilder.addOffset(1, TARGET_IDOffset);
     fbBuilder.addFloat64(2, _START_JULIAN_DATE_TT);
@@ -2057,6 +3019,10 @@ class ACWTrackObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint32(4, _SCHEDULED_COUNT);
     fbBuilder.addUint32(5, _DETECTED_COUNT);
     fbBuilder.addOffset(6, LOSS_REASONOffset);
+    fbBuilder.addBool(7, _HAS_START_JULIAN_DATE_TT);
+    fbBuilder.addBool(8, _HAS_END_JULIAN_DATE_TT);
+    fbBuilder.addBool(9, _HAS_SCHEDULED_COUNT);
+    fbBuilder.addBool(10, _HAS_DETECTED_COUNT);
     return fbBuilder.endTable();
   }
 
@@ -2085,7 +3051,7 @@ class ACWRequest {
   ///  Candidate ground stations.
   List<ACWGroundStation>? get GROUND_STATIONS => const fb.ListReader<ACWGroundStation>(ACWGroundStation.reader).vTableGetNullable(_bc, _bcOffset, 6);
   List<ACWGroundStation>? get groundStations => GROUND_STATIONS;
-  ///  Pre-sampled target Earth-fixed Cartesian states.
+  ///  Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
   List<ACWStateSample>? get STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 8);
   ///  Optional target station id. Empty means all stations when supported.
   String? get TARGET_STATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
@@ -2102,7 +3068,7 @@ class ACWRequest {
   ///  Optional apparent-elevation refraction model.
   ACWRefractionModel? get REFRACTION_MODEL => ACWRefractionModel.reader.vTableGetNullable(_bc, _bcOffset, 18);
   ACWRefractionModel? get refractionModel => REFRACTION_MODEL;
-  ///  Optional constraint composition. When absent the legacy behaviour holds:
+  ///  Optional constraint composition. When absent the station constraints apply:
   ///  every ground station's MIN_ELEVATION_RAD (or the override) plus
   ///  ELEVATION_MASK, all required.
   ACWConstraintSet? get CONSTRAINTS => ACWConstraintSet.reader.vTableGetNullable(_bc, _bcOffset, 20);
@@ -2144,10 +3110,25 @@ class ACWRequest {
   double get startJulianDateTt => START_JULIAN_DATE_TT;
   double get END_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
   double get endJulianDateTt => END_JULIAN_DATE_TT;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_OPERATION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 46, false);
+  bool get hasOperation => HAS_OPERATION;
+  bool get HAS_MIN_ELEVATION_OVERRIDE_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 48, false);
+  bool get hasMinElevationOverrideRad => HAS_MIN_ELEVATION_OVERRIDE_RAD;
+  bool get HAS_EVALUATION_MODE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 50, false);
+  bool get hasEvaluationMode => HAS_EVALUATION_MODE;
+  bool get HAS_ROOT_TOLERANCE_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 52, false);
+  bool get hasRootToleranceS => HAS_ROOT_TOLERANCE_S;
+  bool get HAS_RANDOM_SEED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasRandomSeed => HAS_RANDOM_SEED;
+  bool get HAS_START_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
+  bool get hasStartJulianDateTt => HAS_START_JULIAN_DATE_TT;
+  bool get HAS_END_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  bool get hasEndJulianDateTt => HAS_END_JULIAN_DATE_TT;
 
   @override
   String toString() {
-    return 'ACWRequest{OPERATION: ${OPERATION}, groundStations: ${groundStations}, STATES: ${STATES}, targetStationId: ${targetStationId}, minElevationOverrideRad: ${minElevationOverrideRad}, traceId: ${traceId}, elevationMask: ${elevationMask}, refractionModel: ${refractionModel}, CONSTRAINTS: ${CONSTRAINTS}, OBSERVERS: ${OBSERVERS}, evaluationMode: ${evaluationMode}, rootToleranceS: ${rootToleranceS}, sunStates: ${sunStates}, moonStates: ${moonStates}, TARGETS: ${TARGETS}, SENSORS: ${SENSORS}, ACCESS: ${ACCESS}, earthOrientation: ${earthOrientation}, randomSeed: ${randomSeed}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}}';
+    return 'ACWRequest{OPERATION: ${OPERATION}, groundStations: ${groundStations}, STATES: ${STATES}, targetStationId: ${targetStationId}, minElevationOverrideRad: ${minElevationOverrideRad}, traceId: ${traceId}, elevationMask: ${elevationMask}, refractionModel: ${refractionModel}, CONSTRAINTS: ${CONSTRAINTS}, OBSERVERS: ${OBSERVERS}, evaluationMode: ${evaluationMode}, rootToleranceS: ${rootToleranceS}, sunStates: ${sunStates}, moonStates: ${moonStates}, TARGETS: ${TARGETS}, SENSORS: ${SENSORS}, ACCESS: ${ACCESS}, earthOrientation: ${earthOrientation}, randomSeed: ${randomSeed}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, hasOperation: ${hasOperation}, hasMinElevationOverrideRad: ${hasMinElevationOverrideRad}, hasEvaluationMode: ${hasEvaluationMode}, hasRootToleranceS: ${hasRootToleranceS}, hasRandomSeed: ${hasRandomSeed}, hasStartJulianDateTt: ${hasStartJulianDateTt}, hasEndJulianDateTt: ${hasEndJulianDateTt}}';
   }
 }
 
@@ -2165,7 +3146,7 @@ class ACWRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(28);
   }
 
   int addOperation(acwOperationCode? OPERATION) {
@@ -2252,6 +3233,34 @@ class ACWRequestBuilder {
     fbBuilder.addFloat64(20, END_JULIAN_DATE_TT);
     return fbBuilder.offset;
   }
+  int addHasOperation(bool? HAS_OPERATION) {
+    fbBuilder.addBool(21, HAS_OPERATION);
+    return fbBuilder.offset;
+  }
+  int addHasMinElevationOverrideRad(bool? HAS_MIN_ELEVATION_OVERRIDE_RAD) {
+    fbBuilder.addBool(22, HAS_MIN_ELEVATION_OVERRIDE_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasEvaluationMode(bool? HAS_EVALUATION_MODE) {
+    fbBuilder.addBool(23, HAS_EVALUATION_MODE);
+    return fbBuilder.offset;
+  }
+  int addHasRootToleranceS(bool? HAS_ROOT_TOLERANCE_S) {
+    fbBuilder.addBool(24, HAS_ROOT_TOLERANCE_S);
+    return fbBuilder.offset;
+  }
+  int addHasRandomSeed(bool? HAS_RANDOM_SEED) {
+    fbBuilder.addBool(25, HAS_RANDOM_SEED);
+    return fbBuilder.offset;
+  }
+  int addHasStartJulianDateTt(bool? HAS_START_JULIAN_DATE_TT) {
+    fbBuilder.addBool(26, HAS_START_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasEndJulianDateTt(bool? HAS_END_JULIAN_DATE_TT) {
+    fbBuilder.addBool(27, HAS_END_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2280,6 +3289,13 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
   final int? _RANDOM_SEED;
   final double? _START_JULIAN_DATE_TT;
   final double? _END_JULIAN_DATE_TT;
+  final bool? _HAS_OPERATION;
+  final bool? _HAS_MIN_ELEVATION_OVERRIDE_RAD;
+  final bool? _HAS_EVALUATION_MODE;
+  final bool? _HAS_ROOT_TOLERANCE_S;
+  final bool? _HAS_RANDOM_SEED;
+  final bool? _HAS_START_JULIAN_DATE_TT;
+  final bool? _HAS_END_JULIAN_DATE_TT;
 
   ACWRequestObjectBuilder({
     acwOperationCode? OPERATION,
@@ -2317,6 +3333,20 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
     double? startJulianDateTt,
     double? END_JULIAN_DATE_TT,
     double? endJulianDateTt,
+    bool? HAS_OPERATION,
+    bool? hasOperation,
+    bool? HAS_MIN_ELEVATION_OVERRIDE_RAD,
+    bool? hasMinElevationOverrideRad,
+    bool? HAS_EVALUATION_MODE,
+    bool? hasEvaluationMode,
+    bool? HAS_ROOT_TOLERANCE_S,
+    bool? hasRootToleranceS,
+    bool? HAS_RANDOM_SEED,
+    bool? hasRandomSeed,
+    bool? HAS_START_JULIAN_DATE_TT,
+    bool? hasStartJulianDateTt,
+    bool? HAS_END_JULIAN_DATE_TT,
+    bool? hasEndJulianDateTt,
   })
       : _OPERATION = OPERATION,
         _GROUND_STATIONS = groundStations ?? GROUND_STATIONS,
@@ -2338,7 +3368,14 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
         _EARTH_ORIENTATION = earthOrientation ?? EARTH_ORIENTATION,
         _RANDOM_SEED = randomSeed ?? RANDOM_SEED,
         _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
-        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT;
+        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT,
+        _HAS_OPERATION = hasOperation ?? HAS_OPERATION,
+        _HAS_MIN_ELEVATION_OVERRIDE_RAD = hasMinElevationOverrideRad ?? HAS_MIN_ELEVATION_OVERRIDE_RAD,
+        _HAS_EVALUATION_MODE = hasEvaluationMode ?? HAS_EVALUATION_MODE,
+        _HAS_ROOT_TOLERANCE_S = hasRootToleranceS ?? HAS_ROOT_TOLERANCE_S,
+        _HAS_RANDOM_SEED = hasRandomSeed ?? HAS_RANDOM_SEED,
+        _HAS_START_JULIAN_DATE_TT = hasStartJulianDateTt ?? HAS_START_JULIAN_DATE_TT,
+        _HAS_END_JULIAN_DATE_TT = hasEndJulianDateTt ?? HAS_END_JULIAN_DATE_TT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2369,7 +3406,7 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ACCESS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? EARTH_ORIENTATIONOffset = _EARTH_ORIENTATION == null ? null
         : fbBuilder.writeList(_EARTH_ORIENTATION!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(28);
     fbBuilder.addInt8(0, _OPERATION?.value);
     fbBuilder.addOffset(1, GROUND_STATIONSOffset);
     fbBuilder.addOffset(2, STATESOffset);
@@ -2391,6 +3428,13 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(18, _RANDOM_SEED);
     fbBuilder.addFloat64(19, _START_JULIAN_DATE_TT);
     fbBuilder.addFloat64(20, _END_JULIAN_DATE_TT);
+    fbBuilder.addBool(21, _HAS_OPERATION);
+    fbBuilder.addBool(22, _HAS_MIN_ELEVATION_OVERRIDE_RAD);
+    fbBuilder.addBool(23, _HAS_EVALUATION_MODE);
+    fbBuilder.addBool(24, _HAS_ROOT_TOLERANCE_S);
+    fbBuilder.addBool(25, _HAS_RANDOM_SEED);
+    fbBuilder.addBool(26, _HAS_START_JULIAN_DATE_TT);
+    fbBuilder.addBool(27, _HAS_END_JULIAN_DATE_TT);
     return fbBuilder.endTable();
   }
 
@@ -2434,12 +3478,14 @@ class ACWAccessWindow {
   String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get observerId => OBSERVER_ID;
   ///  Index into the flattened, depth-first constraint list of the constraint
-  ///  whose transition opens the window; -1 when the window starts at the
-  ///  first sample.
+  ///  whose transition opens the window. A clipped start has no limiting
+  ///  constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+  ///  index is nonnegative and in range; the retained wire default is not a sentinel.
   int get START_LIMITING_CONSTRAINT_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, -1);
   int get startLimitingConstraintIndex => START_LIMITING_CONSTRAINT_INDEX;
-  ///  Index of the constraint whose transition closes the window; -1 when the
-  ///  window ends at the last sample.
+  ///  Index of the constraint whose transition closes the window. A clipped end
+  ///  has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+  ///  and in range; the retained wire default is not a sentinel.
   int get END_LIMITING_CONSTRAINT_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, -1);
   int get endLimitingConstraintIndex => END_LIMITING_CONSTRAINT_INDEX;
   ///  Labels of those constraints, when the producer set them.
@@ -2455,10 +3501,29 @@ class ACWAccessWindow {
   ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
   bool get EDGES_REFINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
   bool get edgesRefined => EDGES_REFINED;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_START_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get hasStartJulianDateTt => HAS_START_JULIAN_DATE_TT;
+  bool get HAS_END_JULIAN_DATE_TT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get hasEndJulianDateTt => HAS_END_JULIAN_DATE_TT;
+  bool get HAS_MAX_ELEVATION_RAD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
+  bool get hasMaxElevationRad => HAS_MAX_ELEVATION_RAD;
+  bool get HAS_SAMPLE_COUNT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get hasSampleCount => HAS_SAMPLE_COUNT;
+  bool get HAS_START_LIMITING_CONSTRAINT_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
+  bool get hasStartLimitingConstraintIndex => HAS_START_LIMITING_CONSTRAINT_INDEX;
+  bool get HAS_END_LIMITING_CONSTRAINT_INDEX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  bool get hasEndLimitingConstraintIndex => HAS_END_LIMITING_CONSTRAINT_INDEX;
+  bool get HAS_MIN_RANGE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  bool get hasMinRangeM => HAS_MIN_RANGE_M;
+  bool get HAS_MAX_RANGE_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 44, false);
+  bool get hasMaxRangeM => HAS_MAX_RANGE_M;
+  bool get HAS_EDGES_REFINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 46, false);
+  bool get hasEdgesRefined => HAS_EDGES_REFINED;
 
   @override
   String toString() {
-    return 'ACWAccessWindow{stationId: ${stationId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, maxElevationRad: ${maxElevationRad}, sampleCount: ${sampleCount}, observerId: ${observerId}, startLimitingConstraintIndex: ${startLimitingConstraintIndex}, endLimitingConstraintIndex: ${endLimitingConstraintIndex}, startLimitingConstraintLabel: ${startLimitingConstraintLabel}, endLimitingConstraintLabel: ${endLimitingConstraintLabel}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, edgesRefined: ${edgesRefined}}';
+    return 'ACWAccessWindow{stationId: ${stationId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, maxElevationRad: ${maxElevationRad}, sampleCount: ${sampleCount}, observerId: ${observerId}, startLimitingConstraintIndex: ${startLimitingConstraintIndex}, endLimitingConstraintIndex: ${endLimitingConstraintIndex}, startLimitingConstraintLabel: ${startLimitingConstraintLabel}, endLimitingConstraintLabel: ${endLimitingConstraintLabel}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, edgesRefined: ${edgesRefined}, hasStartJulianDateTt: ${hasStartJulianDateTt}, hasEndJulianDateTt: ${hasEndJulianDateTt}, hasMaxElevationRad: ${hasMaxElevationRad}, hasSampleCount: ${hasSampleCount}, hasStartLimitingConstraintIndex: ${hasStartLimitingConstraintIndex}, hasEndLimitingConstraintIndex: ${hasEndLimitingConstraintIndex}, hasMinRangeM: ${hasMinRangeM}, hasMaxRangeM: ${hasMaxRangeM}, hasEdgesRefined: ${hasEdgesRefined}}';
   }
 }
 
@@ -2476,7 +3541,7 @@ class ACWAccessWindowBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(22);
   }
 
   int addStationIdOffset(int? offset) {
@@ -2531,6 +3596,42 @@ class ACWAccessWindowBuilder {
     fbBuilder.addBool(12, EDGES_REFINED);
     return fbBuilder.offset;
   }
+  int addHasStartJulianDateTt(bool? HAS_START_JULIAN_DATE_TT) {
+    fbBuilder.addBool(13, HAS_START_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasEndJulianDateTt(bool? HAS_END_JULIAN_DATE_TT) {
+    fbBuilder.addBool(14, HAS_END_JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addHasMaxElevationRad(bool? HAS_MAX_ELEVATION_RAD) {
+    fbBuilder.addBool(15, HAS_MAX_ELEVATION_RAD);
+    return fbBuilder.offset;
+  }
+  int addHasSampleCount(bool? HAS_SAMPLE_COUNT) {
+    fbBuilder.addBool(16, HAS_SAMPLE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addHasStartLimitingConstraintIndex(bool? HAS_START_LIMITING_CONSTRAINT_INDEX) {
+    fbBuilder.addBool(17, HAS_START_LIMITING_CONSTRAINT_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasEndLimitingConstraintIndex(bool? HAS_END_LIMITING_CONSTRAINT_INDEX) {
+    fbBuilder.addBool(18, HAS_END_LIMITING_CONSTRAINT_INDEX);
+    return fbBuilder.offset;
+  }
+  int addHasMinRangeM(bool? HAS_MIN_RANGE_M) {
+    fbBuilder.addBool(19, HAS_MIN_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addHasMaxRangeM(bool? HAS_MAX_RANGE_M) {
+    fbBuilder.addBool(20, HAS_MAX_RANGE_M);
+    return fbBuilder.offset;
+  }
+  int addHasEdgesRefined(bool? HAS_EDGES_REFINED) {
+    fbBuilder.addBool(21, HAS_EDGES_REFINED);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2551,6 +3652,15 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
   final double? _MIN_RANGE_M;
   final double? _MAX_RANGE_M;
   final bool? _EDGES_REFINED;
+  final bool? _HAS_START_JULIAN_DATE_TT;
+  final bool? _HAS_END_JULIAN_DATE_TT;
+  final bool? _HAS_MAX_ELEVATION_RAD;
+  final bool? _HAS_SAMPLE_COUNT;
+  final bool? _HAS_START_LIMITING_CONSTRAINT_INDEX;
+  final bool? _HAS_END_LIMITING_CONSTRAINT_INDEX;
+  final bool? _HAS_MIN_RANGE_M;
+  final bool? _HAS_MAX_RANGE_M;
+  final bool? _HAS_EDGES_REFINED;
 
   ACWAccessWindowObjectBuilder({
     String? STATION_ID,
@@ -2579,6 +3689,24 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
     double? maxRangeM,
     bool? EDGES_REFINED,
     bool? edgesRefined,
+    bool? HAS_START_JULIAN_DATE_TT,
+    bool? hasStartJulianDateTt,
+    bool? HAS_END_JULIAN_DATE_TT,
+    bool? hasEndJulianDateTt,
+    bool? HAS_MAX_ELEVATION_RAD,
+    bool? hasMaxElevationRad,
+    bool? HAS_SAMPLE_COUNT,
+    bool? hasSampleCount,
+    bool? HAS_START_LIMITING_CONSTRAINT_INDEX,
+    bool? hasStartLimitingConstraintIndex,
+    bool? HAS_END_LIMITING_CONSTRAINT_INDEX,
+    bool? hasEndLimitingConstraintIndex,
+    bool? HAS_MIN_RANGE_M,
+    bool? hasMinRangeM,
+    bool? HAS_MAX_RANGE_M,
+    bool? hasMaxRangeM,
+    bool? HAS_EDGES_REFINED,
+    bool? hasEdgesRefined,
   })
       : _STATION_ID = stationId ?? STATION_ID,
         _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
@@ -2592,7 +3720,16 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
         _END_LIMITING_CONSTRAINT_LABEL = endLimitingConstraintLabel ?? END_LIMITING_CONSTRAINT_LABEL,
         _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
         _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
-        _EDGES_REFINED = edgesRefined ?? EDGES_REFINED;
+        _EDGES_REFINED = edgesRefined ?? EDGES_REFINED,
+        _HAS_START_JULIAN_DATE_TT = hasStartJulianDateTt ?? HAS_START_JULIAN_DATE_TT,
+        _HAS_END_JULIAN_DATE_TT = hasEndJulianDateTt ?? HAS_END_JULIAN_DATE_TT,
+        _HAS_MAX_ELEVATION_RAD = hasMaxElevationRad ?? HAS_MAX_ELEVATION_RAD,
+        _HAS_SAMPLE_COUNT = hasSampleCount ?? HAS_SAMPLE_COUNT,
+        _HAS_START_LIMITING_CONSTRAINT_INDEX = hasStartLimitingConstraintIndex ?? HAS_START_LIMITING_CONSTRAINT_INDEX,
+        _HAS_END_LIMITING_CONSTRAINT_INDEX = hasEndLimitingConstraintIndex ?? HAS_END_LIMITING_CONSTRAINT_INDEX,
+        _HAS_MIN_RANGE_M = hasMinRangeM ?? HAS_MIN_RANGE_M,
+        _HAS_MAX_RANGE_M = hasMaxRangeM ?? HAS_MAX_RANGE_M,
+        _HAS_EDGES_REFINED = hasEdgesRefined ?? HAS_EDGES_REFINED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2605,7 +3742,7 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_START_LIMITING_CONSTRAINT_LABEL!);
     final int? END_LIMITING_CONSTRAINT_LABELOffset = _END_LIMITING_CONSTRAINT_LABEL == null ? null
         : fbBuilder.writeString(_END_LIMITING_CONSTRAINT_LABEL!);
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, STATION_IDOffset);
     fbBuilder.addFloat64(1, _START_JULIAN_DATE_TT);
     fbBuilder.addFloat64(2, _END_JULIAN_DATE_TT);
@@ -2619,6 +3756,15 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(10, _MIN_RANGE_M);
     fbBuilder.addFloat64(11, _MAX_RANGE_M);
     fbBuilder.addBool(12, _EDGES_REFINED);
+    fbBuilder.addBool(13, _HAS_START_JULIAN_DATE_TT);
+    fbBuilder.addBool(14, _HAS_END_JULIAN_DATE_TT);
+    fbBuilder.addBool(15, _HAS_MAX_ELEVATION_RAD);
+    fbBuilder.addBool(16, _HAS_SAMPLE_COUNT);
+    fbBuilder.addBool(17, _HAS_START_LIMITING_CONSTRAINT_INDEX);
+    fbBuilder.addBool(18, _HAS_END_LIMITING_CONSTRAINT_INDEX);
+    fbBuilder.addBool(19, _HAS_MIN_RANGE_M);
+    fbBuilder.addBool(20, _HAS_MAX_RANGE_M);
+    fbBuilder.addBool(21, _HAS_EDGES_REFINED);
     return fbBuilder.endTable();
   }
 
@@ -2661,10 +3807,17 @@ class ACWResult {
   ///  Observations emitted, including false alarms.
   int get OBSERVATION_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
   int get observationCount => OBSERVATION_COUNT;
+  ///  Value presence: false means omitted; true precedes value validation.
+  bool get HAS_STATUS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasStatus => HAS_STATUS;
+  bool get HAS_EVALUATION_MODE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get hasEvaluationMode => HAS_EVALUATION_MODE;
+  bool get HAS_OBSERVATION_COUNT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasObservationCount => HAS_OBSERVATION_COUNT;
 
   @override
   String toString() {
-    return 'ACWResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, WINDOWS: ${WINDOWS}, traceId: ${traceId}, evaluationMode: ${evaluationMode}, constraintLabels: ${constraintLabels}, TRACKS: ${TRACKS}, observationCount: ${observationCount}}';
+    return 'ACWResult{STATUS: ${STATUS}, errorMessage: ${errorMessage}, WINDOWS: ${WINDOWS}, traceId: ${traceId}, evaluationMode: ${evaluationMode}, constraintLabels: ${constraintLabels}, TRACKS: ${TRACKS}, observationCount: ${observationCount}, hasStatus: ${hasStatus}, hasEvaluationMode: ${hasEvaluationMode}, hasObservationCount: ${hasObservationCount}}';
   }
 }
 
@@ -2682,7 +3835,7 @@ class ACWResultBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(11);
   }
 
   int addStatus(acwResultStatus? STATUS) {
@@ -2717,6 +3870,18 @@ class ACWResultBuilder {
     fbBuilder.addUint32(7, OBSERVATION_COUNT);
     return fbBuilder.offset;
   }
+  int addHasStatus(bool? HAS_STATUS) {
+    fbBuilder.addBool(8, HAS_STATUS);
+    return fbBuilder.offset;
+  }
+  int addHasEvaluationMode(bool? HAS_EVALUATION_MODE) {
+    fbBuilder.addBool(9, HAS_EVALUATION_MODE);
+    return fbBuilder.offset;
+  }
+  int addHasObservationCount(bool? HAS_OBSERVATION_COUNT) {
+    fbBuilder.addBool(10, HAS_OBSERVATION_COUNT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2732,6 +3897,9 @@ class ACWResultObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _CONSTRAINT_LABELS;
   final List<ACWTrackObjectBuilder>? _TRACKS;
   final int? _OBSERVATION_COUNT;
+  final bool? _HAS_STATUS;
+  final bool? _HAS_EVALUATION_MODE;
+  final bool? _HAS_OBSERVATION_COUNT;
 
   ACWResultObjectBuilder({
     acwResultStatus? STATUS,
@@ -2747,6 +3915,12 @@ class ACWResultObjectBuilder extends fb.ObjectBuilder {
     List<ACWTrackObjectBuilder>? TRACKS,
     int? OBSERVATION_COUNT,
     int? observationCount,
+    bool? HAS_STATUS,
+    bool? hasStatus,
+    bool? HAS_EVALUATION_MODE,
+    bool? hasEvaluationMode,
+    bool? HAS_OBSERVATION_COUNT,
+    bool? hasObservationCount,
   })
       : _STATUS = STATUS,
         _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
@@ -2755,7 +3929,10 @@ class ACWResultObjectBuilder extends fb.ObjectBuilder {
         _EVALUATION_MODE = evaluationMode ?? EVALUATION_MODE,
         _CONSTRAINT_LABELS = constraintLabels ?? CONSTRAINT_LABELS,
         _TRACKS = TRACKS,
-        _OBSERVATION_COUNT = observationCount ?? OBSERVATION_COUNT;
+        _OBSERVATION_COUNT = observationCount ?? OBSERVATION_COUNT,
+        _HAS_STATUS = hasStatus ?? HAS_STATUS,
+        _HAS_EVALUATION_MODE = hasEvaluationMode ?? HAS_EVALUATION_MODE,
+        _HAS_OBSERVATION_COUNT = hasObservationCount ?? HAS_OBSERVATION_COUNT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2770,7 +3947,7 @@ class ACWResultObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_CONSTRAINT_LABELS!.map(fbBuilder.writeString).toList());
     final int? TRACKSOffset = _TRACKS == null ? null
         : fbBuilder.writeList(_TRACKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(11);
     fbBuilder.addInt8(0, _STATUS?.value);
     fbBuilder.addOffset(1, ERROR_MESSAGEOffset);
     fbBuilder.addOffset(2, WINDOWSOffset);
@@ -2779,6 +3956,9 @@ class ACWResultObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(5, CONSTRAINT_LABELSOffset);
     fbBuilder.addOffset(6, TRACKSOffset);
     fbBuilder.addUint32(7, _OBSERVATION_COUNT);
+    fbBuilder.addBool(8, _HAS_STATUS);
+    fbBuilder.addBool(9, _HAS_EVALUATION_MODE);
+    fbBuilder.addBool(10, _HAS_OBSERVATION_COUNT);
     return fbBuilder.endTable();
   }
 
@@ -2805,10 +3985,19 @@ class ACW {
 
   ACWRequest? get REQUEST => ACWRequest.reader.vTableGetNullable(_bc, _bcOffset, 4);
   ACWResult? get RESULT => ACWResult.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Appended slot 2. Mandatory in every new request and successful result.
+  ///  Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+  ///  these codes. Missing body fails acw-body-required; absence never means
+  ///  Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+  ///  Result must echo the exact descriptor field values, including optional
+  ///  presence; requester rejects a missing/different echo. Raw table offsets
+  ///  are not identity. Explicit one-time archive conversion is outside runtime.
+  BodyDescriptor? get CENTRAL_BODY => BodyDescriptor.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  BodyDescriptor? get centralBody => CENTRAL_BODY;
 
   @override
   String toString() {
-    return 'ACW{REQUEST: ${REQUEST}, RESULT: ${RESULT}}';
+    return 'ACW{REQUEST: ${REQUEST}, RESULT: ${RESULT}, centralBody: ${centralBody}}';
   }
 }
 
@@ -2826,7 +4015,7 @@ class ACWBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(2);
+    fbBuilder.startTable(3);
   }
 
   int addRequestOffset(int? offset) {
@@ -2835,6 +4024,10 @@ class ACWBuilder {
   }
   int addResultOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCentralBodyOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
@@ -2846,22 +4039,28 @@ class ACWBuilder {
 class ACWObjectBuilder extends fb.ObjectBuilder {
   final ACWRequestObjectBuilder? _REQUEST;
   final ACWResultObjectBuilder? _RESULT;
+  final BodyDescriptorObjectBuilder? _CENTRAL_BODY;
 
   ACWObjectBuilder({
     ACWRequestObjectBuilder? REQUEST,
     ACWResultObjectBuilder? RESULT,
+    BodyDescriptorObjectBuilder? CENTRAL_BODY,
+    BodyDescriptorObjectBuilder? centralBody,
   })
       : _REQUEST = REQUEST,
-        _RESULT = RESULT;
+        _RESULT = RESULT,
+        _CENTRAL_BODY = centralBody ?? CENTRAL_BODY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? REQUESTOffset = _REQUEST?.getOrCreateOffset(fbBuilder);
     final int? RESULTOffset = _RESULT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(2);
+    final int? CENTRAL_BODYOffset = _CENTRAL_BODY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
     fbBuilder.addOffset(0, REQUESTOffset);
     fbBuilder.addOffset(1, RESULTOffset);
+    fbBuilder.addOffset(2, CENTRAL_BODYOffset);
     return fbBuilder.endTable();
   }
 

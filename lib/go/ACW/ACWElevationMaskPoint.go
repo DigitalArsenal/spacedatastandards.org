@@ -86,8 +86,50 @@ func (rcv *ACWElevationMaskPoint) MutateElevationRad(n float64) bool {
 	return rcv.MutateELEVATION_RAD(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWElevationMaskPoint) HAS_AZIMUTH_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWElevationMaskPoint) HasAzimuthRad() bool {
+	return rcv.HAS_AZIMUTH_RAD()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWElevationMaskPoint) MutateHAS_AZIMUTH_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *ACWElevationMaskPoint) MutateHasAzimuthRad(n bool) bool {
+	return rcv.MutateHAS_AZIMUTH_RAD(n)
+}
+
+func (rcv *ACWElevationMaskPoint) HAS_ELEVATION_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWElevationMaskPoint) HasElevationRad() bool {
+	return rcv.HAS_ELEVATION_RAD()
+}
+
+func (rcv *ACWElevationMaskPoint) MutateHAS_ELEVATION_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *ACWElevationMaskPoint) MutateHasElevationRad(n bool) bool {
+	return rcv.MutateHAS_ELEVATION_RAD(n)
+}
+
 func ACWElevationMaskPointStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(4)
 }
 func ACWElevationMaskPointAddAZIMUTH_RAD(builder *flatbuffers.Builder, AZIMUTH_RAD float64) {
 	builder.PrependFloat64Slot(0, AZIMUTH_RAD, 0.0)
@@ -100,6 +142,18 @@ func ACWElevationMaskPointAddELEVATION_RAD(builder *flatbuffers.Builder, ELEVATI
 }
 func ACWElevationMaskPointAddElevationRad(builder *flatbuffers.Builder, ELEVATION_RAD float64) {
 	ACWElevationMaskPointAddELEVATION_RAD(builder, ELEVATION_RAD)
+}
+func ACWElevationMaskPointAddHAS_AZIMUTH_RAD(builder *flatbuffers.Builder, HAS_AZIMUTH_RAD bool) {
+	builder.PrependBoolSlot(2, HAS_AZIMUTH_RAD, false)
+}
+func ACWElevationMaskPointAddHasAzimuthRad(builder *flatbuffers.Builder, HAS_AZIMUTH_RAD bool) {
+	ACWElevationMaskPointAddHAS_AZIMUTH_RAD(builder, HAS_AZIMUTH_RAD)
+}
+func ACWElevationMaskPointAddHAS_ELEVATION_RAD(builder *flatbuffers.Builder, HAS_ELEVATION_RAD bool) {
+	builder.PrependBoolSlot(3, HAS_ELEVATION_RAD, false)
+}
+func ACWElevationMaskPointAddHasElevationRad(builder *flatbuffers.Builder, HAS_ELEVATION_RAD bool) {
+	ACWElevationMaskPointAddHAS_ELEVATION_RAD(builder, HAS_ELEVATION_RAD)
 }
 func ACWElevationMaskPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -65,6 +65,34 @@ class ACWTargetSignature : Table() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasRcsM2 : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasDiameterM : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasGeometricAlbedo : Boolean
+        get() {
+            val o = __offset(18)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEmitterFrequencyHz : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEmitterEirpDbw : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWTargetSignature(_bb: ByteBuffer): ACWTargetSignature = getRootAsACWTargetSignature(_bb, ACWTargetSignature())
@@ -72,21 +100,31 @@ class ACWTargetSignature : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWTargetSignature(builder: FlatBufferBuilder, rcsM2: Double, diameterM: Double, geometricAlbedo: Double, emitterFrequencyHz: Double, emitterEirpDbw: Double) : Int {
-            builder.startTable(5)
+        fun createACWTargetSignature(builder: FlatBufferBuilder, rcsM2: Double, diameterM: Double, geometricAlbedo: Double, emitterFrequencyHz: Double, emitterEirpDbw: Double, hasRcsM2: Boolean, hasDiameterM: Boolean, hasGeometricAlbedo: Boolean, hasEmitterFrequencyHz: Boolean, hasEmitterEirpDbw: Boolean) : Int {
+            builder.startTable(10)
             addEMITTEREIRPDBW(builder, emitterEirpDbw)
             addEMITTERFREQUENCYHZ(builder, emitterFrequencyHz)
             addGEOMETRICALBEDO(builder, geometricAlbedo)
             addDIAMETERM(builder, diameterM)
             addRCSM2(builder, rcsM2)
+            addHASEMITTEREIRPDBW(builder, hasEmitterEirpDbw)
+            addHASEMITTERFREQUENCYHZ(builder, hasEmitterFrequencyHz)
+            addHASGEOMETRICALBEDO(builder, hasGeometricAlbedo)
+            addHASDIAMETERM(builder, hasDiameterM)
+            addHASRCSM2(builder, hasRcsM2)
             return endACWTargetSignature(builder)
         }
-        fun startACWTargetSignature(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startACWTargetSignature(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addRCSM2(builder: FlatBufferBuilder, rcsM2: Double) = builder.addDouble(0, rcsM2, 0.0)
         fun addDIAMETERM(builder: FlatBufferBuilder, diameterM: Double) = builder.addDouble(1, diameterM, 0.0)
         fun addGEOMETRICALBEDO(builder: FlatBufferBuilder, geometricAlbedo: Double) = builder.addDouble(2, geometricAlbedo, 0.0)
         fun addEMITTERFREQUENCYHZ(builder: FlatBufferBuilder, emitterFrequencyHz: Double) = builder.addDouble(3, emitterFrequencyHz, 0.0)
         fun addEMITTEREIRPDBW(builder: FlatBufferBuilder, emitterEirpDbw: Double) = builder.addDouble(4, emitterEirpDbw, 0.0)
+        fun addHASRCSM2(builder: FlatBufferBuilder, hasRcsM2: Boolean) = builder.addBoolean(5, hasRcsM2, false)
+        fun addHASDIAMETERM(builder: FlatBufferBuilder, hasDiameterM: Boolean) = builder.addBoolean(6, hasDiameterM, false)
+        fun addHASGEOMETRICALBEDO(builder: FlatBufferBuilder, hasGeometricAlbedo: Boolean) = builder.addBoolean(7, hasGeometricAlbedo, false)
+        fun addHASEMITTERFREQUENCYHZ(builder: FlatBufferBuilder, hasEmitterFrequencyHz: Boolean) = builder.addBoolean(8, hasEmitterFrequencyHz, false)
+        fun addHASEMITTEREIRPDBW(builder: FlatBufferBuilder, hasEmitterEirpDbw: Boolean) = builder.addBoolean(9, hasEmitterEirpDbw, false)
         fun endACWTargetSignature(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -21,19 +21,30 @@ public struct ACW : IFlatbufferObject
 
   public ACWRequest? REQUEST { get { int o = __p.__offset(4); return o != 0 ? (ACWRequest?)(new ACWRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public ACWResult? RESULT { get { int o = __p.__offset(6); return o != 0 ? (ACWResult?)(new ACWResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Appended slot 2. Mandatory in every new request and successful result.
+  /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+  /// these codes. Missing body fails acw-body-required; absence never means
+  /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+  /// Result must echo the exact descriptor field values, including optional
+  /// presence; requester rejects a missing/different echo. Raw table offsets
+  /// are not identity. Explicit one-time archive conversion is outside runtime.
+  public BodyDescriptor? CENTRAL_BODY { get { int o = __p.__offset(8); return o != 0 ? (BodyDescriptor?)(new BodyDescriptor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<ACW> CreateACW(FlatBufferBuilder builder,
       Offset<ACWRequest> REQUESTOffset = default(Offset<ACWRequest>),
-      Offset<ACWResult> RESULTOffset = default(Offset<ACWResult>)) {
-    builder.StartTable(2);
+      Offset<ACWResult> RESULTOffset = default(Offset<ACWResult>),
+      Offset<BodyDescriptor> CENTRAL_BODYOffset = default(Offset<BodyDescriptor>)) {
+    builder.StartTable(3);
+    ACW.AddCENTRAL_BODY(builder, CENTRAL_BODYOffset);
     ACW.AddRESULT(builder, RESULTOffset);
     ACW.AddREQUEST(builder, REQUESTOffset);
     return ACW.EndACW(builder);
   }
 
-  public static void StartACW(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartACW(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddREQUEST(FlatBufferBuilder builder, Offset<ACWRequest> REQUESTOffset) { builder.AddOffset(0, REQUESTOffset.Value, 0); }
   public static void AddRESULT(FlatBufferBuilder builder, Offset<ACWResult> RESULTOffset) { builder.AddOffset(1, RESULTOffset.Value, 0); }
+  public static void AddCENTRAL_BODY(FlatBufferBuilder builder, Offset<BodyDescriptor> CENTRAL_BODYOffset) { builder.AddOffset(2, CENTRAL_BODYOffset.Value, 0); }
   public static Offset<ACW> EndACW(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACW>(o);
@@ -48,15 +59,18 @@ public struct ACW : IFlatbufferObject
   public void UnPackTo(ACWT _o) {
     _o.REQUEST = this.REQUEST.HasValue ? this.REQUEST.Value.UnPack() : null;
     _o.RESULT = this.RESULT.HasValue ? this.RESULT.Value.UnPack() : null;
+    _o.CENTRAL_BODY = this.CENTRAL_BODY.HasValue ? this.CENTRAL_BODY.Value.UnPack() : null;
   }
   public static Offset<ACW> Pack(FlatBufferBuilder builder, ACWT _o) {
     if (_o == null) return default(Offset<ACW>);
     var _REQUEST = _o.REQUEST == null ? default(Offset<ACWRequest>) : ACWRequest.Pack(builder, _o.REQUEST);
     var _RESULT = _o.RESULT == null ? default(Offset<ACWResult>) : ACWResult.Pack(builder, _o.RESULT);
+    var _CENTRAL_BODY = _o.CENTRAL_BODY == null ? default(Offset<BodyDescriptor>) : BodyDescriptor.Pack(builder, _o.CENTRAL_BODY);
     return CreateACW(
       builder,
       _REQUEST,
-      _RESULT);
+      _RESULT,
+      _CENTRAL_BODY);
   }
 }
 
@@ -64,10 +78,12 @@ public class ACWT
 {
   public ACWRequestT REQUEST { get; set; }
   public ACWResultT RESULT { get; set; }
+  public BodyDescriptorT CENTRAL_BODY { get; set; }
 
   public ACWT() {
     this.REQUEST = null;
     this.RESULT = null;
+    this.CENTRAL_BODY = null;
   }
   public static ACWT DeserializeFromBinary(byte[] fbBuffer) {
     return ACW.GetRootAsACW(new ByteBuffer(fbBuffer)).UnPack();
@@ -87,6 +103,7 @@ static public class ACWVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyTable(tablePos, 4 /*REQUEST*/, ACWRequestVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 6 /*RESULT*/, ACWResultVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 8 /*CENTRAL_BODY*/, BodyDescriptorVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

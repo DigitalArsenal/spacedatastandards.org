@@ -36,22 +36,37 @@ public final class ACWRefractionModel extends com.google.flatbuffers.Table {
    * Local temperature in kelvin.
    */
   public double TEMPERATURE_K() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 283.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_MODEL_KIND() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_PRESSURE_PA() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_TEMPERATURE_K() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWRefractionModel(FlatBufferBuilder builder,
       byte MODEL_KIND,
       double PRESSURE_PA,
-      double TEMPERATURE_K) {
-    builder.startTable(3);
+      double TEMPERATURE_K,
+      boolean HAS_MODEL_KIND,
+      boolean HAS_PRESSURE_PA,
+      boolean HAS_TEMPERATURE_K) {
+    builder.startTable(6);
     ACWRefractionModel.addTemperatureK(builder, TEMPERATURE_K);
     ACWRefractionModel.addPressurePa(builder, PRESSURE_PA);
+    ACWRefractionModel.addHasTemperatureK(builder, HAS_TEMPERATURE_K);
+    ACWRefractionModel.addHasPressurePa(builder, HAS_PRESSURE_PA);
+    ACWRefractionModel.addHasModelKind(builder, HAS_MODEL_KIND);
     ACWRefractionModel.addModelKind(builder, MODEL_KIND);
     return ACWRefractionModel.endACWRefractionModel(builder);
   }
 
-  public static void startACWRefractionModel(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startACWRefractionModel(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addModelKind(FlatBufferBuilder builder, byte MODEL_KIND) { builder.addByte(0, MODEL_KIND, 0); }
   public static void addPressurePa(FlatBufferBuilder builder, double PRESSURE_PA) { builder.addDouble(1, PRESSURE_PA, 101000.0); }
   public static void addTemperatureK(FlatBufferBuilder builder, double TEMPERATURE_K) { builder.addDouble(2, TEMPERATURE_K, 283.0); }
+  public static void addHasModelKind(FlatBufferBuilder builder, boolean HAS_MODEL_KIND) { builder.addBoolean(3, HAS_MODEL_KIND, false); }
+  public static void addHasPressurePa(FlatBufferBuilder builder, boolean HAS_PRESSURE_PA) { builder.addBoolean(4, HAS_PRESSURE_PA, false); }
+  public static void addHasTemperatureK(FlatBufferBuilder builder, boolean HAS_TEMPERATURE_K) { builder.addBoolean(5, HAS_TEMPERATURE_K, false); }
   public static int endACWRefractionModel(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

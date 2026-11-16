@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Target Cartesian state sample in an Earth-fixed frame.
+# Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 class ACWStateSample(object):
     __slots__ = ['_tab']
 
@@ -37,7 +37,7 @@ class ACWStateSample(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Earth-fixed X position, meters.
+    # Fixed-frame X position, meters.
     # ACWStateSample
     def POSITION_X_M(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -45,7 +45,7 @@ class ACWStateSample(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Earth-fixed Y position, meters.
+    # Fixed-frame Y position, meters.
     # ACWStateSample
     def POSITION_Y_M(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -53,7 +53,7 @@ class ACWStateSample(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Earth-fixed Z position, meters.
+    # Fixed-frame Z position, meters.
     # ACWStateSample
     def POSITION_Z_M(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -61,7 +61,7 @@ class ACWStateSample(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Earth-fixed velocity, meters per second. Required for range-rate,
+    # Fixed-frame velocity, meters per second. Required for range-rate,
     # Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
     # ACWStateSample
     def VELOCITY_X_MPS(self):
@@ -84,8 +84,58 @@ class ACWStateSample(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWStateSample
+    def HAS_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_POSITION_X_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_POSITION_Y_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_POSITION_Z_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_VELOCITY_X_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_VELOCITY_Y_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWStateSample
+    def HAS_VELOCITY_Z_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWStateSampleStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(14)
 
 def Start(builder):
     ACWStateSampleStart(builder)
@@ -132,6 +182,48 @@ def ACWStateSampleAddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS):
 def AddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS):
     ACWStateSampleAddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS)
 
+def ACWStateSampleAddHAS_JULIAN_DATE_TT(builder, HAS_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(7, HAS_JULIAN_DATE_TT, 0)
+
+def AddHAS_JULIAN_DATE_TT(builder, HAS_JULIAN_DATE_TT):
+    ACWStateSampleAddHAS_JULIAN_DATE_TT(builder, HAS_JULIAN_DATE_TT)
+
+def ACWStateSampleAddHAS_POSITION_X_M(builder, HAS_POSITION_X_M):
+    builder.PrependBoolSlot(8, HAS_POSITION_X_M, 0)
+
+def AddHAS_POSITION_X_M(builder, HAS_POSITION_X_M):
+    ACWStateSampleAddHAS_POSITION_X_M(builder, HAS_POSITION_X_M)
+
+def ACWStateSampleAddHAS_POSITION_Y_M(builder, HAS_POSITION_Y_M):
+    builder.PrependBoolSlot(9, HAS_POSITION_Y_M, 0)
+
+def AddHAS_POSITION_Y_M(builder, HAS_POSITION_Y_M):
+    ACWStateSampleAddHAS_POSITION_Y_M(builder, HAS_POSITION_Y_M)
+
+def ACWStateSampleAddHAS_POSITION_Z_M(builder, HAS_POSITION_Z_M):
+    builder.PrependBoolSlot(10, HAS_POSITION_Z_M, 0)
+
+def AddHAS_POSITION_Z_M(builder, HAS_POSITION_Z_M):
+    ACWStateSampleAddHAS_POSITION_Z_M(builder, HAS_POSITION_Z_M)
+
+def ACWStateSampleAddHAS_VELOCITY_X_MPS(builder, HAS_VELOCITY_X_MPS):
+    builder.PrependBoolSlot(11, HAS_VELOCITY_X_MPS, 0)
+
+def AddHAS_VELOCITY_X_MPS(builder, HAS_VELOCITY_X_MPS):
+    ACWStateSampleAddHAS_VELOCITY_X_MPS(builder, HAS_VELOCITY_X_MPS)
+
+def ACWStateSampleAddHAS_VELOCITY_Y_MPS(builder, HAS_VELOCITY_Y_MPS):
+    builder.PrependBoolSlot(12, HAS_VELOCITY_Y_MPS, 0)
+
+def AddHAS_VELOCITY_Y_MPS(builder, HAS_VELOCITY_Y_MPS):
+    ACWStateSampleAddHAS_VELOCITY_Y_MPS(builder, HAS_VELOCITY_Y_MPS)
+
+def ACWStateSampleAddHAS_VELOCITY_Z_MPS(builder, HAS_VELOCITY_Z_MPS):
+    builder.PrependBoolSlot(13, HAS_VELOCITY_Z_MPS, 0)
+
+def AddHAS_VELOCITY_Z_MPS(builder, HAS_VELOCITY_Z_MPS):
+    ACWStateSampleAddHAS_VELOCITY_Z_MPS(builder, HAS_VELOCITY_Z_MPS)
+
 def ACWStateSampleEnd(builder):
     return builder.EndObject()
 
@@ -151,6 +243,13 @@ class ACWStateSampleT(object):
         VELOCITY_X_MPS = 0.0,
         VELOCITY_Y_MPS = 0.0,
         VELOCITY_Z_MPS = 0.0,
+        HAS_JULIAN_DATE_TT = False,
+        HAS_POSITION_X_M = False,
+        HAS_POSITION_Y_M = False,
+        HAS_POSITION_Z_M = False,
+        HAS_VELOCITY_X_MPS = False,
+        HAS_VELOCITY_Y_MPS = False,
+        HAS_VELOCITY_Z_MPS = False,
     ):
         self.JULIAN_DATE_TT = JULIAN_DATE_TT  # type: float
         self.POSITION_X_M = POSITION_X_M  # type: float
@@ -159,6 +258,13 @@ class ACWStateSampleT(object):
         self.VELOCITY_X_MPS = VELOCITY_X_MPS  # type: float
         self.VELOCITY_Y_MPS = VELOCITY_Y_MPS  # type: float
         self.VELOCITY_Z_MPS = VELOCITY_Z_MPS  # type: float
+        self.HAS_JULIAN_DATE_TT = HAS_JULIAN_DATE_TT  # type: bool
+        self.HAS_POSITION_X_M = HAS_POSITION_X_M  # type: bool
+        self.HAS_POSITION_Y_M = HAS_POSITION_Y_M  # type: bool
+        self.HAS_POSITION_Z_M = HAS_POSITION_Z_M  # type: bool
+        self.HAS_VELOCITY_X_MPS = HAS_VELOCITY_X_MPS  # type: bool
+        self.HAS_VELOCITY_Y_MPS = HAS_VELOCITY_Y_MPS  # type: bool
+        self.HAS_VELOCITY_Z_MPS = HAS_VELOCITY_Z_MPS  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -188,6 +294,13 @@ class ACWStateSampleT(object):
         self.VELOCITY_X_MPS = ACWStateSample.VELOCITY_X_MPS()
         self.VELOCITY_Y_MPS = ACWStateSample.VELOCITY_Y_MPS()
         self.VELOCITY_Z_MPS = ACWStateSample.VELOCITY_Z_MPS()
+        self.HAS_JULIAN_DATE_TT = ACWStateSample.HAS_JULIAN_DATE_TT()
+        self.HAS_POSITION_X_M = ACWStateSample.HAS_POSITION_X_M()
+        self.HAS_POSITION_Y_M = ACWStateSample.HAS_POSITION_Y_M()
+        self.HAS_POSITION_Z_M = ACWStateSample.HAS_POSITION_Z_M()
+        self.HAS_VELOCITY_X_MPS = ACWStateSample.HAS_VELOCITY_X_MPS()
+        self.HAS_VELOCITY_Y_MPS = ACWStateSample.HAS_VELOCITY_Y_MPS()
+        self.HAS_VELOCITY_Z_MPS = ACWStateSample.HAS_VELOCITY_Z_MPS()
 
     # ACWStateSampleT
     def Pack(self, builder):
@@ -199,5 +312,12 @@ class ACWStateSampleT(object):
         ACWStateSampleAddVELOCITY_X_MPS(builder, self.VELOCITY_X_MPS)
         ACWStateSampleAddVELOCITY_Y_MPS(builder, self.VELOCITY_Y_MPS)
         ACWStateSampleAddVELOCITY_Z_MPS(builder, self.VELOCITY_Z_MPS)
+        ACWStateSampleAddHAS_JULIAN_DATE_TT(builder, self.HAS_JULIAN_DATE_TT)
+        ACWStateSampleAddHAS_POSITION_X_M(builder, self.HAS_POSITION_X_M)
+        ACWStateSampleAddHAS_POSITION_Y_M(builder, self.HAS_POSITION_Y_M)
+        ACWStateSampleAddHAS_POSITION_Z_M(builder, self.HAS_POSITION_Z_M)
+        ACWStateSampleAddHAS_VELOCITY_X_MPS(builder, self.HAS_VELOCITY_X_MPS)
+        ACWStateSampleAddHAS_VELOCITY_Y_MPS(builder, self.HAS_VELOCITY_Y_MPS)
+        ACWStateSampleAddHAS_VELOCITY_Z_MPS(builder, self.HAS_VELOCITY_Z_MPS)
         ACWStateSample = ACWStateSampleEnd(builder)
         return ACWStateSample

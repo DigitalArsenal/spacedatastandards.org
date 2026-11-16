@@ -106,8 +106,70 @@ func (rcv *ACWRefractionModel) MutateTemperatureK(n float64) bool {
 	return rcv.MutateTEMPERATURE_K(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWRefractionModel) HAS_MODEL_KIND() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRefractionModel) HasModelKind() bool {
+	return rcv.HAS_MODEL_KIND()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWRefractionModel) MutateHAS_MODEL_KIND(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *ACWRefractionModel) MutateHasModelKind(n bool) bool {
+	return rcv.MutateHAS_MODEL_KIND(n)
+}
+
+func (rcv *ACWRefractionModel) HAS_PRESSURE_PA() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRefractionModel) HasPressurePa() bool {
+	return rcv.HAS_PRESSURE_PA()
+}
+
+func (rcv *ACWRefractionModel) MutateHAS_PRESSURE_PA(n bool) bool {
+	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *ACWRefractionModel) MutateHasPressurePa(n bool) bool {
+	return rcv.MutateHAS_PRESSURE_PA(n)
+}
+
+func (rcv *ACWRefractionModel) HAS_TEMPERATURE_K() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWRefractionModel) HasTemperatureK() bool {
+	return rcv.HAS_TEMPERATURE_K()
+}
+
+func (rcv *ACWRefractionModel) MutateHAS_TEMPERATURE_K(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *ACWRefractionModel) MutateHasTemperatureK(n bool) bool {
+	return rcv.MutateHAS_TEMPERATURE_K(n)
+}
+
 func ACWRefractionModelStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(6)
 }
 func ACWRefractionModelAddMODEL_KIND(builder *flatbuffers.Builder, MODEL_KIND acwRefractionModelKind) {
 	builder.PrependInt8Slot(0, int8(MODEL_KIND), 0)
@@ -126,6 +188,24 @@ func ACWRefractionModelAddTEMPERATURE_K(builder *flatbuffers.Builder, TEMPERATUR
 }
 func ACWRefractionModelAddTemperatureK(builder *flatbuffers.Builder, TEMPERATURE_K float64) {
 	ACWRefractionModelAddTEMPERATURE_K(builder, TEMPERATURE_K)
+}
+func ACWRefractionModelAddHAS_MODEL_KIND(builder *flatbuffers.Builder, HAS_MODEL_KIND bool) {
+	builder.PrependBoolSlot(3, HAS_MODEL_KIND, false)
+}
+func ACWRefractionModelAddHasModelKind(builder *flatbuffers.Builder, HAS_MODEL_KIND bool) {
+	ACWRefractionModelAddHAS_MODEL_KIND(builder, HAS_MODEL_KIND)
+}
+func ACWRefractionModelAddHAS_PRESSURE_PA(builder *flatbuffers.Builder, HAS_PRESSURE_PA bool) {
+	builder.PrependBoolSlot(4, HAS_PRESSURE_PA, false)
+}
+func ACWRefractionModelAddHasPressurePa(builder *flatbuffers.Builder, HAS_PRESSURE_PA bool) {
+	ACWRefractionModelAddHAS_PRESSURE_PA(builder, HAS_PRESSURE_PA)
+}
+func ACWRefractionModelAddHAS_TEMPERATURE_K(builder *flatbuffers.Builder, HAS_TEMPERATURE_K bool) {
+	builder.PrependBoolSlot(5, HAS_TEMPERATURE_K, false)
+}
+func ACWRefractionModelAddHasTemperatureK(builder *flatbuffers.Builder, HAS_TEMPERATURE_K bool) {
+	ACWRefractionModelAddHAS_TEMPERATURE_K(builder, HAS_TEMPERATURE_K)
 }
 func ACWRefractionModelEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -51,8 +51,26 @@ class ACW(object):
             return obj
         return None
 
+    # Appended slot 2. Mandatory in every new request and successful result.
+    # Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+    # these codes. Missing body fails acw-body-required; absence never means
+    # Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+    # Result must echo the exact descriptor field values, including optional
+    # presence; requester rejects a missing/different echo. Raw table offsets
+    # are not identity. Explicit one-time archive conversion is outside runtime.
+    # ACW
+    def CENTRAL_BODY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BodyDescriptor import BodyDescriptor
+            obj = BodyDescriptor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def ACWStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(3)
 
 def Start(builder):
     ACWStart(builder)
@@ -69,6 +87,12 @@ def ACWAddRESULT(builder, RESULT):
 def AddRESULT(builder, RESULT):
     ACWAddRESULT(builder, RESULT)
 
+def ACWAddCENTRAL_BODY(builder, CENTRAL_BODY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CENTRAL_BODY), 0)
+
+def AddCENTRAL_BODY(builder, CENTRAL_BODY):
+    ACWAddCENTRAL_BODY(builder, CENTRAL_BODY)
+
 def ACWEnd(builder):
     return builder.EndObject()
 
@@ -77,6 +101,7 @@ def End(builder):
 
 import ACWRequest
 import ACWResult
+import BodyDescriptor
 try:
     from typing import Optional
 except:
@@ -89,9 +114,11 @@ class ACWT(object):
         self,
         REQUEST = None,
         RESULT = None,
+        CENTRAL_BODY = None,
     ):
         self.REQUEST = REQUEST  # type: Optional[ACWRequest.ACWRequestT]
         self.RESULT = RESULT  # type: Optional[ACWResult.ACWResultT]
+        self.CENTRAL_BODY = CENTRAL_BODY  # type: Optional[BodyDescriptor.BodyDescriptorT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -118,6 +145,8 @@ class ACWT(object):
             self.REQUEST = ACWRequest.ACWRequestT.InitFromObj(ACW.REQUEST())
         if ACW.RESULT() is not None:
             self.RESULT = ACWResult.ACWResultT.InitFromObj(ACW.RESULT())
+        if ACW.CENTRAL_BODY() is not None:
+            self.CENTRAL_BODY = BodyDescriptor.BodyDescriptorT.InitFromObj(ACW.CENTRAL_BODY())
 
     # ACWT
     def Pack(self, builder):
@@ -125,10 +154,14 @@ class ACWT(object):
             REQUEST = self.REQUEST.Pack(builder)
         if self.RESULT is not None:
             RESULT = self.RESULT.Pack(builder)
+        if self.CENTRAL_BODY is not None:
+            CENTRAL_BODY = self.CENTRAL_BODY.Pack(builder)
         ACWStart(builder)
         if self.REQUEST is not None:
             ACWAddREQUEST(builder, REQUEST)
         if self.RESULT is not None:
             ACWAddRESULT(builder, RESULT)
+        if self.CENTRAL_BODY is not None:
+            ACWAddCENTRAL_BODY(builder, CENTRAL_BODY)
         ACW = ACWEnd(builder)
         return ACW

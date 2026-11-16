@@ -110,7 +110,7 @@ class ACWSensor(object):
         return 0.0
 
     # Shortest time between the end of one track of a target and the start
-    # of the next, seconds.
+    # of the following, seconds.
     # ACWSensor
     def REVISIT_INTERVAL_S(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -209,8 +209,114 @@ class ACWSensor(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWSensor
+    def HAS_PHENOMENOLOGY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_OBSERVATION_INTERVAL_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_TRACK_DURATION_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_REVISIT_INTERVAL_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_MAX_SIMULTANEOUS_TRACKS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_REFERENCE_SNR_DB(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_REFERENCE_RANGE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_REFERENCE_RCS_M2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_DETECTION_THRESHOLD_DB(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_RECEIVER_G_OVER_T_DB_PER_K(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_RECEIVER_BANDWIDTH_HZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_LIMITING_MAGNITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_MAX_HOST_SUN_ELEVATION_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_FALSE_ALARM_RATE_PER_HOUR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWSensor
+    def HAS_TRANSMIT_FREQUENCY_HZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWSensorStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(34)
 
 def Start(builder):
     ACWSensorStart(builder)
@@ -341,6 +447,96 @@ def ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ):
 def AddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ):
     ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ)
 
+def ACWSensorAddHAS_PHENOMENOLOGY(builder, HAS_PHENOMENOLOGY):
+    builder.PrependBoolSlot(19, HAS_PHENOMENOLOGY, 0)
+
+def AddHAS_PHENOMENOLOGY(builder, HAS_PHENOMENOLOGY):
+    ACWSensorAddHAS_PHENOMENOLOGY(builder, HAS_PHENOMENOLOGY)
+
+def ACWSensorAddHAS_OBSERVATION_INTERVAL_S(builder, HAS_OBSERVATION_INTERVAL_S):
+    builder.PrependBoolSlot(20, HAS_OBSERVATION_INTERVAL_S, 0)
+
+def AddHAS_OBSERVATION_INTERVAL_S(builder, HAS_OBSERVATION_INTERVAL_S):
+    ACWSensorAddHAS_OBSERVATION_INTERVAL_S(builder, HAS_OBSERVATION_INTERVAL_S)
+
+def ACWSensorAddHAS_TRACK_DURATION_S(builder, HAS_TRACK_DURATION_S):
+    builder.PrependBoolSlot(21, HAS_TRACK_DURATION_S, 0)
+
+def AddHAS_TRACK_DURATION_S(builder, HAS_TRACK_DURATION_S):
+    ACWSensorAddHAS_TRACK_DURATION_S(builder, HAS_TRACK_DURATION_S)
+
+def ACWSensorAddHAS_REVISIT_INTERVAL_S(builder, HAS_REVISIT_INTERVAL_S):
+    builder.PrependBoolSlot(22, HAS_REVISIT_INTERVAL_S, 0)
+
+def AddHAS_REVISIT_INTERVAL_S(builder, HAS_REVISIT_INTERVAL_S):
+    ACWSensorAddHAS_REVISIT_INTERVAL_S(builder, HAS_REVISIT_INTERVAL_S)
+
+def ACWSensorAddHAS_MAX_SIMULTANEOUS_TRACKS(builder, HAS_MAX_SIMULTANEOUS_TRACKS):
+    builder.PrependBoolSlot(23, HAS_MAX_SIMULTANEOUS_TRACKS, 0)
+
+def AddHAS_MAX_SIMULTANEOUS_TRACKS(builder, HAS_MAX_SIMULTANEOUS_TRACKS):
+    ACWSensorAddHAS_MAX_SIMULTANEOUS_TRACKS(builder, HAS_MAX_SIMULTANEOUS_TRACKS)
+
+def ACWSensorAddHAS_REFERENCE_SNR_DB(builder, HAS_REFERENCE_SNR_DB):
+    builder.PrependBoolSlot(24, HAS_REFERENCE_SNR_DB, 0)
+
+def AddHAS_REFERENCE_SNR_DB(builder, HAS_REFERENCE_SNR_DB):
+    ACWSensorAddHAS_REFERENCE_SNR_DB(builder, HAS_REFERENCE_SNR_DB)
+
+def ACWSensorAddHAS_REFERENCE_RANGE_M(builder, HAS_REFERENCE_RANGE_M):
+    builder.PrependBoolSlot(25, HAS_REFERENCE_RANGE_M, 0)
+
+def AddHAS_REFERENCE_RANGE_M(builder, HAS_REFERENCE_RANGE_M):
+    ACWSensorAddHAS_REFERENCE_RANGE_M(builder, HAS_REFERENCE_RANGE_M)
+
+def ACWSensorAddHAS_REFERENCE_RCS_M2(builder, HAS_REFERENCE_RCS_M2):
+    builder.PrependBoolSlot(26, HAS_REFERENCE_RCS_M2, 0)
+
+def AddHAS_REFERENCE_RCS_M2(builder, HAS_REFERENCE_RCS_M2):
+    ACWSensorAddHAS_REFERENCE_RCS_M2(builder, HAS_REFERENCE_RCS_M2)
+
+def ACWSensorAddHAS_DETECTION_THRESHOLD_DB(builder, HAS_DETECTION_THRESHOLD_DB):
+    builder.PrependBoolSlot(27, HAS_DETECTION_THRESHOLD_DB, 0)
+
+def AddHAS_DETECTION_THRESHOLD_DB(builder, HAS_DETECTION_THRESHOLD_DB):
+    ACWSensorAddHAS_DETECTION_THRESHOLD_DB(builder, HAS_DETECTION_THRESHOLD_DB)
+
+def ACWSensorAddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K):
+    builder.PrependBoolSlot(28, HAS_RECEIVER_G_OVER_T_DB_PER_K, 0)
+
+def AddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K):
+    ACWSensorAddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K)
+
+def ACWSensorAddHAS_RECEIVER_BANDWIDTH_HZ(builder, HAS_RECEIVER_BANDWIDTH_HZ):
+    builder.PrependBoolSlot(29, HAS_RECEIVER_BANDWIDTH_HZ, 0)
+
+def AddHAS_RECEIVER_BANDWIDTH_HZ(builder, HAS_RECEIVER_BANDWIDTH_HZ):
+    ACWSensorAddHAS_RECEIVER_BANDWIDTH_HZ(builder, HAS_RECEIVER_BANDWIDTH_HZ)
+
+def ACWSensorAddHAS_LIMITING_MAGNITUDE(builder, HAS_LIMITING_MAGNITUDE):
+    builder.PrependBoolSlot(30, HAS_LIMITING_MAGNITUDE, 0)
+
+def AddHAS_LIMITING_MAGNITUDE(builder, HAS_LIMITING_MAGNITUDE):
+    ACWSensorAddHAS_LIMITING_MAGNITUDE(builder, HAS_LIMITING_MAGNITUDE)
+
+def ACWSensorAddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD):
+    builder.PrependBoolSlot(31, HAS_MAX_HOST_SUN_ELEVATION_RAD, 0)
+
+def AddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD):
+    ACWSensorAddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD)
+
+def ACWSensorAddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, HAS_FALSE_ALARM_RATE_PER_HOUR):
+    builder.PrependBoolSlot(32, HAS_FALSE_ALARM_RATE_PER_HOUR, 0)
+
+def AddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, HAS_FALSE_ALARM_RATE_PER_HOUR):
+    ACWSensorAddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, HAS_FALSE_ALARM_RATE_PER_HOUR)
+
+def ACWSensorAddHAS_TRANSMIT_FREQUENCY_HZ(builder, HAS_TRANSMIT_FREQUENCY_HZ):
+    builder.PrependBoolSlot(33, HAS_TRANSMIT_FREQUENCY_HZ, 0)
+
+def AddHAS_TRANSMIT_FREQUENCY_HZ(builder, HAS_TRANSMIT_FREQUENCY_HZ):
+    ACWSensorAddHAS_TRANSMIT_FREQUENCY_HZ(builder, HAS_TRANSMIT_FREQUENCY_HZ)
+
 def ACWSensorEnd(builder):
     return builder.EndObject()
 
@@ -378,6 +574,21 @@ class ACWSensorT(object):
         MAX_HOST_SUN_ELEVATION_RAD = 0.0,
         FALSE_ALARM_RATE_PER_HOUR = 0.0,
         TRANSMIT_FREQUENCY_HZ = 0.0,
+        HAS_PHENOMENOLOGY = False,
+        HAS_OBSERVATION_INTERVAL_S = False,
+        HAS_TRACK_DURATION_S = False,
+        HAS_REVISIT_INTERVAL_S = False,
+        HAS_MAX_SIMULTANEOUS_TRACKS = False,
+        HAS_REFERENCE_SNR_DB = False,
+        HAS_REFERENCE_RANGE_M = False,
+        HAS_REFERENCE_RCS_M2 = False,
+        HAS_DETECTION_THRESHOLD_DB = False,
+        HAS_RECEIVER_G_OVER_T_DB_PER_K = False,
+        HAS_RECEIVER_BANDWIDTH_HZ = False,
+        HAS_LIMITING_MAGNITUDE = False,
+        HAS_MAX_HOST_SUN_ELEVATION_RAD = False,
+        HAS_FALSE_ALARM_RATE_PER_HOUR = False,
+        HAS_TRANSMIT_FREQUENCY_HZ = False,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
         self.HOST_ID = HOST_ID  # type: Optional[str]
@@ -398,6 +609,21 @@ class ACWSensorT(object):
         self.MAX_HOST_SUN_ELEVATION_RAD = MAX_HOST_SUN_ELEVATION_RAD  # type: float
         self.FALSE_ALARM_RATE_PER_HOUR = FALSE_ALARM_RATE_PER_HOUR  # type: float
         self.TRANSMIT_FREQUENCY_HZ = TRANSMIT_FREQUENCY_HZ  # type: float
+        self.HAS_PHENOMENOLOGY = HAS_PHENOMENOLOGY  # type: bool
+        self.HAS_OBSERVATION_INTERVAL_S = HAS_OBSERVATION_INTERVAL_S  # type: bool
+        self.HAS_TRACK_DURATION_S = HAS_TRACK_DURATION_S  # type: bool
+        self.HAS_REVISIT_INTERVAL_S = HAS_REVISIT_INTERVAL_S  # type: bool
+        self.HAS_MAX_SIMULTANEOUS_TRACKS = HAS_MAX_SIMULTANEOUS_TRACKS  # type: bool
+        self.HAS_REFERENCE_SNR_DB = HAS_REFERENCE_SNR_DB  # type: bool
+        self.HAS_REFERENCE_RANGE_M = HAS_REFERENCE_RANGE_M  # type: bool
+        self.HAS_REFERENCE_RCS_M2 = HAS_REFERENCE_RCS_M2  # type: bool
+        self.HAS_DETECTION_THRESHOLD_DB = HAS_DETECTION_THRESHOLD_DB  # type: bool
+        self.HAS_RECEIVER_G_OVER_T_DB_PER_K = HAS_RECEIVER_G_OVER_T_DB_PER_K  # type: bool
+        self.HAS_RECEIVER_BANDWIDTH_HZ = HAS_RECEIVER_BANDWIDTH_HZ  # type: bool
+        self.HAS_LIMITING_MAGNITUDE = HAS_LIMITING_MAGNITUDE  # type: bool
+        self.HAS_MAX_HOST_SUN_ELEVATION_RAD = HAS_MAX_HOST_SUN_ELEVATION_RAD  # type: bool
+        self.HAS_FALSE_ALARM_RATE_PER_HOUR = HAS_FALSE_ALARM_RATE_PER_HOUR  # type: bool
+        self.HAS_TRANSMIT_FREQUENCY_HZ = HAS_TRANSMIT_FREQUENCY_HZ  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -447,6 +673,21 @@ class ACWSensorT(object):
         self.MAX_HOST_SUN_ELEVATION_RAD = ACWSensor.MAX_HOST_SUN_ELEVATION_RAD()
         self.FALSE_ALARM_RATE_PER_HOUR = ACWSensor.FALSE_ALARM_RATE_PER_HOUR()
         self.TRANSMIT_FREQUENCY_HZ = ACWSensor.TRANSMIT_FREQUENCY_HZ()
+        self.HAS_PHENOMENOLOGY = ACWSensor.HAS_PHENOMENOLOGY()
+        self.HAS_OBSERVATION_INTERVAL_S = ACWSensor.HAS_OBSERVATION_INTERVAL_S()
+        self.HAS_TRACK_DURATION_S = ACWSensor.HAS_TRACK_DURATION_S()
+        self.HAS_REVISIT_INTERVAL_S = ACWSensor.HAS_REVISIT_INTERVAL_S()
+        self.HAS_MAX_SIMULTANEOUS_TRACKS = ACWSensor.HAS_MAX_SIMULTANEOUS_TRACKS()
+        self.HAS_REFERENCE_SNR_DB = ACWSensor.HAS_REFERENCE_SNR_DB()
+        self.HAS_REFERENCE_RANGE_M = ACWSensor.HAS_REFERENCE_RANGE_M()
+        self.HAS_REFERENCE_RCS_M2 = ACWSensor.HAS_REFERENCE_RCS_M2()
+        self.HAS_DETECTION_THRESHOLD_DB = ACWSensor.HAS_DETECTION_THRESHOLD_DB()
+        self.HAS_RECEIVER_G_OVER_T_DB_PER_K = ACWSensor.HAS_RECEIVER_G_OVER_T_DB_PER_K()
+        self.HAS_RECEIVER_BANDWIDTH_HZ = ACWSensor.HAS_RECEIVER_BANDWIDTH_HZ()
+        self.HAS_LIMITING_MAGNITUDE = ACWSensor.HAS_LIMITING_MAGNITUDE()
+        self.HAS_MAX_HOST_SUN_ELEVATION_RAD = ACWSensor.HAS_MAX_HOST_SUN_ELEVATION_RAD()
+        self.HAS_FALSE_ALARM_RATE_PER_HOUR = ACWSensor.HAS_FALSE_ALARM_RATE_PER_HOUR()
+        self.HAS_TRANSMIT_FREQUENCY_HZ = ACWSensor.HAS_TRANSMIT_FREQUENCY_HZ()
 
     # ACWSensorT
     def Pack(self, builder):
@@ -488,5 +729,20 @@ class ACWSensorT(object):
         ACWSensorAddMAX_HOST_SUN_ELEVATION_RAD(builder, self.MAX_HOST_SUN_ELEVATION_RAD)
         ACWSensorAddFALSE_ALARM_RATE_PER_HOUR(builder, self.FALSE_ALARM_RATE_PER_HOUR)
         ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, self.TRANSMIT_FREQUENCY_HZ)
+        ACWSensorAddHAS_PHENOMENOLOGY(builder, self.HAS_PHENOMENOLOGY)
+        ACWSensorAddHAS_OBSERVATION_INTERVAL_S(builder, self.HAS_OBSERVATION_INTERVAL_S)
+        ACWSensorAddHAS_TRACK_DURATION_S(builder, self.HAS_TRACK_DURATION_S)
+        ACWSensorAddHAS_REVISIT_INTERVAL_S(builder, self.HAS_REVISIT_INTERVAL_S)
+        ACWSensorAddHAS_MAX_SIMULTANEOUS_TRACKS(builder, self.HAS_MAX_SIMULTANEOUS_TRACKS)
+        ACWSensorAddHAS_REFERENCE_SNR_DB(builder, self.HAS_REFERENCE_SNR_DB)
+        ACWSensorAddHAS_REFERENCE_RANGE_M(builder, self.HAS_REFERENCE_RANGE_M)
+        ACWSensorAddHAS_REFERENCE_RCS_M2(builder, self.HAS_REFERENCE_RCS_M2)
+        ACWSensorAddHAS_DETECTION_THRESHOLD_DB(builder, self.HAS_DETECTION_THRESHOLD_DB)
+        ACWSensorAddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, self.HAS_RECEIVER_G_OVER_T_DB_PER_K)
+        ACWSensorAddHAS_RECEIVER_BANDWIDTH_HZ(builder, self.HAS_RECEIVER_BANDWIDTH_HZ)
+        ACWSensorAddHAS_LIMITING_MAGNITUDE(builder, self.HAS_LIMITING_MAGNITUDE)
+        ACWSensorAddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, self.HAS_MAX_HOST_SUN_ELEVATION_RAD)
+        ACWSensorAddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, self.HAS_FALSE_ALARM_RATE_PER_HOUR)
+        ACWSensorAddHAS_TRANSMIT_FREQUENCY_HZ(builder, self.HAS_TRANSMIT_FREQUENCY_HZ)
         ACWSensor = ACWSensorEnd(builder)
         return ACWSensor

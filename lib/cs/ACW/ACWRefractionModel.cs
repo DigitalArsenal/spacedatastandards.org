@@ -22,22 +22,35 @@ public struct ACWRefractionModel : IFlatbufferObject
   public double PRESSURE_PA { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)101000.0; } }
   /// Local temperature in kelvin.
   public double TEMPERATURE_K { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)283.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_MODEL_KIND { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_PRESSURE_PA { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_TEMPERATURE_K { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWRefractionModel> CreateACWRefractionModel(FlatBufferBuilder builder,
       acwRefractionModelKind MODEL_KIND = acwRefractionModelKind.NONE,
       double PRESSURE_PA = 101000.0,
-      double TEMPERATURE_K = 283.0) {
-    builder.StartTable(3);
+      double TEMPERATURE_K = 283.0,
+      bool HAS_MODEL_KIND = false,
+      bool HAS_PRESSURE_PA = false,
+      bool HAS_TEMPERATURE_K = false) {
+    builder.StartTable(6);
     ACWRefractionModel.AddTEMPERATURE_K(builder, TEMPERATURE_K);
     ACWRefractionModel.AddPRESSURE_PA(builder, PRESSURE_PA);
+    ACWRefractionModel.AddHAS_TEMPERATURE_K(builder, HAS_TEMPERATURE_K);
+    ACWRefractionModel.AddHAS_PRESSURE_PA(builder, HAS_PRESSURE_PA);
+    ACWRefractionModel.AddHAS_MODEL_KIND(builder, HAS_MODEL_KIND);
     ACWRefractionModel.AddMODEL_KIND(builder, MODEL_KIND);
     return ACWRefractionModel.EndACWRefractionModel(builder);
   }
 
-  public static void StartACWRefractionModel(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartACWRefractionModel(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddMODEL_KIND(FlatBufferBuilder builder, acwRefractionModelKind MODEL_KIND) { builder.AddSbyte(0, (sbyte)MODEL_KIND, 0); }
   public static void AddPRESSURE_PA(FlatBufferBuilder builder, double PRESSURE_PA) { builder.AddDouble(1, PRESSURE_PA, 101000.0); }
   public static void AddTEMPERATURE_K(FlatBufferBuilder builder, double TEMPERATURE_K) { builder.AddDouble(2, TEMPERATURE_K, 283.0); }
+  public static void AddHAS_MODEL_KIND(FlatBufferBuilder builder, bool HAS_MODEL_KIND) { builder.AddBool(3, HAS_MODEL_KIND, false); }
+  public static void AddHAS_PRESSURE_PA(FlatBufferBuilder builder, bool HAS_PRESSURE_PA) { builder.AddBool(4, HAS_PRESSURE_PA, false); }
+  public static void AddHAS_TEMPERATURE_K(FlatBufferBuilder builder, bool HAS_TEMPERATURE_K) { builder.AddBool(5, HAS_TEMPERATURE_K, false); }
   public static Offset<ACWRefractionModel> EndACWRefractionModel(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWRefractionModel>(o);
@@ -51,6 +64,9 @@ public struct ACWRefractionModel : IFlatbufferObject
     _o.MODEL_KIND = this.MODEL_KIND;
     _o.PRESSURE_PA = this.PRESSURE_PA;
     _o.TEMPERATURE_K = this.TEMPERATURE_K;
+    _o.HAS_MODEL_KIND = this.HAS_MODEL_KIND;
+    _o.HAS_PRESSURE_PA = this.HAS_PRESSURE_PA;
+    _o.HAS_TEMPERATURE_K = this.HAS_TEMPERATURE_K;
   }
   public static Offset<ACWRefractionModel> Pack(FlatBufferBuilder builder, ACWRefractionModelT _o) {
     if (_o == null) return default(Offset<ACWRefractionModel>);
@@ -58,7 +74,10 @@ public struct ACWRefractionModel : IFlatbufferObject
       builder,
       _o.MODEL_KIND,
       _o.PRESSURE_PA,
-      _o.TEMPERATURE_K);
+      _o.TEMPERATURE_K,
+      _o.HAS_MODEL_KIND,
+      _o.HAS_PRESSURE_PA,
+      _o.HAS_TEMPERATURE_K);
   }
 }
 
@@ -67,11 +86,17 @@ public class ACWRefractionModelT
   public acwRefractionModelKind MODEL_KIND { get; set; }
   public double PRESSURE_PA { get; set; }
   public double TEMPERATURE_K { get; set; }
+  public bool HAS_MODEL_KIND { get; set; }
+  public bool HAS_PRESSURE_PA { get; set; }
+  public bool HAS_TEMPERATURE_K { get; set; }
 
   public ACWRefractionModelT() {
     this.MODEL_KIND = acwRefractionModelKind.NONE;
     this.PRESSURE_PA = 101000.0;
     this.TEMPERATURE_K = 283.0;
+    this.HAS_MODEL_KIND = false;
+    this.HAS_PRESSURE_PA = false;
+    this.HAS_TEMPERATURE_K = false;
   }
 }
 
@@ -84,6 +109,9 @@ static public class ACWRefractionModelVerify
       && verifier.VerifyField(tablePos, 4 /*MODEL_KIND*/, 1 /*acwRefractionModelKind*/, 1, false)
       && verifier.VerifyField(tablePos, 6 /*PRESSURE_PA*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*TEMPERATURE_K*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*HAS_MODEL_KIND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*HAS_PRESSURE_PA*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*HAS_TEMPERATURE_K*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

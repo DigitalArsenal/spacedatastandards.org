@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 type ACWStateSample struct {
 	_tab flatbuffers.Table
 }
@@ -64,7 +64,7 @@ func (rcv *ACWStateSample) MutateJulianDateTt(n float64) bool {
 	return rcv.MutateJULIAN_DATE_TT(n)
 }
 
-/// Earth-fixed X position, meters.
+/// Fixed-frame X position, meters.
 func (rcv *ACWStateSample) POSITION_X_M() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -77,7 +77,7 @@ func (rcv *ACWStateSample) PositionXM() float64 {
 	return rcv.POSITION_X_M()
 }
 
-/// Earth-fixed X position, meters.
+/// Fixed-frame X position, meters.
 func (rcv *ACWStateSample) MutatePOSITION_X_M(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -86,7 +86,7 @@ func (rcv *ACWStateSample) MutatePositionXM(n float64) bool {
 	return rcv.MutatePOSITION_X_M(n)
 }
 
-/// Earth-fixed Y position, meters.
+/// Fixed-frame Y position, meters.
 func (rcv *ACWStateSample) POSITION_Y_M() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -99,7 +99,7 @@ func (rcv *ACWStateSample) PositionYM() float64 {
 	return rcv.POSITION_Y_M()
 }
 
-/// Earth-fixed Y position, meters.
+/// Fixed-frame Y position, meters.
 func (rcv *ACWStateSample) MutatePOSITION_Y_M(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -108,7 +108,7 @@ func (rcv *ACWStateSample) MutatePositionYM(n float64) bool {
 	return rcv.MutatePOSITION_Y_M(n)
 }
 
-/// Earth-fixed Z position, meters.
+/// Fixed-frame Z position, meters.
 func (rcv *ACWStateSample) POSITION_Z_M() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -121,7 +121,7 @@ func (rcv *ACWStateSample) PositionZM() float64 {
 	return rcv.POSITION_Z_M()
 }
 
-/// Earth-fixed Z position, meters.
+/// Fixed-frame Z position, meters.
 func (rcv *ACWStateSample) MutatePOSITION_Z_M(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -130,7 +130,7 @@ func (rcv *ACWStateSample) MutatePositionZM(n float64) bool {
 	return rcv.MutatePOSITION_Z_M(n)
 }
 
-/// Earth-fixed velocity, meters per second. Required for range-rate,
+/// Fixed-frame velocity, meters per second. Required for range-rate,
 /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
 func (rcv *ACWStateSample) VELOCITY_X_MPS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -144,7 +144,7 @@ func (rcv *ACWStateSample) VelocityXMps() float64 {
 	return rcv.VELOCITY_X_MPS()
 }
 
-/// Earth-fixed velocity, meters per second. Required for range-rate,
+/// Fixed-frame velocity, meters per second. Required for range-rate,
 /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
 func (rcv *ACWStateSample) MutateVELOCITY_X_MPS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
@@ -194,8 +194,150 @@ func (rcv *ACWStateSample) MutateVelocityZMps(n float64) bool {
 	return rcv.MutateVELOCITY_Z_MPS(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWStateSample) HAS_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasJulianDateTt() bool {
+	return rcv.HAS_JULIAN_DATE_TT()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWStateSample) MutateHAS_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *ACWStateSample) MutateHasJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWStateSample) HAS_POSITION_X_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasPositionXM() bool {
+	return rcv.HAS_POSITION_X_M()
+}
+
+func (rcv *ACWStateSample) MutateHAS_POSITION_X_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWStateSample) MutateHasPositionXM(n bool) bool {
+	return rcv.MutateHAS_POSITION_X_M(n)
+}
+
+func (rcv *ACWStateSample) HAS_POSITION_Y_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasPositionYM() bool {
+	return rcv.HAS_POSITION_Y_M()
+}
+
+func (rcv *ACWStateSample) MutateHAS_POSITION_Y_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWStateSample) MutateHasPositionYM(n bool) bool {
+	return rcv.MutateHAS_POSITION_Y_M(n)
+}
+
+func (rcv *ACWStateSample) HAS_POSITION_Z_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasPositionZM() bool {
+	return rcv.HAS_POSITION_Z_M()
+}
+
+func (rcv *ACWStateSample) MutateHAS_POSITION_Z_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ACWStateSample) MutateHasPositionZM(n bool) bool {
+	return rcv.MutateHAS_POSITION_Z_M(n)
+}
+
+func (rcv *ACWStateSample) HAS_VELOCITY_X_MPS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasVelocityXMps() bool {
+	return rcv.HAS_VELOCITY_X_MPS()
+}
+
+func (rcv *ACWStateSample) MutateHAS_VELOCITY_X_MPS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *ACWStateSample) MutateHasVelocityXMps(n bool) bool {
+	return rcv.MutateHAS_VELOCITY_X_MPS(n)
+}
+
+func (rcv *ACWStateSample) HAS_VELOCITY_Y_MPS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasVelocityYMps() bool {
+	return rcv.HAS_VELOCITY_Y_MPS()
+}
+
+func (rcv *ACWStateSample) MutateHAS_VELOCITY_Y_MPS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *ACWStateSample) MutateHasVelocityYMps(n bool) bool {
+	return rcv.MutateHAS_VELOCITY_Y_MPS(n)
+}
+
+func (rcv *ACWStateSample) HAS_VELOCITY_Z_MPS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWStateSample) HasVelocityZMps() bool {
+	return rcv.HAS_VELOCITY_Z_MPS()
+}
+
+func (rcv *ACWStateSample) MutateHAS_VELOCITY_Z_MPS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *ACWStateSample) MutateHasVelocityZMps(n bool) bool {
+	return rcv.MutateHAS_VELOCITY_Z_MPS(n)
+}
+
 func ACWStateSampleStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(14)
 }
 func ACWStateSampleAddJULIAN_DATE_TT(builder *flatbuffers.Builder, JULIAN_DATE_TT float64) {
 	builder.PrependFloat64Slot(0, JULIAN_DATE_TT, 0.0)
@@ -238,6 +380,48 @@ func ACWStateSampleAddVELOCITY_Z_MPS(builder *flatbuffers.Builder, VELOCITY_Z_MP
 }
 func ACWStateSampleAddVelocityZMps(builder *flatbuffers.Builder, VELOCITY_Z_MPS float64) {
 	ACWStateSampleAddVELOCITY_Z_MPS(builder, VELOCITY_Z_MPS)
+}
+func ACWStateSampleAddHAS_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(7, HAS_JULIAN_DATE_TT, false)
+}
+func ACWStateSampleAddHasJulianDateTt(builder *flatbuffers.Builder, HAS_JULIAN_DATE_TT bool) {
+	ACWStateSampleAddHAS_JULIAN_DATE_TT(builder, HAS_JULIAN_DATE_TT)
+}
+func ACWStateSampleAddHAS_POSITION_X_M(builder *flatbuffers.Builder, HAS_POSITION_X_M bool) {
+	builder.PrependBoolSlot(8, HAS_POSITION_X_M, false)
+}
+func ACWStateSampleAddHasPositionXM(builder *flatbuffers.Builder, HAS_POSITION_X_M bool) {
+	ACWStateSampleAddHAS_POSITION_X_M(builder, HAS_POSITION_X_M)
+}
+func ACWStateSampleAddHAS_POSITION_Y_M(builder *flatbuffers.Builder, HAS_POSITION_Y_M bool) {
+	builder.PrependBoolSlot(9, HAS_POSITION_Y_M, false)
+}
+func ACWStateSampleAddHasPositionYM(builder *flatbuffers.Builder, HAS_POSITION_Y_M bool) {
+	ACWStateSampleAddHAS_POSITION_Y_M(builder, HAS_POSITION_Y_M)
+}
+func ACWStateSampleAddHAS_POSITION_Z_M(builder *flatbuffers.Builder, HAS_POSITION_Z_M bool) {
+	builder.PrependBoolSlot(10, HAS_POSITION_Z_M, false)
+}
+func ACWStateSampleAddHasPositionZM(builder *flatbuffers.Builder, HAS_POSITION_Z_M bool) {
+	ACWStateSampleAddHAS_POSITION_Z_M(builder, HAS_POSITION_Z_M)
+}
+func ACWStateSampleAddHAS_VELOCITY_X_MPS(builder *flatbuffers.Builder, HAS_VELOCITY_X_MPS bool) {
+	builder.PrependBoolSlot(11, HAS_VELOCITY_X_MPS, false)
+}
+func ACWStateSampleAddHasVelocityXMps(builder *flatbuffers.Builder, HAS_VELOCITY_X_MPS bool) {
+	ACWStateSampleAddHAS_VELOCITY_X_MPS(builder, HAS_VELOCITY_X_MPS)
+}
+func ACWStateSampleAddHAS_VELOCITY_Y_MPS(builder *flatbuffers.Builder, HAS_VELOCITY_Y_MPS bool) {
+	builder.PrependBoolSlot(12, HAS_VELOCITY_Y_MPS, false)
+}
+func ACWStateSampleAddHasVelocityYMps(builder *flatbuffers.Builder, HAS_VELOCITY_Y_MPS bool) {
+	ACWStateSampleAddHAS_VELOCITY_Y_MPS(builder, HAS_VELOCITY_Y_MPS)
+}
+func ACWStateSampleAddHAS_VELOCITY_Z_MPS(builder *flatbuffers.Builder, HAS_VELOCITY_Z_MPS bool) {
+	builder.PrependBoolSlot(13, HAS_VELOCITY_Z_MPS, false)
+}
+func ACWStateSampleAddHasVelocityZMps(builder *flatbuffers.Builder, HAS_VELOCITY_Z_MPS bool) {
+	ACWStateSampleAddHAS_VELOCITY_Z_MPS(builder, HAS_VELOCITY_Z_MPS)
 }
 func ACWStateSampleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

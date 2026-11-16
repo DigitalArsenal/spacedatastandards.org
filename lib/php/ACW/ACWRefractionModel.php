@@ -70,25 +70,56 @@ class ACWRefractionModel extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 283.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_MODEL_KIND()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_PRESSURE_PA()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_TEMPERATURE_K()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWRefractionModel(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWRefractionModel
      */
-    public static function createACWRefractionModel(FlatBufferBuilder $builder, $MODEL_KIND, $PRESSURE_PA, $TEMPERATURE_K)
+    public static function createACWRefractionModel(FlatBufferBuilder $builder, $MODEL_KIND, $PRESSURE_PA, $TEMPERATURE_K, $HAS_MODEL_KIND, $HAS_PRESSURE_PA, $HAS_TEMPERATURE_K)
     {
-        $builder->startObject(3);
+        $builder->startObject(6);
         self::addMODEL_KIND($builder, $MODEL_KIND);
         self::addPRESSURE_PA($builder, $PRESSURE_PA);
         self::addTEMPERATURE_K($builder, $TEMPERATURE_K);
+        self::addHAS_MODEL_KIND($builder, $HAS_MODEL_KIND);
+        self::addHAS_PRESSURE_PA($builder, $HAS_PRESSURE_PA);
+        self::addHAS_TEMPERATURE_K($builder, $HAS_TEMPERATURE_K);
         $o = $builder->endObject();
         return $o;
     }
@@ -121,6 +152,36 @@ class ACWRefractionModel extends Table
     public static function addTEMPERATURE_K(FlatBufferBuilder $builder, $TEMPERATURE_K)
     {
         $builder->addDoubleX(2, $TEMPERATURE_K, 283.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MODEL_KIND(FlatBufferBuilder $builder, $HAS_MODEL_KIND)
+    {
+        $builder->addBoolX(3, $HAS_MODEL_KIND, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_PRESSURE_PA(FlatBufferBuilder $builder, $HAS_PRESSURE_PA)
+    {
+        $builder->addBoolX(4, $HAS_PRESSURE_PA, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_TEMPERATURE_K(FlatBufferBuilder $builder, $HAS_TEMPERATURE_K)
+    {
+        $builder->addBoolX(5, $HAS_TEMPERATURE_K, false);
     }
 
     /**

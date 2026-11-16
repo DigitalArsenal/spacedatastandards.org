@@ -7,7 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Target Cartesian state sample in an Earth-fixed frame.
+ * Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
  */
 export class ACWStateSample implements flatbuffers.IUnpackableObject<ACWStateSampleT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -36,7 +36,7 @@ JULIAN_DATE_TT():number {
 }
 
 /**
- * Earth-fixed X position, meters.
+ * Fixed-frame X position, meters.
  */
 POSITION_X_M():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -44,7 +44,7 @@ POSITION_X_M():number {
 }
 
 /**
- * Earth-fixed Y position, meters.
+ * Fixed-frame Y position, meters.
  */
 POSITION_Y_M():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
@@ -52,7 +52,7 @@ POSITION_Y_M():number {
 }
 
 /**
- * Earth-fixed Z position, meters.
+ * Fixed-frame Z position, meters.
  */
 POSITION_Z_M():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -60,7 +60,7 @@ POSITION_Z_M():number {
 }
 
 /**
- * Earth-fixed velocity, meters per second. Required for range-rate,
+ * Fixed-frame velocity, meters per second. Required for range-rate,
  * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
  */
 VELOCITY_X_MPS():number {
@@ -78,8 +78,46 @@ VELOCITY_Z_MPS():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_POSITION_X_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_POSITION_Y_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_POSITION_Z_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_VELOCITY_X_MPS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_VELOCITY_Y_MPS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_VELOCITY_Z_MPS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWStateSample(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(14);
 }
 
 static addJulianDateTt(builder:flatbuffers.Builder, JULIAN_DATE_TT:number) {
@@ -110,12 +148,40 @@ static addVelocityZMps(builder:flatbuffers.Builder, VELOCITY_Z_MPS:number) {
   builder.addFieldFloat64(6, VELOCITY_Z_MPS, 0.0);
 }
 
+static addHasJulianDateTt(builder:flatbuffers.Builder, HAS_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(7, +HAS_JULIAN_DATE_TT, +false);
+}
+
+static addHasPositionXM(builder:flatbuffers.Builder, HAS_POSITION_X_M:boolean) {
+  builder.addFieldInt8(8, +HAS_POSITION_X_M, +false);
+}
+
+static addHasPositionYM(builder:flatbuffers.Builder, HAS_POSITION_Y_M:boolean) {
+  builder.addFieldInt8(9, +HAS_POSITION_Y_M, +false);
+}
+
+static addHasPositionZM(builder:flatbuffers.Builder, HAS_POSITION_Z_M:boolean) {
+  builder.addFieldInt8(10, +HAS_POSITION_Z_M, +false);
+}
+
+static addHasVelocityXMps(builder:flatbuffers.Builder, HAS_VELOCITY_X_MPS:boolean) {
+  builder.addFieldInt8(11, +HAS_VELOCITY_X_MPS, +false);
+}
+
+static addHasVelocityYMps(builder:flatbuffers.Builder, HAS_VELOCITY_Y_MPS:boolean) {
+  builder.addFieldInt8(12, +HAS_VELOCITY_Y_MPS, +false);
+}
+
+static addHasVelocityZMps(builder:flatbuffers.Builder, HAS_VELOCITY_Z_MPS:boolean) {
+  builder.addFieldInt8(13, +HAS_VELOCITY_Z_MPS, +false);
+}
+
 static endACWStateSample(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWStateSample(builder:flatbuffers.Builder, JULIAN_DATE_TT:number, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number, VELOCITY_X_MPS:number, VELOCITY_Y_MPS:number, VELOCITY_Z_MPS:number):flatbuffers.Offset {
+static createACWStateSample(builder:flatbuffers.Builder, JULIAN_DATE_TT:number, POSITION_X_M:number, POSITION_Y_M:number, POSITION_Z_M:number, VELOCITY_X_MPS:number, VELOCITY_Y_MPS:number, VELOCITY_Z_MPS:number, HAS_JULIAN_DATE_TT:boolean, HAS_POSITION_X_M:boolean, HAS_POSITION_Y_M:boolean, HAS_POSITION_Z_M:boolean, HAS_VELOCITY_X_MPS:boolean, HAS_VELOCITY_Y_MPS:boolean, HAS_VELOCITY_Z_MPS:boolean):flatbuffers.Offset {
   ACWStateSample.startACWStateSample(builder);
   ACWStateSample.addJulianDateTt(builder, JULIAN_DATE_TT);
   ACWStateSample.addPositionXM(builder, POSITION_X_M);
@@ -124,6 +190,13 @@ static createACWStateSample(builder:flatbuffers.Builder, JULIAN_DATE_TT:number, 
   ACWStateSample.addVelocityXMps(builder, VELOCITY_X_MPS);
   ACWStateSample.addVelocityYMps(builder, VELOCITY_Y_MPS);
   ACWStateSample.addVelocityZMps(builder, VELOCITY_Z_MPS);
+  ACWStateSample.addHasJulianDateTt(builder, HAS_JULIAN_DATE_TT);
+  ACWStateSample.addHasPositionXM(builder, HAS_POSITION_X_M);
+  ACWStateSample.addHasPositionYM(builder, HAS_POSITION_Y_M);
+  ACWStateSample.addHasPositionZM(builder, HAS_POSITION_Z_M);
+  ACWStateSample.addHasVelocityXMps(builder, HAS_VELOCITY_X_MPS);
+  ACWStateSample.addHasVelocityYMps(builder, HAS_VELOCITY_Y_MPS);
+  ACWStateSample.addHasVelocityZMps(builder, HAS_VELOCITY_Z_MPS);
   return ACWStateSample.endACWStateSample(builder);
 }
 
@@ -135,7 +208,14 @@ unpack(): ACWStateSampleT {
     this.POSITION_Z_M(),
     this.VELOCITY_X_MPS(),
     this.VELOCITY_Y_MPS(),
-    this.VELOCITY_Z_MPS()
+    this.VELOCITY_Z_MPS(),
+    this.HAS_JULIAN_DATE_TT(),
+    this.HAS_POSITION_X_M(),
+    this.HAS_POSITION_Y_M(),
+    this.HAS_POSITION_Z_M(),
+    this.HAS_VELOCITY_X_MPS(),
+    this.HAS_VELOCITY_Y_MPS(),
+    this.HAS_VELOCITY_Z_MPS()
   );
 }
 
@@ -148,6 +228,13 @@ unpackTo(_o: ACWStateSampleT): void {
   _o.VELOCITY_X_MPS = this.VELOCITY_X_MPS();
   _o.VELOCITY_Y_MPS = this.VELOCITY_Y_MPS();
   _o.VELOCITY_Z_MPS = this.VELOCITY_Z_MPS();
+  _o.HAS_JULIAN_DATE_TT = this.HAS_JULIAN_DATE_TT();
+  _o.HAS_POSITION_X_M = this.HAS_POSITION_X_M();
+  _o.HAS_POSITION_Y_M = this.HAS_POSITION_Y_M();
+  _o.HAS_POSITION_Z_M = this.HAS_POSITION_Z_M();
+  _o.HAS_VELOCITY_X_MPS = this.HAS_VELOCITY_X_MPS();
+  _o.HAS_VELOCITY_Y_MPS = this.HAS_VELOCITY_Y_MPS();
+  _o.HAS_VELOCITY_Z_MPS = this.HAS_VELOCITY_Z_MPS();
 }
 }
 
@@ -159,7 +246,14 @@ constructor(
   public POSITION_Z_M: number = 0.0,
   public VELOCITY_X_MPS: number = 0.0,
   public VELOCITY_Y_MPS: number = 0.0,
-  public VELOCITY_Z_MPS: number = 0.0
+  public VELOCITY_Z_MPS: number = 0.0,
+  public HAS_JULIAN_DATE_TT: boolean = false,
+  public HAS_POSITION_X_M: boolean = false,
+  public HAS_POSITION_Y_M: boolean = false,
+  public HAS_POSITION_Z_M: boolean = false,
+  public HAS_VELOCITY_X_MPS: boolean = false,
+  public HAS_VELOCITY_Y_MPS: boolean = false,
+  public HAS_VELOCITY_Z_MPS: boolean = false
 ){}
 
 
@@ -171,7 +265,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.POSITION_Z_M,
     this.VELOCITY_X_MPS,
     this.VELOCITY_Y_MPS,
-    this.VELOCITY_Z_MPS
+    this.VELOCITY_Z_MPS,
+    this.HAS_JULIAN_DATE_TT,
+    this.HAS_POSITION_X_M,
+    this.HAS_POSITION_Y_M,
+    this.HAS_POSITION_Z_M,
+    this.HAS_VELOCITY_X_MPS,
+    this.HAS_VELOCITY_Y_MPS,
+    this.HAS_VELOCITY_Z_MPS
   );
 }
 }

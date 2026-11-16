@@ -43,28 +43,51 @@ public final class ACWTargetSignature extends com.google.flatbuffers.Table {
    */
   public double EMITTER_FREQUENCY_HZ() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double EMITTER_EIRP_DBW() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_RCS_M2() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_DIAMETER_M() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_GEOMETRIC_ALBEDO() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_EMITTER_FREQUENCY_HZ() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_EMITTER_EIRP_DBW() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWTargetSignature(FlatBufferBuilder builder,
       double RCS_M2,
       double DIAMETER_M,
       double GEOMETRIC_ALBEDO,
       double EMITTER_FREQUENCY_HZ,
-      double EMITTER_EIRP_DBW) {
-    builder.startTable(5);
+      double EMITTER_EIRP_DBW,
+      boolean HAS_RCS_M2,
+      boolean HAS_DIAMETER_M,
+      boolean HAS_GEOMETRIC_ALBEDO,
+      boolean HAS_EMITTER_FREQUENCY_HZ,
+      boolean HAS_EMITTER_EIRP_DBW) {
+    builder.startTable(10);
     ACWTargetSignature.addEmitterEirpDbw(builder, EMITTER_EIRP_DBW);
     ACWTargetSignature.addEmitterFrequencyHz(builder, EMITTER_FREQUENCY_HZ);
     ACWTargetSignature.addGeometricAlbedo(builder, GEOMETRIC_ALBEDO);
     ACWTargetSignature.addDiameterM(builder, DIAMETER_M);
     ACWTargetSignature.addRcsM2(builder, RCS_M2);
+    ACWTargetSignature.addHasEmitterEirpDbw(builder, HAS_EMITTER_EIRP_DBW);
+    ACWTargetSignature.addHasEmitterFrequencyHz(builder, HAS_EMITTER_FREQUENCY_HZ);
+    ACWTargetSignature.addHasGeometricAlbedo(builder, HAS_GEOMETRIC_ALBEDO);
+    ACWTargetSignature.addHasDiameterM(builder, HAS_DIAMETER_M);
+    ACWTargetSignature.addHasRcsM2(builder, HAS_RCS_M2);
     return ACWTargetSignature.endACWTargetSignature(builder);
   }
 
-  public static void startACWTargetSignature(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startACWTargetSignature(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addRcsM2(FlatBufferBuilder builder, double RCS_M2) { builder.addDouble(0, RCS_M2, 0.0); }
   public static void addDiameterM(FlatBufferBuilder builder, double DIAMETER_M) { builder.addDouble(1, DIAMETER_M, 0.0); }
   public static void addGeometricAlbedo(FlatBufferBuilder builder, double GEOMETRIC_ALBEDO) { builder.addDouble(2, GEOMETRIC_ALBEDO, 0.0); }
   public static void addEmitterFrequencyHz(FlatBufferBuilder builder, double EMITTER_FREQUENCY_HZ) { builder.addDouble(3, EMITTER_FREQUENCY_HZ, 0.0); }
   public static void addEmitterEirpDbw(FlatBufferBuilder builder, double EMITTER_EIRP_DBW) { builder.addDouble(4, EMITTER_EIRP_DBW, 0.0); }
+  public static void addHasRcsM2(FlatBufferBuilder builder, boolean HAS_RCS_M2) { builder.addBoolean(5, HAS_RCS_M2, false); }
+  public static void addHasDiameterM(FlatBufferBuilder builder, boolean HAS_DIAMETER_M) { builder.addBoolean(6, HAS_DIAMETER_M, false); }
+  public static void addHasGeometricAlbedo(FlatBufferBuilder builder, boolean HAS_GEOMETRIC_ALBEDO) { builder.addBoolean(7, HAS_GEOMETRIC_ALBEDO, false); }
+  public static void addHasEmitterFrequencyHz(FlatBufferBuilder builder, boolean HAS_EMITTER_FREQUENCY_HZ) { builder.addBoolean(8, HAS_EMITTER_FREQUENCY_HZ, false); }
+  public static void addHasEmitterEirpDbw(FlatBufferBuilder builder, boolean HAS_EMITTER_EIRP_DBW) { builder.addBoolean(9, HAS_EMITTER_EIRP_DBW, false); }
   public static int endACWTargetSignature(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

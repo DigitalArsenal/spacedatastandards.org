@@ -50,6 +50,24 @@ class ACWRefractionModel : Table() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 283.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasModelKind : Boolean
+        get() {
+            val o = __offset(10)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasPressurePa : Boolean
+        get() {
+            val o = __offset(12)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasTemperatureK : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWRefractionModel(_bb: ByteBuffer): ACWRefractionModel = getRootAsACWRefractionModel(_bb, ACWRefractionModel())
@@ -57,17 +75,23 @@ class ACWRefractionModel : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWRefractionModel(builder: FlatBufferBuilder, modelKind: Byte, pressurePa: Double, temperatureK: Double) : Int {
-            builder.startTable(3)
+        fun createACWRefractionModel(builder: FlatBufferBuilder, modelKind: Byte, pressurePa: Double, temperatureK: Double, hasModelKind: Boolean, hasPressurePa: Boolean, hasTemperatureK: Boolean) : Int {
+            builder.startTable(6)
             addTEMPERATUREK(builder, temperatureK)
             addPRESSUREPA(builder, pressurePa)
+            addHASTEMPERATUREK(builder, hasTemperatureK)
+            addHASPRESSUREPA(builder, hasPressurePa)
+            addHASMODELKIND(builder, hasModelKind)
             addMODELKIND(builder, modelKind)
             return endACWRefractionModel(builder)
         }
-        fun startACWRefractionModel(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startACWRefractionModel(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addMODELKIND(builder: FlatBufferBuilder, modelKind: Byte) = builder.addByte(0, modelKind, 0)
         fun addPRESSUREPA(builder: FlatBufferBuilder, pressurePa: Double) = builder.addDouble(1, pressurePa, 101000.0)
         fun addTEMPERATUREK(builder: FlatBufferBuilder, temperatureK: Double) = builder.addDouble(2, temperatureK, 283.0)
+        fun addHASMODELKIND(builder: FlatBufferBuilder, hasModelKind: Boolean) = builder.addBoolean(3, hasModelKind, false)
+        fun addHASPRESSUREPA(builder: FlatBufferBuilder, hasPressurePa: Boolean) = builder.addBoolean(4, hasPressurePa, false)
+        fun addHASTEMPERATUREK(builder: FlatBufferBuilder, hasTemperatureK: Boolean) = builder.addBoolean(5, hasTemperatureK, false)
         fun endACWRefractionModel(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

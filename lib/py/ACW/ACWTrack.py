@@ -82,8 +82,37 @@ class ACWTrack(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWTrack
+    def HAS_START_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTrack
+    def HAS_END_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTrack
+    def HAS_SCHEDULED_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTrack
+    def HAS_DETECTED_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWTrackStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(11)
 
 def Start(builder):
     ACWTrackStart(builder)
@@ -130,6 +159,30 @@ def ACWTrackAddLOSS_REASON(builder, LOSS_REASON):
 def AddLOSS_REASON(builder, LOSS_REASON):
     ACWTrackAddLOSS_REASON(builder, LOSS_REASON)
 
+def ACWTrackAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(7, HAS_START_JULIAN_DATE_TT, 0)
+
+def AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    ACWTrackAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+
+def ACWTrackAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(8, HAS_END_JULIAN_DATE_TT, 0)
+
+def AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    ACWTrackAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+
+def ACWTrackAddHAS_SCHEDULED_COUNT(builder, HAS_SCHEDULED_COUNT):
+    builder.PrependBoolSlot(9, HAS_SCHEDULED_COUNT, 0)
+
+def AddHAS_SCHEDULED_COUNT(builder, HAS_SCHEDULED_COUNT):
+    ACWTrackAddHAS_SCHEDULED_COUNT(builder, HAS_SCHEDULED_COUNT)
+
+def ACWTrackAddHAS_DETECTED_COUNT(builder, HAS_DETECTED_COUNT):
+    builder.PrependBoolSlot(10, HAS_DETECTED_COUNT, 0)
+
+def AddHAS_DETECTED_COUNT(builder, HAS_DETECTED_COUNT):
+    ACWTrackAddHAS_DETECTED_COUNT(builder, HAS_DETECTED_COUNT)
+
 def ACWTrackEnd(builder):
     return builder.EndObject()
 
@@ -149,6 +202,10 @@ class ACWTrackT(object):
         SCHEDULED_COUNT = 0,
         DETECTED_COUNT = 0,
         LOSS_REASON = None,
+        HAS_START_JULIAN_DATE_TT = False,
+        HAS_END_JULIAN_DATE_TT = False,
+        HAS_SCHEDULED_COUNT = False,
+        HAS_DETECTED_COUNT = False,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
         self.TARGET_ID = TARGET_ID  # type: Optional[str]
@@ -157,6 +214,10 @@ class ACWTrackT(object):
         self.SCHEDULED_COUNT = SCHEDULED_COUNT  # type: int
         self.DETECTED_COUNT = DETECTED_COUNT  # type: int
         self.LOSS_REASON = LOSS_REASON  # type: Optional[str]
+        self.HAS_START_JULIAN_DATE_TT = HAS_START_JULIAN_DATE_TT  # type: bool
+        self.HAS_END_JULIAN_DATE_TT = HAS_END_JULIAN_DATE_TT  # type: bool
+        self.HAS_SCHEDULED_COUNT = HAS_SCHEDULED_COUNT  # type: bool
+        self.HAS_DETECTED_COUNT = HAS_DETECTED_COUNT  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -186,6 +247,10 @@ class ACWTrackT(object):
         self.SCHEDULED_COUNT = ACWTrack.SCHEDULED_COUNT()
         self.DETECTED_COUNT = ACWTrack.DETECTED_COUNT()
         self.LOSS_REASON = ACWTrack.LOSS_REASON()
+        self.HAS_START_JULIAN_DATE_TT = ACWTrack.HAS_START_JULIAN_DATE_TT()
+        self.HAS_END_JULIAN_DATE_TT = ACWTrack.HAS_END_JULIAN_DATE_TT()
+        self.HAS_SCHEDULED_COUNT = ACWTrack.HAS_SCHEDULED_COUNT()
+        self.HAS_DETECTED_COUNT = ACWTrack.HAS_DETECTED_COUNT()
 
     # ACWTrackT
     def Pack(self, builder):
@@ -206,5 +271,9 @@ class ACWTrackT(object):
         ACWTrackAddDETECTED_COUNT(builder, self.DETECTED_COUNT)
         if self.LOSS_REASON is not None:
             ACWTrackAddLOSS_REASON(builder, LOSS_REASON)
+        ACWTrackAddHAS_START_JULIAN_DATE_TT(builder, self.HAS_START_JULIAN_DATE_TT)
+        ACWTrackAddHAS_END_JULIAN_DATE_TT(builder, self.HAS_END_JULIAN_DATE_TT)
+        ACWTrackAddHAS_SCHEDULED_COUNT(builder, self.HAS_SCHEDULED_COUNT)
+        ACWTrackAddHAS_DETECTED_COUNT(builder, self.HAS_DETECTED_COUNT)
         ACWTrack = ACWTrackEnd(builder)
         return ACWTrack

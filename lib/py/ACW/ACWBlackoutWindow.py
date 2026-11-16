@@ -45,8 +45,23 @@ class ACWBlackoutWindow(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWBlackoutWindow
+    def HAS_START_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWBlackoutWindow
+    def HAS_END_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWBlackoutWindowStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(4)
 
 def Start(builder):
     ACWBlackoutWindowStart(builder)
@@ -63,6 +78,18 @@ def ACWBlackoutWindowAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
 def AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
     ACWBlackoutWindowAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
 
+def ACWBlackoutWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(2, HAS_START_JULIAN_DATE_TT, 0)
+
+def AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    ACWBlackoutWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+
+def ACWBlackoutWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(3, HAS_END_JULIAN_DATE_TT, 0)
+
+def AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    ACWBlackoutWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+
 def ACWBlackoutWindowEnd(builder):
     return builder.EndObject()
 
@@ -77,9 +104,13 @@ class ACWBlackoutWindowT(object):
         self,
         START_JULIAN_DATE_TT = 0.0,
         END_JULIAN_DATE_TT = 0.0,
+        HAS_START_JULIAN_DATE_TT = False,
+        HAS_END_JULIAN_DATE_TT = False,
     ):
         self.START_JULIAN_DATE_TT = START_JULIAN_DATE_TT  # type: float
         self.END_JULIAN_DATE_TT = END_JULIAN_DATE_TT  # type: float
+        self.HAS_START_JULIAN_DATE_TT = HAS_START_JULIAN_DATE_TT  # type: bool
+        self.HAS_END_JULIAN_DATE_TT = HAS_END_JULIAN_DATE_TT  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -104,11 +135,15 @@ class ACWBlackoutWindowT(object):
             return
         self.START_JULIAN_DATE_TT = ACWBlackoutWindow.START_JULIAN_DATE_TT()
         self.END_JULIAN_DATE_TT = ACWBlackoutWindow.END_JULIAN_DATE_TT()
+        self.HAS_START_JULIAN_DATE_TT = ACWBlackoutWindow.HAS_START_JULIAN_DATE_TT()
+        self.HAS_END_JULIAN_DATE_TT = ACWBlackoutWindow.HAS_END_JULIAN_DATE_TT()
 
     # ACWBlackoutWindowT
     def Pack(self, builder):
         ACWBlackoutWindowStart(builder)
         ACWBlackoutWindowAddSTART_JULIAN_DATE_TT(builder, self.START_JULIAN_DATE_TT)
         ACWBlackoutWindowAddEND_JULIAN_DATE_TT(builder, self.END_JULIAN_DATE_TT)
+        ACWBlackoutWindowAddHAS_START_JULIAN_DATE_TT(builder, self.HAS_START_JULIAN_DATE_TT)
+        ACWBlackoutWindowAddHAS_END_JULIAN_DATE_TT(builder, self.HAS_END_JULIAN_DATE_TT)
         ACWBlackoutWindow = ACWBlackoutWindowEnd(builder)
         return ACWBlackoutWindow

@@ -69,8 +69,44 @@ class ACWTargetSignature(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWTargetSignature
+    def HAS_RCS_M2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTargetSignature
+    def HAS_DIAMETER_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTargetSignature
+    def HAS_GEOMETRIC_ALBEDO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTargetSignature
+    def HAS_EMITTER_FREQUENCY_HZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWTargetSignature
+    def HAS_EMITTER_EIRP_DBW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWTargetSignatureStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(10)
 
 def Start(builder):
     ACWTargetSignatureStart(builder)
@@ -105,6 +141,36 @@ def ACWTargetSignatureAddEMITTER_EIRP_DBW(builder, EMITTER_EIRP_DBW):
 def AddEMITTER_EIRP_DBW(builder, EMITTER_EIRP_DBW):
     ACWTargetSignatureAddEMITTER_EIRP_DBW(builder, EMITTER_EIRP_DBW)
 
+def ACWTargetSignatureAddHAS_RCS_M2(builder, HAS_RCS_M2):
+    builder.PrependBoolSlot(5, HAS_RCS_M2, 0)
+
+def AddHAS_RCS_M2(builder, HAS_RCS_M2):
+    ACWTargetSignatureAddHAS_RCS_M2(builder, HAS_RCS_M2)
+
+def ACWTargetSignatureAddHAS_DIAMETER_M(builder, HAS_DIAMETER_M):
+    builder.PrependBoolSlot(6, HAS_DIAMETER_M, 0)
+
+def AddHAS_DIAMETER_M(builder, HAS_DIAMETER_M):
+    ACWTargetSignatureAddHAS_DIAMETER_M(builder, HAS_DIAMETER_M)
+
+def ACWTargetSignatureAddHAS_GEOMETRIC_ALBEDO(builder, HAS_GEOMETRIC_ALBEDO):
+    builder.PrependBoolSlot(7, HAS_GEOMETRIC_ALBEDO, 0)
+
+def AddHAS_GEOMETRIC_ALBEDO(builder, HAS_GEOMETRIC_ALBEDO):
+    ACWTargetSignatureAddHAS_GEOMETRIC_ALBEDO(builder, HAS_GEOMETRIC_ALBEDO)
+
+def ACWTargetSignatureAddHAS_EMITTER_FREQUENCY_HZ(builder, HAS_EMITTER_FREQUENCY_HZ):
+    builder.PrependBoolSlot(8, HAS_EMITTER_FREQUENCY_HZ, 0)
+
+def AddHAS_EMITTER_FREQUENCY_HZ(builder, HAS_EMITTER_FREQUENCY_HZ):
+    ACWTargetSignatureAddHAS_EMITTER_FREQUENCY_HZ(builder, HAS_EMITTER_FREQUENCY_HZ)
+
+def ACWTargetSignatureAddHAS_EMITTER_EIRP_DBW(builder, HAS_EMITTER_EIRP_DBW):
+    builder.PrependBoolSlot(9, HAS_EMITTER_EIRP_DBW, 0)
+
+def AddHAS_EMITTER_EIRP_DBW(builder, HAS_EMITTER_EIRP_DBW):
+    ACWTargetSignatureAddHAS_EMITTER_EIRP_DBW(builder, HAS_EMITTER_EIRP_DBW)
+
 def ACWTargetSignatureEnd(builder):
     return builder.EndObject()
 
@@ -122,12 +188,22 @@ class ACWTargetSignatureT(object):
         GEOMETRIC_ALBEDO = 0.0,
         EMITTER_FREQUENCY_HZ = 0.0,
         EMITTER_EIRP_DBW = 0.0,
+        HAS_RCS_M2 = False,
+        HAS_DIAMETER_M = False,
+        HAS_GEOMETRIC_ALBEDO = False,
+        HAS_EMITTER_FREQUENCY_HZ = False,
+        HAS_EMITTER_EIRP_DBW = False,
     ):
         self.RCS_M2 = RCS_M2  # type: float
         self.DIAMETER_M = DIAMETER_M  # type: float
         self.GEOMETRIC_ALBEDO = GEOMETRIC_ALBEDO  # type: float
         self.EMITTER_FREQUENCY_HZ = EMITTER_FREQUENCY_HZ  # type: float
         self.EMITTER_EIRP_DBW = EMITTER_EIRP_DBW  # type: float
+        self.HAS_RCS_M2 = HAS_RCS_M2  # type: bool
+        self.HAS_DIAMETER_M = HAS_DIAMETER_M  # type: bool
+        self.HAS_GEOMETRIC_ALBEDO = HAS_GEOMETRIC_ALBEDO  # type: bool
+        self.HAS_EMITTER_FREQUENCY_HZ = HAS_EMITTER_FREQUENCY_HZ  # type: bool
+        self.HAS_EMITTER_EIRP_DBW = HAS_EMITTER_EIRP_DBW  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -155,6 +231,11 @@ class ACWTargetSignatureT(object):
         self.GEOMETRIC_ALBEDO = ACWTargetSignature.GEOMETRIC_ALBEDO()
         self.EMITTER_FREQUENCY_HZ = ACWTargetSignature.EMITTER_FREQUENCY_HZ()
         self.EMITTER_EIRP_DBW = ACWTargetSignature.EMITTER_EIRP_DBW()
+        self.HAS_RCS_M2 = ACWTargetSignature.HAS_RCS_M2()
+        self.HAS_DIAMETER_M = ACWTargetSignature.HAS_DIAMETER_M()
+        self.HAS_GEOMETRIC_ALBEDO = ACWTargetSignature.HAS_GEOMETRIC_ALBEDO()
+        self.HAS_EMITTER_FREQUENCY_HZ = ACWTargetSignature.HAS_EMITTER_FREQUENCY_HZ()
+        self.HAS_EMITTER_EIRP_DBW = ACWTargetSignature.HAS_EMITTER_EIRP_DBW()
 
     # ACWTargetSignatureT
     def Pack(self, builder):
@@ -164,5 +245,10 @@ class ACWTargetSignatureT(object):
         ACWTargetSignatureAddGEOMETRIC_ALBEDO(builder, self.GEOMETRIC_ALBEDO)
         ACWTargetSignatureAddEMITTER_FREQUENCY_HZ(builder, self.EMITTER_FREQUENCY_HZ)
         ACWTargetSignatureAddEMITTER_EIRP_DBW(builder, self.EMITTER_EIRP_DBW)
+        ACWTargetSignatureAddHAS_RCS_M2(builder, self.HAS_RCS_M2)
+        ACWTargetSignatureAddHAS_DIAMETER_M(builder, self.HAS_DIAMETER_M)
+        ACWTargetSignatureAddHAS_GEOMETRIC_ALBEDO(builder, self.HAS_GEOMETRIC_ALBEDO)
+        ACWTargetSignatureAddHAS_EMITTER_FREQUENCY_HZ(builder, self.HAS_EMITTER_FREQUENCY_HZ)
+        ACWTargetSignatureAddHAS_EMITTER_EIRP_DBW(builder, self.HAS_EMITTER_EIRP_DBW)
         ACWTargetSignature = ACWTargetSignatureEnd(builder)
         return ACWTargetSignature

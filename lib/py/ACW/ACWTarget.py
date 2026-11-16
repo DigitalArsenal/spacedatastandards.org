@@ -51,7 +51,7 @@ class ACWTarget(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Truth Earth-fixed states with velocity, in the frame and time scale of
+    # Truth central-body-fixed states with velocity, in the frame and time scale of
     # ACWRequest.STATES.
     # ACWTarget
     def STATES(self, j):
@@ -89,8 +89,16 @@ class ACWTarget(object):
             return obj
         return None
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWTarget
+    def HAS_NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWTargetStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(6)
 
 def Start(builder):
     ACWTargetStart(builder)
@@ -137,6 +145,12 @@ def ACWTargetAddSIGNATURE(builder, SIGNATURE):
 def AddSIGNATURE(builder, SIGNATURE):
     ACWTargetAddSIGNATURE(builder, SIGNATURE)
 
+def ACWTargetAddHAS_NORAD_CAT_ID(builder, HAS_NORAD_CAT_ID):
+    builder.PrependBoolSlot(5, HAS_NORAD_CAT_ID, 0)
+
+def AddHAS_NORAD_CAT_ID(builder, HAS_NORAD_CAT_ID):
+    ACWTargetAddHAS_NORAD_CAT_ID(builder, HAS_NORAD_CAT_ID)
+
 def ACWTargetEnd(builder):
     return builder.EndObject()
 
@@ -160,12 +174,14 @@ class ACWTargetT(object):
         OBJECT_ID = None,
         STATES = None,
         SIGNATURE = None,
+        HAS_NORAD_CAT_ID = False,
     ):
         self.TARGET_ID = TARGET_ID  # type: Optional[str]
         self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
         self.STATES = STATES  # type: Optional[List[ACWStateSample.ACWStateSampleT]]
         self.SIGNATURE = SIGNATURE  # type: Optional[ACWTargetSignature.ACWTargetSignatureT]
+        self.HAS_NORAD_CAT_ID = HAS_NORAD_CAT_ID  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -201,6 +217,7 @@ class ACWTargetT(object):
                     self.STATES.append(aCWStateSample_)
         if ACWTarget.SIGNATURE() is not None:
             self.SIGNATURE = ACWTargetSignature.ACWTargetSignatureT.InitFromObj(ACWTarget.SIGNATURE())
+        self.HAS_NORAD_CAT_ID = ACWTarget.HAS_NORAD_CAT_ID()
 
     # ACWTargetT
     def Pack(self, builder):
@@ -228,5 +245,6 @@ class ACWTargetT(object):
             ACWTargetAddSTATES(builder, STATES)
         if self.SIGNATURE is not None:
             ACWTargetAddSIGNATURE(builder, SIGNATURE)
+        ACWTargetAddHAS_NORAD_CAT_ID(builder, self.HAS_NORAD_CAT_ID)
         ACWTarget = ACWTargetEnd(builder)
         return ACWTarget

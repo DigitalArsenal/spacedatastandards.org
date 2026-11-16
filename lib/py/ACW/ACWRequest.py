@@ -62,7 +62,7 @@ class ACWRequest(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
-    # Pre-sampled target Earth-fixed Cartesian states.
+    # Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
     # ACWRequest
     def STATES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -150,7 +150,7 @@ class ACWRequest(object):
             return obj
         return None
 
-    # Optional constraint composition. When absent the legacy behaviour holds:
+    # Optional constraint composition. When absent the station constraints apply:
     # every ground station's MIN_ELEVATION_RAD (or the override) plus
     # ELEVATION_MASK, all required.
     # ACWRequest
@@ -392,8 +392,58 @@ class ACWRequest(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWRequest
+    def HAS_OPERATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_MIN_ELEVATION_OVERRIDE_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_EVALUATION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_ROOT_TOLERANCE_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_RANDOM_SEED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_START_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRequest
+    def HAS_END_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWRequestStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(28)
 
 def Start(builder):
     ACWRequestStart(builder)
@@ -644,6 +694,48 @@ def ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
 def AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
     ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
 
+def ACWRequestAddHAS_OPERATION(builder, HAS_OPERATION):
+    builder.PrependBoolSlot(21, HAS_OPERATION, 0)
+
+def AddHAS_OPERATION(builder, HAS_OPERATION):
+    ACWRequestAddHAS_OPERATION(builder, HAS_OPERATION)
+
+def ACWRequestAddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD):
+    builder.PrependBoolSlot(22, HAS_MIN_ELEVATION_OVERRIDE_RAD, 0)
+
+def AddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD):
+    ACWRequestAddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD)
+
+def ACWRequestAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE):
+    builder.PrependBoolSlot(23, HAS_EVALUATION_MODE, 0)
+
+def AddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE):
+    ACWRequestAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE)
+
+def ACWRequestAddHAS_ROOT_TOLERANCE_S(builder, HAS_ROOT_TOLERANCE_S):
+    builder.PrependBoolSlot(24, HAS_ROOT_TOLERANCE_S, 0)
+
+def AddHAS_ROOT_TOLERANCE_S(builder, HAS_ROOT_TOLERANCE_S):
+    ACWRequestAddHAS_ROOT_TOLERANCE_S(builder, HAS_ROOT_TOLERANCE_S)
+
+def ACWRequestAddHAS_RANDOM_SEED(builder, HAS_RANDOM_SEED):
+    builder.PrependBoolSlot(25, HAS_RANDOM_SEED, 0)
+
+def AddHAS_RANDOM_SEED(builder, HAS_RANDOM_SEED):
+    ACWRequestAddHAS_RANDOM_SEED(builder, HAS_RANDOM_SEED)
+
+def ACWRequestAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(26, HAS_START_JULIAN_DATE_TT, 0)
+
+def AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    ACWRequestAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+
+def ACWRequestAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(27, HAS_END_JULIAN_DATE_TT, 0)
+
+def AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    ACWRequestAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+
 def ACWRequestEnd(builder):
     return builder.EndObject()
 
@@ -691,6 +783,13 @@ class ACWRequestT(object):
         RANDOM_SEED = 0,
         START_JULIAN_DATE_TT = 0.0,
         END_JULIAN_DATE_TT = 0.0,
+        HAS_OPERATION = False,
+        HAS_MIN_ELEVATION_OVERRIDE_RAD = False,
+        HAS_EVALUATION_MODE = False,
+        HAS_ROOT_TOLERANCE_S = False,
+        HAS_RANDOM_SEED = False,
+        HAS_START_JULIAN_DATE_TT = False,
+        HAS_END_JULIAN_DATE_TT = False,
     ):
         self.OPERATION = OPERATION  # type: int
         self.GROUND_STATIONS = GROUND_STATIONS  # type: Optional[List[ACWGroundStation.ACWGroundStationT]]
@@ -713,6 +812,13 @@ class ACWRequestT(object):
         self.RANDOM_SEED = RANDOM_SEED  # type: int
         self.START_JULIAN_DATE_TT = START_JULIAN_DATE_TT  # type: float
         self.END_JULIAN_DATE_TT = END_JULIAN_DATE_TT  # type: float
+        self.HAS_OPERATION = HAS_OPERATION  # type: bool
+        self.HAS_MIN_ELEVATION_OVERRIDE_RAD = HAS_MIN_ELEVATION_OVERRIDE_RAD  # type: bool
+        self.HAS_EVALUATION_MODE = HAS_EVALUATION_MODE  # type: bool
+        self.HAS_ROOT_TOLERANCE_S = HAS_ROOT_TOLERANCE_S  # type: bool
+        self.HAS_RANDOM_SEED = HAS_RANDOM_SEED  # type: bool
+        self.HAS_START_JULIAN_DATE_TT = HAS_START_JULIAN_DATE_TT  # type: bool
+        self.HAS_END_JULIAN_DATE_TT = HAS_END_JULIAN_DATE_TT  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -828,6 +934,13 @@ class ACWRequestT(object):
         self.RANDOM_SEED = ACWRequest.RANDOM_SEED()
         self.START_JULIAN_DATE_TT = ACWRequest.START_JULIAN_DATE_TT()
         self.END_JULIAN_DATE_TT = ACWRequest.END_JULIAN_DATE_TT()
+        self.HAS_OPERATION = ACWRequest.HAS_OPERATION()
+        self.HAS_MIN_ELEVATION_OVERRIDE_RAD = ACWRequest.HAS_MIN_ELEVATION_OVERRIDE_RAD()
+        self.HAS_EVALUATION_MODE = ACWRequest.HAS_EVALUATION_MODE()
+        self.HAS_ROOT_TOLERANCE_S = ACWRequest.HAS_ROOT_TOLERANCE_S()
+        self.HAS_RANDOM_SEED = ACWRequest.HAS_RANDOM_SEED()
+        self.HAS_START_JULIAN_DATE_TT = ACWRequest.HAS_START_JULIAN_DATE_TT()
+        self.HAS_END_JULIAN_DATE_TT = ACWRequest.HAS_END_JULIAN_DATE_TT()
 
     # ACWRequestT
     def Pack(self, builder):
@@ -955,5 +1068,12 @@ class ACWRequestT(object):
         ACWRequestAddRANDOM_SEED(builder, self.RANDOM_SEED)
         ACWRequestAddSTART_JULIAN_DATE_TT(builder, self.START_JULIAN_DATE_TT)
         ACWRequestAddEND_JULIAN_DATE_TT(builder, self.END_JULIAN_DATE_TT)
+        ACWRequestAddHAS_OPERATION(builder, self.HAS_OPERATION)
+        ACWRequestAddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, self.HAS_MIN_ELEVATION_OVERRIDE_RAD)
+        ACWRequestAddHAS_EVALUATION_MODE(builder, self.HAS_EVALUATION_MODE)
+        ACWRequestAddHAS_ROOT_TOLERANCE_S(builder, self.HAS_ROOT_TOLERANCE_S)
+        ACWRequestAddHAS_RANDOM_SEED(builder, self.HAS_RANDOM_SEED)
+        ACWRequestAddHAS_START_JULIAN_DATE_TT(builder, self.HAS_START_JULIAN_DATE_TT)
+        ACWRequestAddHAS_END_JULIAN_DATE_TT(builder, self.HAS_END_JULIAN_DATE_TT)
         ACWRequest = ACWRequestEnd(builder)
         return ACWRequest

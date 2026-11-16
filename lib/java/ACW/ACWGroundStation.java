@@ -42,11 +42,15 @@ public final class ACWGroundStation extends com.google.flatbuffers.Table {
    */
   public double LONGITUDE_RAD() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Height above the WGS-84 ellipsoid, meters.
+   * Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+   * docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+   * finite segment blocks; tangent contact is clear. At height <= 0, including
+   * zero, use the supporting plane, without an own-ellipsoid intersection test.
+   * The user elevation mask and supplied terrain apply separately at all heights.
    */
   public double ALTITUDE_M() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Default minimum visible elevation, radians.
+   * Explicit minimum visible elevation, radians; HAS flag required.
    */
   public double MIN_ELEVATION_RAD() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -61,6 +65,14 @@ public final class ACWGroundStation extends com.google.flatbuffers.Table {
   public int BLACKOUT_WINDOWSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public ACWBlackoutWindow.Vector blackoutWindowsVector() { return blackoutWindowsVector(new ACWBlackoutWindow.Vector()); }
   public ACWBlackoutWindow.Vector blackoutWindowsVector(ACWBlackoutWindow.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_LATITUDE_RAD() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_LONGITUDE_RAD() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_ALTITUDE_M() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MIN_ELEVATION_RAD() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_CHANNEL_CAPACITY() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWGroundStation(FlatBufferBuilder builder,
       int STATION_IDOffset,
@@ -70,8 +82,13 @@ public final class ACWGroundStation extends com.google.flatbuffers.Table {
       double ALTITUDE_M,
       double MIN_ELEVATION_RAD,
       long CHANNEL_CAPACITY,
-      int BLACKOUT_WINDOWSOffset) {
-    builder.startTable(8);
+      int BLACKOUT_WINDOWSOffset,
+      boolean HAS_LATITUDE_RAD,
+      boolean HAS_LONGITUDE_RAD,
+      boolean HAS_ALTITUDE_M,
+      boolean HAS_MIN_ELEVATION_RAD,
+      boolean HAS_CHANNEL_CAPACITY) {
+    builder.startTable(13);
     ACWGroundStation.addMinElevationRad(builder, MIN_ELEVATION_RAD);
     ACWGroundStation.addAltitudeM(builder, ALTITUDE_M);
     ACWGroundStation.addLongitudeRad(builder, LONGITUDE_RAD);
@@ -80,10 +97,15 @@ public final class ACWGroundStation extends com.google.flatbuffers.Table {
     ACWGroundStation.addChannelCapacity(builder, CHANNEL_CAPACITY);
     ACWGroundStation.addName(builder, NAMEOffset);
     ACWGroundStation.addStationId(builder, STATION_IDOffset);
+    ACWGroundStation.addHasChannelCapacity(builder, HAS_CHANNEL_CAPACITY);
+    ACWGroundStation.addHasMinElevationRad(builder, HAS_MIN_ELEVATION_RAD);
+    ACWGroundStation.addHasAltitudeM(builder, HAS_ALTITUDE_M);
+    ACWGroundStation.addHasLongitudeRad(builder, HAS_LONGITUDE_RAD);
+    ACWGroundStation.addHasLatitudeRad(builder, HAS_LATITUDE_RAD);
     return ACWGroundStation.endACWGroundStation(builder);
   }
 
-  public static void startACWGroundStation(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startACWGroundStation(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addStationId(FlatBufferBuilder builder, int STATION_IDOffset) { builder.addOffset(0, STATION_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addLatitudeRad(FlatBufferBuilder builder, double LATITUDE_RAD) { builder.addDouble(2, LATITUDE_RAD, 0.0); }
@@ -94,6 +116,11 @@ public final class ACWGroundStation extends com.google.flatbuffers.Table {
   public static void addBlackoutWindows(FlatBufferBuilder builder, int BLACKOUT_WINDOWSOffset) { builder.addOffset(7, BLACKOUT_WINDOWSOffset, 0); }
   public static int createBlackoutWindowsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startBlackoutWindowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addHasLatitudeRad(FlatBufferBuilder builder, boolean HAS_LATITUDE_RAD) { builder.addBoolean(8, HAS_LATITUDE_RAD, false); }
+  public static void addHasLongitudeRad(FlatBufferBuilder builder, boolean HAS_LONGITUDE_RAD) { builder.addBoolean(9, HAS_LONGITUDE_RAD, false); }
+  public static void addHasAltitudeM(FlatBufferBuilder builder, boolean HAS_ALTITUDE_M) { builder.addBoolean(10, HAS_ALTITUDE_M, false); }
+  public static void addHasMinElevationRad(FlatBufferBuilder builder, boolean HAS_MIN_ELEVATION_RAD) { builder.addBoolean(11, HAS_MIN_ELEVATION_RAD, false); }
+  public static void addHasChannelCapacity(FlatBufferBuilder builder, boolean HAS_CHANNEL_CAPACITY) { builder.addBoolean(12, HAS_CHANNEL_CAPACITY, false); }
   public static int endACWGroundStation(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

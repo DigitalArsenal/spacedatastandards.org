@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 class ACWStateSample extends Table
 {
     /**
@@ -51,7 +51,7 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Earth-fixed X position, meters.
+    /// Fixed-frame X position, meters.
     /**
      * @return double
      */
@@ -61,7 +61,7 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Earth-fixed Y position, meters.
+    /// Fixed-frame Y position, meters.
     /**
      * @return double
      */
@@ -71,7 +71,7 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Earth-fixed Z position, meters.
+    /// Fixed-frame Z position, meters.
     /**
      * @return double
      */
@@ -81,7 +81,7 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Earth-fixed velocity, meters per second. Required for range-rate,
+    /// Fixed-frame velocity, meters per second. Required for range-rate,
     /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
     /**
      * @return double
@@ -110,22 +110,86 @@ class ACWStateSample extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_POSITION_X_M()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_POSITION_Y_M()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_POSITION_Z_M()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_VELOCITY_X_MPS()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_VELOCITY_Y_MPS()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_VELOCITY_Z_MPS()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWStateSample(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWStateSample
      */
-    public static function createACWStateSample(FlatBufferBuilder $builder, $JULIAN_DATE_TT, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M, $VELOCITY_X_MPS, $VELOCITY_Y_MPS, $VELOCITY_Z_MPS)
+    public static function createACWStateSample(FlatBufferBuilder $builder, $JULIAN_DATE_TT, $POSITION_X_M, $POSITION_Y_M, $POSITION_Z_M, $VELOCITY_X_MPS, $VELOCITY_Y_MPS, $VELOCITY_Z_MPS, $HAS_JULIAN_DATE_TT, $HAS_POSITION_X_M, $HAS_POSITION_Y_M, $HAS_POSITION_Z_M, $HAS_VELOCITY_X_MPS, $HAS_VELOCITY_Y_MPS, $HAS_VELOCITY_Z_MPS)
     {
-        $builder->startObject(7);
+        $builder->startObject(14);
         self::addJULIAN_DATE_TT($builder, $JULIAN_DATE_TT);
         self::addPOSITION_X_M($builder, $POSITION_X_M);
         self::addPOSITION_Y_M($builder, $POSITION_Y_M);
@@ -133,6 +197,13 @@ class ACWStateSample extends Table
         self::addVELOCITY_X_MPS($builder, $VELOCITY_X_MPS);
         self::addVELOCITY_Y_MPS($builder, $VELOCITY_Y_MPS);
         self::addVELOCITY_Z_MPS($builder, $VELOCITY_Z_MPS);
+        self::addHAS_JULIAN_DATE_TT($builder, $HAS_JULIAN_DATE_TT);
+        self::addHAS_POSITION_X_M($builder, $HAS_POSITION_X_M);
+        self::addHAS_POSITION_Y_M($builder, $HAS_POSITION_Y_M);
+        self::addHAS_POSITION_Z_M($builder, $HAS_POSITION_Z_M);
+        self::addHAS_VELOCITY_X_MPS($builder, $HAS_VELOCITY_X_MPS);
+        self::addHAS_VELOCITY_Y_MPS($builder, $HAS_VELOCITY_Y_MPS);
+        self::addHAS_VELOCITY_Z_MPS($builder, $HAS_VELOCITY_Z_MPS);
         $o = $builder->endObject();
         return $o;
     }
@@ -205,6 +276,76 @@ class ACWStateSample extends Table
     public static function addVELOCITY_Z_MPS(FlatBufferBuilder $builder, $VELOCITY_Z_MPS)
     {
         $builder->addDoubleX(6, $VELOCITY_Z_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(7, $HAS_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_POSITION_X_M(FlatBufferBuilder $builder, $HAS_POSITION_X_M)
+    {
+        $builder->addBoolX(8, $HAS_POSITION_X_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_POSITION_Y_M(FlatBufferBuilder $builder, $HAS_POSITION_Y_M)
+    {
+        $builder->addBoolX(9, $HAS_POSITION_Y_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_POSITION_Z_M(FlatBufferBuilder $builder, $HAS_POSITION_Z_M)
+    {
+        $builder->addBoolX(10, $HAS_POSITION_Z_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_VELOCITY_X_MPS(FlatBufferBuilder $builder, $HAS_VELOCITY_X_MPS)
+    {
+        $builder->addBoolX(11, $HAS_VELOCITY_X_MPS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_VELOCITY_Y_MPS(FlatBufferBuilder $builder, $HAS_VELOCITY_Y_MPS)
+    {
+        $builder->addBoolX(12, $HAS_VELOCITY_Y_MPS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_VELOCITY_Z_MPS(FlatBufferBuilder $builder, $HAS_VELOCITY_Z_MPS)
+    {
+        $builder->addBoolX(13, $HAS_VELOCITY_Z_MPS, false);
     }
 
     /**

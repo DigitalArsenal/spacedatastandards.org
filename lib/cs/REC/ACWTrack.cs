@@ -46,6 +46,11 @@ public struct ACWTrack : IFlatbufferObject
   public ArraySegment<byte>? GetLOSS_REASONBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetLOSS_REASONArray() { return __p.__vector_as_array<byte>(16); }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_START_JULIAN_DATE_TT { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_END_JULIAN_DATE_TT { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_SCHEDULED_COUNT { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_DETECTED_COUNT { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWTrack> CreateACWTrack(FlatBufferBuilder builder,
       StringOffset SENSOR_IDOffset = default(StringOffset),
@@ -54,8 +59,12 @@ public struct ACWTrack : IFlatbufferObject
       double END_JULIAN_DATE_TT = 0.0,
       uint SCHEDULED_COUNT = 0,
       uint DETECTED_COUNT = 0,
-      StringOffset LOSS_REASONOffset = default(StringOffset)) {
-    builder.StartTable(7);
+      StringOffset LOSS_REASONOffset = default(StringOffset),
+      bool HAS_START_JULIAN_DATE_TT = false,
+      bool HAS_END_JULIAN_DATE_TT = false,
+      bool HAS_SCHEDULED_COUNT = false,
+      bool HAS_DETECTED_COUNT = false) {
+    builder.StartTable(11);
     ACWTrack.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
     ACWTrack.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
     ACWTrack.AddLOSS_REASON(builder, LOSS_REASONOffset);
@@ -63,10 +72,14 @@ public struct ACWTrack : IFlatbufferObject
     ACWTrack.AddSCHEDULED_COUNT(builder, SCHEDULED_COUNT);
     ACWTrack.AddTARGET_ID(builder, TARGET_IDOffset);
     ACWTrack.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    ACWTrack.AddHAS_DETECTED_COUNT(builder, HAS_DETECTED_COUNT);
+    ACWTrack.AddHAS_SCHEDULED_COUNT(builder, HAS_SCHEDULED_COUNT);
+    ACWTrack.AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT);
+    ACWTrack.AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT);
     return ACWTrack.EndACWTrack(builder);
   }
 
-  public static void StartACWTrack(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartACWTrack(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(0, SENSOR_IDOffset.Value, 0); }
   public static void AddTARGET_ID(FlatBufferBuilder builder, StringOffset TARGET_IDOffset) { builder.AddOffset(1, TARGET_IDOffset.Value, 0); }
   public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(2, START_JULIAN_DATE_TT, 0.0); }
@@ -74,6 +87,10 @@ public struct ACWTrack : IFlatbufferObject
   public static void AddSCHEDULED_COUNT(FlatBufferBuilder builder, uint SCHEDULED_COUNT) { builder.AddUint(4, SCHEDULED_COUNT, 0); }
   public static void AddDETECTED_COUNT(FlatBufferBuilder builder, uint DETECTED_COUNT) { builder.AddUint(5, DETECTED_COUNT, 0); }
   public static void AddLOSS_REASON(FlatBufferBuilder builder, StringOffset LOSS_REASONOffset) { builder.AddOffset(6, LOSS_REASONOffset.Value, 0); }
+  public static void AddHAS_START_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_START_JULIAN_DATE_TT) { builder.AddBool(7, HAS_START_JULIAN_DATE_TT, false); }
+  public static void AddHAS_END_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_END_JULIAN_DATE_TT) { builder.AddBool(8, HAS_END_JULIAN_DATE_TT, false); }
+  public static void AddHAS_SCHEDULED_COUNT(FlatBufferBuilder builder, bool HAS_SCHEDULED_COUNT) { builder.AddBool(9, HAS_SCHEDULED_COUNT, false); }
+  public static void AddHAS_DETECTED_COUNT(FlatBufferBuilder builder, bool HAS_DETECTED_COUNT) { builder.AddBool(10, HAS_DETECTED_COUNT, false); }
   public static Offset<ACWTrack> EndACWTrack(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWTrack>(o);
@@ -91,6 +108,10 @@ public struct ACWTrack : IFlatbufferObject
     _o.SCHEDULED_COUNT = this.SCHEDULED_COUNT;
     _o.DETECTED_COUNT = this.DETECTED_COUNT;
     _o.LOSS_REASON = this.LOSS_REASON;
+    _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT;
+    _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT;
+    _o.HAS_SCHEDULED_COUNT = this.HAS_SCHEDULED_COUNT;
+    _o.HAS_DETECTED_COUNT = this.HAS_DETECTED_COUNT;
   }
   public static Offset<ACWTrack> Pack(FlatBufferBuilder builder, ACWTrackT _o) {
     if (_o == null) return default(Offset<ACWTrack>);
@@ -105,7 +126,11 @@ public struct ACWTrack : IFlatbufferObject
       _o.END_JULIAN_DATE_TT,
       _o.SCHEDULED_COUNT,
       _o.DETECTED_COUNT,
-      _LOSS_REASON);
+      _LOSS_REASON,
+      _o.HAS_START_JULIAN_DATE_TT,
+      _o.HAS_END_JULIAN_DATE_TT,
+      _o.HAS_SCHEDULED_COUNT,
+      _o.HAS_DETECTED_COUNT);
   }
 }
 
@@ -118,6 +143,10 @@ public class ACWTrackT
   public uint SCHEDULED_COUNT { get; set; }
   public uint DETECTED_COUNT { get; set; }
   public string LOSS_REASON { get; set; }
+  public bool HAS_START_JULIAN_DATE_TT { get; set; }
+  public bool HAS_END_JULIAN_DATE_TT { get; set; }
+  public bool HAS_SCHEDULED_COUNT { get; set; }
+  public bool HAS_DETECTED_COUNT { get; set; }
 
   public ACWTrackT() {
     this.SENSOR_ID = null;
@@ -127,6 +156,10 @@ public class ACWTrackT
     this.SCHEDULED_COUNT = 0;
     this.DETECTED_COUNT = 0;
     this.LOSS_REASON = null;
+    this.HAS_START_JULIAN_DATE_TT = false;
+    this.HAS_END_JULIAN_DATE_TT = false;
+    this.HAS_SCHEDULED_COUNT = false;
+    this.HAS_DETECTED_COUNT = false;
   }
 }
 
@@ -143,6 +176,10 @@ static public class ACWTrackVerify
       && verifier.VerifyField(tablePos, 12 /*SCHEDULED_COUNT*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 14 /*DETECTED_COUNT*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 16 /*LOSS_REASON*/, false)
+      && verifier.VerifyField(tablePos, 18 /*HAS_START_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*HAS_END_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*HAS_SCHEDULED_COUNT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*HAS_DETECTED_COUNT*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

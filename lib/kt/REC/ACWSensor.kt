@@ -109,7 +109,7 @@ class ACWSensor : Table() {
         }
     /**
      * Shortest time between the end of one track of a target and the start
-     * of the next, seconds.
+     * of the following, seconds.
      */
     val revisitIntervalS : Double
         get() {
@@ -201,6 +201,84 @@ class ACWSensor : Table() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasPhenomenology : Boolean
+        get() {
+            val o = __offset(42)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasObservationIntervalS : Boolean
+        get() {
+            val o = __offset(44)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasTrackDurationS : Boolean
+        get() {
+            val o = __offset(46)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasRevisitIntervalS : Boolean
+        get() {
+            val o = __offset(48)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMaxSimultaneousTracks : Boolean
+        get() {
+            val o = __offset(50)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasReferenceSnrDb : Boolean
+        get() {
+            val o = __offset(52)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasReferenceRangeM : Boolean
+        get() {
+            val o = __offset(54)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasReferenceRcsM2 : Boolean
+        get() {
+            val o = __offset(56)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasDetectionThresholdDb : Boolean
+        get() {
+            val o = __offset(58)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasReceiverGOverTDbPerK : Boolean
+        get() {
+            val o = __offset(60)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasReceiverBandwidthHz : Boolean
+        get() {
+            val o = __offset(62)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasLimitingMagnitude : Boolean
+        get() {
+            val o = __offset(64)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMaxHostSunElevationRad : Boolean
+        get() {
+            val o = __offset(66)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasFalseAlarmRatePerHour : Boolean
+        get() {
+            val o = __offset(68)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasTransmitFrequencyHz : Boolean
+        get() {
+            val o = __offset(70)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWSensor(_bb: ByteBuffer): ACWSensor = getRootAsACWSensor(_bb, ACWSensor())
@@ -208,8 +286,8 @@ class ACWSensor : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWSensor(builder: FlatBufferBuilder, sensorIdOffset: Int, hostIdOffset: Int, phenomenology: UByte, errorModelsOffset: Int, constraintsOffset: Int, observationIntervalS: Double, trackDurationS: Double, revisitIntervalS: Double, maxSimultaneousTracks: UInt, referenceSnrDb: Double, referenceRangeM: Double, referenceRcsM2: Double, detectionThresholdDb: Double, receiverGOverTDbPerK: Double, receiverBandwidthHz: Double, limitingMagnitude: Double, maxHostSunElevationRad: Double, falseAlarmRatePerHour: Double, transmitFrequencyHz: Double) : Int {
-            builder.startTable(19)
+        fun createACWSensor(builder: FlatBufferBuilder, sensorIdOffset: Int, hostIdOffset: Int, phenomenology: UByte, errorModelsOffset: Int, constraintsOffset: Int, observationIntervalS: Double, trackDurationS: Double, revisitIntervalS: Double, maxSimultaneousTracks: UInt, referenceSnrDb: Double, referenceRangeM: Double, referenceRcsM2: Double, detectionThresholdDb: Double, receiverGOverTDbPerK: Double, receiverBandwidthHz: Double, limitingMagnitude: Double, maxHostSunElevationRad: Double, falseAlarmRatePerHour: Double, transmitFrequencyHz: Double, hasPhenomenology: Boolean, hasObservationIntervalS: Boolean, hasTrackDurationS: Boolean, hasRevisitIntervalS: Boolean, hasMaxSimultaneousTracks: Boolean, hasReferenceSnrDb: Boolean, hasReferenceRangeM: Boolean, hasReferenceRcsM2: Boolean, hasDetectionThresholdDb: Boolean, hasReceiverGOverTDbPerK: Boolean, hasReceiverBandwidthHz: Boolean, hasLimitingMagnitude: Boolean, hasMaxHostSunElevationRad: Boolean, hasFalseAlarmRatePerHour: Boolean, hasTransmitFrequencyHz: Boolean) : Int {
+            builder.startTable(34)
             addTRANSMITFREQUENCYHZ(builder, transmitFrequencyHz)
             addFALSEALARMRATEPERHOUR(builder, falseAlarmRatePerHour)
             addMAXHOSTSUNELEVATIONRAD(builder, maxHostSunElevationRad)
@@ -228,10 +306,25 @@ class ACWSensor : Table() {
             addERRORMODELS(builder, errorModelsOffset)
             addHOSTID(builder, hostIdOffset)
             addSENSORID(builder, sensorIdOffset)
+            addHASTRANSMITFREQUENCYHZ(builder, hasTransmitFrequencyHz)
+            addHASFALSEALARMRATEPERHOUR(builder, hasFalseAlarmRatePerHour)
+            addHASMAXHOSTSUNELEVATIONRAD(builder, hasMaxHostSunElevationRad)
+            addHASLIMITINGMAGNITUDE(builder, hasLimitingMagnitude)
+            addHASRECEIVERBANDWIDTHHZ(builder, hasReceiverBandwidthHz)
+            addHASRECEIVERGOVERTDBPERK(builder, hasReceiverGOverTDbPerK)
+            addHASDETECTIONTHRESHOLDDB(builder, hasDetectionThresholdDb)
+            addHASREFERENCERCSM2(builder, hasReferenceRcsM2)
+            addHASREFERENCERANGEM(builder, hasReferenceRangeM)
+            addHASREFERENCESNRDB(builder, hasReferenceSnrDb)
+            addHASMAXSIMULTANEOUSTRACKS(builder, hasMaxSimultaneousTracks)
+            addHASREVISITINTERVALS(builder, hasRevisitIntervalS)
+            addHASTRACKDURATIONS(builder, hasTrackDurationS)
+            addHASOBSERVATIONINTERVALS(builder, hasObservationIntervalS)
+            addHASPHENOMENOLOGY(builder, hasPhenomenology)
             addPHENOMENOLOGY(builder, phenomenology)
             return endACWSensor(builder)
         }
-        fun startACWSensor(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startACWSensor(builder: FlatBufferBuilder) = builder.startTable(34)
         fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(0, sensorId, 0)
         fun addHOSTID(builder: FlatBufferBuilder, hostId: Int) = builder.addOffset(1, hostId, 0)
         fun addPHENOMENOLOGY(builder: FlatBufferBuilder, phenomenology: UByte) = builder.addByte(2, phenomenology.toByte(), 0)
@@ -259,6 +352,21 @@ class ACWSensor : Table() {
         fun addMAXHOSTSUNELEVATIONRAD(builder: FlatBufferBuilder, maxHostSunElevationRad: Double) = builder.addDouble(16, maxHostSunElevationRad, 0.0)
         fun addFALSEALARMRATEPERHOUR(builder: FlatBufferBuilder, falseAlarmRatePerHour: Double) = builder.addDouble(17, falseAlarmRatePerHour, 0.0)
         fun addTRANSMITFREQUENCYHZ(builder: FlatBufferBuilder, transmitFrequencyHz: Double) = builder.addDouble(18, transmitFrequencyHz, 0.0)
+        fun addHASPHENOMENOLOGY(builder: FlatBufferBuilder, hasPhenomenology: Boolean) = builder.addBoolean(19, hasPhenomenology, false)
+        fun addHASOBSERVATIONINTERVALS(builder: FlatBufferBuilder, hasObservationIntervalS: Boolean) = builder.addBoolean(20, hasObservationIntervalS, false)
+        fun addHASTRACKDURATIONS(builder: FlatBufferBuilder, hasTrackDurationS: Boolean) = builder.addBoolean(21, hasTrackDurationS, false)
+        fun addHASREVISITINTERVALS(builder: FlatBufferBuilder, hasRevisitIntervalS: Boolean) = builder.addBoolean(22, hasRevisitIntervalS, false)
+        fun addHASMAXSIMULTANEOUSTRACKS(builder: FlatBufferBuilder, hasMaxSimultaneousTracks: Boolean) = builder.addBoolean(23, hasMaxSimultaneousTracks, false)
+        fun addHASREFERENCESNRDB(builder: FlatBufferBuilder, hasReferenceSnrDb: Boolean) = builder.addBoolean(24, hasReferenceSnrDb, false)
+        fun addHASREFERENCERANGEM(builder: FlatBufferBuilder, hasReferenceRangeM: Boolean) = builder.addBoolean(25, hasReferenceRangeM, false)
+        fun addHASREFERENCERCSM2(builder: FlatBufferBuilder, hasReferenceRcsM2: Boolean) = builder.addBoolean(26, hasReferenceRcsM2, false)
+        fun addHASDETECTIONTHRESHOLDDB(builder: FlatBufferBuilder, hasDetectionThresholdDb: Boolean) = builder.addBoolean(27, hasDetectionThresholdDb, false)
+        fun addHASRECEIVERGOVERTDBPERK(builder: FlatBufferBuilder, hasReceiverGOverTDbPerK: Boolean) = builder.addBoolean(28, hasReceiverGOverTDbPerK, false)
+        fun addHASRECEIVERBANDWIDTHHZ(builder: FlatBufferBuilder, hasReceiverBandwidthHz: Boolean) = builder.addBoolean(29, hasReceiverBandwidthHz, false)
+        fun addHASLIMITINGMAGNITUDE(builder: FlatBufferBuilder, hasLimitingMagnitude: Boolean) = builder.addBoolean(30, hasLimitingMagnitude, false)
+        fun addHASMAXHOSTSUNELEVATIONRAD(builder: FlatBufferBuilder, hasMaxHostSunElevationRad: Boolean) = builder.addBoolean(31, hasMaxHostSunElevationRad, false)
+        fun addHASFALSEALARMRATEPERHOUR(builder: FlatBufferBuilder, hasFalseAlarmRatePerHour: Boolean) = builder.addBoolean(32, hasFalseAlarmRatePerHour, false)
+        fun addHASTRANSMITFREQUENCYHZ(builder: FlatBufferBuilder, hasTransmitFrequencyHz: Boolean) = builder.addBoolean(33, hasTransmitFrequencyHz, false)
         fun endACWSensor(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

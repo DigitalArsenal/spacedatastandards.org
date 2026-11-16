@@ -32,19 +32,33 @@ public final class ACW extends com.google.flatbuffers.Table {
   public ACWRequest REQUEST(ACWRequest obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public ACWResult RESULT() { return RESULT(new ACWResult()); }
   public ACWResult RESULT(ACWResult obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Appended slot 2. Mandatory in every new request and successful result.
+   * Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+   * these codes. Missing body fails acw-body-required; absence never means
+   * Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+   * Result must echo the exact descriptor field values, including optional
+   * presence; requester rejects a missing/different echo. Raw table offsets
+   * are not identity. Explicit one-time archive conversion is outside runtime.
+   */
+  public BodyDescriptor CENTRAL_BODY() { return CENTRAL_BODY(new BodyDescriptor()); }
+  public BodyDescriptor CENTRAL_BODY(BodyDescriptor obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createACW(FlatBufferBuilder builder,
       int REQUESTOffset,
-      int RESULTOffset) {
-    builder.startTable(2);
+      int RESULTOffset,
+      int CENTRAL_BODYOffset) {
+    builder.startTable(3);
+    ACW.addCentralBody(builder, CENTRAL_BODYOffset);
     ACW.addResult(builder, RESULTOffset);
     ACW.addRequest(builder, REQUESTOffset);
     return ACW.endACW(builder);
   }
 
-  public static void startACW(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startACW(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addRequest(FlatBufferBuilder builder, int REQUESTOffset) { builder.addOffset(0, REQUESTOffset, 0); }
   public static void addResult(FlatBufferBuilder builder, int RESULTOffset) { builder.addOffset(1, RESULTOffset, 0); }
+  public static void addCentralBody(FlatBufferBuilder builder, int CENTRAL_BODYOffset) { builder.addOffset(2, CENTRAL_BODYOffset, 0); }
   public static int endACW(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

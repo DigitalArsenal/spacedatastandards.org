@@ -21,7 +21,7 @@ public struct ACWRequest : IFlatbufferObject
   /// Candidate ground stations.
   public ACWGroundStation? GROUND_STATIONS(int j) { int o = __p.__offset(6); return o != 0 ? (ACWGroundStation?)(new ACWGroundStation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GROUND_STATIONSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Pre-sampled target Earth-fixed Cartesian states.
+  /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
   public ACWStateSample? STATES(int j) { int o = __p.__offset(8); return o != 0 ? (ACWStateSample?)(new ACWStateSample()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int STATESLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Optional target station id. Empty means all stations when supported.
@@ -47,7 +47,7 @@ public struct ACWRequest : IFlatbufferObject
   public int ELEVATION_MASKLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Optional apparent-elevation refraction model.
   public ACWRefractionModel? REFRACTION_MODEL { get { int o = __p.__offset(18); return o != 0 ? (ACWRefractionModel?)(new ACWRefractionModel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// Optional constraint composition. When absent the station constraints apply:
   /// every ground station's MIN_ELEVATION_RAD (or the override) plus
   /// ELEVATION_MASK, all required.
   public ACWConstraintSet? CONSTRAINTS { get { int o = __p.__offset(20); return o != 0 ? (ACWConstraintSet?)(new ACWConstraintSet()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -88,6 +88,14 @@ public struct ACWRequest : IFlatbufferObject
   /// states.
   public double START_JULIAN_DATE_TT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double END_JULIAN_DATE_TT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_OPERATION { get { int o = __p.__offset(46); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MIN_ELEVATION_OVERRIDE_RAD { get { int o = __p.__offset(48); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_EVALUATION_MODE { get { int o = __p.__offset(50); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_ROOT_TOLERANCE_S { get { int o = __p.__offset(52); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_RANDOM_SEED { get { int o = __p.__offset(54); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_START_JULIAN_DATE_TT { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_END_JULIAN_DATE_TT { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWRequest> CreateACWRequest(FlatBufferBuilder builder,
       acwOperationCode OPERATION = acwOperationCode.UNKNOWN,
@@ -110,8 +118,15 @@ public struct ACWRequest : IFlatbufferObject
       VectorOffset EARTH_ORIENTATIONOffset = default(VectorOffset),
       ulong RANDOM_SEED = 0,
       double START_JULIAN_DATE_TT = 0.0,
-      double END_JULIAN_DATE_TT = 0.0) {
-    builder.StartTable(21);
+      double END_JULIAN_DATE_TT = 0.0,
+      bool HAS_OPERATION = false,
+      bool HAS_MIN_ELEVATION_OVERRIDE_RAD = false,
+      bool HAS_EVALUATION_MODE = false,
+      bool HAS_ROOT_TOLERANCE_S = false,
+      bool HAS_RANDOM_SEED = false,
+      bool HAS_START_JULIAN_DATE_TT = false,
+      bool HAS_END_JULIAN_DATE_TT = false) {
+    builder.StartTable(28);
     ACWRequest.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
     ACWRequest.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
     ACWRequest.AddRANDOM_SEED(builder, RANDOM_SEED);
@@ -131,12 +146,19 @@ public struct ACWRequest : IFlatbufferObject
     ACWRequest.AddTARGET_STATION_ID(builder, TARGET_STATION_IDOffset);
     ACWRequest.AddSTATES(builder, STATESOffset);
     ACWRequest.AddGROUND_STATIONS(builder, GROUND_STATIONSOffset);
+    ACWRequest.AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT);
+    ACWRequest.AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT);
+    ACWRequest.AddHAS_RANDOM_SEED(builder, HAS_RANDOM_SEED);
+    ACWRequest.AddHAS_ROOT_TOLERANCE_S(builder, HAS_ROOT_TOLERANCE_S);
+    ACWRequest.AddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE);
+    ACWRequest.AddHAS_MIN_ELEVATION_OVERRIDE_RAD(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.AddHAS_OPERATION(builder, HAS_OPERATION);
     ACWRequest.AddEVALUATION_MODE(builder, EVALUATION_MODE);
     ACWRequest.AddOPERATION(builder, OPERATION);
     return ACWRequest.EndACWRequest(builder);
   }
 
-  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(28); }
   public static void AddOPERATION(FlatBufferBuilder builder, acwOperationCode OPERATION) { builder.AddSbyte(0, (sbyte)OPERATION, 0); }
   public static void AddGROUND_STATIONS(FlatBufferBuilder builder, VectorOffset GROUND_STATIONSOffset) { builder.AddOffset(1, GROUND_STATIONSOffset.Value, 0); }
   public static VectorOffset CreateGROUND_STATIONSVector(FlatBufferBuilder builder, Offset<ACWGroundStation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -208,6 +230,13 @@ public struct ACWRequest : IFlatbufferObject
   public static void AddRANDOM_SEED(FlatBufferBuilder builder, ulong RANDOM_SEED) { builder.AddUlong(18, RANDOM_SEED, 0); }
   public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(19, START_JULIAN_DATE_TT, 0.0); }
   public static void AddEND_JULIAN_DATE_TT(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.AddDouble(20, END_JULIAN_DATE_TT, 0.0); }
+  public static void AddHAS_OPERATION(FlatBufferBuilder builder, bool HAS_OPERATION) { builder.AddBool(21, HAS_OPERATION, false); }
+  public static void AddHAS_MIN_ELEVATION_OVERRIDE_RAD(FlatBufferBuilder builder, bool HAS_MIN_ELEVATION_OVERRIDE_RAD) { builder.AddBool(22, HAS_MIN_ELEVATION_OVERRIDE_RAD, false); }
+  public static void AddHAS_EVALUATION_MODE(FlatBufferBuilder builder, bool HAS_EVALUATION_MODE) { builder.AddBool(23, HAS_EVALUATION_MODE, false); }
+  public static void AddHAS_ROOT_TOLERANCE_S(FlatBufferBuilder builder, bool HAS_ROOT_TOLERANCE_S) { builder.AddBool(24, HAS_ROOT_TOLERANCE_S, false); }
+  public static void AddHAS_RANDOM_SEED(FlatBufferBuilder builder, bool HAS_RANDOM_SEED) { builder.AddBool(25, HAS_RANDOM_SEED, false); }
+  public static void AddHAS_START_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_START_JULIAN_DATE_TT) { builder.AddBool(26, HAS_START_JULIAN_DATE_TT, false); }
+  public static void AddHAS_END_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_END_JULIAN_DATE_TT) { builder.AddBool(27, HAS_END_JULIAN_DATE_TT, false); }
   public static Offset<ACWRequest> EndACWRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWRequest>(o);
@@ -249,6 +278,13 @@ public struct ACWRequest : IFlatbufferObject
     _o.RANDOM_SEED = this.RANDOM_SEED;
     _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT;
     _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT;
+    _o.HAS_OPERATION = this.HAS_OPERATION;
+    _o.HAS_MIN_ELEVATION_OVERRIDE_RAD = this.HAS_MIN_ELEVATION_OVERRIDE_RAD;
+    _o.HAS_EVALUATION_MODE = this.HAS_EVALUATION_MODE;
+    _o.HAS_ROOT_TOLERANCE_S = this.HAS_ROOT_TOLERANCE_S;
+    _o.HAS_RANDOM_SEED = this.HAS_RANDOM_SEED;
+    _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT;
+    _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT;
   }
   public static Offset<ACWRequest> Pack(FlatBufferBuilder builder, ACWRequestT _o) {
     if (_o == null) return default(Offset<ACWRequest>);
@@ -338,7 +374,14 @@ public struct ACWRequest : IFlatbufferObject
       _EARTH_ORIENTATION,
       _o.RANDOM_SEED,
       _o.START_JULIAN_DATE_TT,
-      _o.END_JULIAN_DATE_TT);
+      _o.END_JULIAN_DATE_TT,
+      _o.HAS_OPERATION,
+      _o.HAS_MIN_ELEVATION_OVERRIDE_RAD,
+      _o.HAS_EVALUATION_MODE,
+      _o.HAS_ROOT_TOLERANCE_S,
+      _o.HAS_RANDOM_SEED,
+      _o.HAS_START_JULIAN_DATE_TT,
+      _o.HAS_END_JULIAN_DATE_TT);
   }
 }
 
@@ -365,6 +408,13 @@ public class ACWRequestT
   public ulong RANDOM_SEED { get; set; }
   public double START_JULIAN_DATE_TT { get; set; }
   public double END_JULIAN_DATE_TT { get; set; }
+  public bool HAS_OPERATION { get; set; }
+  public bool HAS_MIN_ELEVATION_OVERRIDE_RAD { get; set; }
+  public bool HAS_EVALUATION_MODE { get; set; }
+  public bool HAS_ROOT_TOLERANCE_S { get; set; }
+  public bool HAS_RANDOM_SEED { get; set; }
+  public bool HAS_START_JULIAN_DATE_TT { get; set; }
+  public bool HAS_END_JULIAN_DATE_TT { get; set; }
 
   public ACWRequestT() {
     this.OPERATION = acwOperationCode.UNKNOWN;
@@ -388,6 +438,13 @@ public class ACWRequestT
     this.RANDOM_SEED = 0;
     this.START_JULIAN_DATE_TT = 0.0;
     this.END_JULIAN_DATE_TT = 0.0;
+    this.HAS_OPERATION = false;
+    this.HAS_MIN_ELEVATION_OVERRIDE_RAD = false;
+    this.HAS_EVALUATION_MODE = false;
+    this.HAS_ROOT_TOLERANCE_S = false;
+    this.HAS_RANDOM_SEED = false;
+    this.HAS_START_JULIAN_DATE_TT = false;
+    this.HAS_END_JULIAN_DATE_TT = false;
   }
 }
 
@@ -418,6 +475,13 @@ static public class ACWRequestVerify
       && verifier.VerifyField(tablePos, 40 /*RANDOM_SEED*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*START_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 44 /*END_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*HAS_OPERATION*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 48 /*HAS_MIN_ELEVATION_OVERRIDE_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 50 /*HAS_EVALUATION_MODE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 52 /*HAS_ROOT_TOLERANCE_S*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 54 /*HAS_RANDOM_SEED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 56 /*HAS_START_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 58 /*HAS_END_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

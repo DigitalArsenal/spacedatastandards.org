@@ -89,8 +89,9 @@ class ACWAccessWindow : Table() {
     fun observerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Index into the flattened, depth-first constraint list of the constraint
-     * whose transition opens the window; -1 when the window starts at the
-     * first sample.
+     * whose transition opens the window. A clipped start has no limiting
+     * constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+     * index is nonnegative and in range; the retained wire default is not a sentinel.
      */
     val startLimitingConstraintIndex : Int
         get() {
@@ -98,8 +99,9 @@ class ACWAccessWindow : Table() {
             return if(o != 0) bb.getInt(o + bb_pos) else -1
         }
     /**
-     * Index of the constraint whose transition closes the window; -1 when the
-     * window ends at the last sample.
+     * Index of the constraint whose transition closes the window. A clipped end
+     * has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+     * and in range; the retained wire default is not a sentinel.
      */
     val endLimitingConstraintIndex : Int
         get() {
@@ -152,6 +154,54 @@ class ACWAccessWindow : Table() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasStartJulianDateTt : Boolean
+        get() {
+            val o = __offset(30)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEndJulianDateTt : Boolean
+        get() {
+            val o = __offset(32)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMaxElevationRad : Boolean
+        get() {
+            val o = __offset(34)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasSampleCount : Boolean
+        get() {
+            val o = __offset(36)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasStartLimitingConstraintIndex : Boolean
+        get() {
+            val o = __offset(38)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEndLimitingConstraintIndex : Boolean
+        get() {
+            val o = __offset(40)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMinRangeM : Boolean
+        get() {
+            val o = __offset(42)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMaxRangeM : Boolean
+        get() {
+            val o = __offset(44)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEdgesRefined : Boolean
+        get() {
+            val o = __offset(46)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWAccessWindow(_bb: ByteBuffer): ACWAccessWindow = getRootAsACWAccessWindow(_bb, ACWAccessWindow())
@@ -159,8 +209,8 @@ class ACWAccessWindow : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt, observerIdOffset: Int, startLimitingConstraintIndex: Int, endLimitingConstraintIndex: Int, startLimitingConstraintLabelOffset: Int, endLimitingConstraintLabelOffset: Int, minRangeM: Double, maxRangeM: Double, edgesRefined: Boolean) : Int {
-            builder.startTable(13)
+        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt, observerIdOffset: Int, startLimitingConstraintIndex: Int, endLimitingConstraintIndex: Int, startLimitingConstraintLabelOffset: Int, endLimitingConstraintLabelOffset: Int, minRangeM: Double, maxRangeM: Double, edgesRefined: Boolean, hasStartJulianDateTt: Boolean, hasEndJulianDateTt: Boolean, hasMaxElevationRad: Boolean, hasSampleCount: Boolean, hasStartLimitingConstraintIndex: Boolean, hasEndLimitingConstraintIndex: Boolean, hasMinRangeM: Boolean, hasMaxRangeM: Boolean, hasEdgesRefined: Boolean) : Int {
+            builder.startTable(22)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
             addMAXELEVATIONRAD(builder, maxElevationRad)
@@ -173,10 +223,19 @@ class ACWAccessWindow : Table() {
             addOBSERVERID(builder, observerIdOffset)
             addSAMPLECOUNT(builder, sampleCount)
             addSTATIONID(builder, stationIdOffset)
+            addHASEDGESREFINED(builder, hasEdgesRefined)
+            addHASMAXRANGEM(builder, hasMaxRangeM)
+            addHASMINRANGEM(builder, hasMinRangeM)
+            addHASENDLIMITINGCONSTRAINTINDEX(builder, hasEndLimitingConstraintIndex)
+            addHASSTARTLIMITINGCONSTRAINTINDEX(builder, hasStartLimitingConstraintIndex)
+            addHASSAMPLECOUNT(builder, hasSampleCount)
+            addHASMAXELEVATIONRAD(builder, hasMaxElevationRad)
+            addHASENDJULIANDATETT(builder, hasEndJulianDateTt)
+            addHASSTARTJULIANDATETT(builder, hasStartJulianDateTt)
             addEDGESREFINED(builder, edgesRefined)
             return endACWAccessWindow(builder)
         }
-        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addSTATIONID(builder: FlatBufferBuilder, stationId: Int) = builder.addOffset(0, stationId, 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(1, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(2, endJulianDateTt, 0.0)
@@ -190,6 +249,15 @@ class ACWAccessWindow : Table() {
         fun addMINRANGEM(builder: FlatBufferBuilder, minRangeM: Double) = builder.addDouble(10, minRangeM, 0.0)
         fun addMAXRANGEM(builder: FlatBufferBuilder, maxRangeM: Double) = builder.addDouble(11, maxRangeM, 0.0)
         fun addEDGESREFINED(builder: FlatBufferBuilder, edgesRefined: Boolean) = builder.addBoolean(12, edgesRefined, false)
+        fun addHASSTARTJULIANDATETT(builder: FlatBufferBuilder, hasStartJulianDateTt: Boolean) = builder.addBoolean(13, hasStartJulianDateTt, false)
+        fun addHASENDJULIANDATETT(builder: FlatBufferBuilder, hasEndJulianDateTt: Boolean) = builder.addBoolean(14, hasEndJulianDateTt, false)
+        fun addHASMAXELEVATIONRAD(builder: FlatBufferBuilder, hasMaxElevationRad: Boolean) = builder.addBoolean(15, hasMaxElevationRad, false)
+        fun addHASSAMPLECOUNT(builder: FlatBufferBuilder, hasSampleCount: Boolean) = builder.addBoolean(16, hasSampleCount, false)
+        fun addHASSTARTLIMITINGCONSTRAINTINDEX(builder: FlatBufferBuilder, hasStartLimitingConstraintIndex: Boolean) = builder.addBoolean(17, hasStartLimitingConstraintIndex, false)
+        fun addHASENDLIMITINGCONSTRAINTINDEX(builder: FlatBufferBuilder, hasEndLimitingConstraintIndex: Boolean) = builder.addBoolean(18, hasEndLimitingConstraintIndex, false)
+        fun addHASMINRANGEM(builder: FlatBufferBuilder, hasMinRangeM: Boolean) = builder.addBoolean(19, hasMinRangeM, false)
+        fun addHASMAXRANGEM(builder: FlatBufferBuilder, hasMaxRangeM: Boolean) = builder.addBoolean(20, hasMaxRangeM, false)
+        fun addHASEDGESREFINED(builder: FlatBufferBuilder, hasEdgesRefined: Boolean) = builder.addBoolean(21, hasEdgesRefined, false)
         fun endACWAccessWindow(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

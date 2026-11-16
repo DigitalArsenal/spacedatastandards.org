@@ -19,12 +19,16 @@ export declare class ACWTarget implements flatbuffers.IUnpackableObject<ACWTarge
     OBJECT_ID(): string | null;
     OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Truth Earth-fixed states with velocity, in the frame and time scale of
+     * Truth central-body-fixed states with velocity, in the frame and time scale of
      * ACWRequest.STATES.
      */
     STATES(index: number, obj?: ACWStateSample): ACWStateSample | null;
     statesLength(): number;
     SIGNATURE(obj?: ACWTargetSignature): ACWTargetSignature | null;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_NORAD_CAT_ID(): boolean;
     static startACWTarget(builder: flatbuffers.Builder): void;
     static addTargetId(builder: flatbuffers.Builder, TARGET_IDOffset: flatbuffers.Offset): void;
     static addNoradCatId(builder: flatbuffers.Builder, NORAD_CAT_ID: number): void;
@@ -33,6 +37,7 @@ export declare class ACWTarget implements flatbuffers.IUnpackableObject<ACWTarge
     static createStatesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startStatesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
+    static addHasNoradCatId(builder: flatbuffers.Builder, HAS_NORAD_CAT_ID: boolean): void;
     static endACWTarget(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ACWTargetT;
     unpackTo(_o: ACWTargetT): void;
@@ -43,7 +48,8 @@ export declare class ACWTargetT implements flatbuffers.IGeneratedObject {
     OBJECT_ID: string | Uint8Array | null;
     STATES: (ACWStateSampleT)[];
     SIGNATURE: ACWTargetSignatureT | null;
-    constructor(TARGET_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, STATES?: (ACWStateSampleT)[], SIGNATURE?: ACWTargetSignatureT | null);
+    HAS_NORAD_CAT_ID: boolean;
+    constructor(TARGET_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, STATES?: (ACWStateSampleT)[], SIGNATURE?: ACWTargetSignatureT | null, HAS_NORAD_CAT_ID?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWTarget.d.ts.map

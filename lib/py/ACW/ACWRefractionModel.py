@@ -52,8 +52,30 @@ class ACWRefractionModel(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 283.0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWRefractionModel
+    def HAS_MODEL_KIND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRefractionModel
+    def HAS_PRESSURE_PA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWRefractionModel
+    def HAS_TEMPERATURE_K(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWRefractionModelStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(6)
 
 def Start(builder):
     ACWRefractionModelStart(builder)
@@ -76,6 +98,24 @@ def ACWRefractionModelAddTEMPERATURE_K(builder, TEMPERATURE_K):
 def AddTEMPERATURE_K(builder, TEMPERATURE_K):
     ACWRefractionModelAddTEMPERATURE_K(builder, TEMPERATURE_K)
 
+def ACWRefractionModelAddHAS_MODEL_KIND(builder, HAS_MODEL_KIND):
+    builder.PrependBoolSlot(3, HAS_MODEL_KIND, 0)
+
+def AddHAS_MODEL_KIND(builder, HAS_MODEL_KIND):
+    ACWRefractionModelAddHAS_MODEL_KIND(builder, HAS_MODEL_KIND)
+
+def ACWRefractionModelAddHAS_PRESSURE_PA(builder, HAS_PRESSURE_PA):
+    builder.PrependBoolSlot(4, HAS_PRESSURE_PA, 0)
+
+def AddHAS_PRESSURE_PA(builder, HAS_PRESSURE_PA):
+    ACWRefractionModelAddHAS_PRESSURE_PA(builder, HAS_PRESSURE_PA)
+
+def ACWRefractionModelAddHAS_TEMPERATURE_K(builder, HAS_TEMPERATURE_K):
+    builder.PrependBoolSlot(5, HAS_TEMPERATURE_K, 0)
+
+def AddHAS_TEMPERATURE_K(builder, HAS_TEMPERATURE_K):
+    ACWRefractionModelAddHAS_TEMPERATURE_K(builder, HAS_TEMPERATURE_K)
+
 def ACWRefractionModelEnd(builder):
     return builder.EndObject()
 
@@ -91,10 +131,16 @@ class ACWRefractionModelT(object):
         MODEL_KIND = 0,
         PRESSURE_PA = 101000.0,
         TEMPERATURE_K = 283.0,
+        HAS_MODEL_KIND = False,
+        HAS_PRESSURE_PA = False,
+        HAS_TEMPERATURE_K = False,
     ):
         self.MODEL_KIND = MODEL_KIND  # type: int
         self.PRESSURE_PA = PRESSURE_PA  # type: float
         self.TEMPERATURE_K = TEMPERATURE_K  # type: float
+        self.HAS_MODEL_KIND = HAS_MODEL_KIND  # type: bool
+        self.HAS_PRESSURE_PA = HAS_PRESSURE_PA  # type: bool
+        self.HAS_TEMPERATURE_K = HAS_TEMPERATURE_K  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -120,6 +166,9 @@ class ACWRefractionModelT(object):
         self.MODEL_KIND = ACWRefractionModel.MODEL_KIND()
         self.PRESSURE_PA = ACWRefractionModel.PRESSURE_PA()
         self.TEMPERATURE_K = ACWRefractionModel.TEMPERATURE_K()
+        self.HAS_MODEL_KIND = ACWRefractionModel.HAS_MODEL_KIND()
+        self.HAS_PRESSURE_PA = ACWRefractionModel.HAS_PRESSURE_PA()
+        self.HAS_TEMPERATURE_K = ACWRefractionModel.HAS_TEMPERATURE_K()
 
     # ACWRefractionModelT
     def Pack(self, builder):
@@ -127,5 +176,8 @@ class ACWRefractionModelT(object):
         ACWRefractionModelAddMODEL_KIND(builder, self.MODEL_KIND)
         ACWRefractionModelAddPRESSURE_PA(builder, self.PRESSURE_PA)
         ACWRefractionModelAddTEMPERATURE_K(builder, self.TEMPERATURE_K)
+        ACWRefractionModelAddHAS_MODEL_KIND(builder, self.HAS_MODEL_KIND)
+        ACWRefractionModelAddHAS_PRESSURE_PA(builder, self.HAS_PRESSURE_PA)
+        ACWRefractionModelAddHAS_TEMPERATURE_K(builder, self.HAS_TEMPERATURE_K)
         ACWRefractionModel = ACWRefractionModelEnd(builder)
         return ACWRefractionModel

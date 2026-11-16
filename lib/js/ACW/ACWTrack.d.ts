@@ -28,6 +28,13 @@ export declare class ACWTrack implements flatbuffers.IUnpackableObject<ACWTrackT
      */
     LOSS_REASON(): string | null;
     LOSS_REASON(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_START_JULIAN_DATE_TT(): boolean;
+    HAS_END_JULIAN_DATE_TT(): boolean;
+    HAS_SCHEDULED_COUNT(): boolean;
+    HAS_DETECTED_COUNT(): boolean;
     static startACWTrack(builder: flatbuffers.Builder): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
     static addTargetId(builder: flatbuffers.Builder, TARGET_IDOffset: flatbuffers.Offset): void;
@@ -36,8 +43,12 @@ export declare class ACWTrack implements flatbuffers.IUnpackableObject<ACWTrackT
     static addScheduledCount(builder: flatbuffers.Builder, SCHEDULED_COUNT: number): void;
     static addDetectedCount(builder: flatbuffers.Builder, DETECTED_COUNT: number): void;
     static addLossReason(builder: flatbuffers.Builder, LOSS_REASONOffset: flatbuffers.Offset): void;
+    static addHasStartJulianDateTt(builder: flatbuffers.Builder, HAS_START_JULIAN_DATE_TT: boolean): void;
+    static addHasEndJulianDateTt(builder: flatbuffers.Builder, HAS_END_JULIAN_DATE_TT: boolean): void;
+    static addHasScheduledCount(builder: flatbuffers.Builder, HAS_SCHEDULED_COUNT: boolean): void;
+    static addHasDetectedCount(builder: flatbuffers.Builder, HAS_DETECTED_COUNT: boolean): void;
     static endACWTrack(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWTrack(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset, TARGET_IDOffset: flatbuffers.Offset, START_JULIAN_DATE_TT: number, END_JULIAN_DATE_TT: number, SCHEDULED_COUNT: number, DETECTED_COUNT: number, LOSS_REASONOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createACWTrack(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset, TARGET_IDOffset: flatbuffers.Offset, START_JULIAN_DATE_TT: number, END_JULIAN_DATE_TT: number, SCHEDULED_COUNT: number, DETECTED_COUNT: number, LOSS_REASONOffset: flatbuffers.Offset, HAS_START_JULIAN_DATE_TT: boolean, HAS_END_JULIAN_DATE_TT: boolean, HAS_SCHEDULED_COUNT: boolean, HAS_DETECTED_COUNT: boolean): flatbuffers.Offset;
     unpack(): ACWTrackT;
     unpackTo(_o: ACWTrackT): void;
 }
@@ -49,7 +60,11 @@ export declare class ACWTrackT implements flatbuffers.IGeneratedObject {
     SCHEDULED_COUNT: number;
     DETECTED_COUNT: number;
     LOSS_REASON: string | Uint8Array | null;
-    constructor(SENSOR_ID?: string | Uint8Array | null, TARGET_ID?: string | Uint8Array | null, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, SCHEDULED_COUNT?: number, DETECTED_COUNT?: number, LOSS_REASON?: string | Uint8Array | null);
+    HAS_START_JULIAN_DATE_TT: boolean;
+    HAS_END_JULIAN_DATE_TT: boolean;
+    HAS_SCHEDULED_COUNT: boolean;
+    HAS_DETECTED_COUNT: boolean;
+    constructor(SENSOR_ID?: string | Uint8Array | null, TARGET_ID?: string | Uint8Array | null, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, SCHEDULED_COUNT?: number, DETECTED_COUNT?: number, LOSS_REASON?: string | Uint8Array | null, HAS_START_JULIAN_DATE_TT?: boolean, HAS_END_JULIAN_DATE_TT?: boolean, HAS_SCHEDULED_COUNT?: boolean, HAS_DETECTED_COUNT?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWTrack.d.ts.map

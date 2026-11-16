@@ -70,7 +70,7 @@ class ACWRequest extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Pre-sampled target Earth-fixed Cartesian states.
+    /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
     /**
      * @returnVectorOffset
      */
@@ -142,7 +142,7 @@ class ACWRequest extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Optional constraint composition. When absent the legacy behaviour holds:
+    /// Optional constraint composition. When absent the station constraints apply:
     /// every ground station's MIN_ELEVATION_RAD (or the override) plus
     /// ELEVATION_MASK, all required.
     public function getCONSTRAINTS()
@@ -348,22 +348,86 @@ class ACWRequest extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_OPERATION()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MIN_ELEVATION_OVERRIDE_RAD()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_EVALUATION_MODE()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_ROOT_TOLERANCE_S()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_RANDOM_SEED()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_START_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_END_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(28);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWRequest
      */
-    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES, $TARGETS, $SENSORS, $ACCESS, $EARTH_ORIENTATION, $RANDOM_SEED, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT)
+    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES, $TARGETS, $SENSORS, $ACCESS, $EARTH_ORIENTATION, $RANDOM_SEED, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $HAS_OPERATION, $HAS_MIN_ELEVATION_OVERRIDE_RAD, $HAS_EVALUATION_MODE, $HAS_ROOT_TOLERANCE_S, $HAS_RANDOM_SEED, $HAS_START_JULIAN_DATE_TT, $HAS_END_JULIAN_DATE_TT)
     {
-        $builder->startObject(21);
+        $builder->startObject(28);
         self::addOPERATION($builder, $OPERATION);
         self::addGROUND_STATIONS($builder, $GROUND_STATIONS);
         self::addSTATES($builder, $STATES);
@@ -385,6 +449,13 @@ class ACWRequest extends Table
         self::addRANDOM_SEED($builder, $RANDOM_SEED);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
+        self::addHAS_OPERATION($builder, $HAS_OPERATION);
+        self::addHAS_MIN_ELEVATION_OVERRIDE_RAD($builder, $HAS_MIN_ELEVATION_OVERRIDE_RAD);
+        self::addHAS_EVALUATION_MODE($builder, $HAS_EVALUATION_MODE);
+        self::addHAS_ROOT_TOLERANCE_S($builder, $HAS_ROOT_TOLERANCE_S);
+        self::addHAS_RANDOM_SEED($builder, $HAS_RANDOM_SEED);
+        self::addHAS_START_JULIAN_DATE_TT($builder, $HAS_START_JULIAN_DATE_TT);
+        self::addHAS_END_JULIAN_DATE_TT($builder, $HAS_END_JULIAN_DATE_TT);
         $o = $builder->endObject();
         return $o;
     }
@@ -837,6 +908,76 @@ class ACWRequest extends Table
     public static function addEND_JULIAN_DATE_TT(FlatBufferBuilder $builder, $END_JULIAN_DATE_TT)
     {
         $builder->addDoubleX(20, $END_JULIAN_DATE_TT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_OPERATION(FlatBufferBuilder $builder, $HAS_OPERATION)
+    {
+        $builder->addBoolX(21, $HAS_OPERATION, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MIN_ELEVATION_OVERRIDE_RAD(FlatBufferBuilder $builder, $HAS_MIN_ELEVATION_OVERRIDE_RAD)
+    {
+        $builder->addBoolX(22, $HAS_MIN_ELEVATION_OVERRIDE_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EVALUATION_MODE(FlatBufferBuilder $builder, $HAS_EVALUATION_MODE)
+    {
+        $builder->addBoolX(23, $HAS_EVALUATION_MODE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_ROOT_TOLERANCE_S(FlatBufferBuilder $builder, $HAS_ROOT_TOLERANCE_S)
+    {
+        $builder->addBoolX(24, $HAS_ROOT_TOLERANCE_S, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_RANDOM_SEED(FlatBufferBuilder $builder, $HAS_RANDOM_SEED)
+    {
+        $builder->addBoolX(25, $HAS_RANDOM_SEED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_START_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_START_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(26, $HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_END_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_END_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(27, $HAS_END_JULIAN_DATE_TT, false);
     }
 
     /**

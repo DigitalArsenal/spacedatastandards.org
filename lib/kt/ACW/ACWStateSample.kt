@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Target Cartesian state sample in an Earth-fixed frame.
+ * Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
  */
 @Suppress("unused")
 class ACWStateSample : Table() {
@@ -38,7 +38,7 @@ class ACWStateSample : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Earth-fixed X position, meters.
+     * Fixed-frame X position, meters.
      */
     val positionXM : Double
         get() {
@@ -46,7 +46,7 @@ class ACWStateSample : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Earth-fixed Y position, meters.
+     * Fixed-frame Y position, meters.
      */
     val positionYM : Double
         get() {
@@ -54,7 +54,7 @@ class ACWStateSample : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Earth-fixed Z position, meters.
+     * Fixed-frame Z position, meters.
      */
     val positionZM : Double
         get() {
@@ -62,7 +62,7 @@ class ACWStateSample : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Earth-fixed velocity, meters per second. Required for range-rate,
+     * Fixed-frame velocity, meters per second. Required for range-rate,
      * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
      */
     val velocityXMps : Double
@@ -80,6 +80,44 @@ class ACWStateSample : Table() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasJulianDateTt : Boolean
+        get() {
+            val o = __offset(18)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasPositionXM : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasPositionYM : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasPositionZM : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasVelocityXMps : Boolean
+        get() {
+            val o = __offset(26)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasVelocityYMps : Boolean
+        get() {
+            val o = __offset(28)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasVelocityZMps : Boolean
+        get() {
+            val o = __offset(30)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWStateSample(_bb: ByteBuffer): ACWStateSample = getRootAsACWStateSample(_bb, ACWStateSample())
@@ -87,8 +125,8 @@ class ACWStateSample : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWStateSample(builder: FlatBufferBuilder, julianDateTt: Double, positionXM: Double, positionYM: Double, positionZM: Double, velocityXMps: Double, velocityYMps: Double, velocityZMps: Double) : Int {
-            builder.startTable(7)
+        fun createACWStateSample(builder: FlatBufferBuilder, julianDateTt: Double, positionXM: Double, positionYM: Double, positionZM: Double, velocityXMps: Double, velocityYMps: Double, velocityZMps: Double, hasJulianDateTt: Boolean, hasPositionXM: Boolean, hasPositionYM: Boolean, hasPositionZM: Boolean, hasVelocityXMps: Boolean, hasVelocityYMps: Boolean, hasVelocityZMps: Boolean) : Int {
+            builder.startTable(14)
             addVELOCITYZMPS(builder, velocityZMps)
             addVELOCITYYMPS(builder, velocityYMps)
             addVELOCITYXMPS(builder, velocityXMps)
@@ -96,9 +134,16 @@ class ACWStateSample : Table() {
             addPOSITIONYM(builder, positionYM)
             addPOSITIONXM(builder, positionXM)
             addJULIANDATETT(builder, julianDateTt)
+            addHASVELOCITYZMPS(builder, hasVelocityZMps)
+            addHASVELOCITYYMPS(builder, hasVelocityYMps)
+            addHASVELOCITYXMPS(builder, hasVelocityXMps)
+            addHASPOSITIONZM(builder, hasPositionZM)
+            addHASPOSITIONYM(builder, hasPositionYM)
+            addHASPOSITIONXM(builder, hasPositionXM)
+            addHASJULIANDATETT(builder, hasJulianDateTt)
             return endACWStateSample(builder)
         }
-        fun startACWStateSample(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startACWStateSample(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addJULIANDATETT(builder: FlatBufferBuilder, julianDateTt: Double) = builder.addDouble(0, julianDateTt, 0.0)
         fun addPOSITIONXM(builder: FlatBufferBuilder, positionXM: Double) = builder.addDouble(1, positionXM, 0.0)
         fun addPOSITIONYM(builder: FlatBufferBuilder, positionYM: Double) = builder.addDouble(2, positionYM, 0.0)
@@ -106,6 +151,13 @@ class ACWStateSample : Table() {
         fun addVELOCITYXMPS(builder: FlatBufferBuilder, velocityXMps: Double) = builder.addDouble(4, velocityXMps, 0.0)
         fun addVELOCITYYMPS(builder: FlatBufferBuilder, velocityYMps: Double) = builder.addDouble(5, velocityYMps, 0.0)
         fun addVELOCITYZMPS(builder: FlatBufferBuilder, velocityZMps: Double) = builder.addDouble(6, velocityZMps, 0.0)
+        fun addHASJULIANDATETT(builder: FlatBufferBuilder, hasJulianDateTt: Boolean) = builder.addBoolean(7, hasJulianDateTt, false)
+        fun addHASPOSITIONXM(builder: FlatBufferBuilder, hasPositionXM: Boolean) = builder.addBoolean(8, hasPositionXM, false)
+        fun addHASPOSITIONYM(builder: FlatBufferBuilder, hasPositionYM: Boolean) = builder.addBoolean(9, hasPositionYM, false)
+        fun addHASPOSITIONZM(builder: FlatBufferBuilder, hasPositionZM: Boolean) = builder.addBoolean(10, hasPositionZM, false)
+        fun addHASVELOCITYXMPS(builder: FlatBufferBuilder, hasVelocityXMps: Boolean) = builder.addBoolean(11, hasVelocityXMps, false)
+        fun addHASVELOCITYYMPS(builder: FlatBufferBuilder, hasVelocityYMps: Boolean) = builder.addBoolean(12, hasVelocityYMps, false)
+        fun addHASVELOCITYZMPS(builder: FlatBufferBuilder, hasVelocityZMps: Boolean) = builder.addBoolean(13, hasVelocityZMps, false)
         fun endACWStateSample(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

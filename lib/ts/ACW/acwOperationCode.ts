@@ -2,6 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+/**
+ * ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+ * Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+ * does not apply to ACW enumerations as a group.
+ */
 export enum acwOperationCode {
   UNKNOWN = 0,
 
@@ -20,5 +25,15 @@ export enum acwOperationCode {
    * $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
    * records; the result lists the tracks.
    */
-  SIMULATE_OBSERVATIONS = 2
+  SIMULATE_OBSERVATIONS = 2,
+
+  /**
+   * Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+   */
+  COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY = 3,
+
+  /**
+   * Only runtime simulation operation in body-aware modules; body required.
+   */
+  SIMULATE_OBSERVATIONS_EXPLICIT_BODY = 4
 }

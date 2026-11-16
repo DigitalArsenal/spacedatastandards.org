@@ -49,8 +49,26 @@ TEMPERATURE_K():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 283.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_MODEL_KIND():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_PRESSURE_PA():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_TEMPERATURE_K():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWRefractionModel(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(6);
 }
 
 static addModelKind(builder:flatbuffers.Builder, MODEL_KIND:acwRefractionModelKind) {
@@ -65,16 +83,31 @@ static addTemperatureK(builder:flatbuffers.Builder, TEMPERATURE_K:number) {
   builder.addFieldFloat64(2, TEMPERATURE_K, 283.0);
 }
 
+static addHasModelKind(builder:flatbuffers.Builder, HAS_MODEL_KIND:boolean) {
+  builder.addFieldInt8(3, +HAS_MODEL_KIND, +false);
+}
+
+static addHasPressurePa(builder:flatbuffers.Builder, HAS_PRESSURE_PA:boolean) {
+  builder.addFieldInt8(4, +HAS_PRESSURE_PA, +false);
+}
+
+static addHasTemperatureK(builder:flatbuffers.Builder, HAS_TEMPERATURE_K:boolean) {
+  builder.addFieldInt8(5, +HAS_TEMPERATURE_K, +false);
+}
+
 static endACWRefractionModel(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWRefractionModel(builder:flatbuffers.Builder, MODEL_KIND:acwRefractionModelKind, PRESSURE_PA:number, TEMPERATURE_K:number):flatbuffers.Offset {
+static createACWRefractionModel(builder:flatbuffers.Builder, MODEL_KIND:acwRefractionModelKind, PRESSURE_PA:number, TEMPERATURE_K:number, HAS_MODEL_KIND:boolean, HAS_PRESSURE_PA:boolean, HAS_TEMPERATURE_K:boolean):flatbuffers.Offset {
   ACWRefractionModel.startACWRefractionModel(builder);
   ACWRefractionModel.addModelKind(builder, MODEL_KIND);
   ACWRefractionModel.addPressurePa(builder, PRESSURE_PA);
   ACWRefractionModel.addTemperatureK(builder, TEMPERATURE_K);
+  ACWRefractionModel.addHasModelKind(builder, HAS_MODEL_KIND);
+  ACWRefractionModel.addHasPressurePa(builder, HAS_PRESSURE_PA);
+  ACWRefractionModel.addHasTemperatureK(builder, HAS_TEMPERATURE_K);
   return ACWRefractionModel.endACWRefractionModel(builder);
 }
 
@@ -82,7 +115,10 @@ unpack(): ACWRefractionModelT {
   return new ACWRefractionModelT(
     this.MODEL_KIND(),
     this.PRESSURE_PA(),
-    this.TEMPERATURE_K()
+    this.TEMPERATURE_K(),
+    this.HAS_MODEL_KIND(),
+    this.HAS_PRESSURE_PA(),
+    this.HAS_TEMPERATURE_K()
   );
 }
 
@@ -91,6 +127,9 @@ unpackTo(_o: ACWRefractionModelT): void {
   _o.MODEL_KIND = this.MODEL_KIND();
   _o.PRESSURE_PA = this.PRESSURE_PA();
   _o.TEMPERATURE_K = this.TEMPERATURE_K();
+  _o.HAS_MODEL_KIND = this.HAS_MODEL_KIND();
+  _o.HAS_PRESSURE_PA = this.HAS_PRESSURE_PA();
+  _o.HAS_TEMPERATURE_K = this.HAS_TEMPERATURE_K();
 }
 }
 
@@ -98,7 +137,10 @@ export class ACWRefractionModelT implements flatbuffers.IGeneratedObject {
 constructor(
   public MODEL_KIND: acwRefractionModelKind = acwRefractionModelKind.NONE,
   public PRESSURE_PA: number = 101000.0,
-  public TEMPERATURE_K: number = 283.0
+  public TEMPERATURE_K: number = 283.0,
+  public HAS_MODEL_KIND: boolean = false,
+  public HAS_PRESSURE_PA: boolean = false,
+  public HAS_TEMPERATURE_K: boolean = false
 ){}
 
 
@@ -106,7 +148,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return ACWRefractionModel.createACWRefractionModel(builder,
     this.MODEL_KIND,
     this.PRESSURE_PA,
-    this.TEMPERATURE_K
+    this.TEMPERATURE_K,
+    this.HAS_MODEL_KIND,
+    this.HAS_PRESSURE_PA,
+    this.HAS_TEMPERATURE_K
   );
 }
 }

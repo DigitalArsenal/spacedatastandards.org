@@ -43,8 +43,21 @@ END_JULIAN_DATE_TT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_START_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_END_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWBlackoutWindow(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(4);
 }
 
 static addStartJulianDateTt(builder:flatbuffers.Builder, START_JULIAN_DATE_TT:number) {
@@ -55,22 +68,34 @@ static addEndJulianDateTt(builder:flatbuffers.Builder, END_JULIAN_DATE_TT:number
   builder.addFieldFloat64(1, END_JULIAN_DATE_TT, 0.0);
 }
 
+static addHasStartJulianDateTt(builder:flatbuffers.Builder, HAS_START_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(2, +HAS_START_JULIAN_DATE_TT, +false);
+}
+
+static addHasEndJulianDateTt(builder:flatbuffers.Builder, HAS_END_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(3, +HAS_END_JULIAN_DATE_TT, +false);
+}
+
 static endACWBlackoutWindow(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWBlackoutWindow(builder:flatbuffers.Builder, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number):flatbuffers.Offset {
+static createACWBlackoutWindow(builder:flatbuffers.Builder, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, HAS_START_JULIAN_DATE_TT:boolean, HAS_END_JULIAN_DATE_TT:boolean):flatbuffers.Offset {
   ACWBlackoutWindow.startACWBlackoutWindow(builder);
   ACWBlackoutWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
   ACWBlackoutWindow.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
+  ACWBlackoutWindow.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
+  ACWBlackoutWindow.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
   return ACWBlackoutWindow.endACWBlackoutWindow(builder);
 }
 
 unpack(): ACWBlackoutWindowT {
   return new ACWBlackoutWindowT(
     this.START_JULIAN_DATE_TT(),
-    this.END_JULIAN_DATE_TT()
+    this.END_JULIAN_DATE_TT(),
+    this.HAS_START_JULIAN_DATE_TT(),
+    this.HAS_END_JULIAN_DATE_TT()
   );
 }
 
@@ -78,20 +103,26 @@ unpack(): ACWBlackoutWindowT {
 unpackTo(_o: ACWBlackoutWindowT): void {
   _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT();
   _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT();
+  _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT();
+  _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT();
 }
 }
 
 export class ACWBlackoutWindowT implements flatbuffers.IGeneratedObject {
 constructor(
   public START_JULIAN_DATE_TT: number = 0.0,
-  public END_JULIAN_DATE_TT: number = 0.0
+  public END_JULIAN_DATE_TT: number = 0.0,
+  public HAS_START_JULIAN_DATE_TT: boolean = false,
+  public HAS_END_JULIAN_DATE_TT: boolean = false
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return ACWBlackoutWindow.createACWBlackoutWindow(builder,
     this.START_JULIAN_DATE_TT,
-    this.END_JULIAN_DATE_TT
+    this.END_JULIAN_DATE_TT,
+    this.HAS_START_JULIAN_DATE_TT,
+    this.HAS_END_JULIAN_DATE_TT
   );
 }
 }

@@ -1,11 +1,61 @@
-// Hash: 29e529f09e927164c78b97475a9452ae9ca741c7551769b87ce32dc2f8632c5a
-// Version: 0.0.5
+// Hash: 4099c007aaf6ee2f57b6762decbd1ad8c73d973208ec08ae9792822d987ea330
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
+include "../RFM/main.fbs";
 
 // Access-window request/result records for ground-station visibility analysis.
 
+
+/// Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+/// or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+/// Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+/// MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+/// RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+/// the complete root. URI is advisory and never fetched by a module.
+table BodyRecordRef {
+  STANDARD:string (required);
+  RECORD_ID:string (required);
+  SHA256:string (required);
+  URI:string;
+}
+
+/// Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+/// No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+/// SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+table BodyDescriptor {
+  /// Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+  NAIF_ID:int = 0;
+  FIXED_FRAME:RFMCoordinateSystem (required);
+  /// Each axis requires its HAS flag and a finite positive value.
+  SEMI_AXIS_X_M:double = nan;
+  SEMI_AXIS_Y_M:double = nan;
+  SEMI_AXIS_Z_M:double = nan;
+  MODEL_ID:string (required);
+  /// Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+  MODEL_SHA256:string (required);
+  /// Required explicit assertion, "NONE" or a supported model identifier.
+  ATMOSPHERE_MODEL_ID:string (required);
+  /// Absent means no terrain supplied; elevation remains mandatory for sites.
+  TERRAIN:BodyRecordRef;
+  /// Optional SHC or MODEL reference; its radius is not the shape radius.
+  GRAVITY:BodyRecordRef;
+  /// True HAS flag, positive radius and name required for non-ANY lighting.
+  /// This is a named spherical-shadow approximation, not ellipsoidal lighting.
+  LIGHTING_SPHERE_RADIUS_M:double = nan;
+  LIGHTING_MODEL_ID:string;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_NAIF_ID:bool = false;
+  HAS_SEMI_AXIS_X_M:bool = false;
+  HAS_SEMI_AXIS_Y_M:bool = false;
+  HAS_SEMI_AXIS_Z_M:bool = false;
+  HAS_LIGHTING_SPHERE_RADIUS_M:bool = false;
+}
+
+/// ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+/// Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+/// does not apply to ACW enumerations as a group.
 enum acwOperationCode : byte {
   UNKNOWN = 0,
   /// Compute access windows from pre-sampled target Cartesian states.
@@ -18,7 +68,11 @@ enum acwOperationCode : byte {
   /// test, and add false alarms. The observations are emitted as separate
   /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
   /// records; the result lists the tracks.
-  SIMULATE_OBSERVATIONS = 2
+  SIMULATE_OBSERVATIONS = 2,
+  /// Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+  COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY = 3,
+  /// Only runtime simulation operation in body-aware modules; body required.
+  SIMULATE_OBSERVATIONS_EXPLICIT_BODY = 4
 }
 
 enum acwResultStatus : byte {
@@ -36,21 +90,29 @@ enum acwRefractionModelKind : byte {
   EARTH_STANDARD_ATMOSPHERE = 1
 }
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 table ACWStateSample {
   /// Sample epoch as Julian Date in TT.
   JULIAN_DATE_TT:double;
-  /// Earth-fixed X position, meters.
+  /// Fixed-frame X position, meters.
   POSITION_X_M:double;
-  /// Earth-fixed Y position, meters.
+  /// Fixed-frame Y position, meters.
   POSITION_Y_M:double;
-  /// Earth-fixed Z position, meters.
+  /// Fixed-frame Z position, meters.
   POSITION_Z_M:double;
-  /// Earth-fixed velocity, meters per second. Required for range-rate,
+  /// Fixed-frame velocity, meters per second. Required for range-rate,
   /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
   VELOCITY_X_MPS:double;
   VELOCITY_Y_MPS:double;
   VELOCITY_Z_MPS:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_JULIAN_DATE_TT:bool = false;
+  HAS_POSITION_X_M:bool = false;
+  HAS_POSITION_Y_M:bool = false;
+  HAS_POSITION_Z_M:bool = false;
+  HAS_VELOCITY_X_MPS:bool = false;
+  HAS_VELOCITY_Y_MPS:bool = false;
+  HAS_VELOCITY_Z_MPS:bool = false;
 }
 
 /// Azimuth-dependent minimum elevation mask point.
@@ -59,6 +121,9 @@ table ACWElevationMaskPoint {
   AZIMUTH_RAD:double;
   /// Minimum visible elevation at the azimuth, radians.
   ELEVATION_RAD:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_AZIMUTH_RAD:bool = false;
+  HAS_ELEVATION_RAD:bool = false;
 }
 
 /// Atmospheric refraction model for apparent-elevation access checks.
@@ -68,6 +133,10 @@ table ACWRefractionModel {
   PRESSURE_PA:double = 101000.0;
   /// Local temperature in kelvin.
   TEMPERATURE_K:double = 283.0;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_MODEL_KIND:bool = false;
+  HAS_PRESSURE_PA:bool = false;
+  HAS_TEMPERATURE_K:bool = false;
 }
 
 /// Ground-station blackout interval.
@@ -76,6 +145,9 @@ table ACWBlackoutWindow {
   START_JULIAN_DATE_TT:double;
   /// Interval end as Julian Date in TT.
   END_JULIAN_DATE_TT:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_START_JULIAN_DATE_TT:bool = false;
+  HAS_END_JULIAN_DATE_TT:bool = false;
 }
 
 /// Ground-station geodetic definition and scheduling constraints.
@@ -86,14 +158,24 @@ table ACWGroundStation {
   LATITUDE_RAD:double;
   /// Geodetic longitude, radians.
   LONGITUDE_RAD:double;
-  /// Height above the WGS-84 ellipsoid, meters.
+  /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+  /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+  /// finite segment blocks; tangent contact is clear. At height <= 0, including
+  /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+  /// The user elevation mask and supplied terrain apply separately at all heights.
   ALTITUDE_M:double;
-  /// Default minimum visible elevation, radians.
+  /// Explicit minimum visible elevation, radians; HAS flag required.
   MIN_ELEVATION_RAD:double;
   /// Number of simultaneous contacts this station can schedule.
   CHANNEL_CAPACITY:uint32;
   /// Station-specific unavailable intervals.
   BLACKOUT_WINDOWS:[ACWBlackoutWindow];
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_LATITUDE_RAD:bool = false;
+  HAS_LONGITUDE_RAD:bool = false;
+  HAS_ALTITUDE_M:bool = false;
+  HAS_MIN_ELEVATION_RAD:bool = false;
+  HAS_CHANNEL_CAPACITY:bool = false;
 }
 
 /// Kind of access constraint. Append only.
@@ -159,13 +241,20 @@ table ACWConstraint {
   MAX_RANGE_M:double;
   /// Required target lighting (TARGET_LIGHTING).
   LIGHTING:acwLightingCondition;
-  /// Central-body radius offset for line-of-sight occultation, meters
-  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+  /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
   OCCULTATION_ATMOSPHERE_HEIGHT_M:double;
   /// Azimuth-dependent mask (ELEVATION_MASK).
   MASK:[ACWElevationMaskPoint];
   /// Producer label echoed in window attribution.
   LABEL:string;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_KIND:bool = false;
+  HAS_THRESHOLD_RAD:bool = false;
+  HAS_MIN_RANGE_M:bool = false;
+  HAS_MAX_RANGE_M:bool = false;
+  HAS_LIGHTING:bool = false;
+  HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M:bool = false;
 }
 
 /// A boolean composition of constraints and nested sets.
@@ -175,9 +264,11 @@ table ACWConstraintSet {
   /// Nested sets, combined with the same OPERATOR.
   SETS:[ACWConstraintSet];
   LABEL:string;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_OPERATOR:bool = false;
 }
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 table ACWObserverTrajectory {
   OBSERVER_ID:string;
@@ -213,6 +304,12 @@ table ACWTargetSignature {
   /// (PASSIVE_RF). A frequency of 0 means the target does not emit.
   EMITTER_FREQUENCY_HZ:double;
   EMITTER_EIRP_DBW:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_RCS_M2:bool = false;
+  HAS_DIAMETER_M:bool = false;
+  HAS_GEOMETRIC_ALBEDO:bool = false;
+  HAS_EMITTER_FREQUENCY_HZ:bool = false;
+  HAS_EMITTER_EIRP_DBW:bool = false;
 }
 /// One simulated target: truth states and signature.
 table ACWTarget {
@@ -220,10 +317,12 @@ table ACWTarget {
   NORAD_CAT_ID:uint32;
   /// International designator.
   OBJECT_ID:string;
-  /// Truth Earth-fixed states with velocity, in the frame and time scale of
+  /// Truth central-body-fixed states with velocity, in the frame and time scale of
   /// ACWRequest.STATES.
   STATES:[ACWStateSample];
   SIGNATURE:ACWTargetSignature;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_NORAD_CAT_ID:bool = false;
 }
 /// A simulated sensor hosted by a ground station or an observer trajectory.
 table ACWSensor {
@@ -244,7 +343,7 @@ table ACWSensor {
   /// Longest track, seconds; 0 tracks the whole access window.
   TRACK_DURATION_S:double;
   /// Shortest time between the end of one track of a target and the start
-  /// of the next, seconds.
+  /// of the following, seconds.
   REVISIT_INTERVAL_S:double;
   /// Targets tracked at once.
   MAX_SIMULTANEOUS_TRACKS:uint32 = 1;
@@ -271,6 +370,22 @@ table ACWSensor {
   /// measures the echo's two-way shift relative to it, reported as $RDO
   /// DOPPLER with DOPPLER_FREQUENCY set to this value.
   TRANSMIT_FREQUENCY_HZ:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_PHENOMENOLOGY:bool = false;
+  HAS_OBSERVATION_INTERVAL_S:bool = false;
+  HAS_TRACK_DURATION_S:bool = false;
+  HAS_REVISIT_INTERVAL_S:bool = false;
+  HAS_MAX_SIMULTANEOUS_TRACKS:bool = false;
+  HAS_REFERENCE_SNR_DB:bool = false;
+  HAS_REFERENCE_RANGE_M:bool = false;
+  HAS_REFERENCE_RCS_M2:bool = false;
+  HAS_DETECTION_THRESHOLD_DB:bool = false;
+  HAS_RECEIVER_G_OVER_T_DB_PER_K:bool = false;
+  HAS_RECEIVER_BANDWIDTH_HZ:bool = false;
+  HAS_LIMITING_MAGNITUDE:bool = false;
+  HAS_MAX_HOST_SUN_ELEVATION_RAD:bool = false;
+  HAS_FALSE_ALARM_RATE_PER_HOUR:bool = false;
+  HAS_TRANSMIT_FREQUENCY_HZ:bool = false;
 }
 /// Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).
 table ACWSensorAccess {
@@ -291,13 +406,18 @@ table ACWTrack {
   /// Why scheduled observations were not detected (for example "SNR",
   /// "MAGNITUDE"); empty when all were.
   LOSS_REASON:string;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_START_JULIAN_DATE_TT:bool = false;
+  HAS_END_JULIAN_DATE_TT:bool = false;
+  HAS_SCHEDULED_COUNT:bool = false;
+  HAS_DETECTED_COUNT:bool = false;
 }
 /// One access-window compute request.
 table ACWRequest {
   OPERATION:acwOperationCode;
   /// Candidate ground stations.
   GROUND_STATIONS:[ACWGroundStation];
-  /// Pre-sampled target Earth-fixed Cartesian states.
+  /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
   STATES:[ACWStateSample];
   /// Optional target station id. Empty means all stations when supported.
   TARGET_STATION_ID:string;
@@ -309,7 +429,7 @@ table ACWRequest {
   ELEVATION_MASK:[ACWElevationMaskPoint];
   /// Optional apparent-elevation refraction model.
   REFRACTION_MODEL:ACWRefractionModel;
-  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// Optional constraint composition. When absent the station constraints apply:
   /// every ground station's MIN_ELEVATION_RAD (or the override) plus
   /// ELEVATION_MASK, all required.
   CONSTRAINTS:ACWConstraintSet;
@@ -343,6 +463,14 @@ table ACWRequest {
   /// states.
   START_JULIAN_DATE_TT:double;
   END_JULIAN_DATE_TT:double;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_OPERATION:bool = false;
+  HAS_MIN_ELEVATION_OVERRIDE_RAD:bool = false;
+  HAS_EVALUATION_MODE:bool = false;
+  HAS_ROOT_TOLERANCE_S:bool = false;
+  HAS_RANDOM_SEED:bool = false;
+  HAS_START_JULIAN_DATE_TT:bool = false;
+  HAS_END_JULIAN_DATE_TT:bool = false;
 }
 
 /// One computed access interval.
@@ -360,11 +488,13 @@ table ACWAccessWindow {
   /// ground station (then STATION_ID names it).
   OBSERVER_ID:string;
   /// Index into the flattened, depth-first constraint list of the constraint
-  /// whose transition opens the window; -1 when the window starts at the
-  /// first sample.
+  /// whose transition opens the window. A clipped start has no limiting
+  /// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+  /// index is nonnegative and in range; the retained wire default is not a sentinel.
   START_LIMITING_CONSTRAINT_INDEX:int32 = -1;
-  /// Index of the constraint whose transition closes the window; -1 when the
-  /// window ends at the last sample.
+  /// Index of the constraint whose transition closes the window. A clipped end
+  /// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+  /// and in range; the retained wire default is not a sentinel.
   END_LIMITING_CONSTRAINT_INDEX:int32 = -1;
   /// Labels of those constraints, when the producer set them.
   START_LIMITING_CONSTRAINT_LABEL:string;
@@ -374,6 +504,16 @@ table ACWAccessWindow {
   MAX_RANGE_M:double;
   /// True when edges were root-refined (CONTINUOUS); false when they are samples.
   EDGES_REFINED:bool;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_START_JULIAN_DATE_TT:bool = false;
+  HAS_END_JULIAN_DATE_TT:bool = false;
+  HAS_MAX_ELEVATION_RAD:bool = false;
+  HAS_SAMPLE_COUNT:bool = false;
+  HAS_START_LIMITING_CONSTRAINT_INDEX:bool = false;
+  HAS_END_LIMITING_CONSTRAINT_INDEX:bool = false;
+  HAS_MIN_RANGE_M:bool = false;
+  HAS_MAX_RANGE_M:bool = false;
+  HAS_EDGES_REFINED:bool = false;
 }
 
 /// Result for one access-window compute request.
@@ -391,12 +531,24 @@ table ACWResult {
   TRACKS:[ACWTrack];
   /// Observations emitted, including false alarms.
   OBSERVATION_COUNT:uint32;
+  /// Value presence: false means omitted; true precedes value validation.
+  HAS_STATUS:bool = false;
+  HAS_EVALUATION_MODE:bool = false;
+  HAS_OBSERVATION_COUNT:bool = false;
 }
 
 /// Access-window analysis envelope.
 table ACW {
   REQUEST:ACWRequest;
   RESULT:ACWResult;
+  /// Appended slot 2. Mandatory in every new request and successful result.
+  /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+  /// these codes. Missing body fails acw-body-required; absence never means
+  /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+  /// Result must echo the exact descriptor field values, including optional
+  /// presence; requester rejects a missing/different echo. Raw table offsets
+  /// are not identity. Explicit one-time archive conversion is outside runtime.
+  CENTRAL_BODY:BodyDescriptor;
 }
 
 root_type ACW;

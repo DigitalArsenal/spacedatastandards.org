@@ -41,6 +41,12 @@ export declare class ACWResult implements flatbuffers.IUnpackableObject<ACWResul
      * Observations emitted, including false alarms.
      */
     OBSERVATION_COUNT(): number;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_STATUS(): boolean;
+    HAS_EVALUATION_MODE(): boolean;
+    HAS_OBSERVATION_COUNT(): boolean;
     static startACWResult(builder: flatbuffers.Builder): void;
     static addStatus(builder: flatbuffers.Builder, STATUS: acwResultStatus): void;
     static addErrorMessage(builder: flatbuffers.Builder, ERROR_MESSAGEOffset: flatbuffers.Offset): void;
@@ -56,8 +62,11 @@ export declare class ACWResult implements flatbuffers.IUnpackableObject<ACWResul
     static createTracksVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTracksVector(builder: flatbuffers.Builder, numElems: number): void;
     static addObservationCount(builder: flatbuffers.Builder, OBSERVATION_COUNT: number): void;
+    static addHasStatus(builder: flatbuffers.Builder, HAS_STATUS: boolean): void;
+    static addHasEvaluationMode(builder: flatbuffers.Builder, HAS_EVALUATION_MODE: boolean): void;
+    static addHasObservationCount(builder: flatbuffers.Builder, HAS_OBSERVATION_COUNT: boolean): void;
     static endACWResult(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWResult(builder: flatbuffers.Builder, STATUS: acwResultStatus, ERROR_MESSAGEOffset: flatbuffers.Offset, WINDOWSOffset: flatbuffers.Offset, TRACE_IDOffset: flatbuffers.Offset, EVALUATION_MODE: acwEvaluationMode, CONSTRAINT_LABELSOffset: flatbuffers.Offset, TRACKSOffset: flatbuffers.Offset, OBSERVATION_COUNT: number): flatbuffers.Offset;
+    static createACWResult(builder: flatbuffers.Builder, STATUS: acwResultStatus, ERROR_MESSAGEOffset: flatbuffers.Offset, WINDOWSOffset: flatbuffers.Offset, TRACE_IDOffset: flatbuffers.Offset, EVALUATION_MODE: acwEvaluationMode, CONSTRAINT_LABELSOffset: flatbuffers.Offset, TRACKSOffset: flatbuffers.Offset, OBSERVATION_COUNT: number, HAS_STATUS: boolean, HAS_EVALUATION_MODE: boolean, HAS_OBSERVATION_COUNT: boolean): flatbuffers.Offset;
     unpack(): ACWResultT;
     unpackTo(_o: ACWResultT): void;
 }
@@ -70,7 +79,10 @@ export declare class ACWResultT implements flatbuffers.IGeneratedObject {
     CONSTRAINT_LABELS: (string)[];
     TRACKS: (ACWTrackT)[];
     OBSERVATION_COUNT: number;
-    constructor(STATUS?: acwResultStatus, ERROR_MESSAGE?: string | Uint8Array | null, WINDOWS?: (ACWAccessWindowT)[], TRACE_ID?: string | Uint8Array | null, EVALUATION_MODE?: acwEvaluationMode, CONSTRAINT_LABELS?: (string)[], TRACKS?: (ACWTrackT)[], OBSERVATION_COUNT?: number);
+    HAS_STATUS: boolean;
+    HAS_EVALUATION_MODE: boolean;
+    HAS_OBSERVATION_COUNT: boolean;
+    constructor(STATUS?: acwResultStatus, ERROR_MESSAGE?: string | Uint8Array | null, WINDOWS?: (ACWAccessWindowT)[], TRACE_ID?: string | Uint8Array | null, EVALUATION_MODE?: acwEvaluationMode, CONSTRAINT_LABELS?: (string)[], TRACKS?: (ACWTrackT)[], OBSERVATION_COUNT?: number, HAS_STATUS?: boolean, HAS_EVALUATION_MODE?: boolean, HAS_OBSERVATION_COUNT?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWResult.d.ts.map

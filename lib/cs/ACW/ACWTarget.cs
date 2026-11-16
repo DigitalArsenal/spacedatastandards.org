@@ -33,28 +33,32 @@ public struct ACWTarget : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
-  /// Truth Earth-fixed states with velocity, in the frame and time scale of
+  /// Truth central-body-fixed states with velocity, in the frame and time scale of
   /// ACWRequest.STATES.
   public ACWStateSample? STATES(int j) { int o = __p.__offset(10); return o != 0 ? (ACWStateSample?)(new ACWStateSample()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int STATESLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
   public ACWTargetSignature? SIGNATURE { get { int o = __p.__offset(12); return o != 0 ? (ACWTargetSignature?)(new ACWTargetSignature()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_NORAD_CAT_ID { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWTarget> CreateACWTarget(FlatBufferBuilder builder,
       StringOffset TARGET_IDOffset = default(StringOffset),
       uint NORAD_CAT_ID = 0,
       StringOffset OBJECT_IDOffset = default(StringOffset),
       VectorOffset STATESOffset = default(VectorOffset),
-      Offset<ACWTargetSignature> SIGNATUREOffset = default(Offset<ACWTargetSignature>)) {
-    builder.StartTable(5);
+      Offset<ACWTargetSignature> SIGNATUREOffset = default(Offset<ACWTargetSignature>),
+      bool HAS_NORAD_CAT_ID = false) {
+    builder.StartTable(6);
     ACWTarget.AddSIGNATURE(builder, SIGNATUREOffset);
     ACWTarget.AddSTATES(builder, STATESOffset);
     ACWTarget.AddOBJECT_ID(builder, OBJECT_IDOffset);
     ACWTarget.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     ACWTarget.AddTARGET_ID(builder, TARGET_IDOffset);
+    ACWTarget.AddHAS_NORAD_CAT_ID(builder, HAS_NORAD_CAT_ID);
     return ACWTarget.EndACWTarget(builder);
   }
 
-  public static void StartACWTarget(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartACWTarget(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddTARGET_ID(FlatBufferBuilder builder, StringOffset TARGET_IDOffset) { builder.AddOffset(0, TARGET_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(1, NORAD_CAT_ID, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(2, OBJECT_IDOffset.Value, 0); }
@@ -65,6 +69,7 @@ public struct ACWTarget : IFlatbufferObject
   public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWStateSample>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSTATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddSIGNATURE(FlatBufferBuilder builder, Offset<ACWTargetSignature> SIGNATUREOffset) { builder.AddOffset(4, SIGNATUREOffset.Value, 0); }
+  public static void AddHAS_NORAD_CAT_ID(FlatBufferBuilder builder, bool HAS_NORAD_CAT_ID) { builder.AddBool(5, HAS_NORAD_CAT_ID, false); }
   public static Offset<ACWTarget> EndACWTarget(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWTarget>(o);
@@ -81,6 +86,7 @@ public struct ACWTarget : IFlatbufferObject
     _o.STATES = new List<ACWStateSampleT>();
     for (var _j = 0; _j < this.STATESLength; ++_j) {_o.STATES.Add(this.STATES(_j).HasValue ? this.STATES(_j).Value.UnPack() : null);}
     _o.SIGNATURE = this.SIGNATURE.HasValue ? this.SIGNATURE.Value.UnPack() : null;
+    _o.HAS_NORAD_CAT_ID = this.HAS_NORAD_CAT_ID;
   }
   public static Offset<ACWTarget> Pack(FlatBufferBuilder builder, ACWTargetT _o) {
     if (_o == null) return default(Offset<ACWTarget>);
@@ -99,7 +105,8 @@ public struct ACWTarget : IFlatbufferObject
       _o.NORAD_CAT_ID,
       _OBJECT_ID,
       _STATES,
-      _SIGNATURE);
+      _SIGNATURE,
+      _o.HAS_NORAD_CAT_ID);
   }
 }
 
@@ -110,6 +117,7 @@ public class ACWTargetT
   public string OBJECT_ID { get; set; }
   public List<ACWStateSampleT> STATES { get; set; }
   public ACWTargetSignatureT SIGNATURE { get; set; }
+  public bool HAS_NORAD_CAT_ID { get; set; }
 
   public ACWTargetT() {
     this.TARGET_ID = null;
@@ -117,6 +125,7 @@ public class ACWTargetT
     this.OBJECT_ID = null;
     this.STATES = null;
     this.SIGNATURE = null;
+    this.HAS_NORAD_CAT_ID = false;
   }
 }
 
@@ -131,6 +140,7 @@ static public class ACWTargetVerify
       && verifier.VerifyString(tablePos, 8 /*OBJECT_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 10 /*STATES*/, ACWStateSampleVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 12 /*SIGNATURE*/, ACWTargetSignatureVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 14 /*HAS_NORAD_CAT_ID*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

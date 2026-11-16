@@ -25,8 +25,8 @@ public struct ACWConstraint : IFlatbufferObject
   public double MAX_RANGE_M { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Required target lighting (TARGET_LIGHTING).
   public acwLightingCondition LIGHTING { get { int o = __p.__offset(12); return o != 0 ? (acwLightingCondition)__p.bb.GetSbyte(o + __p.bb_pos) : acwLightingCondition.ANY; } }
-  /// Central-body radius offset for line-of-sight occultation, meters
-  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+  /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
   public double OCCULTATION_ATMOSPHERE_HEIGHT_M { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Azimuth-dependent mask (ELEVATION_MASK).
   public ACWElevationMaskPoint? MASK(int j) { int o = __p.__offset(16); return o != 0 ? (ACWElevationMaskPoint?)(new ACWElevationMaskPoint()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
@@ -39,6 +39,13 @@ public struct ACWConstraint : IFlatbufferObject
   public ArraySegment<byte>? GetLABELBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetLABELArray() { return __p.__vector_as_array<byte>(18); }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_KIND { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_THRESHOLD_RAD { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MIN_RANGE_M { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MAX_RANGE_M { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_LIGHTING { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M { get { int o = __p.__offset(30); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWConstraint> CreateACWConstraint(FlatBufferBuilder builder,
       acwConstraintKind KIND = acwConstraintKind.UNSPECIFIED,
@@ -48,20 +55,32 @@ public struct ACWConstraint : IFlatbufferObject
       acwLightingCondition LIGHTING = acwLightingCondition.ANY,
       double OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
       VectorOffset MASKOffset = default(VectorOffset),
-      StringOffset LABELOffset = default(StringOffset)) {
-    builder.StartTable(8);
+      StringOffset LABELOffset = default(StringOffset),
+      bool HAS_KIND = false,
+      bool HAS_THRESHOLD_RAD = false,
+      bool HAS_MIN_RANGE_M = false,
+      bool HAS_MAX_RANGE_M = false,
+      bool HAS_LIGHTING = false,
+      bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = false) {
+    builder.StartTable(14);
     ACWConstraint.AddOCCULTATION_ATMOSPHERE_HEIGHT_M(builder, OCCULTATION_ATMOSPHERE_HEIGHT_M);
     ACWConstraint.AddMAX_RANGE_M(builder, MAX_RANGE_M);
     ACWConstraint.AddMIN_RANGE_M(builder, MIN_RANGE_M);
     ACWConstraint.AddTHRESHOLD_RAD(builder, THRESHOLD_RAD);
     ACWConstraint.AddLABEL(builder, LABELOffset);
     ACWConstraint.AddMASK(builder, MASKOffset);
+    ACWConstraint.AddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
+    ACWConstraint.AddHAS_LIGHTING(builder, HAS_LIGHTING);
+    ACWConstraint.AddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M);
+    ACWConstraint.AddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M);
+    ACWConstraint.AddHAS_THRESHOLD_RAD(builder, HAS_THRESHOLD_RAD);
+    ACWConstraint.AddHAS_KIND(builder, HAS_KIND);
     ACWConstraint.AddLIGHTING(builder, LIGHTING);
     ACWConstraint.AddKIND(builder, KIND);
     return ACWConstraint.EndACWConstraint(builder);
   }
 
-  public static void StartACWConstraint(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartACWConstraint(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddKIND(FlatBufferBuilder builder, acwConstraintKind KIND) { builder.AddSbyte(0, (sbyte)KIND, 0); }
   public static void AddTHRESHOLD_RAD(FlatBufferBuilder builder, double THRESHOLD_RAD) { builder.AddDouble(1, THRESHOLD_RAD, 0.0); }
   public static void AddMIN_RANGE_M(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.AddDouble(2, MIN_RANGE_M, 0.0); }
@@ -75,6 +94,12 @@ public struct ACWConstraint : IFlatbufferObject
   public static VectorOffset CreateMASKVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWElevationMaskPoint>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMASKVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddLABEL(FlatBufferBuilder builder, StringOffset LABELOffset) { builder.AddOffset(7, LABELOffset.Value, 0); }
+  public static void AddHAS_KIND(FlatBufferBuilder builder, bool HAS_KIND) { builder.AddBool(8, HAS_KIND, false); }
+  public static void AddHAS_THRESHOLD_RAD(FlatBufferBuilder builder, bool HAS_THRESHOLD_RAD) { builder.AddBool(9, HAS_THRESHOLD_RAD, false); }
+  public static void AddHAS_MIN_RANGE_M(FlatBufferBuilder builder, bool HAS_MIN_RANGE_M) { builder.AddBool(10, HAS_MIN_RANGE_M, false); }
+  public static void AddHAS_MAX_RANGE_M(FlatBufferBuilder builder, bool HAS_MAX_RANGE_M) { builder.AddBool(11, HAS_MAX_RANGE_M, false); }
+  public static void AddHAS_LIGHTING(FlatBufferBuilder builder, bool HAS_LIGHTING) { builder.AddBool(12, HAS_LIGHTING, false); }
+  public static void AddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(FlatBufferBuilder builder, bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) { builder.AddBool(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false); }
   public static Offset<ACWConstraint> EndACWConstraint(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWConstraint>(o);
@@ -94,6 +119,12 @@ public struct ACWConstraint : IFlatbufferObject
     _o.MASK = new List<ACWElevationMaskPointT>();
     for (var _j = 0; _j < this.MASKLength; ++_j) {_o.MASK.Add(this.MASK(_j).HasValue ? this.MASK(_j).Value.UnPack() : null);}
     _o.LABEL = this.LABEL;
+    _o.HAS_KIND = this.HAS_KIND;
+    _o.HAS_THRESHOLD_RAD = this.HAS_THRESHOLD_RAD;
+    _o.HAS_MIN_RANGE_M = this.HAS_MIN_RANGE_M;
+    _o.HAS_MAX_RANGE_M = this.HAS_MAX_RANGE_M;
+    _o.HAS_LIGHTING = this.HAS_LIGHTING;
+    _o.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = this.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M;
   }
   public static Offset<ACWConstraint> Pack(FlatBufferBuilder builder, ACWConstraintT _o) {
     if (_o == null) return default(Offset<ACWConstraint>);
@@ -113,7 +144,13 @@ public struct ACWConstraint : IFlatbufferObject
       _o.LIGHTING,
       _o.OCCULTATION_ATMOSPHERE_HEIGHT_M,
       _MASK,
-      _LABEL);
+      _LABEL,
+      _o.HAS_KIND,
+      _o.HAS_THRESHOLD_RAD,
+      _o.HAS_MIN_RANGE_M,
+      _o.HAS_MAX_RANGE_M,
+      _o.HAS_LIGHTING,
+      _o.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
   }
 }
 
@@ -127,6 +164,12 @@ public class ACWConstraintT
   public double OCCULTATION_ATMOSPHERE_HEIGHT_M { get; set; }
   public List<ACWElevationMaskPointT> MASK { get; set; }
   public string LABEL { get; set; }
+  public bool HAS_KIND { get; set; }
+  public bool HAS_THRESHOLD_RAD { get; set; }
+  public bool HAS_MIN_RANGE_M { get; set; }
+  public bool HAS_MAX_RANGE_M { get; set; }
+  public bool HAS_LIGHTING { get; set; }
+  public bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M { get; set; }
 
   public ACWConstraintT() {
     this.KIND = acwConstraintKind.UNSPECIFIED;
@@ -137,6 +180,12 @@ public class ACWConstraintT
     this.OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0;
     this.MASK = null;
     this.LABEL = null;
+    this.HAS_KIND = false;
+    this.HAS_THRESHOLD_RAD = false;
+    this.HAS_MIN_RANGE_M = false;
+    this.HAS_MAX_RANGE_M = false;
+    this.HAS_LIGHTING = false;
+    this.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = false;
   }
 }
 
@@ -154,6 +203,12 @@ static public class ACWConstraintVerify
       && verifier.VerifyField(tablePos, 14 /*OCCULTATION_ATMOSPHERE_HEIGHT_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 16 /*MASK*/, ACWElevationMaskPointVerify.Verify, false)
       && verifier.VerifyString(tablePos, 18 /*LABEL*/, false)
+      && verifier.VerifyField(tablePos, 20 /*HAS_KIND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*HAS_THRESHOLD_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*HAS_MIN_RANGE_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*HAS_MAX_RANGE_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 28 /*HAS_LIGHTING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

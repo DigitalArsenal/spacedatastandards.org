@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+# A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 # the same frame and time scale as ACWRequest.STATES.
 class ACWObserverTrajectory(object):
     __slots__ = ['_tab']

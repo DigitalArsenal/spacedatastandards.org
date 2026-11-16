@@ -63,7 +63,7 @@ class ACWTarget extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Truth Earth-fixed states with velocity, in the frame and time scale of
+    /// Truth central-body-fixed states with velocity, in the frame and time scale of
     /// ACWRequest.STATES.
     /**
      * @returnVectorOffset
@@ -91,27 +91,38 @@ class ACWTarget extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_NORAD_CAT_ID()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWTarget(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWTarget
      */
-    public static function createACWTarget(FlatBufferBuilder $builder, $TARGET_ID, $NORAD_CAT_ID, $OBJECT_ID, $STATES, $SIGNATURE)
+    public static function createACWTarget(FlatBufferBuilder $builder, $TARGET_ID, $NORAD_CAT_ID, $OBJECT_ID, $STATES, $SIGNATURE, $HAS_NORAD_CAT_ID)
     {
-        $builder->startObject(5);
+        $builder->startObject(6);
         self::addTARGET_ID($builder, $TARGET_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addSTATES($builder, $STATES);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addHAS_NORAD_CAT_ID($builder, $HAS_NORAD_CAT_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -188,6 +199,16 @@ class ACWTarget extends Table
     public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
     {
         $builder->addOffsetX(4, $SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_NORAD_CAT_ID(FlatBufferBuilder $builder, $HAS_NORAD_CAT_ID)
+    {
+        $builder->addBoolX(5, $HAS_NORAD_CAT_ID, false);
     }
 
     /**

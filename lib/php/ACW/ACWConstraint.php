@@ -89,8 +89,8 @@ class ACWConstraint extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \acwLightingCondition::ANY;
     }
 
-    /// Central-body radius offset for line-of-sight occultation, meters
-    /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+    /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+    /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
     /**
      * @return double
      */
@@ -127,22 +127,77 @@ class ACWConstraint extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_KIND()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_THRESHOLD_RAD()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MIN_RANGE_M()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MAX_RANGE_M()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_LIGHTING()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWConstraint(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWConstraint
      */
-    public static function createACWConstraint(FlatBufferBuilder $builder, $KIND, $THRESHOLD_RAD, $MIN_RANGE_M, $MAX_RANGE_M, $LIGHTING, $OCCULTATION_ATMOSPHERE_HEIGHT_M, $MASK, $LABEL)
+    public static function createACWConstraint(FlatBufferBuilder $builder, $KIND, $THRESHOLD_RAD, $MIN_RANGE_M, $MAX_RANGE_M, $LIGHTING, $OCCULTATION_ATMOSPHERE_HEIGHT_M, $MASK, $LABEL, $HAS_KIND, $HAS_THRESHOLD_RAD, $HAS_MIN_RANGE_M, $HAS_MAX_RANGE_M, $HAS_LIGHTING, $HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M)
     {
-        $builder->startObject(8);
+        $builder->startObject(14);
         self::addKIND($builder, $KIND);
         self::addTHRESHOLD_RAD($builder, $THRESHOLD_RAD);
         self::addMIN_RANGE_M($builder, $MIN_RANGE_M);
@@ -151,6 +206,12 @@ class ACWConstraint extends Table
         self::addOCCULTATION_ATMOSPHERE_HEIGHT_M($builder, $OCCULTATION_ATMOSPHERE_HEIGHT_M);
         self::addMASK($builder, $MASK);
         self::addLABEL($builder, $LABEL);
+        self::addHAS_KIND($builder, $HAS_KIND);
+        self::addHAS_THRESHOLD_RAD($builder, $HAS_THRESHOLD_RAD);
+        self::addHAS_MIN_RANGE_M($builder, $HAS_MIN_RANGE_M);
+        self::addHAS_MAX_RANGE_M($builder, $HAS_MAX_RANGE_M);
+        self::addHAS_LIGHTING($builder, $HAS_LIGHTING);
+        self::addHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M($builder, $HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
         $o = $builder->endObject();
         return $o;
     }
@@ -257,6 +318,66 @@ class ACWConstraint extends Table
     public static function addLABEL(FlatBufferBuilder $builder, $LABEL)
     {
         $builder->addOffsetX(7, $LABEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_KIND(FlatBufferBuilder $builder, $HAS_KIND)
+    {
+        $builder->addBoolX(8, $HAS_KIND, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_THRESHOLD_RAD(FlatBufferBuilder $builder, $HAS_THRESHOLD_RAD)
+    {
+        $builder->addBoolX(9, $HAS_THRESHOLD_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MIN_RANGE_M(FlatBufferBuilder $builder, $HAS_MIN_RANGE_M)
+    {
+        $builder->addBoolX(10, $HAS_MIN_RANGE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAX_RANGE_M(FlatBufferBuilder $builder, $HAS_MAX_RANGE_M)
+    {
+        $builder->addBoolX(11, $HAS_MAX_RANGE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_LIGHTING(FlatBufferBuilder $builder, $HAS_LIGHTING)
+    {
+        $builder->addBoolX(12, $HAS_LIGHTING, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(FlatBufferBuilder $builder, $HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M)
+    {
+        $builder->addBoolX(13, $HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false);
     }
 
     /**

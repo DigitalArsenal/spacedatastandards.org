@@ -3,22 +3,28 @@
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_ACW_OPERATION_CODE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ACW_OPERATION_CODE: i8 = 2;
+pub const ENUM_MAX_ACW_OPERATION_CODE: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ACW_OPERATION_CODE: [acwOperationCode; 3] = [
+pub const ENUM_VALUES_ACW_OPERATION_CODE: [acwOperationCode; 5] = [
     acwOperationCode::UNKNOWN,
     acwOperationCode::COMPUTE_ACCESS_WINDOWS,
     acwOperationCode::SIMULATE_OBSERVATIONS,
+    acwOperationCode::COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY,
+    acwOperationCode::SIMULATE_OBSERVATIONS_EXPLICIT_BODY,
 ];
 
+/// ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+/// Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+/// does not apply to ACW enumerations as a group.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct acwOperationCode(pub i8);
@@ -37,13 +43,19 @@ impl acwOperationCode {
     /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
     /// records; the result lists the tracks.
     pub const SIMULATE_OBSERVATIONS: Self = Self(2);
+    /// Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+    pub const COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY: Self = Self(3);
+    /// Only runtime simulation operation in body-aware modules; body required.
+    pub const SIMULATE_OBSERVATIONS_EXPLICIT_BODY: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 2;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNKNOWN,
         Self::COMPUTE_ACCESS_WINDOWS,
         Self::SIMULATE_OBSERVATIONS,
+        Self::COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY,
+        Self::SIMULATE_OBSERVATIONS_EXPLICIT_BODY,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -52,6 +64,8 @@ impl acwOperationCode {
             Self::UNKNOWN => Some("UNKNOWN"),
             Self::COMPUTE_ACCESS_WINDOWS => Some("COMPUTE_ACCESS_WINDOWS"),
             Self::SIMULATE_OBSERVATIONS => Some("SIMULATE_OBSERVATIONS"),
+            Self::COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY => Some("COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY"),
+            Self::SIMULATE_OBSERVATIONS_EXPLICIT_BODY => Some("SIMULATE_OBSERVATIONS_EXPLICIT_BODY"),
             _ => None,
         }
     }
@@ -871,9 +885,839 @@ impl<'a> ::flatbuffers::Verifiable for acwSensorPhenomenology {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for acwSensorPhenomenology {}
 
+pub enum BodyRecordRefOffset {}
+
+/// Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+/// or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+/// Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+/// MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+/// RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+/// the complete root. URI is advisory and never fetched by a module.
+#[derive(Copy, Clone, PartialEq)]
+pub struct BodyRecordRef<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for BodyRecordRef<'a> {
+    type Inner = BodyRecordRef<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> BodyRecordRef<'a> {
+    pub const VT_STANDARD: ::flatbuffers::VOffsetT = 4;
+    pub const VT_RECORD_ID: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SHA256: ::flatbuffers::VOffsetT = 8;
+    pub const VT_URI: ::flatbuffers::VOffsetT = 10;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        BodyRecordRef { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args BodyRecordRefArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<BodyRecordRef<'bldr>> {
+        let mut builder = BodyRecordRefBuilder::new(_fbb);
+        if let Some(x) = args.URI { builder.add_URI(x); }
+        if let Some(x) = args.SHA256 { builder.add_SHA256(x); }
+        if let Some(x) = args.RECORD_ID { builder.add_RECORD_ID(x); }
+        if let Some(x) = args.STANDARD { builder.add_STANDARD(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> BodyRecordRefT {
+        let STANDARD = {
+            let x = self.STANDARD();
+            alloc::string::ToString::to_string(x)
+        };
+        let RECORD_ID = {
+            let x = self.RECORD_ID();
+            alloc::string::ToString::to_string(x)
+        };
+        let SHA256 = {
+            let x = self.SHA256();
+            alloc::string::ToString::to_string(x)
+        };
+        let URI = self.URI().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        BodyRecordRefT {
+            STANDARD,
+            RECORD_ID,
+            SHA256,
+            URI,
+        }
+    }
+
+    #[inline]
+    pub fn STANDARD(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyRecordRef::VT_STANDARD, None).unwrap()}
+    }
+
+    #[inline]
+    pub fn RECORD_ID(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyRecordRef::VT_RECORD_ID, None).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHA256(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyRecordRef::VT_SHA256, None).unwrap()}
+    }
+
+    #[inline]
+    pub fn URI(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyRecordRef::VT_URI, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for BodyRecordRef<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STANDARD", Self::VT_STANDARD, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RECORD_ID", Self::VT_RECORD_ID, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SHA256", Self::VT_SHA256, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("URI", Self::VT_URI, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct BodyRecordRefArgs<'a> {
+    pub STANDARD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECORD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub URI: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for BodyRecordRefArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        BodyRecordRefArgs {
+            STANDARD: None, // required field
+            RECORD_ID: None, // required field
+            SHA256: None, // required field
+            URI: None,
+        }
+    }
+}
+
+pub struct BodyRecordRefBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BodyRecordRefBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_STANDARD(&mut self, STANDARD: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyRecordRef::VT_STANDARD, STANDARD);
+    }
+
+    #[inline]
+    pub fn add_RECORD_ID(&mut self, RECORD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyRecordRef::VT_RECORD_ID, RECORD_ID);
+    }
+
+    #[inline]
+    pub fn add_SHA256(&mut self, SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyRecordRef::VT_SHA256, SHA256);
+    }
+
+    #[inline]
+    pub fn add_URI(&mut self, URI: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyRecordRef::VT_URI, URI);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BodyRecordRefBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        BodyRecordRefBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<BodyRecordRef<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, BodyRecordRef::VT_STANDARD,"STANDARD");
+        self.fbb_.required(o, BodyRecordRef::VT_RECORD_ID,"RECORD_ID");
+        self.fbb_.required(o, BodyRecordRef::VT_SHA256,"SHA256");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for BodyRecordRef<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("BodyRecordRef");
+        ds.field("STANDARD", &self.STANDARD());
+        ds.field("RECORD_ID", &self.RECORD_ID());
+        ds.field("SHA256", &self.SHA256());
+        ds.field("URI", &self.URI());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct BodyRecordRefT {
+    pub STANDARD: alloc::string::String,
+    pub RECORD_ID: alloc::string::String,
+    pub SHA256: alloc::string::String,
+    pub URI: Option<alloc::string::String>,
+}
+
+impl Default for BodyRecordRefT {
+    fn default() -> Self {
+        Self {
+            STANDARD: alloc::string::ToString::to_string(""),
+            RECORD_ID: alloc::string::ToString::to_string(""),
+            SHA256: alloc::string::ToString::to_string(""),
+            URI: None,
+        }
+    }
+}
+
+impl BodyRecordRefT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<BodyRecordRef<'b>> {
+        let STANDARD = Some({
+            let x = &self.STANDARD;
+            _fbb.create_string(x)
+        });
+        let RECORD_ID = Some({
+            let x = &self.RECORD_ID;
+            _fbb.create_string(x)
+        });
+        let SHA256 = Some({
+            let x = &self.SHA256;
+            _fbb.create_string(x)
+        });
+        let URI = self.URI.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        BodyRecordRef::create(_fbb, &BodyRecordRefArgs{
+            STANDARD,
+            RECORD_ID,
+            SHA256,
+            URI,
+        })
+    }
+}
+
+pub enum BodyDescriptorOffset {}
+
+/// Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+/// No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+/// SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+#[derive(Copy, Clone, PartialEq)]
+pub struct BodyDescriptor<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for BodyDescriptor<'a> {
+    type Inner = BodyDescriptor<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> BodyDescriptor<'a> {
+    pub const VT_NAIF_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_FIXED_FRAME: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SEMI_AXIS_X_M: ::flatbuffers::VOffsetT = 8;
+    pub const VT_SEMI_AXIS_Y_M: ::flatbuffers::VOffsetT = 10;
+    pub const VT_SEMI_AXIS_Z_M: ::flatbuffers::VOffsetT = 12;
+    pub const VT_MODEL_ID: ::flatbuffers::VOffsetT = 14;
+    pub const VT_MODEL_SHA256: ::flatbuffers::VOffsetT = 16;
+    pub const VT_ATMOSPHERE_MODEL_ID: ::flatbuffers::VOffsetT = 18;
+    pub const VT_TERRAIN: ::flatbuffers::VOffsetT = 20;
+    pub const VT_GRAVITY: ::flatbuffers::VOffsetT = 22;
+    pub const VT_LIGHTING_SPHERE_RADIUS_M: ::flatbuffers::VOffsetT = 24;
+    pub const VT_LIGHTING_MODEL_ID: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HAS_NAIF_ID: ::flatbuffers::VOffsetT = 28;
+    pub const VT_HAS_SEMI_AXIS_X_M: ::flatbuffers::VOffsetT = 30;
+    pub const VT_HAS_SEMI_AXIS_Y_M: ::flatbuffers::VOffsetT = 32;
+    pub const VT_HAS_SEMI_AXIS_Z_M: ::flatbuffers::VOffsetT = 34;
+    pub const VT_HAS_LIGHTING_SPHERE_RADIUS_M: ::flatbuffers::VOffsetT = 36;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        BodyDescriptor { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args BodyDescriptorArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<BodyDescriptor<'bldr>> {
+        let mut builder = BodyDescriptorBuilder::new(_fbb);
+        builder.add_LIGHTING_SPHERE_RADIUS_M(args.LIGHTING_SPHERE_RADIUS_M);
+        builder.add_SEMI_AXIS_Z_M(args.SEMI_AXIS_Z_M);
+        builder.add_SEMI_AXIS_Y_M(args.SEMI_AXIS_Y_M);
+        builder.add_SEMI_AXIS_X_M(args.SEMI_AXIS_X_M);
+        if let Some(x) = args.LIGHTING_MODEL_ID { builder.add_LIGHTING_MODEL_ID(x); }
+        if let Some(x) = args.GRAVITY { builder.add_GRAVITY(x); }
+        if let Some(x) = args.TERRAIN { builder.add_TERRAIN(x); }
+        if let Some(x) = args.ATMOSPHERE_MODEL_ID { builder.add_ATMOSPHERE_MODEL_ID(x); }
+        if let Some(x) = args.MODEL_SHA256 { builder.add_MODEL_SHA256(x); }
+        if let Some(x) = args.MODEL_ID { builder.add_MODEL_ID(x); }
+        if let Some(x) = args.FIXED_FRAME { builder.add_FIXED_FRAME(x); }
+        builder.add_NAIF_ID(args.NAIF_ID);
+        builder.add_HAS_LIGHTING_SPHERE_RADIUS_M(args.HAS_LIGHTING_SPHERE_RADIUS_M);
+        builder.add_HAS_SEMI_AXIS_Z_M(args.HAS_SEMI_AXIS_Z_M);
+        builder.add_HAS_SEMI_AXIS_Y_M(args.HAS_SEMI_AXIS_Y_M);
+        builder.add_HAS_SEMI_AXIS_X_M(args.HAS_SEMI_AXIS_X_M);
+        builder.add_HAS_NAIF_ID(args.HAS_NAIF_ID);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> BodyDescriptorT {
+        let NAIF_ID = self.NAIF_ID();
+        let FIXED_FRAME = {
+            let x = self.FIXED_FRAME();
+            alloc::boxed::Box::new(x.unpack())
+        };
+        let SEMI_AXIS_X_M = self.SEMI_AXIS_X_M();
+        let SEMI_AXIS_Y_M = self.SEMI_AXIS_Y_M();
+        let SEMI_AXIS_Z_M = self.SEMI_AXIS_Z_M();
+        let MODEL_ID = {
+            let x = self.MODEL_ID();
+            alloc::string::ToString::to_string(x)
+        };
+        let MODEL_SHA256 = {
+            let x = self.MODEL_SHA256();
+            alloc::string::ToString::to_string(x)
+        };
+        let ATMOSPHERE_MODEL_ID = {
+            let x = self.ATMOSPHERE_MODEL_ID();
+            alloc::string::ToString::to_string(x)
+        };
+        let TERRAIN = self.TERRAIN().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let GRAVITY = self.GRAVITY().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let LIGHTING_SPHERE_RADIUS_M = self.LIGHTING_SPHERE_RADIUS_M();
+        let LIGHTING_MODEL_ID = self.LIGHTING_MODEL_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let HAS_NAIF_ID = self.HAS_NAIF_ID();
+        let HAS_SEMI_AXIS_X_M = self.HAS_SEMI_AXIS_X_M();
+        let HAS_SEMI_AXIS_Y_M = self.HAS_SEMI_AXIS_Y_M();
+        let HAS_SEMI_AXIS_Z_M = self.HAS_SEMI_AXIS_Z_M();
+        let HAS_LIGHTING_SPHERE_RADIUS_M = self.HAS_LIGHTING_SPHERE_RADIUS_M();
+        BodyDescriptorT {
+            NAIF_ID,
+            FIXED_FRAME,
+            SEMI_AXIS_X_M,
+            SEMI_AXIS_Y_M,
+            SEMI_AXIS_Z_M,
+            MODEL_ID,
+            MODEL_SHA256,
+            ATMOSPHERE_MODEL_ID,
+            TERRAIN,
+            GRAVITY,
+            LIGHTING_SPHERE_RADIUS_M,
+            LIGHTING_MODEL_ID,
+            HAS_NAIF_ID,
+            HAS_SEMI_AXIS_X_M,
+            HAS_SEMI_AXIS_Y_M,
+            HAS_SEMI_AXIS_Z_M,
+            HAS_LIGHTING_SPHERE_RADIUS_M,
+        }
+    }
+
+    /// Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+    #[inline]
+    pub fn NAIF_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(BodyDescriptor::VT_NAIF_ID, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn FIXED_FRAME(&self) -> RFMCoordinateSystem<'a> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>(BodyDescriptor::VT_FIXED_FRAME, None).unwrap()}
+    }
+
+    /// Each axis requires its HAS flag and a finite positive value.
+    #[inline]
+    pub fn SEMI_AXIS_X_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(BodyDescriptor::VT_SEMI_AXIS_X_M, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SEMI_AXIS_Y_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(BodyDescriptor::VT_SEMI_AXIS_Y_M, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SEMI_AXIS_Z_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(BodyDescriptor::VT_SEMI_AXIS_Z_M, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn MODEL_ID(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyDescriptor::VT_MODEL_ID, None).unwrap()}
+    }
+
+    /// Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+    #[inline]
+    pub fn MODEL_SHA256(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyDescriptor::VT_MODEL_SHA256, None).unwrap()}
+    }
+
+    /// Required explicit assertion, "NONE" or a supported model identifier.
+    #[inline]
+    pub fn ATMOSPHERE_MODEL_ID(&self) -> &'a str {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyDescriptor::VT_ATMOSPHERE_MODEL_ID, None).unwrap()}
+    }
+
+    /// Absent means no terrain supplied; elevation remains mandatory for sites.
+    #[inline]
+    pub fn TERRAIN(&self) -> Option<BodyRecordRef<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BodyRecordRef>>(BodyDescriptor::VT_TERRAIN, None)}
+    }
+
+    /// Optional SHC or MODEL reference; its radius is not the shape radius.
+    #[inline]
+    pub fn GRAVITY(&self) -> Option<BodyRecordRef<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BodyRecordRef>>(BodyDescriptor::VT_GRAVITY, None)}
+    }
+
+    /// True HAS flag, positive radius and name required for non-ANY lighting.
+    /// This is a named spherical-shadow approximation, not ellipsoidal lighting.
+    #[inline]
+    pub fn LIGHTING_SPHERE_RADIUS_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(BodyDescriptor::VT_LIGHTING_SPHERE_RADIUS_M, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn LIGHTING_MODEL_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BodyDescriptor::VT_LIGHTING_MODEL_ID, None)}
+    }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_NAIF_ID(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(BodyDescriptor::VT_HAS_NAIF_ID, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_SEMI_AXIS_X_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_X_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_SEMI_AXIS_Y_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_Y_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_SEMI_AXIS_Z_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_Z_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_LIGHTING_SPHERE_RADIUS_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(BodyDescriptor::VT_HAS_LIGHTING_SPHERE_RADIUS_M, Some(false)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for BodyDescriptor<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<i32>("NAIF_ID", Self::VT_NAIF_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<RFMCoordinateSystem>>("FIXED_FRAME", Self::VT_FIXED_FRAME, true)?
+            .visit_field::<f64>("SEMI_AXIS_X_M", Self::VT_SEMI_AXIS_X_M, false)?
+            .visit_field::<f64>("SEMI_AXIS_Y_M", Self::VT_SEMI_AXIS_Y_M, false)?
+            .visit_field::<f64>("SEMI_AXIS_Z_M", Self::VT_SEMI_AXIS_Z_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_ID", Self::VT_MODEL_ID, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODEL_SHA256", Self::VT_MODEL_SHA256, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ATMOSPHERE_MODEL_ID", Self::VT_ATMOSPHERE_MODEL_ID, true)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<BodyRecordRef>>("TERRAIN", Self::VT_TERRAIN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<BodyRecordRef>>("GRAVITY", Self::VT_GRAVITY, false)?
+            .visit_field::<f64>("LIGHTING_SPHERE_RADIUS_M", Self::VT_LIGHTING_SPHERE_RADIUS_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LIGHTING_MODEL_ID", Self::VT_LIGHTING_MODEL_ID, false)?
+            .visit_field::<bool>("HAS_NAIF_ID", Self::VT_HAS_NAIF_ID, false)?
+            .visit_field::<bool>("HAS_SEMI_AXIS_X_M", Self::VT_HAS_SEMI_AXIS_X_M, false)?
+            .visit_field::<bool>("HAS_SEMI_AXIS_Y_M", Self::VT_HAS_SEMI_AXIS_Y_M, false)?
+            .visit_field::<bool>("HAS_SEMI_AXIS_Z_M", Self::VT_HAS_SEMI_AXIS_Z_M, false)?
+            .visit_field::<bool>("HAS_LIGHTING_SPHERE_RADIUS_M", Self::VT_HAS_LIGHTING_SPHERE_RADIUS_M, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct BodyDescriptorArgs<'a> {
+    pub NAIF_ID: i32,
+    pub FIXED_FRAME: Option<::flatbuffers::WIPOffset<RFMCoordinateSystem<'a>>>,
+    pub SEMI_AXIS_X_M: f64,
+    pub SEMI_AXIS_Y_M: f64,
+    pub SEMI_AXIS_Z_M: f64,
+    pub MODEL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODEL_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ATMOSPHERE_MODEL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TERRAIN: Option<::flatbuffers::WIPOffset<BodyRecordRef<'a>>>,
+    pub GRAVITY: Option<::flatbuffers::WIPOffset<BodyRecordRef<'a>>>,
+    pub LIGHTING_SPHERE_RADIUS_M: f64,
+    pub LIGHTING_MODEL_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HAS_NAIF_ID: bool,
+    pub HAS_SEMI_AXIS_X_M: bool,
+    pub HAS_SEMI_AXIS_Y_M: bool,
+    pub HAS_SEMI_AXIS_Z_M: bool,
+    pub HAS_LIGHTING_SPHERE_RADIUS_M: bool,
+}
+
+impl<'a> Default for BodyDescriptorArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        BodyDescriptorArgs {
+            NAIF_ID: 0,
+            FIXED_FRAME: None, // required field
+            SEMI_AXIS_X_M: f64::NAN,
+            SEMI_AXIS_Y_M: f64::NAN,
+            SEMI_AXIS_Z_M: f64::NAN,
+            MODEL_ID: None, // required field
+            MODEL_SHA256: None, // required field
+            ATMOSPHERE_MODEL_ID: None, // required field
+            TERRAIN: None,
+            GRAVITY: None,
+            LIGHTING_SPHERE_RADIUS_M: f64::NAN,
+            LIGHTING_MODEL_ID: None,
+            HAS_NAIF_ID: false,
+            HAS_SEMI_AXIS_X_M: false,
+            HAS_SEMI_AXIS_Y_M: false,
+            HAS_SEMI_AXIS_Z_M: false,
+            HAS_LIGHTING_SPHERE_RADIUS_M: false,
+        }
+    }
+}
+
+pub struct BodyDescriptorBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> BodyDescriptorBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_NAIF_ID(&mut self, NAIF_ID: i32) {
+        self.fbb_.push_slot::<i32>(BodyDescriptor::VT_NAIF_ID, NAIF_ID, 0);
+    }
+
+    #[inline]
+    pub fn add_FIXED_FRAME(&mut self, FIXED_FRAME: ::flatbuffers::WIPOffset<RFMCoordinateSystem<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFMCoordinateSystem>>(BodyDescriptor::VT_FIXED_FRAME, FIXED_FRAME);
+    }
+
+    #[inline]
+    pub fn add_SEMI_AXIS_X_M(&mut self, SEMI_AXIS_X_M: f64) {
+        self.fbb_.push_slot::<f64>(BodyDescriptor::VT_SEMI_AXIS_X_M, SEMI_AXIS_X_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SEMI_AXIS_Y_M(&mut self, SEMI_AXIS_Y_M: f64) {
+        self.fbb_.push_slot::<f64>(BodyDescriptor::VT_SEMI_AXIS_Y_M, SEMI_AXIS_Y_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SEMI_AXIS_Z_M(&mut self, SEMI_AXIS_Z_M: f64) {
+        self.fbb_.push_slot::<f64>(BodyDescriptor::VT_SEMI_AXIS_Z_M, SEMI_AXIS_Z_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_MODEL_ID(&mut self, MODEL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyDescriptor::VT_MODEL_ID, MODEL_ID);
+    }
+
+    #[inline]
+    pub fn add_MODEL_SHA256(&mut self, MODEL_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyDescriptor::VT_MODEL_SHA256, MODEL_SHA256);
+    }
+
+    #[inline]
+    pub fn add_ATMOSPHERE_MODEL_ID(&mut self, ATMOSPHERE_MODEL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyDescriptor::VT_ATMOSPHERE_MODEL_ID, ATMOSPHERE_MODEL_ID);
+    }
+
+    #[inline]
+    pub fn add_TERRAIN(&mut self, TERRAIN: ::flatbuffers::WIPOffset<BodyRecordRef<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BodyRecordRef>>(BodyDescriptor::VT_TERRAIN, TERRAIN);
+    }
+
+    #[inline]
+    pub fn add_GRAVITY(&mut self, GRAVITY: ::flatbuffers::WIPOffset<BodyRecordRef<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BodyRecordRef>>(BodyDescriptor::VT_GRAVITY, GRAVITY);
+    }
+
+    #[inline]
+    pub fn add_LIGHTING_SPHERE_RADIUS_M(&mut self, LIGHTING_SPHERE_RADIUS_M: f64) {
+        self.fbb_.push_slot::<f64>(BodyDescriptor::VT_LIGHTING_SPHERE_RADIUS_M, LIGHTING_SPHERE_RADIUS_M, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_LIGHTING_MODEL_ID(&mut self, LIGHTING_MODEL_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(BodyDescriptor::VT_LIGHTING_MODEL_ID, LIGHTING_MODEL_ID);
+    }
+
+    #[inline]
+    pub fn add_HAS_NAIF_ID(&mut self, HAS_NAIF_ID: bool) {
+        self.fbb_.push_slot::<bool>(BodyDescriptor::VT_HAS_NAIF_ID, HAS_NAIF_ID, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_SEMI_AXIS_X_M(&mut self, HAS_SEMI_AXIS_X_M: bool) {
+        self.fbb_.push_slot::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_X_M, HAS_SEMI_AXIS_X_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_SEMI_AXIS_Y_M(&mut self, HAS_SEMI_AXIS_Y_M: bool) {
+        self.fbb_.push_slot::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_Y_M, HAS_SEMI_AXIS_Y_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_SEMI_AXIS_Z_M(&mut self, HAS_SEMI_AXIS_Z_M: bool) {
+        self.fbb_.push_slot::<bool>(BodyDescriptor::VT_HAS_SEMI_AXIS_Z_M, HAS_SEMI_AXIS_Z_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_LIGHTING_SPHERE_RADIUS_M(&mut self, HAS_LIGHTING_SPHERE_RADIUS_M: bool) {
+        self.fbb_.push_slot::<bool>(BodyDescriptor::VT_HAS_LIGHTING_SPHERE_RADIUS_M, HAS_LIGHTING_SPHERE_RADIUS_M, false);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> BodyDescriptorBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        BodyDescriptorBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<BodyDescriptor<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, BodyDescriptor::VT_FIXED_FRAME,"FIXED_FRAME");
+        self.fbb_.required(o, BodyDescriptor::VT_MODEL_ID,"MODEL_ID");
+        self.fbb_.required(o, BodyDescriptor::VT_MODEL_SHA256,"MODEL_SHA256");
+        self.fbb_.required(o, BodyDescriptor::VT_ATMOSPHERE_MODEL_ID,"ATMOSPHERE_MODEL_ID");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for BodyDescriptor<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("BodyDescriptor");
+        ds.field("NAIF_ID", &self.NAIF_ID());
+        ds.field("FIXED_FRAME", &self.FIXED_FRAME());
+        ds.field("SEMI_AXIS_X_M", &self.SEMI_AXIS_X_M());
+        ds.field("SEMI_AXIS_Y_M", &self.SEMI_AXIS_Y_M());
+        ds.field("SEMI_AXIS_Z_M", &self.SEMI_AXIS_Z_M());
+        ds.field("MODEL_ID", &self.MODEL_ID());
+        ds.field("MODEL_SHA256", &self.MODEL_SHA256());
+        ds.field("ATMOSPHERE_MODEL_ID", &self.ATMOSPHERE_MODEL_ID());
+        ds.field("TERRAIN", &self.TERRAIN());
+        ds.field("GRAVITY", &self.GRAVITY());
+        ds.field("LIGHTING_SPHERE_RADIUS_M", &self.LIGHTING_SPHERE_RADIUS_M());
+        ds.field("LIGHTING_MODEL_ID", &self.LIGHTING_MODEL_ID());
+        ds.field("HAS_NAIF_ID", &self.HAS_NAIF_ID());
+        ds.field("HAS_SEMI_AXIS_X_M", &self.HAS_SEMI_AXIS_X_M());
+        ds.field("HAS_SEMI_AXIS_Y_M", &self.HAS_SEMI_AXIS_Y_M());
+        ds.field("HAS_SEMI_AXIS_Z_M", &self.HAS_SEMI_AXIS_Z_M());
+        ds.field("HAS_LIGHTING_SPHERE_RADIUS_M", &self.HAS_LIGHTING_SPHERE_RADIUS_M());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct BodyDescriptorT {
+    pub NAIF_ID: i32,
+    pub FIXED_FRAME: alloc::boxed::Box<RFMCoordinateSystemT>,
+    pub SEMI_AXIS_X_M: f64,
+    pub SEMI_AXIS_Y_M: f64,
+    pub SEMI_AXIS_Z_M: f64,
+    pub MODEL_ID: alloc::string::String,
+    pub MODEL_SHA256: alloc::string::String,
+    pub ATMOSPHERE_MODEL_ID: alloc::string::String,
+    pub TERRAIN: Option<alloc::boxed::Box<BodyRecordRefT>>,
+    pub GRAVITY: Option<alloc::boxed::Box<BodyRecordRefT>>,
+    pub LIGHTING_SPHERE_RADIUS_M: f64,
+    pub LIGHTING_MODEL_ID: Option<alloc::string::String>,
+    pub HAS_NAIF_ID: bool,
+    pub HAS_SEMI_AXIS_X_M: bool,
+    pub HAS_SEMI_AXIS_Y_M: bool,
+    pub HAS_SEMI_AXIS_Z_M: bool,
+    pub HAS_LIGHTING_SPHERE_RADIUS_M: bool,
+}
+
+impl Default for BodyDescriptorT {
+    fn default() -> Self {
+        Self {
+            NAIF_ID: 0,
+            FIXED_FRAME: Default::default(),
+            SEMI_AXIS_X_M: f64::NAN,
+            SEMI_AXIS_Y_M: f64::NAN,
+            SEMI_AXIS_Z_M: f64::NAN,
+            MODEL_ID: alloc::string::ToString::to_string(""),
+            MODEL_SHA256: alloc::string::ToString::to_string(""),
+            ATMOSPHERE_MODEL_ID: alloc::string::ToString::to_string(""),
+            TERRAIN: None,
+            GRAVITY: None,
+            LIGHTING_SPHERE_RADIUS_M: f64::NAN,
+            LIGHTING_MODEL_ID: None,
+            HAS_NAIF_ID: false,
+            HAS_SEMI_AXIS_X_M: false,
+            HAS_SEMI_AXIS_Y_M: false,
+            HAS_SEMI_AXIS_Z_M: false,
+            HAS_LIGHTING_SPHERE_RADIUS_M: false,
+        }
+    }
+}
+
+impl BodyDescriptorT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<BodyDescriptor<'b>> {
+        let NAIF_ID = self.NAIF_ID;
+        let FIXED_FRAME = Some({
+            let x = &self.FIXED_FRAME;
+            x.pack(_fbb)
+        });
+        let SEMI_AXIS_X_M = self.SEMI_AXIS_X_M;
+        let SEMI_AXIS_Y_M = self.SEMI_AXIS_Y_M;
+        let SEMI_AXIS_Z_M = self.SEMI_AXIS_Z_M;
+        let MODEL_ID = Some({
+            let x = &self.MODEL_ID;
+            _fbb.create_string(x)
+        });
+        let MODEL_SHA256 = Some({
+            let x = &self.MODEL_SHA256;
+            _fbb.create_string(x)
+        });
+        let ATMOSPHERE_MODEL_ID = Some({
+            let x = &self.ATMOSPHERE_MODEL_ID;
+            _fbb.create_string(x)
+        });
+        let TERRAIN = self.TERRAIN.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let GRAVITY = self.GRAVITY.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let LIGHTING_SPHERE_RADIUS_M = self.LIGHTING_SPHERE_RADIUS_M;
+        let LIGHTING_MODEL_ID = self.LIGHTING_MODEL_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let HAS_NAIF_ID = self.HAS_NAIF_ID;
+        let HAS_SEMI_AXIS_X_M = self.HAS_SEMI_AXIS_X_M;
+        let HAS_SEMI_AXIS_Y_M = self.HAS_SEMI_AXIS_Y_M;
+        let HAS_SEMI_AXIS_Z_M = self.HAS_SEMI_AXIS_Z_M;
+        let HAS_LIGHTING_SPHERE_RADIUS_M = self.HAS_LIGHTING_SPHERE_RADIUS_M;
+        BodyDescriptor::create(_fbb, &BodyDescriptorArgs{
+            NAIF_ID,
+            FIXED_FRAME,
+            SEMI_AXIS_X_M,
+            SEMI_AXIS_Y_M,
+            SEMI_AXIS_Z_M,
+            MODEL_ID,
+            MODEL_SHA256,
+            ATMOSPHERE_MODEL_ID,
+            TERRAIN,
+            GRAVITY,
+            LIGHTING_SPHERE_RADIUS_M,
+            LIGHTING_MODEL_ID,
+            HAS_NAIF_ID,
+            HAS_SEMI_AXIS_X_M,
+            HAS_SEMI_AXIS_Y_M,
+            HAS_SEMI_AXIS_Z_M,
+            HAS_LIGHTING_SPHERE_RADIUS_M,
+        })
+    }
+}
+
 pub enum ACWStateSampleOffset {}
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 #[derive(Copy, Clone, PartialEq)]
 pub struct ACWStateSample<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -896,6 +1740,13 @@ impl<'a> ACWStateSample<'a> {
     pub const VT_VELOCITY_X_MPS: ::flatbuffers::VOffsetT = 12;
     pub const VT_VELOCITY_Y_MPS: ::flatbuffers::VOffsetT = 14;
     pub const VT_VELOCITY_Z_MPS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_HAS_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_POSITION_X_M: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_POSITION_Y_M: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HAS_POSITION_Z_M: ::flatbuffers::VOffsetT = 24;
+    pub const VT_HAS_VELOCITY_X_MPS: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HAS_VELOCITY_Y_MPS: ::flatbuffers::VOffsetT = 28;
+    pub const VT_HAS_VELOCITY_Z_MPS: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -915,6 +1766,13 @@ impl<'a> ACWStateSample<'a> {
         builder.add_POSITION_Y_M(args.POSITION_Y_M);
         builder.add_POSITION_X_M(args.POSITION_X_M);
         builder.add_JULIAN_DATE_TT(args.JULIAN_DATE_TT);
+        builder.add_HAS_VELOCITY_Z_MPS(args.HAS_VELOCITY_Z_MPS);
+        builder.add_HAS_VELOCITY_Y_MPS(args.HAS_VELOCITY_Y_MPS);
+        builder.add_HAS_VELOCITY_X_MPS(args.HAS_VELOCITY_X_MPS);
+        builder.add_HAS_POSITION_Z_M(args.HAS_POSITION_Z_M);
+        builder.add_HAS_POSITION_Y_M(args.HAS_POSITION_Y_M);
+        builder.add_HAS_POSITION_X_M(args.HAS_POSITION_X_M);
+        builder.add_HAS_JULIAN_DATE_TT(args.HAS_JULIAN_DATE_TT);
         builder.finish()
     }
 
@@ -926,6 +1784,13 @@ impl<'a> ACWStateSample<'a> {
         let VELOCITY_X_MPS = self.VELOCITY_X_MPS();
         let VELOCITY_Y_MPS = self.VELOCITY_Y_MPS();
         let VELOCITY_Z_MPS = self.VELOCITY_Z_MPS();
+        let HAS_JULIAN_DATE_TT = self.HAS_JULIAN_DATE_TT();
+        let HAS_POSITION_X_M = self.HAS_POSITION_X_M();
+        let HAS_POSITION_Y_M = self.HAS_POSITION_Y_M();
+        let HAS_POSITION_Z_M = self.HAS_POSITION_Z_M();
+        let HAS_VELOCITY_X_MPS = self.HAS_VELOCITY_X_MPS();
+        let HAS_VELOCITY_Y_MPS = self.HAS_VELOCITY_Y_MPS();
+        let HAS_VELOCITY_Z_MPS = self.HAS_VELOCITY_Z_MPS();
         ACWStateSampleT {
             JULIAN_DATE_TT,
             POSITION_X_M,
@@ -934,6 +1799,13 @@ impl<'a> ACWStateSample<'a> {
             VELOCITY_X_MPS,
             VELOCITY_Y_MPS,
             VELOCITY_Z_MPS,
+            HAS_JULIAN_DATE_TT,
+            HAS_POSITION_X_M,
+            HAS_POSITION_Y_M,
+            HAS_POSITION_Z_M,
+            HAS_VELOCITY_X_MPS,
+            HAS_VELOCITY_Y_MPS,
+            HAS_VELOCITY_Z_MPS,
         }
     }
 
@@ -946,7 +1818,7 @@ impl<'a> ACWStateSample<'a> {
         unsafe { self._tab.get::<f64>(ACWStateSample::VT_JULIAN_DATE_TT, Some(0.0)).unwrap()}
     }
 
-    /// Earth-fixed X position, meters.
+    /// Fixed-frame X position, meters.
     #[inline]
     pub fn POSITION_X_M(&self) -> f64 {
         // Safety:
@@ -955,7 +1827,7 @@ impl<'a> ACWStateSample<'a> {
         unsafe { self._tab.get::<f64>(ACWStateSample::VT_POSITION_X_M, Some(0.0)).unwrap()}
     }
 
-    /// Earth-fixed Y position, meters.
+    /// Fixed-frame Y position, meters.
     #[inline]
     pub fn POSITION_Y_M(&self) -> f64 {
         // Safety:
@@ -964,7 +1836,7 @@ impl<'a> ACWStateSample<'a> {
         unsafe { self._tab.get::<f64>(ACWStateSample::VT_POSITION_Y_M, Some(0.0)).unwrap()}
     }
 
-    /// Earth-fixed Z position, meters.
+    /// Fixed-frame Z position, meters.
     #[inline]
     pub fn POSITION_Z_M(&self) -> f64 {
         // Safety:
@@ -973,7 +1845,7 @@ impl<'a> ACWStateSample<'a> {
         unsafe { self._tab.get::<f64>(ACWStateSample::VT_POSITION_Z_M, Some(0.0)).unwrap()}
     }
 
-    /// Earth-fixed velocity, meters per second. Required for range-rate,
+    /// Fixed-frame velocity, meters per second. Required for range-rate,
     /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
     #[inline]
     pub fn VELOCITY_X_MPS(&self) -> f64 {
@@ -998,6 +1870,63 @@ impl<'a> ACWStateSample<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWStateSample::VT_VELOCITY_Z_MPS, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_POSITION_X_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_POSITION_X_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_POSITION_Y_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_POSITION_Y_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_POSITION_Z_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_POSITION_Z_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_VELOCITY_X_MPS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_VELOCITY_X_MPS, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_VELOCITY_Y_MPS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_VELOCITY_Y_MPS, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_VELOCITY_Z_MPS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWStateSample::VT_HAS_VELOCITY_Z_MPS, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWStateSample<'_> {
@@ -1013,6 +1942,13 @@ impl ::flatbuffers::Verifiable for ACWStateSample<'_> {
             .visit_field::<f64>("VELOCITY_X_MPS", Self::VT_VELOCITY_X_MPS, false)?
             .visit_field::<f64>("VELOCITY_Y_MPS", Self::VT_VELOCITY_Y_MPS, false)?
             .visit_field::<f64>("VELOCITY_Z_MPS", Self::VT_VELOCITY_Z_MPS, false)?
+            .visit_field::<bool>("HAS_JULIAN_DATE_TT", Self::VT_HAS_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_POSITION_X_M", Self::VT_HAS_POSITION_X_M, false)?
+            .visit_field::<bool>("HAS_POSITION_Y_M", Self::VT_HAS_POSITION_Y_M, false)?
+            .visit_field::<bool>("HAS_POSITION_Z_M", Self::VT_HAS_POSITION_Z_M, false)?
+            .visit_field::<bool>("HAS_VELOCITY_X_MPS", Self::VT_HAS_VELOCITY_X_MPS, false)?
+            .visit_field::<bool>("HAS_VELOCITY_Y_MPS", Self::VT_HAS_VELOCITY_Y_MPS, false)?
+            .visit_field::<bool>("HAS_VELOCITY_Z_MPS", Self::VT_HAS_VELOCITY_Z_MPS, false)?
             .finish();
         Ok(())
     }
@@ -1026,6 +1962,13 @@ pub struct ACWStateSampleArgs {
     pub VELOCITY_X_MPS: f64,
     pub VELOCITY_Y_MPS: f64,
     pub VELOCITY_Z_MPS: f64,
+    pub HAS_JULIAN_DATE_TT: bool,
+    pub HAS_POSITION_X_M: bool,
+    pub HAS_POSITION_Y_M: bool,
+    pub HAS_POSITION_Z_M: bool,
+    pub HAS_VELOCITY_X_MPS: bool,
+    pub HAS_VELOCITY_Y_MPS: bool,
+    pub HAS_VELOCITY_Z_MPS: bool,
 }
 
 impl<'a> Default for ACWStateSampleArgs {
@@ -1039,6 +1982,13 @@ impl<'a> Default for ACWStateSampleArgs {
             VELOCITY_X_MPS: 0.0,
             VELOCITY_Y_MPS: 0.0,
             VELOCITY_Z_MPS: 0.0,
+            HAS_JULIAN_DATE_TT: false,
+            HAS_POSITION_X_M: false,
+            HAS_POSITION_Y_M: false,
+            HAS_POSITION_Z_M: false,
+            HAS_VELOCITY_X_MPS: false,
+            HAS_VELOCITY_Y_MPS: false,
+            HAS_VELOCITY_Z_MPS: false,
         }
     }
 }
@@ -1085,6 +2035,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWStateSampleBuilder<'a, 'b,
     }
 
     #[inline]
+    pub fn add_HAS_JULIAN_DATE_TT(&mut self, HAS_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_JULIAN_DATE_TT, HAS_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_POSITION_X_M(&mut self, HAS_POSITION_X_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_POSITION_X_M, HAS_POSITION_X_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_POSITION_Y_M(&mut self, HAS_POSITION_Y_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_POSITION_Y_M, HAS_POSITION_Y_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_POSITION_Z_M(&mut self, HAS_POSITION_Z_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_POSITION_Z_M, HAS_POSITION_Z_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_VELOCITY_X_MPS(&mut self, HAS_VELOCITY_X_MPS: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_VELOCITY_X_MPS, HAS_VELOCITY_X_MPS, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_VELOCITY_Y_MPS(&mut self, HAS_VELOCITY_Y_MPS: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_VELOCITY_Y_MPS, HAS_VELOCITY_Y_MPS, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_VELOCITY_Z_MPS(&mut self, HAS_VELOCITY_Z_MPS: bool) {
+        self.fbb_.push_slot::<bool>(ACWStateSample::VT_HAS_VELOCITY_Z_MPS, HAS_VELOCITY_Z_MPS, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWStateSampleBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWStateSampleBuilder {
@@ -1110,6 +2095,13 @@ impl ::core::fmt::Debug for ACWStateSample<'_> {
         ds.field("VELOCITY_X_MPS", &self.VELOCITY_X_MPS());
         ds.field("VELOCITY_Y_MPS", &self.VELOCITY_Y_MPS());
         ds.field("VELOCITY_Z_MPS", &self.VELOCITY_Z_MPS());
+        ds.field("HAS_JULIAN_DATE_TT", &self.HAS_JULIAN_DATE_TT());
+        ds.field("HAS_POSITION_X_M", &self.HAS_POSITION_X_M());
+        ds.field("HAS_POSITION_Y_M", &self.HAS_POSITION_Y_M());
+        ds.field("HAS_POSITION_Z_M", &self.HAS_POSITION_Z_M());
+        ds.field("HAS_VELOCITY_X_MPS", &self.HAS_VELOCITY_X_MPS());
+        ds.field("HAS_VELOCITY_Y_MPS", &self.HAS_VELOCITY_Y_MPS());
+        ds.field("HAS_VELOCITY_Z_MPS", &self.HAS_VELOCITY_Z_MPS());
         ds.finish()
     }
 }
@@ -1124,6 +2116,13 @@ pub struct ACWStateSampleT {
     pub VELOCITY_X_MPS: f64,
     pub VELOCITY_Y_MPS: f64,
     pub VELOCITY_Z_MPS: f64,
+    pub HAS_JULIAN_DATE_TT: bool,
+    pub HAS_POSITION_X_M: bool,
+    pub HAS_POSITION_Y_M: bool,
+    pub HAS_POSITION_Z_M: bool,
+    pub HAS_VELOCITY_X_MPS: bool,
+    pub HAS_VELOCITY_Y_MPS: bool,
+    pub HAS_VELOCITY_Z_MPS: bool,
 }
 
 impl Default for ACWStateSampleT {
@@ -1136,6 +2135,13 @@ impl Default for ACWStateSampleT {
             VELOCITY_X_MPS: 0.0,
             VELOCITY_Y_MPS: 0.0,
             VELOCITY_Z_MPS: 0.0,
+            HAS_JULIAN_DATE_TT: false,
+            HAS_POSITION_X_M: false,
+            HAS_POSITION_Y_M: false,
+            HAS_POSITION_Z_M: false,
+            HAS_VELOCITY_X_MPS: false,
+            HAS_VELOCITY_Y_MPS: false,
+            HAS_VELOCITY_Z_MPS: false,
         }
     }
 }
@@ -1152,6 +2158,13 @@ impl ACWStateSampleT {
         let VELOCITY_X_MPS = self.VELOCITY_X_MPS;
         let VELOCITY_Y_MPS = self.VELOCITY_Y_MPS;
         let VELOCITY_Z_MPS = self.VELOCITY_Z_MPS;
+        let HAS_JULIAN_DATE_TT = self.HAS_JULIAN_DATE_TT;
+        let HAS_POSITION_X_M = self.HAS_POSITION_X_M;
+        let HAS_POSITION_Y_M = self.HAS_POSITION_Y_M;
+        let HAS_POSITION_Z_M = self.HAS_POSITION_Z_M;
+        let HAS_VELOCITY_X_MPS = self.HAS_VELOCITY_X_MPS;
+        let HAS_VELOCITY_Y_MPS = self.HAS_VELOCITY_Y_MPS;
+        let HAS_VELOCITY_Z_MPS = self.HAS_VELOCITY_Z_MPS;
         ACWStateSample::create(_fbb, &ACWStateSampleArgs{
             JULIAN_DATE_TT,
             POSITION_X_M,
@@ -1160,6 +2173,13 @@ impl ACWStateSampleT {
             VELOCITY_X_MPS,
             VELOCITY_Y_MPS,
             VELOCITY_Z_MPS,
+            HAS_JULIAN_DATE_TT,
+            HAS_POSITION_X_M,
+            HAS_POSITION_Y_M,
+            HAS_POSITION_Z_M,
+            HAS_VELOCITY_X_MPS,
+            HAS_VELOCITY_Y_MPS,
+            HAS_VELOCITY_Z_MPS,
         })
     }
 }
@@ -1184,6 +2204,8 @@ impl<'a> ::flatbuffers::Follow<'a> for ACWElevationMaskPoint<'a> {
 impl<'a> ACWElevationMaskPoint<'a> {
     pub const VT_AZIMUTH_RAD: ::flatbuffers::VOffsetT = 4;
     pub const VT_ELEVATION_RAD: ::flatbuffers::VOffsetT = 6;
+    pub const VT_HAS_AZIMUTH_RAD: ::flatbuffers::VOffsetT = 8;
+    pub const VT_HAS_ELEVATION_RAD: ::flatbuffers::VOffsetT = 10;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1198,15 +2220,21 @@ impl<'a> ACWElevationMaskPoint<'a> {
         let mut builder = ACWElevationMaskPointBuilder::new(_fbb);
         builder.add_ELEVATION_RAD(args.ELEVATION_RAD);
         builder.add_AZIMUTH_RAD(args.AZIMUTH_RAD);
+        builder.add_HAS_ELEVATION_RAD(args.HAS_ELEVATION_RAD);
+        builder.add_HAS_AZIMUTH_RAD(args.HAS_AZIMUTH_RAD);
         builder.finish()
     }
 
     pub fn unpack(&self) -> ACWElevationMaskPointT {
         let AZIMUTH_RAD = self.AZIMUTH_RAD();
         let ELEVATION_RAD = self.ELEVATION_RAD();
+        let HAS_AZIMUTH_RAD = self.HAS_AZIMUTH_RAD();
+        let HAS_ELEVATION_RAD = self.HAS_ELEVATION_RAD();
         ACWElevationMaskPointT {
             AZIMUTH_RAD,
             ELEVATION_RAD,
+            HAS_AZIMUTH_RAD,
+            HAS_ELEVATION_RAD,
         }
     }
 
@@ -1227,6 +2255,23 @@ impl<'a> ACWElevationMaskPoint<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWElevationMaskPoint::VT_ELEVATION_RAD, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_AZIMUTH_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWElevationMaskPoint::VT_HAS_AZIMUTH_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_ELEVATION_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWElevationMaskPoint::VT_HAS_ELEVATION_RAD, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWElevationMaskPoint<'_> {
@@ -1237,6 +2282,8 @@ impl ::flatbuffers::Verifiable for ACWElevationMaskPoint<'_> {
         v.visit_table(pos)?
             .visit_field::<f64>("AZIMUTH_RAD", Self::VT_AZIMUTH_RAD, false)?
             .visit_field::<f64>("ELEVATION_RAD", Self::VT_ELEVATION_RAD, false)?
+            .visit_field::<bool>("HAS_AZIMUTH_RAD", Self::VT_HAS_AZIMUTH_RAD, false)?
+            .visit_field::<bool>("HAS_ELEVATION_RAD", Self::VT_HAS_ELEVATION_RAD, false)?
             .finish();
         Ok(())
     }
@@ -1245,6 +2292,8 @@ impl ::flatbuffers::Verifiable for ACWElevationMaskPoint<'_> {
 pub struct ACWElevationMaskPointArgs {
     pub AZIMUTH_RAD: f64,
     pub ELEVATION_RAD: f64,
+    pub HAS_AZIMUTH_RAD: bool,
+    pub HAS_ELEVATION_RAD: bool,
 }
 
 impl<'a> Default for ACWElevationMaskPointArgs {
@@ -1253,6 +2302,8 @@ impl<'a> Default for ACWElevationMaskPointArgs {
         ACWElevationMaskPointArgs {
             AZIMUTH_RAD: 0.0,
             ELEVATION_RAD: 0.0,
+            HAS_AZIMUTH_RAD: false,
+            HAS_ELEVATION_RAD: false,
         }
     }
 }
@@ -1271,6 +2322,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWElevationMaskPointBuilder<
     #[inline]
     pub fn add_ELEVATION_RAD(&mut self, ELEVATION_RAD: f64) {
         self.fbb_.push_slot::<f64>(ACWElevationMaskPoint::VT_ELEVATION_RAD, ELEVATION_RAD, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_AZIMUTH_RAD(&mut self, HAS_AZIMUTH_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWElevationMaskPoint::VT_HAS_AZIMUTH_RAD, HAS_AZIMUTH_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_ELEVATION_RAD(&mut self, HAS_ELEVATION_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWElevationMaskPoint::VT_HAS_ELEVATION_RAD, HAS_ELEVATION_RAD, false);
     }
 
     #[inline]
@@ -1294,6 +2355,8 @@ impl ::core::fmt::Debug for ACWElevationMaskPoint<'_> {
         let mut ds = f.debug_struct("ACWElevationMaskPoint");
         ds.field("AZIMUTH_RAD", &self.AZIMUTH_RAD());
         ds.field("ELEVATION_RAD", &self.ELEVATION_RAD());
+        ds.field("HAS_AZIMUTH_RAD", &self.HAS_AZIMUTH_RAD());
+        ds.field("HAS_ELEVATION_RAD", &self.HAS_ELEVATION_RAD());
         ds.finish()
     }
 }
@@ -1303,6 +2366,8 @@ impl ::core::fmt::Debug for ACWElevationMaskPoint<'_> {
 pub struct ACWElevationMaskPointT {
     pub AZIMUTH_RAD: f64,
     pub ELEVATION_RAD: f64,
+    pub HAS_AZIMUTH_RAD: bool,
+    pub HAS_ELEVATION_RAD: bool,
 }
 
 impl Default for ACWElevationMaskPointT {
@@ -1310,6 +2375,8 @@ impl Default for ACWElevationMaskPointT {
         Self {
             AZIMUTH_RAD: 0.0,
             ELEVATION_RAD: 0.0,
+            HAS_AZIMUTH_RAD: false,
+            HAS_ELEVATION_RAD: false,
         }
     }
 }
@@ -1321,9 +2388,13 @@ impl ACWElevationMaskPointT {
     ) -> ::flatbuffers::WIPOffset<ACWElevationMaskPoint<'b>> {
         let AZIMUTH_RAD = self.AZIMUTH_RAD;
         let ELEVATION_RAD = self.ELEVATION_RAD;
+        let HAS_AZIMUTH_RAD = self.HAS_AZIMUTH_RAD;
+        let HAS_ELEVATION_RAD = self.HAS_ELEVATION_RAD;
         ACWElevationMaskPoint::create(_fbb, &ACWElevationMaskPointArgs{
             AZIMUTH_RAD,
             ELEVATION_RAD,
+            HAS_AZIMUTH_RAD,
+            HAS_ELEVATION_RAD,
         })
     }
 }
@@ -1349,6 +2420,9 @@ impl<'a> ACWRefractionModel<'a> {
     pub const VT_MODEL_KIND: ::flatbuffers::VOffsetT = 4;
     pub const VT_PRESSURE_PA: ::flatbuffers::VOffsetT = 6;
     pub const VT_TEMPERATURE_K: ::flatbuffers::VOffsetT = 8;
+    pub const VT_HAS_MODEL_KIND: ::flatbuffers::VOffsetT = 10;
+    pub const VT_HAS_PRESSURE_PA: ::flatbuffers::VOffsetT = 12;
+    pub const VT_HAS_TEMPERATURE_K: ::flatbuffers::VOffsetT = 14;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1363,6 +2437,9 @@ impl<'a> ACWRefractionModel<'a> {
         let mut builder = ACWRefractionModelBuilder::new(_fbb);
         builder.add_TEMPERATURE_K(args.TEMPERATURE_K);
         builder.add_PRESSURE_PA(args.PRESSURE_PA);
+        builder.add_HAS_TEMPERATURE_K(args.HAS_TEMPERATURE_K);
+        builder.add_HAS_PRESSURE_PA(args.HAS_PRESSURE_PA);
+        builder.add_HAS_MODEL_KIND(args.HAS_MODEL_KIND);
         builder.add_MODEL_KIND(args.MODEL_KIND);
         builder.finish()
     }
@@ -1371,10 +2448,16 @@ impl<'a> ACWRefractionModel<'a> {
         let MODEL_KIND = self.MODEL_KIND();
         let PRESSURE_PA = self.PRESSURE_PA();
         let TEMPERATURE_K = self.TEMPERATURE_K();
+        let HAS_MODEL_KIND = self.HAS_MODEL_KIND();
+        let HAS_PRESSURE_PA = self.HAS_PRESSURE_PA();
+        let HAS_TEMPERATURE_K = self.HAS_TEMPERATURE_K();
         ACWRefractionModelT {
             MODEL_KIND,
             PRESSURE_PA,
             TEMPERATURE_K,
+            HAS_MODEL_KIND,
+            HAS_PRESSURE_PA,
+            HAS_TEMPERATURE_K,
         }
     }
 
@@ -1403,6 +2486,31 @@ impl<'a> ACWRefractionModel<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWRefractionModel::VT_TEMPERATURE_K, Some(283.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_MODEL_KIND(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRefractionModel::VT_HAS_MODEL_KIND, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_PRESSURE_PA(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRefractionModel::VT_HAS_PRESSURE_PA, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_TEMPERATURE_K(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRefractionModel::VT_HAS_TEMPERATURE_K, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWRefractionModel<'_> {
@@ -1414,6 +2522,9 @@ impl ::flatbuffers::Verifiable for ACWRefractionModel<'_> {
             .visit_field::<acwRefractionModelKind>("MODEL_KIND", Self::VT_MODEL_KIND, false)?
             .visit_field::<f64>("PRESSURE_PA", Self::VT_PRESSURE_PA, false)?
             .visit_field::<f64>("TEMPERATURE_K", Self::VT_TEMPERATURE_K, false)?
+            .visit_field::<bool>("HAS_MODEL_KIND", Self::VT_HAS_MODEL_KIND, false)?
+            .visit_field::<bool>("HAS_PRESSURE_PA", Self::VT_HAS_PRESSURE_PA, false)?
+            .visit_field::<bool>("HAS_TEMPERATURE_K", Self::VT_HAS_TEMPERATURE_K, false)?
             .finish();
         Ok(())
     }
@@ -1423,6 +2534,9 @@ pub struct ACWRefractionModelArgs {
     pub MODEL_KIND: acwRefractionModelKind,
     pub PRESSURE_PA: f64,
     pub TEMPERATURE_K: f64,
+    pub HAS_MODEL_KIND: bool,
+    pub HAS_PRESSURE_PA: bool,
+    pub HAS_TEMPERATURE_K: bool,
 }
 
 impl<'a> Default for ACWRefractionModelArgs {
@@ -1432,6 +2546,9 @@ impl<'a> Default for ACWRefractionModelArgs {
             MODEL_KIND: acwRefractionModelKind::NONE,
             PRESSURE_PA: 101000.0,
             TEMPERATURE_K: 283.0,
+            HAS_MODEL_KIND: false,
+            HAS_PRESSURE_PA: false,
+            HAS_TEMPERATURE_K: false,
         }
     }
 }
@@ -1458,6 +2575,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWRefractionModelBuilder<'a,
     }
 
     #[inline]
+    pub fn add_HAS_MODEL_KIND(&mut self, HAS_MODEL_KIND: bool) {
+        self.fbb_.push_slot::<bool>(ACWRefractionModel::VT_HAS_MODEL_KIND, HAS_MODEL_KIND, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_PRESSURE_PA(&mut self, HAS_PRESSURE_PA: bool) {
+        self.fbb_.push_slot::<bool>(ACWRefractionModel::VT_HAS_PRESSURE_PA, HAS_PRESSURE_PA, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_TEMPERATURE_K(&mut self, HAS_TEMPERATURE_K: bool) {
+        self.fbb_.push_slot::<bool>(ACWRefractionModel::VT_HAS_TEMPERATURE_K, HAS_TEMPERATURE_K, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWRefractionModelBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWRefractionModelBuilder {
@@ -1479,6 +2611,9 @@ impl ::core::fmt::Debug for ACWRefractionModel<'_> {
         ds.field("MODEL_KIND", &self.MODEL_KIND());
         ds.field("PRESSURE_PA", &self.PRESSURE_PA());
         ds.field("TEMPERATURE_K", &self.TEMPERATURE_K());
+        ds.field("HAS_MODEL_KIND", &self.HAS_MODEL_KIND());
+        ds.field("HAS_PRESSURE_PA", &self.HAS_PRESSURE_PA());
+        ds.field("HAS_TEMPERATURE_K", &self.HAS_TEMPERATURE_K());
         ds.finish()
     }
 }
@@ -1489,6 +2624,9 @@ pub struct ACWRefractionModelT {
     pub MODEL_KIND: acwRefractionModelKind,
     pub PRESSURE_PA: f64,
     pub TEMPERATURE_K: f64,
+    pub HAS_MODEL_KIND: bool,
+    pub HAS_PRESSURE_PA: bool,
+    pub HAS_TEMPERATURE_K: bool,
 }
 
 impl Default for ACWRefractionModelT {
@@ -1497,6 +2635,9 @@ impl Default for ACWRefractionModelT {
             MODEL_KIND: acwRefractionModelKind::NONE,
             PRESSURE_PA: 101000.0,
             TEMPERATURE_K: 283.0,
+            HAS_MODEL_KIND: false,
+            HAS_PRESSURE_PA: false,
+            HAS_TEMPERATURE_K: false,
         }
     }
 }
@@ -1509,10 +2650,16 @@ impl ACWRefractionModelT {
         let MODEL_KIND = self.MODEL_KIND;
         let PRESSURE_PA = self.PRESSURE_PA;
         let TEMPERATURE_K = self.TEMPERATURE_K;
+        let HAS_MODEL_KIND = self.HAS_MODEL_KIND;
+        let HAS_PRESSURE_PA = self.HAS_PRESSURE_PA;
+        let HAS_TEMPERATURE_K = self.HAS_TEMPERATURE_K;
         ACWRefractionModel::create(_fbb, &ACWRefractionModelArgs{
             MODEL_KIND,
             PRESSURE_PA,
             TEMPERATURE_K,
+            HAS_MODEL_KIND,
+            HAS_PRESSURE_PA,
+            HAS_TEMPERATURE_K,
         })
     }
 }
@@ -1537,6 +2684,8 @@ impl<'a> ::flatbuffers::Follow<'a> for ACWBlackoutWindow<'a> {
 impl<'a> ACWBlackoutWindow<'a> {
     pub const VT_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 4;
     pub const VT_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_HAS_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 8;
+    pub const VT_HAS_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 10;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1551,15 +2700,21 @@ impl<'a> ACWBlackoutWindow<'a> {
         let mut builder = ACWBlackoutWindowBuilder::new(_fbb);
         builder.add_END_JULIAN_DATE_TT(args.END_JULIAN_DATE_TT);
         builder.add_START_JULIAN_DATE_TT(args.START_JULIAN_DATE_TT);
+        builder.add_HAS_END_JULIAN_DATE_TT(args.HAS_END_JULIAN_DATE_TT);
+        builder.add_HAS_START_JULIAN_DATE_TT(args.HAS_START_JULIAN_DATE_TT);
         builder.finish()
     }
 
     pub fn unpack(&self) -> ACWBlackoutWindowT {
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT();
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT();
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT();
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT();
         ACWBlackoutWindowT {
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
         }
     }
 
@@ -1580,6 +2735,23 @@ impl<'a> ACWBlackoutWindow<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWBlackoutWindow::VT_END_JULIAN_DATE_TT, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_START_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWBlackoutWindow::VT_HAS_START_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_END_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWBlackoutWindow::VT_HAS_END_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWBlackoutWindow<'_> {
@@ -1590,6 +2762,8 @@ impl ::flatbuffers::Verifiable for ACWBlackoutWindow<'_> {
         v.visit_table(pos)?
             .visit_field::<f64>("START_JULIAN_DATE_TT", Self::VT_START_JULIAN_DATE_TT, false)?
             .visit_field::<f64>("END_JULIAN_DATE_TT", Self::VT_END_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_START_JULIAN_DATE_TT", Self::VT_HAS_START_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_END_JULIAN_DATE_TT", Self::VT_HAS_END_JULIAN_DATE_TT, false)?
             .finish();
         Ok(())
     }
@@ -1598,6 +2772,8 @@ impl ::flatbuffers::Verifiable for ACWBlackoutWindow<'_> {
 pub struct ACWBlackoutWindowArgs {
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
 }
 
 impl<'a> Default for ACWBlackoutWindowArgs {
@@ -1606,6 +2782,8 @@ impl<'a> Default for ACWBlackoutWindowArgs {
         ACWBlackoutWindowArgs {
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
         }
     }
 }
@@ -1624,6 +2802,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWBlackoutWindowBuilder<'a, 
     #[inline]
     pub fn add_END_JULIAN_DATE_TT(&mut self, END_JULIAN_DATE_TT: f64) {
         self.fbb_.push_slot::<f64>(ACWBlackoutWindow::VT_END_JULIAN_DATE_TT, END_JULIAN_DATE_TT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_START_JULIAN_DATE_TT(&mut self, HAS_START_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWBlackoutWindow::VT_HAS_START_JULIAN_DATE_TT, HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_END_JULIAN_DATE_TT(&mut self, HAS_END_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWBlackoutWindow::VT_HAS_END_JULIAN_DATE_TT, HAS_END_JULIAN_DATE_TT, false);
     }
 
     #[inline]
@@ -1647,6 +2835,8 @@ impl ::core::fmt::Debug for ACWBlackoutWindow<'_> {
         let mut ds = f.debug_struct("ACWBlackoutWindow");
         ds.field("START_JULIAN_DATE_TT", &self.START_JULIAN_DATE_TT());
         ds.field("END_JULIAN_DATE_TT", &self.END_JULIAN_DATE_TT());
+        ds.field("HAS_START_JULIAN_DATE_TT", &self.HAS_START_JULIAN_DATE_TT());
+        ds.field("HAS_END_JULIAN_DATE_TT", &self.HAS_END_JULIAN_DATE_TT());
         ds.finish()
     }
 }
@@ -1656,6 +2846,8 @@ impl ::core::fmt::Debug for ACWBlackoutWindow<'_> {
 pub struct ACWBlackoutWindowT {
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
 }
 
 impl Default for ACWBlackoutWindowT {
@@ -1663,6 +2855,8 @@ impl Default for ACWBlackoutWindowT {
         Self {
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
         }
     }
 }
@@ -1674,9 +2868,13 @@ impl ACWBlackoutWindowT {
     ) -> ::flatbuffers::WIPOffset<ACWBlackoutWindow<'b>> {
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT;
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT;
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT;
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT;
         ACWBlackoutWindow::create(_fbb, &ACWBlackoutWindowArgs{
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
         })
     }
 }
@@ -1707,6 +2905,11 @@ impl<'a> ACWGroundStation<'a> {
     pub const VT_MIN_ELEVATION_RAD: ::flatbuffers::VOffsetT = 14;
     pub const VT_CHANNEL_CAPACITY: ::flatbuffers::VOffsetT = 16;
     pub const VT_BLACKOUT_WINDOWS: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_LATITUDE_RAD: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_LONGITUDE_RAD: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HAS_ALTITUDE_M: ::flatbuffers::VOffsetT = 24;
+    pub const VT_HAS_MIN_ELEVATION_RAD: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HAS_CHANNEL_CAPACITY: ::flatbuffers::VOffsetT = 28;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1727,6 +2930,11 @@ impl<'a> ACWGroundStation<'a> {
         builder.add_CHANNEL_CAPACITY(args.CHANNEL_CAPACITY);
         if let Some(x) = args.NAME { builder.add_NAME(x); }
         if let Some(x) = args.STATION_ID { builder.add_STATION_ID(x); }
+        builder.add_HAS_CHANNEL_CAPACITY(args.HAS_CHANNEL_CAPACITY);
+        builder.add_HAS_MIN_ELEVATION_RAD(args.HAS_MIN_ELEVATION_RAD);
+        builder.add_HAS_ALTITUDE_M(args.HAS_ALTITUDE_M);
+        builder.add_HAS_LONGITUDE_RAD(args.HAS_LONGITUDE_RAD);
+        builder.add_HAS_LATITUDE_RAD(args.HAS_LATITUDE_RAD);
         builder.finish()
     }
 
@@ -1745,6 +2953,11 @@ impl<'a> ACWGroundStation<'a> {
         let BLACKOUT_WINDOWS = self.BLACKOUT_WINDOWS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let HAS_LATITUDE_RAD = self.HAS_LATITUDE_RAD();
+        let HAS_LONGITUDE_RAD = self.HAS_LONGITUDE_RAD();
+        let HAS_ALTITUDE_M = self.HAS_ALTITUDE_M();
+        let HAS_MIN_ELEVATION_RAD = self.HAS_MIN_ELEVATION_RAD();
+        let HAS_CHANNEL_CAPACITY = self.HAS_CHANNEL_CAPACITY();
         ACWGroundStationT {
             STATION_ID,
             NAME,
@@ -1754,6 +2967,11 @@ impl<'a> ACWGroundStation<'a> {
             MIN_ELEVATION_RAD,
             CHANNEL_CAPACITY,
             BLACKOUT_WINDOWS,
+            HAS_LATITUDE_RAD,
+            HAS_LONGITUDE_RAD,
+            HAS_ALTITUDE_M,
+            HAS_MIN_ELEVATION_RAD,
+            HAS_CHANNEL_CAPACITY,
         }
     }
 
@@ -1791,7 +3009,11 @@ impl<'a> ACWGroundStation<'a> {
         unsafe { self._tab.get::<f64>(ACWGroundStation::VT_LONGITUDE_RAD, Some(0.0)).unwrap()}
     }
 
-    /// Height above the WGS-84 ellipsoid, meters.
+    /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+    /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+    /// finite segment blocks; tangent contact is clear. At height <= 0, including
+    /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+    /// The user elevation mask and supplied terrain apply separately at all heights.
     #[inline]
     pub fn ALTITUDE_M(&self) -> f64 {
         // Safety:
@@ -1800,7 +3022,7 @@ impl<'a> ACWGroundStation<'a> {
         unsafe { self._tab.get::<f64>(ACWGroundStation::VT_ALTITUDE_M, Some(0.0)).unwrap()}
     }
 
-    /// Default minimum visible elevation, radians.
+    /// Explicit minimum visible elevation, radians; HAS flag required.
     #[inline]
     pub fn MIN_ELEVATION_RAD(&self) -> f64 {
         // Safety:
@@ -1826,6 +3048,47 @@ impl<'a> ACWGroundStation<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow>>>>(ACWGroundStation::VT_BLACKOUT_WINDOWS, None)}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_LATITUDE_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWGroundStation::VT_HAS_LATITUDE_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_LONGITUDE_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWGroundStation::VT_HAS_LONGITUDE_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_ALTITUDE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWGroundStation::VT_HAS_ALTITUDE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MIN_ELEVATION_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWGroundStation::VT_HAS_MIN_ELEVATION_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_CHANNEL_CAPACITY(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWGroundStation::VT_HAS_CHANNEL_CAPACITY, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWGroundStation<'_> {
@@ -1842,6 +3105,11 @@ impl ::flatbuffers::Verifiable for ACWGroundStation<'_> {
             .visit_field::<f64>("MIN_ELEVATION_RAD", Self::VT_MIN_ELEVATION_RAD, false)?
             .visit_field::<u32>("CHANNEL_CAPACITY", Self::VT_CHANNEL_CAPACITY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow>>>>("BLACKOUT_WINDOWS", Self::VT_BLACKOUT_WINDOWS, false)?
+            .visit_field::<bool>("HAS_LATITUDE_RAD", Self::VT_HAS_LATITUDE_RAD, false)?
+            .visit_field::<bool>("HAS_LONGITUDE_RAD", Self::VT_HAS_LONGITUDE_RAD, false)?
+            .visit_field::<bool>("HAS_ALTITUDE_M", Self::VT_HAS_ALTITUDE_M, false)?
+            .visit_field::<bool>("HAS_MIN_ELEVATION_RAD", Self::VT_HAS_MIN_ELEVATION_RAD, false)?
+            .visit_field::<bool>("HAS_CHANNEL_CAPACITY", Self::VT_HAS_CHANNEL_CAPACITY, false)?
             .finish();
         Ok(())
     }
@@ -1856,6 +3124,11 @@ pub struct ACWGroundStationArgs<'a> {
     pub MIN_ELEVATION_RAD: f64,
     pub CHANNEL_CAPACITY: u32,
     pub BLACKOUT_WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWBlackoutWindow<'a>>>>>,
+    pub HAS_LATITUDE_RAD: bool,
+    pub HAS_LONGITUDE_RAD: bool,
+    pub HAS_ALTITUDE_M: bool,
+    pub HAS_MIN_ELEVATION_RAD: bool,
+    pub HAS_CHANNEL_CAPACITY: bool,
 }
 
 impl<'a> Default for ACWGroundStationArgs<'a> {
@@ -1870,6 +3143,11 @@ impl<'a> Default for ACWGroundStationArgs<'a> {
             MIN_ELEVATION_RAD: 0.0,
             CHANNEL_CAPACITY: 0,
             BLACKOUT_WINDOWS: None,
+            HAS_LATITUDE_RAD: false,
+            HAS_LONGITUDE_RAD: false,
+            HAS_ALTITUDE_M: false,
+            HAS_MIN_ELEVATION_RAD: false,
+            HAS_CHANNEL_CAPACITY: false,
         }
     }
 }
@@ -1921,6 +3199,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWGroundStationBuilder<'a, '
     }
 
     #[inline]
+    pub fn add_HAS_LATITUDE_RAD(&mut self, HAS_LATITUDE_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWGroundStation::VT_HAS_LATITUDE_RAD, HAS_LATITUDE_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_LONGITUDE_RAD(&mut self, HAS_LONGITUDE_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWGroundStation::VT_HAS_LONGITUDE_RAD, HAS_LONGITUDE_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_ALTITUDE_M(&mut self, HAS_ALTITUDE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWGroundStation::VT_HAS_ALTITUDE_M, HAS_ALTITUDE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MIN_ELEVATION_RAD(&mut self, HAS_MIN_ELEVATION_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWGroundStation::VT_HAS_MIN_ELEVATION_RAD, HAS_MIN_ELEVATION_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_CHANNEL_CAPACITY(&mut self, HAS_CHANNEL_CAPACITY: bool) {
+        self.fbb_.push_slot::<bool>(ACWGroundStation::VT_HAS_CHANNEL_CAPACITY, HAS_CHANNEL_CAPACITY, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWGroundStationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWGroundStationBuilder {
@@ -1947,6 +3250,11 @@ impl ::core::fmt::Debug for ACWGroundStation<'_> {
         ds.field("MIN_ELEVATION_RAD", &self.MIN_ELEVATION_RAD());
         ds.field("CHANNEL_CAPACITY", &self.CHANNEL_CAPACITY());
         ds.field("BLACKOUT_WINDOWS", &self.BLACKOUT_WINDOWS());
+        ds.field("HAS_LATITUDE_RAD", &self.HAS_LATITUDE_RAD());
+        ds.field("HAS_LONGITUDE_RAD", &self.HAS_LONGITUDE_RAD());
+        ds.field("HAS_ALTITUDE_M", &self.HAS_ALTITUDE_M());
+        ds.field("HAS_MIN_ELEVATION_RAD", &self.HAS_MIN_ELEVATION_RAD());
+        ds.field("HAS_CHANNEL_CAPACITY", &self.HAS_CHANNEL_CAPACITY());
         ds.finish()
     }
 }
@@ -1962,6 +3270,11 @@ pub struct ACWGroundStationT {
     pub MIN_ELEVATION_RAD: f64,
     pub CHANNEL_CAPACITY: u32,
     pub BLACKOUT_WINDOWS: Option<alloc::vec::Vec<ACWBlackoutWindowT>>,
+    pub HAS_LATITUDE_RAD: bool,
+    pub HAS_LONGITUDE_RAD: bool,
+    pub HAS_ALTITUDE_M: bool,
+    pub HAS_MIN_ELEVATION_RAD: bool,
+    pub HAS_CHANNEL_CAPACITY: bool,
 }
 
 impl Default for ACWGroundStationT {
@@ -1975,6 +3288,11 @@ impl Default for ACWGroundStationT {
             MIN_ELEVATION_RAD: 0.0,
             CHANNEL_CAPACITY: 0,
             BLACKOUT_WINDOWS: None,
+            HAS_LATITUDE_RAD: false,
+            HAS_LONGITUDE_RAD: false,
+            HAS_ALTITUDE_M: false,
+            HAS_MIN_ELEVATION_RAD: false,
+            HAS_CHANNEL_CAPACITY: false,
         }
     }
 }
@@ -1998,6 +3316,11 @@ impl ACWGroundStationT {
         let BLACKOUT_WINDOWS = self.BLACKOUT_WINDOWS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let HAS_LATITUDE_RAD = self.HAS_LATITUDE_RAD;
+        let HAS_LONGITUDE_RAD = self.HAS_LONGITUDE_RAD;
+        let HAS_ALTITUDE_M = self.HAS_ALTITUDE_M;
+        let HAS_MIN_ELEVATION_RAD = self.HAS_MIN_ELEVATION_RAD;
+        let HAS_CHANNEL_CAPACITY = self.HAS_CHANNEL_CAPACITY;
         ACWGroundStation::create(_fbb, &ACWGroundStationArgs{
             STATION_ID,
             NAME,
@@ -2007,6 +3330,11 @@ impl ACWGroundStationT {
             MIN_ELEVATION_RAD,
             CHANNEL_CAPACITY,
             BLACKOUT_WINDOWS,
+            HAS_LATITUDE_RAD,
+            HAS_LONGITUDE_RAD,
+            HAS_ALTITUDE_M,
+            HAS_MIN_ELEVATION_RAD,
+            HAS_CHANNEL_CAPACITY,
         })
     }
 }
@@ -2037,6 +3365,12 @@ impl<'a> ACWConstraint<'a> {
     pub const VT_OCCULTATION_ATMOSPHERE_HEIGHT_M: ::flatbuffers::VOffsetT = 14;
     pub const VT_MASK: ::flatbuffers::VOffsetT = 16;
     pub const VT_LABEL: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_KIND: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_THRESHOLD_RAD: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HAS_MIN_RANGE_M: ::flatbuffers::VOffsetT = 24;
+    pub const VT_HAS_MAX_RANGE_M: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HAS_LIGHTING: ::flatbuffers::VOffsetT = 28;
+    pub const VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2055,6 +3389,12 @@ impl<'a> ACWConstraint<'a> {
         builder.add_THRESHOLD_RAD(args.THRESHOLD_RAD);
         if let Some(x) = args.LABEL { builder.add_LABEL(x); }
         if let Some(x) = args.MASK { builder.add_MASK(x); }
+        builder.add_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(args.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
+        builder.add_HAS_LIGHTING(args.HAS_LIGHTING);
+        builder.add_HAS_MAX_RANGE_M(args.HAS_MAX_RANGE_M);
+        builder.add_HAS_MIN_RANGE_M(args.HAS_MIN_RANGE_M);
+        builder.add_HAS_THRESHOLD_RAD(args.HAS_THRESHOLD_RAD);
+        builder.add_HAS_KIND(args.HAS_KIND);
         builder.add_LIGHTING(args.LIGHTING);
         builder.add_KIND(args.KIND);
         builder.finish()
@@ -2073,6 +3413,12 @@ impl<'a> ACWConstraint<'a> {
         let LABEL = self.LABEL().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let HAS_KIND = self.HAS_KIND();
+        let HAS_THRESHOLD_RAD = self.HAS_THRESHOLD_RAD();
+        let HAS_MIN_RANGE_M = self.HAS_MIN_RANGE_M();
+        let HAS_MAX_RANGE_M = self.HAS_MAX_RANGE_M();
+        let HAS_LIGHTING = self.HAS_LIGHTING();
+        let HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M();
         ACWConstraintT {
             KIND,
             THRESHOLD_RAD,
@@ -2082,6 +3428,12 @@ impl<'a> ACWConstraint<'a> {
             OCCULTATION_ATMOSPHERE_HEIGHT_M,
             MASK,
             LABEL,
+            HAS_KIND,
+            HAS_THRESHOLD_RAD,
+            HAS_MIN_RANGE_M,
+            HAS_MAX_RANGE_M,
+            HAS_LIGHTING,
+            HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M,
         }
     }
 
@@ -2128,8 +3480,8 @@ impl<'a> ACWConstraint<'a> {
         unsafe { self._tab.get::<acwLightingCondition>(ACWConstraint::VT_LIGHTING, Some(acwLightingCondition::ANY)).unwrap()}
     }
 
-    /// Central-body radius offset for line-of-sight occultation, meters
-    /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+    /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+    /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
     #[inline]
     pub fn OCCULTATION_ATMOSPHERE_HEIGHT_M(&self) -> f64 {
         // Safety:
@@ -2155,6 +3507,55 @@ impl<'a> ACWConstraint<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWConstraint::VT_LABEL, None)}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_KIND(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_KIND, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_THRESHOLD_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_THRESHOLD_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MIN_RANGE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_MIN_RANGE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MAX_RANGE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_MAX_RANGE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_LIGHTING(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_LIGHTING, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraint::VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWConstraint<'_> {
@@ -2171,6 +3572,12 @@ impl ::flatbuffers::Verifiable for ACWConstraint<'_> {
             .visit_field::<f64>("OCCULTATION_ATMOSPHERE_HEIGHT_M", Self::VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint>>>>("MASK", Self::VT_MASK, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL", Self::VT_LABEL, false)?
+            .visit_field::<bool>("HAS_KIND", Self::VT_HAS_KIND, false)?
+            .visit_field::<bool>("HAS_THRESHOLD_RAD", Self::VT_HAS_THRESHOLD_RAD, false)?
+            .visit_field::<bool>("HAS_MIN_RANGE_M", Self::VT_HAS_MIN_RANGE_M, false)?
+            .visit_field::<bool>("HAS_MAX_RANGE_M", Self::VT_HAS_MAX_RANGE_M, false)?
+            .visit_field::<bool>("HAS_LIGHTING", Self::VT_HAS_LIGHTING, false)?
+            .visit_field::<bool>("HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M", Self::VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false)?
             .finish();
         Ok(())
     }
@@ -2185,6 +3592,12 @@ pub struct ACWConstraintArgs<'a> {
     pub OCCULTATION_ATMOSPHERE_HEIGHT_M: f64,
     pub MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWElevationMaskPoint<'a>>>>>,
     pub LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HAS_KIND: bool,
+    pub HAS_THRESHOLD_RAD: bool,
+    pub HAS_MIN_RANGE_M: bool,
+    pub HAS_MAX_RANGE_M: bool,
+    pub HAS_LIGHTING: bool,
+    pub HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: bool,
 }
 
 impl<'a> Default for ACWConstraintArgs<'a> {
@@ -2199,6 +3612,12 @@ impl<'a> Default for ACWConstraintArgs<'a> {
             OCCULTATION_ATMOSPHERE_HEIGHT_M: 0.0,
             MASK: None,
             LABEL: None,
+            HAS_KIND: false,
+            HAS_THRESHOLD_RAD: false,
+            HAS_MIN_RANGE_M: false,
+            HAS_MAX_RANGE_M: false,
+            HAS_LIGHTING: false,
+            HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: false,
         }
     }
 }
@@ -2250,6 +3669,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWConstraintBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_HAS_KIND(&mut self, HAS_KIND: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_KIND, HAS_KIND, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_THRESHOLD_RAD(&mut self, HAS_THRESHOLD_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_THRESHOLD_RAD, HAS_THRESHOLD_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MIN_RANGE_M(&mut self, HAS_MIN_RANGE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_MIN_RANGE_M, HAS_MIN_RANGE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAX_RANGE_M(&mut self, HAS_MAX_RANGE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_MAX_RANGE_M, HAS_MAX_RANGE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_LIGHTING(&mut self, HAS_LIGHTING: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_LIGHTING, HAS_LIGHTING, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(&mut self, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraint::VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWConstraintBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWConstraintBuilder {
@@ -2276,6 +3725,12 @@ impl ::core::fmt::Debug for ACWConstraint<'_> {
         ds.field("OCCULTATION_ATMOSPHERE_HEIGHT_M", &self.OCCULTATION_ATMOSPHERE_HEIGHT_M());
         ds.field("MASK", &self.MASK());
         ds.field("LABEL", &self.LABEL());
+        ds.field("HAS_KIND", &self.HAS_KIND());
+        ds.field("HAS_THRESHOLD_RAD", &self.HAS_THRESHOLD_RAD());
+        ds.field("HAS_MIN_RANGE_M", &self.HAS_MIN_RANGE_M());
+        ds.field("HAS_MAX_RANGE_M", &self.HAS_MAX_RANGE_M());
+        ds.field("HAS_LIGHTING", &self.HAS_LIGHTING());
+        ds.field("HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M", &self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M());
         ds.finish()
     }
 }
@@ -2291,6 +3746,12 @@ pub struct ACWConstraintT {
     pub OCCULTATION_ATMOSPHERE_HEIGHT_M: f64,
     pub MASK: Option<alloc::vec::Vec<ACWElevationMaskPointT>>,
     pub LABEL: Option<alloc::string::String>,
+    pub HAS_KIND: bool,
+    pub HAS_THRESHOLD_RAD: bool,
+    pub HAS_MIN_RANGE_M: bool,
+    pub HAS_MAX_RANGE_M: bool,
+    pub HAS_LIGHTING: bool,
+    pub HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: bool,
 }
 
 impl Default for ACWConstraintT {
@@ -2304,6 +3765,12 @@ impl Default for ACWConstraintT {
             OCCULTATION_ATMOSPHERE_HEIGHT_M: 0.0,
             MASK: None,
             LABEL: None,
+            HAS_KIND: false,
+            HAS_THRESHOLD_RAD: false,
+            HAS_MIN_RANGE_M: false,
+            HAS_MAX_RANGE_M: false,
+            HAS_LIGHTING: false,
+            HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: false,
         }
     }
 }
@@ -2325,6 +3792,12 @@ impl ACWConstraintT {
         let LABEL = self.LABEL.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let HAS_KIND = self.HAS_KIND;
+        let HAS_THRESHOLD_RAD = self.HAS_THRESHOLD_RAD;
+        let HAS_MIN_RANGE_M = self.HAS_MIN_RANGE_M;
+        let HAS_MAX_RANGE_M = self.HAS_MAX_RANGE_M;
+        let HAS_LIGHTING = self.HAS_LIGHTING;
+        let HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M;
         ACWConstraint::create(_fbb, &ACWConstraintArgs{
             KIND,
             THRESHOLD_RAD,
@@ -2334,6 +3807,12 @@ impl ACWConstraintT {
             OCCULTATION_ATMOSPHERE_HEIGHT_M,
             MASK,
             LABEL,
+            HAS_KIND,
+            HAS_THRESHOLD_RAD,
+            HAS_MIN_RANGE_M,
+            HAS_MAX_RANGE_M,
+            HAS_LIGHTING,
+            HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M,
         })
     }
 }
@@ -2360,6 +3839,7 @@ impl<'a> ACWConstraintSet<'a> {
     pub const VT_CONSTRAINTS: ::flatbuffers::VOffsetT = 6;
     pub const VT_SETS: ::flatbuffers::VOffsetT = 8;
     pub const VT_LABEL: ::flatbuffers::VOffsetT = 10;
+    pub const VT_HAS_OPERATOR: ::flatbuffers::VOffsetT = 12;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2375,6 +3855,7 @@ impl<'a> ACWConstraintSet<'a> {
         if let Some(x) = args.LABEL { builder.add_LABEL(x); }
         if let Some(x) = args.SETS { builder.add_SETS(x); }
         if let Some(x) = args.CONSTRAINTS { builder.add_CONSTRAINTS(x); }
+        builder.add_HAS_OPERATOR(args.HAS_OPERATOR);
         builder.add_OPERATOR(args.OPERATOR);
         builder.finish()
     }
@@ -2390,11 +3871,13 @@ impl<'a> ACWConstraintSet<'a> {
         let LABEL = self.LABEL().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let HAS_OPERATOR = self.HAS_OPERATOR();
         ACWConstraintSetT {
             OPERATOR,
             CONSTRAINTS,
             SETS,
             LABEL,
+            HAS_OPERATOR,
         }
     }
 
@@ -2430,6 +3913,15 @@ impl<'a> ACWConstraintSet<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWConstraintSet::VT_LABEL, None)}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_OPERATOR(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWConstraintSet::VT_HAS_OPERATOR, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWConstraintSet<'_> {
@@ -2442,6 +3934,7 @@ impl ::flatbuffers::Verifiable for ACWConstraintSet<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWConstraint>>>>("CONSTRAINTS", Self::VT_CONSTRAINTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWConstraintSet>>>>("SETS", Self::VT_SETS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL", Self::VT_LABEL, false)?
+            .visit_field::<bool>("HAS_OPERATOR", Self::VT_HAS_OPERATOR, false)?
             .finish();
         Ok(())
     }
@@ -2452,6 +3945,7 @@ pub struct ACWConstraintSetArgs<'a> {
     pub CONSTRAINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraint<'a>>>>>,
     pub SETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWConstraintSet<'a>>>>>,
     pub LABEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HAS_OPERATOR: bool,
 }
 
 impl<'a> Default for ACWConstraintSetArgs<'a> {
@@ -2462,6 +3956,7 @@ impl<'a> Default for ACWConstraintSetArgs<'a> {
             CONSTRAINTS: None,
             SETS: None,
             LABEL: None,
+            HAS_OPERATOR: false,
         }
     }
 }
@@ -2493,6 +3988,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWConstraintSetBuilder<'a, '
     }
 
     #[inline]
+    pub fn add_HAS_OPERATOR(&mut self, HAS_OPERATOR: bool) {
+        self.fbb_.push_slot::<bool>(ACWConstraintSet::VT_HAS_OPERATOR, HAS_OPERATOR, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWConstraintSetBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWConstraintSetBuilder {
@@ -2515,6 +4015,7 @@ impl ::core::fmt::Debug for ACWConstraintSet<'_> {
         ds.field("CONSTRAINTS", &self.CONSTRAINTS());
         ds.field("SETS", &self.SETS());
         ds.field("LABEL", &self.LABEL());
+        ds.field("HAS_OPERATOR", &self.HAS_OPERATOR());
         ds.finish()
     }
 }
@@ -2526,6 +4027,7 @@ pub struct ACWConstraintSetT {
     pub CONSTRAINTS: Option<alloc::vec::Vec<ACWConstraintT>>,
     pub SETS: Option<alloc::vec::Vec<ACWConstraintSetT>>,
     pub LABEL: Option<alloc::string::String>,
+    pub HAS_OPERATOR: bool,
 }
 
 impl Default for ACWConstraintSetT {
@@ -2535,6 +4037,7 @@ impl Default for ACWConstraintSetT {
             CONSTRAINTS: None,
             SETS: None,
             LABEL: None,
+            HAS_OPERATOR: false,
         }
     }
 }
@@ -2554,18 +4057,20 @@ impl ACWConstraintSetT {
         let LABEL = self.LABEL.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let HAS_OPERATOR = self.HAS_OPERATOR;
         ACWConstraintSet::create(_fbb, &ACWConstraintSetArgs{
             OPERATOR,
             CONSTRAINTS,
             SETS,
             LABEL,
+            HAS_OPERATOR,
         })
     }
 }
 
 pub enum ACWObserverTrajectoryOffset {}
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 #[derive(Copy, Clone, PartialEq)]
 pub struct ACWObserverTrajectory<'a> {
@@ -2816,6 +4321,11 @@ impl<'a> ACWTargetSignature<'a> {
     pub const VT_GEOMETRIC_ALBEDO: ::flatbuffers::VOffsetT = 8;
     pub const VT_EMITTER_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 10;
     pub const VT_EMITTER_EIRP_DBW: ::flatbuffers::VOffsetT = 12;
+    pub const VT_HAS_RCS_M2: ::flatbuffers::VOffsetT = 14;
+    pub const VT_HAS_DIAMETER_M: ::flatbuffers::VOffsetT = 16;
+    pub const VT_HAS_GEOMETRIC_ALBEDO: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_EMITTER_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_EMITTER_EIRP_DBW: ::flatbuffers::VOffsetT = 22;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2833,6 +4343,11 @@ impl<'a> ACWTargetSignature<'a> {
         builder.add_GEOMETRIC_ALBEDO(args.GEOMETRIC_ALBEDO);
         builder.add_DIAMETER_M(args.DIAMETER_M);
         builder.add_RCS_M2(args.RCS_M2);
+        builder.add_HAS_EMITTER_EIRP_DBW(args.HAS_EMITTER_EIRP_DBW);
+        builder.add_HAS_EMITTER_FREQUENCY_HZ(args.HAS_EMITTER_FREQUENCY_HZ);
+        builder.add_HAS_GEOMETRIC_ALBEDO(args.HAS_GEOMETRIC_ALBEDO);
+        builder.add_HAS_DIAMETER_M(args.HAS_DIAMETER_M);
+        builder.add_HAS_RCS_M2(args.HAS_RCS_M2);
         builder.finish()
     }
 
@@ -2842,12 +4357,22 @@ impl<'a> ACWTargetSignature<'a> {
         let GEOMETRIC_ALBEDO = self.GEOMETRIC_ALBEDO();
         let EMITTER_FREQUENCY_HZ = self.EMITTER_FREQUENCY_HZ();
         let EMITTER_EIRP_DBW = self.EMITTER_EIRP_DBW();
+        let HAS_RCS_M2 = self.HAS_RCS_M2();
+        let HAS_DIAMETER_M = self.HAS_DIAMETER_M();
+        let HAS_GEOMETRIC_ALBEDO = self.HAS_GEOMETRIC_ALBEDO();
+        let HAS_EMITTER_FREQUENCY_HZ = self.HAS_EMITTER_FREQUENCY_HZ();
+        let HAS_EMITTER_EIRP_DBW = self.HAS_EMITTER_EIRP_DBW();
         ACWTargetSignatureT {
             RCS_M2,
             DIAMETER_M,
             GEOMETRIC_ALBEDO,
             EMITTER_FREQUENCY_HZ,
             EMITTER_EIRP_DBW,
+            HAS_RCS_M2,
+            HAS_DIAMETER_M,
+            HAS_GEOMETRIC_ALBEDO,
+            HAS_EMITTER_FREQUENCY_HZ,
+            HAS_EMITTER_EIRP_DBW,
         }
     }
 
@@ -2895,6 +4420,47 @@ impl<'a> ACWTargetSignature<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWTargetSignature::VT_EMITTER_EIRP_DBW, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_RCS_M2(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTargetSignature::VT_HAS_RCS_M2, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_DIAMETER_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTargetSignature::VT_HAS_DIAMETER_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_GEOMETRIC_ALBEDO(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTargetSignature::VT_HAS_GEOMETRIC_ALBEDO, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_EMITTER_FREQUENCY_HZ(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTargetSignature::VT_HAS_EMITTER_FREQUENCY_HZ, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_EMITTER_EIRP_DBW(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTargetSignature::VT_HAS_EMITTER_EIRP_DBW, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWTargetSignature<'_> {
@@ -2908,6 +4474,11 @@ impl ::flatbuffers::Verifiable for ACWTargetSignature<'_> {
             .visit_field::<f64>("GEOMETRIC_ALBEDO", Self::VT_GEOMETRIC_ALBEDO, false)?
             .visit_field::<f64>("EMITTER_FREQUENCY_HZ", Self::VT_EMITTER_FREQUENCY_HZ, false)?
             .visit_field::<f64>("EMITTER_EIRP_DBW", Self::VT_EMITTER_EIRP_DBW, false)?
+            .visit_field::<bool>("HAS_RCS_M2", Self::VT_HAS_RCS_M2, false)?
+            .visit_field::<bool>("HAS_DIAMETER_M", Self::VT_HAS_DIAMETER_M, false)?
+            .visit_field::<bool>("HAS_GEOMETRIC_ALBEDO", Self::VT_HAS_GEOMETRIC_ALBEDO, false)?
+            .visit_field::<bool>("HAS_EMITTER_FREQUENCY_HZ", Self::VT_HAS_EMITTER_FREQUENCY_HZ, false)?
+            .visit_field::<bool>("HAS_EMITTER_EIRP_DBW", Self::VT_HAS_EMITTER_EIRP_DBW, false)?
             .finish();
         Ok(())
     }
@@ -2919,6 +4490,11 @@ pub struct ACWTargetSignatureArgs {
     pub GEOMETRIC_ALBEDO: f64,
     pub EMITTER_FREQUENCY_HZ: f64,
     pub EMITTER_EIRP_DBW: f64,
+    pub HAS_RCS_M2: bool,
+    pub HAS_DIAMETER_M: bool,
+    pub HAS_GEOMETRIC_ALBEDO: bool,
+    pub HAS_EMITTER_FREQUENCY_HZ: bool,
+    pub HAS_EMITTER_EIRP_DBW: bool,
 }
 
 impl<'a> Default for ACWTargetSignatureArgs {
@@ -2930,6 +4506,11 @@ impl<'a> Default for ACWTargetSignatureArgs {
             GEOMETRIC_ALBEDO: 0.0,
             EMITTER_FREQUENCY_HZ: 0.0,
             EMITTER_EIRP_DBW: 0.0,
+            HAS_RCS_M2: false,
+            HAS_DIAMETER_M: false,
+            HAS_GEOMETRIC_ALBEDO: false,
+            HAS_EMITTER_FREQUENCY_HZ: false,
+            HAS_EMITTER_EIRP_DBW: false,
         }
     }
 }
@@ -2966,6 +4547,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWTargetSignatureBuilder<'a,
     }
 
     #[inline]
+    pub fn add_HAS_RCS_M2(&mut self, HAS_RCS_M2: bool) {
+        self.fbb_.push_slot::<bool>(ACWTargetSignature::VT_HAS_RCS_M2, HAS_RCS_M2, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_DIAMETER_M(&mut self, HAS_DIAMETER_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWTargetSignature::VT_HAS_DIAMETER_M, HAS_DIAMETER_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_GEOMETRIC_ALBEDO(&mut self, HAS_GEOMETRIC_ALBEDO: bool) {
+        self.fbb_.push_slot::<bool>(ACWTargetSignature::VT_HAS_GEOMETRIC_ALBEDO, HAS_GEOMETRIC_ALBEDO, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_EMITTER_FREQUENCY_HZ(&mut self, HAS_EMITTER_FREQUENCY_HZ: bool) {
+        self.fbb_.push_slot::<bool>(ACWTargetSignature::VT_HAS_EMITTER_FREQUENCY_HZ, HAS_EMITTER_FREQUENCY_HZ, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_EMITTER_EIRP_DBW(&mut self, HAS_EMITTER_EIRP_DBW: bool) {
+        self.fbb_.push_slot::<bool>(ACWTargetSignature::VT_HAS_EMITTER_EIRP_DBW, HAS_EMITTER_EIRP_DBW, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWTargetSignatureBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWTargetSignatureBuilder {
@@ -2989,6 +4595,11 @@ impl ::core::fmt::Debug for ACWTargetSignature<'_> {
         ds.field("GEOMETRIC_ALBEDO", &self.GEOMETRIC_ALBEDO());
         ds.field("EMITTER_FREQUENCY_HZ", &self.EMITTER_FREQUENCY_HZ());
         ds.field("EMITTER_EIRP_DBW", &self.EMITTER_EIRP_DBW());
+        ds.field("HAS_RCS_M2", &self.HAS_RCS_M2());
+        ds.field("HAS_DIAMETER_M", &self.HAS_DIAMETER_M());
+        ds.field("HAS_GEOMETRIC_ALBEDO", &self.HAS_GEOMETRIC_ALBEDO());
+        ds.field("HAS_EMITTER_FREQUENCY_HZ", &self.HAS_EMITTER_FREQUENCY_HZ());
+        ds.field("HAS_EMITTER_EIRP_DBW", &self.HAS_EMITTER_EIRP_DBW());
         ds.finish()
     }
 }
@@ -3001,6 +4612,11 @@ pub struct ACWTargetSignatureT {
     pub GEOMETRIC_ALBEDO: f64,
     pub EMITTER_FREQUENCY_HZ: f64,
     pub EMITTER_EIRP_DBW: f64,
+    pub HAS_RCS_M2: bool,
+    pub HAS_DIAMETER_M: bool,
+    pub HAS_GEOMETRIC_ALBEDO: bool,
+    pub HAS_EMITTER_FREQUENCY_HZ: bool,
+    pub HAS_EMITTER_EIRP_DBW: bool,
 }
 
 impl Default for ACWTargetSignatureT {
@@ -3011,6 +4627,11 @@ impl Default for ACWTargetSignatureT {
             GEOMETRIC_ALBEDO: 0.0,
             EMITTER_FREQUENCY_HZ: 0.0,
             EMITTER_EIRP_DBW: 0.0,
+            HAS_RCS_M2: false,
+            HAS_DIAMETER_M: false,
+            HAS_GEOMETRIC_ALBEDO: false,
+            HAS_EMITTER_FREQUENCY_HZ: false,
+            HAS_EMITTER_EIRP_DBW: false,
         }
     }
 }
@@ -3025,12 +4646,22 @@ impl ACWTargetSignatureT {
         let GEOMETRIC_ALBEDO = self.GEOMETRIC_ALBEDO;
         let EMITTER_FREQUENCY_HZ = self.EMITTER_FREQUENCY_HZ;
         let EMITTER_EIRP_DBW = self.EMITTER_EIRP_DBW;
+        let HAS_RCS_M2 = self.HAS_RCS_M2;
+        let HAS_DIAMETER_M = self.HAS_DIAMETER_M;
+        let HAS_GEOMETRIC_ALBEDO = self.HAS_GEOMETRIC_ALBEDO;
+        let HAS_EMITTER_FREQUENCY_HZ = self.HAS_EMITTER_FREQUENCY_HZ;
+        let HAS_EMITTER_EIRP_DBW = self.HAS_EMITTER_EIRP_DBW;
         ACWTargetSignature::create(_fbb, &ACWTargetSignatureArgs{
             RCS_M2,
             DIAMETER_M,
             GEOMETRIC_ALBEDO,
             EMITTER_FREQUENCY_HZ,
             EMITTER_EIRP_DBW,
+            HAS_RCS_M2,
+            HAS_DIAMETER_M,
+            HAS_GEOMETRIC_ALBEDO,
+            HAS_EMITTER_FREQUENCY_HZ,
+            HAS_EMITTER_EIRP_DBW,
         })
     }
 }
@@ -3058,6 +4689,7 @@ impl<'a> ACWTarget<'a> {
     pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 8;
     pub const VT_STATES: ::flatbuffers::VOffsetT = 10;
     pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 12;
+    pub const VT_HAS_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 14;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3075,6 +4707,7 @@ impl<'a> ACWTarget<'a> {
         if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         if let Some(x) = args.TARGET_ID { builder.add_TARGET_ID(x); }
+        builder.add_HAS_NORAD_CAT_ID(args.HAS_NORAD_CAT_ID);
         builder.finish()
     }
 
@@ -3092,12 +4725,14 @@ impl<'a> ACWTarget<'a> {
         let SIGNATURE = self.SIGNATURE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let HAS_NORAD_CAT_ID = self.HAS_NORAD_CAT_ID();
         ACWTargetT {
             TARGET_ID,
             NORAD_CAT_ID,
             OBJECT_ID,
             STATES,
             SIGNATURE,
+            HAS_NORAD_CAT_ID,
         }
     }
 
@@ -3126,7 +4761,7 @@ impl<'a> ACWTarget<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWTarget::VT_OBJECT_ID, None)}
     }
 
-    /// Truth Earth-fixed states with velocity, in the frame and time scale of
+    /// Truth central-body-fixed states with velocity, in the frame and time scale of
     /// ACWRequest.STATES.
     #[inline]
     pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
@@ -3143,6 +4778,15 @@ impl<'a> ACWTarget<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ACWTargetSignature>>(ACWTarget::VT_SIGNATURE, None)}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_NORAD_CAT_ID(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTarget::VT_HAS_NORAD_CAT_ID, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWTarget<'_> {
@@ -3156,6 +4800,7 @@ impl ::flatbuffers::Verifiable for ACWTarget<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>("STATES", Self::VT_STATES, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<ACWTargetSignature>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+            .visit_field::<bool>("HAS_NORAD_CAT_ID", Self::VT_HAS_NORAD_CAT_ID, false)?
             .finish();
         Ok(())
     }
@@ -3167,6 +4812,7 @@ pub struct ACWTargetArgs<'a> {
     pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<ACWTargetSignature<'a>>>,
+    pub HAS_NORAD_CAT_ID: bool,
 }
 
 impl<'a> Default for ACWTargetArgs<'a> {
@@ -3178,6 +4824,7 @@ impl<'a> Default for ACWTargetArgs<'a> {
             OBJECT_ID: None,
             STATES: None,
             SIGNATURE: None,
+            HAS_NORAD_CAT_ID: false,
         }
     }
 }
@@ -3214,6 +4861,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWTargetBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_HAS_NORAD_CAT_ID(&mut self, HAS_NORAD_CAT_ID: bool) {
+        self.fbb_.push_slot::<bool>(ACWTarget::VT_HAS_NORAD_CAT_ID, HAS_NORAD_CAT_ID, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWTargetBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWTargetBuilder {
@@ -3237,6 +4889,7 @@ impl ::core::fmt::Debug for ACWTarget<'_> {
         ds.field("OBJECT_ID", &self.OBJECT_ID());
         ds.field("STATES", &self.STATES());
         ds.field("SIGNATURE", &self.SIGNATURE());
+        ds.field("HAS_NORAD_CAT_ID", &self.HAS_NORAD_CAT_ID());
         ds.finish()
     }
 }
@@ -3249,6 +4902,7 @@ pub struct ACWTargetT {
     pub OBJECT_ID: Option<alloc::string::String>,
     pub STATES: Option<alloc::vec::Vec<ACWStateSampleT>>,
     pub SIGNATURE: Option<alloc::boxed::Box<ACWTargetSignatureT>>,
+    pub HAS_NORAD_CAT_ID: bool,
 }
 
 impl Default for ACWTargetT {
@@ -3259,6 +4913,7 @@ impl Default for ACWTargetT {
             OBJECT_ID: None,
             STATES: None,
             SIGNATURE: None,
+            HAS_NORAD_CAT_ID: false,
         }
     }
 }
@@ -3281,12 +4936,14 @@ impl ACWTargetT {
         let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let HAS_NORAD_CAT_ID = self.HAS_NORAD_CAT_ID;
         ACWTarget::create(_fbb, &ACWTargetArgs{
             TARGET_ID,
             NORAD_CAT_ID,
             OBJECT_ID,
             STATES,
             SIGNATURE,
+            HAS_NORAD_CAT_ID,
         })
     }
 }
@@ -3328,6 +4985,21 @@ impl<'a> ACWSensor<'a> {
     pub const VT_MAX_HOST_SUN_ELEVATION_RAD: ::flatbuffers::VOffsetT = 36;
     pub const VT_FALSE_ALARM_RATE_PER_HOUR: ::flatbuffers::VOffsetT = 38;
     pub const VT_TRANSMIT_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 40;
+    pub const VT_HAS_PHENOMENOLOGY: ::flatbuffers::VOffsetT = 42;
+    pub const VT_HAS_OBSERVATION_INTERVAL_S: ::flatbuffers::VOffsetT = 44;
+    pub const VT_HAS_TRACK_DURATION_S: ::flatbuffers::VOffsetT = 46;
+    pub const VT_HAS_REVISIT_INTERVAL_S: ::flatbuffers::VOffsetT = 48;
+    pub const VT_HAS_MAX_SIMULTANEOUS_TRACKS: ::flatbuffers::VOffsetT = 50;
+    pub const VT_HAS_REFERENCE_SNR_DB: ::flatbuffers::VOffsetT = 52;
+    pub const VT_HAS_REFERENCE_RANGE_M: ::flatbuffers::VOffsetT = 54;
+    pub const VT_HAS_REFERENCE_RCS_M2: ::flatbuffers::VOffsetT = 56;
+    pub const VT_HAS_DETECTION_THRESHOLD_DB: ::flatbuffers::VOffsetT = 58;
+    pub const VT_HAS_RECEIVER_G_OVER_T_DB_PER_K: ::flatbuffers::VOffsetT = 60;
+    pub const VT_HAS_RECEIVER_BANDWIDTH_HZ: ::flatbuffers::VOffsetT = 62;
+    pub const VT_HAS_LIMITING_MAGNITUDE: ::flatbuffers::VOffsetT = 64;
+    pub const VT_HAS_MAX_HOST_SUN_ELEVATION_RAD: ::flatbuffers::VOffsetT = 66;
+    pub const VT_HAS_FALSE_ALARM_RATE_PER_HOUR: ::flatbuffers::VOffsetT = 68;
+    pub const VT_HAS_TRANSMIT_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 70;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3358,6 +5030,21 @@ impl<'a> ACWSensor<'a> {
         if let Some(x) = args.ERROR_MODELS { builder.add_ERROR_MODELS(x); }
         if let Some(x) = args.HOST_ID { builder.add_HOST_ID(x); }
         if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+        builder.add_HAS_TRANSMIT_FREQUENCY_HZ(args.HAS_TRANSMIT_FREQUENCY_HZ);
+        builder.add_HAS_FALSE_ALARM_RATE_PER_HOUR(args.HAS_FALSE_ALARM_RATE_PER_HOUR);
+        builder.add_HAS_MAX_HOST_SUN_ELEVATION_RAD(args.HAS_MAX_HOST_SUN_ELEVATION_RAD);
+        builder.add_HAS_LIMITING_MAGNITUDE(args.HAS_LIMITING_MAGNITUDE);
+        builder.add_HAS_RECEIVER_BANDWIDTH_HZ(args.HAS_RECEIVER_BANDWIDTH_HZ);
+        builder.add_HAS_RECEIVER_G_OVER_T_DB_PER_K(args.HAS_RECEIVER_G_OVER_T_DB_PER_K);
+        builder.add_HAS_DETECTION_THRESHOLD_DB(args.HAS_DETECTION_THRESHOLD_DB);
+        builder.add_HAS_REFERENCE_RCS_M2(args.HAS_REFERENCE_RCS_M2);
+        builder.add_HAS_REFERENCE_RANGE_M(args.HAS_REFERENCE_RANGE_M);
+        builder.add_HAS_REFERENCE_SNR_DB(args.HAS_REFERENCE_SNR_DB);
+        builder.add_HAS_MAX_SIMULTANEOUS_TRACKS(args.HAS_MAX_SIMULTANEOUS_TRACKS);
+        builder.add_HAS_REVISIT_INTERVAL_S(args.HAS_REVISIT_INTERVAL_S);
+        builder.add_HAS_TRACK_DURATION_S(args.HAS_TRACK_DURATION_S);
+        builder.add_HAS_OBSERVATION_INTERVAL_S(args.HAS_OBSERVATION_INTERVAL_S);
+        builder.add_HAS_PHENOMENOLOGY(args.HAS_PHENOMENOLOGY);
         builder.add_PHENOMENOLOGY(args.PHENOMENOLOGY);
         builder.finish()
     }
@@ -3390,6 +5077,21 @@ impl<'a> ACWSensor<'a> {
         let MAX_HOST_SUN_ELEVATION_RAD = self.MAX_HOST_SUN_ELEVATION_RAD();
         let FALSE_ALARM_RATE_PER_HOUR = self.FALSE_ALARM_RATE_PER_HOUR();
         let TRANSMIT_FREQUENCY_HZ = self.TRANSMIT_FREQUENCY_HZ();
+        let HAS_PHENOMENOLOGY = self.HAS_PHENOMENOLOGY();
+        let HAS_OBSERVATION_INTERVAL_S = self.HAS_OBSERVATION_INTERVAL_S();
+        let HAS_TRACK_DURATION_S = self.HAS_TRACK_DURATION_S();
+        let HAS_REVISIT_INTERVAL_S = self.HAS_REVISIT_INTERVAL_S();
+        let HAS_MAX_SIMULTANEOUS_TRACKS = self.HAS_MAX_SIMULTANEOUS_TRACKS();
+        let HAS_REFERENCE_SNR_DB = self.HAS_REFERENCE_SNR_DB();
+        let HAS_REFERENCE_RANGE_M = self.HAS_REFERENCE_RANGE_M();
+        let HAS_REFERENCE_RCS_M2 = self.HAS_REFERENCE_RCS_M2();
+        let HAS_DETECTION_THRESHOLD_DB = self.HAS_DETECTION_THRESHOLD_DB();
+        let HAS_RECEIVER_G_OVER_T_DB_PER_K = self.HAS_RECEIVER_G_OVER_T_DB_PER_K();
+        let HAS_RECEIVER_BANDWIDTH_HZ = self.HAS_RECEIVER_BANDWIDTH_HZ();
+        let HAS_LIMITING_MAGNITUDE = self.HAS_LIMITING_MAGNITUDE();
+        let HAS_MAX_HOST_SUN_ELEVATION_RAD = self.HAS_MAX_HOST_SUN_ELEVATION_RAD();
+        let HAS_FALSE_ALARM_RATE_PER_HOUR = self.HAS_FALSE_ALARM_RATE_PER_HOUR();
+        let HAS_TRANSMIT_FREQUENCY_HZ = self.HAS_TRANSMIT_FREQUENCY_HZ();
         ACWSensorT {
             SENSOR_ID,
             HOST_ID,
@@ -3410,6 +5112,21 @@ impl<'a> ACWSensor<'a> {
             MAX_HOST_SUN_ELEVATION_RAD,
             FALSE_ALARM_RATE_PER_HOUR,
             TRANSMIT_FREQUENCY_HZ,
+            HAS_PHENOMENOLOGY,
+            HAS_OBSERVATION_INTERVAL_S,
+            HAS_TRACK_DURATION_S,
+            HAS_REVISIT_INTERVAL_S,
+            HAS_MAX_SIMULTANEOUS_TRACKS,
+            HAS_REFERENCE_SNR_DB,
+            HAS_REFERENCE_RANGE_M,
+            HAS_REFERENCE_RCS_M2,
+            HAS_DETECTION_THRESHOLD_DB,
+            HAS_RECEIVER_G_OVER_T_DB_PER_K,
+            HAS_RECEIVER_BANDWIDTH_HZ,
+            HAS_LIMITING_MAGNITUDE,
+            HAS_MAX_HOST_SUN_ELEVATION_RAD,
+            HAS_FALSE_ALARM_RATE_PER_HOUR,
+            HAS_TRANSMIT_FREQUENCY_HZ,
         }
     }
 
@@ -3479,7 +5196,7 @@ impl<'a> ACWSensor<'a> {
     }
 
     /// Shortest time between the end of one track of a target and the start
-    /// of the next, seconds.
+    /// of the following, seconds.
     #[inline]
     pub fn REVISIT_INTERVAL_S(&self) -> f64 {
         // Safety:
@@ -3589,6 +5306,127 @@ impl<'a> ACWSensor<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWSensor::VT_TRANSMIT_FREQUENCY_HZ, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_PHENOMENOLOGY(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_PHENOMENOLOGY, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_OBSERVATION_INTERVAL_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_OBSERVATION_INTERVAL_S, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_TRACK_DURATION_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_TRACK_DURATION_S, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_REVISIT_INTERVAL_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_REVISIT_INTERVAL_S, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MAX_SIMULTANEOUS_TRACKS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_MAX_SIMULTANEOUS_TRACKS, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_REFERENCE_SNR_DB(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_REFERENCE_SNR_DB, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_REFERENCE_RANGE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_REFERENCE_RANGE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_REFERENCE_RCS_M2(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_REFERENCE_RCS_M2, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_DETECTION_THRESHOLD_DB(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_DETECTION_THRESHOLD_DB, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_RECEIVER_G_OVER_T_DB_PER_K(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_RECEIVER_BANDWIDTH_HZ(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_RECEIVER_BANDWIDTH_HZ, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_LIMITING_MAGNITUDE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_LIMITING_MAGNITUDE, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MAX_HOST_SUN_ELEVATION_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_FALSE_ALARM_RATE_PER_HOUR(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_FALSE_ALARM_RATE_PER_HOUR, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_TRANSMIT_FREQUENCY_HZ(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWSensor::VT_HAS_TRANSMIT_FREQUENCY_HZ, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWSensor<'_> {
@@ -3616,6 +5454,21 @@ impl ::flatbuffers::Verifiable for ACWSensor<'_> {
             .visit_field::<f64>("MAX_HOST_SUN_ELEVATION_RAD", Self::VT_MAX_HOST_SUN_ELEVATION_RAD, false)?
             .visit_field::<f64>("FALSE_ALARM_RATE_PER_HOUR", Self::VT_FALSE_ALARM_RATE_PER_HOUR, false)?
             .visit_field::<f64>("TRANSMIT_FREQUENCY_HZ", Self::VT_TRANSMIT_FREQUENCY_HZ, false)?
+            .visit_field::<bool>("HAS_PHENOMENOLOGY", Self::VT_HAS_PHENOMENOLOGY, false)?
+            .visit_field::<bool>("HAS_OBSERVATION_INTERVAL_S", Self::VT_HAS_OBSERVATION_INTERVAL_S, false)?
+            .visit_field::<bool>("HAS_TRACK_DURATION_S", Self::VT_HAS_TRACK_DURATION_S, false)?
+            .visit_field::<bool>("HAS_REVISIT_INTERVAL_S", Self::VT_HAS_REVISIT_INTERVAL_S, false)?
+            .visit_field::<bool>("HAS_MAX_SIMULTANEOUS_TRACKS", Self::VT_HAS_MAX_SIMULTANEOUS_TRACKS, false)?
+            .visit_field::<bool>("HAS_REFERENCE_SNR_DB", Self::VT_HAS_REFERENCE_SNR_DB, false)?
+            .visit_field::<bool>("HAS_REFERENCE_RANGE_M", Self::VT_HAS_REFERENCE_RANGE_M, false)?
+            .visit_field::<bool>("HAS_REFERENCE_RCS_M2", Self::VT_HAS_REFERENCE_RCS_M2, false)?
+            .visit_field::<bool>("HAS_DETECTION_THRESHOLD_DB", Self::VT_HAS_DETECTION_THRESHOLD_DB, false)?
+            .visit_field::<bool>("HAS_RECEIVER_G_OVER_T_DB_PER_K", Self::VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, false)?
+            .visit_field::<bool>("HAS_RECEIVER_BANDWIDTH_HZ", Self::VT_HAS_RECEIVER_BANDWIDTH_HZ, false)?
+            .visit_field::<bool>("HAS_LIMITING_MAGNITUDE", Self::VT_HAS_LIMITING_MAGNITUDE, false)?
+            .visit_field::<bool>("HAS_MAX_HOST_SUN_ELEVATION_RAD", Self::VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, false)?
+            .visit_field::<bool>("HAS_FALSE_ALARM_RATE_PER_HOUR", Self::VT_HAS_FALSE_ALARM_RATE_PER_HOUR, false)?
+            .visit_field::<bool>("HAS_TRANSMIT_FREQUENCY_HZ", Self::VT_HAS_TRANSMIT_FREQUENCY_HZ, false)?
             .finish();
         Ok(())
     }
@@ -3641,6 +5494,21 @@ pub struct ACWSensorArgs<'a> {
     pub MAX_HOST_SUN_ELEVATION_RAD: f64,
     pub FALSE_ALARM_RATE_PER_HOUR: f64,
     pub TRANSMIT_FREQUENCY_HZ: f64,
+    pub HAS_PHENOMENOLOGY: bool,
+    pub HAS_OBSERVATION_INTERVAL_S: bool,
+    pub HAS_TRACK_DURATION_S: bool,
+    pub HAS_REVISIT_INTERVAL_S: bool,
+    pub HAS_MAX_SIMULTANEOUS_TRACKS: bool,
+    pub HAS_REFERENCE_SNR_DB: bool,
+    pub HAS_REFERENCE_RANGE_M: bool,
+    pub HAS_REFERENCE_RCS_M2: bool,
+    pub HAS_DETECTION_THRESHOLD_DB: bool,
+    pub HAS_RECEIVER_G_OVER_T_DB_PER_K: bool,
+    pub HAS_RECEIVER_BANDWIDTH_HZ: bool,
+    pub HAS_LIMITING_MAGNITUDE: bool,
+    pub HAS_MAX_HOST_SUN_ELEVATION_RAD: bool,
+    pub HAS_FALSE_ALARM_RATE_PER_HOUR: bool,
+    pub HAS_TRANSMIT_FREQUENCY_HZ: bool,
 }
 
 impl<'a> Default for ACWSensorArgs<'a> {
@@ -3666,6 +5534,21 @@ impl<'a> Default for ACWSensorArgs<'a> {
             MAX_HOST_SUN_ELEVATION_RAD: 0.0,
             FALSE_ALARM_RATE_PER_HOUR: 0.0,
             TRANSMIT_FREQUENCY_HZ: 0.0,
+            HAS_PHENOMENOLOGY: false,
+            HAS_OBSERVATION_INTERVAL_S: false,
+            HAS_TRACK_DURATION_S: false,
+            HAS_REVISIT_INTERVAL_S: false,
+            HAS_MAX_SIMULTANEOUS_TRACKS: false,
+            HAS_REFERENCE_SNR_DB: false,
+            HAS_REFERENCE_RANGE_M: false,
+            HAS_REFERENCE_RCS_M2: false,
+            HAS_DETECTION_THRESHOLD_DB: false,
+            HAS_RECEIVER_G_OVER_T_DB_PER_K: false,
+            HAS_RECEIVER_BANDWIDTH_HZ: false,
+            HAS_LIMITING_MAGNITUDE: false,
+            HAS_MAX_HOST_SUN_ELEVATION_RAD: false,
+            HAS_FALSE_ALARM_RATE_PER_HOUR: false,
+            HAS_TRANSMIT_FREQUENCY_HZ: false,
         }
     }
 }
@@ -3772,6 +5655,81 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWSensorBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_HAS_PHENOMENOLOGY(&mut self, HAS_PHENOMENOLOGY: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_PHENOMENOLOGY, HAS_PHENOMENOLOGY, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_OBSERVATION_INTERVAL_S(&mut self, HAS_OBSERVATION_INTERVAL_S: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_OBSERVATION_INTERVAL_S, HAS_OBSERVATION_INTERVAL_S, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_TRACK_DURATION_S(&mut self, HAS_TRACK_DURATION_S: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_TRACK_DURATION_S, HAS_TRACK_DURATION_S, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_REVISIT_INTERVAL_S(&mut self, HAS_REVISIT_INTERVAL_S: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_REVISIT_INTERVAL_S, HAS_REVISIT_INTERVAL_S, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAX_SIMULTANEOUS_TRACKS(&mut self, HAS_MAX_SIMULTANEOUS_TRACKS: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_MAX_SIMULTANEOUS_TRACKS, HAS_MAX_SIMULTANEOUS_TRACKS, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_REFERENCE_SNR_DB(&mut self, HAS_REFERENCE_SNR_DB: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_REFERENCE_SNR_DB, HAS_REFERENCE_SNR_DB, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_REFERENCE_RANGE_M(&mut self, HAS_REFERENCE_RANGE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_REFERENCE_RANGE_M, HAS_REFERENCE_RANGE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_REFERENCE_RCS_M2(&mut self, HAS_REFERENCE_RCS_M2: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_REFERENCE_RCS_M2, HAS_REFERENCE_RCS_M2, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_DETECTION_THRESHOLD_DB(&mut self, HAS_DETECTION_THRESHOLD_DB: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_DETECTION_THRESHOLD_DB, HAS_DETECTION_THRESHOLD_DB, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_RECEIVER_G_OVER_T_DB_PER_K(&mut self, HAS_RECEIVER_G_OVER_T_DB_PER_K: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, HAS_RECEIVER_G_OVER_T_DB_PER_K, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_RECEIVER_BANDWIDTH_HZ(&mut self, HAS_RECEIVER_BANDWIDTH_HZ: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_RECEIVER_BANDWIDTH_HZ, HAS_RECEIVER_BANDWIDTH_HZ, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_LIMITING_MAGNITUDE(&mut self, HAS_LIMITING_MAGNITUDE: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_LIMITING_MAGNITUDE, HAS_LIMITING_MAGNITUDE, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAX_HOST_SUN_ELEVATION_RAD(&mut self, HAS_MAX_HOST_SUN_ELEVATION_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, HAS_MAX_HOST_SUN_ELEVATION_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_FALSE_ALARM_RATE_PER_HOUR(&mut self, HAS_FALSE_ALARM_RATE_PER_HOUR: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_FALSE_ALARM_RATE_PER_HOUR, HAS_FALSE_ALARM_RATE_PER_HOUR, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_TRANSMIT_FREQUENCY_HZ(&mut self, HAS_TRANSMIT_FREQUENCY_HZ: bool) {
+        self.fbb_.push_slot::<bool>(ACWSensor::VT_HAS_TRANSMIT_FREQUENCY_HZ, HAS_TRANSMIT_FREQUENCY_HZ, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWSensorBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWSensorBuilder {
@@ -3809,6 +5767,21 @@ impl ::core::fmt::Debug for ACWSensor<'_> {
         ds.field("MAX_HOST_SUN_ELEVATION_RAD", &self.MAX_HOST_SUN_ELEVATION_RAD());
         ds.field("FALSE_ALARM_RATE_PER_HOUR", &self.FALSE_ALARM_RATE_PER_HOUR());
         ds.field("TRANSMIT_FREQUENCY_HZ", &self.TRANSMIT_FREQUENCY_HZ());
+        ds.field("HAS_PHENOMENOLOGY", &self.HAS_PHENOMENOLOGY());
+        ds.field("HAS_OBSERVATION_INTERVAL_S", &self.HAS_OBSERVATION_INTERVAL_S());
+        ds.field("HAS_TRACK_DURATION_S", &self.HAS_TRACK_DURATION_S());
+        ds.field("HAS_REVISIT_INTERVAL_S", &self.HAS_REVISIT_INTERVAL_S());
+        ds.field("HAS_MAX_SIMULTANEOUS_TRACKS", &self.HAS_MAX_SIMULTANEOUS_TRACKS());
+        ds.field("HAS_REFERENCE_SNR_DB", &self.HAS_REFERENCE_SNR_DB());
+        ds.field("HAS_REFERENCE_RANGE_M", &self.HAS_REFERENCE_RANGE_M());
+        ds.field("HAS_REFERENCE_RCS_M2", &self.HAS_REFERENCE_RCS_M2());
+        ds.field("HAS_DETECTION_THRESHOLD_DB", &self.HAS_DETECTION_THRESHOLD_DB());
+        ds.field("HAS_RECEIVER_G_OVER_T_DB_PER_K", &self.HAS_RECEIVER_G_OVER_T_DB_PER_K());
+        ds.field("HAS_RECEIVER_BANDWIDTH_HZ", &self.HAS_RECEIVER_BANDWIDTH_HZ());
+        ds.field("HAS_LIMITING_MAGNITUDE", &self.HAS_LIMITING_MAGNITUDE());
+        ds.field("HAS_MAX_HOST_SUN_ELEVATION_RAD", &self.HAS_MAX_HOST_SUN_ELEVATION_RAD());
+        ds.field("HAS_FALSE_ALARM_RATE_PER_HOUR", &self.HAS_FALSE_ALARM_RATE_PER_HOUR());
+        ds.field("HAS_TRANSMIT_FREQUENCY_HZ", &self.HAS_TRANSMIT_FREQUENCY_HZ());
         ds.finish()
     }
 }
@@ -3835,6 +5808,21 @@ pub struct ACWSensorT {
     pub MAX_HOST_SUN_ELEVATION_RAD: f64,
     pub FALSE_ALARM_RATE_PER_HOUR: f64,
     pub TRANSMIT_FREQUENCY_HZ: f64,
+    pub HAS_PHENOMENOLOGY: bool,
+    pub HAS_OBSERVATION_INTERVAL_S: bool,
+    pub HAS_TRACK_DURATION_S: bool,
+    pub HAS_REVISIT_INTERVAL_S: bool,
+    pub HAS_MAX_SIMULTANEOUS_TRACKS: bool,
+    pub HAS_REFERENCE_SNR_DB: bool,
+    pub HAS_REFERENCE_RANGE_M: bool,
+    pub HAS_REFERENCE_RCS_M2: bool,
+    pub HAS_DETECTION_THRESHOLD_DB: bool,
+    pub HAS_RECEIVER_G_OVER_T_DB_PER_K: bool,
+    pub HAS_RECEIVER_BANDWIDTH_HZ: bool,
+    pub HAS_LIMITING_MAGNITUDE: bool,
+    pub HAS_MAX_HOST_SUN_ELEVATION_RAD: bool,
+    pub HAS_FALSE_ALARM_RATE_PER_HOUR: bool,
+    pub HAS_TRANSMIT_FREQUENCY_HZ: bool,
 }
 
 impl Default for ACWSensorT {
@@ -3859,6 +5847,21 @@ impl Default for ACWSensorT {
             MAX_HOST_SUN_ELEVATION_RAD: 0.0,
             FALSE_ALARM_RATE_PER_HOUR: 0.0,
             TRANSMIT_FREQUENCY_HZ: 0.0,
+            HAS_PHENOMENOLOGY: false,
+            HAS_OBSERVATION_INTERVAL_S: false,
+            HAS_TRACK_DURATION_S: false,
+            HAS_REVISIT_INTERVAL_S: false,
+            HAS_MAX_SIMULTANEOUS_TRACKS: false,
+            HAS_REFERENCE_SNR_DB: false,
+            HAS_REFERENCE_RANGE_M: false,
+            HAS_REFERENCE_RCS_M2: false,
+            HAS_DETECTION_THRESHOLD_DB: false,
+            HAS_RECEIVER_G_OVER_T_DB_PER_K: false,
+            HAS_RECEIVER_BANDWIDTH_HZ: false,
+            HAS_LIMITING_MAGNITUDE: false,
+            HAS_MAX_HOST_SUN_ELEVATION_RAD: false,
+            HAS_FALSE_ALARM_RATE_PER_HOUR: false,
+            HAS_TRANSMIT_FREQUENCY_HZ: false,
         }
     }
 }
@@ -3895,6 +5898,21 @@ impl ACWSensorT {
         let MAX_HOST_SUN_ELEVATION_RAD = self.MAX_HOST_SUN_ELEVATION_RAD;
         let FALSE_ALARM_RATE_PER_HOUR = self.FALSE_ALARM_RATE_PER_HOUR;
         let TRANSMIT_FREQUENCY_HZ = self.TRANSMIT_FREQUENCY_HZ;
+        let HAS_PHENOMENOLOGY = self.HAS_PHENOMENOLOGY;
+        let HAS_OBSERVATION_INTERVAL_S = self.HAS_OBSERVATION_INTERVAL_S;
+        let HAS_TRACK_DURATION_S = self.HAS_TRACK_DURATION_S;
+        let HAS_REVISIT_INTERVAL_S = self.HAS_REVISIT_INTERVAL_S;
+        let HAS_MAX_SIMULTANEOUS_TRACKS = self.HAS_MAX_SIMULTANEOUS_TRACKS;
+        let HAS_REFERENCE_SNR_DB = self.HAS_REFERENCE_SNR_DB;
+        let HAS_REFERENCE_RANGE_M = self.HAS_REFERENCE_RANGE_M;
+        let HAS_REFERENCE_RCS_M2 = self.HAS_REFERENCE_RCS_M2;
+        let HAS_DETECTION_THRESHOLD_DB = self.HAS_DETECTION_THRESHOLD_DB;
+        let HAS_RECEIVER_G_OVER_T_DB_PER_K = self.HAS_RECEIVER_G_OVER_T_DB_PER_K;
+        let HAS_RECEIVER_BANDWIDTH_HZ = self.HAS_RECEIVER_BANDWIDTH_HZ;
+        let HAS_LIMITING_MAGNITUDE = self.HAS_LIMITING_MAGNITUDE;
+        let HAS_MAX_HOST_SUN_ELEVATION_RAD = self.HAS_MAX_HOST_SUN_ELEVATION_RAD;
+        let HAS_FALSE_ALARM_RATE_PER_HOUR = self.HAS_FALSE_ALARM_RATE_PER_HOUR;
+        let HAS_TRANSMIT_FREQUENCY_HZ = self.HAS_TRANSMIT_FREQUENCY_HZ;
         ACWSensor::create(_fbb, &ACWSensorArgs{
             SENSOR_ID,
             HOST_ID,
@@ -3915,6 +5933,21 @@ impl ACWSensorT {
             MAX_HOST_SUN_ELEVATION_RAD,
             FALSE_ALARM_RATE_PER_HOUR,
             TRANSMIT_FREQUENCY_HZ,
+            HAS_PHENOMENOLOGY,
+            HAS_OBSERVATION_INTERVAL_S,
+            HAS_TRACK_DURATION_S,
+            HAS_REVISIT_INTERVAL_S,
+            HAS_MAX_SIMULTANEOUS_TRACKS,
+            HAS_REFERENCE_SNR_DB,
+            HAS_REFERENCE_RANGE_M,
+            HAS_REFERENCE_RCS_M2,
+            HAS_DETECTION_THRESHOLD_DB,
+            HAS_RECEIVER_G_OVER_T_DB_PER_K,
+            HAS_RECEIVER_BANDWIDTH_HZ,
+            HAS_LIMITING_MAGNITUDE,
+            HAS_MAX_HOST_SUN_ELEVATION_RAD,
+            HAS_FALSE_ALARM_RATE_PER_HOUR,
+            HAS_TRANSMIT_FREQUENCY_HZ,
         })
     }
 }
@@ -4143,6 +6176,10 @@ impl<'a> ACWTrack<'a> {
     pub const VT_SCHEDULED_COUNT: ::flatbuffers::VOffsetT = 12;
     pub const VT_DETECTED_COUNT: ::flatbuffers::VOffsetT = 14;
     pub const VT_LOSS_REASON: ::flatbuffers::VOffsetT = 16;
+    pub const VT_HAS_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_SCHEDULED_COUNT: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HAS_DETECTED_COUNT: ::flatbuffers::VOffsetT = 24;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4162,6 +6199,10 @@ impl<'a> ACWTrack<'a> {
         builder.add_SCHEDULED_COUNT(args.SCHEDULED_COUNT);
         if let Some(x) = args.TARGET_ID { builder.add_TARGET_ID(x); }
         if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+        builder.add_HAS_DETECTED_COUNT(args.HAS_DETECTED_COUNT);
+        builder.add_HAS_SCHEDULED_COUNT(args.HAS_SCHEDULED_COUNT);
+        builder.add_HAS_END_JULIAN_DATE_TT(args.HAS_END_JULIAN_DATE_TT);
+        builder.add_HAS_START_JULIAN_DATE_TT(args.HAS_START_JULIAN_DATE_TT);
         builder.finish()
     }
 
@@ -4179,6 +6220,10 @@ impl<'a> ACWTrack<'a> {
         let LOSS_REASON = self.LOSS_REASON().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT();
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT();
+        let HAS_SCHEDULED_COUNT = self.HAS_SCHEDULED_COUNT();
+        let HAS_DETECTED_COUNT = self.HAS_DETECTED_COUNT();
         ACWTrackT {
             SENSOR_ID,
             TARGET_ID,
@@ -4187,6 +6232,10 @@ impl<'a> ACWTrack<'a> {
             SCHEDULED_COUNT,
             DETECTED_COUNT,
             LOSS_REASON,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
+            HAS_SCHEDULED_COUNT,
+            HAS_DETECTED_COUNT,
         }
     }
 
@@ -4249,6 +6298,39 @@ impl<'a> ACWTrack<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACWTrack::VT_LOSS_REASON, None)}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_START_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTrack::VT_HAS_START_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_END_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTrack::VT_HAS_END_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_SCHEDULED_COUNT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTrack::VT_HAS_SCHEDULED_COUNT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_DETECTED_COUNT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWTrack::VT_HAS_DETECTED_COUNT, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWTrack<'_> {
@@ -4264,6 +6346,10 @@ impl ::flatbuffers::Verifiable for ACWTrack<'_> {
             .visit_field::<u32>("SCHEDULED_COUNT", Self::VT_SCHEDULED_COUNT, false)?
             .visit_field::<u32>("DETECTED_COUNT", Self::VT_DETECTED_COUNT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LOSS_REASON", Self::VT_LOSS_REASON, false)?
+            .visit_field::<bool>("HAS_START_JULIAN_DATE_TT", Self::VT_HAS_START_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_END_JULIAN_DATE_TT", Self::VT_HAS_END_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_SCHEDULED_COUNT", Self::VT_HAS_SCHEDULED_COUNT, false)?
+            .visit_field::<bool>("HAS_DETECTED_COUNT", Self::VT_HAS_DETECTED_COUNT, false)?
             .finish();
         Ok(())
     }
@@ -4277,6 +6363,10 @@ pub struct ACWTrackArgs<'a> {
     pub SCHEDULED_COUNT: u32,
     pub DETECTED_COUNT: u32,
     pub LOSS_REASON: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
+    pub HAS_SCHEDULED_COUNT: bool,
+    pub HAS_DETECTED_COUNT: bool,
 }
 
 impl<'a> Default for ACWTrackArgs<'a> {
@@ -4290,6 +6380,10 @@ impl<'a> Default for ACWTrackArgs<'a> {
             SCHEDULED_COUNT: 0,
             DETECTED_COUNT: 0,
             LOSS_REASON: None,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
+            HAS_SCHEDULED_COUNT: false,
+            HAS_DETECTED_COUNT: false,
         }
     }
 }
@@ -4336,6 +6430,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWTrackBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_HAS_START_JULIAN_DATE_TT(&mut self, HAS_START_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWTrack::VT_HAS_START_JULIAN_DATE_TT, HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_END_JULIAN_DATE_TT(&mut self, HAS_END_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWTrack::VT_HAS_END_JULIAN_DATE_TT, HAS_END_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_SCHEDULED_COUNT(&mut self, HAS_SCHEDULED_COUNT: bool) {
+        self.fbb_.push_slot::<bool>(ACWTrack::VT_HAS_SCHEDULED_COUNT, HAS_SCHEDULED_COUNT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_DETECTED_COUNT(&mut self, HAS_DETECTED_COUNT: bool) {
+        self.fbb_.push_slot::<bool>(ACWTrack::VT_HAS_DETECTED_COUNT, HAS_DETECTED_COUNT, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWTrackBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWTrackBuilder {
@@ -4361,6 +6475,10 @@ impl ::core::fmt::Debug for ACWTrack<'_> {
         ds.field("SCHEDULED_COUNT", &self.SCHEDULED_COUNT());
         ds.field("DETECTED_COUNT", &self.DETECTED_COUNT());
         ds.field("LOSS_REASON", &self.LOSS_REASON());
+        ds.field("HAS_START_JULIAN_DATE_TT", &self.HAS_START_JULIAN_DATE_TT());
+        ds.field("HAS_END_JULIAN_DATE_TT", &self.HAS_END_JULIAN_DATE_TT());
+        ds.field("HAS_SCHEDULED_COUNT", &self.HAS_SCHEDULED_COUNT());
+        ds.field("HAS_DETECTED_COUNT", &self.HAS_DETECTED_COUNT());
         ds.finish()
     }
 }
@@ -4375,6 +6493,10 @@ pub struct ACWTrackT {
     pub SCHEDULED_COUNT: u32,
     pub DETECTED_COUNT: u32,
     pub LOSS_REASON: Option<alloc::string::String>,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
+    pub HAS_SCHEDULED_COUNT: bool,
+    pub HAS_DETECTED_COUNT: bool,
 }
 
 impl Default for ACWTrackT {
@@ -4387,6 +6509,10 @@ impl Default for ACWTrackT {
             SCHEDULED_COUNT: 0,
             DETECTED_COUNT: 0,
             LOSS_REASON: None,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
+            HAS_SCHEDULED_COUNT: false,
+            HAS_DETECTED_COUNT: false,
         }
     }
 }
@@ -4409,6 +6535,10 @@ impl ACWTrackT {
         let LOSS_REASON = self.LOSS_REASON.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT;
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT;
+        let HAS_SCHEDULED_COUNT = self.HAS_SCHEDULED_COUNT;
+        let HAS_DETECTED_COUNT = self.HAS_DETECTED_COUNT;
         ACWTrack::create(_fbb, &ACWTrackArgs{
             SENSOR_ID,
             TARGET_ID,
@@ -4417,6 +6547,10 @@ impl ACWTrackT {
             SCHEDULED_COUNT,
             DETECTED_COUNT,
             LOSS_REASON,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
+            HAS_SCHEDULED_COUNT,
+            HAS_DETECTED_COUNT,
         })
     }
 }
@@ -4460,6 +6594,13 @@ impl<'a> ACWRequest<'a> {
     pub const VT_RANDOM_SEED: ::flatbuffers::VOffsetT = 40;
     pub const VT_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 42;
     pub const VT_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 44;
+    pub const VT_HAS_OPERATION: ::flatbuffers::VOffsetT = 46;
+    pub const VT_HAS_MIN_ELEVATION_OVERRIDE_RAD: ::flatbuffers::VOffsetT = 48;
+    pub const VT_HAS_EVALUATION_MODE: ::flatbuffers::VOffsetT = 50;
+    pub const VT_HAS_ROOT_TOLERANCE_S: ::flatbuffers::VOffsetT = 52;
+    pub const VT_HAS_RANDOM_SEED: ::flatbuffers::VOffsetT = 54;
+    pub const VT_HAS_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 56;
+    pub const VT_HAS_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 58;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4491,6 +6632,13 @@ impl<'a> ACWRequest<'a> {
         if let Some(x) = args.TARGET_STATION_ID { builder.add_TARGET_STATION_ID(x); }
         if let Some(x) = args.STATES { builder.add_STATES(x); }
         if let Some(x) = args.GROUND_STATIONS { builder.add_GROUND_STATIONS(x); }
+        builder.add_HAS_END_JULIAN_DATE_TT(args.HAS_END_JULIAN_DATE_TT);
+        builder.add_HAS_START_JULIAN_DATE_TT(args.HAS_START_JULIAN_DATE_TT);
+        builder.add_HAS_RANDOM_SEED(args.HAS_RANDOM_SEED);
+        builder.add_HAS_ROOT_TOLERANCE_S(args.HAS_ROOT_TOLERANCE_S);
+        builder.add_HAS_EVALUATION_MODE(args.HAS_EVALUATION_MODE);
+        builder.add_HAS_MIN_ELEVATION_OVERRIDE_RAD(args.HAS_MIN_ELEVATION_OVERRIDE_RAD);
+        builder.add_HAS_OPERATION(args.HAS_OPERATION);
         builder.add_EVALUATION_MODE(args.EVALUATION_MODE);
         builder.add_OPERATION(args.OPERATION);
         builder.finish()
@@ -4546,6 +6694,13 @@ impl<'a> ACWRequest<'a> {
         let RANDOM_SEED = self.RANDOM_SEED();
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT();
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT();
+        let HAS_OPERATION = self.HAS_OPERATION();
+        let HAS_MIN_ELEVATION_OVERRIDE_RAD = self.HAS_MIN_ELEVATION_OVERRIDE_RAD();
+        let HAS_EVALUATION_MODE = self.HAS_EVALUATION_MODE();
+        let HAS_ROOT_TOLERANCE_S = self.HAS_ROOT_TOLERANCE_S();
+        let HAS_RANDOM_SEED = self.HAS_RANDOM_SEED();
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT();
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT();
         ACWRequestT {
             OPERATION,
             GROUND_STATIONS,
@@ -4568,6 +6723,13 @@ impl<'a> ACWRequest<'a> {
             RANDOM_SEED,
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            HAS_OPERATION,
+            HAS_MIN_ELEVATION_OVERRIDE_RAD,
+            HAS_EVALUATION_MODE,
+            HAS_ROOT_TOLERANCE_S,
+            HAS_RANDOM_SEED,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
         }
     }
 
@@ -4588,7 +6750,7 @@ impl<'a> ACWRequest<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWGroundStation>>>>(ACWRequest::VT_GROUND_STATIONS, None)}
     }
 
-    /// Pre-sampled target Earth-fixed Cartesian states.
+    /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
     #[inline]
     pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
         // Safety:
@@ -4642,7 +6804,7 @@ impl<'a> ACWRequest<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ACWRefractionModel>>(ACWRequest::VT_REFRACTION_MODEL, None)}
     }
 
-    /// Optional constraint composition. When absent the legacy behaviour holds:
+    /// Optional constraint composition. When absent the station constraints apply:
     /// every ground station's MIN_ELEVATION_RAD (or the override) plus
     /// ELEVATION_MASK, all required.
     #[inline]
@@ -4766,6 +6928,63 @@ impl<'a> ACWRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWRequest::VT_END_JULIAN_DATE_TT, Some(0.0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_OPERATION(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_OPERATION, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MIN_ELEVATION_OVERRIDE_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_EVALUATION_MODE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_EVALUATION_MODE, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_ROOT_TOLERANCE_S(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_ROOT_TOLERANCE_S, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_RANDOM_SEED(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_RANDOM_SEED, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_START_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_START_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_END_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWRequest::VT_HAS_END_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWRequest<'_> {
@@ -4795,6 +7014,13 @@ impl ::flatbuffers::Verifiable for ACWRequest<'_> {
             .visit_field::<u64>("RANDOM_SEED", Self::VT_RANDOM_SEED, false)?
             .visit_field::<f64>("START_JULIAN_DATE_TT", Self::VT_START_JULIAN_DATE_TT, false)?
             .visit_field::<f64>("END_JULIAN_DATE_TT", Self::VT_END_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_OPERATION", Self::VT_HAS_OPERATION, false)?
+            .visit_field::<bool>("HAS_MIN_ELEVATION_OVERRIDE_RAD", Self::VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, false)?
+            .visit_field::<bool>("HAS_EVALUATION_MODE", Self::VT_HAS_EVALUATION_MODE, false)?
+            .visit_field::<bool>("HAS_ROOT_TOLERANCE_S", Self::VT_HAS_ROOT_TOLERANCE_S, false)?
+            .visit_field::<bool>("HAS_RANDOM_SEED", Self::VT_HAS_RANDOM_SEED, false)?
+            .visit_field::<bool>("HAS_START_JULIAN_DATE_TT", Self::VT_HAS_START_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_END_JULIAN_DATE_TT", Self::VT_HAS_END_JULIAN_DATE_TT, false)?
             .finish();
         Ok(())
     }
@@ -4822,6 +7048,13 @@ pub struct ACWRequestArgs<'a> {
     pub RANDOM_SEED: u64,
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub HAS_OPERATION: bool,
+    pub HAS_MIN_ELEVATION_OVERRIDE_RAD: bool,
+    pub HAS_EVALUATION_MODE: bool,
+    pub HAS_ROOT_TOLERANCE_S: bool,
+    pub HAS_RANDOM_SEED: bool,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
 }
 
 impl<'a> Default for ACWRequestArgs<'a> {
@@ -4849,6 +7082,13 @@ impl<'a> Default for ACWRequestArgs<'a> {
             RANDOM_SEED: 0,
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            HAS_OPERATION: false,
+            HAS_MIN_ELEVATION_OVERRIDE_RAD: false,
+            HAS_EVALUATION_MODE: false,
+            HAS_ROOT_TOLERANCE_S: false,
+            HAS_RANDOM_SEED: false,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
         }
     }
 }
@@ -4965,6 +7205,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWRequestBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_HAS_OPERATION(&mut self, HAS_OPERATION: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_OPERATION, HAS_OPERATION, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MIN_ELEVATION_OVERRIDE_RAD(&mut self, HAS_MIN_ELEVATION_OVERRIDE_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, HAS_MIN_ELEVATION_OVERRIDE_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_EVALUATION_MODE(&mut self, HAS_EVALUATION_MODE: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_EVALUATION_MODE, HAS_EVALUATION_MODE, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_ROOT_TOLERANCE_S(&mut self, HAS_ROOT_TOLERANCE_S: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_ROOT_TOLERANCE_S, HAS_ROOT_TOLERANCE_S, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_RANDOM_SEED(&mut self, HAS_RANDOM_SEED: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_RANDOM_SEED, HAS_RANDOM_SEED, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_START_JULIAN_DATE_TT(&mut self, HAS_START_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_START_JULIAN_DATE_TT, HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_END_JULIAN_DATE_TT(&mut self, HAS_END_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWRequest::VT_HAS_END_JULIAN_DATE_TT, HAS_END_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWRequestBuilder {
@@ -5004,6 +7279,13 @@ impl ::core::fmt::Debug for ACWRequest<'_> {
         ds.field("RANDOM_SEED", &self.RANDOM_SEED());
         ds.field("START_JULIAN_DATE_TT", &self.START_JULIAN_DATE_TT());
         ds.field("END_JULIAN_DATE_TT", &self.END_JULIAN_DATE_TT());
+        ds.field("HAS_OPERATION", &self.HAS_OPERATION());
+        ds.field("HAS_MIN_ELEVATION_OVERRIDE_RAD", &self.HAS_MIN_ELEVATION_OVERRIDE_RAD());
+        ds.field("HAS_EVALUATION_MODE", &self.HAS_EVALUATION_MODE());
+        ds.field("HAS_ROOT_TOLERANCE_S", &self.HAS_ROOT_TOLERANCE_S());
+        ds.field("HAS_RANDOM_SEED", &self.HAS_RANDOM_SEED());
+        ds.field("HAS_START_JULIAN_DATE_TT", &self.HAS_START_JULIAN_DATE_TT());
+        ds.field("HAS_END_JULIAN_DATE_TT", &self.HAS_END_JULIAN_DATE_TT());
         ds.finish()
     }
 }
@@ -5032,6 +7314,13 @@ pub struct ACWRequestT {
     pub RANDOM_SEED: u64,
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub HAS_OPERATION: bool,
+    pub HAS_MIN_ELEVATION_OVERRIDE_RAD: bool,
+    pub HAS_EVALUATION_MODE: bool,
+    pub HAS_ROOT_TOLERANCE_S: bool,
+    pub HAS_RANDOM_SEED: bool,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
 }
 
 impl Default for ACWRequestT {
@@ -5058,6 +7347,13 @@ impl Default for ACWRequestT {
             RANDOM_SEED: 0,
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            HAS_OPERATION: false,
+            HAS_MIN_ELEVATION_OVERRIDE_RAD: false,
+            HAS_EVALUATION_MODE: false,
+            HAS_ROOT_TOLERANCE_S: false,
+            HAS_RANDOM_SEED: false,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
         }
     }
 }
@@ -5116,6 +7412,13 @@ impl ACWRequestT {
         let RANDOM_SEED = self.RANDOM_SEED;
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT;
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT;
+        let HAS_OPERATION = self.HAS_OPERATION;
+        let HAS_MIN_ELEVATION_OVERRIDE_RAD = self.HAS_MIN_ELEVATION_OVERRIDE_RAD;
+        let HAS_EVALUATION_MODE = self.HAS_EVALUATION_MODE;
+        let HAS_ROOT_TOLERANCE_S = self.HAS_ROOT_TOLERANCE_S;
+        let HAS_RANDOM_SEED = self.HAS_RANDOM_SEED;
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT;
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT;
         ACWRequest::create(_fbb, &ACWRequestArgs{
             OPERATION,
             GROUND_STATIONS,
@@ -5138,6 +7441,13 @@ impl ACWRequestT {
             RANDOM_SEED,
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            HAS_OPERATION,
+            HAS_MIN_ELEVATION_OVERRIDE_RAD,
+            HAS_EVALUATION_MODE,
+            HAS_ROOT_TOLERANCE_S,
+            HAS_RANDOM_SEED,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
         })
     }
 }
@@ -5173,6 +7483,15 @@ impl<'a> ACWAccessWindow<'a> {
     pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 24;
     pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 26;
     pub const VT_EDGES_REFINED: ::flatbuffers::VOffsetT = 28;
+    pub const VT_HAS_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 30;
+    pub const VT_HAS_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 32;
+    pub const VT_HAS_MAX_ELEVATION_RAD: ::flatbuffers::VOffsetT = 34;
+    pub const VT_HAS_SAMPLE_COUNT: ::flatbuffers::VOffsetT = 36;
+    pub const VT_HAS_START_LIMITING_CONSTRAINT_INDEX: ::flatbuffers::VOffsetT = 38;
+    pub const VT_HAS_END_LIMITING_CONSTRAINT_INDEX: ::flatbuffers::VOffsetT = 40;
+    pub const VT_HAS_MIN_RANGE_M: ::flatbuffers::VOffsetT = 42;
+    pub const VT_HAS_MAX_RANGE_M: ::flatbuffers::VOffsetT = 44;
+    pub const VT_HAS_EDGES_REFINED: ::flatbuffers::VOffsetT = 46;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5197,6 +7516,15 @@ impl<'a> ACWAccessWindow<'a> {
         if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
         builder.add_SAMPLE_COUNT(args.SAMPLE_COUNT);
         if let Some(x) = args.STATION_ID { builder.add_STATION_ID(x); }
+        builder.add_HAS_EDGES_REFINED(args.HAS_EDGES_REFINED);
+        builder.add_HAS_MAX_RANGE_M(args.HAS_MAX_RANGE_M);
+        builder.add_HAS_MIN_RANGE_M(args.HAS_MIN_RANGE_M);
+        builder.add_HAS_END_LIMITING_CONSTRAINT_INDEX(args.HAS_END_LIMITING_CONSTRAINT_INDEX);
+        builder.add_HAS_START_LIMITING_CONSTRAINT_INDEX(args.HAS_START_LIMITING_CONSTRAINT_INDEX);
+        builder.add_HAS_SAMPLE_COUNT(args.HAS_SAMPLE_COUNT);
+        builder.add_HAS_MAX_ELEVATION_RAD(args.HAS_MAX_ELEVATION_RAD);
+        builder.add_HAS_END_JULIAN_DATE_TT(args.HAS_END_JULIAN_DATE_TT);
+        builder.add_HAS_START_JULIAN_DATE_TT(args.HAS_START_JULIAN_DATE_TT);
         builder.add_EDGES_REFINED(args.EDGES_REFINED);
         builder.finish()
     }
@@ -5223,6 +7551,15 @@ impl<'a> ACWAccessWindow<'a> {
         let MIN_RANGE_M = self.MIN_RANGE_M();
         let MAX_RANGE_M = self.MAX_RANGE_M();
         let EDGES_REFINED = self.EDGES_REFINED();
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT();
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT();
+        let HAS_MAX_ELEVATION_RAD = self.HAS_MAX_ELEVATION_RAD();
+        let HAS_SAMPLE_COUNT = self.HAS_SAMPLE_COUNT();
+        let HAS_START_LIMITING_CONSTRAINT_INDEX = self.HAS_START_LIMITING_CONSTRAINT_INDEX();
+        let HAS_END_LIMITING_CONSTRAINT_INDEX = self.HAS_END_LIMITING_CONSTRAINT_INDEX();
+        let HAS_MIN_RANGE_M = self.HAS_MIN_RANGE_M();
+        let HAS_MAX_RANGE_M = self.HAS_MAX_RANGE_M();
+        let HAS_EDGES_REFINED = self.HAS_EDGES_REFINED();
         ACWAccessWindowT {
             STATION_ID,
             START_JULIAN_DATE_TT,
@@ -5237,6 +7574,15 @@ impl<'a> ACWAccessWindow<'a> {
             MIN_RANGE_M,
             MAX_RANGE_M,
             EDGES_REFINED,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
+            HAS_MAX_ELEVATION_RAD,
+            HAS_SAMPLE_COUNT,
+            HAS_START_LIMITING_CONSTRAINT_INDEX,
+            HAS_END_LIMITING_CONSTRAINT_INDEX,
+            HAS_MIN_RANGE_M,
+            HAS_MAX_RANGE_M,
+            HAS_EDGES_REFINED,
         }
     }
 
@@ -5295,8 +7641,9 @@ impl<'a> ACWAccessWindow<'a> {
     }
 
     /// Index into the flattened, depth-first constraint list of the constraint
-    /// whose transition opens the window; -1 when the window starts at the
-    /// first sample.
+    /// whose transition opens the window. A clipped start has no limiting
+    /// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+    /// index is nonnegative and in range; the retained wire default is not a sentinel.
     #[inline]
     pub fn START_LIMITING_CONSTRAINT_INDEX(&self) -> i32 {
         // Safety:
@@ -5305,8 +7652,9 @@ impl<'a> ACWAccessWindow<'a> {
         unsafe { self._tab.get::<i32>(ACWAccessWindow::VT_START_LIMITING_CONSTRAINT_INDEX, Some(-1)).unwrap()}
     }
 
-    /// Index of the constraint whose transition closes the window; -1 when the
-    /// window ends at the last sample.
+    /// Index of the constraint whose transition closes the window. A clipped end
+    /// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+    /// and in range; the retained wire default is not a sentinel.
     #[inline]
     pub fn END_LIMITING_CONSTRAINT_INDEX(&self) -> i32 {
         // Safety:
@@ -5357,6 +7705,79 @@ impl<'a> ACWAccessWindow<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_EDGES_REFINED, Some(false)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_START_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_START_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_END_JULIAN_DATE_TT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_END_JULIAN_DATE_TT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MAX_ELEVATION_RAD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_MAX_ELEVATION_RAD, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_SAMPLE_COUNT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_SAMPLE_COUNT, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_START_LIMITING_CONSTRAINT_INDEX(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_START_LIMITING_CONSTRAINT_INDEX, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_END_LIMITING_CONSTRAINT_INDEX(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_END_LIMITING_CONSTRAINT_INDEX, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MIN_RANGE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_MIN_RANGE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_MAX_RANGE_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_MAX_RANGE_M, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_EDGES_REFINED(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_HAS_EDGES_REFINED, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
@@ -5378,6 +7799,15 @@ impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
             .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
             .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
             .visit_field::<bool>("EDGES_REFINED", Self::VT_EDGES_REFINED, false)?
+            .visit_field::<bool>("HAS_START_JULIAN_DATE_TT", Self::VT_HAS_START_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_END_JULIAN_DATE_TT", Self::VT_HAS_END_JULIAN_DATE_TT, false)?
+            .visit_field::<bool>("HAS_MAX_ELEVATION_RAD", Self::VT_HAS_MAX_ELEVATION_RAD, false)?
+            .visit_field::<bool>("HAS_SAMPLE_COUNT", Self::VT_HAS_SAMPLE_COUNT, false)?
+            .visit_field::<bool>("HAS_START_LIMITING_CONSTRAINT_INDEX", Self::VT_HAS_START_LIMITING_CONSTRAINT_INDEX, false)?
+            .visit_field::<bool>("HAS_END_LIMITING_CONSTRAINT_INDEX", Self::VT_HAS_END_LIMITING_CONSTRAINT_INDEX, false)?
+            .visit_field::<bool>("HAS_MIN_RANGE_M", Self::VT_HAS_MIN_RANGE_M, false)?
+            .visit_field::<bool>("HAS_MAX_RANGE_M", Self::VT_HAS_MAX_RANGE_M, false)?
+            .visit_field::<bool>("HAS_EDGES_REFINED", Self::VT_HAS_EDGES_REFINED, false)?
             .finish();
         Ok(())
     }
@@ -5397,6 +7827,15 @@ pub struct ACWAccessWindowArgs<'a> {
     pub MIN_RANGE_M: f64,
     pub MAX_RANGE_M: f64,
     pub EDGES_REFINED: bool,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
+    pub HAS_MAX_ELEVATION_RAD: bool,
+    pub HAS_SAMPLE_COUNT: bool,
+    pub HAS_START_LIMITING_CONSTRAINT_INDEX: bool,
+    pub HAS_END_LIMITING_CONSTRAINT_INDEX: bool,
+    pub HAS_MIN_RANGE_M: bool,
+    pub HAS_MAX_RANGE_M: bool,
+    pub HAS_EDGES_REFINED: bool,
 }
 
 impl<'a> Default for ACWAccessWindowArgs<'a> {
@@ -5416,6 +7855,15 @@ impl<'a> Default for ACWAccessWindowArgs<'a> {
             MIN_RANGE_M: 0.0,
             MAX_RANGE_M: 0.0,
             EDGES_REFINED: false,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
+            HAS_MAX_ELEVATION_RAD: false,
+            HAS_SAMPLE_COUNT: false,
+            HAS_START_LIMITING_CONSTRAINT_INDEX: false,
+            HAS_END_LIMITING_CONSTRAINT_INDEX: false,
+            HAS_MIN_RANGE_M: false,
+            HAS_MAX_RANGE_M: false,
+            HAS_EDGES_REFINED: false,
         }
     }
 }
@@ -5492,6 +7940,51 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWAccessWindowBuilder<'a, 'b
     }
 
     #[inline]
+    pub fn add_HAS_START_JULIAN_DATE_TT(&mut self, HAS_START_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_START_JULIAN_DATE_TT, HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_END_JULIAN_DATE_TT(&mut self, HAS_END_JULIAN_DATE_TT: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_END_JULIAN_DATE_TT, HAS_END_JULIAN_DATE_TT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAX_ELEVATION_RAD(&mut self, HAS_MAX_ELEVATION_RAD: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_MAX_ELEVATION_RAD, HAS_MAX_ELEVATION_RAD, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_SAMPLE_COUNT(&mut self, HAS_SAMPLE_COUNT: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_SAMPLE_COUNT, HAS_SAMPLE_COUNT, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_START_LIMITING_CONSTRAINT_INDEX(&mut self, HAS_START_LIMITING_CONSTRAINT_INDEX: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_START_LIMITING_CONSTRAINT_INDEX, HAS_START_LIMITING_CONSTRAINT_INDEX, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_END_LIMITING_CONSTRAINT_INDEX(&mut self, HAS_END_LIMITING_CONSTRAINT_INDEX: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_END_LIMITING_CONSTRAINT_INDEX, HAS_END_LIMITING_CONSTRAINT_INDEX, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MIN_RANGE_M(&mut self, HAS_MIN_RANGE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_MIN_RANGE_M, HAS_MIN_RANGE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_MAX_RANGE_M(&mut self, HAS_MAX_RANGE_M: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_MAX_RANGE_M, HAS_MAX_RANGE_M, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_EDGES_REFINED(&mut self, HAS_EDGES_REFINED: bool) {
+        self.fbb_.push_slot::<bool>(ACWAccessWindow::VT_HAS_EDGES_REFINED, HAS_EDGES_REFINED, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWAccessWindowBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWAccessWindowBuilder {
@@ -5523,6 +8016,15 @@ impl ::core::fmt::Debug for ACWAccessWindow<'_> {
         ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
         ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
         ds.field("EDGES_REFINED", &self.EDGES_REFINED());
+        ds.field("HAS_START_JULIAN_DATE_TT", &self.HAS_START_JULIAN_DATE_TT());
+        ds.field("HAS_END_JULIAN_DATE_TT", &self.HAS_END_JULIAN_DATE_TT());
+        ds.field("HAS_MAX_ELEVATION_RAD", &self.HAS_MAX_ELEVATION_RAD());
+        ds.field("HAS_SAMPLE_COUNT", &self.HAS_SAMPLE_COUNT());
+        ds.field("HAS_START_LIMITING_CONSTRAINT_INDEX", &self.HAS_START_LIMITING_CONSTRAINT_INDEX());
+        ds.field("HAS_END_LIMITING_CONSTRAINT_INDEX", &self.HAS_END_LIMITING_CONSTRAINT_INDEX());
+        ds.field("HAS_MIN_RANGE_M", &self.HAS_MIN_RANGE_M());
+        ds.field("HAS_MAX_RANGE_M", &self.HAS_MAX_RANGE_M());
+        ds.field("HAS_EDGES_REFINED", &self.HAS_EDGES_REFINED());
         ds.finish()
     }
 }
@@ -5543,6 +8045,15 @@ pub struct ACWAccessWindowT {
     pub MIN_RANGE_M: f64,
     pub MAX_RANGE_M: f64,
     pub EDGES_REFINED: bool,
+    pub HAS_START_JULIAN_DATE_TT: bool,
+    pub HAS_END_JULIAN_DATE_TT: bool,
+    pub HAS_MAX_ELEVATION_RAD: bool,
+    pub HAS_SAMPLE_COUNT: bool,
+    pub HAS_START_LIMITING_CONSTRAINT_INDEX: bool,
+    pub HAS_END_LIMITING_CONSTRAINT_INDEX: bool,
+    pub HAS_MIN_RANGE_M: bool,
+    pub HAS_MAX_RANGE_M: bool,
+    pub HAS_EDGES_REFINED: bool,
 }
 
 impl Default for ACWAccessWindowT {
@@ -5561,6 +8072,15 @@ impl Default for ACWAccessWindowT {
             MIN_RANGE_M: 0.0,
             MAX_RANGE_M: 0.0,
             EDGES_REFINED: false,
+            HAS_START_JULIAN_DATE_TT: false,
+            HAS_END_JULIAN_DATE_TT: false,
+            HAS_MAX_ELEVATION_RAD: false,
+            HAS_SAMPLE_COUNT: false,
+            HAS_START_LIMITING_CONSTRAINT_INDEX: false,
+            HAS_END_LIMITING_CONSTRAINT_INDEX: false,
+            HAS_MIN_RANGE_M: false,
+            HAS_MAX_RANGE_M: false,
+            HAS_EDGES_REFINED: false,
         }
     }
 }
@@ -5591,6 +8111,15 @@ impl ACWAccessWindowT {
         let MIN_RANGE_M = self.MIN_RANGE_M;
         let MAX_RANGE_M = self.MAX_RANGE_M;
         let EDGES_REFINED = self.EDGES_REFINED;
+        let HAS_START_JULIAN_DATE_TT = self.HAS_START_JULIAN_DATE_TT;
+        let HAS_END_JULIAN_DATE_TT = self.HAS_END_JULIAN_DATE_TT;
+        let HAS_MAX_ELEVATION_RAD = self.HAS_MAX_ELEVATION_RAD;
+        let HAS_SAMPLE_COUNT = self.HAS_SAMPLE_COUNT;
+        let HAS_START_LIMITING_CONSTRAINT_INDEX = self.HAS_START_LIMITING_CONSTRAINT_INDEX;
+        let HAS_END_LIMITING_CONSTRAINT_INDEX = self.HAS_END_LIMITING_CONSTRAINT_INDEX;
+        let HAS_MIN_RANGE_M = self.HAS_MIN_RANGE_M;
+        let HAS_MAX_RANGE_M = self.HAS_MAX_RANGE_M;
+        let HAS_EDGES_REFINED = self.HAS_EDGES_REFINED;
         ACWAccessWindow::create(_fbb, &ACWAccessWindowArgs{
             STATION_ID,
             START_JULIAN_DATE_TT,
@@ -5605,6 +8134,15 @@ impl ACWAccessWindowT {
             MIN_RANGE_M,
             MAX_RANGE_M,
             EDGES_REFINED,
+            HAS_START_JULIAN_DATE_TT,
+            HAS_END_JULIAN_DATE_TT,
+            HAS_MAX_ELEVATION_RAD,
+            HAS_SAMPLE_COUNT,
+            HAS_START_LIMITING_CONSTRAINT_INDEX,
+            HAS_END_LIMITING_CONSTRAINT_INDEX,
+            HAS_MIN_RANGE_M,
+            HAS_MAX_RANGE_M,
+            HAS_EDGES_REFINED,
         })
     }
 }
@@ -5635,6 +8173,9 @@ impl<'a> ACWResult<'a> {
     pub const VT_CONSTRAINT_LABELS: ::flatbuffers::VOffsetT = 14;
     pub const VT_TRACKS: ::flatbuffers::VOffsetT = 16;
     pub const VT_OBSERVATION_COUNT: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_STATUS: ::flatbuffers::VOffsetT = 20;
+    pub const VT_HAS_EVALUATION_MODE: ::flatbuffers::VOffsetT = 22;
+    pub const VT_HAS_OBSERVATION_COUNT: ::flatbuffers::VOffsetT = 24;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5653,6 +8194,9 @@ impl<'a> ACWResult<'a> {
         if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
         if let Some(x) = args.WINDOWS { builder.add_WINDOWS(x); }
         if let Some(x) = args.ERROR_MESSAGE { builder.add_ERROR_MESSAGE(x); }
+        builder.add_HAS_OBSERVATION_COUNT(args.HAS_OBSERVATION_COUNT);
+        builder.add_HAS_EVALUATION_MODE(args.HAS_EVALUATION_MODE);
+        builder.add_HAS_STATUS(args.HAS_STATUS);
         builder.add_EVALUATION_MODE(args.EVALUATION_MODE);
         builder.add_STATUS(args.STATUS);
         builder.finish()
@@ -5677,6 +8221,9 @@ impl<'a> ACWResult<'a> {
             x.iter().map(|t| t.unpack()).collect()
         });
         let OBSERVATION_COUNT = self.OBSERVATION_COUNT();
+        let HAS_STATUS = self.HAS_STATUS();
+        let HAS_EVALUATION_MODE = self.HAS_EVALUATION_MODE();
+        let HAS_OBSERVATION_COUNT = self.HAS_OBSERVATION_COUNT();
         ACWResultT {
             STATUS,
             ERROR_MESSAGE,
@@ -5686,6 +8233,9 @@ impl<'a> ACWResult<'a> {
             CONSTRAINT_LABELS,
             TRACKS,
             OBSERVATION_COUNT,
+            HAS_STATUS,
+            HAS_EVALUATION_MODE,
+            HAS_OBSERVATION_COUNT,
         }
     }
 
@@ -5757,6 +8307,31 @@ impl<'a> ACWResult<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<u32>(ACWResult::VT_OBSERVATION_COUNT, Some(0)).unwrap()}
     }
+
+    /// Value presence: false means omitted; true precedes value validation.
+    #[inline]
+    pub fn HAS_STATUS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWResult::VT_HAS_STATUS, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_EVALUATION_MODE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWResult::VT_HAS_EVALUATION_MODE, Some(false)).unwrap()}
+    }
+
+    #[inline]
+    pub fn HAS_OBSERVATION_COUNT(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ACWResult::VT_HAS_OBSERVATION_COUNT, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWResult<'_> {
@@ -5773,6 +8348,9 @@ impl ::flatbuffers::Verifiable for ACWResult<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("CONSTRAINT_LABELS", Self::VT_CONSTRAINT_LABELS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWTrack>>>>("TRACKS", Self::VT_TRACKS, false)?
             .visit_field::<u32>("OBSERVATION_COUNT", Self::VT_OBSERVATION_COUNT, false)?
+            .visit_field::<bool>("HAS_STATUS", Self::VT_HAS_STATUS, false)?
+            .visit_field::<bool>("HAS_EVALUATION_MODE", Self::VT_HAS_EVALUATION_MODE, false)?
+            .visit_field::<bool>("HAS_OBSERVATION_COUNT", Self::VT_HAS_OBSERVATION_COUNT, false)?
             .finish();
         Ok(())
     }
@@ -5787,6 +8365,9 @@ pub struct ACWResultArgs<'a> {
     pub CONSTRAINT_LABELS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub TRACKS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWTrack<'a>>>>>,
     pub OBSERVATION_COUNT: u32,
+    pub HAS_STATUS: bool,
+    pub HAS_EVALUATION_MODE: bool,
+    pub HAS_OBSERVATION_COUNT: bool,
 }
 
 impl<'a> Default for ACWResultArgs<'a> {
@@ -5801,6 +8382,9 @@ impl<'a> Default for ACWResultArgs<'a> {
             CONSTRAINT_LABELS: None,
             TRACKS: None,
             OBSERVATION_COUNT: 0,
+            HAS_STATUS: false,
+            HAS_EVALUATION_MODE: false,
+            HAS_OBSERVATION_COUNT: false,
         }
     }
 }
@@ -5852,6 +8436,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWResultBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_HAS_STATUS(&mut self, HAS_STATUS: bool) {
+        self.fbb_.push_slot::<bool>(ACWResult::VT_HAS_STATUS, HAS_STATUS, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_EVALUATION_MODE(&mut self, HAS_EVALUATION_MODE: bool) {
+        self.fbb_.push_slot::<bool>(ACWResult::VT_HAS_EVALUATION_MODE, HAS_EVALUATION_MODE, false);
+    }
+
+    #[inline]
+    pub fn add_HAS_OBSERVATION_COUNT(&mut self, HAS_OBSERVATION_COUNT: bool) {
+        self.fbb_.push_slot::<bool>(ACWResult::VT_HAS_OBSERVATION_COUNT, HAS_OBSERVATION_COUNT, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWResultBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWResultBuilder {
@@ -5878,6 +8477,9 @@ impl ::core::fmt::Debug for ACWResult<'_> {
         ds.field("CONSTRAINT_LABELS", &self.CONSTRAINT_LABELS());
         ds.field("TRACKS", &self.TRACKS());
         ds.field("OBSERVATION_COUNT", &self.OBSERVATION_COUNT());
+        ds.field("HAS_STATUS", &self.HAS_STATUS());
+        ds.field("HAS_EVALUATION_MODE", &self.HAS_EVALUATION_MODE());
+        ds.field("HAS_OBSERVATION_COUNT", &self.HAS_OBSERVATION_COUNT());
         ds.finish()
     }
 }
@@ -5893,6 +8495,9 @@ pub struct ACWResultT {
     pub CONSTRAINT_LABELS: Option<alloc::vec::Vec<alloc::string::String>>,
     pub TRACKS: Option<alloc::vec::Vec<ACWTrackT>>,
     pub OBSERVATION_COUNT: u32,
+    pub HAS_STATUS: bool,
+    pub HAS_EVALUATION_MODE: bool,
+    pub HAS_OBSERVATION_COUNT: bool,
 }
 
 impl Default for ACWResultT {
@@ -5906,6 +8511,9 @@ impl Default for ACWResultT {
             CONSTRAINT_LABELS: None,
             TRACKS: None,
             OBSERVATION_COUNT: 0,
+            HAS_STATUS: false,
+            HAS_EVALUATION_MODE: false,
+            HAS_OBSERVATION_COUNT: false,
         }
     }
 }
@@ -5933,6 +8541,9 @@ impl ACWResultT {
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
         let OBSERVATION_COUNT = self.OBSERVATION_COUNT;
+        let HAS_STATUS = self.HAS_STATUS;
+        let HAS_EVALUATION_MODE = self.HAS_EVALUATION_MODE;
+        let HAS_OBSERVATION_COUNT = self.HAS_OBSERVATION_COUNT;
         ACWResult::create(_fbb, &ACWResultArgs{
             STATUS,
             ERROR_MESSAGE,
@@ -5942,6 +8553,9 @@ impl ACWResultT {
             CONSTRAINT_LABELS,
             TRACKS,
             OBSERVATION_COUNT,
+            HAS_STATUS,
+            HAS_EVALUATION_MODE,
+            HAS_OBSERVATION_COUNT,
         })
     }
 }
@@ -5966,6 +8580,7 @@ impl<'a> ::flatbuffers::Follow<'a> for ACW<'a> {
 impl<'a> ACW<'a> {
     pub const VT_REQUEST: ::flatbuffers::VOffsetT = 4;
     pub const VT_RESULT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_CENTRAL_BODY: ::flatbuffers::VOffsetT = 8;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5978,6 +8593,7 @@ impl<'a> ACW<'a> {
         args: &'args ACWArgs<'args>
     ) -> ::flatbuffers::WIPOffset<ACW<'bldr>> {
         let mut builder = ACWBuilder::new(_fbb);
+        if let Some(x) = args.CENTRAL_BODY { builder.add_CENTRAL_BODY(x); }
         if let Some(x) = args.RESULT { builder.add_RESULT(x); }
         if let Some(x) = args.REQUEST { builder.add_REQUEST(x); }
         builder.finish()
@@ -5990,9 +8606,13 @@ impl<'a> ACW<'a> {
         let RESULT = self.RESULT().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let CENTRAL_BODY = self.CENTRAL_BODY().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         ACWT {
             REQUEST,
             RESULT,
+            CENTRAL_BODY,
         }
     }
 
@@ -6011,6 +8631,21 @@ impl<'a> ACW<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ACWResult>>(ACW::VT_RESULT, None)}
     }
+
+    /// Appended slot 2. Mandatory in every new request and successful result.
+    /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+    /// these codes. Missing body fails acw-body-required; absence never means
+    /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+    /// Result must echo the exact descriptor field values, including optional
+    /// presence; requester rejects a missing/different echo. Raw table offsets
+    /// are not identity. Explicit one-time archive conversion is outside runtime.
+    #[inline]
+    pub fn CENTRAL_BODY(&self) -> Option<BodyDescriptor<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<BodyDescriptor>>(ACW::VT_CENTRAL_BODY, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACW<'_> {
@@ -6021,6 +8656,7 @@ impl ::flatbuffers::Verifiable for ACW<'_> {
         v.visit_table(pos)?
             .visit_field::<::flatbuffers::ForwardsUOffset<ACWRequest>>("REQUEST", Self::VT_REQUEST, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<ACWResult>>("RESULT", Self::VT_RESULT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<BodyDescriptor>>("CENTRAL_BODY", Self::VT_CENTRAL_BODY, false)?
             .finish();
         Ok(())
     }
@@ -6029,6 +8665,7 @@ impl ::flatbuffers::Verifiable for ACW<'_> {
 pub struct ACWArgs<'a> {
     pub REQUEST: Option<::flatbuffers::WIPOffset<ACWRequest<'a>>>,
     pub RESULT: Option<::flatbuffers::WIPOffset<ACWResult<'a>>>,
+    pub CENTRAL_BODY: Option<::flatbuffers::WIPOffset<BodyDescriptor<'a>>>,
 }
 
 impl<'a> Default for ACWArgs<'a> {
@@ -6037,6 +8674,7 @@ impl<'a> Default for ACWArgs<'a> {
         ACWArgs {
             REQUEST: None,
             RESULT: None,
+            CENTRAL_BODY: None,
         }
     }
 }
@@ -6055,6 +8693,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_RESULT(&mut self, RESULT: ::flatbuffers::WIPOffset<ACWResult<'b >>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ACWResult>>(ACW::VT_RESULT, RESULT);
+    }
+
+    #[inline]
+    pub fn add_CENTRAL_BODY(&mut self, CENTRAL_BODY: ::flatbuffers::WIPOffset<BodyDescriptor<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<BodyDescriptor>>(ACW::VT_CENTRAL_BODY, CENTRAL_BODY);
     }
 
     #[inline]
@@ -6078,6 +8721,7 @@ impl ::core::fmt::Debug for ACW<'_> {
         let mut ds = f.debug_struct("ACW");
         ds.field("REQUEST", &self.REQUEST());
         ds.field("RESULT", &self.RESULT());
+        ds.field("CENTRAL_BODY", &self.CENTRAL_BODY());
         ds.finish()
     }
 }
@@ -6087,6 +8731,7 @@ impl ::core::fmt::Debug for ACW<'_> {
 pub struct ACWT {
     pub REQUEST: Option<alloc::boxed::Box<ACWRequestT>>,
     pub RESULT: Option<alloc::boxed::Box<ACWResultT>>,
+    pub CENTRAL_BODY: Option<alloc::boxed::Box<BodyDescriptorT>>,
 }
 
 impl Default for ACWT {
@@ -6094,6 +8739,7 @@ impl Default for ACWT {
         Self {
             REQUEST: None,
             RESULT: None,
+            CENTRAL_BODY: None,
         }
     }
 }
@@ -6109,9 +8755,13 @@ impl ACWT {
         let RESULT = self.RESULT.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let CENTRAL_BODY = self.CENTRAL_BODY.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         ACW::create(_fbb, &ACWArgs{
             REQUEST,
             RESULT,
+            CENTRAL_BODY,
         })
     }
 }

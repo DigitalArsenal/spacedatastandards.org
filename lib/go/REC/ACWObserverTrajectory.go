@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 type ACWObserverTrajectory struct {
 	_tab flatbuffers.Table

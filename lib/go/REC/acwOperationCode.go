@@ -4,12 +4,15 @@ package REC
 
 import "strconv"
 
+/// ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+/// Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+/// does not apply to ACW enumerations as a group.
 type acwOperationCode int8
 
 const (
-	acwOperationCodeUNKNOWN                acwOperationCode = 0
+	acwOperationCodeUNKNOWN                              acwOperationCode = 0
 	/// Compute access windows from pre-sampled target Cartesian states.
-	acwOperationCodeCOMPUTE_ACCESS_WINDOWS acwOperationCode = 1
+	acwOperationCodeCOMPUTE_ACCESS_WINDOWS               acwOperationCode = 1
 	/// Simulate sensor observations of TARGETS by SENSORS: schedule tracks
 	/// inside the ACCESS windows (computed per sensor and target by
 	/// COMPUTE_ACCESS_WINDOWS with that sensor's constraints), generate each
@@ -18,19 +21,27 @@ const (
 	/// test, and add false alarms. The observations are emitted as separate
 	/// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
 	/// records; the result lists the tracks.
-	acwOperationCodeSIMULATE_OBSERVATIONS  acwOperationCode = 2
+	acwOperationCodeSIMULATE_OBSERVATIONS                acwOperationCode = 2
+	/// Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+	acwOperationCodeCOMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY acwOperationCode = 3
+	/// Only runtime simulation operation in body-aware modules; body required.
+	acwOperationCodeSIMULATE_OBSERVATIONS_EXPLICIT_BODY  acwOperationCode = 4
 )
 
 var EnumNamesacwOperationCode = map[acwOperationCode]string{
-	acwOperationCodeUNKNOWN:                "UNKNOWN",
-	acwOperationCodeCOMPUTE_ACCESS_WINDOWS: "COMPUTE_ACCESS_WINDOWS",
-	acwOperationCodeSIMULATE_OBSERVATIONS:  "SIMULATE_OBSERVATIONS",
+	acwOperationCodeUNKNOWN:                              "UNKNOWN",
+	acwOperationCodeCOMPUTE_ACCESS_WINDOWS:               "COMPUTE_ACCESS_WINDOWS",
+	acwOperationCodeSIMULATE_OBSERVATIONS:                "SIMULATE_OBSERVATIONS",
+	acwOperationCodeCOMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY: "COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY",
+	acwOperationCodeSIMULATE_OBSERVATIONS_EXPLICIT_BODY:  "SIMULATE_OBSERVATIONS_EXPLICIT_BODY",
 }
 
 var EnumValuesacwOperationCode = map[string]acwOperationCode{
-	"UNKNOWN":                acwOperationCodeUNKNOWN,
-	"COMPUTE_ACCESS_WINDOWS": acwOperationCodeCOMPUTE_ACCESS_WINDOWS,
-	"SIMULATE_OBSERVATIONS":  acwOperationCodeSIMULATE_OBSERVATIONS,
+	"UNKNOWN":                              acwOperationCodeUNKNOWN,
+	"COMPUTE_ACCESS_WINDOWS":               acwOperationCodeCOMPUTE_ACCESS_WINDOWS,
+	"SIMULATE_OBSERVATIONS":                acwOperationCodeSIMULATE_OBSERVATIONS,
+	"COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY": acwOperationCodeCOMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY,
+	"SIMULATE_OBSERVATIONS_EXPLICIT_BODY":  acwOperationCodeSIMULATE_OBSERVATIONS_EXPLICIT_BODY,
 }
 
 func (v acwOperationCode) String() string {

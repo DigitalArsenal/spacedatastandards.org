@@ -86,8 +86,50 @@ func (rcv *ACWBlackoutWindow) MutateEndJulianDateTt(n float64) bool {
 	return rcv.MutateEND_JULIAN_DATE_TT(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWBlackoutWindow) HAS_START_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWBlackoutWindow) HasStartJulianDateTt() bool {
+	return rcv.HAS_START_JULIAN_DATE_TT()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWBlackoutWindow) MutateHAS_START_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *ACWBlackoutWindow) MutateHasStartJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_START_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWBlackoutWindow) HAS_END_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWBlackoutWindow) HasEndJulianDateTt() bool {
+	return rcv.HAS_END_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWBlackoutWindow) MutateHAS_END_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *ACWBlackoutWindow) MutateHasEndJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_END_JULIAN_DATE_TT(n)
+}
+
 func ACWBlackoutWindowStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(4)
 }
 func ACWBlackoutWindowAddSTART_JULIAN_DATE_TT(builder *flatbuffers.Builder, START_JULIAN_DATE_TT float64) {
 	builder.PrependFloat64Slot(0, START_JULIAN_DATE_TT, 0.0)
@@ -100,6 +142,18 @@ func ACWBlackoutWindowAddEND_JULIAN_DATE_TT(builder *flatbuffers.Builder, END_JU
 }
 func ACWBlackoutWindowAddEndJulianDateTt(builder *flatbuffers.Builder, END_JULIAN_DATE_TT float64) {
 	ACWBlackoutWindowAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
+}
+func ACWBlackoutWindowAddHAS_START_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(2, HAS_START_JULIAN_DATE_TT, false)
+}
+func ACWBlackoutWindowAddHasStartJulianDateTt(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	ACWBlackoutWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+}
+func ACWBlackoutWindowAddHAS_END_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(3, HAS_END_JULIAN_DATE_TT, false)
+}
+func ACWBlackoutWindowAddHasEndJulianDateTt(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	ACWBlackoutWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
 }
 func ACWBlackoutWindowEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -35,6 +35,7 @@ import CDM.main_generated
 import CES.main_generated
 import CFP.main_generated
 import CHN.main_generated
+import CLG.main_generated
 import CLM.main_generated
 import CLT.main_generated
 import CME.main_generated
@@ -996,6 +997,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_SWA = 293
     RecordTypeExtended_SWS = 294
     RecordTypeExtended_SSY = 295
+    RecordTypeExtended_CLG = 296
 
 class Record
 

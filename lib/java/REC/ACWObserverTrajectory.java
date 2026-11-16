@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+ * A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
  * the same frame and time scale as ACWRequest.STATES.
  */
 @SuppressWarnings("unused")

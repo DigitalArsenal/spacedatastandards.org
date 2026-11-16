@@ -92,6 +92,29 @@ class ACWTrack : Table() {
         }
     val lossReasonAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun lossReasonInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasStartJulianDateTt : Boolean
+        get() {
+            val o = __offset(18)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEndJulianDateTt : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasScheduledCount : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasDetectedCount : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWTrack(_bb: ByteBuffer): ACWTrack = getRootAsACWTrack(_bb, ACWTrack())
@@ -99,8 +122,8 @@ class ACWTrack : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWTrack(builder: FlatBufferBuilder, sensorIdOffset: Int, targetIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, scheduledCount: UInt, detectedCount: UInt, lossReasonOffset: Int) : Int {
-            builder.startTable(7)
+        fun createACWTrack(builder: FlatBufferBuilder, sensorIdOffset: Int, targetIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, scheduledCount: UInt, detectedCount: UInt, lossReasonOffset: Int, hasStartJulianDateTt: Boolean, hasEndJulianDateTt: Boolean, hasScheduledCount: Boolean, hasDetectedCount: Boolean) : Int {
+            builder.startTable(11)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
             addLOSSREASON(builder, lossReasonOffset)
@@ -108,9 +131,13 @@ class ACWTrack : Table() {
             addSCHEDULEDCOUNT(builder, scheduledCount)
             addTARGETID(builder, targetIdOffset)
             addSENSORID(builder, sensorIdOffset)
+            addHASDETECTEDCOUNT(builder, hasDetectedCount)
+            addHASSCHEDULEDCOUNT(builder, hasScheduledCount)
+            addHASENDJULIANDATETT(builder, hasEndJulianDateTt)
+            addHASSTARTJULIANDATETT(builder, hasStartJulianDateTt)
             return endACWTrack(builder)
         }
-        fun startACWTrack(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startACWTrack(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(0, sensorId, 0)
         fun addTARGETID(builder: FlatBufferBuilder, targetId: Int) = builder.addOffset(1, targetId, 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(2, startJulianDateTt, 0.0)
@@ -118,6 +145,10 @@ class ACWTrack : Table() {
         fun addSCHEDULEDCOUNT(builder: FlatBufferBuilder, scheduledCount: UInt) = builder.addInt(4, scheduledCount.toInt(), 0)
         fun addDETECTEDCOUNT(builder: FlatBufferBuilder, detectedCount: UInt) = builder.addInt(5, detectedCount.toInt(), 0)
         fun addLOSSREASON(builder: FlatBufferBuilder, lossReason: Int) = builder.addOffset(6, lossReason, 0)
+        fun addHASSTARTJULIANDATETT(builder: FlatBufferBuilder, hasStartJulianDateTt: Boolean) = builder.addBoolean(7, hasStartJulianDateTt, false)
+        fun addHASENDJULIANDATETT(builder: FlatBufferBuilder, hasEndJulianDateTt: Boolean) = builder.addBoolean(8, hasEndJulianDateTt, false)
+        fun addHASSCHEDULEDCOUNT(builder: FlatBufferBuilder, hasScheduledCount: Boolean) = builder.addBoolean(9, hasScheduledCount, false)
+        fun addHASDETECTEDCOUNT(builder: FlatBufferBuilder, hasDetectedCount: Boolean) = builder.addBoolean(10, hasDetectedCount, false)
         fun endACWTrack(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

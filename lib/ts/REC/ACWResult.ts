@@ -107,8 +107,26 @@ OBSERVATION_COUNT():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_STATUS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_EVALUATION_MODE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_OBSERVATION_COUNT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWResult(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(11);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:acwResultStatus) {
@@ -179,12 +197,24 @@ static addObservationCount(builder:flatbuffers.Builder, OBSERVATION_COUNT:number
   builder.addFieldInt32(7, OBSERVATION_COUNT, 0);
 }
 
+static addHasStatus(builder:flatbuffers.Builder, HAS_STATUS:boolean) {
+  builder.addFieldInt8(8, +HAS_STATUS, +false);
+}
+
+static addHasEvaluationMode(builder:flatbuffers.Builder, HAS_EVALUATION_MODE:boolean) {
+  builder.addFieldInt8(9, +HAS_EVALUATION_MODE, +false);
+}
+
+static addHasObservationCount(builder:flatbuffers.Builder, HAS_OBSERVATION_COUNT:boolean) {
+  builder.addFieldInt8(10, +HAS_OBSERVATION_COUNT, +false);
+}
+
 static endACWResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset, EVALUATION_MODE:acwEvaluationMode, CONSTRAINT_LABELSOffset:flatbuffers.Offset, TRACKSOffset:flatbuffers.Offset, OBSERVATION_COUNT:number):flatbuffers.Offset {
+static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERROR_MESSAGEOffset:flatbuffers.Offset, WINDOWSOffset:flatbuffers.Offset, TRACE_IDOffset:flatbuffers.Offset, EVALUATION_MODE:acwEvaluationMode, CONSTRAINT_LABELSOffset:flatbuffers.Offset, TRACKSOffset:flatbuffers.Offset, OBSERVATION_COUNT:number, HAS_STATUS:boolean, HAS_EVALUATION_MODE:boolean, HAS_OBSERVATION_COUNT:boolean):flatbuffers.Offset {
   ACWResult.startACWResult(builder);
   ACWResult.addStatus(builder, STATUS);
   ACWResult.addErrorMessage(builder, ERROR_MESSAGEOffset);
@@ -194,6 +224,9 @@ static createACWResult(builder:flatbuffers.Builder, STATUS:acwResultStatus, ERRO
   ACWResult.addConstraintLabels(builder, CONSTRAINT_LABELSOffset);
   ACWResult.addTracks(builder, TRACKSOffset);
   ACWResult.addObservationCount(builder, OBSERVATION_COUNT);
+  ACWResult.addHasStatus(builder, HAS_STATUS);
+  ACWResult.addHasEvaluationMode(builder, HAS_EVALUATION_MODE);
+  ACWResult.addHasObservationCount(builder, HAS_OBSERVATION_COUNT);
   return ACWResult.endACWResult(builder);
 }
 
@@ -206,7 +239,10 @@ unpack(): ACWResultT {
     this.EVALUATION_MODE(),
     this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength()),
     this.bb!.createObjList<ACWTrack, ACWTrackT>(this.TRACKS.bind(this), this.tracksLength()),
-    this.OBSERVATION_COUNT()
+    this.OBSERVATION_COUNT(),
+    this.HAS_STATUS(),
+    this.HAS_EVALUATION_MODE(),
+    this.HAS_OBSERVATION_COUNT()
   );
 }
 
@@ -220,6 +256,9 @@ unpackTo(_o: ACWResultT): void {
   _o.CONSTRAINT_LABELS = this.bb!.createScalarList<string>(this.CONSTRAINT_LABELS.bind(this), this.constraintLabelsLength());
   _o.TRACKS = this.bb!.createObjList<ACWTrack, ACWTrackT>(this.TRACKS.bind(this), this.tracksLength());
   _o.OBSERVATION_COUNT = this.OBSERVATION_COUNT();
+  _o.HAS_STATUS = this.HAS_STATUS();
+  _o.HAS_EVALUATION_MODE = this.HAS_EVALUATION_MODE();
+  _o.HAS_OBSERVATION_COUNT = this.HAS_OBSERVATION_COUNT();
 }
 }
 
@@ -232,7 +271,10 @@ constructor(
   public EVALUATION_MODE: acwEvaluationMode = acwEvaluationMode.DISCRETE,
   public CONSTRAINT_LABELS: (string)[] = [],
   public TRACKS: (ACWTrackT)[] = [],
-  public OBSERVATION_COUNT: number = 0
+  public OBSERVATION_COUNT: number = 0,
+  public HAS_STATUS: boolean = false,
+  public HAS_EVALUATION_MODE: boolean = false,
+  public HAS_OBSERVATION_COUNT: boolean = false
 ){}
 
 
@@ -251,7 +293,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.EVALUATION_MODE,
     CONSTRAINT_LABELS,
     TRACKS,
-    this.OBSERVATION_COUNT
+    this.OBSERVATION_COUNT,
+    this.HAS_STATUS,
+    this.HAS_EVALUATION_MODE,
+    this.HAS_OBSERVATION_COUNT
   );
 }
 }

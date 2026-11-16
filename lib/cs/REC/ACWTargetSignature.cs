@@ -27,28 +27,49 @@ public struct ACWTargetSignature : IFlatbufferObject
   /// (PASSIVE_RF). A frequency of 0 means the target does not emit.
   public double EMITTER_FREQUENCY_HZ { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double EMITTER_EIRP_DBW { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_RCS_M2 { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_DIAMETER_M { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_GEOMETRIC_ALBEDO { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_EMITTER_FREQUENCY_HZ { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_EMITTER_EIRP_DBW { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWTargetSignature> CreateACWTargetSignature(FlatBufferBuilder builder,
       double RCS_M2 = 0.0,
       double DIAMETER_M = 0.0,
       double GEOMETRIC_ALBEDO = 0.0,
       double EMITTER_FREQUENCY_HZ = 0.0,
-      double EMITTER_EIRP_DBW = 0.0) {
-    builder.StartTable(5);
+      double EMITTER_EIRP_DBW = 0.0,
+      bool HAS_RCS_M2 = false,
+      bool HAS_DIAMETER_M = false,
+      bool HAS_GEOMETRIC_ALBEDO = false,
+      bool HAS_EMITTER_FREQUENCY_HZ = false,
+      bool HAS_EMITTER_EIRP_DBW = false) {
+    builder.StartTable(10);
     ACWTargetSignature.AddEMITTER_EIRP_DBW(builder, EMITTER_EIRP_DBW);
     ACWTargetSignature.AddEMITTER_FREQUENCY_HZ(builder, EMITTER_FREQUENCY_HZ);
     ACWTargetSignature.AddGEOMETRIC_ALBEDO(builder, GEOMETRIC_ALBEDO);
     ACWTargetSignature.AddDIAMETER_M(builder, DIAMETER_M);
     ACWTargetSignature.AddRCS_M2(builder, RCS_M2);
+    ACWTargetSignature.AddHAS_EMITTER_EIRP_DBW(builder, HAS_EMITTER_EIRP_DBW);
+    ACWTargetSignature.AddHAS_EMITTER_FREQUENCY_HZ(builder, HAS_EMITTER_FREQUENCY_HZ);
+    ACWTargetSignature.AddHAS_GEOMETRIC_ALBEDO(builder, HAS_GEOMETRIC_ALBEDO);
+    ACWTargetSignature.AddHAS_DIAMETER_M(builder, HAS_DIAMETER_M);
+    ACWTargetSignature.AddHAS_RCS_M2(builder, HAS_RCS_M2);
     return ACWTargetSignature.EndACWTargetSignature(builder);
   }
 
-  public static void StartACWTargetSignature(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartACWTargetSignature(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddRCS_M2(FlatBufferBuilder builder, double RCS_M2) { builder.AddDouble(0, RCS_M2, 0.0); }
   public static void AddDIAMETER_M(FlatBufferBuilder builder, double DIAMETER_M) { builder.AddDouble(1, DIAMETER_M, 0.0); }
   public static void AddGEOMETRIC_ALBEDO(FlatBufferBuilder builder, double GEOMETRIC_ALBEDO) { builder.AddDouble(2, GEOMETRIC_ALBEDO, 0.0); }
   public static void AddEMITTER_FREQUENCY_HZ(FlatBufferBuilder builder, double EMITTER_FREQUENCY_HZ) { builder.AddDouble(3, EMITTER_FREQUENCY_HZ, 0.0); }
   public static void AddEMITTER_EIRP_DBW(FlatBufferBuilder builder, double EMITTER_EIRP_DBW) { builder.AddDouble(4, EMITTER_EIRP_DBW, 0.0); }
+  public static void AddHAS_RCS_M2(FlatBufferBuilder builder, bool HAS_RCS_M2) { builder.AddBool(5, HAS_RCS_M2, false); }
+  public static void AddHAS_DIAMETER_M(FlatBufferBuilder builder, bool HAS_DIAMETER_M) { builder.AddBool(6, HAS_DIAMETER_M, false); }
+  public static void AddHAS_GEOMETRIC_ALBEDO(FlatBufferBuilder builder, bool HAS_GEOMETRIC_ALBEDO) { builder.AddBool(7, HAS_GEOMETRIC_ALBEDO, false); }
+  public static void AddHAS_EMITTER_FREQUENCY_HZ(FlatBufferBuilder builder, bool HAS_EMITTER_FREQUENCY_HZ) { builder.AddBool(8, HAS_EMITTER_FREQUENCY_HZ, false); }
+  public static void AddHAS_EMITTER_EIRP_DBW(FlatBufferBuilder builder, bool HAS_EMITTER_EIRP_DBW) { builder.AddBool(9, HAS_EMITTER_EIRP_DBW, false); }
   public static Offset<ACWTargetSignature> EndACWTargetSignature(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWTargetSignature>(o);
@@ -64,6 +85,11 @@ public struct ACWTargetSignature : IFlatbufferObject
     _o.GEOMETRIC_ALBEDO = this.GEOMETRIC_ALBEDO;
     _o.EMITTER_FREQUENCY_HZ = this.EMITTER_FREQUENCY_HZ;
     _o.EMITTER_EIRP_DBW = this.EMITTER_EIRP_DBW;
+    _o.HAS_RCS_M2 = this.HAS_RCS_M2;
+    _o.HAS_DIAMETER_M = this.HAS_DIAMETER_M;
+    _o.HAS_GEOMETRIC_ALBEDO = this.HAS_GEOMETRIC_ALBEDO;
+    _o.HAS_EMITTER_FREQUENCY_HZ = this.HAS_EMITTER_FREQUENCY_HZ;
+    _o.HAS_EMITTER_EIRP_DBW = this.HAS_EMITTER_EIRP_DBW;
   }
   public static Offset<ACWTargetSignature> Pack(FlatBufferBuilder builder, ACWTargetSignatureT _o) {
     if (_o == null) return default(Offset<ACWTargetSignature>);
@@ -73,7 +99,12 @@ public struct ACWTargetSignature : IFlatbufferObject
       _o.DIAMETER_M,
       _o.GEOMETRIC_ALBEDO,
       _o.EMITTER_FREQUENCY_HZ,
-      _o.EMITTER_EIRP_DBW);
+      _o.EMITTER_EIRP_DBW,
+      _o.HAS_RCS_M2,
+      _o.HAS_DIAMETER_M,
+      _o.HAS_GEOMETRIC_ALBEDO,
+      _o.HAS_EMITTER_FREQUENCY_HZ,
+      _o.HAS_EMITTER_EIRP_DBW);
   }
 }
 
@@ -84,6 +115,11 @@ public class ACWTargetSignatureT
   public double GEOMETRIC_ALBEDO { get; set; }
   public double EMITTER_FREQUENCY_HZ { get; set; }
   public double EMITTER_EIRP_DBW { get; set; }
+  public bool HAS_RCS_M2 { get; set; }
+  public bool HAS_DIAMETER_M { get; set; }
+  public bool HAS_GEOMETRIC_ALBEDO { get; set; }
+  public bool HAS_EMITTER_FREQUENCY_HZ { get; set; }
+  public bool HAS_EMITTER_EIRP_DBW { get; set; }
 
   public ACWTargetSignatureT() {
     this.RCS_M2 = 0.0;
@@ -91,6 +127,11 @@ public class ACWTargetSignatureT
     this.GEOMETRIC_ALBEDO = 0.0;
     this.EMITTER_FREQUENCY_HZ = 0.0;
     this.EMITTER_EIRP_DBW = 0.0;
+    this.HAS_RCS_M2 = false;
+    this.HAS_DIAMETER_M = false;
+    this.HAS_GEOMETRIC_ALBEDO = false;
+    this.HAS_EMITTER_FREQUENCY_HZ = false;
+    this.HAS_EMITTER_EIRP_DBW = false;
   }
 }
 
@@ -105,6 +146,11 @@ static public class ACWTargetSignatureVerify
       && verifier.VerifyField(tablePos, 8 /*GEOMETRIC_ALBEDO*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*EMITTER_FREQUENCY_HZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*EMITTER_EIRP_DBW*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*HAS_RCS_M2*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*HAS_DIAMETER_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*HAS_GEOMETRIC_ALBEDO*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*HAS_EMITTER_FREQUENCY_HZ*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*HAS_EMITTER_EIRP_DBW*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

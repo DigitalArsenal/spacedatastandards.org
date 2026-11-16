@@ -139,8 +139,30 @@ class ACWResult(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWResult
+    def HAS_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWResult
+    def HAS_EVALUATION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWResult
+    def HAS_OBSERVATION_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWResultStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(11)
 
 def Start(builder):
     ACWResultStart(builder)
@@ -229,6 +251,24 @@ def ACWResultAddOBSERVATION_COUNT(builder, OBSERVATION_COUNT):
 def AddOBSERVATION_COUNT(builder, OBSERVATION_COUNT):
     ACWResultAddOBSERVATION_COUNT(builder, OBSERVATION_COUNT)
 
+def ACWResultAddHAS_STATUS(builder, HAS_STATUS):
+    builder.PrependBoolSlot(8, HAS_STATUS, 0)
+
+def AddHAS_STATUS(builder, HAS_STATUS):
+    ACWResultAddHAS_STATUS(builder, HAS_STATUS)
+
+def ACWResultAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE):
+    builder.PrependBoolSlot(9, HAS_EVALUATION_MODE, 0)
+
+def AddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE):
+    ACWResultAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE)
+
+def ACWResultAddHAS_OBSERVATION_COUNT(builder, HAS_OBSERVATION_COUNT):
+    builder.PrependBoolSlot(10, HAS_OBSERVATION_COUNT, 0)
+
+def AddHAS_OBSERVATION_COUNT(builder, HAS_OBSERVATION_COUNT):
+    ACWResultAddHAS_OBSERVATION_COUNT(builder, HAS_OBSERVATION_COUNT)
+
 def ACWResultEnd(builder):
     return builder.EndObject()
 
@@ -255,6 +295,9 @@ class ACWResultT(object):
         CONSTRAINT_LABELS = None,
         TRACKS = None,
         OBSERVATION_COUNT = 0,
+        HAS_STATUS = False,
+        HAS_EVALUATION_MODE = False,
+        HAS_OBSERVATION_COUNT = False,
     ):
         self.STATUS = STATUS  # type: int
         self.ERROR_MESSAGE = ERROR_MESSAGE  # type: Optional[str]
@@ -264,6 +307,9 @@ class ACWResultT(object):
         self.CONSTRAINT_LABELS = CONSTRAINT_LABELS  # type: Optional[List[Optional[str]]]
         self.TRACKS = TRACKS  # type: Optional[List[ACWTrack.ACWTrackT]]
         self.OBSERVATION_COUNT = OBSERVATION_COUNT  # type: int
+        self.HAS_STATUS = HAS_STATUS  # type: bool
+        self.HAS_EVALUATION_MODE = HAS_EVALUATION_MODE  # type: bool
+        self.HAS_OBSERVATION_COUNT = HAS_OBSERVATION_COUNT  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -311,6 +357,9 @@ class ACWResultT(object):
                     aCWTrack_ = ACWTrack.ACWTrackT.InitFromObj(ACWResult.TRACKS(i))
                     self.TRACKS.append(aCWTrack_)
         self.OBSERVATION_COUNT = ACWResult.OBSERVATION_COUNT()
+        self.HAS_STATUS = ACWResult.HAS_STATUS()
+        self.HAS_EVALUATION_MODE = ACWResult.HAS_EVALUATION_MODE()
+        self.HAS_OBSERVATION_COUNT = ACWResult.HAS_OBSERVATION_COUNT()
 
     # ACWResultT
     def Pack(self, builder):
@@ -356,5 +405,8 @@ class ACWResultT(object):
         if self.TRACKS is not None:
             ACWResultAddTRACKS(builder, TRACKS)
         ACWResultAddOBSERVATION_COUNT(builder, self.OBSERVATION_COUNT)
+        ACWResultAddHAS_STATUS(builder, self.HAS_STATUS)
+        ACWResultAddHAS_EVALUATION_MODE(builder, self.HAS_EVALUATION_MODE)
+        ACWResultAddHAS_OBSERVATION_COUNT(builder, self.HAS_OBSERVATION_COUNT)
         ACWResult = ACWResultEnd(builder)
         return ACWResult

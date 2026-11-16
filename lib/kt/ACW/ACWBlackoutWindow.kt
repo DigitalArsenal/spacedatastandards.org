@@ -45,6 +45,19 @@ class ACWBlackoutWindow : Table() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasStartJulianDateTt : Boolean
+        get() {
+            val o = __offset(8)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEndJulianDateTt : Boolean
+        get() {
+            val o = __offset(10)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWBlackoutWindow(_bb: ByteBuffer): ACWBlackoutWindow = getRootAsACWBlackoutWindow(_bb, ACWBlackoutWindow())
@@ -52,15 +65,19 @@ class ACWBlackoutWindow : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWBlackoutWindow(builder: FlatBufferBuilder, startJulianDateTt: Double, endJulianDateTt: Double) : Int {
-            builder.startTable(2)
+        fun createACWBlackoutWindow(builder: FlatBufferBuilder, startJulianDateTt: Double, endJulianDateTt: Double, hasStartJulianDateTt: Boolean, hasEndJulianDateTt: Boolean) : Int {
+            builder.startTable(4)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
+            addHASENDJULIANDATETT(builder, hasEndJulianDateTt)
+            addHASSTARTJULIANDATETT(builder, hasStartJulianDateTt)
             return endACWBlackoutWindow(builder)
         }
-        fun startACWBlackoutWindow(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startACWBlackoutWindow(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(0, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(1, endJulianDateTt, 0.0)
+        fun addHASSTARTJULIANDATETT(builder: FlatBufferBuilder, hasStartJulianDateTt: Boolean) = builder.addBoolean(2, hasStartJulianDateTt, false)
+        fun addHASENDJULIANDATETT(builder: FlatBufferBuilder, hasEndJulianDateTt: Boolean) = builder.addBoolean(3, hasEndJulianDateTt, false)
         fun endACWBlackoutWindow(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -42,7 +42,7 @@ export declare class ACWSensor implements flatbuffers.IUnpackableObject<ACWSenso
     TRACK_DURATION_S(): number;
     /**
      * Shortest time between the end of one track of a target and the start
-     * of the next, seconds.
+     * of the following, seconds.
      */
     REVISIT_INTERVAL_S(): number;
     /**
@@ -86,6 +86,24 @@ export declare class ACWSensor implements flatbuffers.IUnpackableObject<ACWSenso
      * DOPPLER with DOPPLER_FREQUENCY set to this value.
      */
     TRANSMIT_FREQUENCY_HZ(): number;
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    HAS_PHENOMENOLOGY(): boolean;
+    HAS_OBSERVATION_INTERVAL_S(): boolean;
+    HAS_TRACK_DURATION_S(): boolean;
+    HAS_REVISIT_INTERVAL_S(): boolean;
+    HAS_MAX_SIMULTANEOUS_TRACKS(): boolean;
+    HAS_REFERENCE_SNR_DB(): boolean;
+    HAS_REFERENCE_RANGE_M(): boolean;
+    HAS_REFERENCE_RCS_M2(): boolean;
+    HAS_DETECTION_THRESHOLD_DB(): boolean;
+    HAS_RECEIVER_G_OVER_T_DB_PER_K(): boolean;
+    HAS_RECEIVER_BANDWIDTH_HZ(): boolean;
+    HAS_LIMITING_MAGNITUDE(): boolean;
+    HAS_MAX_HOST_SUN_ELEVATION_RAD(): boolean;
+    HAS_FALSE_ALARM_RATE_PER_HOUR(): boolean;
+    HAS_TRANSMIT_FREQUENCY_HZ(): boolean;
     static startACWSensor(builder: flatbuffers.Builder): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
     static addHostId(builder: flatbuffers.Builder, HOST_IDOffset: flatbuffers.Offset): void;
@@ -108,6 +126,21 @@ export declare class ACWSensor implements flatbuffers.IUnpackableObject<ACWSenso
     static addMaxHostSunElevationRad(builder: flatbuffers.Builder, MAX_HOST_SUN_ELEVATION_RAD: number): void;
     static addFalseAlarmRatePerHour(builder: flatbuffers.Builder, FALSE_ALARM_RATE_PER_HOUR: number): void;
     static addTransmitFrequencyHz(builder: flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ: number): void;
+    static addHasPhenomenology(builder: flatbuffers.Builder, HAS_PHENOMENOLOGY: boolean): void;
+    static addHasObservationIntervalS(builder: flatbuffers.Builder, HAS_OBSERVATION_INTERVAL_S: boolean): void;
+    static addHasTrackDurationS(builder: flatbuffers.Builder, HAS_TRACK_DURATION_S: boolean): void;
+    static addHasRevisitIntervalS(builder: flatbuffers.Builder, HAS_REVISIT_INTERVAL_S: boolean): void;
+    static addHasMaxSimultaneousTracks(builder: flatbuffers.Builder, HAS_MAX_SIMULTANEOUS_TRACKS: boolean): void;
+    static addHasReferenceSnrDb(builder: flatbuffers.Builder, HAS_REFERENCE_SNR_DB: boolean): void;
+    static addHasReferenceRangeM(builder: flatbuffers.Builder, HAS_REFERENCE_RANGE_M: boolean): void;
+    static addHasReferenceRcsM2(builder: flatbuffers.Builder, HAS_REFERENCE_RCS_M2: boolean): void;
+    static addHasDetectionThresholdDb(builder: flatbuffers.Builder, HAS_DETECTION_THRESHOLD_DB: boolean): void;
+    static addHasReceiverGOverTDbPerK(builder: flatbuffers.Builder, HAS_RECEIVER_G_OVER_T_DB_PER_K: boolean): void;
+    static addHasReceiverBandwidthHz(builder: flatbuffers.Builder, HAS_RECEIVER_BANDWIDTH_HZ: boolean): void;
+    static addHasLimitingMagnitude(builder: flatbuffers.Builder, HAS_LIMITING_MAGNITUDE: boolean): void;
+    static addHasMaxHostSunElevationRad(builder: flatbuffers.Builder, HAS_MAX_HOST_SUN_ELEVATION_RAD: boolean): void;
+    static addHasFalseAlarmRatePerHour(builder: flatbuffers.Builder, HAS_FALSE_ALARM_RATE_PER_HOUR: boolean): void;
+    static addHasTransmitFrequencyHz(builder: flatbuffers.Builder, HAS_TRANSMIT_FREQUENCY_HZ: boolean): void;
     static endACWSensor(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ACWSensorT;
     unpackTo(_o: ACWSensorT): void;
@@ -132,7 +165,22 @@ export declare class ACWSensorT implements flatbuffers.IGeneratedObject {
     MAX_HOST_SUN_ELEVATION_RAD: number;
     FALSE_ALARM_RATE_PER_HOUR: number;
     TRANSMIT_FREQUENCY_HZ: number;
-    constructor(SENSOR_ID?: string | Uint8Array | null, HOST_ID?: string | Uint8Array | null, PHENOMENOLOGY?: acwSensorPhenomenology, ERROR_MODELS?: (MEMErrorModelT)[], CONSTRAINTS?: ACWConstraintSetT | null, OBSERVATION_INTERVAL_S?: number, TRACK_DURATION_S?: number, REVISIT_INTERVAL_S?: number, MAX_SIMULTANEOUS_TRACKS?: number, REFERENCE_SNR_DB?: number, REFERENCE_RANGE_M?: number, REFERENCE_RCS_M2?: number, DETECTION_THRESHOLD_DB?: number, RECEIVER_G_OVER_T_DB_PER_K?: number, RECEIVER_BANDWIDTH_HZ?: number, LIMITING_MAGNITUDE?: number, MAX_HOST_SUN_ELEVATION_RAD?: number, FALSE_ALARM_RATE_PER_HOUR?: number, TRANSMIT_FREQUENCY_HZ?: number);
+    HAS_PHENOMENOLOGY: boolean;
+    HAS_OBSERVATION_INTERVAL_S: boolean;
+    HAS_TRACK_DURATION_S: boolean;
+    HAS_REVISIT_INTERVAL_S: boolean;
+    HAS_MAX_SIMULTANEOUS_TRACKS: boolean;
+    HAS_REFERENCE_SNR_DB: boolean;
+    HAS_REFERENCE_RANGE_M: boolean;
+    HAS_REFERENCE_RCS_M2: boolean;
+    HAS_DETECTION_THRESHOLD_DB: boolean;
+    HAS_RECEIVER_G_OVER_T_DB_PER_K: boolean;
+    HAS_RECEIVER_BANDWIDTH_HZ: boolean;
+    HAS_LIMITING_MAGNITUDE: boolean;
+    HAS_MAX_HOST_SUN_ELEVATION_RAD: boolean;
+    HAS_FALSE_ALARM_RATE_PER_HOUR: boolean;
+    HAS_TRANSMIT_FREQUENCY_HZ: boolean;
+    constructor(SENSOR_ID?: string | Uint8Array | null, HOST_ID?: string | Uint8Array | null, PHENOMENOLOGY?: acwSensorPhenomenology, ERROR_MODELS?: (MEMErrorModelT)[], CONSTRAINTS?: ACWConstraintSetT | null, OBSERVATION_INTERVAL_S?: number, TRACK_DURATION_S?: number, REVISIT_INTERVAL_S?: number, MAX_SIMULTANEOUS_TRACKS?: number, REFERENCE_SNR_DB?: number, REFERENCE_RANGE_M?: number, REFERENCE_RCS_M2?: number, DETECTION_THRESHOLD_DB?: number, RECEIVER_G_OVER_T_DB_PER_K?: number, RECEIVER_BANDWIDTH_HZ?: number, LIMITING_MAGNITUDE?: number, MAX_HOST_SUN_ELEVATION_RAD?: number, FALSE_ALARM_RATE_PER_HOUR?: number, TRANSMIT_FREQUENCY_HZ?: number, HAS_PHENOMENOLOGY?: boolean, HAS_OBSERVATION_INTERVAL_S?: boolean, HAS_TRACK_DURATION_S?: boolean, HAS_REVISIT_INTERVAL_S?: boolean, HAS_MAX_SIMULTANEOUS_TRACKS?: boolean, HAS_REFERENCE_SNR_DB?: boolean, HAS_REFERENCE_RANGE_M?: boolean, HAS_REFERENCE_RCS_M2?: boolean, HAS_DETECTION_THRESHOLD_DB?: boolean, HAS_RECEIVER_G_OVER_T_DB_PER_K?: boolean, HAS_RECEIVER_BANDWIDTH_HZ?: boolean, HAS_LIMITING_MAGNITUDE?: boolean, HAS_MAX_HOST_SUN_ELEVATION_RAD?: boolean, HAS_FALSE_ALARM_RATE_PER_HOUR?: boolean, HAS_TRANSMIT_FREQUENCY_HZ?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWSensor.d.ts.map

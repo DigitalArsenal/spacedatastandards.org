@@ -43,8 +43,21 @@ ELEVATION_RAD():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_AZIMUTH_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_ELEVATION_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWElevationMaskPoint(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(4);
 }
 
 static addAzimuthRad(builder:flatbuffers.Builder, AZIMUTH_RAD:number) {
@@ -55,22 +68,34 @@ static addElevationRad(builder:flatbuffers.Builder, ELEVATION_RAD:number) {
   builder.addFieldFloat64(1, ELEVATION_RAD, 0.0);
 }
 
+static addHasAzimuthRad(builder:flatbuffers.Builder, HAS_AZIMUTH_RAD:boolean) {
+  builder.addFieldInt8(2, +HAS_AZIMUTH_RAD, +false);
+}
+
+static addHasElevationRad(builder:flatbuffers.Builder, HAS_ELEVATION_RAD:boolean) {
+  builder.addFieldInt8(3, +HAS_ELEVATION_RAD, +false);
+}
+
 static endACWElevationMaskPoint(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWElevationMaskPoint(builder:flatbuffers.Builder, AZIMUTH_RAD:number, ELEVATION_RAD:number):flatbuffers.Offset {
+static createACWElevationMaskPoint(builder:flatbuffers.Builder, AZIMUTH_RAD:number, ELEVATION_RAD:number, HAS_AZIMUTH_RAD:boolean, HAS_ELEVATION_RAD:boolean):flatbuffers.Offset {
   ACWElevationMaskPoint.startACWElevationMaskPoint(builder);
   ACWElevationMaskPoint.addAzimuthRad(builder, AZIMUTH_RAD);
   ACWElevationMaskPoint.addElevationRad(builder, ELEVATION_RAD);
+  ACWElevationMaskPoint.addHasAzimuthRad(builder, HAS_AZIMUTH_RAD);
+  ACWElevationMaskPoint.addHasElevationRad(builder, HAS_ELEVATION_RAD);
   return ACWElevationMaskPoint.endACWElevationMaskPoint(builder);
 }
 
 unpack(): ACWElevationMaskPointT {
   return new ACWElevationMaskPointT(
     this.AZIMUTH_RAD(),
-    this.ELEVATION_RAD()
+    this.ELEVATION_RAD(),
+    this.HAS_AZIMUTH_RAD(),
+    this.HAS_ELEVATION_RAD()
   );
 }
 
@@ -78,20 +103,26 @@ unpack(): ACWElevationMaskPointT {
 unpackTo(_o: ACWElevationMaskPointT): void {
   _o.AZIMUTH_RAD = this.AZIMUTH_RAD();
   _o.ELEVATION_RAD = this.ELEVATION_RAD();
+  _o.HAS_AZIMUTH_RAD = this.HAS_AZIMUTH_RAD();
+  _o.HAS_ELEVATION_RAD = this.HAS_ELEVATION_RAD();
 }
 }
 
 export class ACWElevationMaskPointT implements flatbuffers.IGeneratedObject {
 constructor(
   public AZIMUTH_RAD: number = 0.0,
-  public ELEVATION_RAD: number = 0.0
+  public ELEVATION_RAD: number = 0.0,
+  public HAS_AZIMUTH_RAD: boolean = false,
+  public HAS_ELEVATION_RAD: boolean = false
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return ACWElevationMaskPoint.createACWElevationMaskPoint(builder,
     this.AZIMUTH_RAD,
-    this.ELEVATION_RAD
+    this.ELEVATION_RAD,
+    this.HAS_AZIMUTH_RAD,
+    this.HAS_ELEVATION_RAD
   );
 }
 }

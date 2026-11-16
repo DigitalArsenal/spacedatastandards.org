@@ -48,6 +48,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../CES/main_generated.h"
 #include "../CFP/main_generated.h"
 #include "../CHN/main_generated.h"
+#include "../CLG/main_generated.h"
 #include "../CLM/main_generated.h"
 #include "../CLT/main_generated.h"
 #include "../CME/main_generated.h"
@@ -2199,11 +2200,12 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_SWA = 293,
   RecordTypeExtended_SWS = 294,
   RecordTypeExtended_SSY = 295,
+  RecordTypeExtended_CLG = 296,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_SSY
+  RecordTypeExtended_MAX = RecordTypeExtended_CLG
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[41] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[42] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2245,7 +2247,8 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[41] {
     RecordTypeExtended_CME,
     RecordTypeExtended_SWA,
     RecordTypeExtended_SWS,
-    RecordTypeExtended_SSY
+    RecordTypeExtended_SSY,
+    RecordTypeExtended_CLG
   };
   return values;
 }
@@ -2293,6 +2296,7 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_SWA: return "SWA";
     case RecordTypeExtended_SWS: return "SWS";
     case RecordTypeExtended_SSY: return "SSY";
+    case RecordTypeExtended_CLG: return "CLG";
     default: return "";
   }
 }

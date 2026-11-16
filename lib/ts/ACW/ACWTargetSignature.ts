@@ -63,8 +63,36 @@ EMITTER_EIRP_DBW():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_RCS_M2():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_DIAMETER_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_GEOMETRIC_ALBEDO():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_EMITTER_FREQUENCY_HZ():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_EMITTER_EIRP_DBW():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWTargetSignature(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(10);
 }
 
 static addRcsM2(builder:flatbuffers.Builder, RCS_M2:number) {
@@ -87,18 +115,43 @@ static addEmitterEirpDbw(builder:flatbuffers.Builder, EMITTER_EIRP_DBW:number) {
   builder.addFieldFloat64(4, EMITTER_EIRP_DBW, 0.0);
 }
 
+static addHasRcsM2(builder:flatbuffers.Builder, HAS_RCS_M2:boolean) {
+  builder.addFieldInt8(5, +HAS_RCS_M2, +false);
+}
+
+static addHasDiameterM(builder:flatbuffers.Builder, HAS_DIAMETER_M:boolean) {
+  builder.addFieldInt8(6, +HAS_DIAMETER_M, +false);
+}
+
+static addHasGeometricAlbedo(builder:flatbuffers.Builder, HAS_GEOMETRIC_ALBEDO:boolean) {
+  builder.addFieldInt8(7, +HAS_GEOMETRIC_ALBEDO, +false);
+}
+
+static addHasEmitterFrequencyHz(builder:flatbuffers.Builder, HAS_EMITTER_FREQUENCY_HZ:boolean) {
+  builder.addFieldInt8(8, +HAS_EMITTER_FREQUENCY_HZ, +false);
+}
+
+static addHasEmitterEirpDbw(builder:flatbuffers.Builder, HAS_EMITTER_EIRP_DBW:boolean) {
+  builder.addFieldInt8(9, +HAS_EMITTER_EIRP_DBW, +false);
+}
+
 static endACWTargetSignature(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWTargetSignature(builder:flatbuffers.Builder, RCS_M2:number, DIAMETER_M:number, GEOMETRIC_ALBEDO:number, EMITTER_FREQUENCY_HZ:number, EMITTER_EIRP_DBW:number):flatbuffers.Offset {
+static createACWTargetSignature(builder:flatbuffers.Builder, RCS_M2:number, DIAMETER_M:number, GEOMETRIC_ALBEDO:number, EMITTER_FREQUENCY_HZ:number, EMITTER_EIRP_DBW:number, HAS_RCS_M2:boolean, HAS_DIAMETER_M:boolean, HAS_GEOMETRIC_ALBEDO:boolean, HAS_EMITTER_FREQUENCY_HZ:boolean, HAS_EMITTER_EIRP_DBW:boolean):flatbuffers.Offset {
   ACWTargetSignature.startACWTargetSignature(builder);
   ACWTargetSignature.addRcsM2(builder, RCS_M2);
   ACWTargetSignature.addDiameterM(builder, DIAMETER_M);
   ACWTargetSignature.addGeometricAlbedo(builder, GEOMETRIC_ALBEDO);
   ACWTargetSignature.addEmitterFrequencyHz(builder, EMITTER_FREQUENCY_HZ);
   ACWTargetSignature.addEmitterEirpDbw(builder, EMITTER_EIRP_DBW);
+  ACWTargetSignature.addHasRcsM2(builder, HAS_RCS_M2);
+  ACWTargetSignature.addHasDiameterM(builder, HAS_DIAMETER_M);
+  ACWTargetSignature.addHasGeometricAlbedo(builder, HAS_GEOMETRIC_ALBEDO);
+  ACWTargetSignature.addHasEmitterFrequencyHz(builder, HAS_EMITTER_FREQUENCY_HZ);
+  ACWTargetSignature.addHasEmitterEirpDbw(builder, HAS_EMITTER_EIRP_DBW);
   return ACWTargetSignature.endACWTargetSignature(builder);
 }
 
@@ -108,7 +161,12 @@ unpack(): ACWTargetSignatureT {
     this.DIAMETER_M(),
     this.GEOMETRIC_ALBEDO(),
     this.EMITTER_FREQUENCY_HZ(),
-    this.EMITTER_EIRP_DBW()
+    this.EMITTER_EIRP_DBW(),
+    this.HAS_RCS_M2(),
+    this.HAS_DIAMETER_M(),
+    this.HAS_GEOMETRIC_ALBEDO(),
+    this.HAS_EMITTER_FREQUENCY_HZ(),
+    this.HAS_EMITTER_EIRP_DBW()
   );
 }
 
@@ -119,6 +177,11 @@ unpackTo(_o: ACWTargetSignatureT): void {
   _o.GEOMETRIC_ALBEDO = this.GEOMETRIC_ALBEDO();
   _o.EMITTER_FREQUENCY_HZ = this.EMITTER_FREQUENCY_HZ();
   _o.EMITTER_EIRP_DBW = this.EMITTER_EIRP_DBW();
+  _o.HAS_RCS_M2 = this.HAS_RCS_M2();
+  _o.HAS_DIAMETER_M = this.HAS_DIAMETER_M();
+  _o.HAS_GEOMETRIC_ALBEDO = this.HAS_GEOMETRIC_ALBEDO();
+  _o.HAS_EMITTER_FREQUENCY_HZ = this.HAS_EMITTER_FREQUENCY_HZ();
+  _o.HAS_EMITTER_EIRP_DBW = this.HAS_EMITTER_EIRP_DBW();
 }
 }
 
@@ -128,7 +191,12 @@ constructor(
   public DIAMETER_M: number = 0.0,
   public GEOMETRIC_ALBEDO: number = 0.0,
   public EMITTER_FREQUENCY_HZ: number = 0.0,
-  public EMITTER_EIRP_DBW: number = 0.0
+  public EMITTER_EIRP_DBW: number = 0.0,
+  public HAS_RCS_M2: boolean = false,
+  public HAS_DIAMETER_M: boolean = false,
+  public HAS_GEOMETRIC_ALBEDO: boolean = false,
+  public HAS_EMITTER_FREQUENCY_HZ: boolean = false,
+  public HAS_EMITTER_EIRP_DBW: boolean = false
 ){}
 
 
@@ -138,7 +206,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.DIAMETER_M,
     this.GEOMETRIC_ALBEDO,
     this.EMITTER_FREQUENCY_HZ,
-    this.EMITTER_EIRP_DBW
+    this.EMITTER_EIRP_DBW,
+    this.HAS_RCS_M2,
+    this.HAS_DIAMETER_M,
+    this.HAS_GEOMETRIC_ALBEDO,
+    this.HAS_EMITTER_FREQUENCY_HZ,
+    this.HAS_EMITTER_EIRP_DBW
   );
 }
 }

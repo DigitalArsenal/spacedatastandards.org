@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Target Cartesian state sample in an Earth-fixed frame.
+ * Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
  */
 @SuppressWarnings("unused")
 public final class ACWStateSample extends com.google.flatbuffers.Table {
@@ -32,24 +32,34 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
    */
   public double JULIAN_DATE_TT() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Earth-fixed X position, meters.
+   * Fixed-frame X position, meters.
    */
   public double POSITION_X_M() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Earth-fixed Y position, meters.
+   * Fixed-frame Y position, meters.
    */
   public double POSITION_Y_M() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Earth-fixed Z position, meters.
+   * Fixed-frame Z position, meters.
    */
   public double POSITION_Z_M() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Earth-fixed velocity, meters per second. Required for range-rate,
+   * Fixed-frame velocity, meters per second. Required for range-rate,
    * Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
    */
   public double VELOCITY_X_MPS() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double VELOCITY_Y_MPS() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double VELOCITY_Z_MPS() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_JULIAN_DATE_TT() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_POSITION_X_M() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_POSITION_Y_M() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_POSITION_Z_M() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_VELOCITY_X_MPS() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_VELOCITY_Y_MPS() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_VELOCITY_Z_MPS() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWStateSample(FlatBufferBuilder builder,
       double JULIAN_DATE_TT,
@@ -58,8 +68,15 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
       double POSITION_Z_M,
       double VELOCITY_X_MPS,
       double VELOCITY_Y_MPS,
-      double VELOCITY_Z_MPS) {
-    builder.startTable(7);
+      double VELOCITY_Z_MPS,
+      boolean HAS_JULIAN_DATE_TT,
+      boolean HAS_POSITION_X_M,
+      boolean HAS_POSITION_Y_M,
+      boolean HAS_POSITION_Z_M,
+      boolean HAS_VELOCITY_X_MPS,
+      boolean HAS_VELOCITY_Y_MPS,
+      boolean HAS_VELOCITY_Z_MPS) {
+    builder.startTable(14);
     ACWStateSample.addVelocityZMps(builder, VELOCITY_Z_MPS);
     ACWStateSample.addVelocityYMps(builder, VELOCITY_Y_MPS);
     ACWStateSample.addVelocityXMps(builder, VELOCITY_X_MPS);
@@ -67,10 +84,17 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
     ACWStateSample.addPositionYM(builder, POSITION_Y_M);
     ACWStateSample.addPositionXM(builder, POSITION_X_M);
     ACWStateSample.addJulianDateTt(builder, JULIAN_DATE_TT);
+    ACWStateSample.addHasVelocityZMps(builder, HAS_VELOCITY_Z_MPS);
+    ACWStateSample.addHasVelocityYMps(builder, HAS_VELOCITY_Y_MPS);
+    ACWStateSample.addHasVelocityXMps(builder, HAS_VELOCITY_X_MPS);
+    ACWStateSample.addHasPositionZM(builder, HAS_POSITION_Z_M);
+    ACWStateSample.addHasPositionYM(builder, HAS_POSITION_Y_M);
+    ACWStateSample.addHasPositionXM(builder, HAS_POSITION_X_M);
+    ACWStateSample.addHasJulianDateTt(builder, HAS_JULIAN_DATE_TT);
     return ACWStateSample.endACWStateSample(builder);
   }
 
-  public static void startACWStateSample(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startACWStateSample(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addJulianDateTt(FlatBufferBuilder builder, double JULIAN_DATE_TT) { builder.addDouble(0, JULIAN_DATE_TT, 0.0); }
   public static void addPositionXM(FlatBufferBuilder builder, double POSITION_X_M) { builder.addDouble(1, POSITION_X_M, 0.0); }
   public static void addPositionYM(FlatBufferBuilder builder, double POSITION_Y_M) { builder.addDouble(2, POSITION_Y_M, 0.0); }
@@ -78,6 +102,13 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
   public static void addVelocityXMps(FlatBufferBuilder builder, double VELOCITY_X_MPS) { builder.addDouble(4, VELOCITY_X_MPS, 0.0); }
   public static void addVelocityYMps(FlatBufferBuilder builder, double VELOCITY_Y_MPS) { builder.addDouble(5, VELOCITY_Y_MPS, 0.0); }
   public static void addVelocityZMps(FlatBufferBuilder builder, double VELOCITY_Z_MPS) { builder.addDouble(6, VELOCITY_Z_MPS, 0.0); }
+  public static void addHasJulianDateTt(FlatBufferBuilder builder, boolean HAS_JULIAN_DATE_TT) { builder.addBoolean(7, HAS_JULIAN_DATE_TT, false); }
+  public static void addHasPositionXM(FlatBufferBuilder builder, boolean HAS_POSITION_X_M) { builder.addBoolean(8, HAS_POSITION_X_M, false); }
+  public static void addHasPositionYM(FlatBufferBuilder builder, boolean HAS_POSITION_Y_M) { builder.addBoolean(9, HAS_POSITION_Y_M, false); }
+  public static void addHasPositionZM(FlatBufferBuilder builder, boolean HAS_POSITION_Z_M) { builder.addBoolean(10, HAS_POSITION_Z_M, false); }
+  public static void addHasVelocityXMps(FlatBufferBuilder builder, boolean HAS_VELOCITY_X_MPS) { builder.addBoolean(11, HAS_VELOCITY_X_MPS, false); }
+  public static void addHasVelocityYMps(FlatBufferBuilder builder, boolean HAS_VELOCITY_Y_MPS) { builder.addBoolean(12, HAS_VELOCITY_Y_MPS, false); }
+  public static void addHasVelocityZMps(FlatBufferBuilder builder, boolean HAS_VELOCITY_Z_MPS) { builder.addBoolean(13, HAS_VELOCITY_Z_MPS, false); }
   public static int endACWStateSample(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

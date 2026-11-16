@@ -64,7 +64,7 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
   public double TRACK_DURATION_S() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Shortest time between the end of one track of a target and the start
-   * of the next, seconds.
+   * of the following, seconds.
    */
   public double REVISIT_INTERVAL_S() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -108,6 +108,24 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
    * DOPPLER with DOPPLER_FREQUENCY set to this value.
    */
   public double TRANSMIT_FREQUENCY_HZ() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_PHENOMENOLOGY() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_OBSERVATION_INTERVAL_S() { int o = __offset(44); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_TRACK_DURATION_S() { int o = __offset(46); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_REVISIT_INTERVAL_S() { int o = __offset(48); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MAX_SIMULTANEOUS_TRACKS() { int o = __offset(50); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_REFERENCE_SNR_DB() { int o = __offset(52); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_REFERENCE_RANGE_M() { int o = __offset(54); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_REFERENCE_RCS_M2() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_DETECTION_THRESHOLD_DB() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_RECEIVER_G_OVER_T_DB_PER_K() { int o = __offset(60); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_RECEIVER_BANDWIDTH_HZ() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_LIMITING_MAGNITUDE() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MAX_HOST_SUN_ELEVATION_RAD() { int o = __offset(66); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_FALSE_ALARM_RATE_PER_HOUR() { int o = __offset(68); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_TRANSMIT_FREQUENCY_HZ() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWSensor(FlatBufferBuilder builder,
       int SENSOR_IDOffset,
@@ -128,8 +146,23 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
       double LIMITING_MAGNITUDE,
       double MAX_HOST_SUN_ELEVATION_RAD,
       double FALSE_ALARM_RATE_PER_HOUR,
-      double TRANSMIT_FREQUENCY_HZ) {
-    builder.startTable(19);
+      double TRANSMIT_FREQUENCY_HZ,
+      boolean HAS_PHENOMENOLOGY,
+      boolean HAS_OBSERVATION_INTERVAL_S,
+      boolean HAS_TRACK_DURATION_S,
+      boolean HAS_REVISIT_INTERVAL_S,
+      boolean HAS_MAX_SIMULTANEOUS_TRACKS,
+      boolean HAS_REFERENCE_SNR_DB,
+      boolean HAS_REFERENCE_RANGE_M,
+      boolean HAS_REFERENCE_RCS_M2,
+      boolean HAS_DETECTION_THRESHOLD_DB,
+      boolean HAS_RECEIVER_G_OVER_T_DB_PER_K,
+      boolean HAS_RECEIVER_BANDWIDTH_HZ,
+      boolean HAS_LIMITING_MAGNITUDE,
+      boolean HAS_MAX_HOST_SUN_ELEVATION_RAD,
+      boolean HAS_FALSE_ALARM_RATE_PER_HOUR,
+      boolean HAS_TRANSMIT_FREQUENCY_HZ) {
+    builder.startTable(34);
     ACWSensor.addTransmitFrequencyHz(builder, TRANSMIT_FREQUENCY_HZ);
     ACWSensor.addFalseAlarmRatePerHour(builder, FALSE_ALARM_RATE_PER_HOUR);
     ACWSensor.addMaxHostSunElevationRad(builder, MAX_HOST_SUN_ELEVATION_RAD);
@@ -148,11 +181,26 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
     ACWSensor.addErrorModels(builder, ERROR_MODELSOffset);
     ACWSensor.addHostId(builder, HOST_IDOffset);
     ACWSensor.addSensorId(builder, SENSOR_IDOffset);
+    ACWSensor.addHasTransmitFrequencyHz(builder, HAS_TRANSMIT_FREQUENCY_HZ);
+    ACWSensor.addHasFalseAlarmRatePerHour(builder, HAS_FALSE_ALARM_RATE_PER_HOUR);
+    ACWSensor.addHasMaxHostSunElevationRad(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD);
+    ACWSensor.addHasLimitingMagnitude(builder, HAS_LIMITING_MAGNITUDE);
+    ACWSensor.addHasReceiverBandwidthHz(builder, HAS_RECEIVER_BANDWIDTH_HZ);
+    ACWSensor.addHasReceiverGOverTDbPerK(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K);
+    ACWSensor.addHasDetectionThresholdDb(builder, HAS_DETECTION_THRESHOLD_DB);
+    ACWSensor.addHasReferenceRcsM2(builder, HAS_REFERENCE_RCS_M2);
+    ACWSensor.addHasReferenceRangeM(builder, HAS_REFERENCE_RANGE_M);
+    ACWSensor.addHasReferenceSnrDb(builder, HAS_REFERENCE_SNR_DB);
+    ACWSensor.addHasMaxSimultaneousTracks(builder, HAS_MAX_SIMULTANEOUS_TRACKS);
+    ACWSensor.addHasRevisitIntervalS(builder, HAS_REVISIT_INTERVAL_S);
+    ACWSensor.addHasTrackDurationS(builder, HAS_TRACK_DURATION_S);
+    ACWSensor.addHasObservationIntervalS(builder, HAS_OBSERVATION_INTERVAL_S);
+    ACWSensor.addHasPhenomenology(builder, HAS_PHENOMENOLOGY);
     ACWSensor.addPhenomenology(builder, PHENOMENOLOGY);
     return ACWSensor.endACWSensor(builder);
   }
 
-  public static void startACWSensor(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startACWSensor(FlatBufferBuilder builder) { builder.startTable(34); }
   public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(0, SENSOR_IDOffset, 0); }
   public static void addHostId(FlatBufferBuilder builder, int HOST_IDOffset) { builder.addOffset(1, HOST_IDOffset, 0); }
   public static void addPhenomenology(FlatBufferBuilder builder, int PHENOMENOLOGY) { builder.addByte(2, (byte) PHENOMENOLOGY, (byte) 0); }
@@ -174,6 +222,21 @@ public final class ACWSensor extends com.google.flatbuffers.Table {
   public static void addMaxHostSunElevationRad(FlatBufferBuilder builder, double MAX_HOST_SUN_ELEVATION_RAD) { builder.addDouble(16, MAX_HOST_SUN_ELEVATION_RAD, 0.0); }
   public static void addFalseAlarmRatePerHour(FlatBufferBuilder builder, double FALSE_ALARM_RATE_PER_HOUR) { builder.addDouble(17, FALSE_ALARM_RATE_PER_HOUR, 0.0); }
   public static void addTransmitFrequencyHz(FlatBufferBuilder builder, double TRANSMIT_FREQUENCY_HZ) { builder.addDouble(18, TRANSMIT_FREQUENCY_HZ, 0.0); }
+  public static void addHasPhenomenology(FlatBufferBuilder builder, boolean HAS_PHENOMENOLOGY) { builder.addBoolean(19, HAS_PHENOMENOLOGY, false); }
+  public static void addHasObservationIntervalS(FlatBufferBuilder builder, boolean HAS_OBSERVATION_INTERVAL_S) { builder.addBoolean(20, HAS_OBSERVATION_INTERVAL_S, false); }
+  public static void addHasTrackDurationS(FlatBufferBuilder builder, boolean HAS_TRACK_DURATION_S) { builder.addBoolean(21, HAS_TRACK_DURATION_S, false); }
+  public static void addHasRevisitIntervalS(FlatBufferBuilder builder, boolean HAS_REVISIT_INTERVAL_S) { builder.addBoolean(22, HAS_REVISIT_INTERVAL_S, false); }
+  public static void addHasMaxSimultaneousTracks(FlatBufferBuilder builder, boolean HAS_MAX_SIMULTANEOUS_TRACKS) { builder.addBoolean(23, HAS_MAX_SIMULTANEOUS_TRACKS, false); }
+  public static void addHasReferenceSnrDb(FlatBufferBuilder builder, boolean HAS_REFERENCE_SNR_DB) { builder.addBoolean(24, HAS_REFERENCE_SNR_DB, false); }
+  public static void addHasReferenceRangeM(FlatBufferBuilder builder, boolean HAS_REFERENCE_RANGE_M) { builder.addBoolean(25, HAS_REFERENCE_RANGE_M, false); }
+  public static void addHasReferenceRcsM2(FlatBufferBuilder builder, boolean HAS_REFERENCE_RCS_M2) { builder.addBoolean(26, HAS_REFERENCE_RCS_M2, false); }
+  public static void addHasDetectionThresholdDb(FlatBufferBuilder builder, boolean HAS_DETECTION_THRESHOLD_DB) { builder.addBoolean(27, HAS_DETECTION_THRESHOLD_DB, false); }
+  public static void addHasReceiverGOverTDbPerK(FlatBufferBuilder builder, boolean HAS_RECEIVER_G_OVER_T_DB_PER_K) { builder.addBoolean(28, HAS_RECEIVER_G_OVER_T_DB_PER_K, false); }
+  public static void addHasReceiverBandwidthHz(FlatBufferBuilder builder, boolean HAS_RECEIVER_BANDWIDTH_HZ) { builder.addBoolean(29, HAS_RECEIVER_BANDWIDTH_HZ, false); }
+  public static void addHasLimitingMagnitude(FlatBufferBuilder builder, boolean HAS_LIMITING_MAGNITUDE) { builder.addBoolean(30, HAS_LIMITING_MAGNITUDE, false); }
+  public static void addHasMaxHostSunElevationRad(FlatBufferBuilder builder, boolean HAS_MAX_HOST_SUN_ELEVATION_RAD) { builder.addBoolean(31, HAS_MAX_HOST_SUN_ELEVATION_RAD, false); }
+  public static void addHasFalseAlarmRatePerHour(FlatBufferBuilder builder, boolean HAS_FALSE_ALARM_RATE_PER_HOUR) { builder.addBoolean(32, HAS_FALSE_ALARM_RATE_PER_HOUR, false); }
+  public static void addHasTransmitFrequencyHz(FlatBufferBuilder builder, boolean HAS_TRANSMIT_FREQUENCY_HZ) { builder.addBoolean(33, HAS_TRANSMIT_FREQUENCY_HZ, false); }
   public static int endACWSensor(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

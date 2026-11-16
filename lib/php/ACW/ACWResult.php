@@ -142,22 +142,50 @@ class ACWResult extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_STATUS()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_EVALUATION_MODE()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_OBSERVATION_COUNT()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWResult
      */
-    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID, $EVALUATION_MODE, $CONSTRAINT_LABELS, $TRACKS, $OBSERVATION_COUNT)
+    public static function createACWResult(FlatBufferBuilder $builder, $STATUS, $ERROR_MESSAGE, $WINDOWS, $TRACE_ID, $EVALUATION_MODE, $CONSTRAINT_LABELS, $TRACKS, $OBSERVATION_COUNT, $HAS_STATUS, $HAS_EVALUATION_MODE, $HAS_OBSERVATION_COUNT)
     {
-        $builder->startObject(8);
+        $builder->startObject(11);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_MESSAGE($builder, $ERROR_MESSAGE);
         self::addWINDOWS($builder, $WINDOWS);
@@ -166,6 +194,9 @@ class ACWResult extends Table
         self::addCONSTRAINT_LABELS($builder, $CONSTRAINT_LABELS);
         self::addTRACKS($builder, $TRACKS);
         self::addOBSERVATION_COUNT($builder, $OBSERVATION_COUNT);
+        self::addHAS_STATUS($builder, $HAS_STATUS);
+        self::addHAS_EVALUATION_MODE($builder, $HAS_EVALUATION_MODE);
+        self::addHAS_OBSERVATION_COUNT($builder, $HAS_OBSERVATION_COUNT);
         $o = $builder->endObject();
         return $o;
     }
@@ -320,6 +351,36 @@ class ACWResult extends Table
     public static function addOBSERVATION_COUNT(FlatBufferBuilder $builder, $OBSERVATION_COUNT)
     {
         $builder->addUintX(7, $OBSERVATION_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_STATUS(FlatBufferBuilder $builder, $HAS_STATUS)
+    {
+        $builder->addBoolX(8, $HAS_STATUS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EVALUATION_MODE(FlatBufferBuilder $builder, $HAS_EVALUATION_MODE)
+    {
+        $builder->addBoolX(9, $HAS_EVALUATION_MODE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_OBSERVATION_COUNT(FlatBufferBuilder $builder, $HAS_OBSERVATION_COUNT)
+    {
+        $builder->addBoolX(10, $HAS_OBSERVATION_COUNT, false);
     }
 
     /**

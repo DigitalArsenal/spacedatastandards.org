@@ -47,7 +47,7 @@ public struct ACWSensor : IFlatbufferObject
   /// Longest track, seconds; 0 tracks the whole access window.
   public double TRACK_DURATION_S { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Shortest time between the end of one track of a target and the start
-  /// of the next, seconds.
+  /// of the following, seconds.
   public double REVISIT_INTERVAL_S { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Targets tracked at once.
   public uint MAX_SIMULTANEOUS_TRACKS { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)1; } }
@@ -74,6 +74,22 @@ public struct ACWSensor : IFlatbufferObject
   /// measures the echo's two-way shift relative to it, reported as $RDO
   /// DOPPLER with DOPPLER_FREQUENCY set to this value.
   public double TRANSMIT_FREQUENCY_HZ { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_PHENOMENOLOGY { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_OBSERVATION_INTERVAL_S { get { int o = __p.__offset(44); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_TRACK_DURATION_S { get { int o = __p.__offset(46); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_REVISIT_INTERVAL_S { get { int o = __p.__offset(48); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MAX_SIMULTANEOUS_TRACKS { get { int o = __p.__offset(50); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_REFERENCE_SNR_DB { get { int o = __p.__offset(52); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_REFERENCE_RANGE_M { get { int o = __p.__offset(54); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_REFERENCE_RCS_M2 { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_DETECTION_THRESHOLD_DB { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_RECEIVER_G_OVER_T_DB_PER_K { get { int o = __p.__offset(60); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_RECEIVER_BANDWIDTH_HZ { get { int o = __p.__offset(62); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_LIMITING_MAGNITUDE { get { int o = __p.__offset(64); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MAX_HOST_SUN_ELEVATION_RAD { get { int o = __p.__offset(66); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_FALSE_ALARM_RATE_PER_HOUR { get { int o = __p.__offset(68); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_TRANSMIT_FREQUENCY_HZ { get { int o = __p.__offset(70); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWSensor> CreateACWSensor(FlatBufferBuilder builder,
       StringOffset SENSOR_IDOffset = default(StringOffset),
@@ -94,8 +110,23 @@ public struct ACWSensor : IFlatbufferObject
       double LIMITING_MAGNITUDE = 0.0,
       double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
       double FALSE_ALARM_RATE_PER_HOUR = 0.0,
-      double TRANSMIT_FREQUENCY_HZ = 0.0) {
-    builder.StartTable(19);
+      double TRANSMIT_FREQUENCY_HZ = 0.0,
+      bool HAS_PHENOMENOLOGY = false,
+      bool HAS_OBSERVATION_INTERVAL_S = false,
+      bool HAS_TRACK_DURATION_S = false,
+      bool HAS_REVISIT_INTERVAL_S = false,
+      bool HAS_MAX_SIMULTANEOUS_TRACKS = false,
+      bool HAS_REFERENCE_SNR_DB = false,
+      bool HAS_REFERENCE_RANGE_M = false,
+      bool HAS_REFERENCE_RCS_M2 = false,
+      bool HAS_DETECTION_THRESHOLD_DB = false,
+      bool HAS_RECEIVER_G_OVER_T_DB_PER_K = false,
+      bool HAS_RECEIVER_BANDWIDTH_HZ = false,
+      bool HAS_LIMITING_MAGNITUDE = false,
+      bool HAS_MAX_HOST_SUN_ELEVATION_RAD = false,
+      bool HAS_FALSE_ALARM_RATE_PER_HOUR = false,
+      bool HAS_TRANSMIT_FREQUENCY_HZ = false) {
+    builder.StartTable(34);
     ACWSensor.AddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ);
     ACWSensor.AddFALSE_ALARM_RATE_PER_HOUR(builder, FALSE_ALARM_RATE_PER_HOUR);
     ACWSensor.AddMAX_HOST_SUN_ELEVATION_RAD(builder, MAX_HOST_SUN_ELEVATION_RAD);
@@ -114,11 +145,26 @@ public struct ACWSensor : IFlatbufferObject
     ACWSensor.AddERROR_MODELS(builder, ERROR_MODELSOffset);
     ACWSensor.AddHOST_ID(builder, HOST_IDOffset);
     ACWSensor.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    ACWSensor.AddHAS_TRANSMIT_FREQUENCY_HZ(builder, HAS_TRANSMIT_FREQUENCY_HZ);
+    ACWSensor.AddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, HAS_FALSE_ALARM_RATE_PER_HOUR);
+    ACWSensor.AddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD);
+    ACWSensor.AddHAS_LIMITING_MAGNITUDE(builder, HAS_LIMITING_MAGNITUDE);
+    ACWSensor.AddHAS_RECEIVER_BANDWIDTH_HZ(builder, HAS_RECEIVER_BANDWIDTH_HZ);
+    ACWSensor.AddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K);
+    ACWSensor.AddHAS_DETECTION_THRESHOLD_DB(builder, HAS_DETECTION_THRESHOLD_DB);
+    ACWSensor.AddHAS_REFERENCE_RCS_M2(builder, HAS_REFERENCE_RCS_M2);
+    ACWSensor.AddHAS_REFERENCE_RANGE_M(builder, HAS_REFERENCE_RANGE_M);
+    ACWSensor.AddHAS_REFERENCE_SNR_DB(builder, HAS_REFERENCE_SNR_DB);
+    ACWSensor.AddHAS_MAX_SIMULTANEOUS_TRACKS(builder, HAS_MAX_SIMULTANEOUS_TRACKS);
+    ACWSensor.AddHAS_REVISIT_INTERVAL_S(builder, HAS_REVISIT_INTERVAL_S);
+    ACWSensor.AddHAS_TRACK_DURATION_S(builder, HAS_TRACK_DURATION_S);
+    ACWSensor.AddHAS_OBSERVATION_INTERVAL_S(builder, HAS_OBSERVATION_INTERVAL_S);
+    ACWSensor.AddHAS_PHENOMENOLOGY(builder, HAS_PHENOMENOLOGY);
     ACWSensor.AddPHENOMENOLOGY(builder, PHENOMENOLOGY);
     return ACWSensor.EndACWSensor(builder);
   }
 
-  public static void StartACWSensor(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartACWSensor(FlatBufferBuilder builder) { builder.StartTable(34); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(0, SENSOR_IDOffset.Value, 0); }
   public static void AddHOST_ID(FlatBufferBuilder builder, StringOffset HOST_IDOffset) { builder.AddOffset(1, HOST_IDOffset.Value, 0); }
   public static void AddPHENOMENOLOGY(FlatBufferBuilder builder, acwSensorPhenomenology PHENOMENOLOGY) { builder.AddByte(2, (byte)PHENOMENOLOGY, 0); }
@@ -143,6 +189,21 @@ public struct ACWSensor : IFlatbufferObject
   public static void AddMAX_HOST_SUN_ELEVATION_RAD(FlatBufferBuilder builder, double MAX_HOST_SUN_ELEVATION_RAD) { builder.AddDouble(16, MAX_HOST_SUN_ELEVATION_RAD, 0.0); }
   public static void AddFALSE_ALARM_RATE_PER_HOUR(FlatBufferBuilder builder, double FALSE_ALARM_RATE_PER_HOUR) { builder.AddDouble(17, FALSE_ALARM_RATE_PER_HOUR, 0.0); }
   public static void AddTRANSMIT_FREQUENCY_HZ(FlatBufferBuilder builder, double TRANSMIT_FREQUENCY_HZ) { builder.AddDouble(18, TRANSMIT_FREQUENCY_HZ, 0.0); }
+  public static void AddHAS_PHENOMENOLOGY(FlatBufferBuilder builder, bool HAS_PHENOMENOLOGY) { builder.AddBool(19, HAS_PHENOMENOLOGY, false); }
+  public static void AddHAS_OBSERVATION_INTERVAL_S(FlatBufferBuilder builder, bool HAS_OBSERVATION_INTERVAL_S) { builder.AddBool(20, HAS_OBSERVATION_INTERVAL_S, false); }
+  public static void AddHAS_TRACK_DURATION_S(FlatBufferBuilder builder, bool HAS_TRACK_DURATION_S) { builder.AddBool(21, HAS_TRACK_DURATION_S, false); }
+  public static void AddHAS_REVISIT_INTERVAL_S(FlatBufferBuilder builder, bool HAS_REVISIT_INTERVAL_S) { builder.AddBool(22, HAS_REVISIT_INTERVAL_S, false); }
+  public static void AddHAS_MAX_SIMULTANEOUS_TRACKS(FlatBufferBuilder builder, bool HAS_MAX_SIMULTANEOUS_TRACKS) { builder.AddBool(23, HAS_MAX_SIMULTANEOUS_TRACKS, false); }
+  public static void AddHAS_REFERENCE_SNR_DB(FlatBufferBuilder builder, bool HAS_REFERENCE_SNR_DB) { builder.AddBool(24, HAS_REFERENCE_SNR_DB, false); }
+  public static void AddHAS_REFERENCE_RANGE_M(FlatBufferBuilder builder, bool HAS_REFERENCE_RANGE_M) { builder.AddBool(25, HAS_REFERENCE_RANGE_M, false); }
+  public static void AddHAS_REFERENCE_RCS_M2(FlatBufferBuilder builder, bool HAS_REFERENCE_RCS_M2) { builder.AddBool(26, HAS_REFERENCE_RCS_M2, false); }
+  public static void AddHAS_DETECTION_THRESHOLD_DB(FlatBufferBuilder builder, bool HAS_DETECTION_THRESHOLD_DB) { builder.AddBool(27, HAS_DETECTION_THRESHOLD_DB, false); }
+  public static void AddHAS_RECEIVER_G_OVER_T_DB_PER_K(FlatBufferBuilder builder, bool HAS_RECEIVER_G_OVER_T_DB_PER_K) { builder.AddBool(28, HAS_RECEIVER_G_OVER_T_DB_PER_K, false); }
+  public static void AddHAS_RECEIVER_BANDWIDTH_HZ(FlatBufferBuilder builder, bool HAS_RECEIVER_BANDWIDTH_HZ) { builder.AddBool(29, HAS_RECEIVER_BANDWIDTH_HZ, false); }
+  public static void AddHAS_LIMITING_MAGNITUDE(FlatBufferBuilder builder, bool HAS_LIMITING_MAGNITUDE) { builder.AddBool(30, HAS_LIMITING_MAGNITUDE, false); }
+  public static void AddHAS_MAX_HOST_SUN_ELEVATION_RAD(FlatBufferBuilder builder, bool HAS_MAX_HOST_SUN_ELEVATION_RAD) { builder.AddBool(31, HAS_MAX_HOST_SUN_ELEVATION_RAD, false); }
+  public static void AddHAS_FALSE_ALARM_RATE_PER_HOUR(FlatBufferBuilder builder, bool HAS_FALSE_ALARM_RATE_PER_HOUR) { builder.AddBool(32, HAS_FALSE_ALARM_RATE_PER_HOUR, false); }
+  public static void AddHAS_TRANSMIT_FREQUENCY_HZ(FlatBufferBuilder builder, bool HAS_TRANSMIT_FREQUENCY_HZ) { builder.AddBool(33, HAS_TRANSMIT_FREQUENCY_HZ, false); }
   public static Offset<ACWSensor> EndACWSensor(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWSensor>(o);
@@ -173,6 +234,21 @@ public struct ACWSensor : IFlatbufferObject
     _o.MAX_HOST_SUN_ELEVATION_RAD = this.MAX_HOST_SUN_ELEVATION_RAD;
     _o.FALSE_ALARM_RATE_PER_HOUR = this.FALSE_ALARM_RATE_PER_HOUR;
     _o.TRANSMIT_FREQUENCY_HZ = this.TRANSMIT_FREQUENCY_HZ;
+    _o.HAS_PHENOMENOLOGY = this.HAS_PHENOMENOLOGY;
+    _o.HAS_OBSERVATION_INTERVAL_S = this.HAS_OBSERVATION_INTERVAL_S;
+    _o.HAS_TRACK_DURATION_S = this.HAS_TRACK_DURATION_S;
+    _o.HAS_REVISIT_INTERVAL_S = this.HAS_REVISIT_INTERVAL_S;
+    _o.HAS_MAX_SIMULTANEOUS_TRACKS = this.HAS_MAX_SIMULTANEOUS_TRACKS;
+    _o.HAS_REFERENCE_SNR_DB = this.HAS_REFERENCE_SNR_DB;
+    _o.HAS_REFERENCE_RANGE_M = this.HAS_REFERENCE_RANGE_M;
+    _o.HAS_REFERENCE_RCS_M2 = this.HAS_REFERENCE_RCS_M2;
+    _o.HAS_DETECTION_THRESHOLD_DB = this.HAS_DETECTION_THRESHOLD_DB;
+    _o.HAS_RECEIVER_G_OVER_T_DB_PER_K = this.HAS_RECEIVER_G_OVER_T_DB_PER_K;
+    _o.HAS_RECEIVER_BANDWIDTH_HZ = this.HAS_RECEIVER_BANDWIDTH_HZ;
+    _o.HAS_LIMITING_MAGNITUDE = this.HAS_LIMITING_MAGNITUDE;
+    _o.HAS_MAX_HOST_SUN_ELEVATION_RAD = this.HAS_MAX_HOST_SUN_ELEVATION_RAD;
+    _o.HAS_FALSE_ALARM_RATE_PER_HOUR = this.HAS_FALSE_ALARM_RATE_PER_HOUR;
+    _o.HAS_TRANSMIT_FREQUENCY_HZ = this.HAS_TRANSMIT_FREQUENCY_HZ;
   }
   public static Offset<ACWSensor> Pack(FlatBufferBuilder builder, ACWSensorT _o) {
     if (_o == null) return default(Offset<ACWSensor>);
@@ -205,7 +281,22 @@ public struct ACWSensor : IFlatbufferObject
       _o.LIMITING_MAGNITUDE,
       _o.MAX_HOST_SUN_ELEVATION_RAD,
       _o.FALSE_ALARM_RATE_PER_HOUR,
-      _o.TRANSMIT_FREQUENCY_HZ);
+      _o.TRANSMIT_FREQUENCY_HZ,
+      _o.HAS_PHENOMENOLOGY,
+      _o.HAS_OBSERVATION_INTERVAL_S,
+      _o.HAS_TRACK_DURATION_S,
+      _o.HAS_REVISIT_INTERVAL_S,
+      _o.HAS_MAX_SIMULTANEOUS_TRACKS,
+      _o.HAS_REFERENCE_SNR_DB,
+      _o.HAS_REFERENCE_RANGE_M,
+      _o.HAS_REFERENCE_RCS_M2,
+      _o.HAS_DETECTION_THRESHOLD_DB,
+      _o.HAS_RECEIVER_G_OVER_T_DB_PER_K,
+      _o.HAS_RECEIVER_BANDWIDTH_HZ,
+      _o.HAS_LIMITING_MAGNITUDE,
+      _o.HAS_MAX_HOST_SUN_ELEVATION_RAD,
+      _o.HAS_FALSE_ALARM_RATE_PER_HOUR,
+      _o.HAS_TRANSMIT_FREQUENCY_HZ);
   }
 }
 
@@ -230,6 +321,21 @@ public class ACWSensorT
   public double MAX_HOST_SUN_ELEVATION_RAD { get; set; }
   public double FALSE_ALARM_RATE_PER_HOUR { get; set; }
   public double TRANSMIT_FREQUENCY_HZ { get; set; }
+  public bool HAS_PHENOMENOLOGY { get; set; }
+  public bool HAS_OBSERVATION_INTERVAL_S { get; set; }
+  public bool HAS_TRACK_DURATION_S { get; set; }
+  public bool HAS_REVISIT_INTERVAL_S { get; set; }
+  public bool HAS_MAX_SIMULTANEOUS_TRACKS { get; set; }
+  public bool HAS_REFERENCE_SNR_DB { get; set; }
+  public bool HAS_REFERENCE_RANGE_M { get; set; }
+  public bool HAS_REFERENCE_RCS_M2 { get; set; }
+  public bool HAS_DETECTION_THRESHOLD_DB { get; set; }
+  public bool HAS_RECEIVER_G_OVER_T_DB_PER_K { get; set; }
+  public bool HAS_RECEIVER_BANDWIDTH_HZ { get; set; }
+  public bool HAS_LIMITING_MAGNITUDE { get; set; }
+  public bool HAS_MAX_HOST_SUN_ELEVATION_RAD { get; set; }
+  public bool HAS_FALSE_ALARM_RATE_PER_HOUR { get; set; }
+  public bool HAS_TRANSMIT_FREQUENCY_HZ { get; set; }
 
   public ACWSensorT() {
     this.SENSOR_ID = null;
@@ -251,6 +357,21 @@ public class ACWSensorT
     this.MAX_HOST_SUN_ELEVATION_RAD = 0.0;
     this.FALSE_ALARM_RATE_PER_HOUR = 0.0;
     this.TRANSMIT_FREQUENCY_HZ = 0.0;
+    this.HAS_PHENOMENOLOGY = false;
+    this.HAS_OBSERVATION_INTERVAL_S = false;
+    this.HAS_TRACK_DURATION_S = false;
+    this.HAS_REVISIT_INTERVAL_S = false;
+    this.HAS_MAX_SIMULTANEOUS_TRACKS = false;
+    this.HAS_REFERENCE_SNR_DB = false;
+    this.HAS_REFERENCE_RANGE_M = false;
+    this.HAS_REFERENCE_RCS_M2 = false;
+    this.HAS_DETECTION_THRESHOLD_DB = false;
+    this.HAS_RECEIVER_G_OVER_T_DB_PER_K = false;
+    this.HAS_RECEIVER_BANDWIDTH_HZ = false;
+    this.HAS_LIMITING_MAGNITUDE = false;
+    this.HAS_MAX_HOST_SUN_ELEVATION_RAD = false;
+    this.HAS_FALSE_ALARM_RATE_PER_HOUR = false;
+    this.HAS_TRANSMIT_FREQUENCY_HZ = false;
   }
 }
 
@@ -279,6 +400,21 @@ static public class ACWSensorVerify
       && verifier.VerifyField(tablePos, 36 /*MAX_HOST_SUN_ELEVATION_RAD*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 38 /*FALSE_ALARM_RATE_PER_HOUR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*TRANSMIT_FREQUENCY_HZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*HAS_PHENOMENOLOGY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 44 /*HAS_OBSERVATION_INTERVAL_S*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 46 /*HAS_TRACK_DURATION_S*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 48 /*HAS_REVISIT_INTERVAL_S*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 50 /*HAS_MAX_SIMULTANEOUS_TRACKS*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 52 /*HAS_REFERENCE_SNR_DB*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 54 /*HAS_REFERENCE_RANGE_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 56 /*HAS_REFERENCE_RCS_M2*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 58 /*HAS_DETECTION_THRESHOLD_DB*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 60 /*HAS_RECEIVER_G_OVER_T_DB_PER_K*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 62 /*HAS_RECEIVER_BANDWIDTH_HZ*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 64 /*HAS_LIMITING_MAGNITUDE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 66 /*HAS_MAX_HOST_SUN_ELEVATION_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 68 /*HAS_FALSE_ALARM_RATE_PER_HOUR*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 70 /*HAS_TRANSMIT_FREQUENCY_HZ*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

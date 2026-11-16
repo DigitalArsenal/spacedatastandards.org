@@ -61,24 +61,45 @@ class ACWElevationMaskPoint extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_AZIMUTH_RAD()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_ELEVATION_RAD()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWElevationMaskPoint(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(2);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWElevationMaskPoint
      */
-    public static function createACWElevationMaskPoint(FlatBufferBuilder $builder, $AZIMUTH_RAD, $ELEVATION_RAD)
+    public static function createACWElevationMaskPoint(FlatBufferBuilder $builder, $AZIMUTH_RAD, $ELEVATION_RAD, $HAS_AZIMUTH_RAD, $HAS_ELEVATION_RAD)
     {
-        $builder->startObject(2);
+        $builder->startObject(4);
         self::addAZIMUTH_RAD($builder, $AZIMUTH_RAD);
         self::addELEVATION_RAD($builder, $ELEVATION_RAD);
+        self::addHAS_AZIMUTH_RAD($builder, $HAS_AZIMUTH_RAD);
+        self::addHAS_ELEVATION_RAD($builder, $HAS_ELEVATION_RAD);
         $o = $builder->endObject();
         return $o;
     }
@@ -101,6 +122,26 @@ class ACWElevationMaskPoint extends Table
     public static function addELEVATION_RAD(FlatBufferBuilder $builder, $ELEVATION_RAD)
     {
         $builder->addDoubleX(1, $ELEVATION_RAD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_AZIMUTH_RAD(FlatBufferBuilder $builder, $HAS_AZIMUTH_RAD)
+    {
+        $builder->addBoolX(2, $HAS_AZIMUTH_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_ELEVATION_RAD(FlatBufferBuilder $builder, $HAS_ELEVATION_RAD)
+    {
+        $builder->addBoolX(3, $HAS_ELEVATION_RAD, false);
     }
 
     /**

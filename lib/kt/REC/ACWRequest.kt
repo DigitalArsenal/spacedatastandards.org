@@ -51,7 +51,7 @@ class ACWRequest : Table() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Pre-sampled target Earth-fixed Cartesian states.
+     * Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
      */
     fun states(j: Int) : ACWStateSample? = states(ACWStateSample(), j)
     fun states(obj: ACWStateSample, j: Int) : ACWStateSample? {
@@ -131,7 +131,7 @@ class ACWRequest : Table() {
         }
     }
     /**
-     * Optional constraint composition. When absent the legacy behaviour holds:
+     * Optional constraint composition. When absent the station constraints apply:
      * every ground station's MIN_ELEVATION_RAD (or the override) plus
      * ELEVATION_MASK, all required.
      */
@@ -300,6 +300,44 @@ class ACWRequest : Table() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasOperation : Boolean
+        get() {
+            val o = __offset(46)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMinElevationOverrideRad : Boolean
+        get() {
+            val o = __offset(48)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEvaluationMode : Boolean
+        get() {
+            val o = __offset(50)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasRootToleranceS : Boolean
+        get() {
+            val o = __offset(52)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasRandomSeed : Boolean
+        get() {
+            val o = __offset(54)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasStartJulianDateTt : Boolean
+        get() {
+            val o = __offset(56)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEndJulianDateTt : Boolean
+        get() {
+            val o = __offset(58)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWRequest(_bb: ByteBuffer): ACWRequest = getRootAsACWRequest(_bb, ACWRequest())
@@ -307,8 +345,8 @@ class ACWRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int, targetsOffset: Int, sensorsOffset: Int, accessOffset: Int, earthOrientationOffset: Int, randomSeed: ULong, startJulianDateTt: Double, endJulianDateTt: Double) : Int {
-            builder.startTable(21)
+        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int, targetsOffset: Int, sensorsOffset: Int, accessOffset: Int, earthOrientationOffset: Int, randomSeed: ULong, startJulianDateTt: Double, endJulianDateTt: Double, hasOperation: Boolean, hasMinElevationOverrideRad: Boolean, hasEvaluationMode: Boolean, hasRootToleranceS: Boolean, hasRandomSeed: Boolean, hasStartJulianDateTt: Boolean, hasEndJulianDateTt: Boolean) : Int {
+            builder.startTable(28)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
             addRANDOMSEED(builder, randomSeed)
@@ -328,11 +366,18 @@ class ACWRequest : Table() {
             addTARGETSTATIONID(builder, targetStationIdOffset)
             addSTATES(builder, statesOffset)
             addGROUNDSTATIONS(builder, groundStationsOffset)
+            addHASENDJULIANDATETT(builder, hasEndJulianDateTt)
+            addHASSTARTJULIANDATETT(builder, hasStartJulianDateTt)
+            addHASRANDOMSEED(builder, hasRandomSeed)
+            addHASROOTTOLERANCES(builder, hasRootToleranceS)
+            addHASEVALUATIONMODE(builder, hasEvaluationMode)
+            addHASMINELEVATIONOVERRIDERAD(builder, hasMinElevationOverrideRad)
+            addHASOPERATION(builder, hasOperation)
             addEVALUATIONMODE(builder, evaluationMode)
             addOPERATION(builder, operation)
             return endACWRequest(builder)
         }
-        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(28)
         fun addOPERATION(builder: FlatBufferBuilder, operation: Byte) = builder.addByte(0, operation, 0)
         fun addGROUNDSTATIONS(builder: FlatBufferBuilder, groundStations: Int) = builder.addOffset(1, groundStations, 0)
         fun createGroundStationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -434,6 +479,13 @@ class ACWRequest : Table() {
         fun addRANDOMSEED(builder: FlatBufferBuilder, randomSeed: ULong) = builder.addLong(18, randomSeed.toLong(), 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(19, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(20, endJulianDateTt, 0.0)
+        fun addHASOPERATION(builder: FlatBufferBuilder, hasOperation: Boolean) = builder.addBoolean(21, hasOperation, false)
+        fun addHASMINELEVATIONOVERRIDERAD(builder: FlatBufferBuilder, hasMinElevationOverrideRad: Boolean) = builder.addBoolean(22, hasMinElevationOverrideRad, false)
+        fun addHASEVALUATIONMODE(builder: FlatBufferBuilder, hasEvaluationMode: Boolean) = builder.addBoolean(23, hasEvaluationMode, false)
+        fun addHASROOTTOLERANCES(builder: FlatBufferBuilder, hasRootToleranceS: Boolean) = builder.addBoolean(24, hasRootToleranceS, false)
+        fun addHASRANDOMSEED(builder: FlatBufferBuilder, hasRandomSeed: Boolean) = builder.addBoolean(25, hasRandomSeed, false)
+        fun addHASSTARTJULIANDATETT(builder: FlatBufferBuilder, hasStartJulianDateTt: Boolean) = builder.addBoolean(26, hasStartJulianDateTt, false)
+        fun addHASENDJULIANDATETT(builder: FlatBufferBuilder, hasEndJulianDateTt: Boolean) = builder.addBoolean(27, hasEndJulianDateTt, false)
         fun endACWRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

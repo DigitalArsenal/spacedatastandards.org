@@ -9,7 +9,7 @@ import { ACWStateSample, ACWStateSampleT } from './ACWStateSample.js';
 
 
 /**
- * A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+ * A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
  * the same frame and time scale as ACWRequest.STATES.
  */
 export class ACWObserverTrajectory implements flatbuffers.IUnpackableObject<ACWObserverTrajectoryT> {

@@ -35,19 +35,30 @@ public final class ACWBlackoutWindow extends com.google.flatbuffers.Table {
    * Interval end as Julian Date in TT.
    */
   public double END_JULIAN_DATE_TT() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_START_JULIAN_DATE_TT() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_END_JULIAN_DATE_TT() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWBlackoutWindow(FlatBufferBuilder builder,
       double START_JULIAN_DATE_TT,
-      double END_JULIAN_DATE_TT) {
-    builder.startTable(2);
+      double END_JULIAN_DATE_TT,
+      boolean HAS_START_JULIAN_DATE_TT,
+      boolean HAS_END_JULIAN_DATE_TT) {
+    builder.startTable(4);
     ACWBlackoutWindow.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWBlackoutWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
+    ACWBlackoutWindow.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+    ACWBlackoutWindow.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
     return ACWBlackoutWindow.endACWBlackoutWindow(builder);
   }
 
-  public static void startACWBlackoutWindow(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startACWBlackoutWindow(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(0, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(1, END_JULIAN_DATE_TT, 0.0); }
+  public static void addHasStartJulianDateTt(FlatBufferBuilder builder, boolean HAS_START_JULIAN_DATE_TT) { builder.addBoolean(2, HAS_START_JULIAN_DATE_TT, false); }
+  public static void addHasEndJulianDateTt(FlatBufferBuilder builder, boolean HAS_END_JULIAN_DATE_TT) { builder.addBoolean(3, HAS_END_JULIAN_DATE_TT, false); }
   public static int endACWBlackoutWindow(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

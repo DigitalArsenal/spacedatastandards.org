@@ -44,21 +44,27 @@ public final class ACWConstraintSet extends com.google.flatbuffers.Table {
   public String LABEL() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LABELAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer LABELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_OPERATOR() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWConstraintSet(FlatBufferBuilder builder,
       byte OPERATOR,
       int CONSTRAINTSOffset,
       int SETSOffset,
-      int LABELOffset) {
-    builder.startTable(4);
+      int LABELOffset,
+      boolean HAS_OPERATOR) {
+    builder.startTable(5);
     ACWConstraintSet.addLabel(builder, LABELOffset);
     ACWConstraintSet.addSets(builder, SETSOffset);
     ACWConstraintSet.addConstraints(builder, CONSTRAINTSOffset);
+    ACWConstraintSet.addHasOperator(builder, HAS_OPERATOR);
     ACWConstraintSet.addOperator(builder, OPERATOR);
     return ACWConstraintSet.endACWConstraintSet(builder);
   }
 
-  public static void startACWConstraintSet(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startACWConstraintSet(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addOperator(FlatBufferBuilder builder, byte OPERATOR) { builder.addByte(0, OPERATOR, 0); }
   public static void addConstraints(FlatBufferBuilder builder, int CONSTRAINTSOffset) { builder.addOffset(1, CONSTRAINTSOffset, 0); }
   public static int createConstraintsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -67,6 +73,7 @@ public final class ACWConstraintSet extends com.google.flatbuffers.Table {
   public static int createSetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addLabel(FlatBufferBuilder builder, int LABELOffset) { builder.addOffset(3, LABELOffset, 0); }
+  public static void addHasOperator(FlatBufferBuilder builder, boolean HAS_OPERATOR) { builder.addBoolean(4, HAS_OPERATOR, false); }
   public static int endACWConstraintSet(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

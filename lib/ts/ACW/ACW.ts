@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { ACWRequest, ACWRequestT } from './ACWRequest.js';
 import { ACWResult, ACWResultT } from './ACWResult.js';
+import { BodyDescriptor, BodyDescriptorT } from './BodyDescriptor.js';
 
 
 /**
@@ -43,8 +44,22 @@ RESULT(obj?:ACWResult):ACWResult|null {
   return offset ? (obj || new ACWResult()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Appended slot 2. Mandatory in every new request and successful result.
+ * Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+ * these codes. Missing body fails acw-body-required; absence never means
+ * Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+ * Result must echo the exact descriptor field values, including optional
+ * presence; requester rejects a missing/different echo. Raw table offsets
+ * are not identity. Explicit one-time archive conversion is outside runtime.
+ */
+CENTRAL_BODY(obj?:BodyDescriptor):BodyDescriptor|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? (obj || new BodyDescriptor()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startACW(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(3);
 }
 
 static addRequest(builder:flatbuffers.Builder, REQUESTOffset:flatbuffers.Offset) {
@@ -53,6 +68,10 @@ static addRequest(builder:flatbuffers.Builder, REQUESTOffset:flatbuffers.Offset)
 
 static addResult(builder:flatbuffers.Builder, RESULTOffset:flatbuffers.Offset) {
   builder.addFieldOffset(1, RESULTOffset, 0);
+}
+
+static addCentralBody(builder:flatbuffers.Builder, CENTRAL_BODYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, CENTRAL_BODYOffset, 0);
 }
 
 static endACW(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -72,7 +91,8 @@ static finishSizePrefixedACWBuffer(builder:flatbuffers.Builder, offset:flatbuffe
 unpack(): ACWT {
   return new ACWT(
     (this.REQUEST() !== null ? this.REQUEST()!.unpack() : null),
-    (this.RESULT() !== null ? this.RESULT()!.unpack() : null)
+    (this.RESULT() !== null ? this.RESULT()!.unpack() : null),
+    (this.CENTRAL_BODY() !== null ? this.CENTRAL_BODY()!.unpack() : null)
   );
 }
 
@@ -80,23 +100,27 @@ unpack(): ACWT {
 unpackTo(_o: ACWT): void {
   _o.REQUEST = (this.REQUEST() !== null ? this.REQUEST()!.unpack() : null);
   _o.RESULT = (this.RESULT() !== null ? this.RESULT()!.unpack() : null);
+  _o.CENTRAL_BODY = (this.CENTRAL_BODY() !== null ? this.CENTRAL_BODY()!.unpack() : null);
 }
 }
 
 export class ACWT implements flatbuffers.IGeneratedObject {
 constructor(
   public REQUEST: ACWRequestT|null = null,
-  public RESULT: ACWResultT|null = null
+  public RESULT: ACWResultT|null = null,
+  public CENTRAL_BODY: BodyDescriptorT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REQUEST = (this.REQUEST !== null ? this.REQUEST!.pack(builder) : 0);
   const RESULT = (this.RESULT !== null ? this.RESULT!.pack(builder) : 0);
+  const CENTRAL_BODY = (this.CENTRAL_BODY !== null ? this.CENTRAL_BODY!.pack(builder) : 0);
 
   ACW.startACW(builder);
   ACW.addRequest(builder, REQUEST);
   ACW.addResult(builder, RESULT);
+  ACW.addCentralBody(builder, CENTRAL_BODY);
 
   return ACW.endACW(builder);
 }

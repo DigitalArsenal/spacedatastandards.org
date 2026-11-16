@@ -65,8 +65,8 @@ LIGHTING():acwLightingCondition {
 }
 
 /**
- * Central-body radius offset for line-of-sight occultation, meters
- * (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+ * Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+ * LOS only; not geodetic altitude. Never applied to a surface-station pair.
  */
 OCCULTATION_ATMOSPHERE_HEIGHT_M():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -96,8 +96,41 @@ LABEL(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_KIND():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_THRESHOLD_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MIN_RANGE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MAX_RANGE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_LIGHTING():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWConstraint(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(14);
 }
 
 static addKind(builder:flatbuffers.Builder, KIND:acwConstraintKind) {
@@ -144,12 +177,36 @@ static addLabel(builder:flatbuffers.Builder, LABELOffset:flatbuffers.Offset) {
   builder.addFieldOffset(7, LABELOffset, 0);
 }
 
+static addHasKind(builder:flatbuffers.Builder, HAS_KIND:boolean) {
+  builder.addFieldInt8(8, +HAS_KIND, +false);
+}
+
+static addHasThresholdRad(builder:flatbuffers.Builder, HAS_THRESHOLD_RAD:boolean) {
+  builder.addFieldInt8(9, +HAS_THRESHOLD_RAD, +false);
+}
+
+static addHasMinRangeM(builder:flatbuffers.Builder, HAS_MIN_RANGE_M:boolean) {
+  builder.addFieldInt8(10, +HAS_MIN_RANGE_M, +false);
+}
+
+static addHasMaxRangeM(builder:flatbuffers.Builder, HAS_MAX_RANGE_M:boolean) {
+  builder.addFieldInt8(11, +HAS_MAX_RANGE_M, +false);
+}
+
+static addHasLighting(builder:flatbuffers.Builder, HAS_LIGHTING:boolean) {
+  builder.addFieldInt8(12, +HAS_LIGHTING, +false);
+}
+
+static addHasOccultationAtmosphereHeightM(builder:flatbuffers.Builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M:boolean) {
+  builder.addFieldInt8(13, +HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, +false);
+}
+
 static endACWConstraint(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWConstraint(builder:flatbuffers.Builder, KIND:acwConstraintKind, THRESHOLD_RAD:number, MIN_RANGE_M:number, MAX_RANGE_M:number, LIGHTING:acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M:number, MASKOffset:flatbuffers.Offset, LABELOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWConstraint(builder:flatbuffers.Builder, KIND:acwConstraintKind, THRESHOLD_RAD:number, MIN_RANGE_M:number, MAX_RANGE_M:number, LIGHTING:acwLightingCondition, OCCULTATION_ATMOSPHERE_HEIGHT_M:number, MASKOffset:flatbuffers.Offset, LABELOffset:flatbuffers.Offset, HAS_KIND:boolean, HAS_THRESHOLD_RAD:boolean, HAS_MIN_RANGE_M:boolean, HAS_MAX_RANGE_M:boolean, HAS_LIGHTING:boolean, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M:boolean):flatbuffers.Offset {
   ACWConstraint.startACWConstraint(builder);
   ACWConstraint.addKind(builder, KIND);
   ACWConstraint.addThresholdRad(builder, THRESHOLD_RAD);
@@ -159,6 +216,12 @@ static createACWConstraint(builder:flatbuffers.Builder, KIND:acwConstraintKind, 
   ACWConstraint.addOccultationAtmosphereHeightM(builder, OCCULTATION_ATMOSPHERE_HEIGHT_M);
   ACWConstraint.addMask(builder, MASKOffset);
   ACWConstraint.addLabel(builder, LABELOffset);
+  ACWConstraint.addHasKind(builder, HAS_KIND);
+  ACWConstraint.addHasThresholdRad(builder, HAS_THRESHOLD_RAD);
+  ACWConstraint.addHasMinRangeM(builder, HAS_MIN_RANGE_M);
+  ACWConstraint.addHasMaxRangeM(builder, HAS_MAX_RANGE_M);
+  ACWConstraint.addHasLighting(builder, HAS_LIGHTING);
+  ACWConstraint.addHasOccultationAtmosphereHeightM(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
   return ACWConstraint.endACWConstraint(builder);
 }
 
@@ -171,7 +234,13 @@ unpack(): ACWConstraintT {
     this.LIGHTING(),
     this.OCCULTATION_ATMOSPHERE_HEIGHT_M(),
     this.bb!.createObjList<ACWElevationMaskPoint, ACWElevationMaskPointT>(this.MASK.bind(this), this.maskLength()),
-    this.LABEL()
+    this.LABEL(),
+    this.HAS_KIND(),
+    this.HAS_THRESHOLD_RAD(),
+    this.HAS_MIN_RANGE_M(),
+    this.HAS_MAX_RANGE_M(),
+    this.HAS_LIGHTING(),
+    this.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M()
   );
 }
 
@@ -185,6 +254,12 @@ unpackTo(_o: ACWConstraintT): void {
   _o.OCCULTATION_ATMOSPHERE_HEIGHT_M = this.OCCULTATION_ATMOSPHERE_HEIGHT_M();
   _o.MASK = this.bb!.createObjList<ACWElevationMaskPoint, ACWElevationMaskPointT>(this.MASK.bind(this), this.maskLength());
   _o.LABEL = this.LABEL();
+  _o.HAS_KIND = this.HAS_KIND();
+  _o.HAS_THRESHOLD_RAD = this.HAS_THRESHOLD_RAD();
+  _o.HAS_MIN_RANGE_M = this.HAS_MIN_RANGE_M();
+  _o.HAS_MAX_RANGE_M = this.HAS_MAX_RANGE_M();
+  _o.HAS_LIGHTING = this.HAS_LIGHTING();
+  _o.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = this.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M();
 }
 }
 
@@ -197,7 +272,13 @@ constructor(
   public LIGHTING: acwLightingCondition = acwLightingCondition.ANY,
   public OCCULTATION_ATMOSPHERE_HEIGHT_M: number = 0.0,
   public MASK: (ACWElevationMaskPointT)[] = [],
-  public LABEL: string|Uint8Array|null = null
+  public LABEL: string|Uint8Array|null = null,
+  public HAS_KIND: boolean = false,
+  public HAS_THRESHOLD_RAD: boolean = false,
+  public HAS_MIN_RANGE_M: boolean = false,
+  public HAS_MAX_RANGE_M: boolean = false,
+  public HAS_LIGHTING: boolean = false,
+  public HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: boolean = false
 ){}
 
 
@@ -213,7 +294,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.LIGHTING,
     this.OCCULTATION_ATMOSPHERE_HEIGHT_M,
     MASK,
-    LABEL
+    LABEL,
+    this.HAS_KIND,
+    this.HAS_THRESHOLD_RAD,
+    this.HAS_MIN_RANGE_M,
+    this.HAS_MAX_RANGE_M,
+    this.HAS_LIGHTING,
+    this.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M
   );
 }
 }

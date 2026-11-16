@@ -30,21 +30,25 @@ public struct ACWConstraintSet : IFlatbufferObject
   public ArraySegment<byte>? GetLABELBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetLABELArray() { return __p.__vector_as_array<byte>(10); }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_OPERATOR { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWConstraintSet> CreateACWConstraintSet(FlatBufferBuilder builder,
       acwConstraintOperator OPERATOR = acwConstraintOperator.ALL_OF,
       VectorOffset CONSTRAINTSOffset = default(VectorOffset),
       VectorOffset SETSOffset = default(VectorOffset),
-      StringOffset LABELOffset = default(StringOffset)) {
-    builder.StartTable(4);
+      StringOffset LABELOffset = default(StringOffset),
+      bool HAS_OPERATOR = false) {
+    builder.StartTable(5);
     ACWConstraintSet.AddLABEL(builder, LABELOffset);
     ACWConstraintSet.AddSETS(builder, SETSOffset);
     ACWConstraintSet.AddCONSTRAINTS(builder, CONSTRAINTSOffset);
+    ACWConstraintSet.AddHAS_OPERATOR(builder, HAS_OPERATOR);
     ACWConstraintSet.AddOPERATOR(builder, OPERATOR);
     return ACWConstraintSet.EndACWConstraintSet(builder);
   }
 
-  public static void StartACWConstraintSet(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartACWConstraintSet(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddOPERATOR(FlatBufferBuilder builder, acwConstraintOperator OPERATOR) { builder.AddSbyte(0, (sbyte)OPERATOR, 0); }
   public static void AddCONSTRAINTS(FlatBufferBuilder builder, VectorOffset CONSTRAINTSOffset) { builder.AddOffset(1, CONSTRAINTSOffset.Value, 0); }
   public static VectorOffset CreateCONSTRAINTSVector(FlatBufferBuilder builder, Offset<ACWConstraint>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -59,6 +63,7 @@ public struct ACWConstraintSet : IFlatbufferObject
   public static VectorOffset CreateSETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWConstraintSet>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddLABEL(FlatBufferBuilder builder, StringOffset LABELOffset) { builder.AddOffset(3, LABELOffset.Value, 0); }
+  public static void AddHAS_OPERATOR(FlatBufferBuilder builder, bool HAS_OPERATOR) { builder.AddBool(4, HAS_OPERATOR, false); }
   public static Offset<ACWConstraintSet> EndACWConstraintSet(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWConstraintSet>(o);
@@ -75,6 +80,7 @@ public struct ACWConstraintSet : IFlatbufferObject
     _o.SETS = new List<ACWConstraintSetT>();
     for (var _j = 0; _j < this.SETSLength; ++_j) {_o.SETS.Add(this.SETS(_j).HasValue ? this.SETS(_j).Value.UnPack() : null);}
     _o.LABEL = this.LABEL;
+    _o.HAS_OPERATOR = this.HAS_OPERATOR;
   }
   public static Offset<ACWConstraintSet> Pack(FlatBufferBuilder builder, ACWConstraintSetT _o) {
     if (_o == null) return default(Offset<ACWConstraintSet>);
@@ -96,7 +102,8 @@ public struct ACWConstraintSet : IFlatbufferObject
       _o.OPERATOR,
       _CONSTRAINTS,
       _SETS,
-      _LABEL);
+      _LABEL,
+      _o.HAS_OPERATOR);
   }
 }
 
@@ -106,12 +113,14 @@ public class ACWConstraintSetT
   public List<ACWConstraintT> CONSTRAINTS { get; set; }
   public List<ACWConstraintSetT> SETS { get; set; }
   public string LABEL { get; set; }
+  public bool HAS_OPERATOR { get; set; }
 
   public ACWConstraintSetT() {
     this.OPERATOR = acwConstraintOperator.ALL_OF;
     this.CONSTRAINTS = null;
     this.SETS = null;
     this.LABEL = null;
+    this.HAS_OPERATOR = false;
   }
 }
 
@@ -125,6 +134,7 @@ static public class ACWConstraintSetVerify
       && verifier.VerifyVectorOfTables(tablePos, 6 /*CONSTRAINTS*/, ACWConstraintVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 8 /*SETS*/, ACWConstraintSetVerify.Verify, false)
       && verifier.VerifyString(tablePos, 10 /*LABEL*/, false)
+      && verifier.VerifyField(tablePos, 12 /*HAS_OPERATOR*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

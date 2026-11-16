@@ -99,22 +99,59 @@ class ACWTrack extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_START_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_END_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_SCHEDULED_COUNT()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_DETECTED_COUNT()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWTrack(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWTrack
      */
-    public static function createACWTrack(FlatBufferBuilder $builder, $SENSOR_ID, $TARGET_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $SCHEDULED_COUNT, $DETECTED_COUNT, $LOSS_REASON)
+    public static function createACWTrack(FlatBufferBuilder $builder, $SENSOR_ID, $TARGET_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $SCHEDULED_COUNT, $DETECTED_COUNT, $LOSS_REASON, $HAS_START_JULIAN_DATE_TT, $HAS_END_JULIAN_DATE_TT, $HAS_SCHEDULED_COUNT, $HAS_DETECTED_COUNT)
     {
-        $builder->startObject(7);
+        $builder->startObject(11);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addTARGET_ID($builder, $TARGET_ID);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
@@ -122,6 +159,10 @@ class ACWTrack extends Table
         self::addSCHEDULED_COUNT($builder, $SCHEDULED_COUNT);
         self::addDETECTED_COUNT($builder, $DETECTED_COUNT);
         self::addLOSS_REASON($builder, $LOSS_REASON);
+        self::addHAS_START_JULIAN_DATE_TT($builder, $HAS_START_JULIAN_DATE_TT);
+        self::addHAS_END_JULIAN_DATE_TT($builder, $HAS_END_JULIAN_DATE_TT);
+        self::addHAS_SCHEDULED_COUNT($builder, $HAS_SCHEDULED_COUNT);
+        self::addHAS_DETECTED_COUNT($builder, $HAS_DETECTED_COUNT);
         $o = $builder->endObject();
         return $o;
     }
@@ -194,6 +235,46 @@ class ACWTrack extends Table
     public static function addLOSS_REASON(FlatBufferBuilder $builder, $LOSS_REASON)
     {
         $builder->addOffsetX(6, $LOSS_REASON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_START_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_START_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(7, $HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_END_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_END_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(8, $HAS_END_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_SCHEDULED_COUNT(FlatBufferBuilder $builder, $HAS_SCHEDULED_COUNT)
+    {
+        $builder->addBoolX(9, $HAS_SCHEDULED_COUNT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DETECTED_COUNT(FlatBufferBuilder $builder, $HAS_DETECTED_COUNT)
+    {
+        $builder->addBoolX(10, $HAS_DETECTED_COUNT, false);
     }
 
     /**

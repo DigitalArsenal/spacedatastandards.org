@@ -58,7 +58,7 @@ groundStationsLength():number {
 }
 
 /**
- * Pre-sampled target Earth-fixed Cartesian states.
+ * Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
  */
 STATES(index: number, obj?:ACWStateSample):ACWStateSample|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
@@ -120,7 +120,7 @@ REFRACTION_MODEL(obj?:ACWRefractionModel):ACWRefractionModel|null {
 }
 
 /**
- * Optional constraint composition. When absent the legacy behaviour holds:
+ * Optional constraint composition. When absent the station constraints apply:
  * every ground station's MIN_ELEVATION_RAD (or the override) plus
  * ELEVATION_MASK, all required.
  */
@@ -264,8 +264,46 @@ END_JULIAN_DATE_TT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_OPERATION():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MIN_ELEVATION_OVERRIDE_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_EVALUATION_MODE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_ROOT_TOLERANCE_S():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_RANDOM_SEED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_START_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_END_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWRequest(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(28);
 }
 
 static addOperation(builder:flatbuffers.Builder, OPERATION:acwOperationCode) {
@@ -472,6 +510,34 @@ static addEndJulianDateTt(builder:flatbuffers.Builder, END_JULIAN_DATE_TT:number
   builder.addFieldFloat64(20, END_JULIAN_DATE_TT, 0.0);
 }
 
+static addHasOperation(builder:flatbuffers.Builder, HAS_OPERATION:boolean) {
+  builder.addFieldInt8(21, +HAS_OPERATION, +false);
+}
+
+static addHasMinElevationOverrideRad(builder:flatbuffers.Builder, HAS_MIN_ELEVATION_OVERRIDE_RAD:boolean) {
+  builder.addFieldInt8(22, +HAS_MIN_ELEVATION_OVERRIDE_RAD, +false);
+}
+
+static addHasEvaluationMode(builder:flatbuffers.Builder, HAS_EVALUATION_MODE:boolean) {
+  builder.addFieldInt8(23, +HAS_EVALUATION_MODE, +false);
+}
+
+static addHasRootToleranceS(builder:flatbuffers.Builder, HAS_ROOT_TOLERANCE_S:boolean) {
+  builder.addFieldInt8(24, +HAS_ROOT_TOLERANCE_S, +false);
+}
+
+static addHasRandomSeed(builder:flatbuffers.Builder, HAS_RANDOM_SEED:boolean) {
+  builder.addFieldInt8(25, +HAS_RANDOM_SEED, +false);
+}
+
+static addHasStartJulianDateTt(builder:flatbuffers.Builder, HAS_START_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(26, +HAS_START_JULIAN_DATE_TT, +false);
+}
+
+static addHasEndJulianDateTt(builder:flatbuffers.Builder, HAS_END_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(27, +HAS_END_JULIAN_DATE_TT, +false);
+}
+
 static endACWRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -500,7 +566,14 @@ unpack(): ACWRequestT {
     this.bb!.createObjList<EOP, EOPT>(this.EARTH_ORIENTATION.bind(this), this.earthOrientationLength()),
     this.RANDOM_SEED(),
     this.START_JULIAN_DATE_TT(),
-    this.END_JULIAN_DATE_TT()
+    this.END_JULIAN_DATE_TT(),
+    this.HAS_OPERATION(),
+    this.HAS_MIN_ELEVATION_OVERRIDE_RAD(),
+    this.HAS_EVALUATION_MODE(),
+    this.HAS_ROOT_TOLERANCE_S(),
+    this.HAS_RANDOM_SEED(),
+    this.HAS_START_JULIAN_DATE_TT(),
+    this.HAS_END_JULIAN_DATE_TT()
   );
 }
 
@@ -527,6 +600,13 @@ unpackTo(_o: ACWRequestT): void {
   _o.RANDOM_SEED = this.RANDOM_SEED();
   _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT();
   _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT();
+  _o.HAS_OPERATION = this.HAS_OPERATION();
+  _o.HAS_MIN_ELEVATION_OVERRIDE_RAD = this.HAS_MIN_ELEVATION_OVERRIDE_RAD();
+  _o.HAS_EVALUATION_MODE = this.HAS_EVALUATION_MODE();
+  _o.HAS_ROOT_TOLERANCE_S = this.HAS_ROOT_TOLERANCE_S();
+  _o.HAS_RANDOM_SEED = this.HAS_RANDOM_SEED();
+  _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT();
+  _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT();
 }
 }
 
@@ -552,7 +632,14 @@ constructor(
   public EARTH_ORIENTATION: (EOPT)[] = [],
   public RANDOM_SEED: bigint = BigInt('0'),
   public START_JULIAN_DATE_TT: number = 0.0,
-  public END_JULIAN_DATE_TT: number = 0.0
+  public END_JULIAN_DATE_TT: number = 0.0,
+  public HAS_OPERATION: boolean = false,
+  public HAS_MIN_ELEVATION_OVERRIDE_RAD: boolean = false,
+  public HAS_EVALUATION_MODE: boolean = false,
+  public HAS_ROOT_TOLERANCE_S: boolean = false,
+  public HAS_RANDOM_SEED: boolean = false,
+  public HAS_START_JULIAN_DATE_TT: boolean = false,
+  public HAS_END_JULIAN_DATE_TT: boolean = false
 ){}
 
 
@@ -594,6 +681,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWRequest.addRandomSeed(builder, this.RANDOM_SEED);
   ACWRequest.addStartJulianDateTt(builder, this.START_JULIAN_DATE_TT);
   ACWRequest.addEndJulianDateTt(builder, this.END_JULIAN_DATE_TT);
+  ACWRequest.addHasOperation(builder, this.HAS_OPERATION);
+  ACWRequest.addHasMinElevationOverrideRad(builder, this.HAS_MIN_ELEVATION_OVERRIDE_RAD);
+  ACWRequest.addHasEvaluationMode(builder, this.HAS_EVALUATION_MODE);
+  ACWRequest.addHasRootToleranceS(builder, this.HAS_ROOT_TOLERANCE_S);
+  ACWRequest.addHasRandomSeed(builder, this.HAS_RANDOM_SEED);
+  ACWRequest.addHasStartJulianDateTt(builder, this.HAS_START_JULIAN_DATE_TT);
+  ACWRequest.addHasEndJulianDateTt(builder, this.HAS_END_JULIAN_DATE_TT);
 
   return ACWRequest.endACWRequest(builder);
 }

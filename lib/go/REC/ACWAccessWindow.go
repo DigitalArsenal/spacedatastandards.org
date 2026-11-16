@@ -159,8 +159,9 @@ func (rcv *ACWAccessWindow) ObserverId() []byte {
 /// Observer id when the observer is an ACWObserverTrajectory; empty for a
 /// ground station (then STATION_ID names it).
 /// Index into the flattened, depth-first constraint list of the constraint
-/// whose transition opens the window; -1 when the window starts at the
-/// first sample.
+/// whose transition opens the window. A clipped start has no limiting
+/// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+/// index is nonnegative and in range; the retained wire default is not a sentinel.
 func (rcv *ACWAccessWindow) START_LIMITING_CONSTRAINT_INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -174,8 +175,9 @@ func (rcv *ACWAccessWindow) StartLimitingConstraintIndex() int32 {
 }
 
 /// Index into the flattened, depth-first constraint list of the constraint
-/// whose transition opens the window; -1 when the window starts at the
-/// first sample.
+/// whose transition opens the window. A clipped start has no limiting
+/// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+/// index is nonnegative and in range; the retained wire default is not a sentinel.
 func (rcv *ACWAccessWindow) MutateSTART_LIMITING_CONSTRAINT_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(16, n)
 }
@@ -184,8 +186,9 @@ func (rcv *ACWAccessWindow) MutateStartLimitingConstraintIndex(n int32) bool {
 	return rcv.MutateSTART_LIMITING_CONSTRAINT_INDEX(n)
 }
 
-/// Index of the constraint whose transition closes the window; -1 when the
-/// window ends at the last sample.
+/// Index of the constraint whose transition closes the window. A clipped end
+/// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+/// and in range; the retained wire default is not a sentinel.
 func (rcv *ACWAccessWindow) END_LIMITING_CONSTRAINT_INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -198,8 +201,9 @@ func (rcv *ACWAccessWindow) EndLimitingConstraintIndex() int32 {
 	return rcv.END_LIMITING_CONSTRAINT_INDEX()
 }
 
-/// Index of the constraint whose transition closes the window; -1 when the
-/// window ends at the last sample.
+/// Index of the constraint whose transition closes the window. A clipped end
+/// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+/// and in range; the retained wire default is not a sentinel.
 func (rcv *ACWAccessWindow) MutateEND_LIMITING_CONSTRAINT_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
 }
@@ -298,8 +302,190 @@ func (rcv *ACWAccessWindow) MutateEdgesRefined(n bool) bool {
 	return rcv.MutateEDGES_REFINED(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWAccessWindow) HAS_START_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasStartJulianDateTt() bool {
+	return rcv.HAS_START_JULIAN_DATE_TT()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWAccessWindow) MutateHAS_START_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasStartJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_START_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_END_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasEndJulianDateTt() bool {
+	return rcv.HAS_END_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_END_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasEndJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_END_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_MAX_ELEVATION_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasMaxElevationRad() bool {
+	return rcv.HAS_MAX_ELEVATION_RAD()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_MAX_ELEVATION_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(34, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasMaxElevationRad(n bool) bool {
+	return rcv.MutateHAS_MAX_ELEVATION_RAD(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_SAMPLE_COUNT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasSampleCount() bool {
+	return rcv.HAS_SAMPLE_COUNT()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_SAMPLE_COUNT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasSampleCount(n bool) bool {
+	return rcv.MutateHAS_SAMPLE_COUNT(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_START_LIMITING_CONSTRAINT_INDEX() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasStartLimitingConstraintIndex() bool {
+	return rcv.HAS_START_LIMITING_CONSTRAINT_INDEX()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_START_LIMITING_CONSTRAINT_INDEX(n bool) bool {
+	return rcv._tab.MutateBoolSlot(38, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasStartLimitingConstraintIndex(n bool) bool {
+	return rcv.MutateHAS_START_LIMITING_CONSTRAINT_INDEX(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_END_LIMITING_CONSTRAINT_INDEX() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasEndLimitingConstraintIndex() bool {
+	return rcv.HAS_END_LIMITING_CONSTRAINT_INDEX()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_END_LIMITING_CONSTRAINT_INDEX(n bool) bool {
+	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasEndLimitingConstraintIndex(n bool) bool {
+	return rcv.MutateHAS_END_LIMITING_CONSTRAINT_INDEX(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_MIN_RANGE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasMinRangeM() bool {
+	return rcv.HAS_MIN_RANGE_M()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_MIN_RANGE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasMinRangeM(n bool) bool {
+	return rcv.MutateHAS_MIN_RANGE_M(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_MAX_RANGE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasMaxRangeM() bool {
+	return rcv.HAS_MAX_RANGE_M()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_MAX_RANGE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(44, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasMaxRangeM(n bool) bool {
+	return rcv.MutateHAS_MAX_RANGE_M(n)
+}
+
+func (rcv *ACWAccessWindow) HAS_EDGES_REFINED() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWAccessWindow) HasEdgesRefined() bool {
+	return rcv.HAS_EDGES_REFINED()
+}
+
+func (rcv *ACWAccessWindow) MutateHAS_EDGES_REFINED(n bool) bool {
+	return rcv._tab.MutateBoolSlot(46, n)
+}
+
+func (rcv *ACWAccessWindow) MutateHasEdgesRefined(n bool) bool {
+	return rcv.MutateHAS_EDGES_REFINED(n)
+}
+
 func ACWAccessWindowStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(22)
 }
 func ACWAccessWindowAddSTATION_ID(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATION_ID), 0)
@@ -378,6 +564,60 @@ func ACWAccessWindowAddEDGES_REFINED(builder *flatbuffers.Builder, EDGES_REFINED
 }
 func ACWAccessWindowAddEdgesRefined(builder *flatbuffers.Builder, EDGES_REFINED bool) {
 	ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED)
+}
+func ACWAccessWindowAddHAS_START_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(13, HAS_START_JULIAN_DATE_TT, false)
+}
+func ACWAccessWindowAddHasStartJulianDateTt(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	ACWAccessWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+}
+func ACWAccessWindowAddHAS_END_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(14, HAS_END_JULIAN_DATE_TT, false)
+}
+func ACWAccessWindowAddHasEndJulianDateTt(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	ACWAccessWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+}
+func ACWAccessWindowAddHAS_MAX_ELEVATION_RAD(builder *flatbuffers.Builder, HAS_MAX_ELEVATION_RAD bool) {
+	builder.PrependBoolSlot(15, HAS_MAX_ELEVATION_RAD, false)
+}
+func ACWAccessWindowAddHasMaxElevationRad(builder *flatbuffers.Builder, HAS_MAX_ELEVATION_RAD bool) {
+	ACWAccessWindowAddHAS_MAX_ELEVATION_RAD(builder, HAS_MAX_ELEVATION_RAD)
+}
+func ACWAccessWindowAddHAS_SAMPLE_COUNT(builder *flatbuffers.Builder, HAS_SAMPLE_COUNT bool) {
+	builder.PrependBoolSlot(16, HAS_SAMPLE_COUNT, false)
+}
+func ACWAccessWindowAddHasSampleCount(builder *flatbuffers.Builder, HAS_SAMPLE_COUNT bool) {
+	ACWAccessWindowAddHAS_SAMPLE_COUNT(builder, HAS_SAMPLE_COUNT)
+}
+func ACWAccessWindowAddHAS_START_LIMITING_CONSTRAINT_INDEX(builder *flatbuffers.Builder, HAS_START_LIMITING_CONSTRAINT_INDEX bool) {
+	builder.PrependBoolSlot(17, HAS_START_LIMITING_CONSTRAINT_INDEX, false)
+}
+func ACWAccessWindowAddHasStartLimitingConstraintIndex(builder *flatbuffers.Builder, HAS_START_LIMITING_CONSTRAINT_INDEX bool) {
+	ACWAccessWindowAddHAS_START_LIMITING_CONSTRAINT_INDEX(builder, HAS_START_LIMITING_CONSTRAINT_INDEX)
+}
+func ACWAccessWindowAddHAS_END_LIMITING_CONSTRAINT_INDEX(builder *flatbuffers.Builder, HAS_END_LIMITING_CONSTRAINT_INDEX bool) {
+	builder.PrependBoolSlot(18, HAS_END_LIMITING_CONSTRAINT_INDEX, false)
+}
+func ACWAccessWindowAddHasEndLimitingConstraintIndex(builder *flatbuffers.Builder, HAS_END_LIMITING_CONSTRAINT_INDEX bool) {
+	ACWAccessWindowAddHAS_END_LIMITING_CONSTRAINT_INDEX(builder, HAS_END_LIMITING_CONSTRAINT_INDEX)
+}
+func ACWAccessWindowAddHAS_MIN_RANGE_M(builder *flatbuffers.Builder, HAS_MIN_RANGE_M bool) {
+	builder.PrependBoolSlot(19, HAS_MIN_RANGE_M, false)
+}
+func ACWAccessWindowAddHasMinRangeM(builder *flatbuffers.Builder, HAS_MIN_RANGE_M bool) {
+	ACWAccessWindowAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M)
+}
+func ACWAccessWindowAddHAS_MAX_RANGE_M(builder *flatbuffers.Builder, HAS_MAX_RANGE_M bool) {
+	builder.PrependBoolSlot(20, HAS_MAX_RANGE_M, false)
+}
+func ACWAccessWindowAddHasMaxRangeM(builder *flatbuffers.Builder, HAS_MAX_RANGE_M bool) {
+	ACWAccessWindowAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M)
+}
+func ACWAccessWindowAddHAS_EDGES_REFINED(builder *flatbuffers.Builder, HAS_EDGES_REFINED bool) {
+	builder.PrependBoolSlot(21, HAS_EDGES_REFINED, false)
+}
+func ACWAccessWindowAddHasEdgesRefined(builder *flatbuffers.Builder, HAS_EDGES_REFINED bool) {
+	ACWAccessWindowAddHAS_EDGES_REFINED(builder, HAS_EDGES_REFINED)
 }
 func ACWAccessWindowEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

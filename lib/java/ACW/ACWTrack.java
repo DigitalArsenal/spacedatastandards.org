@@ -50,6 +50,13 @@ public final class ACWTrack extends com.google.flatbuffers.Table {
   public String LOSS_REASON() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LOSS_REASONAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer LOSS_REASONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_START_JULIAN_DATE_TT() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_END_JULIAN_DATE_TT() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_SCHEDULED_COUNT() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_DETECTED_COUNT() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWTrack(FlatBufferBuilder builder,
       int SENSOR_IDOffset,
@@ -58,8 +65,12 @@ public final class ACWTrack extends com.google.flatbuffers.Table {
       double END_JULIAN_DATE_TT,
       long SCHEDULED_COUNT,
       long DETECTED_COUNT,
-      int LOSS_REASONOffset) {
-    builder.startTable(7);
+      int LOSS_REASONOffset,
+      boolean HAS_START_JULIAN_DATE_TT,
+      boolean HAS_END_JULIAN_DATE_TT,
+      boolean HAS_SCHEDULED_COUNT,
+      boolean HAS_DETECTED_COUNT) {
+    builder.startTable(11);
     ACWTrack.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWTrack.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
     ACWTrack.addLossReason(builder, LOSS_REASONOffset);
@@ -67,10 +78,14 @@ public final class ACWTrack extends com.google.flatbuffers.Table {
     ACWTrack.addScheduledCount(builder, SCHEDULED_COUNT);
     ACWTrack.addTargetId(builder, TARGET_IDOffset);
     ACWTrack.addSensorId(builder, SENSOR_IDOffset);
+    ACWTrack.addHasDetectedCount(builder, HAS_DETECTED_COUNT);
+    ACWTrack.addHasScheduledCount(builder, HAS_SCHEDULED_COUNT);
+    ACWTrack.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+    ACWTrack.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
     return ACWTrack.endACWTrack(builder);
   }
 
-  public static void startACWTrack(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startACWTrack(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(0, SENSOR_IDOffset, 0); }
   public static void addTargetId(FlatBufferBuilder builder, int TARGET_IDOffset) { builder.addOffset(1, TARGET_IDOffset, 0); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(2, START_JULIAN_DATE_TT, 0.0); }
@@ -78,6 +93,10 @@ public final class ACWTrack extends com.google.flatbuffers.Table {
   public static void addScheduledCount(FlatBufferBuilder builder, long SCHEDULED_COUNT) { builder.addInt(4, (int) SCHEDULED_COUNT, (int) 0L); }
   public static void addDetectedCount(FlatBufferBuilder builder, long DETECTED_COUNT) { builder.addInt(5, (int) DETECTED_COUNT, (int) 0L); }
   public static void addLossReason(FlatBufferBuilder builder, int LOSS_REASONOffset) { builder.addOffset(6, LOSS_REASONOffset, 0); }
+  public static void addHasStartJulianDateTt(FlatBufferBuilder builder, boolean HAS_START_JULIAN_DATE_TT) { builder.addBoolean(7, HAS_START_JULIAN_DATE_TT, false); }
+  public static void addHasEndJulianDateTt(FlatBufferBuilder builder, boolean HAS_END_JULIAN_DATE_TT) { builder.addBoolean(8, HAS_END_JULIAN_DATE_TT, false); }
+  public static void addHasScheduledCount(FlatBufferBuilder builder, boolean HAS_SCHEDULED_COUNT) { builder.addBoolean(9, HAS_SCHEDULED_COUNT, false); }
+  public static void addHasDetectedCount(FlatBufferBuilder builder, boolean HAS_DETECTED_COUNT) { builder.addBoolean(10, HAS_DETECTED_COUNT, false); }
   public static int endACWTrack(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -55,13 +55,15 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
   public ByteBuffer OBSERVER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Index into the flattened, depth-first constraint list of the constraint
-   * whose transition opens the window; -1 when the window starts at the
-   * first sample.
+   * whose transition opens the window. A clipped start has no limiting
+   * constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+   * index is nonnegative and in range; the retained wire default is not a sentinel.
    */
   public int START_LIMITING_CONSTRAINT_INDEX() { int o = __offset(16); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
   /**
-   * Index of the constraint whose transition closes the window; -1 when the
-   * window ends at the last sample.
+   * Index of the constraint whose transition closes the window. A clipped end
+   * has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+   * and in range; the retained wire default is not a sentinel.
    */
   public int END_LIMITING_CONSTRAINT_INDEX() { int o = __offset(18); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
   /**
@@ -82,6 +84,18 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
    * True when edges were root-refined (CONTINUOUS); false when they are samples.
    */
   public boolean EDGES_REFINED() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_START_JULIAN_DATE_TT() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_END_JULIAN_DATE_TT() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MAX_ELEVATION_RAD() { int o = __offset(34); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_SAMPLE_COUNT() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_START_LIMITING_CONSTRAINT_INDEX() { int o = __offset(38); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_END_LIMITING_CONSTRAINT_INDEX() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MIN_RANGE_M() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MAX_RANGE_M() { int o = __offset(44); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_EDGES_REFINED() { int o = __offset(46); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWAccessWindow(FlatBufferBuilder builder,
       int STATION_IDOffset,
@@ -96,8 +110,17 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
       int END_LIMITING_CONSTRAINT_LABELOffset,
       double MIN_RANGE_M,
       double MAX_RANGE_M,
-      boolean EDGES_REFINED) {
-    builder.startTable(13);
+      boolean EDGES_REFINED,
+      boolean HAS_START_JULIAN_DATE_TT,
+      boolean HAS_END_JULIAN_DATE_TT,
+      boolean HAS_MAX_ELEVATION_RAD,
+      boolean HAS_SAMPLE_COUNT,
+      boolean HAS_START_LIMITING_CONSTRAINT_INDEX,
+      boolean HAS_END_LIMITING_CONSTRAINT_INDEX,
+      boolean HAS_MIN_RANGE_M,
+      boolean HAS_MAX_RANGE_M,
+      boolean HAS_EDGES_REFINED) {
+    builder.startTable(22);
     ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
     ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
     ACWAccessWindow.addMaxElevationRad(builder, MAX_ELEVATION_RAD);
@@ -110,11 +133,20 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
     ACWAccessWindow.addObserverId(builder, OBSERVER_IDOffset);
     ACWAccessWindow.addSampleCount(builder, SAMPLE_COUNT);
     ACWAccessWindow.addStationId(builder, STATION_IDOffset);
+    ACWAccessWindow.addHasEdgesRefined(builder, HAS_EDGES_REFINED);
+    ACWAccessWindow.addHasMaxRangeM(builder, HAS_MAX_RANGE_M);
+    ACWAccessWindow.addHasMinRangeM(builder, HAS_MIN_RANGE_M);
+    ACWAccessWindow.addHasEndLimitingConstraintIndex(builder, HAS_END_LIMITING_CONSTRAINT_INDEX);
+    ACWAccessWindow.addHasStartLimitingConstraintIndex(builder, HAS_START_LIMITING_CONSTRAINT_INDEX);
+    ACWAccessWindow.addHasSampleCount(builder, HAS_SAMPLE_COUNT);
+    ACWAccessWindow.addHasMaxElevationRad(builder, HAS_MAX_ELEVATION_RAD);
+    ACWAccessWindow.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+    ACWAccessWindow.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
     ACWAccessWindow.addEdgesRefined(builder, EDGES_REFINED);
     return ACWAccessWindow.endACWAccessWindow(builder);
   }
 
-  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addStationId(FlatBufferBuilder builder, int STATION_IDOffset) { builder.addOffset(0, STATION_IDOffset, 0); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(1, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(2, END_JULIAN_DATE_TT, 0.0); }
@@ -128,6 +160,15 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
   public static void addMinRangeM(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.addDouble(10, MIN_RANGE_M, 0.0); }
   public static void addMaxRangeM(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.addDouble(11, MAX_RANGE_M, 0.0); }
   public static void addEdgesRefined(FlatBufferBuilder builder, boolean EDGES_REFINED) { builder.addBoolean(12, EDGES_REFINED, false); }
+  public static void addHasStartJulianDateTt(FlatBufferBuilder builder, boolean HAS_START_JULIAN_DATE_TT) { builder.addBoolean(13, HAS_START_JULIAN_DATE_TT, false); }
+  public static void addHasEndJulianDateTt(FlatBufferBuilder builder, boolean HAS_END_JULIAN_DATE_TT) { builder.addBoolean(14, HAS_END_JULIAN_DATE_TT, false); }
+  public static void addHasMaxElevationRad(FlatBufferBuilder builder, boolean HAS_MAX_ELEVATION_RAD) { builder.addBoolean(15, HAS_MAX_ELEVATION_RAD, false); }
+  public static void addHasSampleCount(FlatBufferBuilder builder, boolean HAS_SAMPLE_COUNT) { builder.addBoolean(16, HAS_SAMPLE_COUNT, false); }
+  public static void addHasStartLimitingConstraintIndex(FlatBufferBuilder builder, boolean HAS_START_LIMITING_CONSTRAINT_INDEX) { builder.addBoolean(17, HAS_START_LIMITING_CONSTRAINT_INDEX, false); }
+  public static void addHasEndLimitingConstraintIndex(FlatBufferBuilder builder, boolean HAS_END_LIMITING_CONSTRAINT_INDEX) { builder.addBoolean(18, HAS_END_LIMITING_CONSTRAINT_INDEX, false); }
+  public static void addHasMinRangeM(FlatBufferBuilder builder, boolean HAS_MIN_RANGE_M) { builder.addBoolean(19, HAS_MIN_RANGE_M, false); }
+  public static void addHasMaxRangeM(FlatBufferBuilder builder, boolean HAS_MAX_RANGE_M) { builder.addBoolean(20, HAS_MAX_RANGE_M, false); }
+  public static void addHasEdgesRefined(FlatBufferBuilder builder, boolean HAS_EDGES_REFINED) { builder.addBoolean(21, HAS_EDGES_REFINED, false); }
   public static int endACWAccessWindow(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

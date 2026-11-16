@@ -52,4 +52,5 @@ public enum RecordTypeExtended : ushort
   SWA = 293,
   SWS = 294,
   SSY = 295,
+  CLG = 296,
 };

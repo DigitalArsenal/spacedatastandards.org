@@ -21,19 +21,28 @@ public struct ACWElevationMaskPoint : IFlatbufferObject
   public double AZIMUTH_RAD { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Minimum visible elevation at the azimuth, radians.
   public double ELEVATION_RAD { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_AZIMUTH_RAD { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_ELEVATION_RAD { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWElevationMaskPoint> CreateACWElevationMaskPoint(FlatBufferBuilder builder,
       double AZIMUTH_RAD = 0.0,
-      double ELEVATION_RAD = 0.0) {
-    builder.StartTable(2);
+      double ELEVATION_RAD = 0.0,
+      bool HAS_AZIMUTH_RAD = false,
+      bool HAS_ELEVATION_RAD = false) {
+    builder.StartTable(4);
     ACWElevationMaskPoint.AddELEVATION_RAD(builder, ELEVATION_RAD);
     ACWElevationMaskPoint.AddAZIMUTH_RAD(builder, AZIMUTH_RAD);
+    ACWElevationMaskPoint.AddHAS_ELEVATION_RAD(builder, HAS_ELEVATION_RAD);
+    ACWElevationMaskPoint.AddHAS_AZIMUTH_RAD(builder, HAS_AZIMUTH_RAD);
     return ACWElevationMaskPoint.EndACWElevationMaskPoint(builder);
   }
 
-  public static void StartACWElevationMaskPoint(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartACWElevationMaskPoint(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddAZIMUTH_RAD(FlatBufferBuilder builder, double AZIMUTH_RAD) { builder.AddDouble(0, AZIMUTH_RAD, 0.0); }
   public static void AddELEVATION_RAD(FlatBufferBuilder builder, double ELEVATION_RAD) { builder.AddDouble(1, ELEVATION_RAD, 0.0); }
+  public static void AddHAS_AZIMUTH_RAD(FlatBufferBuilder builder, bool HAS_AZIMUTH_RAD) { builder.AddBool(2, HAS_AZIMUTH_RAD, false); }
+  public static void AddHAS_ELEVATION_RAD(FlatBufferBuilder builder, bool HAS_ELEVATION_RAD) { builder.AddBool(3, HAS_ELEVATION_RAD, false); }
   public static Offset<ACWElevationMaskPoint> EndACWElevationMaskPoint(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWElevationMaskPoint>(o);
@@ -46,13 +55,17 @@ public struct ACWElevationMaskPoint : IFlatbufferObject
   public void UnPackTo(ACWElevationMaskPointT _o) {
     _o.AZIMUTH_RAD = this.AZIMUTH_RAD;
     _o.ELEVATION_RAD = this.ELEVATION_RAD;
+    _o.HAS_AZIMUTH_RAD = this.HAS_AZIMUTH_RAD;
+    _o.HAS_ELEVATION_RAD = this.HAS_ELEVATION_RAD;
   }
   public static Offset<ACWElevationMaskPoint> Pack(FlatBufferBuilder builder, ACWElevationMaskPointT _o) {
     if (_o == null) return default(Offset<ACWElevationMaskPoint>);
     return CreateACWElevationMaskPoint(
       builder,
       _o.AZIMUTH_RAD,
-      _o.ELEVATION_RAD);
+      _o.ELEVATION_RAD,
+      _o.HAS_AZIMUTH_RAD,
+      _o.HAS_ELEVATION_RAD);
   }
 }
 
@@ -60,10 +73,14 @@ public class ACWElevationMaskPointT
 {
   public double AZIMUTH_RAD { get; set; }
   public double ELEVATION_RAD { get; set; }
+  public bool HAS_AZIMUTH_RAD { get; set; }
+  public bool HAS_ELEVATION_RAD { get; set; }
 
   public ACWElevationMaskPointT() {
     this.AZIMUTH_RAD = 0.0;
     this.ELEVATION_RAD = 0.0;
+    this.HAS_AZIMUTH_RAD = false;
+    this.HAS_ELEVATION_RAD = false;
   }
 }
 
@@ -75,6 +92,8 @@ static public class ACWElevationMaskPointVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*AZIMUTH_RAD*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 6 /*ELEVATION_RAD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*HAS_AZIMUTH_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*HAS_ELEVATION_RAD*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

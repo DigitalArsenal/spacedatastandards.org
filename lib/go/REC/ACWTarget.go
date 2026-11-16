@@ -88,7 +88,7 @@ func (rcv *ACWTarget) ObjectId() []byte {
 }
 
 /// International designator.
-/// Truth Earth-fixed states with velocity, in the frame and time scale of
+/// Truth central-body-fixed states with velocity, in the frame and time scale of
 /// ACWRequest.STATES.
 func (rcv *ACWTarget) STATES(obj *ACWStateSample, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -121,7 +121,7 @@ func (rcv *ACWTarget) StatesLength() int {
 	return rcv.STATESLength()
 }
 
-/// Truth Earth-fixed states with velocity, in the frame and time scale of
+/// Truth central-body-fixed states with velocity, in the frame and time scale of
 /// ACWRequest.STATES.
 func (rcv *ACWTarget) SIGNATURE(obj *ACWTargetSignature) *ACWTargetSignature {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -140,8 +140,30 @@ func (rcv *ACWTarget) Signature(obj *ACWTargetSignature) *ACWTargetSignature {
 	return rcv.SIGNATURE(obj)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTarget) HAS_NORAD_CAT_ID() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTarget) HasNoradCatId() bool {
+	return rcv.HAS_NORAD_CAT_ID()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTarget) MutateHAS_NORAD_CAT_ID(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *ACWTarget) MutateHasNoradCatId(n bool) bool {
+	return rcv.MutateHAS_NORAD_CAT_ID(n)
+}
+
 func ACWTargetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(6)
 }
 func ACWTargetAddTARGET_ID(builder *flatbuffers.Builder, TARGET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TARGET_ID), 0)
@@ -178,6 +200,12 @@ func ACWTargetAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.U
 }
 func ACWTargetAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	ACWTargetAddSIGNATURE(builder, SIGNATURE)
+}
+func ACWTargetAddHAS_NORAD_CAT_ID(builder *flatbuffers.Builder, HAS_NORAD_CAT_ID bool) {
+	builder.PrependBoolSlot(5, HAS_NORAD_CAT_ID, false)
+}
+func ACWTargetAddHasNoradCatId(builder *flatbuffers.Builder, HAS_NORAD_CAT_ID bool) {
+	ACWTargetAddHAS_NORAD_CAT_ID(builder, HAS_NORAD_CAT_ID)
 }
 func ACWTargetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

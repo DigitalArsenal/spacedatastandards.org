@@ -94,8 +94,16 @@ class ACWConstraintSet(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWConstraintSet
+    def HAS_OPERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWConstraintSetStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     ACWConstraintSetStart(builder)
@@ -148,6 +156,12 @@ def ACWConstraintSetAddLABEL(builder, LABEL):
 def AddLABEL(builder, LABEL):
     ACWConstraintSetAddLABEL(builder, LABEL)
 
+def ACWConstraintSetAddHAS_OPERATOR(builder, HAS_OPERATOR):
+    builder.PrependBoolSlot(4, HAS_OPERATOR, 0)
+
+def AddHAS_OPERATOR(builder, HAS_OPERATOR):
+    ACWConstraintSetAddHAS_OPERATOR(builder, HAS_OPERATOR)
+
 def ACWConstraintSetEnd(builder):
     return builder.EndObject()
 
@@ -169,11 +183,13 @@ class ACWConstraintSetT(object):
         CONSTRAINTS = None,
         SETS = None,
         LABEL = None,
+        HAS_OPERATOR = False,
     ):
         self.OPERATOR = OPERATOR  # type: int
         self.CONSTRAINTS = CONSTRAINTS  # type: Optional[List[ACWConstraint.ACWConstraintT]]
         self.SETS = SETS  # type: Optional[List[ACWConstraintSet.ACWConstraintSetT]]
         self.LABEL = LABEL  # type: Optional[str]
+        self.HAS_OPERATOR = HAS_OPERATOR  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -214,6 +230,7 @@ class ACWConstraintSetT(object):
                     aCWConstraintSet_ = ACWConstraintSet.ACWConstraintSetT.InitFromObj(ACWConstraintSet.SETS(i))
                     self.SETS.append(aCWConstraintSet_)
         self.LABEL = ACWConstraintSet.LABEL()
+        self.HAS_OPERATOR = ACWConstraintSet.HAS_OPERATOR()
 
     # ACWConstraintSetT
     def Pack(self, builder):
@@ -243,5 +260,6 @@ class ACWConstraintSetT(object):
             ACWConstraintSetAddSETS(builder, SETS)
         if self.LABEL is not None:
             ACWConstraintSetAddLABEL(builder, LABEL)
+        ACWConstraintSetAddHAS_OPERATOR(builder, self.HAS_OPERATOR)
         ACWConstraintSet = ACWConstraintSetEnd(builder)
         return ACWConstraintSet

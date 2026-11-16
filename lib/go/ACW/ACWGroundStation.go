@@ -110,7 +110,11 @@ func (rcv *ACWGroundStation) MutateLongitudeRad(n float64) bool {
 	return rcv.MutateLONGITUDE_RAD(n)
 }
 
-/// Height above the WGS-84 ellipsoid, meters.
+/// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+/// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+/// finite segment blocks; tangent contact is clear. At height <= 0, including
+/// zero, use the supporting plane, without an own-ellipsoid intersection test.
+/// The user elevation mask and supplied terrain apply separately at all heights.
 func (rcv *ACWGroundStation) ALTITUDE_M() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -123,7 +127,11 @@ func (rcv *ACWGroundStation) AltitudeM() float64 {
 	return rcv.ALTITUDE_M()
 }
 
-/// Height above the WGS-84 ellipsoid, meters.
+/// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+/// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+/// finite segment blocks; tangent contact is clear. At height <= 0, including
+/// zero, use the supporting plane, without an own-ellipsoid intersection test.
+/// The user elevation mask and supplied terrain apply separately at all heights.
 func (rcv *ACWGroundStation) MutateALTITUDE_M(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -132,7 +140,7 @@ func (rcv *ACWGroundStation) MutateAltitudeM(n float64) bool {
 	return rcv.MutateALTITUDE_M(n)
 }
 
-/// Default minimum visible elevation, radians.
+/// Explicit minimum visible elevation, radians; HAS flag required.
 func (rcv *ACWGroundStation) MIN_ELEVATION_RAD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -145,7 +153,7 @@ func (rcv *ACWGroundStation) MinElevationRad() float64 {
 	return rcv.MIN_ELEVATION_RAD()
 }
 
-/// Default minimum visible elevation, radians.
+/// Explicit minimum visible elevation, radians; HAS flag required.
 func (rcv *ACWGroundStation) MutateMIN_ELEVATION_RAD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -209,8 +217,110 @@ func (rcv *ACWGroundStation) BlackoutWindowsLength() int {
 }
 
 /// Station-specific unavailable intervals.
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWGroundStation) HAS_LATITUDE_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWGroundStation) HasLatitudeRad() bool {
+	return rcv.HAS_LATITUDE_RAD()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWGroundStation) MutateHAS_LATITUDE_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWGroundStation) MutateHasLatitudeRad(n bool) bool {
+	return rcv.MutateHAS_LATITUDE_RAD(n)
+}
+
+func (rcv *ACWGroundStation) HAS_LONGITUDE_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWGroundStation) HasLongitudeRad() bool {
+	return rcv.HAS_LONGITUDE_RAD()
+}
+
+func (rcv *ACWGroundStation) MutateHAS_LONGITUDE_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWGroundStation) MutateHasLongitudeRad(n bool) bool {
+	return rcv.MutateHAS_LONGITUDE_RAD(n)
+}
+
+func (rcv *ACWGroundStation) HAS_ALTITUDE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWGroundStation) HasAltitudeM() bool {
+	return rcv.HAS_ALTITUDE_M()
+}
+
+func (rcv *ACWGroundStation) MutateHAS_ALTITUDE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ACWGroundStation) MutateHasAltitudeM(n bool) bool {
+	return rcv.MutateHAS_ALTITUDE_M(n)
+}
+
+func (rcv *ACWGroundStation) HAS_MIN_ELEVATION_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWGroundStation) HasMinElevationRad() bool {
+	return rcv.HAS_MIN_ELEVATION_RAD()
+}
+
+func (rcv *ACWGroundStation) MutateHAS_MIN_ELEVATION_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *ACWGroundStation) MutateHasMinElevationRad(n bool) bool {
+	return rcv.MutateHAS_MIN_ELEVATION_RAD(n)
+}
+
+func (rcv *ACWGroundStation) HAS_CHANNEL_CAPACITY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWGroundStation) HasChannelCapacity() bool {
+	return rcv.HAS_CHANNEL_CAPACITY()
+}
+
+func (rcv *ACWGroundStation) MutateHAS_CHANNEL_CAPACITY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *ACWGroundStation) MutateHasChannelCapacity(n bool) bool {
+	return rcv.MutateHAS_CHANNEL_CAPACITY(n)
+}
+
 func ACWGroundStationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(13)
 }
 func ACWGroundStationAddSTATION_ID(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATION_ID), 0)
@@ -265,6 +375,36 @@ func ACWGroundStationStartBLACKOUT_WINDOWSVector(builder *flatbuffers.Builder, n
 }
 func ACWGroundStationStartBlackoutWindowsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACWGroundStationStartBLACKOUT_WINDOWSVector(builder, numElems)
+}
+func ACWGroundStationAddHAS_LATITUDE_RAD(builder *flatbuffers.Builder, HAS_LATITUDE_RAD bool) {
+	builder.PrependBoolSlot(8, HAS_LATITUDE_RAD, false)
+}
+func ACWGroundStationAddHasLatitudeRad(builder *flatbuffers.Builder, HAS_LATITUDE_RAD bool) {
+	ACWGroundStationAddHAS_LATITUDE_RAD(builder, HAS_LATITUDE_RAD)
+}
+func ACWGroundStationAddHAS_LONGITUDE_RAD(builder *flatbuffers.Builder, HAS_LONGITUDE_RAD bool) {
+	builder.PrependBoolSlot(9, HAS_LONGITUDE_RAD, false)
+}
+func ACWGroundStationAddHasLongitudeRad(builder *flatbuffers.Builder, HAS_LONGITUDE_RAD bool) {
+	ACWGroundStationAddHAS_LONGITUDE_RAD(builder, HAS_LONGITUDE_RAD)
+}
+func ACWGroundStationAddHAS_ALTITUDE_M(builder *flatbuffers.Builder, HAS_ALTITUDE_M bool) {
+	builder.PrependBoolSlot(10, HAS_ALTITUDE_M, false)
+}
+func ACWGroundStationAddHasAltitudeM(builder *flatbuffers.Builder, HAS_ALTITUDE_M bool) {
+	ACWGroundStationAddHAS_ALTITUDE_M(builder, HAS_ALTITUDE_M)
+}
+func ACWGroundStationAddHAS_MIN_ELEVATION_RAD(builder *flatbuffers.Builder, HAS_MIN_ELEVATION_RAD bool) {
+	builder.PrependBoolSlot(11, HAS_MIN_ELEVATION_RAD, false)
+}
+func ACWGroundStationAddHasMinElevationRad(builder *flatbuffers.Builder, HAS_MIN_ELEVATION_RAD bool) {
+	ACWGroundStationAddHAS_MIN_ELEVATION_RAD(builder, HAS_MIN_ELEVATION_RAD)
+}
+func ACWGroundStationAddHAS_CHANNEL_CAPACITY(builder *flatbuffers.Builder, HAS_CHANNEL_CAPACITY bool) {
+	builder.PrependBoolSlot(12, HAS_CHANNEL_CAPACITY, false)
+}
+func ACWGroundStationAddHasChannelCapacity(builder *flatbuffers.Builder, HAS_CHANNEL_CAPACITY bool) {
+	ACWGroundStationAddHAS_CHANNEL_CAPACITY(builder, HAS_CHANNEL_CAPACITY)
 }
 func ACWGroundStationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

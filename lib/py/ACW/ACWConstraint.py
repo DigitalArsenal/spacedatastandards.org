@@ -67,8 +67,8 @@ class ACWConstraint(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Central-body radius offset for line-of-sight occultation, meters
-    # (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+    # Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+    # LOS only; not geodetic altitude. Never applied to a surface-station pair.
     # ACWConstraint
     def OCCULTATION_ATMOSPHERE_HEIGHT_M(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -110,8 +110,51 @@ class ACWConstraint(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWConstraint
+    def HAS_KIND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWConstraint
+    def HAS_THRESHOLD_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWConstraint
+    def HAS_MIN_RANGE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWConstraint
+    def HAS_MAX_RANGE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWConstraint
+    def HAS_LIGHTING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWConstraint
+    def HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWConstraintStart(builder):
-    builder.StartObject(8)
+    builder.StartObject(14)
 
 def Start(builder):
     ACWConstraintStart(builder)
@@ -176,6 +219,42 @@ def ACWConstraintAddLABEL(builder, LABEL):
 def AddLABEL(builder, LABEL):
     ACWConstraintAddLABEL(builder, LABEL)
 
+def ACWConstraintAddHAS_KIND(builder, HAS_KIND):
+    builder.PrependBoolSlot(8, HAS_KIND, 0)
+
+def AddHAS_KIND(builder, HAS_KIND):
+    ACWConstraintAddHAS_KIND(builder, HAS_KIND)
+
+def ACWConstraintAddHAS_THRESHOLD_RAD(builder, HAS_THRESHOLD_RAD):
+    builder.PrependBoolSlot(9, HAS_THRESHOLD_RAD, 0)
+
+def AddHAS_THRESHOLD_RAD(builder, HAS_THRESHOLD_RAD):
+    ACWConstraintAddHAS_THRESHOLD_RAD(builder, HAS_THRESHOLD_RAD)
+
+def ACWConstraintAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M):
+    builder.PrependBoolSlot(10, HAS_MIN_RANGE_M, 0)
+
+def AddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M):
+    ACWConstraintAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M)
+
+def ACWConstraintAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M):
+    builder.PrependBoolSlot(11, HAS_MAX_RANGE_M, 0)
+
+def AddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M):
+    ACWConstraintAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M)
+
+def ACWConstraintAddHAS_LIGHTING(builder, HAS_LIGHTING):
+    builder.PrependBoolSlot(12, HAS_LIGHTING, 0)
+
+def AddHAS_LIGHTING(builder, HAS_LIGHTING):
+    ACWConstraintAddHAS_LIGHTING(builder, HAS_LIGHTING)
+
+def ACWConstraintAddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M):
+    builder.PrependBoolSlot(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, 0)
+
+def AddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M):
+    ACWConstraintAddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M)
+
 def ACWConstraintEnd(builder):
     return builder.EndObject()
 
@@ -201,6 +280,12 @@ class ACWConstraintT(object):
         OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
         MASK = None,
         LABEL = None,
+        HAS_KIND = False,
+        HAS_THRESHOLD_RAD = False,
+        HAS_MIN_RANGE_M = False,
+        HAS_MAX_RANGE_M = False,
+        HAS_LIGHTING = False,
+        HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = False,
     ):
         self.KIND = KIND  # type: int
         self.THRESHOLD_RAD = THRESHOLD_RAD  # type: float
@@ -210,6 +295,12 @@ class ACWConstraintT(object):
         self.OCCULTATION_ATMOSPHERE_HEIGHT_M = OCCULTATION_ATMOSPHERE_HEIGHT_M  # type: float
         self.MASK = MASK  # type: Optional[List[ACWElevationMaskPoint.ACWElevationMaskPointT]]
         self.LABEL = LABEL  # type: Optional[str]
+        self.HAS_KIND = HAS_KIND  # type: bool
+        self.HAS_THRESHOLD_RAD = HAS_THRESHOLD_RAD  # type: bool
+        self.HAS_MIN_RANGE_M = HAS_MIN_RANGE_M  # type: bool
+        self.HAS_MAX_RANGE_M = HAS_MAX_RANGE_M  # type: bool
+        self.HAS_LIGHTING = HAS_LIGHTING  # type: bool
+        self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -247,6 +338,12 @@ class ACWConstraintT(object):
                     aCWElevationMaskPoint_ = ACWElevationMaskPoint.ACWElevationMaskPointT.InitFromObj(ACWConstraint.MASK(i))
                     self.MASK.append(aCWElevationMaskPoint_)
         self.LABEL = ACWConstraint.LABEL()
+        self.HAS_KIND = ACWConstraint.HAS_KIND()
+        self.HAS_THRESHOLD_RAD = ACWConstraint.HAS_THRESHOLD_RAD()
+        self.HAS_MIN_RANGE_M = ACWConstraint.HAS_MIN_RANGE_M()
+        self.HAS_MAX_RANGE_M = ACWConstraint.HAS_MAX_RANGE_M()
+        self.HAS_LIGHTING = ACWConstraint.HAS_LIGHTING()
+        self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = ACWConstraint.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M()
 
     # ACWConstraintT
     def Pack(self, builder):
@@ -271,5 +368,11 @@ class ACWConstraintT(object):
             ACWConstraintAddMASK(builder, MASK)
         if self.LABEL is not None:
             ACWConstraintAddLABEL(builder, LABEL)
+        ACWConstraintAddHAS_KIND(builder, self.HAS_KIND)
+        ACWConstraintAddHAS_THRESHOLD_RAD(builder, self.HAS_THRESHOLD_RAD)
+        ACWConstraintAddHAS_MIN_RANGE_M(builder, self.HAS_MIN_RANGE_M)
+        ACWConstraintAddHAS_MAX_RANGE_M(builder, self.HAS_MAX_RANGE_M)
+        ACWConstraintAddHAS_LIGHTING(builder, self.HAS_LIGHTING)
+        ACWConstraintAddHAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(builder, self.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M)
         ACWConstraint = ACWConstraintEnd(builder)
         return ACWConstraint

@@ -181,9 +181,45 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "IAU_2000A", "IAU_2000B", "IAU_2006"]
     },
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", "GALACTIC"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
     "acwOperationCode" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS", "SIMULATE_OBSERVATIONS"]
+      "enum": ["UNKNOWN", "COMPUTE_ACCESS_WINDOWS", "SIMULATE_OBSERVATIONS", "COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY", "SIMULATE_OBSERVATIONS_EXPLICIT_BODY"]
     },
     "acwResultStatus" : {
       "type" : "string",
@@ -489,42 +525,6 @@
       "type" : "string",
       "enum": ["User", "Node"]
     },
-    "CelestialFrame" : {
-      "type" : "string",
-      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
-    },
-    "SpacecraftFrame" : {
-      "type" : "string",
-      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
-    },
-    "OrbitFrame" : {
-      "type" : "string",
-      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
-    },
-    "CustomFrame" : {
-      "type" : "string",
-      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
-    },
-    "rfmAxisType" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", "GALACTIC"]
-    },
-    "rfmOriginKind" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER"]
-    },
-    "rfmLibrationPoint" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
-    },
-    "rfmVectorSpecification" : {
-      "type" : "string",
-      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
-    },
-    "RFMUnion" : {
-      "type" : "string",
-      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
-    },
     "screeningVolumeShape" : {
       "type" : "string",
       "enum": ["ELLIPSOID", "BOX"]
@@ -560,6 +560,146 @@
     "transmissionClass" : {
       "type" : "string",
       "enum": ["ACKNOWLEDGED", "UNACKNOWLEDGED"]
+    },
+    "scvEnvelopeKind" : {
+      "type" : "string",
+      "enum": ["REQUEST", "RESULT", "PROGRESS", "CANCEL", "GEOMETRY"]
+    },
+    "scvAnalysisMode" : {
+      "type" : "string",
+      "enum": ["COVERAGE", "ACCESS", "SWATH", "COMBINED"]
+    },
+    "scvCoordinateFrame" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM", "SENSOR_LOCAL"]
+    },
+    "scvBodyKind" : {
+      "type" : "string",
+      "enum": ["EARTH", "MOON", "MARS", "CUSTOM"]
+    },
+    "scvSensorShapeKind" : {
+      "type" : "string",
+      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR"]
+    },
+    "scvSensorAxisConvention" : {
+      "type" : "string",
+      "enum": ["LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"]
+    },
+    "scvSensorRangeBoundaryKind" : {
+      "type" : "string",
+      "enum": ["RADIAL_SPHERICAL", "LOCAL_Z_PLANE"]
+    },
+    "scvGeometryDomain" : {
+      "type" : "string",
+      "enum": ["SURFACE", "SPACE", "ELLIPSOID", "PLANE", "CUSTOM_MESH"]
+    },
+    "scvTargetShape" : {
+      "type" : "string",
+      "enum": ["POINT", "POLYGON", "RECTANGLE", "BOX", "SPHERE", "EXTRUDED_POLYGON"]
+    },
+    "scvResultState" : {
+      "type" : "string",
+      "enum": ["OK", "PARTIAL", "CANCELLED", "FAILED"]
+    },
+    "scvMetricSeriesKind" : {
+      "type" : "string",
+      "enum": ["PERCENT_COVERED", "COVERED_CELL_COUNT", "ACCESS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "OVERLAP_COUNT", "LATITUDE_BAND_COVERAGE"]
+    },
+    "scvGeometryEncoding" : {
+      "type" : "string",
+      "enum": ["FLAT_FLOAT32", "INTERLEAVED_FLOAT32", "QUANTIZED_UINT16", "SHARED_MEMORY_OFFSET"]
+    },
+    "scvRasterProductKind" : {
+      "type" : "string",
+      "enum": ["CELL_BOUNDS_DEG", "CELL_CENTERS_DEG", "PERCENT_COVERAGE", "PASS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "CURRENT_ACCESS_BITSET", "BUCKET_START_SECONDS", "BUCKET_STOP_SECONDS", "BUCKET_ACTIVE_CELL_COUNT", "PASS_COUNT_RGBA", "CURRENT_ACCESS_RGBA", "LATITUDE_BAND_COVERAGE", "BUCKET_PASS_START_COUNT", "WINDOW_START_ACCESS_BITSET", "WINDOW_STOP_ACCESS_BITSET"]
+    },
+    "scvRasterProductEncoding" : {
+      "type" : "string",
+      "enum": ["FLOAT32", "FLOAT64", "UINT32", "BITSET_UINT32", "UINT8"]
+    },
+    "clgPayloadClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DEFINITION", "STATE_BLOCK", "RESULT"]
+    },
+    "clgNodeCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPACECRAFT", "SURFACE_STATION"]
+    },
+    "clgTerminalMedium" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RF", "OPTICAL"]
+    },
+    "clgTerminalCapability" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TRANSMIT", "RECEIVE", "TRANSMIT_RECEIVE"]
+    },
+    "clgLinkDirection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "BIDIRECTIONAL", "A_TO_B", "B_TO_A"]
+    },
+    "clgRayDirection" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SIMULTANEOUS", "A_TO_B", "B_TO_A"]
+    },
+    "clgSteeringClass" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MECHANICAL", "FIXED_BEAM", "ELECTRONIC"]
+    },
+    "clgPointingArchitecture" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "COMMON_AXIS", "SPLIT_TX_RX"]
+    },
+    "clgRegardGeometry" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ALL_DIRECTIONS", "SCV_SHAPE"]
+    },
+    "clgSourceCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELEMENTS", "SAMPLED_STATES", "BODY_EPHEMERIS", "FIXED_SITE"]
+    },
+    "clgOwnerCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NODE", "BODY"]
+    },
+    "clgAttitudeLaw" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SUPPLIED_SERIES", "NADIR_LVLH", "INERTIALLY_FIXED", "STATION_ENU"]
+    },
+    "clgElevationGate" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NONE", "MIN_ELEVATION"]
+    },
+    "clgPropagationTiming" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SIMULTANEOUS", "RETARDED_VACUUM"]
+    },
+    "clgClearanceMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELLIPSOID_AXIS_OFFSET", "TERRAIN"]
+    },
+    "clgSelectionPolicy" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RETAIN_THEN_GREEDY"]
+    },
+    "clgComputationState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACCEPTED", "COMPLETE", "FAILED", "CANCELLED"]
+    },
+    "clgAnalysisScope" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GEOMETRIC_TERMINAL_FEASIBILITY"]
+    },
+    "clgSnapshotOrigin" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "REQUESTED", "EVENT", "TOPOLOGY"]
+    },
+    "clgBoundaryCause" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPAN_BOUNDARY", "OCCULTATION", "RANGE_NEAR", "RANGE_FAR", "REGARD_A", "REGARD_B", "RATE_A", "RATE_B", "ACCELERATION_A", "ACCELERATION_B", "ELEVATION_A", "ELEVATION_B", "BLACKOUT", "ACQUISITION", "POINT_AHEAD_A", "POINT_AHEAD_B", "HORIZON_A", "HORIZON_B", "TERRAIN_A", "TERRAIN_B"]
+    },
+    "clgTransitionStage" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SLEW", "ACQUIRE", "ACTIVE", "DRAIN", "RELEASE"]
     },
     "clmObjectKind" : {
       "type" : "string",
@@ -2409,62 +2549,6 @@
       "type" : "string",
       "enum": ["FiniteSupport", "EllipsoidalKernel"]
     },
-    "scvEnvelopeKind" : {
-      "type" : "string",
-      "enum": ["REQUEST", "RESULT", "PROGRESS", "CANCEL", "GEOMETRY"]
-    },
-    "scvAnalysisMode" : {
-      "type" : "string",
-      "enum": ["COVERAGE", "ACCESS", "SWATH", "COMBINED"]
-    },
-    "scvCoordinateFrame" : {
-      "type" : "string",
-      "enum": ["UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM", "SENSOR_LOCAL"]
-    },
-    "scvBodyKind" : {
-      "type" : "string",
-      "enum": ["EARTH", "MOON", "MARS", "CUSTOM"]
-    },
-    "scvSensorShapeKind" : {
-      "type" : "string",
-      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR"]
-    },
-    "scvSensorAxisConvention" : {
-      "type" : "string",
-      "enum": ["LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"]
-    },
-    "scvSensorRangeBoundaryKind" : {
-      "type" : "string",
-      "enum": ["RADIAL_SPHERICAL", "LOCAL_Z_PLANE"]
-    },
-    "scvGeometryDomain" : {
-      "type" : "string",
-      "enum": ["SURFACE", "SPACE", "ELLIPSOID", "PLANE", "CUSTOM_MESH"]
-    },
-    "scvTargetShape" : {
-      "type" : "string",
-      "enum": ["POINT", "POLYGON", "RECTANGLE", "BOX", "SPHERE", "EXTRUDED_POLYGON"]
-    },
-    "scvResultState" : {
-      "type" : "string",
-      "enum": ["OK", "PARTIAL", "CANCELLED", "FAILED"]
-    },
-    "scvMetricSeriesKind" : {
-      "type" : "string",
-      "enum": ["PERCENT_COVERED", "COVERED_CELL_COUNT", "ACCESS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "OVERLAP_COUNT", "LATITUDE_BAND_COVERAGE"]
-    },
-    "scvGeometryEncoding" : {
-      "type" : "string",
-      "enum": ["FLAT_FLOAT32", "INTERLEAVED_FLOAT32", "QUANTIZED_UINT16", "SHARED_MEMORY_OFFSET"]
-    },
-    "scvRasterProductKind" : {
-      "type" : "string",
-      "enum": ["CELL_BOUNDS_DEG", "CELL_CENTERS_DEG", "PERCENT_COVERAGE", "PASS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "CURRENT_ACCESS_BITSET", "BUCKET_START_SECONDS", "BUCKET_STOP_SECONDS", "BUCKET_ACTIVE_CELL_COUNT", "PASS_COUNT_RGBA", "CURRENT_ACCESS_RGBA", "LATITUDE_BAND_COVERAGE", "BUCKET_PASS_START_COUNT", "WINDOW_START_ACCESS_BITSET", "WINDOW_STOP_ACCESS_BITSET"]
-    },
-    "scvRasterProductEncoding" : {
-      "type" : "string",
-      "enum": ["FLOAT32", "FLOAT64", "UINT32", "BITSET_UINT32", "UINT8"]
-    },
     "sdfPrimitive" : {
       "type" : "string",
       "enum": ["CONE", "RECTANGULAR", "SPHERE", "CYLINDER", "CUSTOM"]
@@ -3155,7 +3239,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS", "SSY"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS", "SSY", "CLG"]
     },
     "ABA" : {
       "type" : "object",
@@ -6514,9 +6598,340 @@
       },
       "additionalProperties" : false
     },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              },
+        "GALCEN_RA_DEG" : {
+                "type" : "number",
+                "description" : "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DEC_DEG" : {
+                "type" : "number",
+                "description" : "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DISTANCE_PC" : {
+                "type" : "number",
+                "description" : "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10)."
+              },
+        "Z_SUN_PC" : {
+                "type" : "number",
+                "description" : "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417)."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default."
+              },
+        "V_SUN_KMS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "BodyRecordRef" : {
+      "type" : "object",
+      "description" : "Immutable reference. STANDARD matches REC.standard (e.g. \"DTT\", no \"$\"),\nor \"MODEL\" for a manifest. SHA256 is 64 lowercase hexadecimal characters.\nHash exact standalone root bytes WITHOUT size prefix, WITH file identifier;\nMODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.\nRECORD_ID is the selector specified in docs/clg-contract.md section 2; \"root\" selects\nthe complete root. URI is advisory and never fetched by a module.",
+      "properties" : {
+        "STANDARD" : {
+                "type" : "string"
+              },
+        "RECORD_ID" : {
+                "type" : "string"
+              },
+        "SHA256" : {
+                "type" : "string"
+              },
+        "URI" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["STANDARD", "RECORD_ID", "SHA256"],
+      "additionalProperties" : false
+    },
+    "BodyDescriptor" : {
+      "type" : "object",
+      "description" : "Shared body descriptor, usable by ACW, CLG and future SCV revisions.\nNo absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.\nSCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.",
+      "properties" : {
+        "NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid."
+              },
+        "FIXED_FRAME" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              },
+        "SEMI_AXIS_X_M" : {
+                "type" : "number",
+                "description" : "Each axis requires its HAS flag and a finite positive value."
+              },
+        "SEMI_AXIS_Y_M" : {
+                "type" : "number"
+              },
+        "SEMI_AXIS_Z_M" : {
+                "type" : "number"
+              },
+        "MODEL_ID" : {
+                "type" : "string"
+              },
+        "MODEL_SHA256" : {
+                "type" : "string",
+                "description" : "Exact model-manifest bytes, 64 lowercase hexadecimal characters."
+              },
+        "ATMOSPHERE_MODEL_ID" : {
+                "type" : "string",
+                "description" : "Required explicit assertion, \"NONE\" or a supported model identifier."
+              },
+        "TERRAIN" : {
+                "$ref" : "#/definitions/BodyRecordRef",
+                "description" : "Absent means no terrain supplied; elevation remains mandatory for sites."
+              },
+        "GRAVITY" : {
+                "$ref" : "#/definitions/BodyRecordRef",
+                "description" : "Optional SHC or MODEL reference; its radius is not the shape radius."
+              },
+        "LIGHTING_SPHERE_RADIUS_M" : {
+                "type" : "number",
+                "description" : "True HAS flag, positive radius and name required for non-ANY lighting.\nThis is a named spherical-shadow approximation, not ellipsoidal lighting."
+              },
+        "LIGHTING_MODEL_ID" : {
+                "type" : "string"
+              },
+        "HAS_NAIF_ID" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_SEMI_AXIS_X_M" : {
+                "type" : "boolean"
+              },
+        "HAS_SEMI_AXIS_Y_M" : {
+                "type" : "boolean"
+              },
+        "HAS_SEMI_AXIS_Z_M" : {
+                "type" : "boolean"
+              },
+        "HAS_LIGHTING_SPHERE_RADIUS_M" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["FIXED_FRAME", "MODEL_ID", "MODEL_SHA256", "ATMOSPHERE_MODEL_ID"],
+      "additionalProperties" : false
+    },
     "ACWStateSample" : {
       "type" : "object",
-      "description" : "Target Cartesian state sample in an Earth-fixed frame.",
+      "description" : "Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.",
       "properties" : {
         "JULIAN_DATE_TT" : {
                 "type" : "number",
@@ -6524,25 +6939,47 @@
               },
         "POSITION_X_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed X position, meters."
+                "description" : "Fixed-frame X position, meters."
               },
         "POSITION_Y_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed Y position, meters."
+                "description" : "Fixed-frame Y position, meters."
               },
         "POSITION_Z_M" : {
                 "type" : "number",
-                "description" : "Earth-fixed Z position, meters."
+                "description" : "Fixed-frame Z position, meters."
               },
         "VELOCITY_X_MPS" : {
                 "type" : "number",
-                "description" : "Earth-fixed velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
+                "description" : "Fixed-frame velocity, meters per second. Required for range-rate,\nDoppler and frequency measurements (SIMULATE_OBSERVATIONS)."
               },
         "VELOCITY_Y_MPS" : {
                 "type" : "number"
               },
         "VELOCITY_Z_MPS" : {
                 "type" : "number"
+              },
+        "HAS_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_POSITION_X_M" : {
+                "type" : "boolean"
+              },
+        "HAS_POSITION_Y_M" : {
+                "type" : "boolean"
+              },
+        "HAS_POSITION_Z_M" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_X_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_Y_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_Z_MPS" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6558,6 +6995,13 @@
         "ELEVATION_RAD" : {
                 "type" : "number",
                 "description" : "Minimum visible elevation at the azimuth, radians."
+              },
+        "HAS_AZIMUTH_RAD" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_ELEVATION_RAD" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6576,6 +7020,16 @@
         "TEMPERATURE_K" : {
                 "type" : "number",
                 "description" : "Local temperature in kelvin."
+              },
+        "HAS_MODEL_KIND" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_PRESSURE_PA" : {
+                "type" : "boolean"
+              },
+        "HAS_TEMPERATURE_K" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6591,6 +7045,13 @@
         "END_JULIAN_DATE_TT" : {
                 "type" : "number",
                 "description" : "Interval end as Julian Date in TT."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6615,11 +7076,11 @@
               },
         "ALTITUDE_M" : {
                 "type" : "number",
-                "description" : "Height above the WGS-84 ellipsoid, meters."
+                "description" : "Height along the outward normal of CENTRAL_BODY ellipsoid, meters.\ndocs/clg-contract.md section 4: at height > 0, own-body interior penetration of the\nfinite segment blocks; tangent contact is clear. At height <= 0, including\nzero, use the supporting plane, without an own-ellipsoid intersection test.\nThe user elevation mask and supplied terrain apply separately at all heights."
               },
         "MIN_ELEVATION_RAD" : {
                 "type" : "number",
-                "description" : "Default minimum visible elevation, radians."
+                "description" : "Explicit minimum visible elevation, radians; HAS flag required."
               },
         "CHANNEL_CAPACITY" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -6628,6 +7089,22 @@
         "BLACKOUT_WINDOWS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWBlackoutWindow"},
                 "description" : "Station-specific unavailable intervals."
+              },
+        "HAS_LATITUDE_RAD" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_LONGITUDE_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_ALTITUDE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_CHANNEL_CAPACITY" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6656,7 +7133,7 @@
               },
         "OCCULTATION_ATMOSPHERE_HEIGHT_M" : {
                 "type" : "number",
-                "description" : "Central-body radius offset for line-of-sight occultation, meters\n(LINE_OF_SIGHT); 0 grazes the ellipsoid surface."
+                "description" : "Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space\nLOS only; not geodetic altitude. Never applied to a surface-station pair."
               },
         "MASK" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWElevationMaskPoint"},
@@ -6665,6 +7142,25 @@
         "LABEL" : {
                 "type" : "string",
                 "description" : "Producer label echoed in window attribution."
+              },
+        "HAS_KIND" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_THRESHOLD_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_LIGHTING" : {
+                "type" : "boolean"
+              },
+        "HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6685,13 +7181,17 @@
               },
         "LABEL" : {
                 "type" : "string"
+              },
+        "HAS_OPERATOR" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
               }
       },
       "additionalProperties" : false
     },
     "ACWObserverTrajectory" : {
       "type" : "object",
-      "description" : "A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
+      "description" : "A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in\nthe same frame and time scale as ACWRequest.STATES.",
       "properties" : {
         "OBSERVER_ID" : {
                 "type" : "string"
@@ -6730,6 +7230,22 @@
               },
         "EMITTER_EIRP_DBW" : {
                 "type" : "number"
+              },
+        "HAS_RCS_M2" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_DIAMETER_M" : {
+                "type" : "boolean"
+              },
+        "HAS_GEOMETRIC_ALBEDO" : {
+                "type" : "boolean"
+              },
+        "HAS_EMITTER_FREQUENCY_HZ" : {
+                "type" : "boolean"
+              },
+        "HAS_EMITTER_EIRP_DBW" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6750,10 +7266,14 @@
               },
         "STATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
-                "description" : "Truth Earth-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
+                "description" : "Truth central-body-fixed states with velocity, in the frame and time scale of\nACWRequest.STATES."
               },
         "SIGNATURE" : {
                 "$ref" : "#/definitions/ACWTargetSignature"
+              },
+        "HAS_NORAD_CAT_ID" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
               }
       },
       "additionalProperties" : false
@@ -6790,7 +7310,7 @@
               },
         "REVISIT_INTERVAL_S" : {
                 "type" : "number",
-                "description" : "Shortest time between the end of one track of a target and the start\nof the next, seconds."
+                "description" : "Shortest time between the end of one track of a target and the start\nof the following, seconds."
               },
         "MAX_SIMULTANEOUS_TRACKS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -6832,6 +7352,52 @@
         "TRANSMIT_FREQUENCY_HZ" : {
                 "type" : "number",
                 "description" : "RADAR: transmitted carrier frequency, hertz. A DOPPLER error model\nmeasures the echo's two-way shift relative to it, reported as $RDO\nDOPPLER with DOPPLER_FREQUENCY set to this value."
+              },
+        "HAS_PHENOMENOLOGY" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_OBSERVATION_INTERVAL_S" : {
+                "type" : "boolean"
+              },
+        "HAS_TRACK_DURATION_S" : {
+                "type" : "boolean"
+              },
+        "HAS_REVISIT_INTERVAL_S" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SIMULTANEOUS_TRACKS" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_SNR_DB" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_REFERENCE_RCS_M2" : {
+                "type" : "boolean"
+              },
+        "HAS_DETECTION_THRESHOLD_DB" : {
+                "type" : "boolean"
+              },
+        "HAS_RECEIVER_G_OVER_T_DB_PER_K" : {
+                "type" : "boolean"
+              },
+        "HAS_RECEIVER_BANDWIDTH_HZ" : {
+                "type" : "boolean"
+              },
+        "HAS_LIMITING_MAGNITUDE" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_HOST_SUN_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_FALSE_ALARM_RATE_PER_HOUR" : {
+                "type" : "boolean"
+              },
+        "HAS_TRANSMIT_FREQUENCY_HZ" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6879,6 +7445,19 @@
         "LOSS_REASON" : {
                 "type" : "string",
                 "description" : "Why scheduled observations were not detected (for example \"SNR\",\n\"MAGNITUDE\"); empty when all were."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_SCHEDULED_COUNT" : {
+                "type" : "boolean"
+              },
+        "HAS_DETECTED_COUNT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -6896,7 +7475,7 @@
               },
         "STATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWStateSample"},
-                "description" : "Pre-sampled target Earth-fixed Cartesian states."
+                "description" : "Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME."
               },
         "TARGET_STATION_ID" : {
                 "type" : "string",
@@ -6920,7 +7499,7 @@
               },
         "CONSTRAINTS" : {
                 "$ref" : "#/definitions/ACWConstraintSet",
-                "description" : "Optional constraint composition. When absent the legacy behaviour holds:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required."
+                "description" : "Optional constraint composition. When absent the station constraints apply:\nevery ground station's MIN_ELEVATION_RAD (or the override) plus\nELEVATION_MASK, all required."
               },
         "OBSERVERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/ACWObserverTrajectory"},
@@ -6968,6 +7547,28 @@
               },
         "END_JULIAN_DATE_TT" : {
                 "type" : "number"
+              },
+        "HAS_OPERATION" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_MIN_ELEVATION_OVERRIDE_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_EVALUATION_MODE" : {
+                "type" : "boolean"
+              },
+        "HAS_ROOT_TOLERANCE_S" : {
+                "type" : "boolean"
+              },
+        "HAS_RANDOM_SEED" : {
+                "type" : "boolean"
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -7001,11 +7602,11 @@
               },
         "START_LIMITING_CONSTRAINT_INDEX" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window; -1 when the window starts at the\nfirst sample."
+                "description" : "Index into the flattened, depth-first constraint list of the constraint\nwhose transition opens the window. A clipped start has no limiting\nconstraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present\nindex is nonnegative and in range; the retained wire default is not a sentinel."
               },
         "END_LIMITING_CONSTRAINT_INDEX" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Index of the constraint whose transition closes the window; -1 when the\nwindow ends at the last sample."
+                "description" : "Index of the constraint whose transition closes the window. A clipped end\nhas HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative\nand in range; the retained wire default is not a sentinel."
               },
         "START_LIMITING_CONSTRAINT_LABEL" : {
                 "type" : "string",
@@ -7024,6 +7625,34 @@
         "EDGES_REFINED" : {
                 "type" : "boolean",
                 "description" : "True when edges were root-refined (CONTINUOUS); false when they are samples."
+              },
+        "HAS_START_JULIAN_DATE_TT" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_END_JULIAN_DATE_TT" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_SAMPLE_COUNT" : {
+                "type" : "boolean"
+              },
+        "HAS_START_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_END_LIMITING_CONSTRAINT_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_EDGES_REFINED" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -7060,6 +7689,16 @@
         "OBSERVATION_COUNT" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Observations emitted, including false alarms."
+              },
+        "HAS_STATUS" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_EVALUATION_MODE" : {
+                "type" : "boolean"
+              },
+        "HAS_OBSERVATION_COUNT" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -7073,6 +7712,10 @@
               },
         "RESULT" : {
                 "$ref" : "#/definitions/ACWResult"
+              },
+        "CENTRAL_BODY" : {
+                "$ref" : "#/definitions/BodyDescriptor",
+                "description" : "Appended slot 2. Mandatory in every new request and successful result.\nRequest OPERATION must be 3 (access) or 4 (simulation); old modules reject\nthese codes. Missing body fails acw-body-required; absence never means\nEarth. Operations 1/2 are archival only and are rejected by new runtimes.\nResult must echo the exact descriptor field values, including optional\npresence; requester rejects a missing/different echo. Raw table offsets\nare not identity. Explicit one-time archive conversion is outside runtime."
               }
       },
       "additionalProperties" : false
@@ -11592,250 +12235,6 @@
       },
       "additionalProperties" : false
     },
-    "RFMOrigin" : {
-      "type" : "object",
-      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
-      "properties" : {
-        "KIND" : {
-                "$ref" : "#/definitions/rfmOriginKind"
-              },
-        "CELESTIAL_BODY_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
-              },
-        "BARYCENTRE_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
-              },
-        "LIBRATION_POINT" : {
-                "$ref" : "#/definitions/rfmLibrationPoint",
-                "description" : "Which libration point, when KIND is LIBRATION_POINT."
-              },
-        "LIBRATION_PRIMARY_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code of the libration system primary."
-              },
-        "LIBRATION_SECONDARY_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code of the libration system secondary."
-              },
-        "OBJECT_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
-              },
-        "SITE_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
-              },
-        "SITE_BODY_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code of the body the site sits on."
-              },
-        "SITE_LATITUDE" : {
-                "type" : "number",
-                "description" : "Geodetic latitude of the site, degrees, positive north."
-              },
-        "SITE_LONGITUDE" : {
-                "type" : "number",
-                "description" : "Geodetic longitude of the site, degrees, positive east."
-              },
-        "SITE_ALTITUDE" : {
-                "type" : "number",
-                "description" : "Height of the site above the reference ellipsoid, metres."
-              },
-        "NAME" : {
-                "type" : "string",
-                "description" : "Human-readable label. Descriptive only."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFMObjectReferencedAxes" : {
-      "type" : "object",
-      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
-      "properties" : {
-        "PRIMARY_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "SECONDARY_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "X_AXIS" : {
-                "$ref" : "#/definitions/rfmVectorSpecification"
-              },
-        "Y_AXIS" : {
-                "$ref" : "#/definitions/rfmVectorSpecification"
-              },
-        "Z_AXIS" : {
-                "$ref" : "#/definitions/rfmVectorSpecification"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFMLocalAlignedConstrainedAxes" : {
-      "type" : "object",
-      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
-      "properties" : {
-        "REFERENCE_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
-                "type" : "string"
-              },
-        "ALIGNMENT_VECTOR" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "ALIGNMENT_REFERENCE_VECTOR" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "CONSTRAINT_VECTOR" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "CONSTRAINT_REFERENCE_VECTOR" : {
-                "type" : "array", "items" : {"type" : "number"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFMCoordinateSystem" : {
-      "type" : "object",
-      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
-      "properties" : {
-        "NAME" : {
-                "type" : "string",
-                "description" : "Stable name for this coordinate system within the producing data set."
-              },
-        "AXIS_TYPE" : {
-                "$ref" : "#/definitions/rfmAxisType",
-                "description" : "Orientation rule."
-              },
-        "ORIGIN" : {
-                "$ref" : "#/definitions/RFMOrigin",
-                "description" : "Centre of the system."
-              },
-        "AXIS_REFERENCE_BODY_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
-              },
-        "EPOCH" : {
-                "type" : "string",
-                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
-              },
-        "EPOCH_TIME_SYSTEM" : {
-                "type" : "string",
-                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
-              },
-        "OBJECT_REFERENCED_AXES" : {
-                "$ref" : "#/definitions/RFMObjectReferencedAxes",
-                "description" : "Extra parameters for OBJECT_REFERENCED axes."
-              },
-        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
-                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
-                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
-              },
-        "KERNEL_FRAME_NAME" : {
-                "type" : "string",
-                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
-              },
-        "KERNEL_FRAME_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
-                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
-              },
-        "EOP_DATA_SET_CID" : {
-                "type" : "string",
-                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
-              },
-        "GALCEN_RA_DEG" : {
-                "type" : "number",
-                "description" : "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872)."
-              },
-        "GALCEN_DEC_DEG" : {
-                "type" : "number",
-                "description" : "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872)."
-              },
-        "GALCEN_DISTANCE_PC" : {
-                "type" : "number",
-                "description" : "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10)."
-              },
-        "Z_SUN_PC" : {
-                "type" : "number",
-                "description" : "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417)."
-              },
-        "ROLL_DEG" : {
-                "type" : "number",
-                "description" : "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default."
-              },
-        "V_SUN_KMS" : {
-                "type" : "array", "items" : {"type" : "number"},
-                "description" : "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "CelestialFrameWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "frame" : {
-                "$ref" : "#/definitions/CelestialFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SpacecraftFrameWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "frame" : {
-                "$ref" : "#/definitions/SpacecraftFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "OrbitFrameWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "frame" : {
-                "$ref" : "#/definitions/OrbitFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "CustomFrameWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "frame" : {
-                "$ref" : "#/definitions/CustomFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFMCoordinateSystemWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "COORDINATE_SYSTEM" : {
-                "$ref" : "#/definitions/RFMCoordinateSystem"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "RFM" : {
-      "type" : "object",
-      "description" : "Reference Frame Message",
-      "properties" : {
-        "REFERENCE_FRAME_type" : {
-                "$ref" : "#/definitions/RFMUnion"
-              },
-        "REFERENCE_FRAME" : {
-                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
-              },
-        "INDEX" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "NAME" : {
-                "type" : "string"
-              }
-      },
-      "additionalProperties" : false
-    },
     "CDMObject" : {
       "type" : "object",
       "properties" : {
@@ -12325,6 +12724,2010 @@
                 "type" : "string"
               }
       },
+      "additionalProperties" : false
+    },
+    "SCVVec3" : {
+      "type" : "object",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVEllipsoid" : {
+      "type" : "object",
+      "properties" : {
+        "BODY" : {
+                "$ref" : "#/definitions/scvBodyKind"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "SEMI_MAJOR_M" : {
+                "type" : "number"
+              },
+        "SEMI_MINOR_M" : {
+                "type" : "number"
+              },
+        "SEMI_INTERMEDIATE_M" : {
+                "type" : "number"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVTimeGrid" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH_ISO" : {
+                "type" : "string"
+              },
+        "EPOCH_JULIAN_DATE" : {
+                "type" : "number"
+              },
+        "START_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "STOP_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "STEP_SEC" : {
+                "type" : "number"
+              },
+        "GRID_INDEX_START" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GRID_INDEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVAzElMaskPoint" : {
+      "type" : "object",
+      "description" : "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
+      "properties" : {
+        "AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Azimuth, degrees clockwise from north, in [0, 360)."
+              },
+        "MIN_ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVSensorShapeContract" : {
+      "type" : "object",
+      "description" : "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
+      "properties" : {
+        "SHAPE_KIND" : {
+                "$ref" : "#/definitions/scvSensorShapeKind"
+              },
+        "AXIS_CONVENTION" : {
+                "$ref" : "#/definitions/scvSensorAxisConvention"
+              },
+        "RANGE_BOUNDARY" : {
+                "$ref" : "#/definitions/scvSensorRangeBoundaryKind"
+              },
+        "OUTER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MIN_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MAX_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "X_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "Y_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "OUTER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "SAR_SAMPLING_DENSITY" : {
+                "type" : "number"
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "POLYGON_VERTICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
+              },
+        "POLYGON_FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "AZ_EL_MASK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVAzElMaskPoint"},
+                "description" : "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVSensor" : {
+      "type" : "object",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "POSITION_M" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "VELOCITY_MPS" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "BORESIGHT_UNIT" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "UP_UNIT" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "SHAPE_CONTRACT" : {
+                "$ref" : "#/definitions/SCVSensorShapeContract"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVStateSample" : {
+      "type" : "object",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TIME_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "POSITION_M" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "VELOCITY_MPS" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "QUATERNION_X" : {
+                "type" : "number"
+              },
+        "QUATERNION_Y" : {
+                "type" : "number"
+              },
+        "QUATERNION_Z" : {
+                "type" : "number"
+              },
+        "QUATERNION_W" : {
+                "type" : "number"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVTarget" : {
+      "type" : "object",
+      "properties" : {
+        "TARGET_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "POSITION_M" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "VELOCITY_MPS" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "RADIUS_M" : {
+                "type" : "number"
+              },
+        "TARGET_KIND" : {
+                "$ref" : "#/definitions/scvTargetShape"
+              },
+        "DOMAIN" : {
+                "$ref" : "#/definitions/scvGeometryDomain"
+              },
+        "POLYGON_VERTICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
+              },
+        "MIN_ALTITUDE_M" : {
+                "type" : "number"
+              },
+        "MAX_ALTITUDE_M" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVTargetStateSample" : {
+      "type" : "object",
+      "properties" : {
+        "TARGET_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TIME_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "POSITION_M" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "VELOCITY_MPS" : {
+                "$ref" : "#/definitions/SCVVec3"
+              },
+        "QUATERNION_X" : {
+                "type" : "number"
+              },
+        "QUATERNION_Y" : {
+                "type" : "number"
+              },
+        "QUATERNION_Z" : {
+                "type" : "number"
+              },
+        "QUATERNION_W" : {
+                "type" : "number"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVCoverageGrid" : {
+      "type" : "object",
+      "properties" : {
+        "GRID_ID" : {
+                "type" : "string"
+              },
+        "DOMAIN" : {
+                "$ref" : "#/definitions/scvGeometryDomain"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "MIN_LAT_DEG" : {
+                "type" : "number"
+              },
+        "MAX_LAT_DEG" : {
+                "type" : "number"
+              },
+        "MIN_LON_DEG" : {
+                "type" : "number"
+              },
+        "MAX_LON_DEG" : {
+                "type" : "number"
+              },
+        "LAT_STEP_DEG" : {
+                "type" : "number"
+              },
+        "LON_STEP_DEG" : {
+                "type" : "number"
+              },
+        "ALTITUDE_M" : {
+                "type" : "number"
+              },
+        "CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "RESOLUTION_DEG" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVCoverageRequest" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "ANALYSIS_MODE" : {
+                "$ref" : "#/definitions/scvAnalysisMode"
+              },
+        "TARGET_BODY" : {
+                "$ref" : "#/definitions/SCVEllipsoid"
+              },
+        "TIME_GRID" : {
+                "$ref" : "#/definitions/SCVTimeGrid"
+              },
+        "COVERAGE_GRID" : {
+                "$ref" : "#/definitions/SCVCoverageGrid"
+              },
+        "SENSORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSensor"}
+              },
+        "STATE_SAMPLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVStateSample"}
+              },
+        "TARGETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTarget"}
+              },
+        "TARGET_STATE_SAMPLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTargetStateSample"}
+              },
+        "REQUESTED_PRODUCTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/scvMetricSeriesKind"}
+              },
+        "SENSOR_BATCH_START" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SENSOR_BATCH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WINDOW_BATCH_START" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WINDOW_BATCH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GEOMETRY_ENCODING" : {
+                "$ref" : "#/definitions/scvGeometryEncoding"
+              },
+        "INCLUDE_PACKED_GEOMETRY" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVProgress" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/scvResultState"
+              },
+        "COMPLETED_SENSORS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_SENSORS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "COMPLETED_WINDOWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_WINDOWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BACKLOG_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "COMPLETION_FRACTION" : {
+                "type" : "number"
+              },
+        "MESSAGE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVCancel" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "REASON" : {
+                "type" : "string"
+              },
+        "CANCEL_AFTER_WINDOW_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVSensorContribution" : {
+      "type" : "object",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FIRST_WINDOW_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "LAST_WINDOW_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CONTRIBUTION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVHistogramBin" : {
+      "type" : "object",
+      "properties" : {
+        "METRIC_KIND" : {
+                "$ref" : "#/definitions/scvMetricSeriesKind"
+              },
+        "MIN_VALUE" : {
+                "type" : "number"
+              },
+        "MAX_VALUE" : {
+                "type" : "number"
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WEIGHT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVSwathSegment" : {
+      "type" : "object",
+      "properties" : {
+        "SEGMENT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SENSOR_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WINDOW_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DOMAIN" : {
+                "$ref" : "#/definitions/scvGeometryDomain"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "START_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "STOP_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "VERTEX_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "INDEX_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "INDEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SENSOR_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVMemoryRegion" : {
+      "type" : "object",
+      "properties" : {
+        "REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REGION_KEY" : {
+                "type" : "string"
+              },
+        "BYTE_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTE_STRIDE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ALIGNMENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SHARED" : {
+                "type" : "boolean"
+              },
+        "MUTABLE" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVPackedGeometryChunk" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "CHUNK_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WINDOW_START_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WINDOW_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DOMAIN" : {
+                "$ref" : "#/definitions/scvGeometryDomain"
+              },
+        "FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/scvGeometryEncoding"
+              },
+        "TIME_START_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "TIME_STOP_OFFSET_SEC" : {
+                "type" : "number"
+              },
+        "MEMORY_REGIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVMemoryRegion"}
+              },
+        "POSITIONS_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "POSITIONS_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "NORMALS_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "NORMALS_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ST_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ST_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REVEAL_COORDS_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REVEAL_COORDS_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "INDICES_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "INDICES_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "POSITIONS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "NORMALS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ST" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "REVEAL_COORDS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "INDICES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "SEGMENT_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "SENSOR_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSwathSegment"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVPackedRasterBand" : {
+      "type" : "object",
+      "properties" : {
+        "PRODUCT_KIND" : {
+                "$ref" : "#/definitions/scvRasterProductKind"
+              },
+        "METRIC_KIND" : {
+                "$ref" : "#/definitions/scvMetricSeriesKind"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/scvRasterProductEncoding"
+              },
+        "COMPONENTS_PER_CELL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BUCKET_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WORDS_PER_BUCKET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FLOAT32_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "FLOAT64_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "UINT32_VALUES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVPackedRasterProducts" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "GRID" : {
+                "$ref" : "#/definitions/SCVCoverageGrid"
+              },
+        "TIME_GRID" : {
+                "$ref" : "#/definitions/SCVTimeGrid"
+              },
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "COLUMNS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BUCKET_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WORDS_PER_BUCKET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_REGIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVMemoryRegion"}
+              },
+        "BANDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVPackedRasterBand"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVAggregateStatistics" : {
+      "type" : "object",
+      "properties" : {
+        "TOTAL_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ACCESSED_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MULTI_ACCESS_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ACTIVE_SENSOR_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SWATH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_WINDOWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_INTERVAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_REVISIT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_ACCESS_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "TOTAL_GAP_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "MAX_GAP_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "MEAN_REVISIT_TIME_SEC" : {
+                "type" : "number"
+              },
+        "MAX_RESPONSE_TIME_SEC" : {
+                "type" : "number"
+              },
+        "MEAN_RESPONSE_TIME_SEC" : {
+                "type" : "number"
+              },
+        "PERCENT_COVERAGE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVTargetResult" : {
+      "type" : "object",
+      "properties" : {
+        "TARGET_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "ACCESS_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REVISIT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_ACCESS_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "MEAN_REVISIT_TIME_SEC" : {
+                "type" : "number"
+              },
+        "MAX_GAP_SEC" : {
+                "type" : "number"
+              },
+        "INTERVAL_START_SEC" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "INTERVAL_STOP_SEC" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "PASS_START_BUCKETS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "ACCESS_BITSET" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVResult" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/scvResultState"
+              },
+        "TIME_GRID" : {
+                "$ref" : "#/definitions/SCVTimeGrid"
+              },
+        "TARGET_BODY" : {
+                "$ref" : "#/definitions/SCVEllipsoid"
+              },
+        "TOTAL_SENSORS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_WINDOWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "HISTOGRAMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVHistogramBin"}
+              },
+        "CONTRIBUTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSensorContribution"}
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/SCVPackedGeometryChunk"
+              },
+        "RASTER_PRODUCTS" : {
+                "$ref" : "#/definitions/SCVPackedRasterProducts"
+              },
+        "MESSAGE" : {
+                "type" : "string"
+              },
+        "AGGREGATE_STATISTICS" : {
+                "$ref" : "#/definitions/SCVAggregateStatistics"
+              },
+        "TARGET_RESULTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTargetResult"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCV" : {
+      "type" : "object",
+      "properties" : {
+        "ENVELOPE_KIND" : {
+                "$ref" : "#/definitions/scvEnvelopeKind"
+              },
+        "REQUEST" : {
+                "$ref" : "#/definitions/SCVCoverageRequest"
+              },
+        "PROGRESS" : {
+                "$ref" : "#/definitions/SCVProgress"
+              },
+        "CANCEL" : {
+                "$ref" : "#/definitions/SCVCancel"
+              },
+        "RESULT" : {
+                "$ref" : "#/definitions/SCVResult"
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/SCVPackedGeometryChunk"
+              },
+        "RASTER_PRODUCTS" : {
+                "$ref" : "#/definitions/SCVPackedRasterProducts"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGIndex" : {
+      "type" : "object",
+      "properties" : {
+        "VALUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "HAS_VALUE" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGVector3" : {
+      "type" : "object",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "HAS_VALUES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGQuaternion" : {
+      "type" : "object",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "W" : {
+                "type" : "number"
+              },
+        "HAS_VALUES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGRecordRef" : {
+      "type" : "object",
+      "description" : "Same identity/hash rules as BodyRecordRef, docs/clg-contract.md section 2.",
+      "properties" : {
+        "STANDARD" : {
+                "type" : "string"
+              },
+        "RECORD_ID" : {
+                "type" : "string"
+              },
+        "SHA256" : {
+                "type" : "string"
+              },
+        "URI" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["STANDARD", "RECORD_ID", "SHA256"],
+      "additionalProperties" : false
+    },
+    "CLGSource" : {
+      "type" : "object",
+      "properties" : {
+        "CATEGORY" : {
+                "$ref" : "#/definitions/clgSourceCategory"
+              },
+        "RECORD" : {
+                "$ref" : "#/definitions/CLGRecordRef"
+              },
+        "THEORY" : {
+                "type" : "string"
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "PROVIDER_VERSION" : {
+                "type" : "string"
+              },
+        "PROVIDER_SHA256" : {
+                "type" : "string"
+              },
+        "CONFIGURATION" : {
+                "$ref" : "#/definitions/CLGRecordRef"
+              },
+        "ATTITUDE" : {
+                "$ref" : "#/definitions/CLGRecordRef"
+              },
+        "AUXILIARY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGRecordRef"}
+              },
+        "INTERPOLATION_ID" : {
+                "type" : "string"
+              },
+        "POSITION_ERROR_M" : {
+                "type" : "number",
+                "description" : "HAS_<FIELD> controls presence; applicable bounds must be finite >=0."
+              },
+        "VELOCITY_ERROR_MPS" : {
+                "type" : "number"
+              },
+        "ACCELERATION_ERROR_MPS2" : {
+                "type" : "number"
+              },
+        "JERK_ERROR_MPS3" : {
+                "type" : "number"
+              },
+        "ATTITUDE_ERROR_RAD" : {
+                "type" : "number"
+              },
+        "ANGULAR_RATE_ERROR_RAD_S" : {
+                "type" : "number"
+              },
+        "ANGULAR_ACCELERATION_ERROR_RAD_S2" : {
+                "type" : "number"
+              },
+        "HAS_CATEGORY" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_POSITION_ERROR_M" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_ERROR_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_ACCELERATION_ERROR_MPS2" : {
+                "type" : "boolean"
+              },
+        "HAS_JERK_ERROR_MPS3" : {
+                "type" : "boolean"
+              },
+        "HAS_ATTITUDE_ERROR_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_ANGULAR_RATE_ERROR_RAD_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ANGULAR_ACCELERATION_ERROR_RAD_S2" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["RECORD", "THEORY", "INTERPOLATION_ID"],
+      "additionalProperties" : false
+    },
+    "CLGBody" : {
+      "type" : "object",
+      "properties" : {
+        "MODEL" : {
+                "$ref" : "#/definitions/BodyDescriptor"
+              },
+        "MOTION_SOURCE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Missing HAS_MOTION_SOURCE_INDEX is allowed only with explicitly supplied\nFRAME_STATIONARY=true and exact identity\nwith the definition's fixed frame. Otherwise a valid source is required."
+              },
+        "FRAME_STATIONARY" : {
+                "type" : "boolean"
+              },
+        "CLEARANCE" : {
+                "$ref" : "#/definitions/clgClearanceMode"
+              },
+        "SPACE_SPACE_SKIM_MARGIN_M" : {
+                "type" : "number",
+                "description" : "Presence flag required; finite >=0, added to EACH semiaxis only when BOTH\nendpoints are SPACECRAFT. BodyDescriptor always describes true surface."
+              },
+        "HAS_MOTION_SOURCE_INDEX" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_FRAME_STATIONARY" : {
+                "type" : "boolean"
+              },
+        "HAS_CLEARANCE" : {
+                "type" : "boolean"
+              },
+        "HAS_SPACE_SPACE_SKIM_MARGIN_M" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["MODEL"],
+      "additionalProperties" : false
+    },
+    "CLGNode" : {
+      "type" : "object",
+      "properties" : {
+        "NODE_ID" : {
+                "type" : "string"
+              },
+        "CATEGORY" : {
+                "$ref" : "#/definitions/clgNodeCategory"
+              },
+        "BODY_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "All indices require their HAS flag; -1 remains an invalid wire default."
+              },
+        "IDENTITY" : {
+                "$ref" : "#/definitions/CLGRecordRef"
+              },
+        "STATE_SOURCE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MAX_SIMULTANEOUS_LINKS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SITE_POSITION_M" : {
+                "$ref" : "#/definitions/CLGVector3",
+                "description" : "Stations: Cartesian fixed-frame meters and ellipsoid-normal unit up."
+              },
+        "SITE_UP" : {
+                "$ref" : "#/definitions/CLGVector3"
+              },
+        "ELEVATION_GATE" : {
+                "$ref" : "#/definitions/clgElevationGate",
+                "description" : "Stations require MIN_ELEVATION; spacecraft require NONE and absent angle."
+              },
+        "MIN_ELEVATION_RAD" : {
+                "type" : "number"
+              },
+        "ATTITUDE_LAW" : {
+                "$ref" : "#/definitions/clgAttitudeLaw",
+                "description" : "Stations require STATION_ENU. Spacecraft explicitly select one other law."
+              },
+        "FIXED_ATTITUDE" : {
+                "$ref" : "#/definitions/CLGQuaternion",
+                "description" : "Required only for INERTIALLY_FIXED, node -> declared inertial frame."
+              },
+        "ATTITUDE_FRAME" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              },
+        "HAS_CATEGORY" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_BODY_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_STATE_SOURCE_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SIMULTANEOUS_LINKS" : {
+                "type" : "boolean"
+              },
+        "HAS_ELEVATION_GATE" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_ELEVATION_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_ATTITUDE_LAW" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["NODE_ID"],
+      "additionalProperties" : false
+    },
+    "CLGTerminalProfile" : {
+      "type" : "object",
+      "properties" : {
+        "PROFILE_ID" : {
+                "type" : "string"
+              },
+        "MEDIUM" : {
+                "$ref" : "#/definitions/clgTerminalMedium"
+              },
+        "CAPABILITY" : {
+                "$ref" : "#/definitions/clgTerminalCapability"
+              },
+        "COMPATIBILITY_CLASS" : {
+                "type" : "string"
+              },
+        "DEFINITION_REFS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGRecordRef"}
+              },
+        "STEERING" : {
+                "$ref" : "#/definitions/clgSteeringClass"
+              },
+        "REGARD" : {
+                "$ref" : "#/definitions/clgRegardGeometry"
+              },
+        "SHAPE" : {
+                "$ref" : "#/definitions/SCVSensorShapeContract",
+                "description" : "Mount +Z boresight, +X right, +Y up. SCV angles are degrees.\nShape radial fields zero; bounds below are authoritative SI values."
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_SLEW_RATE_RAD_S" : {
+                "type" : "number",
+                "description" : "MECHANICAL only: finite positive rates/acceleration with true HAS flags."
+              },
+        "MAX_ANGULAR_ACCELERATION_RAD_S2" : {
+                "type" : "number"
+              },
+        "ACQUISITION_MAX_RATE_RAD_S" : {
+                "type" : "number"
+              },
+        "ACQUISITION_TIME_S" : {
+                "type" : "number",
+                "description" : "MECHANICAL only: finite >=0; explicit zero has a true HAS flag."
+              },
+        "SETTLE_TIME_S" : {
+                "type" : "number"
+              },
+        "BEAM_SWITCH_TIME_S" : {
+                "type" : "number",
+                "description" : "ELECTRONIC only: HAS_BEAM_SWITCH_TIME_S=false requests no modeled delay;\na true flag with zero specifies\nzero delay. Applicability and omission are preserved in provenance."
+              },
+        "MAX_SIMULTANEOUS_LINKS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "INDEPENDENT_BEAMS" : {
+                "type" : "boolean"
+              },
+        "POINTING" : {
+                "$ref" : "#/definitions/clgPointingArchitecture"
+              },
+        "MAX_POINT_AHEAD_RAD" : {
+                "type" : "number",
+                "description" : "Bidirectional retarded COMMON_AXIS requires finite positive separation\ntolerance stated by user, backed by DEFINITION_REFS. No implied zero.\nRetarded COMMON_AXIS profiles require positive value even in a one-way run."
+              },
+        "HAS_MEDIUM" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_CAPABILITY" : {
+                "type" : "boolean"
+              },
+        "HAS_STEERING" : {
+                "type" : "boolean"
+              },
+        "HAS_REGARD" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RANGE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SLEW_RATE_RAD_S" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_ANGULAR_ACCELERATION_RAD_S2" : {
+                "type" : "boolean"
+              },
+        "HAS_ACQUISITION_MAX_RATE_RAD_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ACQUISITION_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_SETTLE_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_BEAM_SWITCH_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SIMULTANEOUS_LINKS" : {
+                "type" : "boolean"
+              },
+        "HAS_INDEPENDENT_BEAMS" : {
+                "type" : "boolean"
+              },
+        "HAS_POINTING" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_POINT_AHEAD_RAD" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["PROFILE_ID", "COMPATIBILITY_CLASS"],
+      "additionalProperties" : false
+    },
+    "CLGTerminal" : {
+      "type" : "object",
+      "properties" : {
+        "TERMINAL_ID" : {
+                "type" : "string"
+              },
+        "NODE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "PROFILE_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MOUNT_TO_NODE" : {
+                "$ref" : "#/definitions/CLGQuaternion"
+              },
+        "INITIAL_DIRECTION" : {
+                "$ref" : "#/definitions/CLGVector3",
+                "description" : "Mechanical initial direction; fixed beam requires exactly mount +Z."
+              },
+        "INITIAL_AT_REST" : {
+                "type" : "boolean"
+              },
+        "HAS_NODE_INDEX" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_PROFILE_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_INITIAL_AT_REST" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["TERMINAL_ID"],
+      "additionalProperties" : false
+    },
+    "CLGBlackout" : {
+      "type" : "object",
+      "properties" : {
+        "TERMINAL_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "START_S" : {
+                "type" : "number"
+              },
+        "STOP_S" : {
+                "type" : "number"
+              },
+        "HAS_TIMES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGControls" : {
+      "type" : "object",
+      "properties" : {
+        "TIMING" : {
+                "$ref" : "#/definitions/clgPropagationTiming"
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/clgLinkDirection",
+                "description" : "Required service direction relative to canonical endpoint identities,\nnever relative to arrival/storage order; docs/clg-contract.md section 4."
+              },
+        "MAX_LIGHT_TIME_S" : {
+                "type" : "number"
+              },
+        "REQUESTED_TIME_ACCURACY_S" : {
+                "type" : "number",
+                "description" : "No default is a valid tolerance. Every applicable value is explicit."
+              },
+        "ROOT_TOLERANCE_S" : {
+                "type" : "number"
+              },
+        "LIGHT_TIME_TOLERANCE_S" : {
+                "type" : "number"
+              },
+        "ISOLATION_FLOOR_S" : {
+                "type" : "number"
+              },
+        "RANGE_EXTREMUM_TOLERANCE_M" : {
+                "type" : "number"
+              },
+        "ATTITUDE_JOIN_TOLERANCE_RAD" : {
+                "type" : "number",
+                "description" : "Normalized-rotation continuity: geodesic angle and angular derivatives."
+              },
+        "RATE_JOIN_TOLERANCE_RAD_S" : {
+                "type" : "number"
+              },
+        "ACCELERATION_JOIN_TOLERANCE_RAD_S2" : {
+                "type" : "number"
+              },
+        "POSITION_JOIN_TOLERANCE_M" : {
+                "type" : "number"
+              },
+        "VELOCITY_JOIN_TOLERANCE_MPS" : {
+                "type" : "number"
+              },
+        "ACCELERATION_JOIN_TOLERANCE_MPS2" : {
+                "type" : "number"
+              },
+        "POLICY" : {
+                "$ref" : "#/definitions/clgSelectionPolicy"
+              },
+        "MIN_HOLD_TIME_S" : {
+                "type" : "number"
+              },
+        "MIN_ACTIVE_TIME_S" : {
+                "type" : "number"
+              },
+        "DECISION_STEP_S" : {
+                "type" : "number"
+              },
+        "OUTPUT_EPOCHS_S" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "EMIT_EVENT_SNAPSHOTS" : {
+                "type" : "boolean",
+                "description" : "Required explicit opt-in/out; HAS_EMIT_EVENT_SNAPSHOTS must be true."
+              },
+        "THREAD_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "MAX_WORKING_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Resource bounds require true HAS flags and finite positive values."
+              },
+        "MAX_RESULT_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_CANDIDATE_PAIRS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_INPUT_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_SPOOL_BYTES" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "HAS_TIMING" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_DIRECTION" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_LIGHT_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_REQUESTED_TIME_ACCURACY_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ROOT_TOLERANCE_S" : {
+                "type" : "boolean"
+              },
+        "HAS_LIGHT_TIME_TOLERANCE_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ISOLATION_FLOOR_S" : {
+                "type" : "boolean"
+              },
+        "HAS_RANGE_EXTREMUM_TOLERANCE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_ATTITUDE_JOIN_TOLERANCE_RAD" : {
+                "type" : "boolean"
+              },
+        "HAS_RATE_JOIN_TOLERANCE_RAD_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ACCELERATION_JOIN_TOLERANCE_RAD_S2" : {
+                "type" : "boolean"
+              },
+        "HAS_POSITION_JOIN_TOLERANCE_M" : {
+                "type" : "boolean"
+              },
+        "HAS_VELOCITY_JOIN_TOLERANCE_MPS" : {
+                "type" : "boolean"
+              },
+        "HAS_ACCELERATION_JOIN_TOLERANCE_MPS2" : {
+                "type" : "boolean"
+              },
+        "HAS_POLICY" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_HOLD_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_MIN_ACTIVE_TIME_S" : {
+                "type" : "boolean"
+              },
+        "HAS_DECISION_STEP_S" : {
+                "type" : "boolean"
+              },
+        "HAS_EMIT_EVENT_SNAPSHOTS" : {
+                "type" : "boolean"
+              },
+        "HAS_THREAD_COUNT" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_WORKING_BYTES" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_RESULT_BYTES" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_CANDIDATE_PAIRS" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_INPUT_BYTES" : {
+                "type" : "boolean"
+              },
+        "HAS_MAX_SPOOL_BYTES" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["OUTPUT_EPOCHS_S"],
+      "additionalProperties" : false
+    },
+    "CLGDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH_JD_TT_DAY" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Two-part JD TT, integer noon-based day plus seconds [0,86400)."
+              },
+        "EPOCH_JD_TT_SECONDS" : {
+                "type" : "number"
+              },
+        "START_OFFSET_S" : {
+                "type" : "number",
+                "description" : "ALL offsets incl. source halos satisfy abs(offset)<2^22 seconds.\nLonger analyses split/re-epoch definitions; never use year-long doubles."
+              },
+        "STOP_OFFSET_S" : {
+                "type" : "number"
+              },
+        "WORKING_FRAME" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem",
+                "description" : "SIMULTANEOUS may use fixed axes. RETARDED requires SSB/ICRF inertial\ncoordinates or a declared constant-velocity inertial transform thereof.\nGCRS-like local approximation needs certified model error; rotating\nbody-fixed axes and a moving body center are not inertial ray coordinates."
+              },
+        "BODIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGBody"}
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGSource"}
+              },
+        "NODES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGNode"},
+                "description" : "Dense index = vector position; ascending exact UTF-8 NODE_ID bytes.\nImmutable for the graph, including all state blocks and result chunks."
+              },
+        "PROFILES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGTerminalProfile"}
+              },
+        "TERMINALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGTerminal"},
+                "description" : "Ascending (NODE_INDEX, exact UTF-8 TERMINAL_ID bytes); unique IDs."
+              },
+        "BLACKOUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGBlackout"}
+              },
+        "CONTROLS" : {
+                "$ref" : "#/definitions/CLGControls"
+              },
+        "HAS_EPOCH_JD_TT_DAY" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_EPOCH_JD_TT_SECONDS" : {
+                "type" : "boolean"
+              },
+        "HAS_START_OFFSET_S" : {
+                "type" : "boolean"
+              },
+        "HAS_STOP_OFFSET_S" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["WORKING_FRAME", "BODIES", "SOURCES", "NODES", "PROFILES", "TERMINALS", "CONTROLS"],
+      "additionalProperties" : false
+    },
+    "CLGPoseSegment" : {
+      "type" : "object",
+      "description" : "u=(t-START_S)/(STOP_S-START_S), ascending power coefficients axis-major.\nPosition length=3*(DEGREE+1), SI. Quaternion length=4*(DEGREE+1), xyzw,\nrequired for bodies and SUPPLIED_SERIES nodes; absent for evaluated laws.\nQ/||Q|| defines rotation. Sign-continuous representative, normalized C2\nrotation and angular derivatives checked using explicit join tolerances.",
+      "properties" : {
+        "OWNER" : {
+                "$ref" : "#/definitions/clgOwnerCategory"
+              },
+        "OWNER_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "START_S" : {
+                "type" : "number"
+              },
+        "STOP_S" : {
+                "type" : "number"
+              },
+        "DEGREE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "POSITION_COEFFICIENTS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "QUATERNION_COEFFICIENTS" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "HAS_OWNER" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_OWNER_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_START_S" : {
+                "type" : "boolean"
+              },
+        "HAS_STOP_S" : {
+                "type" : "boolean"
+              },
+        "HAS_DEGREE" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["POSITION_COEFFICIENTS"],
+      "additionalProperties" : false
+    },
+    "CLGStateBlock" : {
+      "type" : "object",
+      "properties" : {
+        "SEQUENCE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGPoseSegment"}
+              },
+        "FINAL_BLOCK" : {
+                "type" : "boolean"
+              },
+        "HAS_SEQUENCE" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_FINAL_BLOCK" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["SEGMENTS"],
+      "additionalProperties" : false
+    },
+    "CLGPair" : {
+      "type" : "object",
+      "description" : "A is the endpoint with the lexicographically smaller (NODE_ID,TERMINAL_ID)\nexact UTF-8 byte tuple, B the larger; distinct nodes, canonical A<B indexes.\nReversed fields or noncanonical dictionaries fail, never reverse direction.\nSorted by (A,B,DIRECTION); requested direction only.",
+      "properties" : {
+        "TERMINAL_A" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "TERMINAL_B" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/clgLinkDirection"
+              },
+        "HAS_DIRECTION" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGCause" : {
+      "type" : "object",
+      "description" : "All co-causes retained, sorted by enum ordinal, ray direction, body index.\nBODY_INDEX supplied for OCCULTATION, HORIZON_A/B and TERRAIN_A/B only.\nNo ambiguous zero body.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/clgBoundaryCause"
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/clgRayDirection"
+              },
+        "BODY_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "HAS_KIND" : {
+                "type" : "boolean"
+              },
+        "HAS_DIRECTION" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGRayTimes" : {
+      "type" : "object",
+      "description" : "One demanded ray at an interval boundary, TT offsets from graph epoch.\nEmission equals boundary OFFSET_S. Reception bracket encloses the mapped\nemission bracket and light-time solve error; SIMULTANEOUS uses equal times.",
+      "properties" : {
+        "DIRECTION" : {
+                "$ref" : "#/definitions/clgRayDirection"
+              },
+        "EMISSION_S" : {
+                "type" : "number"
+              },
+        "RECEPTION_S" : {
+                "type" : "number"
+              },
+        "RECEPTION_BRACKET_LO_S" : {
+                "type" : "number"
+              },
+        "RECEPTION_BRACKET_HI_S" : {
+                "type" : "number"
+              },
+        "HAS_VALUES" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGBoundary" : {
+      "type" : "object",
+      "description" : "Local to a result chunk. Distinct event clusters never merged by tolerance.\nCertified root brackets overlap only for a proved common event, otherwise\nrefine to disjoint brackets or fail. A common event retains every cause.",
+      "properties" : {
+        "PAIR_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "OFFSET_S" : {
+                "type" : "number",
+                "description" : "Emission clock for every demanded ray, including both duplex rays."
+              },
+        "BRACKET_LO_S" : {
+                "type" : "number"
+              },
+        "BRACKET_HI_S" : {
+                "type" : "number"
+              },
+        "CAUSES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGCause"}
+              },
+        "RAY_TIMES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGRayTimes"},
+                "description" : "Exactly the demanded direction(s), A_TO_B before B_TO_A; no duplicates."
+              },
+        "HAS_OFFSET_S" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_BRACKET_LO_S" : {
+                "type" : "boolean"
+              },
+        "HAS_BRACKET_HI_S" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["CAUSES", "RAY_TIMES"],
+      "additionalProperties" : false
+    },
+    "CLGInterval" : {
+      "type" : "object",
+      "description" : "START/STOP/READY_FROM are emission TT offsets (docs/clg-contract.md section 3a).\nPacked scalars are present iff HAS_VALUES=true, otherwise invalid.\nREADY_FROM_S is present iff HAS_READY_FROM=true (no silent zero readiness).",
+      "properties" : {
+        "START_S" : {
+                "type" : "number"
+              },
+        "STOP_S" : {
+                "type" : "number"
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "READY_FROM_S" : {
+                "type" : "number"
+              },
+        "PAIR_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "START_BOUNDARY_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "STOP_BOUNDARY_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "HAS_VALUES" : {
+                "type" : "boolean"
+              },
+        "HAS_READY_FROM" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGLink" : {
+      "type" : "object",
+      "description" : "Deduplicated tuple (PAIR_INDEX,SLOT_A,SLOT_B), reused across acquisitions.",
+      "properties" : {
+        "PAIR_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "SLOT_A" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "SLOT_B" : {
+                "$ref" : "#/definitions/CLGIndex"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGTransition" : {
+      "type" : "object",
+      "properties" : {
+        "TIME_S" : {
+                "type" : "number",
+                "description" : "Physical scheduling event in TT. ACTIVE/DRAIN bound emission service;\nretarded RELEASE follows the latest demanded reception, including tails."
+              },
+        "LINK_INDEX" : {
+                "$ref" : "#/definitions/CLGIndex"
+              },
+        "STAGE" : {
+                "$ref" : "#/definitions/clgTransitionStage"
+              },
+        "CAUSE" : {
+                "$ref" : "#/definitions/clgBoundaryCause"
+              },
+        "HAS_TIME" : {
+                "type" : "boolean"
+              },
+        "HAS_STAGE" : {
+                "type" : "boolean"
+              },
+        "HAS_CAUSE" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLGAdjacency" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH_S" : {
+                "type" : "number",
+                "description" : "Common emission query in TT; equal-time transitions already applied."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/clgSnapshotOrigin"
+              },
+        "ROW_OFFSETS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Exactly N+1 entries, starting zero and ending at arc count."
+              },
+        "NEIGHBOR_NODE_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "One outgoing arc per directed ACTIVE link, two per bidirectional link."
+              },
+        "LINK_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "RANGES_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Parallel to arcs; computed natively for that directed ray at EPOCH_S.\nSIMULTANEOUS: same-epoch range and range/c; reception epoch equals EPOCH_S.\nRETARDED: null-path range, coordinate vacuum flight time, reception TT."
+              },
+        "LIGHT_TIMES_S" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "RECEPTION_EPOCHS_S" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "HAS_EPOCH_S" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_ORIGIN" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["ROW_OFFSETS", "NEIGHBOR_NODE_INDEXES", "LINK_INDEXES", "RANGES_M", "LIGHT_TIMES_S", "RECEPTION_EPOCHS_S"],
+      "additionalProperties" : false
+    },
+    "CLGProvenance" : {
+      "type" : "object",
+      "description" : "Module-known values only; host identity is separate PVN on CLGResult.",
+      "properties" : {
+        "DEFINITION_SHA256" : {
+                "type" : "string"
+              },
+        "STATE_BLOCK_SHA256" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "One 64-character lowercase hex digest per block in sequence order."
+              },
+        "ALGORITHM_ID" : {
+                "type" : "string"
+              },
+        "ROOT_ERROR_BOUND_S" : {
+                "type" : "number"
+              },
+        "SOURCE_ERROR_BOUND_S" : {
+                "type" : "number"
+              },
+        "FRAME_TIME_ERROR_BOUND_S" : {
+                "type" : "number"
+              },
+        "RANGE_ERROR_BOUND_M" : {
+                "type" : "number"
+              },
+        "MODEL_ERROR_BOUND_S" : {
+                "type" : "number",
+                "description" : "Mandatory, >= max compatible range/c for SIMULTANEOUS, and increased\nwhen needed to bound actual model discrepancy; interbody simultaneous fails."
+              },
+        "ANALYSIS_SCOPE" : {
+                "$ref" : "#/definitions/clgAnalysisScope"
+              },
+        "TIMING" : {
+                "$ref" : "#/definitions/clgPropagationTiming"
+              },
+        "HAS_ROOT_ERROR_BOUND_S" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_SOURCE_ERROR_BOUND_S" : {
+                "type" : "boolean"
+              },
+        "HAS_FRAME_TIME_ERROR_BOUND_S" : {
+                "type" : "boolean"
+              },
+        "HAS_RANGE_ERROR_BOUND_M" : {
+                "type" : "boolean"
+              },
+        "HAS_MODEL_ERROR_BOUND_S" : {
+                "type" : "boolean"
+              },
+        "HAS_ANALYSIS_SCOPE" : {
+                "type" : "boolean"
+              },
+        "HAS_TIMING" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["DEFINITION_SHA256", "STATE_BLOCK_SHA256", "ALGORITHM_ID"],
+      "additionalProperties" : false
+    },
+    "CLGResult" : {
+      "type" : "object",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/clgComputationState"
+              },
+        "ERROR_CODE" : {
+                "type" : "string"
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string"
+              },
+        "CHUNK_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "CHUNK_COUNT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "DEFINITION_REF" : {
+                "$ref" : "#/definitions/CLGRecordRef"
+              },
+        "PAIRS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGPair"},
+                "description" : "Global dictionaries in chunk zero only, bounded to 64 MiB together."
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGLink"}
+              },
+        "BOUNDARIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGBoundary"},
+                "description" : "Each interval and its boundary records live together in exactly one chunk."
+              },
+        "INTERVALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGInterval"}
+              },
+        "TRANSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGTransition"}
+              },
+        "ADJACENCY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CLGAdjacency"}
+              },
+        "TOPOLOGY_CHANGE_EPOCHS_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sorted unique TT emission epochs where the directed (src,dst,link) set\nchanges after atomic transitions; always includes START_OFFSET_S.\nEach has a mandatory adjacency, independent of EMIT_EVENT_SNAPSHOTS.\nChunk-local entries correspond to this chunk's snapshots; concatenate."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/CLGProvenance"
+              },
+        "PRODUCER" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Host stamps PRODUCER_SHA256 from loaded artifact before durable COMPLETE."
+              },
+        "HAS_STATUS" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              },
+        "HAS_CHUNK_INDEX" : {
+                "type" : "boolean"
+              },
+        "HAS_CHUNK_COUNT" : {
+                "type" : "boolean"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CLG" : {
+      "type" : "object",
+      "description" : "Exactly one payload; every frame uses the same GRAPH_ID. COMPLETE requires\nall chunks, definition, implemented scope/enums and host-stamped producer.",
+      "properties" : {
+        "GRAPH_ID" : {
+                "type" : "string",
+                "description" : "Globally unique across exchanging producers/stores; names one dictionary\nforever. A known ID with a different definition SHA256 is rejected,\nnever merged or rebound. docs/clg-contract.md section 2 defines allocation and hashing."
+              },
+        "PAYLOAD" : {
+                "$ref" : "#/definitions/clgPayloadClass"
+              },
+        "DEFINITION" : {
+                "$ref" : "#/definitions/CLGDefinition"
+              },
+        "STATE_BLOCK" : {
+                "$ref" : "#/definitions/CLGStateBlock"
+              },
+        "RESULT" : {
+                "$ref" : "#/definitions/CLGResult"
+              },
+        "HAS_PAYLOAD" : {
+                "type" : "boolean",
+                "description" : "Value presence: false means omitted; true precedes value validation."
+              }
+      },
+      "required" : ["GRAPH_ID"],
       "additionalProperties" : false
     },
     "CLMCountersignature" : {
@@ -53138,893 +55541,6 @@
               },
         "POSSIBILITY_RESULT" : {
                 "$ref" : "#/definitions/SCRPossibilityResult"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVVec3" : {
-      "type" : "object",
-      "properties" : {
-        "X" : {
-                "type" : "number"
-              },
-        "Y" : {
-                "type" : "number"
-              },
-        "Z" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVEllipsoid" : {
-      "type" : "object",
-      "properties" : {
-        "BODY" : {
-                "$ref" : "#/definitions/scvBodyKind"
-              },
-        "NAME" : {
-                "type" : "string"
-              },
-        "SEMI_MAJOR_M" : {
-                "type" : "number"
-              },
-        "SEMI_MINOR_M" : {
-                "type" : "number"
-              },
-        "SEMI_INTERMEDIATE_M" : {
-                "type" : "number"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVTimeGrid" : {
-      "type" : "object",
-      "properties" : {
-        "EPOCH_ISO" : {
-                "type" : "string"
-              },
-        "EPOCH_JULIAN_DATE" : {
-                "type" : "number"
-              },
-        "START_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "STOP_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "STEP_SEC" : {
-                "type" : "number"
-              },
-        "GRID_INDEX_START" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "GRID_INDEX_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVAzElMaskPoint" : {
-      "type" : "object",
-      "description" : "One point of an azimuth/elevation mask: the lowest elevation at which the\nsensor sees at that azimuth (a terrain or structure horizon). The mask is the\npolyline through its points ordered by AZIMUTH_DEG, wrapping from the last\npoint to the first across 360 degrees, linearly interpolated in azimuth.",
-      "properties" : {
-        "AZIMUTH_DEG" : {
-                "type" : "number",
-                "description" : "Azimuth, degrees clockwise from north, in [0, 360)."
-              },
-        "MIN_ELEVATION_DEG" : {
-                "type" : "number",
-                "description" : "Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVSensorShapeContract" : {
-      "type" : "object",
-      "description" : "The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR\ncarries the same table as the sensor definition's FIELD_OF_VIEW, so a\ndefinition and an analysis request never describe a shape in two types.",
-      "properties" : {
-        "SHAPE_KIND" : {
-                "$ref" : "#/definitions/scvSensorShapeKind"
-              },
-        "AXIS_CONVENTION" : {
-                "$ref" : "#/definitions/scvSensorAxisConvention"
-              },
-        "RANGE_BOUNDARY" : {
-                "$ref" : "#/definitions/scvSensorRangeBoundaryKind"
-              },
-        "OUTER_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "INNER_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "MIN_CLOCK_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "MAX_CLOCK_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "X_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "Y_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "INNER_LOOK_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "OUTER_LOOK_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "SAR_SAMPLING_DENSITY" : {
-                "type" : "number"
-              },
-        "MIN_RANGE_M" : {
-                "type" : "number"
-              },
-        "MAX_RANGE_M" : {
-                "type" : "number"
-              },
-        "POLYGON_VERTICES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
-              },
-        "POLYGON_FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "AZ_EL_MASK" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVAzElMaskPoint"},
-                "description" : "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVSensor" : {
-      "type" : "object",
-      "properties" : {
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "OBJECT_ID" : {
-                "type" : "string"
-              },
-        "NAME" : {
-                "type" : "string"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "POSITION_M" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "VELOCITY_MPS" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "BORESIGHT_UNIT" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "UP_UNIT" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "SHAPE_CONTRACT" : {
-                "$ref" : "#/definitions/SCVSensorShapeContract"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVStateSample" : {
-      "type" : "object",
-      "properties" : {
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TIME_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "POSITION_M" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "VELOCITY_MPS" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "QUATERNION_X" : {
-                "type" : "number"
-              },
-        "QUATERNION_Y" : {
-                "type" : "number"
-              },
-        "QUATERNION_Z" : {
-                "type" : "number"
-              },
-        "QUATERNION_W" : {
-                "type" : "number"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVTarget" : {
-      "type" : "object",
-      "properties" : {
-        "TARGET_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "OBJECT_ID" : {
-                "type" : "string"
-              },
-        "NAME" : {
-                "type" : "string"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "POSITION_M" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "VELOCITY_MPS" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "RADIUS_M" : {
-                "type" : "number"
-              },
-        "TARGET_KIND" : {
-                "$ref" : "#/definitions/scvTargetShape"
-              },
-        "DOMAIN" : {
-                "$ref" : "#/definitions/scvGeometryDomain"
-              },
-        "POLYGON_VERTICES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
-              },
-        "MIN_ALTITUDE_M" : {
-                "type" : "number"
-              },
-        "MAX_ALTITUDE_M" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVTargetStateSample" : {
-      "type" : "object",
-      "properties" : {
-        "TARGET_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TIME_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "POSITION_M" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "VELOCITY_MPS" : {
-                "$ref" : "#/definitions/SCVVec3"
-              },
-        "QUATERNION_X" : {
-                "type" : "number"
-              },
-        "QUATERNION_Y" : {
-                "type" : "number"
-              },
-        "QUATERNION_Z" : {
-                "type" : "number"
-              },
-        "QUATERNION_W" : {
-                "type" : "number"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVCoverageGrid" : {
-      "type" : "object",
-      "properties" : {
-        "GRID_ID" : {
-                "type" : "string"
-              },
-        "DOMAIN" : {
-                "$ref" : "#/definitions/scvGeometryDomain"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "MIN_LAT_DEG" : {
-                "type" : "number"
-              },
-        "MAX_LAT_DEG" : {
-                "type" : "number"
-              },
-        "MIN_LON_DEG" : {
-                "type" : "number"
-              },
-        "MAX_LON_DEG" : {
-                "type" : "number"
-              },
-        "LAT_STEP_DEG" : {
-                "type" : "number"
-              },
-        "LON_STEP_DEG" : {
-                "type" : "number"
-              },
-        "ALTITUDE_M" : {
-                "type" : "number"
-              },
-        "CELL_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "RESOLUTION_DEG" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVCoverageRequest" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "ANALYSIS_MODE" : {
-                "$ref" : "#/definitions/scvAnalysisMode"
-              },
-        "TARGET_BODY" : {
-                "$ref" : "#/definitions/SCVEllipsoid"
-              },
-        "TIME_GRID" : {
-                "$ref" : "#/definitions/SCVTimeGrid"
-              },
-        "COVERAGE_GRID" : {
-                "$ref" : "#/definitions/SCVCoverageGrid"
-              },
-        "SENSORS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSensor"}
-              },
-        "STATE_SAMPLES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVStateSample"}
-              },
-        "TARGETS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTarget"}
-              },
-        "TARGET_STATE_SAMPLES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTargetStateSample"}
-              },
-        "REQUESTED_PRODUCTS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/scvMetricSeriesKind"}
-              },
-        "SENSOR_BATCH_START" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "SENSOR_BATCH_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WINDOW_BATCH_START" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WINDOW_BATCH_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "GEOMETRY_ENCODING" : {
-                "$ref" : "#/definitions/scvGeometryEncoding"
-              },
-        "INCLUDE_PACKED_GEOMETRY" : {
-                "type" : "boolean"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVProgress" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "STATUS" : {
-                "$ref" : "#/definitions/scvResultState"
-              },
-        "COMPLETED_SENSORS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_SENSORS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "COMPLETED_WINDOWS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_WINDOWS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "BACKLOG_REMAINING" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "COMPLETION_FRACTION" : {
-                "type" : "number"
-              },
-        "MESSAGE" : {
-                "type" : "string"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVCancel" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "REASON" : {
-                "type" : "string"
-              },
-        "CANCEL_AFTER_WINDOW_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVSensorContribution" : {
-      "type" : "object",
-      "properties" : {
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "FIRST_WINDOW_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "LAST_WINDOW_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "CONTRIBUTION_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVHistogramBin" : {
-      "type" : "object",
-      "properties" : {
-        "METRIC_KIND" : {
-                "$ref" : "#/definitions/scvMetricSeriesKind"
-              },
-        "MIN_VALUE" : {
-                "type" : "number"
-              },
-        "MAX_VALUE" : {
-                "type" : "number"
-              },
-        "COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WEIGHT" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVSwathSegment" : {
-      "type" : "object",
-      "properties" : {
-        "SEGMENT_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WINDOW_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "DOMAIN" : {
-                "$ref" : "#/definitions/scvGeometryDomain"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "START_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "STOP_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "VERTEX_OFFSET" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "VERTEX_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "INDEX_OFFSET" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "INDEX_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "SENSOR_IDS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVMemoryRegion" : {
-      "type" : "object",
-      "properties" : {
-        "REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "REGION_KEY" : {
-                "type" : "string"
-              },
-        "BYTE_OFFSET" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "BYTE_LENGTH" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "BYTE_STRIDE" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "ALIGNMENT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "SHARED" : {
-                "type" : "boolean"
-              },
-        "MUTABLE" : {
-                "type" : "boolean"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVPackedGeometryChunk" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "CHUNK_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WINDOW_START_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WINDOW_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "DOMAIN" : {
-                "$ref" : "#/definitions/scvGeometryDomain"
-              },
-        "FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
-              },
-        "ENCODING" : {
-                "$ref" : "#/definitions/scvGeometryEncoding"
-              },
-        "TIME_START_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "TIME_STOP_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "MEMORY_REGIONS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVMemoryRegion"}
-              },
-        "POSITIONS_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "POSITIONS_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "NORMALS_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "NORMALS_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "ST_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "ST_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "REVEAL_COORDS_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "REVEAL_COORDS_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "INDICES_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "INDICES_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "POSITIONS" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "NORMALS" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "ST" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "REVEAL_COORDS" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "INDICES" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              },
-        "SEGMENT_IDS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              },
-        "SENSOR_IDS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              },
-        "SEGMENTS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSwathSegment"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVPackedRasterBand" : {
-      "type" : "object",
-      "properties" : {
-        "PRODUCT_KIND" : {
-                "$ref" : "#/definitions/scvRasterProductKind"
-              },
-        "METRIC_KIND" : {
-                "$ref" : "#/definitions/scvMetricSeriesKind"
-              },
-        "ENCODING" : {
-                "$ref" : "#/definitions/scvRasterProductEncoding"
-              },
-        "COMPONENTS_PER_CELL" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "CELL_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "BUCKET_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WORDS_PER_BUCKET" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "MEMORY_REGION_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "MEMORY_RECORD_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "FLOAT32_VALUES" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "FLOAT64_VALUES" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "UINT32_VALUES" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVPackedRasterProducts" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "GRID" : {
-                "$ref" : "#/definitions/SCVCoverageGrid"
-              },
-        "TIME_GRID" : {
-                "$ref" : "#/definitions/SCVTimeGrid"
-              },
-        "ROWS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "COLUMNS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "CELL_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "BUCKET_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "WORDS_PER_BUCKET" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "MEMORY_REGIONS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVMemoryRegion"}
-              },
-        "BANDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVPackedRasterBand"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVAggregateStatistics" : {
-      "type" : "object",
-      "properties" : {
-        "TOTAL_CELLS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "ACCESSED_CELLS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "MULTI_ACCESS_CELLS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "ACTIVE_SENSOR_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "SWATH_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_WINDOWS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_INTERVAL_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_REVISIT_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_ACCESS_DURATION_SEC" : {
-                "type" : "number"
-              },
-        "TOTAL_GAP_DURATION_SEC" : {
-                "type" : "number"
-              },
-        "MAX_GAP_DURATION_SEC" : {
-                "type" : "number"
-              },
-        "MEAN_REVISIT_TIME_SEC" : {
-                "type" : "number"
-              },
-        "MAX_RESPONSE_TIME_SEC" : {
-                "type" : "number"
-              },
-        "MEAN_RESPONSE_TIME_SEC" : {
-                "type" : "number"
-              },
-        "PERCENT_COVERAGE" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVTargetResult" : {
-      "type" : "object",
-      "properties" : {
-        "TARGET_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "NAME" : {
-                "type" : "string"
-              },
-        "ACCESS_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "REVISIT_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_ACCESS_DURATION_SEC" : {
-                "type" : "number"
-              },
-        "MEAN_REVISIT_TIME_SEC" : {
-                "type" : "number"
-              },
-        "MAX_GAP_SEC" : {
-                "type" : "number"
-              },
-        "INTERVAL_START_SEC" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "INTERVAL_STOP_SEC" : {
-                "type" : "array", "items" : {"type" : "number"}
-              },
-        "PASS_START_BUCKETS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              },
-        "ACCESS_BITSET" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVResult" : {
-      "type" : "object",
-      "properties" : {
-        "JOB_ID" : {
-                "type" : "string"
-              },
-        "TRACE_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
-              },
-        "STATUS" : {
-                "$ref" : "#/definitions/scvResultState"
-              },
-        "TIME_GRID" : {
-                "$ref" : "#/definitions/SCVTimeGrid"
-              },
-        "TARGET_BODY" : {
-                "$ref" : "#/definitions/SCVEllipsoid"
-              },
-        "TOTAL_SENSORS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_WINDOWS" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "HISTOGRAMS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVHistogramBin"}
-              },
-        "CONTRIBUTIONS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVSensorContribution"}
-              },
-        "GEOMETRY" : {
-                "$ref" : "#/definitions/SCVPackedGeometryChunk"
-              },
-        "RASTER_PRODUCTS" : {
-                "$ref" : "#/definitions/SCVPackedRasterProducts"
-              },
-        "MESSAGE" : {
-                "type" : "string"
-              },
-        "AGGREGATE_STATISTICS" : {
-                "$ref" : "#/definitions/SCVAggregateStatistics"
-              },
-        "TARGET_RESULTS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTargetResult"}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCV" : {
-      "type" : "object",
-      "properties" : {
-        "ENVELOPE_KIND" : {
-                "$ref" : "#/definitions/scvEnvelopeKind"
-              },
-        "REQUEST" : {
-                "$ref" : "#/definitions/SCVCoverageRequest"
-              },
-        "PROGRESS" : {
-                "$ref" : "#/definitions/SCVProgress"
-              },
-        "CANCEL" : {
-                "$ref" : "#/definitions/SCVCancel"
-              },
-        "RESULT" : {
-                "$ref" : "#/definitions/SCVResult"
-              },
-        "GEOMETRY" : {
-                "$ref" : "#/definitions/SCVPackedGeometryChunk"
-              },
-        "RASTER_PRODUCTS" : {
-                "$ref" : "#/definitions/SCVPackedRasterProducts"
               }
       },
       "additionalProperties" : false

@@ -64,8 +64,8 @@ class ACWConstraint : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * Central-body radius offset for line-of-sight occultation, meters
-     * (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+     * Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+     * LOS only; not geodetic altitude. Never applied to a surface-station pair.
      */
     val occultationAtmosphereHeightM : Double
         get() {
@@ -102,6 +102,39 @@ class ACWConstraint : Table() {
         }
     val labelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
     fun labelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasKind : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasThresholdRad : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMinRangeM : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMaxRangeM : Boolean
+        get() {
+            val o = __offset(26)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasLighting : Boolean
+        get() {
+            val o = __offset(28)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasOccultationAtmosphereHeightM : Boolean
+        get() {
+            val o = __offset(30)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWConstraint(_bb: ByteBuffer): ACWConstraint = getRootAsACWConstraint(_bb, ACWConstraint())
@@ -109,19 +142,25 @@ class ACWConstraint : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWConstraint(builder: FlatBufferBuilder, kind: Byte, thresholdRad: Double, minRangeM: Double, maxRangeM: Double, lighting: Byte, occultationAtmosphereHeightM: Double, maskOffset: Int, labelOffset: Int) : Int {
-            builder.startTable(8)
+        fun createACWConstraint(builder: FlatBufferBuilder, kind: Byte, thresholdRad: Double, minRangeM: Double, maxRangeM: Double, lighting: Byte, occultationAtmosphereHeightM: Double, maskOffset: Int, labelOffset: Int, hasKind: Boolean, hasThresholdRad: Boolean, hasMinRangeM: Boolean, hasMaxRangeM: Boolean, hasLighting: Boolean, hasOccultationAtmosphereHeightM: Boolean) : Int {
+            builder.startTable(14)
             addOCCULTATIONATMOSPHEREHEIGHTM(builder, occultationAtmosphereHeightM)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
             addTHRESHOLDRAD(builder, thresholdRad)
             addLABEL(builder, labelOffset)
             addMASK(builder, maskOffset)
+            addHASOCCULTATIONATMOSPHEREHEIGHTM(builder, hasOccultationAtmosphereHeightM)
+            addHASLIGHTING(builder, hasLighting)
+            addHASMAXRANGEM(builder, hasMaxRangeM)
+            addHASMINRANGEM(builder, hasMinRangeM)
+            addHASTHRESHOLDRAD(builder, hasThresholdRad)
+            addHASKIND(builder, hasKind)
             addLIGHTING(builder, lighting)
             addKIND(builder, kind)
             return endACWConstraint(builder)
         }
-        fun startACWConstraint(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startACWConstraint(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addKIND(builder: FlatBufferBuilder, kind: Byte) = builder.addByte(0, kind, 0)
         fun addTHRESHOLDRAD(builder: FlatBufferBuilder, thresholdRad: Double) = builder.addDouble(1, thresholdRad, 0.0)
         fun addMINRANGEM(builder: FlatBufferBuilder, minRangeM: Double) = builder.addDouble(2, minRangeM, 0.0)
@@ -138,6 +177,12 @@ class ACWConstraint : Table() {
         }
         fun startMaskVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addLABEL(builder: FlatBufferBuilder, label: Int) = builder.addOffset(7, label, 0)
+        fun addHASKIND(builder: FlatBufferBuilder, hasKind: Boolean) = builder.addBoolean(8, hasKind, false)
+        fun addHASTHRESHOLDRAD(builder: FlatBufferBuilder, hasThresholdRad: Boolean) = builder.addBoolean(9, hasThresholdRad, false)
+        fun addHASMINRANGEM(builder: FlatBufferBuilder, hasMinRangeM: Boolean) = builder.addBoolean(10, hasMinRangeM, false)
+        fun addHASMAXRANGEM(builder: FlatBufferBuilder, hasMaxRangeM: Boolean) = builder.addBoolean(11, hasMaxRangeM, false)
+        fun addHASLIGHTING(builder: FlatBufferBuilder, hasLighting: Boolean) = builder.addBoolean(12, hasLighting, false)
+        fun addHASOCCULTATIONATMOSPHEREHEIGHTM(builder: FlatBufferBuilder, hasOccultationAtmosphereHeightM: Boolean) = builder.addBoolean(13, hasOccultationAtmosphereHeightM, false)
         fun endACWConstraint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

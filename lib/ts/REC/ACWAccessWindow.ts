@@ -79,8 +79,9 @@ OBSERVER_ID(optionalEncoding?:any):string|Uint8Array|null {
 
 /**
  * Index into the flattened, depth-first constraint list of the constraint
- * whose transition opens the window; -1 when the window starts at the
- * first sample.
+ * whose transition opens the window. A clipped start has no limiting
+ * constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+ * index is nonnegative and in range; the retained wire default is not a sentinel.
  */
 START_LIMITING_CONSTRAINT_INDEX():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -88,8 +89,9 @@ START_LIMITING_CONSTRAINT_INDEX():number {
 }
 
 /**
- * Index of the constraint whose transition closes the window; -1 when the
- * window ends at the last sample.
+ * Index of the constraint whose transition closes the window. A clipped end
+ * has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+ * and in range; the retained wire default is not a sentinel.
  */
 END_LIMITING_CONSTRAINT_INDEX():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -134,8 +136,56 @@ EDGES_REFINED():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_START_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_END_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MAX_ELEVATION_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_SAMPLE_COUNT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_START_LIMITING_CONSTRAINT_INDEX():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_END_LIMITING_CONSTRAINT_INDEX():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MIN_RANGE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MAX_RANGE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_EDGES_REFINED():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWAccessWindow(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(22);
 }
 
 static addStationId(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset) {
@@ -190,12 +240,48 @@ static addEdgesRefined(builder:flatbuffers.Builder, EDGES_REFINED:boolean) {
   builder.addFieldInt8(12, +EDGES_REFINED, +false);
 }
 
+static addHasStartJulianDateTt(builder:flatbuffers.Builder, HAS_START_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(13, +HAS_START_JULIAN_DATE_TT, +false);
+}
+
+static addHasEndJulianDateTt(builder:flatbuffers.Builder, HAS_END_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(14, +HAS_END_JULIAN_DATE_TT, +false);
+}
+
+static addHasMaxElevationRad(builder:flatbuffers.Builder, HAS_MAX_ELEVATION_RAD:boolean) {
+  builder.addFieldInt8(15, +HAS_MAX_ELEVATION_RAD, +false);
+}
+
+static addHasSampleCount(builder:flatbuffers.Builder, HAS_SAMPLE_COUNT:boolean) {
+  builder.addFieldInt8(16, +HAS_SAMPLE_COUNT, +false);
+}
+
+static addHasStartLimitingConstraintIndex(builder:flatbuffers.Builder, HAS_START_LIMITING_CONSTRAINT_INDEX:boolean) {
+  builder.addFieldInt8(17, +HAS_START_LIMITING_CONSTRAINT_INDEX, +false);
+}
+
+static addHasEndLimitingConstraintIndex(builder:flatbuffers.Builder, HAS_END_LIMITING_CONSTRAINT_INDEX:boolean) {
+  builder.addFieldInt8(18, +HAS_END_LIMITING_CONSTRAINT_INDEX, +false);
+}
+
+static addHasMinRangeM(builder:flatbuffers.Builder, HAS_MIN_RANGE_M:boolean) {
+  builder.addFieldInt8(19, +HAS_MIN_RANGE_M, +false);
+}
+
+static addHasMaxRangeM(builder:flatbuffers.Builder, HAS_MAX_RANGE_M:boolean) {
+  builder.addFieldInt8(20, +HAS_MAX_RANGE_M, +false);
+}
+
+static addHasEdgesRefined(builder:flatbuffers.Builder, HAS_EDGES_REFINED:boolean) {
+  builder.addFieldInt8(21, +HAS_EDGES_REFINED, +false);
+}
+
 static endACWAccessWindow(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number, OBSERVER_IDOffset:flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX:number, END_LIMITING_CONSTRAINT_INDEX:number, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, MIN_RANGE_M:number, MAX_RANGE_M:number, EDGES_REFINED:boolean):flatbuffers.Offset {
+static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number, OBSERVER_IDOffset:flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX:number, END_LIMITING_CONSTRAINT_INDEX:number, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, MIN_RANGE_M:number, MAX_RANGE_M:number, EDGES_REFINED:boolean, HAS_START_JULIAN_DATE_TT:boolean, HAS_END_JULIAN_DATE_TT:boolean, HAS_MAX_ELEVATION_RAD:boolean, HAS_SAMPLE_COUNT:boolean, HAS_START_LIMITING_CONSTRAINT_INDEX:boolean, HAS_END_LIMITING_CONSTRAINT_INDEX:boolean, HAS_MIN_RANGE_M:boolean, HAS_MAX_RANGE_M:boolean, HAS_EDGES_REFINED:boolean):flatbuffers.Offset {
   ACWAccessWindow.startACWAccessWindow(builder);
   ACWAccessWindow.addStationId(builder, STATION_IDOffset);
   ACWAccessWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
@@ -210,6 +296,15 @@ static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatb
   ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
   ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
   ACWAccessWindow.addEdgesRefined(builder, EDGES_REFINED);
+  ACWAccessWindow.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
+  ACWAccessWindow.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+  ACWAccessWindow.addHasMaxElevationRad(builder, HAS_MAX_ELEVATION_RAD);
+  ACWAccessWindow.addHasSampleCount(builder, HAS_SAMPLE_COUNT);
+  ACWAccessWindow.addHasStartLimitingConstraintIndex(builder, HAS_START_LIMITING_CONSTRAINT_INDEX);
+  ACWAccessWindow.addHasEndLimitingConstraintIndex(builder, HAS_END_LIMITING_CONSTRAINT_INDEX);
+  ACWAccessWindow.addHasMinRangeM(builder, HAS_MIN_RANGE_M);
+  ACWAccessWindow.addHasMaxRangeM(builder, HAS_MAX_RANGE_M);
+  ACWAccessWindow.addHasEdgesRefined(builder, HAS_EDGES_REFINED);
   return ACWAccessWindow.endACWAccessWindow(builder);
 }
 
@@ -227,7 +322,16 @@ unpack(): ACWAccessWindowT {
     this.END_LIMITING_CONSTRAINT_LABEL(),
     this.MIN_RANGE_M(),
     this.MAX_RANGE_M(),
-    this.EDGES_REFINED()
+    this.EDGES_REFINED(),
+    this.HAS_START_JULIAN_DATE_TT(),
+    this.HAS_END_JULIAN_DATE_TT(),
+    this.HAS_MAX_ELEVATION_RAD(),
+    this.HAS_SAMPLE_COUNT(),
+    this.HAS_START_LIMITING_CONSTRAINT_INDEX(),
+    this.HAS_END_LIMITING_CONSTRAINT_INDEX(),
+    this.HAS_MIN_RANGE_M(),
+    this.HAS_MAX_RANGE_M(),
+    this.HAS_EDGES_REFINED()
   );
 }
 
@@ -246,6 +350,15 @@ unpackTo(_o: ACWAccessWindowT): void {
   _o.MIN_RANGE_M = this.MIN_RANGE_M();
   _o.MAX_RANGE_M = this.MAX_RANGE_M();
   _o.EDGES_REFINED = this.EDGES_REFINED();
+  _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT();
+  _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT();
+  _o.HAS_MAX_ELEVATION_RAD = this.HAS_MAX_ELEVATION_RAD();
+  _o.HAS_SAMPLE_COUNT = this.HAS_SAMPLE_COUNT();
+  _o.HAS_START_LIMITING_CONSTRAINT_INDEX = this.HAS_START_LIMITING_CONSTRAINT_INDEX();
+  _o.HAS_END_LIMITING_CONSTRAINT_INDEX = this.HAS_END_LIMITING_CONSTRAINT_INDEX();
+  _o.HAS_MIN_RANGE_M = this.HAS_MIN_RANGE_M();
+  _o.HAS_MAX_RANGE_M = this.HAS_MAX_RANGE_M();
+  _o.HAS_EDGES_REFINED = this.HAS_EDGES_REFINED();
 }
 }
 
@@ -263,7 +376,16 @@ constructor(
   public END_LIMITING_CONSTRAINT_LABEL: string|Uint8Array|null = null,
   public MIN_RANGE_M: number = 0.0,
   public MAX_RANGE_M: number = 0.0,
-  public EDGES_REFINED: boolean = false
+  public EDGES_REFINED: boolean = false,
+  public HAS_START_JULIAN_DATE_TT: boolean = false,
+  public HAS_END_JULIAN_DATE_TT: boolean = false,
+  public HAS_MAX_ELEVATION_RAD: boolean = false,
+  public HAS_SAMPLE_COUNT: boolean = false,
+  public HAS_START_LIMITING_CONSTRAINT_INDEX: boolean = false,
+  public HAS_END_LIMITING_CONSTRAINT_INDEX: boolean = false,
+  public HAS_MIN_RANGE_M: boolean = false,
+  public HAS_MAX_RANGE_M: boolean = false,
+  public HAS_EDGES_REFINED: boolean = false
 ){}
 
 
@@ -286,7 +408,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     END_LIMITING_CONSTRAINT_LABEL,
     this.MIN_RANGE_M,
     this.MAX_RANGE_M,
-    this.EDGES_REFINED
+    this.EDGES_REFINED,
+    this.HAS_START_JULIAN_DATE_TT,
+    this.HAS_END_JULIAN_DATE_TT,
+    this.HAS_MAX_ELEVATION_RAD,
+    this.HAS_SAMPLE_COUNT,
+    this.HAS_START_LIMITING_CONSTRAINT_INDEX,
+    this.HAS_END_LIMITING_CONSTRAINT_INDEX,
+    this.HAS_MIN_RANGE_M,
+    this.HAS_MAX_RANGE_M,
+    this.HAS_EDGES_REFINED
   );
 }
 }

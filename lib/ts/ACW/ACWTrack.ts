@@ -78,8 +78,31 @@ LOSS_REASON(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_START_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_END_JULIAN_DATE_TT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_SCHEDULED_COUNT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_DETECTED_COUNT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWTrack(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(11);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
@@ -110,12 +133,28 @@ static addLossReason(builder:flatbuffers.Builder, LOSS_REASONOffset:flatbuffers.
   builder.addFieldOffset(6, LOSS_REASONOffset, 0);
 }
 
+static addHasStartJulianDateTt(builder:flatbuffers.Builder, HAS_START_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(7, +HAS_START_JULIAN_DATE_TT, +false);
+}
+
+static addHasEndJulianDateTt(builder:flatbuffers.Builder, HAS_END_JULIAN_DATE_TT:boolean) {
+  builder.addFieldInt8(8, +HAS_END_JULIAN_DATE_TT, +false);
+}
+
+static addHasScheduledCount(builder:flatbuffers.Builder, HAS_SCHEDULED_COUNT:boolean) {
+  builder.addFieldInt8(9, +HAS_SCHEDULED_COUNT, +false);
+}
+
+static addHasDetectedCount(builder:flatbuffers.Builder, HAS_DETECTED_COUNT:boolean) {
+  builder.addFieldInt8(10, +HAS_DETECTED_COUNT, +false);
+}
+
 static endACWTrack(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWTrack(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset, TARGET_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, SCHEDULED_COUNT:number, DETECTED_COUNT:number, LOSS_REASONOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWTrack(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset, TARGET_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, SCHEDULED_COUNT:number, DETECTED_COUNT:number, LOSS_REASONOffset:flatbuffers.Offset, HAS_START_JULIAN_DATE_TT:boolean, HAS_END_JULIAN_DATE_TT:boolean, HAS_SCHEDULED_COUNT:boolean, HAS_DETECTED_COUNT:boolean):flatbuffers.Offset {
   ACWTrack.startACWTrack(builder);
   ACWTrack.addSensorId(builder, SENSOR_IDOffset);
   ACWTrack.addTargetId(builder, TARGET_IDOffset);
@@ -124,6 +163,10 @@ static createACWTrack(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.O
   ACWTrack.addScheduledCount(builder, SCHEDULED_COUNT);
   ACWTrack.addDetectedCount(builder, DETECTED_COUNT);
   ACWTrack.addLossReason(builder, LOSS_REASONOffset);
+  ACWTrack.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
+  ACWTrack.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+  ACWTrack.addHasScheduledCount(builder, HAS_SCHEDULED_COUNT);
+  ACWTrack.addHasDetectedCount(builder, HAS_DETECTED_COUNT);
   return ACWTrack.endACWTrack(builder);
 }
 
@@ -135,7 +178,11 @@ unpack(): ACWTrackT {
     this.END_JULIAN_DATE_TT(),
     this.SCHEDULED_COUNT(),
     this.DETECTED_COUNT(),
-    this.LOSS_REASON()
+    this.LOSS_REASON(),
+    this.HAS_START_JULIAN_DATE_TT(),
+    this.HAS_END_JULIAN_DATE_TT(),
+    this.HAS_SCHEDULED_COUNT(),
+    this.HAS_DETECTED_COUNT()
   );
 }
 
@@ -148,6 +195,10 @@ unpackTo(_o: ACWTrackT): void {
   _o.SCHEDULED_COUNT = this.SCHEDULED_COUNT();
   _o.DETECTED_COUNT = this.DETECTED_COUNT();
   _o.LOSS_REASON = this.LOSS_REASON();
+  _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT();
+  _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT();
+  _o.HAS_SCHEDULED_COUNT = this.HAS_SCHEDULED_COUNT();
+  _o.HAS_DETECTED_COUNT = this.HAS_DETECTED_COUNT();
 }
 }
 
@@ -159,7 +210,11 @@ constructor(
   public END_JULIAN_DATE_TT: number = 0.0,
   public SCHEDULED_COUNT: number = 0,
   public DETECTED_COUNT: number = 0,
-  public LOSS_REASON: string|Uint8Array|null = null
+  public LOSS_REASON: string|Uint8Array|null = null,
+  public HAS_START_JULIAN_DATE_TT: boolean = false,
+  public HAS_END_JULIAN_DATE_TT: boolean = false,
+  public HAS_SCHEDULED_COUNT: boolean = false,
+  public HAS_DETECTED_COUNT: boolean = false
 ){}
 
 
@@ -175,7 +230,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.END_JULIAN_DATE_TT,
     this.SCHEDULED_COUNT,
     this.DETECTED_COUNT,
-    LOSS_REASON
+    LOSS_REASON,
+    this.HAS_START_JULIAN_DATE_TT,
+    this.HAS_END_JULIAN_DATE_TT,
+    this.HAS_SCHEDULED_COUNT,
+    this.HAS_DETECTED_COUNT
   );
 }
 }

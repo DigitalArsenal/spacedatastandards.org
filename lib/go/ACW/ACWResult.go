@@ -223,8 +223,70 @@ func (rcv *ACWResult) MutateObservationCount(n uint32) bool {
 	return rcv.MutateOBSERVATION_COUNT(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWResult) HAS_STATUS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWResult) HasStatus() bool {
+	return rcv.HAS_STATUS()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWResult) MutateHAS_STATUS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWResult) MutateHasStatus(n bool) bool {
+	return rcv.MutateHAS_STATUS(n)
+}
+
+func (rcv *ACWResult) HAS_EVALUATION_MODE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWResult) HasEvaluationMode() bool {
+	return rcv.HAS_EVALUATION_MODE()
+}
+
+func (rcv *ACWResult) MutateHAS_EVALUATION_MODE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWResult) MutateHasEvaluationMode(n bool) bool {
+	return rcv.MutateHAS_EVALUATION_MODE(n)
+}
+
+func (rcv *ACWResult) HAS_OBSERVATION_COUNT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWResult) HasObservationCount() bool {
+	return rcv.HAS_OBSERVATION_COUNT()
+}
+
+func (rcv *ACWResult) MutateHAS_OBSERVATION_COUNT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ACWResult) MutateHasObservationCount(n bool) bool {
+	return rcv.MutateHAS_OBSERVATION_COUNT(n)
+}
+
 func ACWResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(11)
 }
 func ACWResultAddSTATUS(builder *flatbuffers.Builder, STATUS acwResultStatus) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -291,6 +353,24 @@ func ACWResultAddOBSERVATION_COUNT(builder *flatbuffers.Builder, OBSERVATION_COU
 }
 func ACWResultAddObservationCount(builder *flatbuffers.Builder, OBSERVATION_COUNT uint32) {
 	ACWResultAddOBSERVATION_COUNT(builder, OBSERVATION_COUNT)
+}
+func ACWResultAddHAS_STATUS(builder *flatbuffers.Builder, HAS_STATUS bool) {
+	builder.PrependBoolSlot(8, HAS_STATUS, false)
+}
+func ACWResultAddHasStatus(builder *flatbuffers.Builder, HAS_STATUS bool) {
+	ACWResultAddHAS_STATUS(builder, HAS_STATUS)
+}
+func ACWResultAddHAS_EVALUATION_MODE(builder *flatbuffers.Builder, HAS_EVALUATION_MODE bool) {
+	builder.PrependBoolSlot(9, HAS_EVALUATION_MODE, false)
+}
+func ACWResultAddHasEvaluationMode(builder *flatbuffers.Builder, HAS_EVALUATION_MODE bool) {
+	ACWResultAddHAS_EVALUATION_MODE(builder, HAS_EVALUATION_MODE)
+}
+func ACWResultAddHAS_OBSERVATION_COUNT(builder *flatbuffers.Builder, HAS_OBSERVATION_COUNT bool) {
+	builder.PrependBoolSlot(10, HAS_OBSERVATION_COUNT, false)
+}
+func ACWResultAddHasObservationCount(builder *flatbuffers.Builder, HAS_OBSERVATION_COUNT bool) {
+	ACWResultAddHAS_OBSERVATION_COUNT(builder, HAS_OBSERVATION_COUNT)
 }
 func ACWResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

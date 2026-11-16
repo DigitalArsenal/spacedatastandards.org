@@ -15,6 +15,13 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 
 #include "../EOP/main_generated.h"
 #include "../MEM/main_generated.h"
+#include "../RFM/main_generated.h"
+
+struct BodyRecordRef;
+struct BodyRecordRefBuilder;
+
+struct BodyDescriptor;
+struct BodyDescriptorBuilder;
 
 struct ACWStateSample;
 struct ACWStateSampleBuilder;
@@ -67,6 +74,9 @@ struct ACWResultBuilder;
 struct ACW;
 struct ACWBuilder;
 
+/// ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+/// Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+/// does not apply to ACW enumerations as a group.
 enum acwOperationCode : int8_t {
   acwOperationCode_UNKNOWN = 0,
   /// Compute access windows from pre-sampled target Cartesian states.
@@ -80,31 +90,39 @@ enum acwOperationCode : int8_t {
   /// $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
   /// records; the result lists the tracks.
   acwOperationCode_SIMULATE_OBSERVATIONS = 2,
+  /// Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+  acwOperationCode_COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY = 3,
+  /// Only runtime simulation operation in body-aware modules; body required.
+  acwOperationCode_SIMULATE_OBSERVATIONS_EXPLICIT_BODY = 4,
   acwOperationCode_MIN = acwOperationCode_UNKNOWN,
-  acwOperationCode_MAX = acwOperationCode_SIMULATE_OBSERVATIONS
+  acwOperationCode_MAX = acwOperationCode_SIMULATE_OBSERVATIONS_EXPLICIT_BODY
 };
 
-inline const acwOperationCode (&EnumValuesacwOperationCode())[3] {
+inline const acwOperationCode (&EnumValuesacwOperationCode())[5] {
   static const acwOperationCode values[] = {
     acwOperationCode_UNKNOWN,
     acwOperationCode_COMPUTE_ACCESS_WINDOWS,
-    acwOperationCode_SIMULATE_OBSERVATIONS
+    acwOperationCode_SIMULATE_OBSERVATIONS,
+    acwOperationCode_COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY,
+    acwOperationCode_SIMULATE_OBSERVATIONS_EXPLICIT_BODY
   };
   return values;
 }
 
 inline const char * const *EnumNamesacwOperationCode() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
     "UNKNOWN",
     "COMPUTE_ACCESS_WINDOWS",
     "SIMULATE_OBSERVATIONS",
+    "COMPUTE_ACCESS_WINDOWS_EXPLICIT_BODY",
+    "SIMULATE_OBSERVATIONS_EXPLICIT_BODY",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameacwOperationCode(acwOperationCode e) {
-  if (::flatbuffers::IsOutRange(e, acwOperationCode_UNKNOWN, acwOperationCode_SIMULATE_OBSERVATIONS)) return "";
+  if (::flatbuffers::IsOutRange(e, acwOperationCode_UNKNOWN, acwOperationCode_SIMULATE_OBSERVATIONS_EXPLICIT_BODY)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesacwOperationCode()[index];
 }
@@ -397,7 +415,379 @@ inline const char *EnumNameacwSensorPhenomenology(acwSensorPhenomenology e) {
   return EnumNamesacwSensorPhenomenology()[index];
 }
 
-/// Target Cartesian state sample in an Earth-fixed frame.
+/// Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+/// or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+/// Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+/// MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+/// RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+/// the complete root. URI is advisory and never fetched by a module.
+struct BodyRecordRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BodyRecordRefBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_STANDARD = 4,
+    VT_RECORD_ID = 6,
+    VT_SHA256 = 8,
+    VT_URI = 10
+  };
+  const ::flatbuffers::String *STANDARD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STANDARD);
+  }
+  const ::flatbuffers::String *RECORD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECORD_ID);
+  }
+  const ::flatbuffers::String *SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHA256);
+  }
+  const ::flatbuffers::String *URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_URI);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_STANDARD) &&
+           verifier.VerifyString(STANDARD()) &&
+           VerifyOffsetRequired(verifier, VT_RECORD_ID) &&
+           verifier.VerifyString(RECORD_ID()) &&
+           VerifyOffsetRequired(verifier, VT_SHA256) &&
+           verifier.VerifyString(SHA256()) &&
+           VerifyOffset(verifier, VT_URI) &&
+           verifier.VerifyString(URI()) &&
+           verifier.EndTable();
+  }
+};
+
+struct BodyRecordRefBuilder {
+  typedef BodyRecordRef Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_STANDARD(::flatbuffers::Offset<::flatbuffers::String> STANDARD) {
+    fbb_.AddOffset(BodyRecordRef::VT_STANDARD, STANDARD);
+  }
+  void add_RECORD_ID(::flatbuffers::Offset<::flatbuffers::String> RECORD_ID) {
+    fbb_.AddOffset(BodyRecordRef::VT_RECORD_ID, RECORD_ID);
+  }
+  void add_SHA256(::flatbuffers::Offset<::flatbuffers::String> SHA256) {
+    fbb_.AddOffset(BodyRecordRef::VT_SHA256, SHA256);
+  }
+  void add_URI(::flatbuffers::Offset<::flatbuffers::String> URI) {
+    fbb_.AddOffset(BodyRecordRef::VT_URI, URI);
+  }
+  explicit BodyRecordRefBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<BodyRecordRef> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<BodyRecordRef>(end);
+    fbb_.Required(o, BodyRecordRef::VT_STANDARD);
+    fbb_.Required(o, BodyRecordRef::VT_RECORD_ID);
+    fbb_.Required(o, BodyRecordRef::VT_SHA256);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<BodyRecordRef> CreateBodyRecordRef(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> STANDARD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RECORD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHA256 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> URI = 0) {
+  BodyRecordRefBuilder builder_(_fbb);
+  builder_.add_URI(URI);
+  builder_.add_SHA256(SHA256);
+  builder_.add_RECORD_ID(RECORD_ID);
+  builder_.add_STANDARD(STANDARD);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<BodyRecordRef> CreateBodyRecordRefDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *STANDARD = nullptr,
+    const char *RECORD_ID = nullptr,
+    const char *SHA256 = nullptr,
+    const char *URI = nullptr) {
+  auto STANDARD__ = STANDARD ? _fbb.CreateString(STANDARD) : 0;
+  auto RECORD_ID__ = RECORD_ID ? _fbb.CreateString(RECORD_ID) : 0;
+  auto SHA256__ = SHA256 ? _fbb.CreateString(SHA256) : 0;
+  auto URI__ = URI ? _fbb.CreateString(URI) : 0;
+  return CreateBodyRecordRef(
+      _fbb,
+      STANDARD__,
+      RECORD_ID__,
+      SHA256__,
+      URI__);
+}
+
+/// Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+/// No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+/// SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+struct BodyDescriptor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef BodyDescriptorBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAIF_ID = 4,
+    VT_FIXED_FRAME = 6,
+    VT_SEMI_AXIS_X_M = 8,
+    VT_SEMI_AXIS_Y_M = 10,
+    VT_SEMI_AXIS_Z_M = 12,
+    VT_MODEL_ID = 14,
+    VT_MODEL_SHA256 = 16,
+    VT_ATMOSPHERE_MODEL_ID = 18,
+    VT_TERRAIN = 20,
+    VT_GRAVITY = 22,
+    VT_LIGHTING_SPHERE_RADIUS_M = 24,
+    VT_LIGHTING_MODEL_ID = 26,
+    VT_HAS_NAIF_ID = 28,
+    VT_HAS_SEMI_AXIS_X_M = 30,
+    VT_HAS_SEMI_AXIS_Y_M = 32,
+    VT_HAS_SEMI_AXIS_Z_M = 34,
+    VT_HAS_LIGHTING_SPHERE_RADIUS_M = 36
+  };
+  /// Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+  int32_t NAIF_ID() const {
+    return GetField<int32_t>(VT_NAIF_ID, 0);
+  }
+  const RFMCoordinateSystem *FIXED_FRAME() const {
+    return GetPointer<const RFMCoordinateSystem *>(VT_FIXED_FRAME);
+  }
+  /// Each axis requires its HAS flag and a finite positive value.
+  double SEMI_AXIS_X_M() const {
+    return GetField<double>(VT_SEMI_AXIS_X_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  double SEMI_AXIS_Y_M() const {
+    return GetField<double>(VT_SEMI_AXIS_Y_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  double SEMI_AXIS_Z_M() const {
+    return GetField<double>(VT_SEMI_AXIS_Z_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  const ::flatbuffers::String *MODEL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODEL_ID);
+  }
+  /// Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+  const ::flatbuffers::String *MODEL_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODEL_SHA256);
+  }
+  /// Required explicit assertion, "NONE" or a supported model identifier.
+  const ::flatbuffers::String *ATMOSPHERE_MODEL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATMOSPHERE_MODEL_ID);
+  }
+  /// Absent means no terrain supplied; elevation remains mandatory for sites.
+  const BodyRecordRef *TERRAIN() const {
+    return GetPointer<const BodyRecordRef *>(VT_TERRAIN);
+  }
+  /// Optional SHC or MODEL reference; its radius is not the shape radius.
+  const BodyRecordRef *GRAVITY() const {
+    return GetPointer<const BodyRecordRef *>(VT_GRAVITY);
+  }
+  /// True HAS flag, positive radius and name required for non-ANY lighting.
+  /// This is a named spherical-shadow approximation, not ellipsoidal lighting.
+  double LIGHTING_SPHERE_RADIUS_M() const {
+    return GetField<double>(VT_LIGHTING_SPHERE_RADIUS_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  const ::flatbuffers::String *LIGHTING_MODEL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LIGHTING_MODEL_ID);
+  }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_NAIF_ID() const {
+    return GetField<uint8_t>(VT_HAS_NAIF_ID, 0) != 0;
+  }
+  bool HAS_SEMI_AXIS_X_M() const {
+    return GetField<uint8_t>(VT_HAS_SEMI_AXIS_X_M, 0) != 0;
+  }
+  bool HAS_SEMI_AXIS_Y_M() const {
+    return GetField<uint8_t>(VT_HAS_SEMI_AXIS_Y_M, 0) != 0;
+  }
+  bool HAS_SEMI_AXIS_Z_M() const {
+    return GetField<uint8_t>(VT_HAS_SEMI_AXIS_Z_M, 0) != 0;
+  }
+  bool HAS_LIGHTING_SPHERE_RADIUS_M() const {
+    return GetField<uint8_t>(VT_HAS_LIGHTING_SPHERE_RADIUS_M, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_NAIF_ID, 4) &&
+           VerifyOffsetRequired(verifier, VT_FIXED_FRAME) &&
+           verifier.VerifyTable(FIXED_FRAME()) &&
+           VerifyField<double>(verifier, VT_SEMI_AXIS_X_M, 8) &&
+           VerifyField<double>(verifier, VT_SEMI_AXIS_Y_M, 8) &&
+           VerifyField<double>(verifier, VT_SEMI_AXIS_Z_M, 8) &&
+           VerifyOffsetRequired(verifier, VT_MODEL_ID) &&
+           verifier.VerifyString(MODEL_ID()) &&
+           VerifyOffsetRequired(verifier, VT_MODEL_SHA256) &&
+           verifier.VerifyString(MODEL_SHA256()) &&
+           VerifyOffsetRequired(verifier, VT_ATMOSPHERE_MODEL_ID) &&
+           verifier.VerifyString(ATMOSPHERE_MODEL_ID()) &&
+           VerifyOffset(verifier, VT_TERRAIN) &&
+           verifier.VerifyTable(TERRAIN()) &&
+           VerifyOffset(verifier, VT_GRAVITY) &&
+           verifier.VerifyTable(GRAVITY()) &&
+           VerifyField<double>(verifier, VT_LIGHTING_SPHERE_RADIUS_M, 8) &&
+           VerifyOffset(verifier, VT_LIGHTING_MODEL_ID) &&
+           verifier.VerifyString(LIGHTING_MODEL_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_NAIF_ID, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SEMI_AXIS_X_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SEMI_AXIS_Y_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SEMI_AXIS_Z_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_LIGHTING_SPHERE_RADIUS_M, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct BodyDescriptorBuilder {
+  typedef BodyDescriptor Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAIF_ID(int32_t NAIF_ID) {
+    fbb_.AddElement<int32_t>(BodyDescriptor::VT_NAIF_ID, NAIF_ID, 0);
+  }
+  void add_FIXED_FRAME(::flatbuffers::Offset<RFMCoordinateSystem> FIXED_FRAME) {
+    fbb_.AddOffset(BodyDescriptor::VT_FIXED_FRAME, FIXED_FRAME);
+  }
+  void add_SEMI_AXIS_X_M(double SEMI_AXIS_X_M) {
+    fbb_.AddElement<double>(BodyDescriptor::VT_SEMI_AXIS_X_M, SEMI_AXIS_X_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SEMI_AXIS_Y_M(double SEMI_AXIS_Y_M) {
+    fbb_.AddElement<double>(BodyDescriptor::VT_SEMI_AXIS_Y_M, SEMI_AXIS_Y_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SEMI_AXIS_Z_M(double SEMI_AXIS_Z_M) {
+    fbb_.AddElement<double>(BodyDescriptor::VT_SEMI_AXIS_Z_M, SEMI_AXIS_Z_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_MODEL_ID(::flatbuffers::Offset<::flatbuffers::String> MODEL_ID) {
+    fbb_.AddOffset(BodyDescriptor::VT_MODEL_ID, MODEL_ID);
+  }
+  void add_MODEL_SHA256(::flatbuffers::Offset<::flatbuffers::String> MODEL_SHA256) {
+    fbb_.AddOffset(BodyDescriptor::VT_MODEL_SHA256, MODEL_SHA256);
+  }
+  void add_ATMOSPHERE_MODEL_ID(::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERE_MODEL_ID) {
+    fbb_.AddOffset(BodyDescriptor::VT_ATMOSPHERE_MODEL_ID, ATMOSPHERE_MODEL_ID);
+  }
+  void add_TERRAIN(::flatbuffers::Offset<BodyRecordRef> TERRAIN) {
+    fbb_.AddOffset(BodyDescriptor::VT_TERRAIN, TERRAIN);
+  }
+  void add_GRAVITY(::flatbuffers::Offset<BodyRecordRef> GRAVITY) {
+    fbb_.AddOffset(BodyDescriptor::VT_GRAVITY, GRAVITY);
+  }
+  void add_LIGHTING_SPHERE_RADIUS_M(double LIGHTING_SPHERE_RADIUS_M) {
+    fbb_.AddElement<double>(BodyDescriptor::VT_LIGHTING_SPHERE_RADIUS_M, LIGHTING_SPHERE_RADIUS_M, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_LIGHTING_MODEL_ID(::flatbuffers::Offset<::flatbuffers::String> LIGHTING_MODEL_ID) {
+    fbb_.AddOffset(BodyDescriptor::VT_LIGHTING_MODEL_ID, LIGHTING_MODEL_ID);
+  }
+  void add_HAS_NAIF_ID(bool HAS_NAIF_ID) {
+    fbb_.AddElement<uint8_t>(BodyDescriptor::VT_HAS_NAIF_ID, static_cast<uint8_t>(HAS_NAIF_ID), 0);
+  }
+  void add_HAS_SEMI_AXIS_X_M(bool HAS_SEMI_AXIS_X_M) {
+    fbb_.AddElement<uint8_t>(BodyDescriptor::VT_HAS_SEMI_AXIS_X_M, static_cast<uint8_t>(HAS_SEMI_AXIS_X_M), 0);
+  }
+  void add_HAS_SEMI_AXIS_Y_M(bool HAS_SEMI_AXIS_Y_M) {
+    fbb_.AddElement<uint8_t>(BodyDescriptor::VT_HAS_SEMI_AXIS_Y_M, static_cast<uint8_t>(HAS_SEMI_AXIS_Y_M), 0);
+  }
+  void add_HAS_SEMI_AXIS_Z_M(bool HAS_SEMI_AXIS_Z_M) {
+    fbb_.AddElement<uint8_t>(BodyDescriptor::VT_HAS_SEMI_AXIS_Z_M, static_cast<uint8_t>(HAS_SEMI_AXIS_Z_M), 0);
+  }
+  void add_HAS_LIGHTING_SPHERE_RADIUS_M(bool HAS_LIGHTING_SPHERE_RADIUS_M) {
+    fbb_.AddElement<uint8_t>(BodyDescriptor::VT_HAS_LIGHTING_SPHERE_RADIUS_M, static_cast<uint8_t>(HAS_LIGHTING_SPHERE_RADIUS_M), 0);
+  }
+  explicit BodyDescriptorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<BodyDescriptor> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<BodyDescriptor>(end);
+    fbb_.Required(o, BodyDescriptor::VT_FIXED_FRAME);
+    fbb_.Required(o, BodyDescriptor::VT_MODEL_ID);
+    fbb_.Required(o, BodyDescriptor::VT_MODEL_SHA256);
+    fbb_.Required(o, BodyDescriptor::VT_ATMOSPHERE_MODEL_ID);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<BodyDescriptor> CreateBodyDescriptor(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t NAIF_ID = 0,
+    ::flatbuffers::Offset<RFMCoordinateSystem> FIXED_FRAME = 0,
+    double SEMI_AXIS_X_M = std::numeric_limits<double>::quiet_NaN(),
+    double SEMI_AXIS_Y_M = std::numeric_limits<double>::quiet_NaN(),
+    double SEMI_AXIS_Z_M = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> MODEL_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODEL_SHA256 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATMOSPHERE_MODEL_ID = 0,
+    ::flatbuffers::Offset<BodyRecordRef> TERRAIN = 0,
+    ::flatbuffers::Offset<BodyRecordRef> GRAVITY = 0,
+    double LIGHTING_SPHERE_RADIUS_M = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> LIGHTING_MODEL_ID = 0,
+    bool HAS_NAIF_ID = false,
+    bool HAS_SEMI_AXIS_X_M = false,
+    bool HAS_SEMI_AXIS_Y_M = false,
+    bool HAS_SEMI_AXIS_Z_M = false,
+    bool HAS_LIGHTING_SPHERE_RADIUS_M = false) {
+  BodyDescriptorBuilder builder_(_fbb);
+  builder_.add_LIGHTING_SPHERE_RADIUS_M(LIGHTING_SPHERE_RADIUS_M);
+  builder_.add_SEMI_AXIS_Z_M(SEMI_AXIS_Z_M);
+  builder_.add_SEMI_AXIS_Y_M(SEMI_AXIS_Y_M);
+  builder_.add_SEMI_AXIS_X_M(SEMI_AXIS_X_M);
+  builder_.add_LIGHTING_MODEL_ID(LIGHTING_MODEL_ID);
+  builder_.add_GRAVITY(GRAVITY);
+  builder_.add_TERRAIN(TERRAIN);
+  builder_.add_ATMOSPHERE_MODEL_ID(ATMOSPHERE_MODEL_ID);
+  builder_.add_MODEL_SHA256(MODEL_SHA256);
+  builder_.add_MODEL_ID(MODEL_ID);
+  builder_.add_FIXED_FRAME(FIXED_FRAME);
+  builder_.add_NAIF_ID(NAIF_ID);
+  builder_.add_HAS_LIGHTING_SPHERE_RADIUS_M(HAS_LIGHTING_SPHERE_RADIUS_M);
+  builder_.add_HAS_SEMI_AXIS_Z_M(HAS_SEMI_AXIS_Z_M);
+  builder_.add_HAS_SEMI_AXIS_Y_M(HAS_SEMI_AXIS_Y_M);
+  builder_.add_HAS_SEMI_AXIS_X_M(HAS_SEMI_AXIS_X_M);
+  builder_.add_HAS_NAIF_ID(HAS_NAIF_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<BodyDescriptor> CreateBodyDescriptorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t NAIF_ID = 0,
+    ::flatbuffers::Offset<RFMCoordinateSystem> FIXED_FRAME = 0,
+    double SEMI_AXIS_X_M = std::numeric_limits<double>::quiet_NaN(),
+    double SEMI_AXIS_Y_M = std::numeric_limits<double>::quiet_NaN(),
+    double SEMI_AXIS_Z_M = std::numeric_limits<double>::quiet_NaN(),
+    const char *MODEL_ID = nullptr,
+    const char *MODEL_SHA256 = nullptr,
+    const char *ATMOSPHERE_MODEL_ID = nullptr,
+    ::flatbuffers::Offset<BodyRecordRef> TERRAIN = 0,
+    ::flatbuffers::Offset<BodyRecordRef> GRAVITY = 0,
+    double LIGHTING_SPHERE_RADIUS_M = std::numeric_limits<double>::quiet_NaN(),
+    const char *LIGHTING_MODEL_ID = nullptr,
+    bool HAS_NAIF_ID = false,
+    bool HAS_SEMI_AXIS_X_M = false,
+    bool HAS_SEMI_AXIS_Y_M = false,
+    bool HAS_SEMI_AXIS_Z_M = false,
+    bool HAS_LIGHTING_SPHERE_RADIUS_M = false) {
+  auto MODEL_ID__ = MODEL_ID ? _fbb.CreateString(MODEL_ID) : 0;
+  auto MODEL_SHA256__ = MODEL_SHA256 ? _fbb.CreateString(MODEL_SHA256) : 0;
+  auto ATMOSPHERE_MODEL_ID__ = ATMOSPHERE_MODEL_ID ? _fbb.CreateString(ATMOSPHERE_MODEL_ID) : 0;
+  auto LIGHTING_MODEL_ID__ = LIGHTING_MODEL_ID ? _fbb.CreateString(LIGHTING_MODEL_ID) : 0;
+  return CreateBodyDescriptor(
+      _fbb,
+      NAIF_ID,
+      FIXED_FRAME,
+      SEMI_AXIS_X_M,
+      SEMI_AXIS_Y_M,
+      SEMI_AXIS_Z_M,
+      MODEL_ID__,
+      MODEL_SHA256__,
+      ATMOSPHERE_MODEL_ID__,
+      TERRAIN,
+      GRAVITY,
+      LIGHTING_SPHERE_RADIUS_M,
+      LIGHTING_MODEL_ID__,
+      HAS_NAIF_ID,
+      HAS_SEMI_AXIS_X_M,
+      HAS_SEMI_AXIS_Y_M,
+      HAS_SEMI_AXIS_Z_M,
+      HAS_LIGHTING_SPHERE_RADIUS_M);
+}
+
+/// Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 struct ACWStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ACWStateSampleBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -407,25 +797,32 @@ struct ACWStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POSITION_Z_M = 10,
     VT_VELOCITY_X_MPS = 12,
     VT_VELOCITY_Y_MPS = 14,
-    VT_VELOCITY_Z_MPS = 16
+    VT_VELOCITY_Z_MPS = 16,
+    VT_HAS_JULIAN_DATE_TT = 18,
+    VT_HAS_POSITION_X_M = 20,
+    VT_HAS_POSITION_Y_M = 22,
+    VT_HAS_POSITION_Z_M = 24,
+    VT_HAS_VELOCITY_X_MPS = 26,
+    VT_HAS_VELOCITY_Y_MPS = 28,
+    VT_HAS_VELOCITY_Z_MPS = 30
   };
   /// Sample epoch as Julian Date in TT.
   double JULIAN_DATE_TT() const {
     return GetField<double>(VT_JULIAN_DATE_TT, 0.0);
   }
-  /// Earth-fixed X position, meters.
+  /// Fixed-frame X position, meters.
   double POSITION_X_M() const {
     return GetField<double>(VT_POSITION_X_M, 0.0);
   }
-  /// Earth-fixed Y position, meters.
+  /// Fixed-frame Y position, meters.
   double POSITION_Y_M() const {
     return GetField<double>(VT_POSITION_Y_M, 0.0);
   }
-  /// Earth-fixed Z position, meters.
+  /// Fixed-frame Z position, meters.
   double POSITION_Z_M() const {
     return GetField<double>(VT_POSITION_Z_M, 0.0);
   }
-  /// Earth-fixed velocity, meters per second. Required for range-rate,
+  /// Fixed-frame velocity, meters per second. Required for range-rate,
   /// Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
   double VELOCITY_X_MPS() const {
     return GetField<double>(VT_VELOCITY_X_MPS, 0.0);
@@ -435,6 +832,28 @@ struct ACWStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   double VELOCITY_Z_MPS() const {
     return GetField<double>(VT_VELOCITY_Z_MPS, 0.0);
+  }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_POSITION_X_M() const {
+    return GetField<uint8_t>(VT_HAS_POSITION_X_M, 0) != 0;
+  }
+  bool HAS_POSITION_Y_M() const {
+    return GetField<uint8_t>(VT_HAS_POSITION_Y_M, 0) != 0;
+  }
+  bool HAS_POSITION_Z_M() const {
+    return GetField<uint8_t>(VT_HAS_POSITION_Z_M, 0) != 0;
+  }
+  bool HAS_VELOCITY_X_MPS() const {
+    return GetField<uint8_t>(VT_HAS_VELOCITY_X_MPS, 0) != 0;
+  }
+  bool HAS_VELOCITY_Y_MPS() const {
+    return GetField<uint8_t>(VT_HAS_VELOCITY_Y_MPS, 0) != 0;
+  }
+  bool HAS_VELOCITY_Z_MPS() const {
+    return GetField<uint8_t>(VT_HAS_VELOCITY_Z_MPS, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -446,6 +865,13 @@ struct ACWStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_VELOCITY_X_MPS, 8) &&
            VerifyField<double>(verifier, VT_VELOCITY_Y_MPS, 8) &&
            VerifyField<double>(verifier, VT_VELOCITY_Z_MPS, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_POSITION_X_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_POSITION_Y_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_POSITION_Z_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_VELOCITY_X_MPS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_VELOCITY_Y_MPS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_VELOCITY_Z_MPS, 1) &&
            verifier.EndTable();
   }
 };
@@ -475,6 +901,27 @@ struct ACWStateSampleBuilder {
   void add_VELOCITY_Z_MPS(double VELOCITY_Z_MPS) {
     fbb_.AddElement<double>(ACWStateSample::VT_VELOCITY_Z_MPS, VELOCITY_Z_MPS, 0.0);
   }
+  void add_HAS_JULIAN_DATE_TT(bool HAS_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_POSITION_X_M(bool HAS_POSITION_X_M) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_POSITION_X_M, static_cast<uint8_t>(HAS_POSITION_X_M), 0);
+  }
+  void add_HAS_POSITION_Y_M(bool HAS_POSITION_Y_M) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_POSITION_Y_M, static_cast<uint8_t>(HAS_POSITION_Y_M), 0);
+  }
+  void add_HAS_POSITION_Z_M(bool HAS_POSITION_Z_M) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_POSITION_Z_M, static_cast<uint8_t>(HAS_POSITION_Z_M), 0);
+  }
+  void add_HAS_VELOCITY_X_MPS(bool HAS_VELOCITY_X_MPS) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_VELOCITY_X_MPS, static_cast<uint8_t>(HAS_VELOCITY_X_MPS), 0);
+  }
+  void add_HAS_VELOCITY_Y_MPS(bool HAS_VELOCITY_Y_MPS) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_VELOCITY_Y_MPS, static_cast<uint8_t>(HAS_VELOCITY_Y_MPS), 0);
+  }
+  void add_HAS_VELOCITY_Z_MPS(bool HAS_VELOCITY_Z_MPS) {
+    fbb_.AddElement<uint8_t>(ACWStateSample::VT_HAS_VELOCITY_Z_MPS, static_cast<uint8_t>(HAS_VELOCITY_Z_MPS), 0);
+  }
   explicit ACWStateSampleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -494,7 +941,14 @@ inline ::flatbuffers::Offset<ACWStateSample> CreateACWStateSample(
     double POSITION_Z_M = 0.0,
     double VELOCITY_X_MPS = 0.0,
     double VELOCITY_Y_MPS = 0.0,
-    double VELOCITY_Z_MPS = 0.0) {
+    double VELOCITY_Z_MPS = 0.0,
+    bool HAS_JULIAN_DATE_TT = false,
+    bool HAS_POSITION_X_M = false,
+    bool HAS_POSITION_Y_M = false,
+    bool HAS_POSITION_Z_M = false,
+    bool HAS_VELOCITY_X_MPS = false,
+    bool HAS_VELOCITY_Y_MPS = false,
+    bool HAS_VELOCITY_Z_MPS = false) {
   ACWStateSampleBuilder builder_(_fbb);
   builder_.add_VELOCITY_Z_MPS(VELOCITY_Z_MPS);
   builder_.add_VELOCITY_Y_MPS(VELOCITY_Y_MPS);
@@ -503,6 +957,13 @@ inline ::flatbuffers::Offset<ACWStateSample> CreateACWStateSample(
   builder_.add_POSITION_Y_M(POSITION_Y_M);
   builder_.add_POSITION_X_M(POSITION_X_M);
   builder_.add_JULIAN_DATE_TT(JULIAN_DATE_TT);
+  builder_.add_HAS_VELOCITY_Z_MPS(HAS_VELOCITY_Z_MPS);
+  builder_.add_HAS_VELOCITY_Y_MPS(HAS_VELOCITY_Y_MPS);
+  builder_.add_HAS_VELOCITY_X_MPS(HAS_VELOCITY_X_MPS);
+  builder_.add_HAS_POSITION_Z_M(HAS_POSITION_Z_M);
+  builder_.add_HAS_POSITION_Y_M(HAS_POSITION_Y_M);
+  builder_.add_HAS_POSITION_X_M(HAS_POSITION_X_M);
+  builder_.add_HAS_JULIAN_DATE_TT(HAS_JULIAN_DATE_TT);
   return builder_.Finish();
 }
 
@@ -511,7 +972,9 @@ struct ACWElevationMaskPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   typedef ACWElevationMaskPointBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_AZIMUTH_RAD = 4,
-    VT_ELEVATION_RAD = 6
+    VT_ELEVATION_RAD = 6,
+    VT_HAS_AZIMUTH_RAD = 8,
+    VT_HAS_ELEVATION_RAD = 10
   };
   /// Azimuth, radians in the TopocentricFrame convention.
   double AZIMUTH_RAD() const {
@@ -521,11 +984,20 @@ struct ACWElevationMaskPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   double ELEVATION_RAD() const {
     return GetField<double>(VT_ELEVATION_RAD, 0.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_AZIMUTH_RAD() const {
+    return GetField<uint8_t>(VT_HAS_AZIMUTH_RAD, 0) != 0;
+  }
+  bool HAS_ELEVATION_RAD() const {
+    return GetField<uint8_t>(VT_HAS_ELEVATION_RAD, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_AZIMUTH_RAD, 8) &&
            VerifyField<double>(verifier, VT_ELEVATION_RAD, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_AZIMUTH_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_ELEVATION_RAD, 1) &&
            verifier.EndTable();
   }
 };
@@ -539,6 +1011,12 @@ struct ACWElevationMaskPointBuilder {
   }
   void add_ELEVATION_RAD(double ELEVATION_RAD) {
     fbb_.AddElement<double>(ACWElevationMaskPoint::VT_ELEVATION_RAD, ELEVATION_RAD, 0.0);
+  }
+  void add_HAS_AZIMUTH_RAD(bool HAS_AZIMUTH_RAD) {
+    fbb_.AddElement<uint8_t>(ACWElevationMaskPoint::VT_HAS_AZIMUTH_RAD, static_cast<uint8_t>(HAS_AZIMUTH_RAD), 0);
+  }
+  void add_HAS_ELEVATION_RAD(bool HAS_ELEVATION_RAD) {
+    fbb_.AddElement<uint8_t>(ACWElevationMaskPoint::VT_HAS_ELEVATION_RAD, static_cast<uint8_t>(HAS_ELEVATION_RAD), 0);
   }
   explicit ACWElevationMaskPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -554,10 +1032,14 @@ struct ACWElevationMaskPointBuilder {
 inline ::flatbuffers::Offset<ACWElevationMaskPoint> CreateACWElevationMaskPoint(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     double AZIMUTH_RAD = 0.0,
-    double ELEVATION_RAD = 0.0) {
+    double ELEVATION_RAD = 0.0,
+    bool HAS_AZIMUTH_RAD = false,
+    bool HAS_ELEVATION_RAD = false) {
   ACWElevationMaskPointBuilder builder_(_fbb);
   builder_.add_ELEVATION_RAD(ELEVATION_RAD);
   builder_.add_AZIMUTH_RAD(AZIMUTH_RAD);
+  builder_.add_HAS_ELEVATION_RAD(HAS_ELEVATION_RAD);
+  builder_.add_HAS_AZIMUTH_RAD(HAS_AZIMUTH_RAD);
   return builder_.Finish();
 }
 
@@ -567,7 +1049,10 @@ struct ACWRefractionModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_MODEL_KIND = 4,
     VT_PRESSURE_PA = 6,
-    VT_TEMPERATURE_K = 8
+    VT_TEMPERATURE_K = 8,
+    VT_HAS_MODEL_KIND = 10,
+    VT_HAS_PRESSURE_PA = 12,
+    VT_HAS_TEMPERATURE_K = 14
   };
   acwRefractionModelKind MODEL_KIND() const {
     return static_cast<acwRefractionModelKind>(GetField<int8_t>(VT_MODEL_KIND, 0));
@@ -580,12 +1065,25 @@ struct ACWRefractionModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   double TEMPERATURE_K() const {
     return GetField<double>(VT_TEMPERATURE_K, 283.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_MODEL_KIND() const {
+    return GetField<uint8_t>(VT_HAS_MODEL_KIND, 0) != 0;
+  }
+  bool HAS_PRESSURE_PA() const {
+    return GetField<uint8_t>(VT_HAS_PRESSURE_PA, 0) != 0;
+  }
+  bool HAS_TEMPERATURE_K() const {
+    return GetField<uint8_t>(VT_HAS_TEMPERATURE_K, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_MODEL_KIND, 1) &&
            VerifyField<double>(verifier, VT_PRESSURE_PA, 8) &&
            VerifyField<double>(verifier, VT_TEMPERATURE_K, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MODEL_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_PRESSURE_PA, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_TEMPERATURE_K, 1) &&
            verifier.EndTable();
   }
 };
@@ -603,6 +1101,15 @@ struct ACWRefractionModelBuilder {
   void add_TEMPERATURE_K(double TEMPERATURE_K) {
     fbb_.AddElement<double>(ACWRefractionModel::VT_TEMPERATURE_K, TEMPERATURE_K, 283.0);
   }
+  void add_HAS_MODEL_KIND(bool HAS_MODEL_KIND) {
+    fbb_.AddElement<uint8_t>(ACWRefractionModel::VT_HAS_MODEL_KIND, static_cast<uint8_t>(HAS_MODEL_KIND), 0);
+  }
+  void add_HAS_PRESSURE_PA(bool HAS_PRESSURE_PA) {
+    fbb_.AddElement<uint8_t>(ACWRefractionModel::VT_HAS_PRESSURE_PA, static_cast<uint8_t>(HAS_PRESSURE_PA), 0);
+  }
+  void add_HAS_TEMPERATURE_K(bool HAS_TEMPERATURE_K) {
+    fbb_.AddElement<uint8_t>(ACWRefractionModel::VT_HAS_TEMPERATURE_K, static_cast<uint8_t>(HAS_TEMPERATURE_K), 0);
+  }
   explicit ACWRefractionModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -618,10 +1125,16 @@ inline ::flatbuffers::Offset<ACWRefractionModel> CreateACWRefractionModel(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     acwRefractionModelKind MODEL_KIND = acwRefractionModelKind_NONE,
     double PRESSURE_PA = 101000.0,
-    double TEMPERATURE_K = 283.0) {
+    double TEMPERATURE_K = 283.0,
+    bool HAS_MODEL_KIND = false,
+    bool HAS_PRESSURE_PA = false,
+    bool HAS_TEMPERATURE_K = false) {
   ACWRefractionModelBuilder builder_(_fbb);
   builder_.add_TEMPERATURE_K(TEMPERATURE_K);
   builder_.add_PRESSURE_PA(PRESSURE_PA);
+  builder_.add_HAS_TEMPERATURE_K(HAS_TEMPERATURE_K);
+  builder_.add_HAS_PRESSURE_PA(HAS_PRESSURE_PA);
+  builder_.add_HAS_MODEL_KIND(HAS_MODEL_KIND);
   builder_.add_MODEL_KIND(MODEL_KIND);
   return builder_.Finish();
 }
@@ -631,7 +1144,9 @@ struct ACWBlackoutWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   typedef ACWBlackoutWindowBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_START_JULIAN_DATE_TT = 4,
-    VT_END_JULIAN_DATE_TT = 6
+    VT_END_JULIAN_DATE_TT = 6,
+    VT_HAS_START_JULIAN_DATE_TT = 8,
+    VT_HAS_END_JULIAN_DATE_TT = 10
   };
   /// Interval start as Julian Date in TT.
   double START_JULIAN_DATE_TT() const {
@@ -641,11 +1156,20 @@ struct ACWBlackoutWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double END_JULIAN_DATE_TT() const {
     return GetField<double>(VT_END_JULIAN_DATE_TT, 0.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_START_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_START_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_END_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_END_JULIAN_DATE_TT, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_START_JULIAN_DATE_TT, 8) &&
            VerifyField<double>(verifier, VT_END_JULIAN_DATE_TT, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_START_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_END_JULIAN_DATE_TT, 1) &&
            verifier.EndTable();
   }
 };
@@ -659,6 +1183,12 @@ struct ACWBlackoutWindowBuilder {
   }
   void add_END_JULIAN_DATE_TT(double END_JULIAN_DATE_TT) {
     fbb_.AddElement<double>(ACWBlackoutWindow::VT_END_JULIAN_DATE_TT, END_JULIAN_DATE_TT, 0.0);
+  }
+  void add_HAS_START_JULIAN_DATE_TT(bool HAS_START_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWBlackoutWindow::VT_HAS_START_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_START_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_END_JULIAN_DATE_TT(bool HAS_END_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWBlackoutWindow::VT_HAS_END_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_END_JULIAN_DATE_TT), 0);
   }
   explicit ACWBlackoutWindowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -674,10 +1204,14 @@ struct ACWBlackoutWindowBuilder {
 inline ::flatbuffers::Offset<ACWBlackoutWindow> CreateACWBlackoutWindow(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     double START_JULIAN_DATE_TT = 0.0,
-    double END_JULIAN_DATE_TT = 0.0) {
+    double END_JULIAN_DATE_TT = 0.0,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false) {
   ACWBlackoutWindowBuilder builder_(_fbb);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
+  builder_.add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT);
+  builder_.add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT);
   return builder_.Finish();
 }
 
@@ -692,7 +1226,12 @@ struct ACWGroundStation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ALTITUDE_M = 12,
     VT_MIN_ELEVATION_RAD = 14,
     VT_CHANNEL_CAPACITY = 16,
-    VT_BLACKOUT_WINDOWS = 18
+    VT_BLACKOUT_WINDOWS = 18,
+    VT_HAS_LATITUDE_RAD = 20,
+    VT_HAS_LONGITUDE_RAD = 22,
+    VT_HAS_ALTITUDE_M = 24,
+    VT_HAS_MIN_ELEVATION_RAD = 26,
+    VT_HAS_CHANNEL_CAPACITY = 28
   };
   const ::flatbuffers::String *STATION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STATION_ID);
@@ -708,11 +1247,15 @@ struct ACWGroundStation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double LONGITUDE_RAD() const {
     return GetField<double>(VT_LONGITUDE_RAD, 0.0);
   }
-  /// Height above the WGS-84 ellipsoid, meters.
+  /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+  /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+  /// finite segment blocks; tangent contact is clear. At height <= 0, including
+  /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+  /// The user elevation mask and supplied terrain apply separately at all heights.
   double ALTITUDE_M() const {
     return GetField<double>(VT_ALTITUDE_M, 0.0);
   }
-  /// Default minimum visible elevation, radians.
+  /// Explicit minimum visible elevation, radians; HAS flag required.
   double MIN_ELEVATION_RAD() const {
     return GetField<double>(VT_MIN_ELEVATION_RAD, 0.0);
   }
@@ -723,6 +1266,22 @@ struct ACWGroundStation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Station-specific unavailable intervals.
   const ::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>> *BLACKOUT_WINDOWS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>> *>(VT_BLACKOUT_WINDOWS);
+  }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_LATITUDE_RAD() const {
+    return GetField<uint8_t>(VT_HAS_LATITUDE_RAD, 0) != 0;
+  }
+  bool HAS_LONGITUDE_RAD() const {
+    return GetField<uint8_t>(VT_HAS_LONGITUDE_RAD, 0) != 0;
+  }
+  bool HAS_ALTITUDE_M() const {
+    return GetField<uint8_t>(VT_HAS_ALTITUDE_M, 0) != 0;
+  }
+  bool HAS_MIN_ELEVATION_RAD() const {
+    return GetField<uint8_t>(VT_HAS_MIN_ELEVATION_RAD, 0) != 0;
+  }
+  bool HAS_CHANNEL_CAPACITY() const {
+    return GetField<uint8_t>(VT_HAS_CHANNEL_CAPACITY, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -739,6 +1298,11 @@ struct ACWGroundStation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_BLACKOUT_WINDOWS) &&
            verifier.VerifyVector(BLACKOUT_WINDOWS()) &&
            verifier.VerifyVectorOfTables(BLACKOUT_WINDOWS()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_LATITUDE_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_LONGITUDE_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_ALTITUDE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MIN_ELEVATION_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_CHANNEL_CAPACITY, 1) &&
            verifier.EndTable();
   }
 };
@@ -771,6 +1335,21 @@ struct ACWGroundStationBuilder {
   void add_BLACKOUT_WINDOWS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>>> BLACKOUT_WINDOWS) {
     fbb_.AddOffset(ACWGroundStation::VT_BLACKOUT_WINDOWS, BLACKOUT_WINDOWS);
   }
+  void add_HAS_LATITUDE_RAD(bool HAS_LATITUDE_RAD) {
+    fbb_.AddElement<uint8_t>(ACWGroundStation::VT_HAS_LATITUDE_RAD, static_cast<uint8_t>(HAS_LATITUDE_RAD), 0);
+  }
+  void add_HAS_LONGITUDE_RAD(bool HAS_LONGITUDE_RAD) {
+    fbb_.AddElement<uint8_t>(ACWGroundStation::VT_HAS_LONGITUDE_RAD, static_cast<uint8_t>(HAS_LONGITUDE_RAD), 0);
+  }
+  void add_HAS_ALTITUDE_M(bool HAS_ALTITUDE_M) {
+    fbb_.AddElement<uint8_t>(ACWGroundStation::VT_HAS_ALTITUDE_M, static_cast<uint8_t>(HAS_ALTITUDE_M), 0);
+  }
+  void add_HAS_MIN_ELEVATION_RAD(bool HAS_MIN_ELEVATION_RAD) {
+    fbb_.AddElement<uint8_t>(ACWGroundStation::VT_HAS_MIN_ELEVATION_RAD, static_cast<uint8_t>(HAS_MIN_ELEVATION_RAD), 0);
+  }
+  void add_HAS_CHANNEL_CAPACITY(bool HAS_CHANNEL_CAPACITY) {
+    fbb_.AddElement<uint8_t>(ACWGroundStation::VT_HAS_CHANNEL_CAPACITY, static_cast<uint8_t>(HAS_CHANNEL_CAPACITY), 0);
+  }
   explicit ACWGroundStationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -791,7 +1370,12 @@ inline ::flatbuffers::Offset<ACWGroundStation> CreateACWGroundStation(
     double ALTITUDE_M = 0.0,
     double MIN_ELEVATION_RAD = 0.0,
     uint32_t CHANNEL_CAPACITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>>> BLACKOUT_WINDOWS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWBlackoutWindow>>> BLACKOUT_WINDOWS = 0,
+    bool HAS_LATITUDE_RAD = false,
+    bool HAS_LONGITUDE_RAD = false,
+    bool HAS_ALTITUDE_M = false,
+    bool HAS_MIN_ELEVATION_RAD = false,
+    bool HAS_CHANNEL_CAPACITY = false) {
   ACWGroundStationBuilder builder_(_fbb);
   builder_.add_MIN_ELEVATION_RAD(MIN_ELEVATION_RAD);
   builder_.add_ALTITUDE_M(ALTITUDE_M);
@@ -801,6 +1385,11 @@ inline ::flatbuffers::Offset<ACWGroundStation> CreateACWGroundStation(
   builder_.add_CHANNEL_CAPACITY(CHANNEL_CAPACITY);
   builder_.add_NAME(NAME);
   builder_.add_STATION_ID(STATION_ID);
+  builder_.add_HAS_CHANNEL_CAPACITY(HAS_CHANNEL_CAPACITY);
+  builder_.add_HAS_MIN_ELEVATION_RAD(HAS_MIN_ELEVATION_RAD);
+  builder_.add_HAS_ALTITUDE_M(HAS_ALTITUDE_M);
+  builder_.add_HAS_LONGITUDE_RAD(HAS_LONGITUDE_RAD);
+  builder_.add_HAS_LATITUDE_RAD(HAS_LATITUDE_RAD);
   return builder_.Finish();
 }
 
@@ -813,7 +1402,12 @@ inline ::flatbuffers::Offset<ACWGroundStation> CreateACWGroundStationDirect(
     double ALTITUDE_M = 0.0,
     double MIN_ELEVATION_RAD = 0.0,
     uint32_t CHANNEL_CAPACITY = 0,
-    const std::vector<::flatbuffers::Offset<ACWBlackoutWindow>> *BLACKOUT_WINDOWS = nullptr) {
+    const std::vector<::flatbuffers::Offset<ACWBlackoutWindow>> *BLACKOUT_WINDOWS = nullptr,
+    bool HAS_LATITUDE_RAD = false,
+    bool HAS_LONGITUDE_RAD = false,
+    bool HAS_ALTITUDE_M = false,
+    bool HAS_MIN_ELEVATION_RAD = false,
+    bool HAS_CHANNEL_CAPACITY = false) {
   auto STATION_ID__ = STATION_ID ? _fbb.CreateString(STATION_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto BLACKOUT_WINDOWS__ = BLACKOUT_WINDOWS ? _fbb.CreateVector<::flatbuffers::Offset<ACWBlackoutWindow>>(*BLACKOUT_WINDOWS) : 0;
@@ -826,7 +1420,12 @@ inline ::flatbuffers::Offset<ACWGroundStation> CreateACWGroundStationDirect(
       ALTITUDE_M,
       MIN_ELEVATION_RAD,
       CHANNEL_CAPACITY,
-      BLACKOUT_WINDOWS__);
+      BLACKOUT_WINDOWS__,
+      HAS_LATITUDE_RAD,
+      HAS_LONGITUDE_RAD,
+      HAS_ALTITUDE_M,
+      HAS_MIN_ELEVATION_RAD,
+      HAS_CHANNEL_CAPACITY);
 }
 
 /// One access constraint. Fields not used by KIND are ignored.
@@ -840,7 +1439,13 @@ struct ACWConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LIGHTING = 12,
     VT_OCCULTATION_ATMOSPHERE_HEIGHT_M = 14,
     VT_MASK = 16,
-    VT_LABEL = 18
+    VT_LABEL = 18,
+    VT_HAS_KIND = 20,
+    VT_HAS_THRESHOLD_RAD = 22,
+    VT_HAS_MIN_RANGE_M = 24,
+    VT_HAS_MAX_RANGE_M = 26,
+    VT_HAS_LIGHTING = 28,
+    VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = 30
   };
   acwConstraintKind KIND() const {
     return static_cast<acwConstraintKind>(GetField<int8_t>(VT_KIND, 0));
@@ -860,8 +1465,8 @@ struct ACWConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   acwLightingCondition LIGHTING() const {
     return static_cast<acwLightingCondition>(GetField<int8_t>(VT_LIGHTING, 0));
   }
-  /// Central-body radius offset for line-of-sight occultation, meters
-  /// (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  /// Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+  /// LOS only; not geodetic altitude. Never applied to a surface-station pair.
   double OCCULTATION_ATMOSPHERE_HEIGHT_M() const {
     return GetField<double>(VT_OCCULTATION_ATMOSPHERE_HEIGHT_M, 0.0);
   }
@@ -872,6 +1477,25 @@ struct ACWConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Producer label echoed in window attribution.
   const ::flatbuffers::String *LABEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LABEL);
+  }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_KIND() const {
+    return GetField<uint8_t>(VT_HAS_KIND, 0) != 0;
+  }
+  bool HAS_THRESHOLD_RAD() const {
+    return GetField<uint8_t>(VT_HAS_THRESHOLD_RAD, 0) != 0;
+  }
+  bool HAS_MIN_RANGE_M() const {
+    return GetField<uint8_t>(VT_HAS_MIN_RANGE_M, 0) != 0;
+  }
+  bool HAS_MAX_RANGE_M() const {
+    return GetField<uint8_t>(VT_HAS_MAX_RANGE_M, 0) != 0;
+  }
+  bool HAS_LIGHTING() const {
+    return GetField<uint8_t>(VT_HAS_LIGHTING, 0) != 0;
+  }
+  bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M() const {
+    return GetField<uint8_t>(VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -887,6 +1511,12 @@ struct ACWConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(MASK()) &&
            VerifyOffset(verifier, VT_LABEL) &&
            verifier.VerifyString(LABEL()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_THRESHOLD_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MIN_RANGE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MAX_RANGE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_LIGHTING, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, 1) &&
            verifier.EndTable();
   }
 };
@@ -919,6 +1549,24 @@ struct ACWConstraintBuilder {
   void add_LABEL(::flatbuffers::Offset<::flatbuffers::String> LABEL) {
     fbb_.AddOffset(ACWConstraint::VT_LABEL, LABEL);
   }
+  void add_HAS_KIND(bool HAS_KIND) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_KIND, static_cast<uint8_t>(HAS_KIND), 0);
+  }
+  void add_HAS_THRESHOLD_RAD(bool HAS_THRESHOLD_RAD) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_THRESHOLD_RAD, static_cast<uint8_t>(HAS_THRESHOLD_RAD), 0);
+  }
+  void add_HAS_MIN_RANGE_M(bool HAS_MIN_RANGE_M) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_MIN_RANGE_M, static_cast<uint8_t>(HAS_MIN_RANGE_M), 0);
+  }
+  void add_HAS_MAX_RANGE_M(bool HAS_MAX_RANGE_M) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_MAX_RANGE_M, static_cast<uint8_t>(HAS_MAX_RANGE_M), 0);
+  }
+  void add_HAS_LIGHTING(bool HAS_LIGHTING) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_LIGHTING, static_cast<uint8_t>(HAS_LIGHTING), 0);
+  }
+  void add_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) {
+    fbb_.AddElement<uint8_t>(ACWConstraint::VT_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, static_cast<uint8_t>(HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M), 0);
+  }
   explicit ACWConstraintBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -939,7 +1587,13 @@ inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraint(
     acwLightingCondition LIGHTING = acwLightingCondition_ANY,
     double OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWElevationMaskPoint>>> MASK = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0,
+    bool HAS_KIND = false,
+    bool HAS_THRESHOLD_RAD = false,
+    bool HAS_MIN_RANGE_M = false,
+    bool HAS_MAX_RANGE_M = false,
+    bool HAS_LIGHTING = false,
+    bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = false) {
   ACWConstraintBuilder builder_(_fbb);
   builder_.add_OCCULTATION_ATMOSPHERE_HEIGHT_M(OCCULTATION_ATMOSPHERE_HEIGHT_M);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
@@ -947,6 +1601,12 @@ inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraint(
   builder_.add_THRESHOLD_RAD(THRESHOLD_RAD);
   builder_.add_LABEL(LABEL);
   builder_.add_MASK(MASK);
+  builder_.add_HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M(HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
+  builder_.add_HAS_LIGHTING(HAS_LIGHTING);
+  builder_.add_HAS_MAX_RANGE_M(HAS_MAX_RANGE_M);
+  builder_.add_HAS_MIN_RANGE_M(HAS_MIN_RANGE_M);
+  builder_.add_HAS_THRESHOLD_RAD(HAS_THRESHOLD_RAD);
+  builder_.add_HAS_KIND(HAS_KIND);
   builder_.add_LIGHTING(LIGHTING);
   builder_.add_KIND(KIND);
   return builder_.Finish();
@@ -961,7 +1621,13 @@ inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraintDirect(
     acwLightingCondition LIGHTING = acwLightingCondition_ANY,
     double OCCULTATION_ATMOSPHERE_HEIGHT_M = 0.0,
     const std::vector<::flatbuffers::Offset<ACWElevationMaskPoint>> *MASK = nullptr,
-    const char *LABEL = nullptr) {
+    const char *LABEL = nullptr,
+    bool HAS_KIND = false,
+    bool HAS_THRESHOLD_RAD = false,
+    bool HAS_MIN_RANGE_M = false,
+    bool HAS_MAX_RANGE_M = false,
+    bool HAS_LIGHTING = false,
+    bool HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M = false) {
   auto MASK__ = MASK ? _fbb.CreateVector<::flatbuffers::Offset<ACWElevationMaskPoint>>(*MASK) : 0;
   auto LABEL__ = LABEL ? _fbb.CreateString(LABEL) : 0;
   return CreateACWConstraint(
@@ -973,7 +1639,13 @@ inline ::flatbuffers::Offset<ACWConstraint> CreateACWConstraintDirect(
       LIGHTING,
       OCCULTATION_ATMOSPHERE_HEIGHT_M,
       MASK__,
-      LABEL__);
+      LABEL__,
+      HAS_KIND,
+      HAS_THRESHOLD_RAD,
+      HAS_MIN_RANGE_M,
+      HAS_MAX_RANGE_M,
+      HAS_LIGHTING,
+      HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
 }
 
 /// A boolean composition of constraints and nested sets.
@@ -983,7 +1655,8 @@ struct ACWConstraintSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OPERATOR = 4,
     VT_CONSTRAINTS = 6,
     VT_SETS = 8,
-    VT_LABEL = 10
+    VT_LABEL = 10,
+    VT_HAS_OPERATOR = 12
   };
   acwConstraintOperator OPERATOR() const {
     return static_cast<acwConstraintOperator>(GetField<int8_t>(VT_OPERATOR, 0));
@@ -998,6 +1671,10 @@ struct ACWConstraintSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *LABEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LABEL);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_OPERATOR() const {
+    return GetField<uint8_t>(VT_HAS_OPERATOR, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1010,6 +1687,7 @@ struct ACWConstraintSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(SETS()) &&
            VerifyOffset(verifier, VT_LABEL) &&
            verifier.VerifyString(LABEL()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_OPERATOR, 1) &&
            verifier.EndTable();
   }
 };
@@ -1030,6 +1708,9 @@ struct ACWConstraintSetBuilder {
   void add_LABEL(::flatbuffers::Offset<::flatbuffers::String> LABEL) {
     fbb_.AddOffset(ACWConstraintSet::VT_LABEL, LABEL);
   }
+  void add_HAS_OPERATOR(bool HAS_OPERATOR) {
+    fbb_.AddElement<uint8_t>(ACWConstraintSet::VT_HAS_OPERATOR, static_cast<uint8_t>(HAS_OPERATOR), 0);
+  }
   explicit ACWConstraintSetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1046,11 +1727,13 @@ inline ::flatbuffers::Offset<ACWConstraintSet> CreateACWConstraintSet(
     acwConstraintOperator OPERATOR = acwConstraintOperator_ALL_OF,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraint>>> CONSTRAINTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWConstraintSet>>> SETS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> LABEL = 0,
+    bool HAS_OPERATOR = false) {
   ACWConstraintSetBuilder builder_(_fbb);
   builder_.add_LABEL(LABEL);
   builder_.add_SETS(SETS);
   builder_.add_CONSTRAINTS(CONSTRAINTS);
+  builder_.add_HAS_OPERATOR(HAS_OPERATOR);
   builder_.add_OPERATOR(OPERATOR);
   return builder_.Finish();
 }
@@ -1060,7 +1743,8 @@ inline ::flatbuffers::Offset<ACWConstraintSet> CreateACWConstraintSetDirect(
     acwConstraintOperator OPERATOR = acwConstraintOperator_ALL_OF,
     const std::vector<::flatbuffers::Offset<ACWConstraint>> *CONSTRAINTS = nullptr,
     const std::vector<::flatbuffers::Offset<ACWConstraintSet>> *SETS = nullptr,
-    const char *LABEL = nullptr) {
+    const char *LABEL = nullptr,
+    bool HAS_OPERATOR = false) {
   auto CONSTRAINTS__ = CONSTRAINTS ? _fbb.CreateVector<::flatbuffers::Offset<ACWConstraint>>(*CONSTRAINTS) : 0;
   auto SETS__ = SETS ? _fbb.CreateVector<::flatbuffers::Offset<ACWConstraintSet>>(*SETS) : 0;
   auto LABEL__ = LABEL ? _fbb.CreateString(LABEL) : 0;
@@ -1069,10 +1753,11 @@ inline ::flatbuffers::Offset<ACWConstraintSet> CreateACWConstraintSetDirect(
       OPERATOR,
       CONSTRAINTS__,
       SETS__,
-      LABEL__);
+      LABEL__,
+      HAS_OPERATOR);
 }
 
-/// A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+/// A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 /// the same frame and time scale as ACWRequest.STATES.
 struct ACWObserverTrajectory FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ACWObserverTrajectoryBuilder Builder;
@@ -1179,7 +1864,12 @@ struct ACWTargetSignature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_DIAMETER_M = 6,
     VT_GEOMETRIC_ALBEDO = 8,
     VT_EMITTER_FREQUENCY_HZ = 10,
-    VT_EMITTER_EIRP_DBW = 12
+    VT_EMITTER_EIRP_DBW = 12,
+    VT_HAS_RCS_M2 = 14,
+    VT_HAS_DIAMETER_M = 16,
+    VT_HAS_GEOMETRIC_ALBEDO = 18,
+    VT_HAS_EMITTER_FREQUENCY_HZ = 20,
+    VT_HAS_EMITTER_EIRP_DBW = 22
   };
   /// Radar cross-section, square meters (RADAR).
   double RCS_M2() const {
@@ -1201,6 +1891,22 @@ struct ACWTargetSignature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   double EMITTER_EIRP_DBW() const {
     return GetField<double>(VT_EMITTER_EIRP_DBW, 0.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_RCS_M2() const {
+    return GetField<uint8_t>(VT_HAS_RCS_M2, 0) != 0;
+  }
+  bool HAS_DIAMETER_M() const {
+    return GetField<uint8_t>(VT_HAS_DIAMETER_M, 0) != 0;
+  }
+  bool HAS_GEOMETRIC_ALBEDO() const {
+    return GetField<uint8_t>(VT_HAS_GEOMETRIC_ALBEDO, 0) != 0;
+  }
+  bool HAS_EMITTER_FREQUENCY_HZ() const {
+    return GetField<uint8_t>(VT_HAS_EMITTER_FREQUENCY_HZ, 0) != 0;
+  }
+  bool HAS_EMITTER_EIRP_DBW() const {
+    return GetField<uint8_t>(VT_HAS_EMITTER_EIRP_DBW, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1209,6 +1915,11 @@ struct ACWTargetSignature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyField<double>(verifier, VT_GEOMETRIC_ALBEDO, 8) &&
            VerifyField<double>(verifier, VT_EMITTER_FREQUENCY_HZ, 8) &&
            VerifyField<double>(verifier, VT_EMITTER_EIRP_DBW, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_RCS_M2, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DIAMETER_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_GEOMETRIC_ALBEDO, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_EMITTER_FREQUENCY_HZ, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_EMITTER_EIRP_DBW, 1) &&
            verifier.EndTable();
   }
 };
@@ -1232,6 +1943,21 @@ struct ACWTargetSignatureBuilder {
   void add_EMITTER_EIRP_DBW(double EMITTER_EIRP_DBW) {
     fbb_.AddElement<double>(ACWTargetSignature::VT_EMITTER_EIRP_DBW, EMITTER_EIRP_DBW, 0.0);
   }
+  void add_HAS_RCS_M2(bool HAS_RCS_M2) {
+    fbb_.AddElement<uint8_t>(ACWTargetSignature::VT_HAS_RCS_M2, static_cast<uint8_t>(HAS_RCS_M2), 0);
+  }
+  void add_HAS_DIAMETER_M(bool HAS_DIAMETER_M) {
+    fbb_.AddElement<uint8_t>(ACWTargetSignature::VT_HAS_DIAMETER_M, static_cast<uint8_t>(HAS_DIAMETER_M), 0);
+  }
+  void add_HAS_GEOMETRIC_ALBEDO(bool HAS_GEOMETRIC_ALBEDO) {
+    fbb_.AddElement<uint8_t>(ACWTargetSignature::VT_HAS_GEOMETRIC_ALBEDO, static_cast<uint8_t>(HAS_GEOMETRIC_ALBEDO), 0);
+  }
+  void add_HAS_EMITTER_FREQUENCY_HZ(bool HAS_EMITTER_FREQUENCY_HZ) {
+    fbb_.AddElement<uint8_t>(ACWTargetSignature::VT_HAS_EMITTER_FREQUENCY_HZ, static_cast<uint8_t>(HAS_EMITTER_FREQUENCY_HZ), 0);
+  }
+  void add_HAS_EMITTER_EIRP_DBW(bool HAS_EMITTER_EIRP_DBW) {
+    fbb_.AddElement<uint8_t>(ACWTargetSignature::VT_HAS_EMITTER_EIRP_DBW, static_cast<uint8_t>(HAS_EMITTER_EIRP_DBW), 0);
+  }
   explicit ACWTargetSignatureBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1249,13 +1975,23 @@ inline ::flatbuffers::Offset<ACWTargetSignature> CreateACWTargetSignature(
     double DIAMETER_M = 0.0,
     double GEOMETRIC_ALBEDO = 0.0,
     double EMITTER_FREQUENCY_HZ = 0.0,
-    double EMITTER_EIRP_DBW = 0.0) {
+    double EMITTER_EIRP_DBW = 0.0,
+    bool HAS_RCS_M2 = false,
+    bool HAS_DIAMETER_M = false,
+    bool HAS_GEOMETRIC_ALBEDO = false,
+    bool HAS_EMITTER_FREQUENCY_HZ = false,
+    bool HAS_EMITTER_EIRP_DBW = false) {
   ACWTargetSignatureBuilder builder_(_fbb);
   builder_.add_EMITTER_EIRP_DBW(EMITTER_EIRP_DBW);
   builder_.add_EMITTER_FREQUENCY_HZ(EMITTER_FREQUENCY_HZ);
   builder_.add_GEOMETRIC_ALBEDO(GEOMETRIC_ALBEDO);
   builder_.add_DIAMETER_M(DIAMETER_M);
   builder_.add_RCS_M2(RCS_M2);
+  builder_.add_HAS_EMITTER_EIRP_DBW(HAS_EMITTER_EIRP_DBW);
+  builder_.add_HAS_EMITTER_FREQUENCY_HZ(HAS_EMITTER_FREQUENCY_HZ);
+  builder_.add_HAS_GEOMETRIC_ALBEDO(HAS_GEOMETRIC_ALBEDO);
+  builder_.add_HAS_DIAMETER_M(HAS_DIAMETER_M);
+  builder_.add_HAS_RCS_M2(HAS_RCS_M2);
   return builder_.Finish();
 }
 
@@ -1267,7 +2003,8 @@ struct ACWTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NORAD_CAT_ID = 6,
     VT_OBJECT_ID = 8,
     VT_STATES = 10,
-    VT_SIGNATURE = 12
+    VT_SIGNATURE = 12,
+    VT_HAS_NORAD_CAT_ID = 14
   };
   const ::flatbuffers::String *TARGET_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TARGET_ID);
@@ -1279,13 +2016,17 @@ struct ACWTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
-  /// Truth Earth-fixed states with velocity, in the frame and time scale of
+  /// Truth central-body-fixed states with velocity, in the frame and time scale of
   /// ACWRequest.STATES.
   const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *STATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_STATES);
   }
   const ACWTargetSignature *SIGNATURE() const {
     return GetPointer<const ACWTargetSignature *>(VT_SIGNATURE);
+  }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_NORAD_CAT_ID() const {
+    return GetField<uint8_t>(VT_HAS_NORAD_CAT_ID, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1300,6 +2041,7 @@ struct ACWTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(STATES()) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyTable(SIGNATURE()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_NORAD_CAT_ID, 1) &&
            verifier.EndTable();
   }
 };
@@ -1323,6 +2065,9 @@ struct ACWTargetBuilder {
   void add_SIGNATURE(::flatbuffers::Offset<ACWTargetSignature> SIGNATURE) {
     fbb_.AddOffset(ACWTarget::VT_SIGNATURE, SIGNATURE);
   }
+  void add_HAS_NORAD_CAT_ID(bool HAS_NORAD_CAT_ID) {
+    fbb_.AddElement<uint8_t>(ACWTarget::VT_HAS_NORAD_CAT_ID, static_cast<uint8_t>(HAS_NORAD_CAT_ID), 0);
+  }
   explicit ACWTargetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1340,13 +2085,15 @@ inline ::flatbuffers::Offset<ACWTarget> CreateACWTarget(
     uint32_t NORAD_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> STATES = 0,
-    ::flatbuffers::Offset<ACWTargetSignature> SIGNATURE = 0) {
+    ::flatbuffers::Offset<ACWTargetSignature> SIGNATURE = 0,
+    bool HAS_NORAD_CAT_ID = false) {
   ACWTargetBuilder builder_(_fbb);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_STATES(STATES);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_TARGET_ID(TARGET_ID);
+  builder_.add_HAS_NORAD_CAT_ID(HAS_NORAD_CAT_ID);
   return builder_.Finish();
 }
 
@@ -1356,7 +2103,8 @@ inline ::flatbuffers::Offset<ACWTarget> CreateACWTargetDirect(
     uint32_t NORAD_CAT_ID = 0,
     const char *OBJECT_ID = nullptr,
     const std::vector<::flatbuffers::Offset<ACWStateSample>> *STATES = nullptr,
-    ::flatbuffers::Offset<ACWTargetSignature> SIGNATURE = 0) {
+    ::flatbuffers::Offset<ACWTargetSignature> SIGNATURE = 0,
+    bool HAS_NORAD_CAT_ID = false) {
   auto TARGET_ID__ = TARGET_ID ? _fbb.CreateString(TARGET_ID) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
@@ -1366,7 +2114,8 @@ inline ::flatbuffers::Offset<ACWTarget> CreateACWTargetDirect(
       NORAD_CAT_ID,
       OBJECT_ID__,
       STATES__,
-      SIGNATURE);
+      SIGNATURE,
+      HAS_NORAD_CAT_ID);
 }
 
 /// A simulated sensor hosted by a ground station or an observer trajectory.
@@ -1391,7 +2140,22 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LIMITING_MAGNITUDE = 34,
     VT_MAX_HOST_SUN_ELEVATION_RAD = 36,
     VT_FALSE_ALARM_RATE_PER_HOUR = 38,
-    VT_TRANSMIT_FREQUENCY_HZ = 40
+    VT_TRANSMIT_FREQUENCY_HZ = 40,
+    VT_HAS_PHENOMENOLOGY = 42,
+    VT_HAS_OBSERVATION_INTERVAL_S = 44,
+    VT_HAS_TRACK_DURATION_S = 46,
+    VT_HAS_REVISIT_INTERVAL_S = 48,
+    VT_HAS_MAX_SIMULTANEOUS_TRACKS = 50,
+    VT_HAS_REFERENCE_SNR_DB = 52,
+    VT_HAS_REFERENCE_RANGE_M = 54,
+    VT_HAS_REFERENCE_RCS_M2 = 56,
+    VT_HAS_DETECTION_THRESHOLD_DB = 58,
+    VT_HAS_RECEIVER_G_OVER_T_DB_PER_K = 60,
+    VT_HAS_RECEIVER_BANDWIDTH_HZ = 62,
+    VT_HAS_LIMITING_MAGNITUDE = 64,
+    VT_HAS_MAX_HOST_SUN_ELEVATION_RAD = 66,
+    VT_HAS_FALSE_ALARM_RATE_PER_HOUR = 68,
+    VT_HAS_TRANSMIT_FREQUENCY_HZ = 70
   };
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
@@ -1424,7 +2188,7 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_TRACK_DURATION_S, 0.0);
   }
   /// Shortest time between the end of one track of a target and the start
-  /// of the next, seconds.
+  /// of the following, seconds.
   double REVISIT_INTERVAL_S() const {
     return GetField<double>(VT_REVISIT_INTERVAL_S, 0.0);
   }
@@ -1475,6 +2239,52 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TRANSMIT_FREQUENCY_HZ() const {
     return GetField<double>(VT_TRANSMIT_FREQUENCY_HZ, 0.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_PHENOMENOLOGY() const {
+    return GetField<uint8_t>(VT_HAS_PHENOMENOLOGY, 0) != 0;
+  }
+  bool HAS_OBSERVATION_INTERVAL_S() const {
+    return GetField<uint8_t>(VT_HAS_OBSERVATION_INTERVAL_S, 0) != 0;
+  }
+  bool HAS_TRACK_DURATION_S() const {
+    return GetField<uint8_t>(VT_HAS_TRACK_DURATION_S, 0) != 0;
+  }
+  bool HAS_REVISIT_INTERVAL_S() const {
+    return GetField<uint8_t>(VT_HAS_REVISIT_INTERVAL_S, 0) != 0;
+  }
+  bool HAS_MAX_SIMULTANEOUS_TRACKS() const {
+    return GetField<uint8_t>(VT_HAS_MAX_SIMULTANEOUS_TRACKS, 0) != 0;
+  }
+  bool HAS_REFERENCE_SNR_DB() const {
+    return GetField<uint8_t>(VT_HAS_REFERENCE_SNR_DB, 0) != 0;
+  }
+  bool HAS_REFERENCE_RANGE_M() const {
+    return GetField<uint8_t>(VT_HAS_REFERENCE_RANGE_M, 0) != 0;
+  }
+  bool HAS_REFERENCE_RCS_M2() const {
+    return GetField<uint8_t>(VT_HAS_REFERENCE_RCS_M2, 0) != 0;
+  }
+  bool HAS_DETECTION_THRESHOLD_DB() const {
+    return GetField<uint8_t>(VT_HAS_DETECTION_THRESHOLD_DB, 0) != 0;
+  }
+  bool HAS_RECEIVER_G_OVER_T_DB_PER_K() const {
+    return GetField<uint8_t>(VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, 0) != 0;
+  }
+  bool HAS_RECEIVER_BANDWIDTH_HZ() const {
+    return GetField<uint8_t>(VT_HAS_RECEIVER_BANDWIDTH_HZ, 0) != 0;
+  }
+  bool HAS_LIMITING_MAGNITUDE() const {
+    return GetField<uint8_t>(VT_HAS_LIMITING_MAGNITUDE, 0) != 0;
+  }
+  bool HAS_MAX_HOST_SUN_ELEVATION_RAD() const {
+    return GetField<uint8_t>(VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, 0) != 0;
+  }
+  bool HAS_FALSE_ALARM_RATE_PER_HOUR() const {
+    return GetField<uint8_t>(VT_HAS_FALSE_ALARM_RATE_PER_HOUR, 0) != 0;
+  }
+  bool HAS_TRANSMIT_FREQUENCY_HZ() const {
+    return GetField<uint8_t>(VT_HAS_TRANSMIT_FREQUENCY_HZ, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1502,6 +2312,21 @@ struct ACWSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MAX_HOST_SUN_ELEVATION_RAD, 8) &&
            VerifyField<double>(verifier, VT_FALSE_ALARM_RATE_PER_HOUR, 8) &&
            VerifyField<double>(verifier, VT_TRANSMIT_FREQUENCY_HZ, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_PHENOMENOLOGY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_OBSERVATION_INTERVAL_S, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_TRACK_DURATION_S, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_REVISIT_INTERVAL_S, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MAX_SIMULTANEOUS_TRACKS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_REFERENCE_SNR_DB, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_REFERENCE_RANGE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_REFERENCE_RCS_M2, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DETECTION_THRESHOLD_DB, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_RECEIVER_BANDWIDTH_HZ, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_LIMITING_MAGNITUDE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_FALSE_ALARM_RATE_PER_HOUR, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_TRANSMIT_FREQUENCY_HZ, 1) &&
            verifier.EndTable();
   }
 };
@@ -1567,6 +2392,51 @@ struct ACWSensorBuilder {
   void add_TRANSMIT_FREQUENCY_HZ(double TRANSMIT_FREQUENCY_HZ) {
     fbb_.AddElement<double>(ACWSensor::VT_TRANSMIT_FREQUENCY_HZ, TRANSMIT_FREQUENCY_HZ, 0.0);
   }
+  void add_HAS_PHENOMENOLOGY(bool HAS_PHENOMENOLOGY) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_PHENOMENOLOGY, static_cast<uint8_t>(HAS_PHENOMENOLOGY), 0);
+  }
+  void add_HAS_OBSERVATION_INTERVAL_S(bool HAS_OBSERVATION_INTERVAL_S) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_OBSERVATION_INTERVAL_S, static_cast<uint8_t>(HAS_OBSERVATION_INTERVAL_S), 0);
+  }
+  void add_HAS_TRACK_DURATION_S(bool HAS_TRACK_DURATION_S) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_TRACK_DURATION_S, static_cast<uint8_t>(HAS_TRACK_DURATION_S), 0);
+  }
+  void add_HAS_REVISIT_INTERVAL_S(bool HAS_REVISIT_INTERVAL_S) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_REVISIT_INTERVAL_S, static_cast<uint8_t>(HAS_REVISIT_INTERVAL_S), 0);
+  }
+  void add_HAS_MAX_SIMULTANEOUS_TRACKS(bool HAS_MAX_SIMULTANEOUS_TRACKS) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_MAX_SIMULTANEOUS_TRACKS, static_cast<uint8_t>(HAS_MAX_SIMULTANEOUS_TRACKS), 0);
+  }
+  void add_HAS_REFERENCE_SNR_DB(bool HAS_REFERENCE_SNR_DB) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_REFERENCE_SNR_DB, static_cast<uint8_t>(HAS_REFERENCE_SNR_DB), 0);
+  }
+  void add_HAS_REFERENCE_RANGE_M(bool HAS_REFERENCE_RANGE_M) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_REFERENCE_RANGE_M, static_cast<uint8_t>(HAS_REFERENCE_RANGE_M), 0);
+  }
+  void add_HAS_REFERENCE_RCS_M2(bool HAS_REFERENCE_RCS_M2) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_REFERENCE_RCS_M2, static_cast<uint8_t>(HAS_REFERENCE_RCS_M2), 0);
+  }
+  void add_HAS_DETECTION_THRESHOLD_DB(bool HAS_DETECTION_THRESHOLD_DB) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_DETECTION_THRESHOLD_DB, static_cast<uint8_t>(HAS_DETECTION_THRESHOLD_DB), 0);
+  }
+  void add_HAS_RECEIVER_G_OVER_T_DB_PER_K(bool HAS_RECEIVER_G_OVER_T_DB_PER_K) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_RECEIVER_G_OVER_T_DB_PER_K, static_cast<uint8_t>(HAS_RECEIVER_G_OVER_T_DB_PER_K), 0);
+  }
+  void add_HAS_RECEIVER_BANDWIDTH_HZ(bool HAS_RECEIVER_BANDWIDTH_HZ) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_RECEIVER_BANDWIDTH_HZ, static_cast<uint8_t>(HAS_RECEIVER_BANDWIDTH_HZ), 0);
+  }
+  void add_HAS_LIMITING_MAGNITUDE(bool HAS_LIMITING_MAGNITUDE) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_LIMITING_MAGNITUDE, static_cast<uint8_t>(HAS_LIMITING_MAGNITUDE), 0);
+  }
+  void add_HAS_MAX_HOST_SUN_ELEVATION_RAD(bool HAS_MAX_HOST_SUN_ELEVATION_RAD) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_MAX_HOST_SUN_ELEVATION_RAD, static_cast<uint8_t>(HAS_MAX_HOST_SUN_ELEVATION_RAD), 0);
+  }
+  void add_HAS_FALSE_ALARM_RATE_PER_HOUR(bool HAS_FALSE_ALARM_RATE_PER_HOUR) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_FALSE_ALARM_RATE_PER_HOUR, static_cast<uint8_t>(HAS_FALSE_ALARM_RATE_PER_HOUR), 0);
+  }
+  void add_HAS_TRANSMIT_FREQUENCY_HZ(bool HAS_TRANSMIT_FREQUENCY_HZ) {
+    fbb_.AddElement<uint8_t>(ACWSensor::VT_HAS_TRANSMIT_FREQUENCY_HZ, static_cast<uint8_t>(HAS_TRANSMIT_FREQUENCY_HZ), 0);
+  }
   explicit ACWSensorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1598,7 +2468,22 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensor(
     double LIMITING_MAGNITUDE = 0.0,
     double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
     double FALSE_ALARM_RATE_PER_HOUR = 0.0,
-    double TRANSMIT_FREQUENCY_HZ = 0.0) {
+    double TRANSMIT_FREQUENCY_HZ = 0.0,
+    bool HAS_PHENOMENOLOGY = false,
+    bool HAS_OBSERVATION_INTERVAL_S = false,
+    bool HAS_TRACK_DURATION_S = false,
+    bool HAS_REVISIT_INTERVAL_S = false,
+    bool HAS_MAX_SIMULTANEOUS_TRACKS = false,
+    bool HAS_REFERENCE_SNR_DB = false,
+    bool HAS_REFERENCE_RANGE_M = false,
+    bool HAS_REFERENCE_RCS_M2 = false,
+    bool HAS_DETECTION_THRESHOLD_DB = false,
+    bool HAS_RECEIVER_G_OVER_T_DB_PER_K = false,
+    bool HAS_RECEIVER_BANDWIDTH_HZ = false,
+    bool HAS_LIMITING_MAGNITUDE = false,
+    bool HAS_MAX_HOST_SUN_ELEVATION_RAD = false,
+    bool HAS_FALSE_ALARM_RATE_PER_HOUR = false,
+    bool HAS_TRANSMIT_FREQUENCY_HZ = false) {
   ACWSensorBuilder builder_(_fbb);
   builder_.add_TRANSMIT_FREQUENCY_HZ(TRANSMIT_FREQUENCY_HZ);
   builder_.add_FALSE_ALARM_RATE_PER_HOUR(FALSE_ALARM_RATE_PER_HOUR);
@@ -1618,6 +2503,21 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensor(
   builder_.add_ERROR_MODELS(ERROR_MODELS);
   builder_.add_HOST_ID(HOST_ID);
   builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_HAS_TRANSMIT_FREQUENCY_HZ(HAS_TRANSMIT_FREQUENCY_HZ);
+  builder_.add_HAS_FALSE_ALARM_RATE_PER_HOUR(HAS_FALSE_ALARM_RATE_PER_HOUR);
+  builder_.add_HAS_MAX_HOST_SUN_ELEVATION_RAD(HAS_MAX_HOST_SUN_ELEVATION_RAD);
+  builder_.add_HAS_LIMITING_MAGNITUDE(HAS_LIMITING_MAGNITUDE);
+  builder_.add_HAS_RECEIVER_BANDWIDTH_HZ(HAS_RECEIVER_BANDWIDTH_HZ);
+  builder_.add_HAS_RECEIVER_G_OVER_T_DB_PER_K(HAS_RECEIVER_G_OVER_T_DB_PER_K);
+  builder_.add_HAS_DETECTION_THRESHOLD_DB(HAS_DETECTION_THRESHOLD_DB);
+  builder_.add_HAS_REFERENCE_RCS_M2(HAS_REFERENCE_RCS_M2);
+  builder_.add_HAS_REFERENCE_RANGE_M(HAS_REFERENCE_RANGE_M);
+  builder_.add_HAS_REFERENCE_SNR_DB(HAS_REFERENCE_SNR_DB);
+  builder_.add_HAS_MAX_SIMULTANEOUS_TRACKS(HAS_MAX_SIMULTANEOUS_TRACKS);
+  builder_.add_HAS_REVISIT_INTERVAL_S(HAS_REVISIT_INTERVAL_S);
+  builder_.add_HAS_TRACK_DURATION_S(HAS_TRACK_DURATION_S);
+  builder_.add_HAS_OBSERVATION_INTERVAL_S(HAS_OBSERVATION_INTERVAL_S);
+  builder_.add_HAS_PHENOMENOLOGY(HAS_PHENOMENOLOGY);
   builder_.add_PHENOMENOLOGY(PHENOMENOLOGY);
   return builder_.Finish();
 }
@@ -1642,7 +2542,22 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensorDirect(
     double LIMITING_MAGNITUDE = 0.0,
     double MAX_HOST_SUN_ELEVATION_RAD = 0.0,
     double FALSE_ALARM_RATE_PER_HOUR = 0.0,
-    double TRANSMIT_FREQUENCY_HZ = 0.0) {
+    double TRANSMIT_FREQUENCY_HZ = 0.0,
+    bool HAS_PHENOMENOLOGY = false,
+    bool HAS_OBSERVATION_INTERVAL_S = false,
+    bool HAS_TRACK_DURATION_S = false,
+    bool HAS_REVISIT_INTERVAL_S = false,
+    bool HAS_MAX_SIMULTANEOUS_TRACKS = false,
+    bool HAS_REFERENCE_SNR_DB = false,
+    bool HAS_REFERENCE_RANGE_M = false,
+    bool HAS_REFERENCE_RCS_M2 = false,
+    bool HAS_DETECTION_THRESHOLD_DB = false,
+    bool HAS_RECEIVER_G_OVER_T_DB_PER_K = false,
+    bool HAS_RECEIVER_BANDWIDTH_HZ = false,
+    bool HAS_LIMITING_MAGNITUDE = false,
+    bool HAS_MAX_HOST_SUN_ELEVATION_RAD = false,
+    bool HAS_FALSE_ALARM_RATE_PER_HOUR = false,
+    bool HAS_TRANSMIT_FREQUENCY_HZ = false) {
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto HOST_ID__ = HOST_ID ? _fbb.CreateString(HOST_ID) : 0;
   auto ERROR_MODELS__ = ERROR_MODELS ? _fbb.CreateVector<::flatbuffers::Offset<MEMErrorModel>>(*ERROR_MODELS) : 0;
@@ -1666,7 +2581,22 @@ inline ::flatbuffers::Offset<ACWSensor> CreateACWSensorDirect(
       LIMITING_MAGNITUDE,
       MAX_HOST_SUN_ELEVATION_RAD,
       FALSE_ALARM_RATE_PER_HOUR,
-      TRANSMIT_FREQUENCY_HZ);
+      TRANSMIT_FREQUENCY_HZ,
+      HAS_PHENOMENOLOGY,
+      HAS_OBSERVATION_INTERVAL_S,
+      HAS_TRACK_DURATION_S,
+      HAS_REVISIT_INTERVAL_S,
+      HAS_MAX_SIMULTANEOUS_TRACKS,
+      HAS_REFERENCE_SNR_DB,
+      HAS_REFERENCE_RANGE_M,
+      HAS_REFERENCE_RCS_M2,
+      HAS_DETECTION_THRESHOLD_DB,
+      HAS_RECEIVER_G_OVER_T_DB_PER_K,
+      HAS_RECEIVER_BANDWIDTH_HZ,
+      HAS_LIMITING_MAGNITUDE,
+      HAS_MAX_HOST_SUN_ELEVATION_RAD,
+      HAS_FALSE_ALARM_RATE_PER_HOUR,
+      HAS_TRANSMIT_FREQUENCY_HZ);
 }
 
 /// Access windows of one sensor to one target (SIMULATE_OBSERVATIONS input).
@@ -1761,7 +2691,11 @@ struct ACWTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_END_JULIAN_DATE_TT = 10,
     VT_SCHEDULED_COUNT = 12,
     VT_DETECTED_COUNT = 14,
-    VT_LOSS_REASON = 16
+    VT_LOSS_REASON = 16,
+    VT_HAS_START_JULIAN_DATE_TT = 18,
+    VT_HAS_END_JULIAN_DATE_TT = 20,
+    VT_HAS_SCHEDULED_COUNT = 22,
+    VT_HAS_DETECTED_COUNT = 24
   };
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
@@ -1788,6 +2722,19 @@ struct ACWTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *LOSS_REASON() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LOSS_REASON);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_START_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_START_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_END_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_END_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_SCHEDULED_COUNT() const {
+    return GetField<uint8_t>(VT_HAS_SCHEDULED_COUNT, 0) != 0;
+  }
+  bool HAS_DETECTED_COUNT() const {
+    return GetField<uint8_t>(VT_HAS_DETECTED_COUNT, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1801,6 +2748,10 @@ struct ACWTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_DETECTED_COUNT, 4) &&
            VerifyOffset(verifier, VT_LOSS_REASON) &&
            verifier.VerifyString(LOSS_REASON()) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_START_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_END_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SCHEDULED_COUNT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_DETECTED_COUNT, 1) &&
            verifier.EndTable();
   }
 };
@@ -1830,6 +2781,18 @@ struct ACWTrackBuilder {
   void add_LOSS_REASON(::flatbuffers::Offset<::flatbuffers::String> LOSS_REASON) {
     fbb_.AddOffset(ACWTrack::VT_LOSS_REASON, LOSS_REASON);
   }
+  void add_HAS_START_JULIAN_DATE_TT(bool HAS_START_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWTrack::VT_HAS_START_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_START_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_END_JULIAN_DATE_TT(bool HAS_END_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWTrack::VT_HAS_END_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_END_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_SCHEDULED_COUNT(bool HAS_SCHEDULED_COUNT) {
+    fbb_.AddElement<uint8_t>(ACWTrack::VT_HAS_SCHEDULED_COUNT, static_cast<uint8_t>(HAS_SCHEDULED_COUNT), 0);
+  }
+  void add_HAS_DETECTED_COUNT(bool HAS_DETECTED_COUNT) {
+    fbb_.AddElement<uint8_t>(ACWTrack::VT_HAS_DETECTED_COUNT, static_cast<uint8_t>(HAS_DETECTED_COUNT), 0);
+  }
   explicit ACWTrackBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1849,7 +2812,11 @@ inline ::flatbuffers::Offset<ACWTrack> CreateACWTrack(
     double END_JULIAN_DATE_TT = 0.0,
     uint32_t SCHEDULED_COUNT = 0,
     uint32_t DETECTED_COUNT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LOSS_REASON = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> LOSS_REASON = 0,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false,
+    bool HAS_SCHEDULED_COUNT = false,
+    bool HAS_DETECTED_COUNT = false) {
   ACWTrackBuilder builder_(_fbb);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
@@ -1858,6 +2825,10 @@ inline ::flatbuffers::Offset<ACWTrack> CreateACWTrack(
   builder_.add_SCHEDULED_COUNT(SCHEDULED_COUNT);
   builder_.add_TARGET_ID(TARGET_ID);
   builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_HAS_DETECTED_COUNT(HAS_DETECTED_COUNT);
+  builder_.add_HAS_SCHEDULED_COUNT(HAS_SCHEDULED_COUNT);
+  builder_.add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT);
+  builder_.add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT);
   return builder_.Finish();
 }
 
@@ -1869,7 +2840,11 @@ inline ::flatbuffers::Offset<ACWTrack> CreateACWTrackDirect(
     double END_JULIAN_DATE_TT = 0.0,
     uint32_t SCHEDULED_COUNT = 0,
     uint32_t DETECTED_COUNT = 0,
-    const char *LOSS_REASON = nullptr) {
+    const char *LOSS_REASON = nullptr,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false,
+    bool HAS_SCHEDULED_COUNT = false,
+    bool HAS_DETECTED_COUNT = false) {
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto TARGET_ID__ = TARGET_ID ? _fbb.CreateString(TARGET_ID) : 0;
   auto LOSS_REASON__ = LOSS_REASON ? _fbb.CreateString(LOSS_REASON) : 0;
@@ -1881,7 +2856,11 @@ inline ::flatbuffers::Offset<ACWTrack> CreateACWTrackDirect(
       END_JULIAN_DATE_TT,
       SCHEDULED_COUNT,
       DETECTED_COUNT,
-      LOSS_REASON__);
+      LOSS_REASON__,
+      HAS_START_JULIAN_DATE_TT,
+      HAS_END_JULIAN_DATE_TT,
+      HAS_SCHEDULED_COUNT,
+      HAS_DETECTED_COUNT);
 }
 
 /// One access-window compute request.
@@ -1908,7 +2887,14 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EARTH_ORIENTATION = 38,
     VT_RANDOM_SEED = 40,
     VT_START_JULIAN_DATE_TT = 42,
-    VT_END_JULIAN_DATE_TT = 44
+    VT_END_JULIAN_DATE_TT = 44,
+    VT_HAS_OPERATION = 46,
+    VT_HAS_MIN_ELEVATION_OVERRIDE_RAD = 48,
+    VT_HAS_EVALUATION_MODE = 50,
+    VT_HAS_ROOT_TOLERANCE_S = 52,
+    VT_HAS_RANDOM_SEED = 54,
+    VT_HAS_START_JULIAN_DATE_TT = 56,
+    VT_HAS_END_JULIAN_DATE_TT = 58
   };
   acwOperationCode OPERATION() const {
     return static_cast<acwOperationCode>(GetField<int8_t>(VT_OPERATION, 0));
@@ -1917,7 +2903,7 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<ACWGroundStation>> *GROUND_STATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWGroundStation>> *>(VT_GROUND_STATIONS);
   }
-  /// Pre-sampled target Earth-fixed Cartesian states.
+  /// Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
   const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *STATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_STATES);
   }
@@ -1941,7 +2927,7 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ACWRefractionModel *REFRACTION_MODEL() const {
     return GetPointer<const ACWRefractionModel *>(VT_REFRACTION_MODEL);
   }
-  /// Optional constraint composition. When absent the legacy behaviour holds:
+  /// Optional constraint composition. When absent the station constraints apply:
   /// every ground station's MIN_ELEVATION_RAD (or the override) plus
   /// ELEVATION_MASK, all required.
   const ACWConstraintSet *CONSTRAINTS() const {
@@ -2001,6 +2987,28 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double END_JULIAN_DATE_TT() const {
     return GetField<double>(VT_END_JULIAN_DATE_TT, 0.0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_OPERATION() const {
+    return GetField<uint8_t>(VT_HAS_OPERATION, 0) != 0;
+  }
+  bool HAS_MIN_ELEVATION_OVERRIDE_RAD() const {
+    return GetField<uint8_t>(VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, 0) != 0;
+  }
+  bool HAS_EVALUATION_MODE() const {
+    return GetField<uint8_t>(VT_HAS_EVALUATION_MODE, 0) != 0;
+  }
+  bool HAS_ROOT_TOLERANCE_S() const {
+    return GetField<uint8_t>(VT_HAS_ROOT_TOLERANCE_S, 0) != 0;
+  }
+  bool HAS_RANDOM_SEED() const {
+    return GetField<uint8_t>(VT_HAS_RANDOM_SEED, 0) != 0;
+  }
+  bool HAS_START_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_START_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_END_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_END_JULIAN_DATE_TT, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2049,6 +3057,13 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_RANDOM_SEED, 8) &&
            VerifyField<double>(verifier, VT_START_JULIAN_DATE_TT, 8) &&
            VerifyField<double>(verifier, VT_END_JULIAN_DATE_TT, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_OPERATION, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_EVALUATION_MODE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_ROOT_TOLERANCE_S, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_RANDOM_SEED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_START_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_END_JULIAN_DATE_TT, 1) &&
            verifier.EndTable();
   }
 };
@@ -2120,6 +3135,27 @@ struct ACWRequestBuilder {
   void add_END_JULIAN_DATE_TT(double END_JULIAN_DATE_TT) {
     fbb_.AddElement<double>(ACWRequest::VT_END_JULIAN_DATE_TT, END_JULIAN_DATE_TT, 0.0);
   }
+  void add_HAS_OPERATION(bool HAS_OPERATION) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_OPERATION, static_cast<uint8_t>(HAS_OPERATION), 0);
+  }
+  void add_HAS_MIN_ELEVATION_OVERRIDE_RAD(bool HAS_MIN_ELEVATION_OVERRIDE_RAD) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_MIN_ELEVATION_OVERRIDE_RAD, static_cast<uint8_t>(HAS_MIN_ELEVATION_OVERRIDE_RAD), 0);
+  }
+  void add_HAS_EVALUATION_MODE(bool HAS_EVALUATION_MODE) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_EVALUATION_MODE, static_cast<uint8_t>(HAS_EVALUATION_MODE), 0);
+  }
+  void add_HAS_ROOT_TOLERANCE_S(bool HAS_ROOT_TOLERANCE_S) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_ROOT_TOLERANCE_S, static_cast<uint8_t>(HAS_ROOT_TOLERANCE_S), 0);
+  }
+  void add_HAS_RANDOM_SEED(bool HAS_RANDOM_SEED) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_RANDOM_SEED, static_cast<uint8_t>(HAS_RANDOM_SEED), 0);
+  }
+  void add_HAS_START_JULIAN_DATE_TT(bool HAS_START_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_START_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_START_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_END_JULIAN_DATE_TT(bool HAS_END_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWRequest::VT_HAS_END_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_END_JULIAN_DATE_TT), 0);
+  }
   explicit ACWRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2153,7 +3189,14 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequest(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> EARTH_ORIENTATION = 0,
     uint64_t RANDOM_SEED = 0,
     double START_JULIAN_DATE_TT = 0.0,
-    double END_JULIAN_DATE_TT = 0.0) {
+    double END_JULIAN_DATE_TT = 0.0,
+    bool HAS_OPERATION = false,
+    bool HAS_MIN_ELEVATION_OVERRIDE_RAD = false,
+    bool HAS_EVALUATION_MODE = false,
+    bool HAS_ROOT_TOLERANCE_S = false,
+    bool HAS_RANDOM_SEED = false,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false) {
   ACWRequestBuilder builder_(_fbb);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
@@ -2174,6 +3217,13 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequest(
   builder_.add_TARGET_STATION_ID(TARGET_STATION_ID);
   builder_.add_STATES(STATES);
   builder_.add_GROUND_STATIONS(GROUND_STATIONS);
+  builder_.add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT);
+  builder_.add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT);
+  builder_.add_HAS_RANDOM_SEED(HAS_RANDOM_SEED);
+  builder_.add_HAS_ROOT_TOLERANCE_S(HAS_ROOT_TOLERANCE_S);
+  builder_.add_HAS_EVALUATION_MODE(HAS_EVALUATION_MODE);
+  builder_.add_HAS_MIN_ELEVATION_OVERRIDE_RAD(HAS_MIN_ELEVATION_OVERRIDE_RAD);
+  builder_.add_HAS_OPERATION(HAS_OPERATION);
   builder_.add_EVALUATION_MODE(EVALUATION_MODE);
   builder_.add_OPERATION(OPERATION);
   return builder_.Finish();
@@ -2201,7 +3251,14 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
     const std::vector<::flatbuffers::Offset<EOP>> *EARTH_ORIENTATION = nullptr,
     uint64_t RANDOM_SEED = 0,
     double START_JULIAN_DATE_TT = 0.0,
-    double END_JULIAN_DATE_TT = 0.0) {
+    double END_JULIAN_DATE_TT = 0.0,
+    bool HAS_OPERATION = false,
+    bool HAS_MIN_ELEVATION_OVERRIDE_RAD = false,
+    bool HAS_EVALUATION_MODE = false,
+    bool HAS_ROOT_TOLERANCE_S = false,
+    bool HAS_RANDOM_SEED = false,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false) {
   auto GROUND_STATIONS__ = GROUND_STATIONS ? _fbb.CreateVector<::flatbuffers::Offset<ACWGroundStation>>(*GROUND_STATIONS) : 0;
   auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
   auto TARGET_STATION_ID__ = TARGET_STATION_ID ? _fbb.CreateString(TARGET_STATION_ID) : 0;
@@ -2236,7 +3293,14 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
       EARTH_ORIENTATION__,
       RANDOM_SEED,
       START_JULIAN_DATE_TT,
-      END_JULIAN_DATE_TT);
+      END_JULIAN_DATE_TT,
+      HAS_OPERATION,
+      HAS_MIN_ELEVATION_OVERRIDE_RAD,
+      HAS_EVALUATION_MODE,
+      HAS_ROOT_TOLERANCE_S,
+      HAS_RANDOM_SEED,
+      HAS_START_JULIAN_DATE_TT,
+      HAS_END_JULIAN_DATE_TT);
 }
 
 /// One computed access interval.
@@ -2255,7 +3319,16 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_END_LIMITING_CONSTRAINT_LABEL = 22,
     VT_MIN_RANGE_M = 24,
     VT_MAX_RANGE_M = 26,
-    VT_EDGES_REFINED = 28
+    VT_EDGES_REFINED = 28,
+    VT_HAS_START_JULIAN_DATE_TT = 30,
+    VT_HAS_END_JULIAN_DATE_TT = 32,
+    VT_HAS_MAX_ELEVATION_RAD = 34,
+    VT_HAS_SAMPLE_COUNT = 36,
+    VT_HAS_START_LIMITING_CONSTRAINT_INDEX = 38,
+    VT_HAS_END_LIMITING_CONSTRAINT_INDEX = 40,
+    VT_HAS_MIN_RANGE_M = 42,
+    VT_HAS_MAX_RANGE_M = 44,
+    VT_HAS_EDGES_REFINED = 46
   };
   const ::flatbuffers::String *STATION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STATION_ID);
@@ -2282,13 +3355,15 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_OBSERVER_ID);
   }
   /// Index into the flattened, depth-first constraint list of the constraint
-  /// whose transition opens the window; -1 when the window starts at the
-  /// first sample.
+  /// whose transition opens the window. A clipped start has no limiting
+  /// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+  /// index is nonnegative and in range; the retained wire default is not a sentinel.
   int32_t START_LIMITING_CONSTRAINT_INDEX() const {
     return GetField<int32_t>(VT_START_LIMITING_CONSTRAINT_INDEX, -1);
   }
-  /// Index of the constraint whose transition closes the window; -1 when the
-  /// window ends at the last sample.
+  /// Index of the constraint whose transition closes the window. A clipped end
+  /// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+  /// and in range; the retained wire default is not a sentinel.
   int32_t END_LIMITING_CONSTRAINT_INDEX() const {
     return GetField<int32_t>(VT_END_LIMITING_CONSTRAINT_INDEX, -1);
   }
@@ -2310,6 +3385,34 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool EDGES_REFINED() const {
     return GetField<uint8_t>(VT_EDGES_REFINED, 0) != 0;
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_START_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_START_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_END_JULIAN_DATE_TT() const {
+    return GetField<uint8_t>(VT_HAS_END_JULIAN_DATE_TT, 0) != 0;
+  }
+  bool HAS_MAX_ELEVATION_RAD() const {
+    return GetField<uint8_t>(VT_HAS_MAX_ELEVATION_RAD, 0) != 0;
+  }
+  bool HAS_SAMPLE_COUNT() const {
+    return GetField<uint8_t>(VT_HAS_SAMPLE_COUNT, 0) != 0;
+  }
+  bool HAS_START_LIMITING_CONSTRAINT_INDEX() const {
+    return GetField<uint8_t>(VT_HAS_START_LIMITING_CONSTRAINT_INDEX, 0) != 0;
+  }
+  bool HAS_END_LIMITING_CONSTRAINT_INDEX() const {
+    return GetField<uint8_t>(VT_HAS_END_LIMITING_CONSTRAINT_INDEX, 0) != 0;
+  }
+  bool HAS_MIN_RANGE_M() const {
+    return GetField<uint8_t>(VT_HAS_MIN_RANGE_M, 0) != 0;
+  }
+  bool HAS_MAX_RANGE_M() const {
+    return GetField<uint8_t>(VT_HAS_MAX_RANGE_M, 0) != 0;
+  }
+  bool HAS_EDGES_REFINED() const {
+    return GetField<uint8_t>(VT_HAS_EDGES_REFINED, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2330,6 +3433,15 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MIN_RANGE_M, 8) &&
            VerifyField<double>(verifier, VT_MAX_RANGE_M, 8) &&
            VerifyField<uint8_t>(verifier, VT_EDGES_REFINED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_START_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_END_JULIAN_DATE_TT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MAX_ELEVATION_RAD, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_SAMPLE_COUNT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_START_LIMITING_CONSTRAINT_INDEX, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_END_LIMITING_CONSTRAINT_INDEX, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MIN_RANGE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_MAX_RANGE_M, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_EDGES_REFINED, 1) &&
            verifier.EndTable();
   }
 };
@@ -2377,6 +3489,33 @@ struct ACWAccessWindowBuilder {
   void add_EDGES_REFINED(bool EDGES_REFINED) {
     fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_EDGES_REFINED, static_cast<uint8_t>(EDGES_REFINED), 0);
   }
+  void add_HAS_START_JULIAN_DATE_TT(bool HAS_START_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_START_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_START_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_END_JULIAN_DATE_TT(bool HAS_END_JULIAN_DATE_TT) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_END_JULIAN_DATE_TT, static_cast<uint8_t>(HAS_END_JULIAN_DATE_TT), 0);
+  }
+  void add_HAS_MAX_ELEVATION_RAD(bool HAS_MAX_ELEVATION_RAD) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_MAX_ELEVATION_RAD, static_cast<uint8_t>(HAS_MAX_ELEVATION_RAD), 0);
+  }
+  void add_HAS_SAMPLE_COUNT(bool HAS_SAMPLE_COUNT) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_SAMPLE_COUNT, static_cast<uint8_t>(HAS_SAMPLE_COUNT), 0);
+  }
+  void add_HAS_START_LIMITING_CONSTRAINT_INDEX(bool HAS_START_LIMITING_CONSTRAINT_INDEX) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_START_LIMITING_CONSTRAINT_INDEX, static_cast<uint8_t>(HAS_START_LIMITING_CONSTRAINT_INDEX), 0);
+  }
+  void add_HAS_END_LIMITING_CONSTRAINT_INDEX(bool HAS_END_LIMITING_CONSTRAINT_INDEX) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_END_LIMITING_CONSTRAINT_INDEX, static_cast<uint8_t>(HAS_END_LIMITING_CONSTRAINT_INDEX), 0);
+  }
+  void add_HAS_MIN_RANGE_M(bool HAS_MIN_RANGE_M) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_MIN_RANGE_M, static_cast<uint8_t>(HAS_MIN_RANGE_M), 0);
+  }
+  void add_HAS_MAX_RANGE_M(bool HAS_MAX_RANGE_M) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_MAX_RANGE_M, static_cast<uint8_t>(HAS_MAX_RANGE_M), 0);
+  }
+  void add_HAS_EDGES_REFINED(bool HAS_EDGES_REFINED) {
+    fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_HAS_EDGES_REFINED, static_cast<uint8_t>(HAS_EDGES_REFINED), 0);
+  }
   explicit ACWAccessWindowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2402,7 +3541,16 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindow(
     ::flatbuffers::Offset<::flatbuffers::String> END_LIMITING_CONSTRAINT_LABEL = 0,
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
-    bool EDGES_REFINED = false) {
+    bool EDGES_REFINED = false,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false,
+    bool HAS_MAX_ELEVATION_RAD = false,
+    bool HAS_SAMPLE_COUNT = false,
+    bool HAS_START_LIMITING_CONSTRAINT_INDEX = false,
+    bool HAS_END_LIMITING_CONSTRAINT_INDEX = false,
+    bool HAS_MIN_RANGE_M = false,
+    bool HAS_MAX_RANGE_M = false,
+    bool HAS_EDGES_REFINED = false) {
   ACWAccessWindowBuilder builder_(_fbb);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
   builder_.add_MIN_RANGE_M(MIN_RANGE_M);
@@ -2416,6 +3564,15 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindow(
   builder_.add_OBSERVER_ID(OBSERVER_ID);
   builder_.add_SAMPLE_COUNT(SAMPLE_COUNT);
   builder_.add_STATION_ID(STATION_ID);
+  builder_.add_HAS_EDGES_REFINED(HAS_EDGES_REFINED);
+  builder_.add_HAS_MAX_RANGE_M(HAS_MAX_RANGE_M);
+  builder_.add_HAS_MIN_RANGE_M(HAS_MIN_RANGE_M);
+  builder_.add_HAS_END_LIMITING_CONSTRAINT_INDEX(HAS_END_LIMITING_CONSTRAINT_INDEX);
+  builder_.add_HAS_START_LIMITING_CONSTRAINT_INDEX(HAS_START_LIMITING_CONSTRAINT_INDEX);
+  builder_.add_HAS_SAMPLE_COUNT(HAS_SAMPLE_COUNT);
+  builder_.add_HAS_MAX_ELEVATION_RAD(HAS_MAX_ELEVATION_RAD);
+  builder_.add_HAS_END_JULIAN_DATE_TT(HAS_END_JULIAN_DATE_TT);
+  builder_.add_HAS_START_JULIAN_DATE_TT(HAS_START_JULIAN_DATE_TT);
   builder_.add_EDGES_REFINED(EDGES_REFINED);
   return builder_.Finish();
 }
@@ -2434,7 +3591,16 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindowDirect(
     const char *END_LIMITING_CONSTRAINT_LABEL = nullptr,
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
-    bool EDGES_REFINED = false) {
+    bool EDGES_REFINED = false,
+    bool HAS_START_JULIAN_DATE_TT = false,
+    bool HAS_END_JULIAN_DATE_TT = false,
+    bool HAS_MAX_ELEVATION_RAD = false,
+    bool HAS_SAMPLE_COUNT = false,
+    bool HAS_START_LIMITING_CONSTRAINT_INDEX = false,
+    bool HAS_END_LIMITING_CONSTRAINT_INDEX = false,
+    bool HAS_MIN_RANGE_M = false,
+    bool HAS_MAX_RANGE_M = false,
+    bool HAS_EDGES_REFINED = false) {
   auto STATION_ID__ = STATION_ID ? _fbb.CreateString(STATION_ID) : 0;
   auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
   auto START_LIMITING_CONSTRAINT_LABEL__ = START_LIMITING_CONSTRAINT_LABEL ? _fbb.CreateString(START_LIMITING_CONSTRAINT_LABEL) : 0;
@@ -2453,7 +3619,16 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindowDirect(
       END_LIMITING_CONSTRAINT_LABEL__,
       MIN_RANGE_M,
       MAX_RANGE_M,
-      EDGES_REFINED);
+      EDGES_REFINED,
+      HAS_START_JULIAN_DATE_TT,
+      HAS_END_JULIAN_DATE_TT,
+      HAS_MAX_ELEVATION_RAD,
+      HAS_SAMPLE_COUNT,
+      HAS_START_LIMITING_CONSTRAINT_INDEX,
+      HAS_END_LIMITING_CONSTRAINT_INDEX,
+      HAS_MIN_RANGE_M,
+      HAS_MAX_RANGE_M,
+      HAS_EDGES_REFINED);
 }
 
 /// Result for one access-window compute request.
@@ -2467,7 +3642,10 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EVALUATION_MODE = 12,
     VT_CONSTRAINT_LABELS = 14,
     VT_TRACKS = 16,
-    VT_OBSERVATION_COUNT = 18
+    VT_OBSERVATION_COUNT = 18,
+    VT_HAS_STATUS = 20,
+    VT_HAS_EVALUATION_MODE = 22,
+    VT_HAS_OBSERVATION_COUNT = 24
   };
   acwResultStatus STATUS() const {
     return static_cast<acwResultStatus>(GetField<int8_t>(VT_STATUS, 0));
@@ -2498,6 +3676,16 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t OBSERVATION_COUNT() const {
     return GetField<uint32_t>(VT_OBSERVATION_COUNT, 0);
   }
+  /// Value presence: false means omitted; true precedes value validation.
+  bool HAS_STATUS() const {
+    return GetField<uint8_t>(VT_HAS_STATUS, 0) != 0;
+  }
+  bool HAS_EVALUATION_MODE() const {
+    return GetField<uint8_t>(VT_HAS_EVALUATION_MODE, 0) != 0;
+  }
+  bool HAS_OBSERVATION_COUNT() const {
+    return GetField<uint8_t>(VT_HAS_OBSERVATION_COUNT, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2517,6 +3705,9 @@ struct ACWResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(TRACKS()) &&
            verifier.VerifyVectorOfTables(TRACKS()) &&
            VerifyField<uint32_t>(verifier, VT_OBSERVATION_COUNT, 4) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_STATUS, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_EVALUATION_MODE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_OBSERVATION_COUNT, 1) &&
            verifier.EndTable();
   }
 };
@@ -2549,6 +3740,15 @@ struct ACWResultBuilder {
   void add_OBSERVATION_COUNT(uint32_t OBSERVATION_COUNT) {
     fbb_.AddElement<uint32_t>(ACWResult::VT_OBSERVATION_COUNT, OBSERVATION_COUNT, 0);
   }
+  void add_HAS_STATUS(bool HAS_STATUS) {
+    fbb_.AddElement<uint8_t>(ACWResult::VT_HAS_STATUS, static_cast<uint8_t>(HAS_STATUS), 0);
+  }
+  void add_HAS_EVALUATION_MODE(bool HAS_EVALUATION_MODE) {
+    fbb_.AddElement<uint8_t>(ACWResult::VT_HAS_EVALUATION_MODE, static_cast<uint8_t>(HAS_EVALUATION_MODE), 0);
+  }
+  void add_HAS_OBSERVATION_COUNT(bool HAS_OBSERVATION_COUNT) {
+    fbb_.AddElement<uint8_t>(ACWResult::VT_HAS_OBSERVATION_COUNT, static_cast<uint8_t>(HAS_OBSERVATION_COUNT), 0);
+  }
   explicit ACWResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2569,7 +3769,10 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResult(
     acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CONSTRAINT_LABELS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWTrack>>> TRACKS = 0,
-    uint32_t OBSERVATION_COUNT = 0) {
+    uint32_t OBSERVATION_COUNT = 0,
+    bool HAS_STATUS = false,
+    bool HAS_EVALUATION_MODE = false,
+    bool HAS_OBSERVATION_COUNT = false) {
   ACWResultBuilder builder_(_fbb);
   builder_.add_OBSERVATION_COUNT(OBSERVATION_COUNT);
   builder_.add_TRACKS(TRACKS);
@@ -2577,6 +3780,9 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResult(
   builder_.add_TRACE_ID(TRACE_ID);
   builder_.add_WINDOWS(WINDOWS);
   builder_.add_ERROR_MESSAGE(ERROR_MESSAGE);
+  builder_.add_HAS_OBSERVATION_COUNT(HAS_OBSERVATION_COUNT);
+  builder_.add_HAS_EVALUATION_MODE(HAS_EVALUATION_MODE);
+  builder_.add_HAS_STATUS(HAS_STATUS);
   builder_.add_EVALUATION_MODE(EVALUATION_MODE);
   builder_.add_STATUS(STATUS);
   return builder_.Finish();
@@ -2591,7 +3797,10 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResultDirect(
     acwEvaluationMode EVALUATION_MODE = acwEvaluationMode_DISCRETE,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *CONSTRAINT_LABELS = nullptr,
     const std::vector<::flatbuffers::Offset<ACWTrack>> *TRACKS = nullptr,
-    uint32_t OBSERVATION_COUNT = 0) {
+    uint32_t OBSERVATION_COUNT = 0,
+    bool HAS_STATUS = false,
+    bool HAS_EVALUATION_MODE = false,
+    bool HAS_OBSERVATION_COUNT = false) {
   auto ERROR_MESSAGE__ = ERROR_MESSAGE ? _fbb.CreateString(ERROR_MESSAGE) : 0;
   auto WINDOWS__ = WINDOWS ? _fbb.CreateVector<::flatbuffers::Offset<ACWAccessWindow>>(*WINDOWS) : 0;
   auto TRACE_ID__ = TRACE_ID ? _fbb.CreateString(TRACE_ID) : 0;
@@ -2606,7 +3815,10 @@ inline ::flatbuffers::Offset<ACWResult> CreateACWResultDirect(
       EVALUATION_MODE,
       CONSTRAINT_LABELS__,
       TRACKS__,
-      OBSERVATION_COUNT);
+      OBSERVATION_COUNT,
+      HAS_STATUS,
+      HAS_EVALUATION_MODE,
+      HAS_OBSERVATION_COUNT);
 }
 
 /// Access-window analysis envelope.
@@ -2614,13 +3826,24 @@ struct ACW FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ACWBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_REQUEST = 4,
-    VT_RESULT = 6
+    VT_RESULT = 6,
+    VT_CENTRAL_BODY = 8
   };
   const ACWRequest *REQUEST() const {
     return GetPointer<const ACWRequest *>(VT_REQUEST);
   }
   const ACWResult *RESULT() const {
     return GetPointer<const ACWResult *>(VT_RESULT);
+  }
+  /// Appended slot 2. Mandatory in every new request and successful result.
+  /// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+  /// these codes. Missing body fails acw-body-required; absence never means
+  /// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+  /// Result must echo the exact descriptor field values, including optional
+  /// presence; requester rejects a missing/different echo. Raw table offsets
+  /// are not identity. Explicit one-time archive conversion is outside runtime.
+  const BodyDescriptor *CENTRAL_BODY() const {
+    return GetPointer<const BodyDescriptor *>(VT_CENTRAL_BODY);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -2629,6 +3852,8 @@ struct ACW FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(REQUEST()) &&
            VerifyOffset(verifier, VT_RESULT) &&
            verifier.VerifyTable(RESULT()) &&
+           VerifyOffset(verifier, VT_CENTRAL_BODY) &&
+           verifier.VerifyTable(CENTRAL_BODY()) &&
            verifier.EndTable();
   }
 };
@@ -2642,6 +3867,9 @@ struct ACWBuilder {
   }
   void add_RESULT(::flatbuffers::Offset<ACWResult> RESULT) {
     fbb_.AddOffset(ACW::VT_RESULT, RESULT);
+  }
+  void add_CENTRAL_BODY(::flatbuffers::Offset<BodyDescriptor> CENTRAL_BODY) {
+    fbb_.AddOffset(ACW::VT_CENTRAL_BODY, CENTRAL_BODY);
   }
   explicit ACWBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -2657,8 +3885,10 @@ struct ACWBuilder {
 inline ::flatbuffers::Offset<ACW> CreateACW(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<ACWRequest> REQUEST = 0,
-    ::flatbuffers::Offset<ACWResult> RESULT = 0) {
+    ::flatbuffers::Offset<ACWResult> RESULT = 0,
+    ::flatbuffers::Offset<BodyDescriptor> CENTRAL_BODY = 0) {
   ACWBuilder builder_(_fbb);
+  builder_.add_CENTRAL_BODY(CENTRAL_BODY);
   builder_.add_RESULT(RESULT);
   builder_.add_REQUEST(REQUEST);
   return builder_.Finish();

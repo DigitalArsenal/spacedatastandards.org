@@ -37,7 +37,7 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public ACWGroundStation.Vector groundStationsVector() { return groundStationsVector(new ACWGroundStation.Vector()); }
   public ACWGroundStation.Vector groundStationsVector(ACWGroundStation.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Pre-sampled target Earth-fixed Cartesian states.
+   * Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
    */
   public ACWStateSample STATES(int j) { return STATES(new ACWStateSample(), j); }
   public ACWStateSample STATES(ACWStateSample obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
@@ -74,7 +74,7 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public ACWRefractionModel REFRACTION_MODEL() { return REFRACTION_MODEL(new ACWRefractionModel()); }
   public ACWRefractionModel REFRACTION_MODEL(ACWRefractionModel obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * Optional constraint composition. When absent the legacy behaviour holds:
+   * Optional constraint composition. When absent the station constraints apply:
    * every ground station's MIN_ELEVATION_RAD (or the override) plus
    * ELEVATION_MASK, all required.
    */
@@ -160,6 +160,16 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
    */
   public double START_JULIAN_DATE_TT() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double END_JULIAN_DATE_TT() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_OPERATION() { int o = __offset(46); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MIN_ELEVATION_OVERRIDE_RAD() { int o = __offset(48); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_EVALUATION_MODE() { int o = __offset(50); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_ROOT_TOLERANCE_S() { int o = __offset(52); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_RANDOM_SEED() { int o = __offset(54); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_START_JULIAN_DATE_TT() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_END_JULIAN_DATE_TT() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWRequest(FlatBufferBuilder builder,
       byte OPERATION,
@@ -182,8 +192,15 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
       int EARTH_ORIENTATIONOffset,
       long RANDOM_SEED,
       double START_JULIAN_DATE_TT,
-      double END_JULIAN_DATE_TT) {
-    builder.startTable(21);
+      double END_JULIAN_DATE_TT,
+      boolean HAS_OPERATION,
+      boolean HAS_MIN_ELEVATION_OVERRIDE_RAD,
+      boolean HAS_EVALUATION_MODE,
+      boolean HAS_ROOT_TOLERANCE_S,
+      boolean HAS_RANDOM_SEED,
+      boolean HAS_START_JULIAN_DATE_TT,
+      boolean HAS_END_JULIAN_DATE_TT) {
+    builder.startTable(28);
     ACWRequest.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWRequest.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
     ACWRequest.addRandomSeed(builder, RANDOM_SEED);
@@ -203,12 +220,19 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
     ACWRequest.addTargetStationId(builder, TARGET_STATION_IDOffset);
     ACWRequest.addStates(builder, STATESOffset);
     ACWRequest.addGroundStations(builder, GROUND_STATIONSOffset);
+    ACWRequest.addHasEndJulianDateTt(builder, HAS_END_JULIAN_DATE_TT);
+    ACWRequest.addHasStartJulianDateTt(builder, HAS_START_JULIAN_DATE_TT);
+    ACWRequest.addHasRandomSeed(builder, HAS_RANDOM_SEED);
+    ACWRequest.addHasRootToleranceS(builder, HAS_ROOT_TOLERANCE_S);
+    ACWRequest.addHasEvaluationMode(builder, HAS_EVALUATION_MODE);
+    ACWRequest.addHasMinElevationOverrideRad(builder, HAS_MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.addHasOperation(builder, HAS_OPERATION);
     ACWRequest.addEvaluationMode(builder, EVALUATION_MODE);
     ACWRequest.addOperation(builder, OPERATION);
     return ACWRequest.endACWRequest(builder);
   }
 
-  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(28); }
   public static void addOperation(FlatBufferBuilder builder, byte OPERATION) { builder.addByte(0, OPERATION, 0); }
   public static void addGroundStations(FlatBufferBuilder builder, int GROUND_STATIONSOffset) { builder.addOffset(1, GROUND_STATIONSOffset, 0); }
   public static int createGroundStationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -250,6 +274,13 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public static void addRandomSeed(FlatBufferBuilder builder, long RANDOM_SEED) { builder.addLong(18, RANDOM_SEED, 0L); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(19, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(20, END_JULIAN_DATE_TT, 0.0); }
+  public static void addHasOperation(FlatBufferBuilder builder, boolean HAS_OPERATION) { builder.addBoolean(21, HAS_OPERATION, false); }
+  public static void addHasMinElevationOverrideRad(FlatBufferBuilder builder, boolean HAS_MIN_ELEVATION_OVERRIDE_RAD) { builder.addBoolean(22, HAS_MIN_ELEVATION_OVERRIDE_RAD, false); }
+  public static void addHasEvaluationMode(FlatBufferBuilder builder, boolean HAS_EVALUATION_MODE) { builder.addBoolean(23, HAS_EVALUATION_MODE, false); }
+  public static void addHasRootToleranceS(FlatBufferBuilder builder, boolean HAS_ROOT_TOLERANCE_S) { builder.addBoolean(24, HAS_ROOT_TOLERANCE_S, false); }
+  public static void addHasRandomSeed(FlatBufferBuilder builder, boolean HAS_RANDOM_SEED) { builder.addBoolean(25, HAS_RANDOM_SEED, false); }
+  public static void addHasStartJulianDateTt(FlatBufferBuilder builder, boolean HAS_START_JULIAN_DATE_TT) { builder.addBoolean(26, HAS_START_JULIAN_DATE_TT, false); }
+  public static void addHasEndJulianDateTt(FlatBufferBuilder builder, boolean HAS_END_JULIAN_DATE_TT) { builder.addBoolean(27, HAS_END_JULIAN_DATE_TT, false); }
   public static int endACWRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

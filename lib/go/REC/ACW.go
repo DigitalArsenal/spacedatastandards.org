@@ -88,8 +88,39 @@ func (rcv *ACW) Result(obj *ACWResult) *ACWResult {
 	return rcv.RESULT(obj)
 }
 
+/// Appended slot 2. Mandatory in every new request and successful result.
+/// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+/// these codes. Missing body fails acw-body-required; absence never means
+/// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+/// Result must echo the exact descriptor field values, including optional
+/// presence; requester rejects a missing/different echo. Raw table offsets
+/// are not identity. Explicit one-time archive conversion is outside runtime.
+func (rcv *ACW) CENTRAL_BODY(obj *BodyDescriptor) *BodyDescriptor {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(BodyDescriptor)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *ACW) CentralBody(obj *BodyDescriptor) *BodyDescriptor {
+	return rcv.CENTRAL_BODY(obj)
+}
+
+/// Appended slot 2. Mandatory in every new request and successful result.
+/// Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+/// these codes. Missing body fails acw-body-required; absence never means
+/// Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+/// Result must echo the exact descriptor field values, including optional
+/// presence; requester rejects a missing/different echo. Raw table offsets
+/// are not identity. Explicit one-time archive conversion is outside runtime.
 func ACWStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(3)
 }
 func ACWAddREQUEST(builder *flatbuffers.Builder, REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REQUEST), 0)
@@ -102,6 +133,12 @@ func ACWAddRESULT(builder *flatbuffers.Builder, RESULT flatbuffers.UOffsetT) {
 }
 func ACWAddResult(builder *flatbuffers.Builder, RESULT flatbuffers.UOffsetT) {
 	ACWAddRESULT(builder, RESULT)
+}
+func ACWAddCENTRAL_BODY(builder *flatbuffers.Builder, CENTRAL_BODY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CENTRAL_BODY), 0)
+}
+func ACWAddCentralBody(builder *flatbuffers.Builder, CENTRAL_BODY flatbuffers.UOffsetT) {
+	ACWAddCENTRAL_BODY(builder, CENTRAL_BODY)
 }
 func ACWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

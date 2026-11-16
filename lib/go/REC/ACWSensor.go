@@ -193,7 +193,7 @@ func (rcv *ACWSensor) MutateTrackDurationS(n float64) bool {
 }
 
 /// Shortest time between the end of one track of a target and the start
-/// of the next, seconds.
+/// of the following, seconds.
 func (rcv *ACWSensor) REVISIT_INTERVAL_S() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -207,7 +207,7 @@ func (rcv *ACWSensor) RevisitIntervalS() float64 {
 }
 
 /// Shortest time between the end of one track of a target and the start
-/// of the next, seconds.
+/// of the following, seconds.
 func (rcv *ACWSensor) MutateREVISIT_INTERVAL_S(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
@@ -464,8 +464,310 @@ func (rcv *ACWSensor) MutateTransmitFrequencyHz(n float64) bool {
 	return rcv.MutateTRANSMIT_FREQUENCY_HZ(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWSensor) HAS_PHENOMENOLOGY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasPhenomenology() bool {
+	return rcv.HAS_PHENOMENOLOGY()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWSensor) MutateHAS_PHENOMENOLOGY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *ACWSensor) MutateHasPhenomenology(n bool) bool {
+	return rcv.MutateHAS_PHENOMENOLOGY(n)
+}
+
+func (rcv *ACWSensor) HAS_OBSERVATION_INTERVAL_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasObservationIntervalS() bool {
+	return rcv.HAS_OBSERVATION_INTERVAL_S()
+}
+
+func (rcv *ACWSensor) MutateHAS_OBSERVATION_INTERVAL_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(44, n)
+}
+
+func (rcv *ACWSensor) MutateHasObservationIntervalS(n bool) bool {
+	return rcv.MutateHAS_OBSERVATION_INTERVAL_S(n)
+}
+
+func (rcv *ACWSensor) HAS_TRACK_DURATION_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasTrackDurationS() bool {
+	return rcv.HAS_TRACK_DURATION_S()
+}
+
+func (rcv *ACWSensor) MutateHAS_TRACK_DURATION_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(46, n)
+}
+
+func (rcv *ACWSensor) MutateHasTrackDurationS(n bool) bool {
+	return rcv.MutateHAS_TRACK_DURATION_S(n)
+}
+
+func (rcv *ACWSensor) HAS_REVISIT_INTERVAL_S() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasRevisitIntervalS() bool {
+	return rcv.HAS_REVISIT_INTERVAL_S()
+}
+
+func (rcv *ACWSensor) MutateHAS_REVISIT_INTERVAL_S(n bool) bool {
+	return rcv._tab.MutateBoolSlot(48, n)
+}
+
+func (rcv *ACWSensor) MutateHasRevisitIntervalS(n bool) bool {
+	return rcv.MutateHAS_REVISIT_INTERVAL_S(n)
+}
+
+func (rcv *ACWSensor) HAS_MAX_SIMULTANEOUS_TRACKS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasMaxSimultaneousTracks() bool {
+	return rcv.HAS_MAX_SIMULTANEOUS_TRACKS()
+}
+
+func (rcv *ACWSensor) MutateHAS_MAX_SIMULTANEOUS_TRACKS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(50, n)
+}
+
+func (rcv *ACWSensor) MutateHasMaxSimultaneousTracks(n bool) bool {
+	return rcv.MutateHAS_MAX_SIMULTANEOUS_TRACKS(n)
+}
+
+func (rcv *ACWSensor) HAS_REFERENCE_SNR_DB() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasReferenceSnrDb() bool {
+	return rcv.HAS_REFERENCE_SNR_DB()
+}
+
+func (rcv *ACWSensor) MutateHAS_REFERENCE_SNR_DB(n bool) bool {
+	return rcv._tab.MutateBoolSlot(52, n)
+}
+
+func (rcv *ACWSensor) MutateHasReferenceSnrDb(n bool) bool {
+	return rcv.MutateHAS_REFERENCE_SNR_DB(n)
+}
+
+func (rcv *ACWSensor) HAS_REFERENCE_RANGE_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasReferenceRangeM() bool {
+	return rcv.HAS_REFERENCE_RANGE_M()
+}
+
+func (rcv *ACWSensor) MutateHAS_REFERENCE_RANGE_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(54, n)
+}
+
+func (rcv *ACWSensor) MutateHasReferenceRangeM(n bool) bool {
+	return rcv.MutateHAS_REFERENCE_RANGE_M(n)
+}
+
+func (rcv *ACWSensor) HAS_REFERENCE_RCS_M2() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasReferenceRcsM2() bool {
+	return rcv.HAS_REFERENCE_RCS_M2()
+}
+
+func (rcv *ACWSensor) MutateHAS_REFERENCE_RCS_M2(n bool) bool {
+	return rcv._tab.MutateBoolSlot(56, n)
+}
+
+func (rcv *ACWSensor) MutateHasReferenceRcsM2(n bool) bool {
+	return rcv.MutateHAS_REFERENCE_RCS_M2(n)
+}
+
+func (rcv *ACWSensor) HAS_DETECTION_THRESHOLD_DB() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasDetectionThresholdDb() bool {
+	return rcv.HAS_DETECTION_THRESHOLD_DB()
+}
+
+func (rcv *ACWSensor) MutateHAS_DETECTION_THRESHOLD_DB(n bool) bool {
+	return rcv._tab.MutateBoolSlot(58, n)
+}
+
+func (rcv *ACWSensor) MutateHasDetectionThresholdDb(n bool) bool {
+	return rcv.MutateHAS_DETECTION_THRESHOLD_DB(n)
+}
+
+func (rcv *ACWSensor) HAS_RECEIVER_G_OVER_T_DB_PER_K() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasReceiverGOverTDbPerK() bool {
+	return rcv.HAS_RECEIVER_G_OVER_T_DB_PER_K()
+}
+
+func (rcv *ACWSensor) MutateHAS_RECEIVER_G_OVER_T_DB_PER_K(n bool) bool {
+	return rcv._tab.MutateBoolSlot(60, n)
+}
+
+func (rcv *ACWSensor) MutateHasReceiverGOverTDbPerK(n bool) bool {
+	return rcv.MutateHAS_RECEIVER_G_OVER_T_DB_PER_K(n)
+}
+
+func (rcv *ACWSensor) HAS_RECEIVER_BANDWIDTH_HZ() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasReceiverBandwidthHz() bool {
+	return rcv.HAS_RECEIVER_BANDWIDTH_HZ()
+}
+
+func (rcv *ACWSensor) MutateHAS_RECEIVER_BANDWIDTH_HZ(n bool) bool {
+	return rcv._tab.MutateBoolSlot(62, n)
+}
+
+func (rcv *ACWSensor) MutateHasReceiverBandwidthHz(n bool) bool {
+	return rcv.MutateHAS_RECEIVER_BANDWIDTH_HZ(n)
+}
+
+func (rcv *ACWSensor) HAS_LIMITING_MAGNITUDE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasLimitingMagnitude() bool {
+	return rcv.HAS_LIMITING_MAGNITUDE()
+}
+
+func (rcv *ACWSensor) MutateHAS_LIMITING_MAGNITUDE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(64, n)
+}
+
+func (rcv *ACWSensor) MutateHasLimitingMagnitude(n bool) bool {
+	return rcv.MutateHAS_LIMITING_MAGNITUDE(n)
+}
+
+func (rcv *ACWSensor) HAS_MAX_HOST_SUN_ELEVATION_RAD() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasMaxHostSunElevationRad() bool {
+	return rcv.HAS_MAX_HOST_SUN_ELEVATION_RAD()
+}
+
+func (rcv *ACWSensor) MutateHAS_MAX_HOST_SUN_ELEVATION_RAD(n bool) bool {
+	return rcv._tab.MutateBoolSlot(66, n)
+}
+
+func (rcv *ACWSensor) MutateHasMaxHostSunElevationRad(n bool) bool {
+	return rcv.MutateHAS_MAX_HOST_SUN_ELEVATION_RAD(n)
+}
+
+func (rcv *ACWSensor) HAS_FALSE_ALARM_RATE_PER_HOUR() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasFalseAlarmRatePerHour() bool {
+	return rcv.HAS_FALSE_ALARM_RATE_PER_HOUR()
+}
+
+func (rcv *ACWSensor) MutateHAS_FALSE_ALARM_RATE_PER_HOUR(n bool) bool {
+	return rcv._tab.MutateBoolSlot(68, n)
+}
+
+func (rcv *ACWSensor) MutateHasFalseAlarmRatePerHour(n bool) bool {
+	return rcv.MutateHAS_FALSE_ALARM_RATE_PER_HOUR(n)
+}
+
+func (rcv *ACWSensor) HAS_TRANSMIT_FREQUENCY_HZ() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWSensor) HasTransmitFrequencyHz() bool {
+	return rcv.HAS_TRANSMIT_FREQUENCY_HZ()
+}
+
+func (rcv *ACWSensor) MutateHAS_TRANSMIT_FREQUENCY_HZ(n bool) bool {
+	return rcv._tab.MutateBoolSlot(70, n)
+}
+
+func (rcv *ACWSensor) MutateHasTransmitFrequencyHz(n bool) bool {
+	return rcv.MutateHAS_TRANSMIT_FREQUENCY_HZ(n)
+}
+
 func ACWSensorStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(34)
 }
 func ACWSensorAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
@@ -586,6 +888,96 @@ func ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder *flatbuffers.Builder, TRANSMIT_FR
 }
 func ACWSensorAddTransmitFrequencyHz(builder *flatbuffers.Builder, TRANSMIT_FREQUENCY_HZ float64) {
 	ACWSensorAddTRANSMIT_FREQUENCY_HZ(builder, TRANSMIT_FREQUENCY_HZ)
+}
+func ACWSensorAddHAS_PHENOMENOLOGY(builder *flatbuffers.Builder, HAS_PHENOMENOLOGY bool) {
+	builder.PrependBoolSlot(19, HAS_PHENOMENOLOGY, false)
+}
+func ACWSensorAddHasPhenomenology(builder *flatbuffers.Builder, HAS_PHENOMENOLOGY bool) {
+	ACWSensorAddHAS_PHENOMENOLOGY(builder, HAS_PHENOMENOLOGY)
+}
+func ACWSensorAddHAS_OBSERVATION_INTERVAL_S(builder *flatbuffers.Builder, HAS_OBSERVATION_INTERVAL_S bool) {
+	builder.PrependBoolSlot(20, HAS_OBSERVATION_INTERVAL_S, false)
+}
+func ACWSensorAddHasObservationIntervalS(builder *flatbuffers.Builder, HAS_OBSERVATION_INTERVAL_S bool) {
+	ACWSensorAddHAS_OBSERVATION_INTERVAL_S(builder, HAS_OBSERVATION_INTERVAL_S)
+}
+func ACWSensorAddHAS_TRACK_DURATION_S(builder *flatbuffers.Builder, HAS_TRACK_DURATION_S bool) {
+	builder.PrependBoolSlot(21, HAS_TRACK_DURATION_S, false)
+}
+func ACWSensorAddHasTrackDurationS(builder *flatbuffers.Builder, HAS_TRACK_DURATION_S bool) {
+	ACWSensorAddHAS_TRACK_DURATION_S(builder, HAS_TRACK_DURATION_S)
+}
+func ACWSensorAddHAS_REVISIT_INTERVAL_S(builder *flatbuffers.Builder, HAS_REVISIT_INTERVAL_S bool) {
+	builder.PrependBoolSlot(22, HAS_REVISIT_INTERVAL_S, false)
+}
+func ACWSensorAddHasRevisitIntervalS(builder *flatbuffers.Builder, HAS_REVISIT_INTERVAL_S bool) {
+	ACWSensorAddHAS_REVISIT_INTERVAL_S(builder, HAS_REVISIT_INTERVAL_S)
+}
+func ACWSensorAddHAS_MAX_SIMULTANEOUS_TRACKS(builder *flatbuffers.Builder, HAS_MAX_SIMULTANEOUS_TRACKS bool) {
+	builder.PrependBoolSlot(23, HAS_MAX_SIMULTANEOUS_TRACKS, false)
+}
+func ACWSensorAddHasMaxSimultaneousTracks(builder *flatbuffers.Builder, HAS_MAX_SIMULTANEOUS_TRACKS bool) {
+	ACWSensorAddHAS_MAX_SIMULTANEOUS_TRACKS(builder, HAS_MAX_SIMULTANEOUS_TRACKS)
+}
+func ACWSensorAddHAS_REFERENCE_SNR_DB(builder *flatbuffers.Builder, HAS_REFERENCE_SNR_DB bool) {
+	builder.PrependBoolSlot(24, HAS_REFERENCE_SNR_DB, false)
+}
+func ACWSensorAddHasReferenceSnrDb(builder *flatbuffers.Builder, HAS_REFERENCE_SNR_DB bool) {
+	ACWSensorAddHAS_REFERENCE_SNR_DB(builder, HAS_REFERENCE_SNR_DB)
+}
+func ACWSensorAddHAS_REFERENCE_RANGE_M(builder *flatbuffers.Builder, HAS_REFERENCE_RANGE_M bool) {
+	builder.PrependBoolSlot(25, HAS_REFERENCE_RANGE_M, false)
+}
+func ACWSensorAddHasReferenceRangeM(builder *flatbuffers.Builder, HAS_REFERENCE_RANGE_M bool) {
+	ACWSensorAddHAS_REFERENCE_RANGE_M(builder, HAS_REFERENCE_RANGE_M)
+}
+func ACWSensorAddHAS_REFERENCE_RCS_M2(builder *flatbuffers.Builder, HAS_REFERENCE_RCS_M2 bool) {
+	builder.PrependBoolSlot(26, HAS_REFERENCE_RCS_M2, false)
+}
+func ACWSensorAddHasReferenceRcsM2(builder *flatbuffers.Builder, HAS_REFERENCE_RCS_M2 bool) {
+	ACWSensorAddHAS_REFERENCE_RCS_M2(builder, HAS_REFERENCE_RCS_M2)
+}
+func ACWSensorAddHAS_DETECTION_THRESHOLD_DB(builder *flatbuffers.Builder, HAS_DETECTION_THRESHOLD_DB bool) {
+	builder.PrependBoolSlot(27, HAS_DETECTION_THRESHOLD_DB, false)
+}
+func ACWSensorAddHasDetectionThresholdDb(builder *flatbuffers.Builder, HAS_DETECTION_THRESHOLD_DB bool) {
+	ACWSensorAddHAS_DETECTION_THRESHOLD_DB(builder, HAS_DETECTION_THRESHOLD_DB)
+}
+func ACWSensorAddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder *flatbuffers.Builder, HAS_RECEIVER_G_OVER_T_DB_PER_K bool) {
+	builder.PrependBoolSlot(28, HAS_RECEIVER_G_OVER_T_DB_PER_K, false)
+}
+func ACWSensorAddHasReceiverGOverTDbPerK(builder *flatbuffers.Builder, HAS_RECEIVER_G_OVER_T_DB_PER_K bool) {
+	ACWSensorAddHAS_RECEIVER_G_OVER_T_DB_PER_K(builder, HAS_RECEIVER_G_OVER_T_DB_PER_K)
+}
+func ACWSensorAddHAS_RECEIVER_BANDWIDTH_HZ(builder *flatbuffers.Builder, HAS_RECEIVER_BANDWIDTH_HZ bool) {
+	builder.PrependBoolSlot(29, HAS_RECEIVER_BANDWIDTH_HZ, false)
+}
+func ACWSensorAddHasReceiverBandwidthHz(builder *flatbuffers.Builder, HAS_RECEIVER_BANDWIDTH_HZ bool) {
+	ACWSensorAddHAS_RECEIVER_BANDWIDTH_HZ(builder, HAS_RECEIVER_BANDWIDTH_HZ)
+}
+func ACWSensorAddHAS_LIMITING_MAGNITUDE(builder *flatbuffers.Builder, HAS_LIMITING_MAGNITUDE bool) {
+	builder.PrependBoolSlot(30, HAS_LIMITING_MAGNITUDE, false)
+}
+func ACWSensorAddHasLimitingMagnitude(builder *flatbuffers.Builder, HAS_LIMITING_MAGNITUDE bool) {
+	ACWSensorAddHAS_LIMITING_MAGNITUDE(builder, HAS_LIMITING_MAGNITUDE)
+}
+func ACWSensorAddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder *flatbuffers.Builder, HAS_MAX_HOST_SUN_ELEVATION_RAD bool) {
+	builder.PrependBoolSlot(31, HAS_MAX_HOST_SUN_ELEVATION_RAD, false)
+}
+func ACWSensorAddHasMaxHostSunElevationRad(builder *flatbuffers.Builder, HAS_MAX_HOST_SUN_ELEVATION_RAD bool) {
+	ACWSensorAddHAS_MAX_HOST_SUN_ELEVATION_RAD(builder, HAS_MAX_HOST_SUN_ELEVATION_RAD)
+}
+func ACWSensorAddHAS_FALSE_ALARM_RATE_PER_HOUR(builder *flatbuffers.Builder, HAS_FALSE_ALARM_RATE_PER_HOUR bool) {
+	builder.PrependBoolSlot(32, HAS_FALSE_ALARM_RATE_PER_HOUR, false)
+}
+func ACWSensorAddHasFalseAlarmRatePerHour(builder *flatbuffers.Builder, HAS_FALSE_ALARM_RATE_PER_HOUR bool) {
+	ACWSensorAddHAS_FALSE_ALARM_RATE_PER_HOUR(builder, HAS_FALSE_ALARM_RATE_PER_HOUR)
+}
+func ACWSensorAddHAS_TRANSMIT_FREQUENCY_HZ(builder *flatbuffers.Builder, HAS_TRANSMIT_FREQUENCY_HZ bool) {
+	builder.PrependBoolSlot(33, HAS_TRANSMIT_FREQUENCY_HZ, false)
+}
+func ACWSensorAddHasTransmitFrequencyHz(builder *flatbuffers.Builder, HAS_TRANSMIT_FREQUENCY_HZ bool) {
+	ACWSensorAddHAS_TRANSMIT_FREQUENCY_HZ(builder, HAS_TRANSMIT_FREQUENCY_HZ)
 }
 func ACWSensorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

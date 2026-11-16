@@ -52,7 +52,7 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Truth Earth-fixed states with velocity, in the frame and time scale of
+ * Truth central-body-fixed states with velocity, in the frame and time scale of
  * ACWRequest.STATES.
  */
 STATES(index: number, obj?:ACWStateSample):ACWStateSample|null {
@@ -70,8 +70,16 @@ SIGNATURE(obj?:ACWTargetSignature):ACWTargetSignature|null {
   return offset ? (obj || new ACWTargetSignature()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_NORAD_CAT_ID():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWTarget(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 }
 
 static addTargetId(builder:flatbuffers.Builder, TARGET_IDOffset:flatbuffers.Offset) {
@@ -106,6 +114,10 @@ static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Off
   builder.addFieldOffset(4, SIGNATUREOffset, 0);
 }
 
+static addHasNoradCatId(builder:flatbuffers.Builder, HAS_NORAD_CAT_ID:boolean) {
+  builder.addFieldInt8(5, +HAS_NORAD_CAT_ID, +false);
+}
+
 static endACWTarget(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -118,7 +130,8 @@ unpack(): ACWTargetT {
     this.NORAD_CAT_ID(),
     this.OBJECT_ID(),
     this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.STATES.bind(this), this.statesLength()),
-    (this.SIGNATURE() !== null ? this.SIGNATURE()!.unpack() : null)
+    (this.SIGNATURE() !== null ? this.SIGNATURE()!.unpack() : null),
+    this.HAS_NORAD_CAT_ID()
   );
 }
 
@@ -129,6 +142,7 @@ unpackTo(_o: ACWTargetT): void {
   _o.OBJECT_ID = this.OBJECT_ID();
   _o.STATES = this.bb!.createObjList<ACWStateSample, ACWStateSampleT>(this.STATES.bind(this), this.statesLength());
   _o.SIGNATURE = (this.SIGNATURE() !== null ? this.SIGNATURE()!.unpack() : null);
+  _o.HAS_NORAD_CAT_ID = this.HAS_NORAD_CAT_ID();
 }
 }
 
@@ -138,7 +152,8 @@ constructor(
   public NORAD_CAT_ID: number = 0,
   public OBJECT_ID: string|Uint8Array|null = null,
   public STATES: (ACWStateSampleT)[] = [],
-  public SIGNATURE: ACWTargetSignatureT|null = null
+  public SIGNATURE: ACWTargetSignatureT|null = null,
+  public HAS_NORAD_CAT_ID: boolean = false
 ){}
 
 
@@ -154,6 +169,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWTarget.addObjectId(builder, OBJECT_ID);
   ACWTarget.addStates(builder, STATES);
   ACWTarget.addSignature(builder, SIGNATURE);
+  ACWTarget.addHasNoradCatId(builder, this.HAS_NORAD_CAT_ID);
 
   return ACWTarget.endACWTarget(builder);
 }

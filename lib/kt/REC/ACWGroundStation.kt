@@ -68,7 +68,11 @@ class ACWGroundStation : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Height above the WGS-84 ellipsoid, meters.
+     * Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+     * docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+     * finite segment blocks; tangent contact is clear. At height <= 0, including
+     * zero, use the supporting plane, without an own-ellipsoid intersection test.
+     * The user elevation mask and supplied terrain apply separately at all heights.
      */
     val altitudeM : Double
         get() {
@@ -76,7 +80,7 @@ class ACWGroundStation : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Default minimum visible elevation, radians.
+     * Explicit minimum visible elevation, radians; HAS flag required.
      */
     val minElevationRad : Double
         get() {
@@ -107,6 +111,34 @@ class ACWGroundStation : Table() {
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasLatitudeRad : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasLongitudeRad : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasAltitudeM : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasMinElevationRad : Boolean
+        get() {
+            val o = __offset(26)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasChannelCapacity : Boolean
+        get() {
+            val o = __offset(28)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWGroundStation(_bb: ByteBuffer): ACWGroundStation = getRootAsACWGroundStation(_bb, ACWGroundStation())
@@ -114,8 +146,8 @@ class ACWGroundStation : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWGroundStation(builder: FlatBufferBuilder, stationIdOffset: Int, nameOffset: Int, latitudeRad: Double, longitudeRad: Double, altitudeM: Double, minElevationRad: Double, channelCapacity: UInt, blackoutWindowsOffset: Int) : Int {
-            builder.startTable(8)
+        fun createACWGroundStation(builder: FlatBufferBuilder, stationIdOffset: Int, nameOffset: Int, latitudeRad: Double, longitudeRad: Double, altitudeM: Double, minElevationRad: Double, channelCapacity: UInt, blackoutWindowsOffset: Int, hasLatitudeRad: Boolean, hasLongitudeRad: Boolean, hasAltitudeM: Boolean, hasMinElevationRad: Boolean, hasChannelCapacity: Boolean) : Int {
+            builder.startTable(13)
             addMINELEVATIONRAD(builder, minElevationRad)
             addALTITUDEM(builder, altitudeM)
             addLONGITUDERAD(builder, longitudeRad)
@@ -124,9 +156,14 @@ class ACWGroundStation : Table() {
             addCHANNELCAPACITY(builder, channelCapacity)
             addNAME(builder, nameOffset)
             addSTATIONID(builder, stationIdOffset)
+            addHASCHANNELCAPACITY(builder, hasChannelCapacity)
+            addHASMINELEVATIONRAD(builder, hasMinElevationRad)
+            addHASALTITUDEM(builder, hasAltitudeM)
+            addHASLONGITUDERAD(builder, hasLongitudeRad)
+            addHASLATITUDERAD(builder, hasLatitudeRad)
             return endACWGroundStation(builder)
         }
-        fun startACWGroundStation(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startACWGroundStation(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addSTATIONID(builder: FlatBufferBuilder, stationId: Int) = builder.addOffset(0, stationId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addLATITUDERAD(builder: FlatBufferBuilder, latitudeRad: Double) = builder.addDouble(2, latitudeRad, 0.0)
@@ -143,6 +180,11 @@ class ACWGroundStation : Table() {
             return builder.endVector()
         }
         fun startBlackoutWindowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addHASLATITUDERAD(builder: FlatBufferBuilder, hasLatitudeRad: Boolean) = builder.addBoolean(8, hasLatitudeRad, false)
+        fun addHASLONGITUDERAD(builder: FlatBufferBuilder, hasLongitudeRad: Boolean) = builder.addBoolean(9, hasLongitudeRad, false)
+        fun addHASALTITUDEM(builder: FlatBufferBuilder, hasAltitudeM: Boolean) = builder.addBoolean(10, hasAltitudeM, false)
+        fun addHASMINELEVATIONRAD(builder: FlatBufferBuilder, hasMinElevationRad: Boolean) = builder.addBoolean(11, hasMinElevationRad, false)
+        fun addHASCHANNELCAPACITY(builder: FlatBufferBuilder, hasChannelCapacity: Boolean) = builder.addBoolean(12, hasChannelCapacity, false)
         fun endACWGroundStation(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

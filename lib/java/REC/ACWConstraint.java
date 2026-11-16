@@ -42,8 +42,8 @@ public final class ACWConstraint extends com.google.flatbuffers.Table {
    */
   public byte LIGHTING() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Central-body radius offset for line-of-sight occultation, meters
-   * (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+   * Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+   * LOS only; not geodetic altitude. Never applied to a surface-station pair.
    */
   public double OCCULTATION_ATMOSPHERE_HEIGHT_M() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -60,6 +60,15 @@ public final class ACWConstraint extends com.google.flatbuffers.Table {
   public String LABEL() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LABELAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer LABELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_KIND() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_THRESHOLD_RAD() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MIN_RANGE_M() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_MAX_RANGE_M() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_LIGHTING() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWConstraint(FlatBufferBuilder builder,
       byte KIND,
@@ -69,20 +78,32 @@ public final class ACWConstraint extends com.google.flatbuffers.Table {
       byte LIGHTING,
       double OCCULTATION_ATMOSPHERE_HEIGHT_M,
       int MASKOffset,
-      int LABELOffset) {
-    builder.startTable(8);
+      int LABELOffset,
+      boolean HAS_KIND,
+      boolean HAS_THRESHOLD_RAD,
+      boolean HAS_MIN_RANGE_M,
+      boolean HAS_MAX_RANGE_M,
+      boolean HAS_LIGHTING,
+      boolean HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) {
+    builder.startTable(14);
     ACWConstraint.addOccultationAtmosphereHeightM(builder, OCCULTATION_ATMOSPHERE_HEIGHT_M);
     ACWConstraint.addMaxRangeM(builder, MAX_RANGE_M);
     ACWConstraint.addMinRangeM(builder, MIN_RANGE_M);
     ACWConstraint.addThresholdRad(builder, THRESHOLD_RAD);
     ACWConstraint.addLabel(builder, LABELOffset);
     ACWConstraint.addMask(builder, MASKOffset);
+    ACWConstraint.addHasOccultationAtmosphereHeightM(builder, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M);
+    ACWConstraint.addHasLighting(builder, HAS_LIGHTING);
+    ACWConstraint.addHasMaxRangeM(builder, HAS_MAX_RANGE_M);
+    ACWConstraint.addHasMinRangeM(builder, HAS_MIN_RANGE_M);
+    ACWConstraint.addHasThresholdRad(builder, HAS_THRESHOLD_RAD);
+    ACWConstraint.addHasKind(builder, HAS_KIND);
     ACWConstraint.addLighting(builder, LIGHTING);
     ACWConstraint.addKind(builder, KIND);
     return ACWConstraint.endACWConstraint(builder);
   }
 
-  public static void startACWConstraint(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startACWConstraint(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(0, KIND, 0); }
   public static void addThresholdRad(FlatBufferBuilder builder, double THRESHOLD_RAD) { builder.addDouble(1, THRESHOLD_RAD, 0.0); }
   public static void addMinRangeM(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.addDouble(2, MIN_RANGE_M, 0.0); }
@@ -93,6 +114,12 @@ public final class ACWConstraint extends com.google.flatbuffers.Table {
   public static int createMaskVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMaskVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addLabel(FlatBufferBuilder builder, int LABELOffset) { builder.addOffset(7, LABELOffset, 0); }
+  public static void addHasKind(FlatBufferBuilder builder, boolean HAS_KIND) { builder.addBoolean(8, HAS_KIND, false); }
+  public static void addHasThresholdRad(FlatBufferBuilder builder, boolean HAS_THRESHOLD_RAD) { builder.addBoolean(9, HAS_THRESHOLD_RAD, false); }
+  public static void addHasMinRangeM(FlatBufferBuilder builder, boolean HAS_MIN_RANGE_M) { builder.addBoolean(10, HAS_MIN_RANGE_M, false); }
+  public static void addHasMaxRangeM(FlatBufferBuilder builder, boolean HAS_MAX_RANGE_M) { builder.addBoolean(11, HAS_MAX_RANGE_M, false); }
+  public static void addHasLighting(FlatBufferBuilder builder, boolean HAS_LIGHTING) { builder.addBoolean(12, HAS_LIGHTING, false); }
+  public static void addHasOccultationAtmosphereHeightM(FlatBufferBuilder builder, boolean HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) { builder.addBoolean(13, HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, false); }
   public static int endACWConstraint(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -91,27 +91,78 @@ class ACWTargetSignature extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_RCS_M2()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_DIAMETER_M()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_GEOMETRIC_ALBEDO()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_EMITTER_FREQUENCY_HZ()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_EMITTER_EIRP_DBW()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWTargetSignature(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWTargetSignature
      */
-    public static function createACWTargetSignature(FlatBufferBuilder $builder, $RCS_M2, $DIAMETER_M, $GEOMETRIC_ALBEDO, $EMITTER_FREQUENCY_HZ, $EMITTER_EIRP_DBW)
+    public static function createACWTargetSignature(FlatBufferBuilder $builder, $RCS_M2, $DIAMETER_M, $GEOMETRIC_ALBEDO, $EMITTER_FREQUENCY_HZ, $EMITTER_EIRP_DBW, $HAS_RCS_M2, $HAS_DIAMETER_M, $HAS_GEOMETRIC_ALBEDO, $HAS_EMITTER_FREQUENCY_HZ, $HAS_EMITTER_EIRP_DBW)
     {
-        $builder->startObject(5);
+        $builder->startObject(10);
         self::addRCS_M2($builder, $RCS_M2);
         self::addDIAMETER_M($builder, $DIAMETER_M);
         self::addGEOMETRIC_ALBEDO($builder, $GEOMETRIC_ALBEDO);
         self::addEMITTER_FREQUENCY_HZ($builder, $EMITTER_FREQUENCY_HZ);
         self::addEMITTER_EIRP_DBW($builder, $EMITTER_EIRP_DBW);
+        self::addHAS_RCS_M2($builder, $HAS_RCS_M2);
+        self::addHAS_DIAMETER_M($builder, $HAS_DIAMETER_M);
+        self::addHAS_GEOMETRIC_ALBEDO($builder, $HAS_GEOMETRIC_ALBEDO);
+        self::addHAS_EMITTER_FREQUENCY_HZ($builder, $HAS_EMITTER_FREQUENCY_HZ);
+        self::addHAS_EMITTER_EIRP_DBW($builder, $HAS_EMITTER_EIRP_DBW);
         $o = $builder->endObject();
         return $o;
     }
@@ -164,6 +215,56 @@ class ACWTargetSignature extends Table
     public static function addEMITTER_EIRP_DBW(FlatBufferBuilder $builder, $EMITTER_EIRP_DBW)
     {
         $builder->addDoubleX(4, $EMITTER_EIRP_DBW, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_RCS_M2(FlatBufferBuilder $builder, $HAS_RCS_M2)
+    {
+        $builder->addBoolX(5, $HAS_RCS_M2, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_DIAMETER_M(FlatBufferBuilder $builder, $HAS_DIAMETER_M)
+    {
+        $builder->addBoolX(6, $HAS_DIAMETER_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_GEOMETRIC_ALBEDO(FlatBufferBuilder $builder, $HAS_GEOMETRIC_ALBEDO)
+    {
+        $builder->addBoolX(7, $HAS_GEOMETRIC_ALBEDO, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EMITTER_FREQUENCY_HZ(FlatBufferBuilder $builder, $HAS_EMITTER_FREQUENCY_HZ)
+    {
+        $builder->addBoolX(8, $HAS_EMITTER_FREQUENCY_HZ, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EMITTER_EIRP_DBW(FlatBufferBuilder $builder, $HAS_EMITTER_EIRP_DBW)
+    {
+        $builder->addBoolX(9, $HAS_EMITTER_EIRP_DBW, false);
     }
 
     /**

@@ -166,8 +166,90 @@ func (rcv *ACWTrack) LossReason() []byte {
 
 /// Why scheduled observations were not detected (for example "SNR",
 /// "MAGNITUDE"); empty when all were.
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTrack) HAS_START_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTrack) HasStartJulianDateTt() bool {
+	return rcv.HAS_START_JULIAN_DATE_TT()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTrack) MutateHAS_START_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *ACWTrack) MutateHasStartJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_START_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWTrack) HAS_END_JULIAN_DATE_TT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTrack) HasEndJulianDateTt() bool {
+	return rcv.HAS_END_JULIAN_DATE_TT()
+}
+
+func (rcv *ACWTrack) MutateHAS_END_JULIAN_DATE_TT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWTrack) MutateHasEndJulianDateTt(n bool) bool {
+	return rcv.MutateHAS_END_JULIAN_DATE_TT(n)
+}
+
+func (rcv *ACWTrack) HAS_SCHEDULED_COUNT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTrack) HasScheduledCount() bool {
+	return rcv.HAS_SCHEDULED_COUNT()
+}
+
+func (rcv *ACWTrack) MutateHAS_SCHEDULED_COUNT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWTrack) MutateHasScheduledCount(n bool) bool {
+	return rcv.MutateHAS_SCHEDULED_COUNT(n)
+}
+
+func (rcv *ACWTrack) HAS_DETECTED_COUNT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTrack) HasDetectedCount() bool {
+	return rcv.HAS_DETECTED_COUNT()
+}
+
+func (rcv *ACWTrack) MutateHAS_DETECTED_COUNT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *ACWTrack) MutateHasDetectedCount(n bool) bool {
+	return rcv.MutateHAS_DETECTED_COUNT(n)
+}
+
 func ACWTrackStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(11)
 }
 func ACWTrackAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
@@ -210,6 +292,30 @@ func ACWTrackAddLOSS_REASON(builder *flatbuffers.Builder, LOSS_REASON flatbuffer
 }
 func ACWTrackAddLossReason(builder *flatbuffers.Builder, LOSS_REASON flatbuffers.UOffsetT) {
 	ACWTrackAddLOSS_REASON(builder, LOSS_REASON)
+}
+func ACWTrackAddHAS_START_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(7, HAS_START_JULIAN_DATE_TT, false)
+}
+func ACWTrackAddHasStartJulianDateTt(builder *flatbuffers.Builder, HAS_START_JULIAN_DATE_TT bool) {
+	ACWTrackAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+}
+func ACWTrackAddHAS_END_JULIAN_DATE_TT(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	builder.PrependBoolSlot(8, HAS_END_JULIAN_DATE_TT, false)
+}
+func ACWTrackAddHasEndJulianDateTt(builder *flatbuffers.Builder, HAS_END_JULIAN_DATE_TT bool) {
+	ACWTrackAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+}
+func ACWTrackAddHAS_SCHEDULED_COUNT(builder *flatbuffers.Builder, HAS_SCHEDULED_COUNT bool) {
+	builder.PrependBoolSlot(9, HAS_SCHEDULED_COUNT, false)
+}
+func ACWTrackAddHasScheduledCount(builder *flatbuffers.Builder, HAS_SCHEDULED_COUNT bool) {
+	ACWTrackAddHAS_SCHEDULED_COUNT(builder, HAS_SCHEDULED_COUNT)
+}
+func ACWTrackAddHAS_DETECTED_COUNT(builder *flatbuffers.Builder, HAS_DETECTED_COUNT bool) {
+	builder.PrependBoolSlot(10, HAS_DETECTED_COUNT, false)
+}
+func ACWTrackAddHasDetectedCount(builder *flatbuffers.Builder, HAS_DETECTED_COUNT bool) {
+	ACWTrackAddHAS_DETECTED_COUNT(builder, HAS_DETECTED_COUNT)
 }
 func ACWTrackEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

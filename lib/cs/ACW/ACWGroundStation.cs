@@ -35,15 +35,25 @@ public struct ACWGroundStation : IFlatbufferObject
   public double LATITUDE_RAD { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Geodetic longitude, radians.
   public double LONGITUDE_RAD { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Height above the WGS-84 ellipsoid, meters.
+  /// Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+  /// docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+  /// finite segment blocks; tangent contact is clear. At height <= 0, including
+  /// zero, use the supporting plane, without an own-ellipsoid intersection test.
+  /// The user elevation mask and supplied terrain apply separately at all heights.
   public double ALTITUDE_M { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Default minimum visible elevation, radians.
+  /// Explicit minimum visible elevation, radians; HAS flag required.
   public double MIN_ELEVATION_RAD { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Number of simultaneous contacts this station can schedule.
   public uint CHANNEL_CAPACITY { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Station-specific unavailable intervals.
   public ACWBlackoutWindow? BLACKOUT_WINDOWS(int j) { int o = __p.__offset(18); return o != 0 ? (ACWBlackoutWindow?)(new ACWBlackoutWindow()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int BLACKOUT_WINDOWSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_LATITUDE_RAD { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_LONGITUDE_RAD { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_ALTITUDE_M { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_MIN_ELEVATION_RAD { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_CHANNEL_CAPACITY { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWGroundStation> CreateACWGroundStation(FlatBufferBuilder builder,
       StringOffset STATION_IDOffset = default(StringOffset),
@@ -53,8 +63,13 @@ public struct ACWGroundStation : IFlatbufferObject
       double ALTITUDE_M = 0.0,
       double MIN_ELEVATION_RAD = 0.0,
       uint CHANNEL_CAPACITY = 0,
-      VectorOffset BLACKOUT_WINDOWSOffset = default(VectorOffset)) {
-    builder.StartTable(8);
+      VectorOffset BLACKOUT_WINDOWSOffset = default(VectorOffset),
+      bool HAS_LATITUDE_RAD = false,
+      bool HAS_LONGITUDE_RAD = false,
+      bool HAS_ALTITUDE_M = false,
+      bool HAS_MIN_ELEVATION_RAD = false,
+      bool HAS_CHANNEL_CAPACITY = false) {
+    builder.StartTable(13);
     ACWGroundStation.AddMIN_ELEVATION_RAD(builder, MIN_ELEVATION_RAD);
     ACWGroundStation.AddALTITUDE_M(builder, ALTITUDE_M);
     ACWGroundStation.AddLONGITUDE_RAD(builder, LONGITUDE_RAD);
@@ -63,10 +78,15 @@ public struct ACWGroundStation : IFlatbufferObject
     ACWGroundStation.AddCHANNEL_CAPACITY(builder, CHANNEL_CAPACITY);
     ACWGroundStation.AddNAME(builder, NAMEOffset);
     ACWGroundStation.AddSTATION_ID(builder, STATION_IDOffset);
+    ACWGroundStation.AddHAS_CHANNEL_CAPACITY(builder, HAS_CHANNEL_CAPACITY);
+    ACWGroundStation.AddHAS_MIN_ELEVATION_RAD(builder, HAS_MIN_ELEVATION_RAD);
+    ACWGroundStation.AddHAS_ALTITUDE_M(builder, HAS_ALTITUDE_M);
+    ACWGroundStation.AddHAS_LONGITUDE_RAD(builder, HAS_LONGITUDE_RAD);
+    ACWGroundStation.AddHAS_LATITUDE_RAD(builder, HAS_LATITUDE_RAD);
     return ACWGroundStation.EndACWGroundStation(builder);
   }
 
-  public static void StartACWGroundStation(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartACWGroundStation(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddSTATION_ID(FlatBufferBuilder builder, StringOffset STATION_IDOffset) { builder.AddOffset(0, STATION_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddLATITUDE_RAD(FlatBufferBuilder builder, double LATITUDE_RAD) { builder.AddDouble(2, LATITUDE_RAD, 0.0); }
@@ -80,6 +100,11 @@ public struct ACWGroundStation : IFlatbufferObject
   public static VectorOffset CreateBLACKOUT_WINDOWSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWBlackoutWindow>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBLACKOUT_WINDOWSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWBlackoutWindow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBLACKOUT_WINDOWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddHAS_LATITUDE_RAD(FlatBufferBuilder builder, bool HAS_LATITUDE_RAD) { builder.AddBool(8, HAS_LATITUDE_RAD, false); }
+  public static void AddHAS_LONGITUDE_RAD(FlatBufferBuilder builder, bool HAS_LONGITUDE_RAD) { builder.AddBool(9, HAS_LONGITUDE_RAD, false); }
+  public static void AddHAS_ALTITUDE_M(FlatBufferBuilder builder, bool HAS_ALTITUDE_M) { builder.AddBool(10, HAS_ALTITUDE_M, false); }
+  public static void AddHAS_MIN_ELEVATION_RAD(FlatBufferBuilder builder, bool HAS_MIN_ELEVATION_RAD) { builder.AddBool(11, HAS_MIN_ELEVATION_RAD, false); }
+  public static void AddHAS_CHANNEL_CAPACITY(FlatBufferBuilder builder, bool HAS_CHANNEL_CAPACITY) { builder.AddBool(12, HAS_CHANNEL_CAPACITY, false); }
   public static Offset<ACWGroundStation> EndACWGroundStation(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWGroundStation>(o);
@@ -99,6 +124,11 @@ public struct ACWGroundStation : IFlatbufferObject
     _o.CHANNEL_CAPACITY = this.CHANNEL_CAPACITY;
     _o.BLACKOUT_WINDOWS = new List<ACWBlackoutWindowT>();
     for (var _j = 0; _j < this.BLACKOUT_WINDOWSLength; ++_j) {_o.BLACKOUT_WINDOWS.Add(this.BLACKOUT_WINDOWS(_j).HasValue ? this.BLACKOUT_WINDOWS(_j).Value.UnPack() : null);}
+    _o.HAS_LATITUDE_RAD = this.HAS_LATITUDE_RAD;
+    _o.HAS_LONGITUDE_RAD = this.HAS_LONGITUDE_RAD;
+    _o.HAS_ALTITUDE_M = this.HAS_ALTITUDE_M;
+    _o.HAS_MIN_ELEVATION_RAD = this.HAS_MIN_ELEVATION_RAD;
+    _o.HAS_CHANNEL_CAPACITY = this.HAS_CHANNEL_CAPACITY;
   }
   public static Offset<ACWGroundStation> Pack(FlatBufferBuilder builder, ACWGroundStationT _o) {
     if (_o == null) return default(Offset<ACWGroundStation>);
@@ -119,7 +149,12 @@ public struct ACWGroundStation : IFlatbufferObject
       _o.ALTITUDE_M,
       _o.MIN_ELEVATION_RAD,
       _o.CHANNEL_CAPACITY,
-      _BLACKOUT_WINDOWS);
+      _BLACKOUT_WINDOWS,
+      _o.HAS_LATITUDE_RAD,
+      _o.HAS_LONGITUDE_RAD,
+      _o.HAS_ALTITUDE_M,
+      _o.HAS_MIN_ELEVATION_RAD,
+      _o.HAS_CHANNEL_CAPACITY);
   }
 }
 
@@ -133,6 +168,11 @@ public class ACWGroundStationT
   public double MIN_ELEVATION_RAD { get; set; }
   public uint CHANNEL_CAPACITY { get; set; }
   public List<ACWBlackoutWindowT> BLACKOUT_WINDOWS { get; set; }
+  public bool HAS_LATITUDE_RAD { get; set; }
+  public bool HAS_LONGITUDE_RAD { get; set; }
+  public bool HAS_ALTITUDE_M { get; set; }
+  public bool HAS_MIN_ELEVATION_RAD { get; set; }
+  public bool HAS_CHANNEL_CAPACITY { get; set; }
 
   public ACWGroundStationT() {
     this.STATION_ID = null;
@@ -143,6 +183,11 @@ public class ACWGroundStationT
     this.MIN_ELEVATION_RAD = 0.0;
     this.CHANNEL_CAPACITY = 0;
     this.BLACKOUT_WINDOWS = null;
+    this.HAS_LATITUDE_RAD = false;
+    this.HAS_LONGITUDE_RAD = false;
+    this.HAS_ALTITUDE_M = false;
+    this.HAS_MIN_ELEVATION_RAD = false;
+    this.HAS_CHANNEL_CAPACITY = false;
   }
 }
 
@@ -160,6 +205,11 @@ static public class ACWGroundStationVerify
       && verifier.VerifyField(tablePos, 14 /*MIN_ELEVATION_RAD*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 16 /*CHANNEL_CAPACITY*/, 4 /*uint*/, 4, false)
       && verifier.VerifyVectorOfTables(tablePos, 18 /*BLACKOUT_WINDOWS*/, ACWBlackoutWindowVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 20 /*HAS_LATITUDE_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*HAS_LONGITUDE_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*HAS_ALTITUDE_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*HAS_MIN_ELEVATION_RAD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 28 /*HAS_CHANNEL_CAPACITY*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

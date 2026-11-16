@@ -1,0 +1,63 @@
+import * as flatbuffers from 'flatbuffers';
+export declare class SCVAggregateStatistics implements flatbuffers.IUnpackableObject<SCVAggregateStatisticsT> {
+    bb: flatbuffers.ByteBuffer | null;
+    bb_pos: number;
+    __init(i: number, bb: flatbuffers.ByteBuffer): SCVAggregateStatistics;
+    static getRootAsSCVAggregateStatistics(bb: flatbuffers.ByteBuffer, obj?: SCVAggregateStatistics): SCVAggregateStatistics;
+    static getSizePrefixedRootAsSCVAggregateStatistics(bb: flatbuffers.ByteBuffer, obj?: SCVAggregateStatistics): SCVAggregateStatistics;
+    TOTAL_CELLS(): number;
+    ACCESSED_CELLS(): number;
+    MULTI_ACCESS_CELLS(): number;
+    ACTIVE_SENSOR_COUNT(): number;
+    SWATH_COUNT(): number;
+    TOTAL_WINDOWS(): number;
+    TOTAL_INTERVAL_COUNT(): number;
+    TOTAL_REVISIT_COUNT(): number;
+    TOTAL_ACCESS_DURATION_SEC(): number;
+    TOTAL_GAP_DURATION_SEC(): number;
+    MAX_GAP_DURATION_SEC(): number;
+    MEAN_REVISIT_TIME_SEC(): number;
+    MAX_RESPONSE_TIME_SEC(): number;
+    MEAN_RESPONSE_TIME_SEC(): number;
+    PERCENT_COVERAGE(): number;
+    static startSCVAggregateStatistics(builder: flatbuffers.Builder): void;
+    static addTotalCells(builder: flatbuffers.Builder, TOTAL_CELLS: number): void;
+    static addAccessedCells(builder: flatbuffers.Builder, ACCESSED_CELLS: number): void;
+    static addMultiAccessCells(builder: flatbuffers.Builder, MULTI_ACCESS_CELLS: number): void;
+    static addActiveSensorCount(builder: flatbuffers.Builder, ACTIVE_SENSOR_COUNT: number): void;
+    static addSwathCount(builder: flatbuffers.Builder, SWATH_COUNT: number): void;
+    static addTotalWindows(builder: flatbuffers.Builder, TOTAL_WINDOWS: number): void;
+    static addTotalIntervalCount(builder: flatbuffers.Builder, TOTAL_INTERVAL_COUNT: number): void;
+    static addTotalRevisitCount(builder: flatbuffers.Builder, TOTAL_REVISIT_COUNT: number): void;
+    static addTotalAccessDurationSec(builder: flatbuffers.Builder, TOTAL_ACCESS_DURATION_SEC: number): void;
+    static addTotalGapDurationSec(builder: flatbuffers.Builder, TOTAL_GAP_DURATION_SEC: number): void;
+    static addMaxGapDurationSec(builder: flatbuffers.Builder, MAX_GAP_DURATION_SEC: number): void;
+    static addMeanRevisitTimeSec(builder: flatbuffers.Builder, MEAN_REVISIT_TIME_SEC: number): void;
+    static addMaxResponseTimeSec(builder: flatbuffers.Builder, MAX_RESPONSE_TIME_SEC: number): void;
+    static addMeanResponseTimeSec(builder: flatbuffers.Builder, MEAN_RESPONSE_TIME_SEC: number): void;
+    static addPercentCoverage(builder: flatbuffers.Builder, PERCENT_COVERAGE: number): void;
+    static endSCVAggregateStatistics(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static createSCVAggregateStatistics(builder: flatbuffers.Builder, TOTAL_CELLS: number, ACCESSED_CELLS: number, MULTI_ACCESS_CELLS: number, ACTIVE_SENSOR_COUNT: number, SWATH_COUNT: number, TOTAL_WINDOWS: number, TOTAL_INTERVAL_COUNT: number, TOTAL_REVISIT_COUNT: number, TOTAL_ACCESS_DURATION_SEC: number, TOTAL_GAP_DURATION_SEC: number, MAX_GAP_DURATION_SEC: number, MEAN_REVISIT_TIME_SEC: number, MAX_RESPONSE_TIME_SEC: number, MEAN_RESPONSE_TIME_SEC: number, PERCENT_COVERAGE: number): flatbuffers.Offset;
+    unpack(): SCVAggregateStatisticsT;
+    unpackTo(_o: SCVAggregateStatisticsT): void;
+}
+export declare class SCVAggregateStatisticsT implements flatbuffers.IGeneratedObject {
+    TOTAL_CELLS: number;
+    ACCESSED_CELLS: number;
+    MULTI_ACCESS_CELLS: number;
+    ACTIVE_SENSOR_COUNT: number;
+    SWATH_COUNT: number;
+    TOTAL_WINDOWS: number;
+    TOTAL_INTERVAL_COUNT: number;
+    TOTAL_REVISIT_COUNT: number;
+    TOTAL_ACCESS_DURATION_SEC: number;
+    TOTAL_GAP_DURATION_SEC: number;
+    MAX_GAP_DURATION_SEC: number;
+    MEAN_REVISIT_TIME_SEC: number;
+    MAX_RESPONSE_TIME_SEC: number;
+    MEAN_RESPONSE_TIME_SEC: number;
+    PERCENT_COVERAGE: number;
+    constructor(TOTAL_CELLS?: number, ACCESSED_CELLS?: number, MULTI_ACCESS_CELLS?: number, ACTIVE_SENSOR_COUNT?: number, SWATH_COUNT?: number, TOTAL_WINDOWS?: number, TOTAL_INTERVAL_COUNT?: number, TOTAL_REVISIT_COUNT?: number, TOTAL_ACCESS_DURATION_SEC?: number, TOTAL_GAP_DURATION_SEC?: number, MAX_GAP_DURATION_SEC?: number, MEAN_REVISIT_TIME_SEC?: number, MAX_RESPONSE_TIME_SEC?: number, MEAN_RESPONSE_TIME_SEC?: number, PERCENT_COVERAGE?: number);
+    pack(builder: flatbuffers.Builder): flatbuffers.Offset;
+}
+//# sourceMappingURL=SCVAggregateStatistics.d.ts.map

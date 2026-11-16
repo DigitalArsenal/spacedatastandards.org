@@ -35,19 +35,30 @@ public final class ACWElevationMaskPoint extends com.google.flatbuffers.Table {
    * Minimum visible elevation at the azimuth, radians.
    */
   public double ELEVATION_RAD() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_AZIMUTH_RAD() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HAS_ELEVATION_RAD() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWElevationMaskPoint(FlatBufferBuilder builder,
       double AZIMUTH_RAD,
-      double ELEVATION_RAD) {
-    builder.startTable(2);
+      double ELEVATION_RAD,
+      boolean HAS_AZIMUTH_RAD,
+      boolean HAS_ELEVATION_RAD) {
+    builder.startTable(4);
     ACWElevationMaskPoint.addElevationRad(builder, ELEVATION_RAD);
     ACWElevationMaskPoint.addAzimuthRad(builder, AZIMUTH_RAD);
+    ACWElevationMaskPoint.addHasElevationRad(builder, HAS_ELEVATION_RAD);
+    ACWElevationMaskPoint.addHasAzimuthRad(builder, HAS_AZIMUTH_RAD);
     return ACWElevationMaskPoint.endACWElevationMaskPoint(builder);
   }
 
-  public static void startACWElevationMaskPoint(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startACWElevationMaskPoint(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addAzimuthRad(FlatBufferBuilder builder, double AZIMUTH_RAD) { builder.addDouble(0, AZIMUTH_RAD, 0.0); }
   public static void addElevationRad(FlatBufferBuilder builder, double ELEVATION_RAD) { builder.addDouble(1, ELEVATION_RAD, 0.0); }
+  public static void addHasAzimuthRad(FlatBufferBuilder builder, boolean HAS_AZIMUTH_RAD) { builder.addBoolean(2, HAS_AZIMUTH_RAD, false); }
+  public static void addHasElevationRad(FlatBufferBuilder builder, boolean HAS_ELEVATION_RAD) { builder.addBoolean(3, HAS_ELEVATION_RAD, false); }
   public static int endACWElevationMaskPoint(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

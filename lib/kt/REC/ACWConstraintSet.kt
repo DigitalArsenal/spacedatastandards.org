@@ -74,6 +74,14 @@ class ACWConstraintSet : Table() {
         }
     val labelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun labelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasOperator : Boolean
+        get() {
+            val o = __offset(12)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWConstraintSet(_bb: ByteBuffer): ACWConstraintSet = getRootAsACWConstraintSet(_bb, ACWConstraintSet())
@@ -81,15 +89,16 @@ class ACWConstraintSet : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWConstraintSet(builder: FlatBufferBuilder, operator: Byte, constraintsOffset: Int, setsOffset: Int, labelOffset: Int) : Int {
-            builder.startTable(4)
+        fun createACWConstraintSet(builder: FlatBufferBuilder, operator: Byte, constraintsOffset: Int, setsOffset: Int, labelOffset: Int, hasOperator: Boolean) : Int {
+            builder.startTable(5)
             addLABEL(builder, labelOffset)
             addSETS(builder, setsOffset)
             addCONSTRAINTS(builder, constraintsOffset)
+            addHASOPERATOR(builder, hasOperator)
             addOPERATOR(builder, operator)
             return endACWConstraintSet(builder)
         }
-        fun startACWConstraintSet(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startACWConstraintSet(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addOPERATOR(builder: FlatBufferBuilder, operator: Byte) = builder.addByte(0, operator, 0)
         fun addCONSTRAINTS(builder: FlatBufferBuilder, constraints: Int) = builder.addOffset(1, constraints, 0)
         fun createConstraintsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -110,6 +119,7 @@ class ACWConstraintSet : Table() {
         }
         fun startSetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addLABEL(builder: FlatBufferBuilder, label: Int) = builder.addOffset(3, label, 0)
+        fun addHASOPERATOR(builder: FlatBufferBuilder, hasOperator: Boolean) = builder.addBoolean(4, hasOperator, false)
         fun endACWConstraintSet(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -59,7 +59,11 @@ LONGITUDE_RAD():number {
 }
 
 /**
- * Height above the WGS-84 ellipsoid, meters.
+ * Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+ * docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+ * finite segment blocks; tangent contact is clear. At height <= 0, including
+ * zero, use the supporting plane, without an own-ellipsoid intersection test.
+ * The user elevation mask and supplied terrain apply separately at all heights.
  */
 ALTITUDE_M():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -67,7 +71,7 @@ ALTITUDE_M():number {
 }
 
 /**
- * Default minimum visible elevation, radians.
+ * Explicit minimum visible elevation, radians; HAS flag required.
  */
 MIN_ELEVATION_RAD():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -95,8 +99,36 @@ blackoutWindowsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_LATITUDE_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_LONGITUDE_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_ALTITUDE_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_MIN_ELEVATION_RAD():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+HAS_CHANNEL_CAPACITY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWGroundStation(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(13);
 }
 
 static addStationId(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset) {
@@ -143,12 +175,32 @@ static startBlackoutWindowsVector(builder:flatbuffers.Builder, numElems:number) 
   builder.startVector(4, numElems, 4);
 }
 
+static addHasLatitudeRad(builder:flatbuffers.Builder, HAS_LATITUDE_RAD:boolean) {
+  builder.addFieldInt8(8, +HAS_LATITUDE_RAD, +false);
+}
+
+static addHasLongitudeRad(builder:flatbuffers.Builder, HAS_LONGITUDE_RAD:boolean) {
+  builder.addFieldInt8(9, +HAS_LONGITUDE_RAD, +false);
+}
+
+static addHasAltitudeM(builder:flatbuffers.Builder, HAS_ALTITUDE_M:boolean) {
+  builder.addFieldInt8(10, +HAS_ALTITUDE_M, +false);
+}
+
+static addHasMinElevationRad(builder:flatbuffers.Builder, HAS_MIN_ELEVATION_RAD:boolean) {
+  builder.addFieldInt8(11, +HAS_MIN_ELEVATION_RAD, +false);
+}
+
+static addHasChannelCapacity(builder:flatbuffers.Builder, HAS_CHANNEL_CAPACITY:boolean) {
+  builder.addFieldInt8(12, +HAS_CHANNEL_CAPACITY, +false);
+}
+
 static endACWGroundStation(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWGroundStation(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, LATITUDE_RAD:number, LONGITUDE_RAD:number, ALTITUDE_M:number, MIN_ELEVATION_RAD:number, CHANNEL_CAPACITY:number, BLACKOUT_WINDOWSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWGroundStation(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, LATITUDE_RAD:number, LONGITUDE_RAD:number, ALTITUDE_M:number, MIN_ELEVATION_RAD:number, CHANNEL_CAPACITY:number, BLACKOUT_WINDOWSOffset:flatbuffers.Offset, HAS_LATITUDE_RAD:boolean, HAS_LONGITUDE_RAD:boolean, HAS_ALTITUDE_M:boolean, HAS_MIN_ELEVATION_RAD:boolean, HAS_CHANNEL_CAPACITY:boolean):flatbuffers.Offset {
   ACWGroundStation.startACWGroundStation(builder);
   ACWGroundStation.addStationId(builder, STATION_IDOffset);
   ACWGroundStation.addName(builder, NAMEOffset);
@@ -158,6 +210,11 @@ static createACWGroundStation(builder:flatbuffers.Builder, STATION_IDOffset:flat
   ACWGroundStation.addMinElevationRad(builder, MIN_ELEVATION_RAD);
   ACWGroundStation.addChannelCapacity(builder, CHANNEL_CAPACITY);
   ACWGroundStation.addBlackoutWindows(builder, BLACKOUT_WINDOWSOffset);
+  ACWGroundStation.addHasLatitudeRad(builder, HAS_LATITUDE_RAD);
+  ACWGroundStation.addHasLongitudeRad(builder, HAS_LONGITUDE_RAD);
+  ACWGroundStation.addHasAltitudeM(builder, HAS_ALTITUDE_M);
+  ACWGroundStation.addHasMinElevationRad(builder, HAS_MIN_ELEVATION_RAD);
+  ACWGroundStation.addHasChannelCapacity(builder, HAS_CHANNEL_CAPACITY);
   return ACWGroundStation.endACWGroundStation(builder);
 }
 
@@ -170,7 +227,12 @@ unpack(): ACWGroundStationT {
     this.ALTITUDE_M(),
     this.MIN_ELEVATION_RAD(),
     this.CHANNEL_CAPACITY(),
-    this.bb!.createObjList<ACWBlackoutWindow, ACWBlackoutWindowT>(this.BLACKOUT_WINDOWS.bind(this), this.blackoutWindowsLength())
+    this.bb!.createObjList<ACWBlackoutWindow, ACWBlackoutWindowT>(this.BLACKOUT_WINDOWS.bind(this), this.blackoutWindowsLength()),
+    this.HAS_LATITUDE_RAD(),
+    this.HAS_LONGITUDE_RAD(),
+    this.HAS_ALTITUDE_M(),
+    this.HAS_MIN_ELEVATION_RAD(),
+    this.HAS_CHANNEL_CAPACITY()
   );
 }
 
@@ -184,6 +246,11 @@ unpackTo(_o: ACWGroundStationT): void {
   _o.MIN_ELEVATION_RAD = this.MIN_ELEVATION_RAD();
   _o.CHANNEL_CAPACITY = this.CHANNEL_CAPACITY();
   _o.BLACKOUT_WINDOWS = this.bb!.createObjList<ACWBlackoutWindow, ACWBlackoutWindowT>(this.BLACKOUT_WINDOWS.bind(this), this.blackoutWindowsLength());
+  _o.HAS_LATITUDE_RAD = this.HAS_LATITUDE_RAD();
+  _o.HAS_LONGITUDE_RAD = this.HAS_LONGITUDE_RAD();
+  _o.HAS_ALTITUDE_M = this.HAS_ALTITUDE_M();
+  _o.HAS_MIN_ELEVATION_RAD = this.HAS_MIN_ELEVATION_RAD();
+  _o.HAS_CHANNEL_CAPACITY = this.HAS_CHANNEL_CAPACITY();
 }
 }
 
@@ -196,7 +263,12 @@ constructor(
   public ALTITUDE_M: number = 0.0,
   public MIN_ELEVATION_RAD: number = 0.0,
   public CHANNEL_CAPACITY: number = 0,
-  public BLACKOUT_WINDOWS: (ACWBlackoutWindowT)[] = []
+  public BLACKOUT_WINDOWS: (ACWBlackoutWindowT)[] = [],
+  public HAS_LATITUDE_RAD: boolean = false,
+  public HAS_LONGITUDE_RAD: boolean = false,
+  public HAS_ALTITUDE_M: boolean = false,
+  public HAS_MIN_ELEVATION_RAD: boolean = false,
+  public HAS_CHANNEL_CAPACITY: boolean = false
 ){}
 
 
@@ -213,7 +285,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ALTITUDE_M,
     this.MIN_ELEVATION_RAD,
     this.CHANNEL_CAPACITY,
-    BLACKOUT_WINDOWS
+    BLACKOUT_WINDOWS,
+    this.HAS_LATITUDE_RAD,
+    this.HAS_LONGITUDE_RAD,
+    this.HAS_ALTITUDE_M,
+    this.HAS_MIN_ELEVATION_RAD,
+    this.HAS_CHANNEL_CAPACITY
   );
 }
 }

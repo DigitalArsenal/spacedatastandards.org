@@ -38,7 +38,7 @@ public final class ACWTarget extends com.google.flatbuffers.Table {
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Truth Earth-fixed states with velocity, in the frame and time scale of
+   * Truth central-body-fixed states with velocity, in the frame and time scale of
    * ACWRequest.STATES.
    */
   public ACWStateSample STATES(int j) { return STATES(new ACWStateSample(), j); }
@@ -48,23 +48,29 @@ public final class ACWTarget extends com.google.flatbuffers.Table {
   public ACWStateSample.Vector statesVector(ACWStateSample.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public ACWTargetSignature SIGNATURE() { return SIGNATURE(new ACWTargetSignature()); }
   public ACWTargetSignature SIGNATURE(ACWTargetSignature obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Value presence: false means omitted; true precedes value validation.
+   */
+  public boolean HAS_NORAD_CAT_ID() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createACWTarget(FlatBufferBuilder builder,
       int TARGET_IDOffset,
       long NORAD_CAT_ID,
       int OBJECT_IDOffset,
       int STATESOffset,
-      int SIGNATUREOffset) {
-    builder.startTable(5);
+      int SIGNATUREOffset,
+      boolean HAS_NORAD_CAT_ID) {
+    builder.startTable(6);
     ACWTarget.addSignature(builder, SIGNATUREOffset);
     ACWTarget.addStates(builder, STATESOffset);
     ACWTarget.addObjectId(builder, OBJECT_IDOffset);
     ACWTarget.addNoradCatId(builder, NORAD_CAT_ID);
     ACWTarget.addTargetId(builder, TARGET_IDOffset);
+    ACWTarget.addHasNoradCatId(builder, HAS_NORAD_CAT_ID);
     return ACWTarget.endACWTarget(builder);
   }
 
-  public static void startACWTarget(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startACWTarget(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addTargetId(FlatBufferBuilder builder, int TARGET_IDOffset) { builder.addOffset(0, TARGET_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(1, (int) NORAD_CAT_ID, (int) 0L); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(2, OBJECT_IDOffset, 0); }
@@ -72,6 +78,7 @@ public final class ACWTarget extends com.google.flatbuffers.Table {
   public static int createStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(4, SIGNATUREOffset, 0); }
+  public static void addHasNoradCatId(FlatBufferBuilder builder, boolean HAS_NORAD_CAT_ID) { builder.addBoolean(5, HAS_NORAD_CAT_ID, false); }
   public static int endACWTarget(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

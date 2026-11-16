@@ -95,26 +95,37 @@ class ACWConstraintSet extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_OPERATOR()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWConstraintSet(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWConstraintSet
      */
-    public static function createACWConstraintSet(FlatBufferBuilder $builder, $OPERATOR, $CONSTRAINTS, $SETS, $LABEL)
+    public static function createACWConstraintSet(FlatBufferBuilder $builder, $OPERATOR, $CONSTRAINTS, $SETS, $LABEL, $HAS_OPERATOR)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
         self::addOPERATOR($builder, $OPERATOR);
         self::addCONSTRAINTS($builder, $CONSTRAINTS);
         self::addSETS($builder, $SETS);
         self::addLABEL($builder, $LABEL);
+        self::addHAS_OPERATOR($builder, $HAS_OPERATOR);
         $o = $builder->endObject();
         return $o;
     }
@@ -205,6 +216,16 @@ class ACWConstraintSet extends Table
     public static function addLABEL(FlatBufferBuilder $builder, $LABEL)
     {
         $builder->addOffsetX(3, $LABEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_OPERATOR(FlatBufferBuilder $builder, $HAS_OPERATOR)
+    {
+        $builder->addBoolX(4, $HAS_OPERATOR, false);
     }
 
     /**

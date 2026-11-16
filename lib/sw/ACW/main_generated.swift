@@ -8,6 +8,9 @@ import Common
 
 import FlatBuffers
 
+///  ACW enum domains and individual HAS flags are specified in docs/clg-scalar-presence.md.
+///  Existing zero values retain their meanings; the CLG UNSPECIFIED rule
+///  does not apply to ACW enumerations as a group.
 public enum acwOperationCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -24,8 +27,12 @@ public enum acwOperationCode: Int8, FlatbuffersVectorInitializable, Enum, Verifi
   ///  $RDO (RADAR), $EOO (OPTICAL, LASER_RANGING) and $RFO (PASSIVE_RF)
   ///  records; the result lists the tracks.
   case simulateObservations = 2
+  ///  Only runtime access operation in body-aware modules; CENTRAL_BODY required.
+  case computeAccessWindowsExplicitBody = 3
+  ///  Only runtime simulation operation in body-aware modules; body required.
+  case simulateObservationsExplicitBody = 4
 
-  public static var max: acwOperationCode { return .simulateObservations }
+  public static var max: acwOperationCode { return .simulateObservationsExplicitBody }
   public static var min: acwOperationCode { return .unknown }
 }
 
@@ -162,7 +169,222 @@ public enum acwSensorPhenomenology: UInt8, FlatbuffersVectorInitializable, Enum,
 }
 
 
-///  Target Cartesian state sample in an Earth-fixed frame.
+///  Immutable reference. STANDARD matches REC.standard (e.g. "DTT", no "$"),
+///  or "MODEL" for a manifest. SHA256 is 64 lowercase hexadecimal characters.
+///  Hash exact standalone root bytes WITHOUT size prefix, WITH file identifier;
+///  MODEL hashes exact supplied manifest bytes. Never hash a REC wrapper.
+///  RECORD_ID is the selector specified in docs/clg-contract.md section 2; "root" selects
+///  the complete root. URI is advisory and never fetched by a module.
+public struct BodyRecordRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BodyRecordRef.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let STANDARD: VOffset = 4
+    static let RECORD_ID: VOffset = 6
+    static let SHA256: VOffset = 8
+    static let URI: VOffset = 10
+  }
+
+  public var STANDARD: String! { let o = _accessor.offset(VT.STANDARD); return _accessor.string(at: o) }
+  public var STANDARDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.STANDARD) }
+  public var RECORD_ID: String! { let o = _accessor.offset(VT.RECORD_ID); return _accessor.string(at: o) }
+  public var RECORD_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.RECORD_ID) }
+  public var SHA256: String! { let o = _accessor.offset(VT.SHA256); return _accessor.string(at: o) }
+  public var SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SHA256) }
+  public var URI: String? { let o = _accessor.offset(VT.URI); return o == 0 ? nil : _accessor.string(at: o) }
+  public var URISegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URI) }
+  public static func startBodyRecordRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(STANDARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STANDARD, at: VT.STANDARD) }
+  public static func add(RECORD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_ID, at: VT.RECORD_ID) }
+  public static func add(SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHA256, at: VT.SHA256) }
+  public static func add(URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URI, at: VT.URI) }
+  public static func endBodyRecordRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
+  public static func createBodyRecordRef(
+    _ fbb: inout FlatBufferBuilder,
+    STANDARDOffset STANDARD: Offset,
+    RECORD_IDOffset RECORD_ID: Offset,
+    SHA256Offset SHA256: Offset,
+    URIOffset URI: Offset = Offset()
+  ) -> Offset {
+    let __start = BodyRecordRef.startBodyRecordRef(&fbb)
+    BodyRecordRef.add(STANDARD: STANDARD, &fbb)
+    BodyRecordRef.add(RECORD_ID: RECORD_ID, &fbb)
+    BodyRecordRef.add(SHA256: SHA256, &fbb)
+    BodyRecordRef.add(URI: URI, &fbb)
+    return BodyRecordRef.endBodyRecordRef(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.STANDARD, fieldName: "STANDARD", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORD_ID, fieldName: "RECORD_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHA256, fieldName: "SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.URI, fieldName: "URI", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Shared body descriptor, usable by ACW, CLG and future SCV revisions.
+///  No absence means Earth. Axes retain their FIXED_FRAME X/Y/Z order.
+///  SCVEllipsoid and DTT mapping is normative in docs/clg-contract.md section 2.
+public struct BodyDescriptor: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: BodyDescriptor.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAIF_ID: VOffset = 4
+    static let FIXED_FRAME: VOffset = 6
+    static let SEMI_AXIS_X_M: VOffset = 8
+    static let SEMI_AXIS_Y_M: VOffset = 10
+    static let SEMI_AXIS_Z_M: VOffset = 12
+    static let MODEL_ID: VOffset = 14
+    static let MODEL_SHA256: VOffset = 16
+    static let ATMOSPHERE_MODEL_ID: VOffset = 18
+    static let TERRAIN: VOffset = 20
+    static let GRAVITY: VOffset = 22
+    static let LIGHTING_SPHERE_RADIUS_M: VOffset = 24
+    static let LIGHTING_MODEL_ID: VOffset = 26
+    static let HAS_NAIF_ID: VOffset = 28
+    static let HAS_SEMI_AXIS_X_M: VOffset = 30
+    static let HAS_SEMI_AXIS_Y_M: VOffset = 32
+    static let HAS_SEMI_AXIS_Z_M: VOffset = 34
+    static let HAS_LIGHTING_SPHERE_RADIUS_M: VOffset = 36
+  }
+
+  ///  Physical NAIF body, not barycenter; HAS_NAIF_ID required, zero invalid.
+  public var NAIF_ID: Int32 { let o = _accessor.offset(VT.NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var FIXED_FRAME: RFMCoordinateSystem! { let o = _accessor.offset(VT.FIXED_FRAME); return RFMCoordinateSystem(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Each axis requires its HAS flag and a finite positive value.
+  public var SEMI_AXIS_X_M: Double { let o = _accessor.offset(VT.SEMI_AXIS_X_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_AXIS_Y_M: Double { let o = _accessor.offset(VT.SEMI_AXIS_Y_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_AXIS_Z_M: Double { let o = _accessor.offset(VT.SEMI_AXIS_Z_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MODEL_ID: String! { let o = _accessor.offset(VT.MODEL_ID); return _accessor.string(at: o) }
+  public var MODEL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODEL_ID) }
+  ///  Exact model-manifest bytes, 64 lowercase hexadecimal characters.
+  public var MODEL_SHA256: String! { let o = _accessor.offset(VT.MODEL_SHA256); return _accessor.string(at: o) }
+  public var MODEL_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MODEL_SHA256) }
+  ///  Required explicit assertion, "NONE" or a supported model identifier.
+  public var ATMOSPHERE_MODEL_ID: String! { let o = _accessor.offset(VT.ATMOSPHERE_MODEL_ID); return _accessor.string(at: o) }
+  public var ATMOSPHERE_MODEL_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ATMOSPHERE_MODEL_ID) }
+  ///  Absent means no terrain supplied; elevation remains mandatory for sites.
+  public var TERRAIN: BodyRecordRef? { let o = _accessor.offset(VT.TERRAIN); return o == 0 ? nil : BodyRecordRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Optional SHC or MODEL reference; its radius is not the shape radius.
+  public var GRAVITY: BodyRecordRef? { let o = _accessor.offset(VT.GRAVITY); return o == 0 ? nil : BodyRecordRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  True HAS flag, positive radius and name required for non-ANY lighting.
+  ///  This is a named spherical-shadow approximation, not ellipsoidal lighting.
+  public var LIGHTING_SPHERE_RADIUS_M: Double { let o = _accessor.offset(VT.LIGHTING_SPHERE_RADIUS_M); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LIGHTING_MODEL_ID: String? { let o = _accessor.offset(VT.LIGHTING_MODEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LIGHTING_MODEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LIGHTING_MODEL_ID) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_NAIF_ID: Bool { let o = _accessor.offset(VT.HAS_NAIF_ID); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_SEMI_AXIS_X_M: Bool { let o = _accessor.offset(VT.HAS_SEMI_AXIS_X_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_SEMI_AXIS_Y_M: Bool { let o = _accessor.offset(VT.HAS_SEMI_AXIS_Y_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_SEMI_AXIS_Z_M: Bool { let o = _accessor.offset(VT.HAS_SEMI_AXIS_Z_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_LIGHTING_SPHERE_RADIUS_M: Bool { let o = _accessor.offset(VT.HAS_LIGHTING_SPHERE_RADIUS_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startBodyDescriptor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  public static func add(NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NAIF_ID, def: 0, at: VT.NAIF_ID) }
+  public static func add(FIXED_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_FRAME, at: VT.FIXED_FRAME) }
+  public static func add(SEMI_AXIS_X_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_AXIS_X_M, def: .nan, at: VT.SEMI_AXIS_X_M) }
+  public static func add(SEMI_AXIS_Y_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_AXIS_Y_M, def: .nan, at: VT.SEMI_AXIS_Y_M) }
+  public static func add(SEMI_AXIS_Z_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_AXIS_Z_M, def: .nan, at: VT.SEMI_AXIS_Z_M) }
+  public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
+  public static func add(MODEL_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_SHA256, at: VT.MODEL_SHA256) }
+  public static func add(ATMOSPHERE_MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ATMOSPHERE_MODEL_ID, at: VT.ATMOSPHERE_MODEL_ID) }
+  public static func add(TERRAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERRAIN, at: VT.TERRAIN) }
+  public static func add(GRAVITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRAVITY, at: VT.GRAVITY) }
+  public static func add(LIGHTING_SPHERE_RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIGHTING_SPHERE_RADIUS_M, def: .nan, at: VT.LIGHTING_SPHERE_RADIUS_M) }
+  public static func add(LIGHTING_MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIGHTING_MODEL_ID, at: VT.LIGHTING_MODEL_ID) }
+  public static func add(HAS_NAIF_ID: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_NAIF_ID, def: false,
+   at: VT.HAS_NAIF_ID) }
+  public static func add(HAS_SEMI_AXIS_X_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SEMI_AXIS_X_M, def: false,
+   at: VT.HAS_SEMI_AXIS_X_M) }
+  public static func add(HAS_SEMI_AXIS_Y_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SEMI_AXIS_Y_M, def: false,
+   at: VT.HAS_SEMI_AXIS_Y_M) }
+  public static func add(HAS_SEMI_AXIS_Z_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SEMI_AXIS_Z_M, def: false,
+   at: VT.HAS_SEMI_AXIS_Z_M) }
+  public static func add(HAS_LIGHTING_SPHERE_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LIGHTING_SPHERE_RADIUS_M, def: false,
+   at: VT.HAS_LIGHTING_SPHERE_RADIUS_M) }
+  public static func endBodyDescriptor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6, 14, 16, 18]); return end }
+  public static func createBodyDescriptor(
+    _ fbb: inout FlatBufferBuilder,
+    NAIF_ID: Int32 = 0,
+    FIXED_FRAMEOffset FIXED_FRAME: Offset,
+    SEMI_AXIS_X_M: Double = .nan,
+    SEMI_AXIS_Y_M: Double = .nan,
+    SEMI_AXIS_Z_M: Double = .nan,
+    MODEL_IDOffset MODEL_ID: Offset,
+    MODEL_SHA256Offset MODEL_SHA256: Offset,
+    ATMOSPHERE_MODEL_IDOffset ATMOSPHERE_MODEL_ID: Offset,
+    TERRAINOffset TERRAIN: Offset = Offset(),
+    GRAVITYOffset GRAVITY: Offset = Offset(),
+    LIGHTING_SPHERE_RADIUS_M: Double = .nan,
+    LIGHTING_MODEL_IDOffset LIGHTING_MODEL_ID: Offset = Offset(),
+    HAS_NAIF_ID: Bool = false,
+    HAS_SEMI_AXIS_X_M: Bool = false,
+    HAS_SEMI_AXIS_Y_M: Bool = false,
+    HAS_SEMI_AXIS_Z_M: Bool = false,
+    HAS_LIGHTING_SPHERE_RADIUS_M: Bool = false
+  ) -> Offset {
+    let __start = BodyDescriptor.startBodyDescriptor(&fbb)
+    BodyDescriptor.add(NAIF_ID: NAIF_ID, &fbb)
+    BodyDescriptor.add(FIXED_FRAME: FIXED_FRAME, &fbb)
+    BodyDescriptor.add(SEMI_AXIS_X_M: SEMI_AXIS_X_M, &fbb)
+    BodyDescriptor.add(SEMI_AXIS_Y_M: SEMI_AXIS_Y_M, &fbb)
+    BodyDescriptor.add(SEMI_AXIS_Z_M: SEMI_AXIS_Z_M, &fbb)
+    BodyDescriptor.add(MODEL_ID: MODEL_ID, &fbb)
+    BodyDescriptor.add(MODEL_SHA256: MODEL_SHA256, &fbb)
+    BodyDescriptor.add(ATMOSPHERE_MODEL_ID: ATMOSPHERE_MODEL_ID, &fbb)
+    BodyDescriptor.add(TERRAIN: TERRAIN, &fbb)
+    BodyDescriptor.add(GRAVITY: GRAVITY, &fbb)
+    BodyDescriptor.add(LIGHTING_SPHERE_RADIUS_M: LIGHTING_SPHERE_RADIUS_M, &fbb)
+    BodyDescriptor.add(LIGHTING_MODEL_ID: LIGHTING_MODEL_ID, &fbb)
+    BodyDescriptor.add(HAS_NAIF_ID: HAS_NAIF_ID, &fbb)
+    BodyDescriptor.add(HAS_SEMI_AXIS_X_M: HAS_SEMI_AXIS_X_M, &fbb)
+    BodyDescriptor.add(HAS_SEMI_AXIS_Y_M: HAS_SEMI_AXIS_Y_M, &fbb)
+    BodyDescriptor.add(HAS_SEMI_AXIS_Z_M: HAS_SEMI_AXIS_Z_M, &fbb)
+    BodyDescriptor.add(HAS_LIGHTING_SPHERE_RADIUS_M: HAS_LIGHTING_SPHERE_RADIUS_M, &fbb)
+    return BodyDescriptor.endBodyDescriptor(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAIF_ID, fieldName: "NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.FIXED_FRAME, fieldName: "FIXED_FRAME", required: true, type: ForwardOffset<RFMCoordinateSystem>.self)
+    try _v.visit(field: VT.SEMI_AXIS_X_M, fieldName: "SEMI_AXIS_X_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_AXIS_Y_M, fieldName: "SEMI_AXIS_Y_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_AXIS_Z_M, fieldName: "SEMI_AXIS_Z_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MODEL_ID, fieldName: "MODEL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODEL_SHA256, fieldName: "MODEL_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ATMOSPHERE_MODEL_ID, fieldName: "ATMOSPHERE_MODEL_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TERRAIN, fieldName: "TERRAIN", required: false, type: ForwardOffset<BodyRecordRef>.self)
+    try _v.visit(field: VT.GRAVITY, fieldName: "GRAVITY", required: false, type: ForwardOffset<BodyRecordRef>.self)
+    try _v.visit(field: VT.LIGHTING_SPHERE_RADIUS_M, fieldName: "LIGHTING_SPHERE_RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.LIGHTING_MODEL_ID, fieldName: "LIGHTING_MODEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HAS_NAIF_ID, fieldName: "HAS_NAIF_ID", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_SEMI_AXIS_X_M, fieldName: "HAS_SEMI_AXIS_X_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_SEMI_AXIS_Y_M, fieldName: "HAS_SEMI_AXIS_Y_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_SEMI_AXIS_Z_M, fieldName: "HAS_SEMI_AXIS_Z_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_LIGHTING_SPHERE_RADIUS_M, fieldName: "HAS_LIGHTING_SPHERE_RADIUS_M", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Target Cartesian state sample in the required CENTRAL_BODY.FIXED_FRAME.
 public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -182,22 +404,37 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
     static let VELOCITY_X_MPS: VOffset = 12
     static let VELOCITY_Y_MPS: VOffset = 14
     static let VELOCITY_Z_MPS: VOffset = 16
+    static let HAS_JULIAN_DATE_TT: VOffset = 18
+    static let HAS_POSITION_X_M: VOffset = 20
+    static let HAS_POSITION_Y_M: VOffset = 22
+    static let HAS_POSITION_Z_M: VOffset = 24
+    static let HAS_VELOCITY_X_MPS: VOffset = 26
+    static let HAS_VELOCITY_Y_MPS: VOffset = 28
+    static let HAS_VELOCITY_Z_MPS: VOffset = 30
   }
 
   ///  Sample epoch as Julian Date in TT.
   public var JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Earth-fixed X position, meters.
+  ///  Fixed-frame X position, meters.
   public var POSITION_X_M: Double { let o = _accessor.offset(VT.POSITION_X_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Earth-fixed Y position, meters.
+  ///  Fixed-frame Y position, meters.
   public var POSITION_Y_M: Double { let o = _accessor.offset(VT.POSITION_Y_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Earth-fixed Z position, meters.
+  ///  Fixed-frame Z position, meters.
   public var POSITION_Z_M: Double { let o = _accessor.offset(VT.POSITION_Z_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Earth-fixed velocity, meters per second. Required for range-rate,
+  ///  Fixed-frame velocity, meters per second. Required for range-rate,
   ///  Doppler and frequency measurements (SIMULATE_OBSERVATIONS).
   public var VELOCITY_X_MPS: Double { let o = _accessor.offset(VT.VELOCITY_X_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var VELOCITY_Y_MPS: Double { let o = _accessor.offset(VT.VELOCITY_Y_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var VELOCITY_Z_MPS: Double { let o = _accessor.offset(VT.VELOCITY_Z_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWStateSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_POSITION_X_M: Bool { let o = _accessor.offset(VT.HAS_POSITION_X_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_POSITION_Y_M: Bool { let o = _accessor.offset(VT.HAS_POSITION_Y_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_POSITION_Z_M: Bool { let o = _accessor.offset(VT.HAS_POSITION_Z_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_VELOCITY_X_MPS: Bool { let o = _accessor.offset(VT.HAS_VELOCITY_X_MPS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_VELOCITY_Y_MPS: Bool { let o = _accessor.offset(VT.HAS_VELOCITY_Y_MPS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_VELOCITY_Z_MPS: Bool { let o = _accessor.offset(VT.HAS_VELOCITY_Z_MPS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWStateSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE_TT, def: 0.0, at: VT.JULIAN_DATE_TT) }
   public static func add(POSITION_X_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X_M, def: 0.0, at: VT.POSITION_X_M) }
   public static func add(POSITION_Y_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y_M, def: 0.0, at: VT.POSITION_Y_M) }
@@ -205,6 +442,20 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
   public static func add(VELOCITY_X_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_X_MPS, def: 0.0, at: VT.VELOCITY_X_MPS) }
   public static func add(VELOCITY_Y_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Y_MPS, def: 0.0, at: VT.VELOCITY_Y_MPS) }
   public static func add(VELOCITY_Z_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VELOCITY_Z_MPS, def: 0.0, at: VT.VELOCITY_Z_MPS) }
+  public static func add(HAS_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_JULIAN_DATE_TT) }
+  public static func add(HAS_POSITION_X_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_POSITION_X_M, def: false,
+   at: VT.HAS_POSITION_X_M) }
+  public static func add(HAS_POSITION_Y_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_POSITION_Y_M, def: false,
+   at: VT.HAS_POSITION_Y_M) }
+  public static func add(HAS_POSITION_Z_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_POSITION_Z_M, def: false,
+   at: VT.HAS_POSITION_Z_M) }
+  public static func add(HAS_VELOCITY_X_MPS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_VELOCITY_X_MPS, def: false,
+   at: VT.HAS_VELOCITY_X_MPS) }
+  public static func add(HAS_VELOCITY_Y_MPS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_VELOCITY_Y_MPS, def: false,
+   at: VT.HAS_VELOCITY_Y_MPS) }
+  public static func add(HAS_VELOCITY_Z_MPS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_VELOCITY_Z_MPS, def: false,
+   at: VT.HAS_VELOCITY_Z_MPS) }
   public static func endACWStateSample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWStateSample(
     _ fbb: inout FlatBufferBuilder,
@@ -214,7 +465,14 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
     POSITION_Z_M: Double = 0.0,
     VELOCITY_X_MPS: Double = 0.0,
     VELOCITY_Y_MPS: Double = 0.0,
-    VELOCITY_Z_MPS: Double = 0.0
+    VELOCITY_Z_MPS: Double = 0.0,
+    HAS_JULIAN_DATE_TT: Bool = false,
+    HAS_POSITION_X_M: Bool = false,
+    HAS_POSITION_Y_M: Bool = false,
+    HAS_POSITION_Z_M: Bool = false,
+    HAS_VELOCITY_X_MPS: Bool = false,
+    HAS_VELOCITY_Y_MPS: Bool = false,
+    HAS_VELOCITY_Z_MPS: Bool = false
   ) -> Offset {
     let __start = ACWStateSample.startACWStateSample(&fbb)
     ACWStateSample.add(JULIAN_DATE_TT: JULIAN_DATE_TT, &fbb)
@@ -224,6 +482,13 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
     ACWStateSample.add(VELOCITY_X_MPS: VELOCITY_X_MPS, &fbb)
     ACWStateSample.add(VELOCITY_Y_MPS: VELOCITY_Y_MPS, &fbb)
     ACWStateSample.add(VELOCITY_Z_MPS: VELOCITY_Z_MPS, &fbb)
+    ACWStateSample.add(HAS_JULIAN_DATE_TT: HAS_JULIAN_DATE_TT, &fbb)
+    ACWStateSample.add(HAS_POSITION_X_M: HAS_POSITION_X_M, &fbb)
+    ACWStateSample.add(HAS_POSITION_Y_M: HAS_POSITION_Y_M, &fbb)
+    ACWStateSample.add(HAS_POSITION_Z_M: HAS_POSITION_Z_M, &fbb)
+    ACWStateSample.add(HAS_VELOCITY_X_MPS: HAS_VELOCITY_X_MPS, &fbb)
+    ACWStateSample.add(HAS_VELOCITY_Y_MPS: HAS_VELOCITY_Y_MPS, &fbb)
+    ACWStateSample.add(HAS_VELOCITY_Z_MPS: HAS_VELOCITY_Z_MPS, &fbb)
     return ACWStateSample.endACWStateSample(&fbb, start: __start)
   }
 
@@ -236,6 +501,13 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
     try _v.visit(field: VT.VELOCITY_X_MPS, fieldName: "VELOCITY_X_MPS", required: false, type: Double.self)
     try _v.visit(field: VT.VELOCITY_Y_MPS, fieldName: "VELOCITY_Y_MPS", required: false, type: Double.self)
     try _v.visit(field: VT.VELOCITY_Z_MPS, fieldName: "VELOCITY_Z_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_JULIAN_DATE_TT, fieldName: "HAS_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_POSITION_X_M, fieldName: "HAS_POSITION_X_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_POSITION_Y_M, fieldName: "HAS_POSITION_Y_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_POSITION_Z_M, fieldName: "HAS_POSITION_Z_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_VELOCITY_X_MPS, fieldName: "HAS_VELOCITY_X_MPS", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_VELOCITY_Y_MPS, fieldName: "HAS_VELOCITY_Y_MPS", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_VELOCITY_Z_MPS, fieldName: "HAS_VELOCITY_Z_MPS", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -255,24 +527,37 @@ public struct ACWElevationMaskPoint: FlatBufferVerifiableTable, FlatbuffersVecto
   private struct VT {
     static let AZIMUTH_RAD: VOffset = 4
     static let ELEVATION_RAD: VOffset = 6
+    static let HAS_AZIMUTH_RAD: VOffset = 8
+    static let HAS_ELEVATION_RAD: VOffset = 10
   }
 
   ///  Azimuth, radians in the TopocentricFrame convention.
   public var AZIMUTH_RAD: Double { let o = _accessor.offset(VT.AZIMUTH_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Minimum visible elevation at the azimuth, radians.
   public var ELEVATION_RAD: Double { let o = _accessor.offset(VT.ELEVATION_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWElevationMaskPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_AZIMUTH_RAD: Bool { let o = _accessor.offset(VT.HAS_AZIMUTH_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_ELEVATION_RAD: Bool { let o = _accessor.offset(VT.HAS_ELEVATION_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWElevationMaskPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(AZIMUTH_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_RAD, def: 0.0, at: VT.AZIMUTH_RAD) }
   public static func add(ELEVATION_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_RAD, def: 0.0, at: VT.ELEVATION_RAD) }
+  public static func add(HAS_AZIMUTH_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_AZIMUTH_RAD, def: false,
+   at: VT.HAS_AZIMUTH_RAD) }
+  public static func add(HAS_ELEVATION_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ELEVATION_RAD, def: false,
+   at: VT.HAS_ELEVATION_RAD) }
   public static func endACWElevationMaskPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWElevationMaskPoint(
     _ fbb: inout FlatBufferBuilder,
     AZIMUTH_RAD: Double = 0.0,
-    ELEVATION_RAD: Double = 0.0
+    ELEVATION_RAD: Double = 0.0,
+    HAS_AZIMUTH_RAD: Bool = false,
+    HAS_ELEVATION_RAD: Bool = false
   ) -> Offset {
     let __start = ACWElevationMaskPoint.startACWElevationMaskPoint(&fbb)
     ACWElevationMaskPoint.add(AZIMUTH_RAD: AZIMUTH_RAD, &fbb)
     ACWElevationMaskPoint.add(ELEVATION_RAD: ELEVATION_RAD, &fbb)
+    ACWElevationMaskPoint.add(HAS_AZIMUTH_RAD: HAS_AZIMUTH_RAD, &fbb)
+    ACWElevationMaskPoint.add(HAS_ELEVATION_RAD: HAS_ELEVATION_RAD, &fbb)
     return ACWElevationMaskPoint.endACWElevationMaskPoint(&fbb, start: __start)
   }
 
@@ -280,6 +565,8 @@ public struct ACWElevationMaskPoint: FlatBufferVerifiableTable, FlatbuffersVecto
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.AZIMUTH_RAD, fieldName: "AZIMUTH_RAD", required: false, type: Double.self)
     try _v.visit(field: VT.ELEVATION_RAD, fieldName: "ELEVATION_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_AZIMUTH_RAD, fieldName: "HAS_AZIMUTH_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_ELEVATION_RAD, fieldName: "HAS_ELEVATION_RAD", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -300,6 +587,9 @@ public struct ACWRefractionModel: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let MODEL_KIND: VOffset = 4
     static let PRESSURE_PA: VOffset = 6
     static let TEMPERATURE_K: VOffset = 8
+    static let HAS_MODEL_KIND: VOffset = 10
+    static let HAS_PRESSURE_PA: VOffset = 12
+    static let HAS_TEMPERATURE_K: VOffset = 14
   }
 
   public var MODEL_KIND: acwRefractionModelKind { let o = _accessor.offset(VT.MODEL_KIND); return o == 0 ? .none_ : acwRefractionModelKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
@@ -307,21 +597,37 @@ public struct ACWRefractionModel: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public var PRESSURE_PA: Double { let o = _accessor.offset(VT.PRESSURE_PA); return o == 0 ? 101000.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Local temperature in kelvin.
   public var TEMPERATURE_K: Double { let o = _accessor.offset(VT.TEMPERATURE_K); return o == 0 ? 283.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWRefractionModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_MODEL_KIND: Bool { let o = _accessor.offset(VT.HAS_MODEL_KIND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_PRESSURE_PA: Bool { let o = _accessor.offset(VT.HAS_PRESSURE_PA); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_TEMPERATURE_K: Bool { let o = _accessor.offset(VT.HAS_TEMPERATURE_K); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWRefractionModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(MODEL_KIND: acwRefractionModelKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_KIND.rawValue, def: 0, at: VT.MODEL_KIND) }
   public static func add(PRESSURE_PA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRESSURE_PA, def: 101000.0, at: VT.PRESSURE_PA) }
   public static func add(TEMPERATURE_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE_K, def: 283.0, at: VT.TEMPERATURE_K) }
+  public static func add(HAS_MODEL_KIND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MODEL_KIND, def: false,
+   at: VT.HAS_MODEL_KIND) }
+  public static func add(HAS_PRESSURE_PA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PRESSURE_PA, def: false,
+   at: VT.HAS_PRESSURE_PA) }
+  public static func add(HAS_TEMPERATURE_K: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TEMPERATURE_K, def: false,
+   at: VT.HAS_TEMPERATURE_K) }
   public static func endACWRefractionModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWRefractionModel(
     _ fbb: inout FlatBufferBuilder,
     MODEL_KIND: acwRefractionModelKind = .none_,
     PRESSURE_PA: Double = 101000.0,
-    TEMPERATURE_K: Double = 283.0
+    TEMPERATURE_K: Double = 283.0,
+    HAS_MODEL_KIND: Bool = false,
+    HAS_PRESSURE_PA: Bool = false,
+    HAS_TEMPERATURE_K: Bool = false
   ) -> Offset {
     let __start = ACWRefractionModel.startACWRefractionModel(&fbb)
     ACWRefractionModel.add(MODEL_KIND: MODEL_KIND, &fbb)
     ACWRefractionModel.add(PRESSURE_PA: PRESSURE_PA, &fbb)
     ACWRefractionModel.add(TEMPERATURE_K: TEMPERATURE_K, &fbb)
+    ACWRefractionModel.add(HAS_MODEL_KIND: HAS_MODEL_KIND, &fbb)
+    ACWRefractionModel.add(HAS_PRESSURE_PA: HAS_PRESSURE_PA, &fbb)
+    ACWRefractionModel.add(HAS_TEMPERATURE_K: HAS_TEMPERATURE_K, &fbb)
     return ACWRefractionModel.endACWRefractionModel(&fbb, start: __start)
   }
 
@@ -330,6 +636,9 @@ public struct ACWRefractionModel: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.MODEL_KIND, fieldName: "MODEL_KIND", required: false, type: acwRefractionModelKind.self)
     try _v.visit(field: VT.PRESSURE_PA, fieldName: "PRESSURE_PA", required: false, type: Double.self)
     try _v.visit(field: VT.TEMPERATURE_K, fieldName: "TEMPERATURE_K", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_MODEL_KIND, fieldName: "HAS_MODEL_KIND", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_PRESSURE_PA, fieldName: "HAS_PRESSURE_PA", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_TEMPERATURE_K, fieldName: "HAS_TEMPERATURE_K", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -349,24 +658,37 @@ public struct ACWBlackoutWindow: FlatBufferVerifiableTable, FlatbuffersVectorIni
   private struct VT {
     static let START_JULIAN_DATE_TT: VOffset = 4
     static let END_JULIAN_DATE_TT: VOffset = 6
+    static let HAS_START_JULIAN_DATE_TT: VOffset = 8
+    static let HAS_END_JULIAN_DATE_TT: VOffset = 10
   }
 
   ///  Interval start as Julian Date in TT.
   public var START_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.START_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Interval end as Julian Date in TT.
   public var END_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.END_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWBlackoutWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_START_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_START_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_END_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_END_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWBlackoutWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
+  public static func add(HAS_START_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_START_JULIAN_DATE_TT) }
+  public static func add(HAS_END_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_END_JULIAN_DATE_TT) }
   public static func endACWBlackoutWindow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWBlackoutWindow(
     _ fbb: inout FlatBufferBuilder,
     START_JULIAN_DATE_TT: Double = 0.0,
-    END_JULIAN_DATE_TT: Double = 0.0
+    END_JULIAN_DATE_TT: Double = 0.0,
+    HAS_START_JULIAN_DATE_TT: Bool = false,
+    HAS_END_JULIAN_DATE_TT: Bool = false
   ) -> Offset {
     let __start = ACWBlackoutWindow.startACWBlackoutWindow(&fbb)
     ACWBlackoutWindow.add(START_JULIAN_DATE_TT: START_JULIAN_DATE_TT, &fbb)
     ACWBlackoutWindow.add(END_JULIAN_DATE_TT: END_JULIAN_DATE_TT, &fbb)
+    ACWBlackoutWindow.add(HAS_START_JULIAN_DATE_TT: HAS_START_JULIAN_DATE_TT, &fbb)
+    ACWBlackoutWindow.add(HAS_END_JULIAN_DATE_TT: HAS_END_JULIAN_DATE_TT, &fbb)
     return ACWBlackoutWindow.endACWBlackoutWindow(&fbb, start: __start)
   }
 
@@ -374,6 +696,8 @@ public struct ACWBlackoutWindow: FlatBufferVerifiableTable, FlatbuffersVectorIni
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.START_JULIAN_DATE_TT, fieldName: "START_JULIAN_DATE_TT", required: false, type: Double.self)
     try _v.visit(field: VT.END_JULIAN_DATE_TT, fieldName: "END_JULIAN_DATE_TT", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_START_JULIAN_DATE_TT, fieldName: "HAS_START_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_END_JULIAN_DATE_TT, fieldName: "HAS_END_JULIAN_DATE_TT", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -399,6 +723,11 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
     static let MIN_ELEVATION_RAD: VOffset = 14
     static let CHANNEL_CAPACITY: VOffset = 16
     static let BLACKOUT_WINDOWS: VOffset = 18
+    static let HAS_LATITUDE_RAD: VOffset = 20
+    static let HAS_LONGITUDE_RAD: VOffset = 22
+    static let HAS_ALTITUDE_M: VOffset = 24
+    static let HAS_MIN_ELEVATION_RAD: VOffset = 26
+    static let HAS_CHANNEL_CAPACITY: VOffset = 28
   }
 
   public var STATION_ID: String? { let o = _accessor.offset(VT.STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -409,15 +738,25 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public var LATITUDE_RAD: Double { let o = _accessor.offset(VT.LATITUDE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Geodetic longitude, radians.
   public var LONGITUDE_RAD: Double { let o = _accessor.offset(VT.LONGITUDE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Height above the WGS-84 ellipsoid, meters.
+  ///  Height along the outward normal of CENTRAL_BODY ellipsoid, meters.
+  ///  docs/clg-contract.md section 4: at height > 0, own-body interior penetration of the
+  ///  finite segment blocks; tangent contact is clear. At height <= 0, including
+  ///  zero, use the supporting plane, without an own-ellipsoid intersection test.
+  ///  The user elevation mask and supplied terrain apply separately at all heights.
   public var ALTITUDE_M: Double { let o = _accessor.offset(VT.ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Default minimum visible elevation, radians.
+  ///  Explicit minimum visible elevation, radians; HAS flag required.
   public var MIN_ELEVATION_RAD: Double { let o = _accessor.offset(VT.MIN_ELEVATION_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of simultaneous contacts this station can schedule.
   public var CHANNEL_CAPACITY: UInt32 { let o = _accessor.offset(VT.CHANNEL_CAPACITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Station-specific unavailable intervals.
   public var BLACKOUT_WINDOWS: FlatbufferVector<ACWBlackoutWindow> { return _accessor.vector(at: VT.BLACKOUT_WINDOWS, byteSize: 4) }
-  public static func startACWGroundStation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_LATITUDE_RAD: Bool { let o = _accessor.offset(VT.HAS_LATITUDE_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_LONGITUDE_RAD: Bool { let o = _accessor.offset(VT.HAS_LONGITUDE_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_ALTITUDE_M: Bool { let o = _accessor.offset(VT.HAS_ALTITUDE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MIN_ELEVATION_RAD: Bool { let o = _accessor.offset(VT.HAS_MIN_ELEVATION_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_CHANNEL_CAPACITY: Bool { let o = _accessor.offset(VT.HAS_CHANNEL_CAPACITY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWGroundStation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VT.STATION_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(LATITUDE_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE_RAD, def: 0.0, at: VT.LATITUDE_RAD) }
@@ -426,6 +765,16 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public static func add(MIN_ELEVATION_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ELEVATION_RAD, def: 0.0, at: VT.MIN_ELEVATION_RAD) }
   public static func add(CHANNEL_CAPACITY: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHANNEL_CAPACITY, def: 0, at: VT.CHANNEL_CAPACITY) }
   public static func addVectorOf(BLACKOUT_WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLACKOUT_WINDOWS, at: VT.BLACKOUT_WINDOWS) }
+  public static func add(HAS_LATITUDE_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LATITUDE_RAD, def: false,
+   at: VT.HAS_LATITUDE_RAD) }
+  public static func add(HAS_LONGITUDE_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LONGITUDE_RAD, def: false,
+   at: VT.HAS_LONGITUDE_RAD) }
+  public static func add(HAS_ALTITUDE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ALTITUDE_M, def: false,
+   at: VT.HAS_ALTITUDE_M) }
+  public static func add(HAS_MIN_ELEVATION_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MIN_ELEVATION_RAD, def: false,
+   at: VT.HAS_MIN_ELEVATION_RAD) }
+  public static func add(HAS_CHANNEL_CAPACITY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_CHANNEL_CAPACITY, def: false,
+   at: VT.HAS_CHANNEL_CAPACITY) }
   public static func endACWGroundStation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWGroundStation(
     _ fbb: inout FlatBufferBuilder,
@@ -436,7 +785,12 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
     ALTITUDE_M: Double = 0.0,
     MIN_ELEVATION_RAD: Double = 0.0,
     CHANNEL_CAPACITY: UInt32 = 0,
-    BLACKOUT_WINDOWSVectorOffset BLACKOUT_WINDOWS: Offset = Offset()
+    BLACKOUT_WINDOWSVectorOffset BLACKOUT_WINDOWS: Offset = Offset(),
+    HAS_LATITUDE_RAD: Bool = false,
+    HAS_LONGITUDE_RAD: Bool = false,
+    HAS_ALTITUDE_M: Bool = false,
+    HAS_MIN_ELEVATION_RAD: Bool = false,
+    HAS_CHANNEL_CAPACITY: Bool = false
   ) -> Offset {
     let __start = ACWGroundStation.startACWGroundStation(&fbb)
     ACWGroundStation.add(STATION_ID: STATION_ID, &fbb)
@@ -447,6 +801,11 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
     ACWGroundStation.add(MIN_ELEVATION_RAD: MIN_ELEVATION_RAD, &fbb)
     ACWGroundStation.add(CHANNEL_CAPACITY: CHANNEL_CAPACITY, &fbb)
     ACWGroundStation.addVectorOf(BLACKOUT_WINDOWS: BLACKOUT_WINDOWS, &fbb)
+    ACWGroundStation.add(HAS_LATITUDE_RAD: HAS_LATITUDE_RAD, &fbb)
+    ACWGroundStation.add(HAS_LONGITUDE_RAD: HAS_LONGITUDE_RAD, &fbb)
+    ACWGroundStation.add(HAS_ALTITUDE_M: HAS_ALTITUDE_M, &fbb)
+    ACWGroundStation.add(HAS_MIN_ELEVATION_RAD: HAS_MIN_ELEVATION_RAD, &fbb)
+    ACWGroundStation.add(HAS_CHANNEL_CAPACITY: HAS_CHANNEL_CAPACITY, &fbb)
     return ACWGroundStation.endACWGroundStation(&fbb, start: __start)
   }
 
@@ -460,6 +819,11 @@ public struct ACWGroundStation: FlatBufferVerifiableTable, FlatbuffersVectorInit
     try _v.visit(field: VT.MIN_ELEVATION_RAD, fieldName: "MIN_ELEVATION_RAD", required: false, type: Double.self)
     try _v.visit(field: VT.CHANNEL_CAPACITY, fieldName: "CHANNEL_CAPACITY", required: false, type: UInt32.self)
     try _v.visit(field: VT.BLACKOUT_WINDOWS, fieldName: "BLACKOUT_WINDOWS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWBlackoutWindow>, ACWBlackoutWindow>>.self)
+    try _v.visit(field: VT.HAS_LATITUDE_RAD, fieldName: "HAS_LATITUDE_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_LONGITUDE_RAD, fieldName: "HAS_LONGITUDE_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_ALTITUDE_M, fieldName: "HAS_ALTITUDE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MIN_ELEVATION_RAD, fieldName: "HAS_MIN_ELEVATION_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_CHANNEL_CAPACITY, fieldName: "HAS_CHANNEL_CAPACITY", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -485,6 +849,12 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     static let OCCULTATION_ATMOSPHERE_HEIGHT_M: VOffset = 14
     static let MASK: VOffset = 16
     static let LABEL: VOffset = 18
+    static let HAS_KIND: VOffset = 20
+    static let HAS_THRESHOLD_RAD: VOffset = 22
+    static let HAS_MIN_RANGE_M: VOffset = 24
+    static let HAS_MAX_RANGE_M: VOffset = 26
+    static let HAS_LIGHTING: VOffset = 28
+    static let HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: VOffset = 30
   }
 
   public var KIND: acwConstraintKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : acwConstraintKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
@@ -495,15 +865,22 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Required target lighting (TARGET_LIGHTING).
   public var LIGHTING: acwLightingCondition { let o = _accessor.offset(VT.LIGHTING); return o == 0 ? .any : acwLightingCondition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .any }
-  ///  Central-body radius offset for line-of-sight occultation, meters
-  ///  (LINE_OF_SIGHT); 0 grazes the ellipsoid surface.
+  ///  Nonnegative meters added to EACH ellipsoid semiaxis for space-to-space
+  ///  LOS only; not geodetic altitude. Never applied to a surface-station pair.
   public var OCCULTATION_ATMOSPHERE_HEIGHT_M: Double { let o = _accessor.offset(VT.OCCULTATION_ATMOSPHERE_HEIGHT_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Azimuth-dependent mask (ELEVATION_MASK).
   public var MASK: FlatbufferVector<ACWElevationMaskPoint> { return _accessor.vector(at: VT.MASK, byteSize: 4) }
   ///  Producer label echoed in window attribution.
   public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
   public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
-  public static func startACWConstraint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_KIND: Bool { let o = _accessor.offset(VT.HAS_KIND); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_THRESHOLD_RAD: Bool { let o = _accessor.offset(VT.HAS_THRESHOLD_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MIN_RANGE_M: Bool { let o = _accessor.offset(VT.HAS_MIN_RANGE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MAX_RANGE_M: Bool { let o = _accessor.offset(VT.HAS_MAX_RANGE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_LIGHTING: Bool { let o = _accessor.offset(VT.HAS_LIGHTING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: Bool { let o = _accessor.offset(VT.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWConstraint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(KIND: acwConstraintKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(THRESHOLD_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_RAD, def: 0.0, at: VT.THRESHOLD_RAD) }
   public static func add(MIN_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE_M, def: 0.0, at: VT.MIN_RANGE_M) }
@@ -512,6 +889,18 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   public static func add(OCCULTATION_ATMOSPHERE_HEIGHT_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCCULTATION_ATMOSPHERE_HEIGHT_M, def: 0.0, at: VT.OCCULTATION_ATMOSPHERE_HEIGHT_M) }
   public static func addVectorOf(MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MASK, at: VT.MASK) }
   public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(HAS_KIND: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_KIND, def: false,
+   at: VT.HAS_KIND) }
+  public static func add(HAS_THRESHOLD_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_THRESHOLD_RAD, def: false,
+   at: VT.HAS_THRESHOLD_RAD) }
+  public static func add(HAS_MIN_RANGE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MIN_RANGE_M, def: false,
+   at: VT.HAS_MIN_RANGE_M) }
+  public static func add(HAS_MAX_RANGE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAX_RANGE_M, def: false,
+   at: VT.HAS_MAX_RANGE_M) }
+  public static func add(HAS_LIGHTING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LIGHTING, def: false,
+   at: VT.HAS_LIGHTING) }
+  public static func add(HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, def: false,
+   at: VT.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M) }
   public static func endACWConstraint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWConstraint(
     _ fbb: inout FlatBufferBuilder,
@@ -522,7 +911,13 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     LIGHTING: acwLightingCondition = .any,
     OCCULTATION_ATMOSPHERE_HEIGHT_M: Double = 0.0,
     MASKVectorOffset MASK: Offset = Offset(),
-    LABELOffset LABEL: Offset = Offset()
+    LABELOffset LABEL: Offset = Offset(),
+    HAS_KIND: Bool = false,
+    HAS_THRESHOLD_RAD: Bool = false,
+    HAS_MIN_RANGE_M: Bool = false,
+    HAS_MAX_RANGE_M: Bool = false,
+    HAS_LIGHTING: Bool = false,
+    HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: Bool = false
   ) -> Offset {
     let __start = ACWConstraint.startACWConstraint(&fbb)
     ACWConstraint.add(KIND: KIND, &fbb)
@@ -533,6 +928,12 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     ACWConstraint.add(OCCULTATION_ATMOSPHERE_HEIGHT_M: OCCULTATION_ATMOSPHERE_HEIGHT_M, &fbb)
     ACWConstraint.addVectorOf(MASK: MASK, &fbb)
     ACWConstraint.add(LABEL: LABEL, &fbb)
+    ACWConstraint.add(HAS_KIND: HAS_KIND, &fbb)
+    ACWConstraint.add(HAS_THRESHOLD_RAD: HAS_THRESHOLD_RAD, &fbb)
+    ACWConstraint.add(HAS_MIN_RANGE_M: HAS_MIN_RANGE_M, &fbb)
+    ACWConstraint.add(HAS_MAX_RANGE_M: HAS_MAX_RANGE_M, &fbb)
+    ACWConstraint.add(HAS_LIGHTING: HAS_LIGHTING, &fbb)
+    ACWConstraint.add(HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M: HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, &fbb)
     return ACWConstraint.endACWConstraint(&fbb, start: __start)
   }
 
@@ -546,6 +947,12 @@ public struct ACWConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     try _v.visit(field: VT.OCCULTATION_ATMOSPHERE_HEIGHT_M, fieldName: "OCCULTATION_ATMOSPHERE_HEIGHT_M", required: false, type: Double.self)
     try _v.visit(field: VT.MASK, fieldName: "MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWElevationMaskPoint>, ACWElevationMaskPoint>>.self)
     try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HAS_KIND, fieldName: "HAS_KIND", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_THRESHOLD_RAD, fieldName: "HAS_THRESHOLD_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MIN_RANGE_M, fieldName: "HAS_MIN_RANGE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MAX_RANGE_M, fieldName: "HAS_MAX_RANGE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_LIGHTING, fieldName: "HAS_LIGHTING", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M, fieldName: "HAS_OCCULTATION_ATMOSPHERE_HEIGHT_M", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -567,6 +974,7 @@ public struct ACWConstraintSet: FlatBufferVerifiableTable, FlatbuffersVectorInit
     static let CONSTRAINTS: VOffset = 6
     static let SETS: VOffset = 8
     static let LABEL: VOffset = 10
+    static let HAS_OPERATOR: VOffset = 12
   }
 
   public var OPERATOR: acwConstraintOperator { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? .allOf : acwConstraintOperator(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .allOf }
@@ -575,24 +983,30 @@ public struct ACWConstraintSet: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public var SETS: FlatbufferVector<ACWConstraintSet> { return _accessor.vector(at: VT.SETS, byteSize: 4) }
   public var LABEL: String? { let o = _accessor.offset(VT.LABEL); return o == 0 ? nil : _accessor.string(at: o) }
   public var LABELSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL) }
-  public static func startACWConstraintSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_OPERATOR: Bool { let o = _accessor.offset(VT.HAS_OPERATOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWConstraintSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(OPERATOR: acwConstraintOperator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VT.OPERATOR) }
   public static func addVectorOf(CONSTRAINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINTS, at: VT.CONSTRAINTS) }
   public static func addVectorOf(SETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SETS, at: VT.SETS) }
   public static func add(LABEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL, at: VT.LABEL) }
+  public static func add(HAS_OPERATOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_OPERATOR, def: false,
+   at: VT.HAS_OPERATOR) }
   public static func endACWConstraintSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWConstraintSet(
     _ fbb: inout FlatBufferBuilder,
     OPERATOR: acwConstraintOperator = .allOf,
     CONSTRAINTSVectorOffset CONSTRAINTS: Offset = Offset(),
     SETSVectorOffset SETS: Offset = Offset(),
-    LABELOffset LABEL: Offset = Offset()
+    LABELOffset LABEL: Offset = Offset(),
+    HAS_OPERATOR: Bool = false
   ) -> Offset {
     let __start = ACWConstraintSet.startACWConstraintSet(&fbb)
     ACWConstraintSet.add(OPERATOR: OPERATOR, &fbb)
     ACWConstraintSet.addVectorOf(CONSTRAINTS: CONSTRAINTS, &fbb)
     ACWConstraintSet.addVectorOf(SETS: SETS, &fbb)
     ACWConstraintSet.add(LABEL: LABEL, &fbb)
+    ACWConstraintSet.add(HAS_OPERATOR: HAS_OPERATOR, &fbb)
     return ACWConstraintSet.endACWConstraintSet(&fbb, start: __start)
   }
 
@@ -602,11 +1016,12 @@ public struct ACWConstraintSet: FlatBufferVerifiableTable, FlatbuffersVectorInit
     try _v.visit(field: VT.CONSTRAINTS, fieldName: "CONSTRAINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWConstraint>, ACWConstraint>>.self)
     try _v.visit(field: VT.SETS, fieldName: "SETS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWConstraintSet>, ACWConstraintSet>>.self)
     try _v.visit(field: VT.LABEL, fieldName: "LABEL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HAS_OPERATOR, fieldName: "HAS_OPERATOR", required: false, type: Bool.self)
     _v.finish()
   }
 }
 
-///  A moving observer (spacecraft) given as pre-sampled Earth-fixed states, in
+///  A moving observer (spacecraft) given as pre-sampled central-body-fixed states, in
 ///  the same frame and time scale as ACWRequest.STATES.
 public struct ACWObserverTrajectory: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -682,6 +1097,11 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let GEOMETRIC_ALBEDO: VOffset = 8
     static let EMITTER_FREQUENCY_HZ: VOffset = 10
     static let EMITTER_EIRP_DBW: VOffset = 12
+    static let HAS_RCS_M2: VOffset = 14
+    static let HAS_DIAMETER_M: VOffset = 16
+    static let HAS_GEOMETRIC_ALBEDO: VOffset = 18
+    static let HAS_EMITTER_FREQUENCY_HZ: VOffset = 20
+    static let HAS_EMITTER_EIRP_DBW: VOffset = 22
   }
 
   ///  Radar cross-section, square meters (RADAR).
@@ -694,12 +1114,28 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  (PASSIVE_RF). A frequency of 0 means the target does not emit.
   public var EMITTER_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.EMITTER_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var EMITTER_EIRP_DBW: Double { let o = _accessor.offset(VT.EMITTER_EIRP_DBW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWTargetSignature(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_RCS_M2: Bool { let o = _accessor.offset(VT.HAS_RCS_M2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_DIAMETER_M: Bool { let o = _accessor.offset(VT.HAS_DIAMETER_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_GEOMETRIC_ALBEDO: Bool { let o = _accessor.offset(VT.HAS_GEOMETRIC_ALBEDO); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_EMITTER_FREQUENCY_HZ: Bool { let o = _accessor.offset(VT.HAS_EMITTER_FREQUENCY_HZ); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_EMITTER_EIRP_DBW: Bool { let o = _accessor.offset(VT.HAS_EMITTER_EIRP_DBW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWTargetSignature(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(RCS_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RCS_M2, def: 0.0, at: VT.RCS_M2) }
   public static func add(DIAMETER_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIAMETER_M, def: 0.0, at: VT.DIAMETER_M) }
   public static func add(GEOMETRIC_ALBEDO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GEOMETRIC_ALBEDO, def: 0.0, at: VT.GEOMETRIC_ALBEDO) }
   public static func add(EMITTER_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMITTER_FREQUENCY_HZ, def: 0.0, at: VT.EMITTER_FREQUENCY_HZ) }
   public static func add(EMITTER_EIRP_DBW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EMITTER_EIRP_DBW, def: 0.0, at: VT.EMITTER_EIRP_DBW) }
+  public static func add(HAS_RCS_M2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_RCS_M2, def: false,
+   at: VT.HAS_RCS_M2) }
+  public static func add(HAS_DIAMETER_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DIAMETER_M, def: false,
+   at: VT.HAS_DIAMETER_M) }
+  public static func add(HAS_GEOMETRIC_ALBEDO: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GEOMETRIC_ALBEDO, def: false,
+   at: VT.HAS_GEOMETRIC_ALBEDO) }
+  public static func add(HAS_EMITTER_FREQUENCY_HZ: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EMITTER_FREQUENCY_HZ, def: false,
+   at: VT.HAS_EMITTER_FREQUENCY_HZ) }
+  public static func add(HAS_EMITTER_EIRP_DBW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EMITTER_EIRP_DBW, def: false,
+   at: VT.HAS_EMITTER_EIRP_DBW) }
   public static func endACWTargetSignature(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWTargetSignature(
     _ fbb: inout FlatBufferBuilder,
@@ -707,7 +1143,12 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
     DIAMETER_M: Double = 0.0,
     GEOMETRIC_ALBEDO: Double = 0.0,
     EMITTER_FREQUENCY_HZ: Double = 0.0,
-    EMITTER_EIRP_DBW: Double = 0.0
+    EMITTER_EIRP_DBW: Double = 0.0,
+    HAS_RCS_M2: Bool = false,
+    HAS_DIAMETER_M: Bool = false,
+    HAS_GEOMETRIC_ALBEDO: Bool = false,
+    HAS_EMITTER_FREQUENCY_HZ: Bool = false,
+    HAS_EMITTER_EIRP_DBW: Bool = false
   ) -> Offset {
     let __start = ACWTargetSignature.startACWTargetSignature(&fbb)
     ACWTargetSignature.add(RCS_M2: RCS_M2, &fbb)
@@ -715,6 +1156,11 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
     ACWTargetSignature.add(GEOMETRIC_ALBEDO: GEOMETRIC_ALBEDO, &fbb)
     ACWTargetSignature.add(EMITTER_FREQUENCY_HZ: EMITTER_FREQUENCY_HZ, &fbb)
     ACWTargetSignature.add(EMITTER_EIRP_DBW: EMITTER_EIRP_DBW, &fbb)
+    ACWTargetSignature.add(HAS_RCS_M2: HAS_RCS_M2, &fbb)
+    ACWTargetSignature.add(HAS_DIAMETER_M: HAS_DIAMETER_M, &fbb)
+    ACWTargetSignature.add(HAS_GEOMETRIC_ALBEDO: HAS_GEOMETRIC_ALBEDO, &fbb)
+    ACWTargetSignature.add(HAS_EMITTER_FREQUENCY_HZ: HAS_EMITTER_FREQUENCY_HZ, &fbb)
+    ACWTargetSignature.add(HAS_EMITTER_EIRP_DBW: HAS_EMITTER_EIRP_DBW, &fbb)
     return ACWTargetSignature.endACWTargetSignature(&fbb, start: __start)
   }
 
@@ -725,6 +1171,11 @@ public struct ACWTargetSignature: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.GEOMETRIC_ALBEDO, fieldName: "GEOMETRIC_ALBEDO", required: false, type: Double.self)
     try _v.visit(field: VT.EMITTER_FREQUENCY_HZ, fieldName: "EMITTER_FREQUENCY_HZ", required: false, type: Double.self)
     try _v.visit(field: VT.EMITTER_EIRP_DBW, fieldName: "EMITTER_EIRP_DBW", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_RCS_M2, fieldName: "HAS_RCS_M2", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_DIAMETER_M, fieldName: "HAS_DIAMETER_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_GEOMETRIC_ALBEDO, fieldName: "HAS_GEOMETRIC_ALBEDO", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_EMITTER_FREQUENCY_HZ, fieldName: "HAS_EMITTER_FREQUENCY_HZ", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_EMITTER_EIRP_DBW, fieldName: "HAS_EMITTER_EIRP_DBW", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -747,6 +1198,7 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     static let OBJECT_ID: VOffset = 8
     static let STATES: VOffset = 10
     static let SIGNATURE: VOffset = 12
+    static let HAS_NORAD_CAT_ID: VOffset = 14
   }
 
   public var TARGET_ID: String? { let o = _accessor.offset(VT.TARGET_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -755,16 +1207,20 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   ///  International designator.
   public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  Truth Earth-fixed states with velocity, in the frame and time scale of
+  ///  Truth central-body-fixed states with velocity, in the frame and time scale of
   ///  ACWRequest.STATES.
   public var STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.STATES, byteSize: 4) }
   public var SIGNATURE: ACWTargetSignature? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : ACWTargetSignature(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startACWTarget(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_NORAD_CAT_ID: Bool { let o = _accessor.offset(VT.HAS_NORAD_CAT_ID); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWTarget(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(TARGET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ID, at: VT.TARGET_ID) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
   public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(HAS_NORAD_CAT_ID: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_NORAD_CAT_ID, def: false,
+   at: VT.HAS_NORAD_CAT_ID) }
   public static func endACWTarget(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWTarget(
     _ fbb: inout FlatBufferBuilder,
@@ -772,7 +1228,8 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     NORAD_CAT_ID: UInt32 = 0,
     OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
     STATESVectorOffset STATES: Offset = Offset(),
-    SIGNATUREOffset SIGNATURE: Offset = Offset()
+    SIGNATUREOffset SIGNATURE: Offset = Offset(),
+    HAS_NORAD_CAT_ID: Bool = false
   ) -> Offset {
     let __start = ACWTarget.startACWTarget(&fbb)
     ACWTarget.add(TARGET_ID: TARGET_ID, &fbb)
@@ -780,6 +1237,7 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     ACWTarget.add(OBJECT_ID: OBJECT_ID, &fbb)
     ACWTarget.addVectorOf(STATES: STATES, &fbb)
     ACWTarget.add(SIGNATURE: SIGNATURE, &fbb)
+    ACWTarget.add(HAS_NORAD_CAT_ID: HAS_NORAD_CAT_ID, &fbb)
     return ACWTarget.endACWTarget(&fbb, start: __start)
   }
 
@@ -790,6 +1248,7 @@ public struct ACWTarget: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.STATES, fieldName: "STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWStateSample>, ACWStateSample>>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<ACWTargetSignature>.self)
+    try _v.visit(field: VT.HAS_NORAD_CAT_ID, fieldName: "HAS_NORAD_CAT_ID", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -826,6 +1285,21 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     static let MAX_HOST_SUN_ELEVATION_RAD: VOffset = 36
     static let FALSE_ALARM_RATE_PER_HOUR: VOffset = 38
     static let TRANSMIT_FREQUENCY_HZ: VOffset = 40
+    static let HAS_PHENOMENOLOGY: VOffset = 42
+    static let HAS_OBSERVATION_INTERVAL_S: VOffset = 44
+    static let HAS_TRACK_DURATION_S: VOffset = 46
+    static let HAS_REVISIT_INTERVAL_S: VOffset = 48
+    static let HAS_MAX_SIMULTANEOUS_TRACKS: VOffset = 50
+    static let HAS_REFERENCE_SNR_DB: VOffset = 52
+    static let HAS_REFERENCE_RANGE_M: VOffset = 54
+    static let HAS_REFERENCE_RCS_M2: VOffset = 56
+    static let HAS_DETECTION_THRESHOLD_DB: VOffset = 58
+    static let HAS_RECEIVER_G_OVER_T_DB_PER_K: VOffset = 60
+    static let HAS_RECEIVER_BANDWIDTH_HZ: VOffset = 62
+    static let HAS_LIMITING_MAGNITUDE: VOffset = 64
+    static let HAS_MAX_HOST_SUN_ELEVATION_RAD: VOffset = 66
+    static let HAS_FALSE_ALARM_RATE_PER_HOUR: VOffset = 68
+    static let HAS_TRANSMIT_FREQUENCY_HZ: VOffset = 70
   }
 
   public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -847,7 +1321,7 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   ///  Longest track, seconds; 0 tracks the whole access window.
   public var TRACK_DURATION_S: Double { let o = _accessor.offset(VT.TRACK_DURATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Shortest time between the end of one track of a target and the start
-  ///  of the next, seconds.
+  ///  of the following, seconds.
   public var REVISIT_INTERVAL_S: Double { let o = _accessor.offset(VT.REVISIT_INTERVAL_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Targets tracked at once.
   public var MAX_SIMULTANEOUS_TRACKS: UInt32 { let o = _accessor.offset(VT.MAX_SIMULTANEOUS_TRACKS); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
@@ -874,7 +1348,23 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   ///  measures the echo's two-way shift relative to it, reported as $RDO
   ///  DOPPLER with DOPPLER_FREQUENCY set to this value.
   public var TRANSMIT_FREQUENCY_HZ: Double { let o = _accessor.offset(VT.TRANSMIT_FREQUENCY_HZ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWSensor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_PHENOMENOLOGY: Bool { let o = _accessor.offset(VT.HAS_PHENOMENOLOGY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_OBSERVATION_INTERVAL_S: Bool { let o = _accessor.offset(VT.HAS_OBSERVATION_INTERVAL_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_TRACK_DURATION_S: Bool { let o = _accessor.offset(VT.HAS_TRACK_DURATION_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_REVISIT_INTERVAL_S: Bool { let o = _accessor.offset(VT.HAS_REVISIT_INTERVAL_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MAX_SIMULTANEOUS_TRACKS: Bool { let o = _accessor.offset(VT.HAS_MAX_SIMULTANEOUS_TRACKS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_REFERENCE_SNR_DB: Bool { let o = _accessor.offset(VT.HAS_REFERENCE_SNR_DB); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_REFERENCE_RANGE_M: Bool { let o = _accessor.offset(VT.HAS_REFERENCE_RANGE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_REFERENCE_RCS_M2: Bool { let o = _accessor.offset(VT.HAS_REFERENCE_RCS_M2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_DETECTION_THRESHOLD_DB: Bool { let o = _accessor.offset(VT.HAS_DETECTION_THRESHOLD_DB); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_RECEIVER_G_OVER_T_DB_PER_K: Bool { let o = _accessor.offset(VT.HAS_RECEIVER_G_OVER_T_DB_PER_K); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_RECEIVER_BANDWIDTH_HZ: Bool { let o = _accessor.offset(VT.HAS_RECEIVER_BANDWIDTH_HZ); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_LIMITING_MAGNITUDE: Bool { let o = _accessor.offset(VT.HAS_LIMITING_MAGNITUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MAX_HOST_SUN_ELEVATION_RAD: Bool { let o = _accessor.offset(VT.HAS_MAX_HOST_SUN_ELEVATION_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_FALSE_ALARM_RATE_PER_HOUR: Bool { let o = _accessor.offset(VT.HAS_FALSE_ALARM_RATE_PER_HOUR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_TRANSMIT_FREQUENCY_HZ: Bool { let o = _accessor.offset(VT.HAS_TRANSMIT_FREQUENCY_HZ); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWSensor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 34) }
   public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
   public static func add(HOST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HOST_ID, at: VT.HOST_ID) }
   public static func add(PHENOMENOLOGY: acwSensorPhenomenology, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHENOMENOLOGY.rawValue, def: 0, at: VT.PHENOMENOLOGY) }
@@ -894,6 +1384,36 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   public static func add(MAX_HOST_SUN_ELEVATION_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_HOST_SUN_ELEVATION_RAD, def: 0.0, at: VT.MAX_HOST_SUN_ELEVATION_RAD) }
   public static func add(FALSE_ALARM_RATE_PER_HOUR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FALSE_ALARM_RATE_PER_HOUR, def: 0.0, at: VT.FALSE_ALARM_RATE_PER_HOUR) }
   public static func add(TRANSMIT_FREQUENCY_HZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMIT_FREQUENCY_HZ, def: 0.0, at: VT.TRANSMIT_FREQUENCY_HZ) }
+  public static func add(HAS_PHENOMENOLOGY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PHENOMENOLOGY, def: false,
+   at: VT.HAS_PHENOMENOLOGY) }
+  public static func add(HAS_OBSERVATION_INTERVAL_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_OBSERVATION_INTERVAL_S, def: false,
+   at: VT.HAS_OBSERVATION_INTERVAL_S) }
+  public static func add(HAS_TRACK_DURATION_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TRACK_DURATION_S, def: false,
+   at: VT.HAS_TRACK_DURATION_S) }
+  public static func add(HAS_REVISIT_INTERVAL_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_REVISIT_INTERVAL_S, def: false,
+   at: VT.HAS_REVISIT_INTERVAL_S) }
+  public static func add(HAS_MAX_SIMULTANEOUS_TRACKS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAX_SIMULTANEOUS_TRACKS, def: false,
+   at: VT.HAS_MAX_SIMULTANEOUS_TRACKS) }
+  public static func add(HAS_REFERENCE_SNR_DB: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_REFERENCE_SNR_DB, def: false,
+   at: VT.HAS_REFERENCE_SNR_DB) }
+  public static func add(HAS_REFERENCE_RANGE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_REFERENCE_RANGE_M, def: false,
+   at: VT.HAS_REFERENCE_RANGE_M) }
+  public static func add(HAS_REFERENCE_RCS_M2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_REFERENCE_RCS_M2, def: false,
+   at: VT.HAS_REFERENCE_RCS_M2) }
+  public static func add(HAS_DETECTION_THRESHOLD_DB: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DETECTION_THRESHOLD_DB, def: false,
+   at: VT.HAS_DETECTION_THRESHOLD_DB) }
+  public static func add(HAS_RECEIVER_G_OVER_T_DB_PER_K: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_RECEIVER_G_OVER_T_DB_PER_K, def: false,
+   at: VT.HAS_RECEIVER_G_OVER_T_DB_PER_K) }
+  public static func add(HAS_RECEIVER_BANDWIDTH_HZ: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_RECEIVER_BANDWIDTH_HZ, def: false,
+   at: VT.HAS_RECEIVER_BANDWIDTH_HZ) }
+  public static func add(HAS_LIMITING_MAGNITUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LIMITING_MAGNITUDE, def: false,
+   at: VT.HAS_LIMITING_MAGNITUDE) }
+  public static func add(HAS_MAX_HOST_SUN_ELEVATION_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAX_HOST_SUN_ELEVATION_RAD, def: false,
+   at: VT.HAS_MAX_HOST_SUN_ELEVATION_RAD) }
+  public static func add(HAS_FALSE_ALARM_RATE_PER_HOUR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_FALSE_ALARM_RATE_PER_HOUR, def: false,
+   at: VT.HAS_FALSE_ALARM_RATE_PER_HOUR) }
+  public static func add(HAS_TRANSMIT_FREQUENCY_HZ: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TRANSMIT_FREQUENCY_HZ, def: false,
+   at: VT.HAS_TRANSMIT_FREQUENCY_HZ) }
   public static func endACWSensor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWSensor(
     _ fbb: inout FlatBufferBuilder,
@@ -915,7 +1435,22 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     LIMITING_MAGNITUDE: Double = 0.0,
     MAX_HOST_SUN_ELEVATION_RAD: Double = 0.0,
     FALSE_ALARM_RATE_PER_HOUR: Double = 0.0,
-    TRANSMIT_FREQUENCY_HZ: Double = 0.0
+    TRANSMIT_FREQUENCY_HZ: Double = 0.0,
+    HAS_PHENOMENOLOGY: Bool = false,
+    HAS_OBSERVATION_INTERVAL_S: Bool = false,
+    HAS_TRACK_DURATION_S: Bool = false,
+    HAS_REVISIT_INTERVAL_S: Bool = false,
+    HAS_MAX_SIMULTANEOUS_TRACKS: Bool = false,
+    HAS_REFERENCE_SNR_DB: Bool = false,
+    HAS_REFERENCE_RANGE_M: Bool = false,
+    HAS_REFERENCE_RCS_M2: Bool = false,
+    HAS_DETECTION_THRESHOLD_DB: Bool = false,
+    HAS_RECEIVER_G_OVER_T_DB_PER_K: Bool = false,
+    HAS_RECEIVER_BANDWIDTH_HZ: Bool = false,
+    HAS_LIMITING_MAGNITUDE: Bool = false,
+    HAS_MAX_HOST_SUN_ELEVATION_RAD: Bool = false,
+    HAS_FALSE_ALARM_RATE_PER_HOUR: Bool = false,
+    HAS_TRANSMIT_FREQUENCY_HZ: Bool = false
   ) -> Offset {
     let __start = ACWSensor.startACWSensor(&fbb)
     ACWSensor.add(SENSOR_ID: SENSOR_ID, &fbb)
@@ -937,6 +1472,21 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     ACWSensor.add(MAX_HOST_SUN_ELEVATION_RAD: MAX_HOST_SUN_ELEVATION_RAD, &fbb)
     ACWSensor.add(FALSE_ALARM_RATE_PER_HOUR: FALSE_ALARM_RATE_PER_HOUR, &fbb)
     ACWSensor.add(TRANSMIT_FREQUENCY_HZ: TRANSMIT_FREQUENCY_HZ, &fbb)
+    ACWSensor.add(HAS_PHENOMENOLOGY: HAS_PHENOMENOLOGY, &fbb)
+    ACWSensor.add(HAS_OBSERVATION_INTERVAL_S: HAS_OBSERVATION_INTERVAL_S, &fbb)
+    ACWSensor.add(HAS_TRACK_DURATION_S: HAS_TRACK_DURATION_S, &fbb)
+    ACWSensor.add(HAS_REVISIT_INTERVAL_S: HAS_REVISIT_INTERVAL_S, &fbb)
+    ACWSensor.add(HAS_MAX_SIMULTANEOUS_TRACKS: HAS_MAX_SIMULTANEOUS_TRACKS, &fbb)
+    ACWSensor.add(HAS_REFERENCE_SNR_DB: HAS_REFERENCE_SNR_DB, &fbb)
+    ACWSensor.add(HAS_REFERENCE_RANGE_M: HAS_REFERENCE_RANGE_M, &fbb)
+    ACWSensor.add(HAS_REFERENCE_RCS_M2: HAS_REFERENCE_RCS_M2, &fbb)
+    ACWSensor.add(HAS_DETECTION_THRESHOLD_DB: HAS_DETECTION_THRESHOLD_DB, &fbb)
+    ACWSensor.add(HAS_RECEIVER_G_OVER_T_DB_PER_K: HAS_RECEIVER_G_OVER_T_DB_PER_K, &fbb)
+    ACWSensor.add(HAS_RECEIVER_BANDWIDTH_HZ: HAS_RECEIVER_BANDWIDTH_HZ, &fbb)
+    ACWSensor.add(HAS_LIMITING_MAGNITUDE: HAS_LIMITING_MAGNITUDE, &fbb)
+    ACWSensor.add(HAS_MAX_HOST_SUN_ELEVATION_RAD: HAS_MAX_HOST_SUN_ELEVATION_RAD, &fbb)
+    ACWSensor.add(HAS_FALSE_ALARM_RATE_PER_HOUR: HAS_FALSE_ALARM_RATE_PER_HOUR, &fbb)
+    ACWSensor.add(HAS_TRANSMIT_FREQUENCY_HZ: HAS_TRANSMIT_FREQUENCY_HZ, &fbb)
     return ACWSensor.endACWSensor(&fbb, start: __start)
   }
 
@@ -961,6 +1511,21 @@ public struct ACWSensor: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     try _v.visit(field: VT.MAX_HOST_SUN_ELEVATION_RAD, fieldName: "MAX_HOST_SUN_ELEVATION_RAD", required: false, type: Double.self)
     try _v.visit(field: VT.FALSE_ALARM_RATE_PER_HOUR, fieldName: "FALSE_ALARM_RATE_PER_HOUR", required: false, type: Double.self)
     try _v.visit(field: VT.TRANSMIT_FREQUENCY_HZ, fieldName: "TRANSMIT_FREQUENCY_HZ", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PHENOMENOLOGY, fieldName: "HAS_PHENOMENOLOGY", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_OBSERVATION_INTERVAL_S, fieldName: "HAS_OBSERVATION_INTERVAL_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_TRACK_DURATION_S, fieldName: "HAS_TRACK_DURATION_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_REVISIT_INTERVAL_S, fieldName: "HAS_REVISIT_INTERVAL_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MAX_SIMULTANEOUS_TRACKS, fieldName: "HAS_MAX_SIMULTANEOUS_TRACKS", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_REFERENCE_SNR_DB, fieldName: "HAS_REFERENCE_SNR_DB", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_REFERENCE_RANGE_M, fieldName: "HAS_REFERENCE_RANGE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_REFERENCE_RCS_M2, fieldName: "HAS_REFERENCE_RCS_M2", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_DETECTION_THRESHOLD_DB, fieldName: "HAS_DETECTION_THRESHOLD_DB", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_RECEIVER_G_OVER_T_DB_PER_K, fieldName: "HAS_RECEIVER_G_OVER_T_DB_PER_K", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_RECEIVER_BANDWIDTH_HZ, fieldName: "HAS_RECEIVER_BANDWIDTH_HZ", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_LIMITING_MAGNITUDE, fieldName: "HAS_LIMITING_MAGNITUDE", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MAX_HOST_SUN_ELEVATION_RAD, fieldName: "HAS_MAX_HOST_SUN_ELEVATION_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_FALSE_ALARM_RATE_PER_HOUR, fieldName: "HAS_FALSE_ALARM_RATE_PER_HOUR", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_TRANSMIT_FREQUENCY_HZ, fieldName: "HAS_TRANSMIT_FREQUENCY_HZ", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1035,6 +1600,10 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let SCHEDULED_COUNT: VOffset = 12
     static let DETECTED_COUNT: VOffset = 14
     static let LOSS_REASON: VOffset = 16
+    static let HAS_START_JULIAN_DATE_TT: VOffset = 18
+    static let HAS_END_JULIAN_DATE_TT: VOffset = 20
+    static let HAS_SCHEDULED_COUNT: VOffset = 22
+    static let HAS_DETECTED_COUNT: VOffset = 24
   }
 
   public var SENSOR_ID: String? { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -1051,7 +1620,12 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  "MAGNITUDE"); empty when all were.
   public var LOSS_REASON: String? { let o = _accessor.offset(VT.LOSS_REASON); return o == 0 ? nil : _accessor.string(at: o) }
   public var LOSS_REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LOSS_REASON) }
-  public static func startACWTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_START_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_START_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_END_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_END_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_SCHEDULED_COUNT: Bool { let o = _accessor.offset(VT.HAS_SCHEDULED_COUNT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_DETECTED_COUNT: Bool { let o = _accessor.offset(VT.HAS_DETECTED_COUNT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
   public static func add(TARGET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_ID, at: VT.TARGET_ID) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
@@ -1059,6 +1633,14 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func add(SCHEDULED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCHEDULED_COUNT, def: 0, at: VT.SCHEDULED_COUNT) }
   public static func add(DETECTED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTED_COUNT, def: 0, at: VT.DETECTED_COUNT) }
   public static func add(LOSS_REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOSS_REASON, at: VT.LOSS_REASON) }
+  public static func add(HAS_START_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_START_JULIAN_DATE_TT) }
+  public static func add(HAS_END_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_END_JULIAN_DATE_TT) }
+  public static func add(HAS_SCHEDULED_COUNT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SCHEDULED_COUNT, def: false,
+   at: VT.HAS_SCHEDULED_COUNT) }
+  public static func add(HAS_DETECTED_COUNT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DETECTED_COUNT, def: false,
+   at: VT.HAS_DETECTED_COUNT) }
   public static func endACWTrack(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWTrack(
     _ fbb: inout FlatBufferBuilder,
@@ -1068,7 +1650,11 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     END_JULIAN_DATE_TT: Double = 0.0,
     SCHEDULED_COUNT: UInt32 = 0,
     DETECTED_COUNT: UInt32 = 0,
-    LOSS_REASONOffset LOSS_REASON: Offset = Offset()
+    LOSS_REASONOffset LOSS_REASON: Offset = Offset(),
+    HAS_START_JULIAN_DATE_TT: Bool = false,
+    HAS_END_JULIAN_DATE_TT: Bool = false,
+    HAS_SCHEDULED_COUNT: Bool = false,
+    HAS_DETECTED_COUNT: Bool = false
   ) -> Offset {
     let __start = ACWTrack.startACWTrack(&fbb)
     ACWTrack.add(SENSOR_ID: SENSOR_ID, &fbb)
@@ -1078,6 +1664,10 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     ACWTrack.add(SCHEDULED_COUNT: SCHEDULED_COUNT, &fbb)
     ACWTrack.add(DETECTED_COUNT: DETECTED_COUNT, &fbb)
     ACWTrack.add(LOSS_REASON: LOSS_REASON, &fbb)
+    ACWTrack.add(HAS_START_JULIAN_DATE_TT: HAS_START_JULIAN_DATE_TT, &fbb)
+    ACWTrack.add(HAS_END_JULIAN_DATE_TT: HAS_END_JULIAN_DATE_TT, &fbb)
+    ACWTrack.add(HAS_SCHEDULED_COUNT: HAS_SCHEDULED_COUNT, &fbb)
+    ACWTrack.add(HAS_DETECTED_COUNT: HAS_DETECTED_COUNT, &fbb)
     return ACWTrack.endACWTrack(&fbb, start: __start)
   }
 
@@ -1090,6 +1680,10 @@ public struct ACWTrack: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.SCHEDULED_COUNT, fieldName: "SCHEDULED_COUNT", required: false, type: UInt32.self)
     try _v.visit(field: VT.DETECTED_COUNT, fieldName: "DETECTED_COUNT", required: false, type: UInt32.self)
     try _v.visit(field: VT.LOSS_REASON, fieldName: "LOSS_REASON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HAS_START_JULIAN_DATE_TT, fieldName: "HAS_START_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_END_JULIAN_DATE_TT, fieldName: "HAS_END_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_SCHEDULED_COUNT, fieldName: "HAS_SCHEDULED_COUNT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_DETECTED_COUNT, fieldName: "HAS_DETECTED_COUNT", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1128,12 +1722,19 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let RANDOM_SEED: VOffset = 40
     static let START_JULIAN_DATE_TT: VOffset = 42
     static let END_JULIAN_DATE_TT: VOffset = 44
+    static let HAS_OPERATION: VOffset = 46
+    static let HAS_MIN_ELEVATION_OVERRIDE_RAD: VOffset = 48
+    static let HAS_EVALUATION_MODE: VOffset = 50
+    static let HAS_ROOT_TOLERANCE_S: VOffset = 52
+    static let HAS_RANDOM_SEED: VOffset = 54
+    static let HAS_START_JULIAN_DATE_TT: VOffset = 56
+    static let HAS_END_JULIAN_DATE_TT: VOffset = 58
   }
 
   public var OPERATION: acwOperationCode { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .unknown : acwOperationCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Candidate ground stations.
   public var GROUND_STATIONS: FlatbufferVector<ACWGroundStation> { return _accessor.vector(at: VT.GROUND_STATIONS, byteSize: 4) }
-  ///  Pre-sampled target Earth-fixed Cartesian states.
+  ///  Pre-sampled target Cartesian states in CENTRAL_BODY.FIXED_FRAME.
   public var STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.STATES, byteSize: 4) }
   ///  Optional target station id. Empty means all stations when supported.
   public var TARGET_STATION_ID: String? { let o = _accessor.offset(VT.TARGET_STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -1147,7 +1748,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public var ELEVATION_MASK: FlatbufferVector<ACWElevationMaskPoint> { return _accessor.vector(at: VT.ELEVATION_MASK, byteSize: 4) }
   ///  Optional apparent-elevation refraction model.
   public var REFRACTION_MODEL: ACWRefractionModel? { let o = _accessor.offset(VT.REFRACTION_MODEL); return o == 0 ? nil : ACWRefractionModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Optional constraint composition. When absent the legacy behaviour holds:
+  ///  Optional constraint composition. When absent the station constraints apply:
   ///  every ground station's MIN_ELEVATION_RAD (or the override) plus
   ///  ELEVATION_MASK, all required.
   public var CONSTRAINTS: ACWConstraintSet? { let o = _accessor.offset(VT.CONSTRAINTS); return o == 0 ? nil : ACWConstraintSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -1181,7 +1782,15 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   ///  states.
   public var START_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.START_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var END_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.END_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_OPERATION: Bool { let o = _accessor.offset(VT.HAS_OPERATION); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MIN_ELEVATION_OVERRIDE_RAD: Bool { let o = _accessor.offset(VT.HAS_MIN_ELEVATION_OVERRIDE_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_EVALUATION_MODE: Bool { let o = _accessor.offset(VT.HAS_EVALUATION_MODE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_ROOT_TOLERANCE_S: Bool { let o = _accessor.offset(VT.HAS_ROOT_TOLERANCE_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_RANDOM_SEED: Bool { let o = _accessor.offset(VT.HAS_RANDOM_SEED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_START_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_START_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_END_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_END_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
   public static func add(OPERATION: acwOperationCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
   public static func addVectorOf(GROUND_STATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_STATIONS, at: VT.GROUND_STATIONS) }
   public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
@@ -1203,6 +1812,20 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(RANDOM_SEED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANDOM_SEED, def: 0, at: VT.RANDOM_SEED) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
+  public static func add(HAS_OPERATION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_OPERATION, def: false,
+   at: VT.HAS_OPERATION) }
+  public static func add(HAS_MIN_ELEVATION_OVERRIDE_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MIN_ELEVATION_OVERRIDE_RAD, def: false,
+   at: VT.HAS_MIN_ELEVATION_OVERRIDE_RAD) }
+  public static func add(HAS_EVALUATION_MODE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EVALUATION_MODE, def: false,
+   at: VT.HAS_EVALUATION_MODE) }
+  public static func add(HAS_ROOT_TOLERANCE_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ROOT_TOLERANCE_S, def: false,
+   at: VT.HAS_ROOT_TOLERANCE_S) }
+  public static func add(HAS_RANDOM_SEED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_RANDOM_SEED, def: false,
+   at: VT.HAS_RANDOM_SEED) }
+  public static func add(HAS_START_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_START_JULIAN_DATE_TT) }
+  public static func add(HAS_END_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_END_JULIAN_DATE_TT) }
   public static func endACWRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -1226,7 +1849,14 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     EARTH_ORIENTATIONVectorOffset EARTH_ORIENTATION: Offset = Offset(),
     RANDOM_SEED: UInt64 = 0,
     START_JULIAN_DATE_TT: Double = 0.0,
-    END_JULIAN_DATE_TT: Double = 0.0
+    END_JULIAN_DATE_TT: Double = 0.0,
+    HAS_OPERATION: Bool = false,
+    HAS_MIN_ELEVATION_OVERRIDE_RAD: Bool = false,
+    HAS_EVALUATION_MODE: Bool = false,
+    HAS_ROOT_TOLERANCE_S: Bool = false,
+    HAS_RANDOM_SEED: Bool = false,
+    HAS_START_JULIAN_DATE_TT: Bool = false,
+    HAS_END_JULIAN_DATE_TT: Bool = false
   ) -> Offset {
     let __start = ACWRequest.startACWRequest(&fbb)
     ACWRequest.add(OPERATION: OPERATION, &fbb)
@@ -1250,6 +1880,13 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     ACWRequest.add(RANDOM_SEED: RANDOM_SEED, &fbb)
     ACWRequest.add(START_JULIAN_DATE_TT: START_JULIAN_DATE_TT, &fbb)
     ACWRequest.add(END_JULIAN_DATE_TT: END_JULIAN_DATE_TT, &fbb)
+    ACWRequest.add(HAS_OPERATION: HAS_OPERATION, &fbb)
+    ACWRequest.add(HAS_MIN_ELEVATION_OVERRIDE_RAD: HAS_MIN_ELEVATION_OVERRIDE_RAD, &fbb)
+    ACWRequest.add(HAS_EVALUATION_MODE: HAS_EVALUATION_MODE, &fbb)
+    ACWRequest.add(HAS_ROOT_TOLERANCE_S: HAS_ROOT_TOLERANCE_S, &fbb)
+    ACWRequest.add(HAS_RANDOM_SEED: HAS_RANDOM_SEED, &fbb)
+    ACWRequest.add(HAS_START_JULIAN_DATE_TT: HAS_START_JULIAN_DATE_TT, &fbb)
+    ACWRequest.add(HAS_END_JULIAN_DATE_TT: HAS_END_JULIAN_DATE_TT, &fbb)
     return ACWRequest.endACWRequest(&fbb, start: __start)
   }
 
@@ -1276,6 +1913,13 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.RANDOM_SEED, fieldName: "RANDOM_SEED", required: false, type: UInt64.self)
     try _v.visit(field: VT.START_JULIAN_DATE_TT, fieldName: "START_JULIAN_DATE_TT", required: false, type: Double.self)
     try _v.visit(field: VT.END_JULIAN_DATE_TT, fieldName: "END_JULIAN_DATE_TT", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_OPERATION, fieldName: "HAS_OPERATION", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MIN_ELEVATION_OVERRIDE_RAD, fieldName: "HAS_MIN_ELEVATION_OVERRIDE_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_EVALUATION_MODE, fieldName: "HAS_EVALUATION_MODE", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_ROOT_TOLERANCE_S, fieldName: "HAS_ROOT_TOLERANCE_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_RANDOM_SEED, fieldName: "HAS_RANDOM_SEED", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_START_JULIAN_DATE_TT, fieldName: "HAS_START_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_END_JULIAN_DATE_TT, fieldName: "HAS_END_JULIAN_DATE_TT", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1306,6 +1950,15 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     static let MIN_RANGE_M: VOffset = 24
     static let MAX_RANGE_M: VOffset = 26
     static let EDGES_REFINED: VOffset = 28
+    static let HAS_START_JULIAN_DATE_TT: VOffset = 30
+    static let HAS_END_JULIAN_DATE_TT: VOffset = 32
+    static let HAS_MAX_ELEVATION_RAD: VOffset = 34
+    static let HAS_SAMPLE_COUNT: VOffset = 36
+    static let HAS_START_LIMITING_CONSTRAINT_INDEX: VOffset = 38
+    static let HAS_END_LIMITING_CONSTRAINT_INDEX: VOffset = 40
+    static let HAS_MIN_RANGE_M: VOffset = 42
+    static let HAS_MAX_RANGE_M: VOffset = 44
+    static let HAS_EDGES_REFINED: VOffset = 46
   }
 
   public var STATION_ID: String? { let o = _accessor.offset(VT.STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -1323,11 +1976,13 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
   ///  Index into the flattened, depth-first constraint list of the constraint
-  ///  whose transition opens the window; -1 when the window starts at the
-  ///  first sample.
+  ///  whose transition opens the window. A clipped start has no limiting
+  ///  constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+  ///  index is nonnegative and in range; the retained wire default is not a sentinel.
   public var START_LIMITING_CONSTRAINT_INDEX: Int32 { let o = _accessor.offset(VT.START_LIMITING_CONSTRAINT_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Index of the constraint whose transition closes the window; -1 when the
-  ///  window ends at the last sample.
+  ///  Index of the constraint whose transition closes the window. A clipped end
+  ///  has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+  ///  and in range; the retained wire default is not a sentinel.
   public var END_LIMITING_CONSTRAINT_INDEX: Int32 { let o = _accessor.offset(VT.END_LIMITING_CONSTRAINT_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Labels of those constraints, when the producer set them.
   public var START_LIMITING_CONSTRAINT_LABEL: String? { let o = _accessor.offset(VT.START_LIMITING_CONSTRAINT_LABEL); return o == 0 ? nil : _accessor.string(at: o) }
@@ -1339,7 +1994,17 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
   public var EDGES_REFINED: Bool { let o = _accessor.offset(VT.EDGES_REFINED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_START_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_START_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_END_JULIAN_DATE_TT: Bool { let o = _accessor.offset(VT.HAS_END_JULIAN_DATE_TT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MAX_ELEVATION_RAD: Bool { let o = _accessor.offset(VT.HAS_MAX_ELEVATION_RAD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_SAMPLE_COUNT: Bool { let o = _accessor.offset(VT.HAS_SAMPLE_COUNT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_START_LIMITING_CONSTRAINT_INDEX: Bool { let o = _accessor.offset(VT.HAS_START_LIMITING_CONSTRAINT_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_END_LIMITING_CONSTRAINT_INDEX: Bool { let o = _accessor.offset(VT.HAS_END_LIMITING_CONSTRAINT_INDEX); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MIN_RANGE_M: Bool { let o = _accessor.offset(VT.HAS_MIN_RANGE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_MAX_RANGE_M: Bool { let o = _accessor.offset(VT.HAS_MAX_RANGE_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_EDGES_REFINED: Bool { let o = _accessor.offset(VT.HAS_EDGES_REFINED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VT.STATION_ID) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
@@ -1354,6 +2019,24 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
   public static func add(EDGES_REFINED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDGES_REFINED, def: false,
    at: VT.EDGES_REFINED) }
+  public static func add(HAS_START_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_START_JULIAN_DATE_TT) }
+  public static func add(HAS_END_JULIAN_DATE_TT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_JULIAN_DATE_TT, def: false,
+   at: VT.HAS_END_JULIAN_DATE_TT) }
+  public static func add(HAS_MAX_ELEVATION_RAD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAX_ELEVATION_RAD, def: false,
+   at: VT.HAS_MAX_ELEVATION_RAD) }
+  public static func add(HAS_SAMPLE_COUNT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SAMPLE_COUNT, def: false,
+   at: VT.HAS_SAMPLE_COUNT) }
+  public static func add(HAS_START_LIMITING_CONSTRAINT_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_START_LIMITING_CONSTRAINT_INDEX, def: false,
+   at: VT.HAS_START_LIMITING_CONSTRAINT_INDEX) }
+  public static func add(HAS_END_LIMITING_CONSTRAINT_INDEX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_END_LIMITING_CONSTRAINT_INDEX, def: false,
+   at: VT.HAS_END_LIMITING_CONSTRAINT_INDEX) }
+  public static func add(HAS_MIN_RANGE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MIN_RANGE_M, def: false,
+   at: VT.HAS_MIN_RANGE_M) }
+  public static func add(HAS_MAX_RANGE_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAX_RANGE_M, def: false,
+   at: VT.HAS_MAX_RANGE_M) }
+  public static func add(HAS_EDGES_REFINED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EDGES_REFINED, def: false,
+   at: VT.HAS_EDGES_REFINED) }
   public static func endACWAccessWindow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWAccessWindow(
     _ fbb: inout FlatBufferBuilder,
@@ -1369,7 +2052,16 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     END_LIMITING_CONSTRAINT_LABELOffset END_LIMITING_CONSTRAINT_LABEL: Offset = Offset(),
     MIN_RANGE_M: Double = 0.0,
     MAX_RANGE_M: Double = 0.0,
-    EDGES_REFINED: Bool = false
+    EDGES_REFINED: Bool = false,
+    HAS_START_JULIAN_DATE_TT: Bool = false,
+    HAS_END_JULIAN_DATE_TT: Bool = false,
+    HAS_MAX_ELEVATION_RAD: Bool = false,
+    HAS_SAMPLE_COUNT: Bool = false,
+    HAS_START_LIMITING_CONSTRAINT_INDEX: Bool = false,
+    HAS_END_LIMITING_CONSTRAINT_INDEX: Bool = false,
+    HAS_MIN_RANGE_M: Bool = false,
+    HAS_MAX_RANGE_M: Bool = false,
+    HAS_EDGES_REFINED: Bool = false
   ) -> Offset {
     let __start = ACWAccessWindow.startACWAccessWindow(&fbb)
     ACWAccessWindow.add(STATION_ID: STATION_ID, &fbb)
@@ -1385,6 +2077,15 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     ACWAccessWindow.add(MIN_RANGE_M: MIN_RANGE_M, &fbb)
     ACWAccessWindow.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
     ACWAccessWindow.add(EDGES_REFINED: EDGES_REFINED, &fbb)
+    ACWAccessWindow.add(HAS_START_JULIAN_DATE_TT: HAS_START_JULIAN_DATE_TT, &fbb)
+    ACWAccessWindow.add(HAS_END_JULIAN_DATE_TT: HAS_END_JULIAN_DATE_TT, &fbb)
+    ACWAccessWindow.add(HAS_MAX_ELEVATION_RAD: HAS_MAX_ELEVATION_RAD, &fbb)
+    ACWAccessWindow.add(HAS_SAMPLE_COUNT: HAS_SAMPLE_COUNT, &fbb)
+    ACWAccessWindow.add(HAS_START_LIMITING_CONSTRAINT_INDEX: HAS_START_LIMITING_CONSTRAINT_INDEX, &fbb)
+    ACWAccessWindow.add(HAS_END_LIMITING_CONSTRAINT_INDEX: HAS_END_LIMITING_CONSTRAINT_INDEX, &fbb)
+    ACWAccessWindow.add(HAS_MIN_RANGE_M: HAS_MIN_RANGE_M, &fbb)
+    ACWAccessWindow.add(HAS_MAX_RANGE_M: HAS_MAX_RANGE_M, &fbb)
+    ACWAccessWindow.add(HAS_EDGES_REFINED: HAS_EDGES_REFINED, &fbb)
     return ACWAccessWindow.endACWAccessWindow(&fbb, start: __start)
   }
 
@@ -1403,6 +2104,15 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     try _v.visit(field: VT.MIN_RANGE_M, fieldName: "MIN_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.EDGES_REFINED, fieldName: "EDGES_REFINED", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_START_JULIAN_DATE_TT, fieldName: "HAS_START_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_END_JULIAN_DATE_TT, fieldName: "HAS_END_JULIAN_DATE_TT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MAX_ELEVATION_RAD, fieldName: "HAS_MAX_ELEVATION_RAD", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_SAMPLE_COUNT, fieldName: "HAS_SAMPLE_COUNT", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_START_LIMITING_CONSTRAINT_INDEX, fieldName: "HAS_START_LIMITING_CONSTRAINT_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_END_LIMITING_CONSTRAINT_INDEX, fieldName: "HAS_END_LIMITING_CONSTRAINT_INDEX", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MIN_RANGE_M, fieldName: "HAS_MIN_RANGE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_MAX_RANGE_M, fieldName: "HAS_MAX_RANGE_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_EDGES_REFINED, fieldName: "HAS_EDGES_REFINED", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1428,6 +2138,9 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     static let CONSTRAINT_LABELS: VOffset = 14
     static let TRACKS: VOffset = 16
     static let OBSERVATION_COUNT: VOffset = 18
+    static let HAS_STATUS: VOffset = 20
+    static let HAS_EVALUATION_MODE: VOffset = 22
+    static let HAS_OBSERVATION_COUNT: VOffset = 24
   }
 
   public var STATUS: acwResultStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .ok : acwResultStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ok }
@@ -1445,7 +2158,11 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   public var TRACKS: FlatbufferVector<ACWTrack> { return _accessor.vector(at: VT.TRACKS, byteSize: 4) }
   ///  Observations emitted, including false alarms.
   public var OBSERVATION_COUNT: UInt32 { let o = _accessor.offset(VT.OBSERVATION_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startACWResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Value presence: false means omitted; true precedes value validation.
+  public var HAS_STATUS: Bool { let o = _accessor.offset(VT.HAS_STATUS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_EVALUATION_MODE: Bool { let o = _accessor.offset(VT.HAS_EVALUATION_MODE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var HAS_OBSERVATION_COUNT: Bool { let o = _accessor.offset(VT.HAS_OBSERVATION_COUNT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startACWResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(STATUS: acwResultStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
   public static func addVectorOf(WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOWS, at: VT.WINDOWS) }
@@ -1454,6 +2171,12 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   public static func addVectorOf(CONSTRAINT_LABELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTRAINT_LABELS, at: VT.CONSTRAINT_LABELS) }
   public static func addVectorOf(TRACKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACKS, at: VT.TRACKS) }
   public static func add(OBSERVATION_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATION_COUNT, def: 0, at: VT.OBSERVATION_COUNT) }
+  public static func add(HAS_STATUS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_STATUS, def: false,
+   at: VT.HAS_STATUS) }
+  public static func add(HAS_EVALUATION_MODE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EVALUATION_MODE, def: false,
+   at: VT.HAS_EVALUATION_MODE) }
+  public static func add(HAS_OBSERVATION_COUNT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_OBSERVATION_COUNT, def: false,
+   at: VT.HAS_OBSERVATION_COUNT) }
   public static func endACWResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWResult(
     _ fbb: inout FlatBufferBuilder,
@@ -1464,7 +2187,10 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     EVALUATION_MODE: acwEvaluationMode = .discrete,
     CONSTRAINT_LABELSVectorOffset CONSTRAINT_LABELS: Offset = Offset(),
     TRACKSVectorOffset TRACKS: Offset = Offset(),
-    OBSERVATION_COUNT: UInt32 = 0
+    OBSERVATION_COUNT: UInt32 = 0,
+    HAS_STATUS: Bool = false,
+    HAS_EVALUATION_MODE: Bool = false,
+    HAS_OBSERVATION_COUNT: Bool = false
   ) -> Offset {
     let __start = ACWResult.startACWResult(&fbb)
     ACWResult.add(STATUS: STATUS, &fbb)
@@ -1475,6 +2201,9 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     ACWResult.addVectorOf(CONSTRAINT_LABELS: CONSTRAINT_LABELS, &fbb)
     ACWResult.addVectorOf(TRACKS: TRACKS, &fbb)
     ACWResult.add(OBSERVATION_COUNT: OBSERVATION_COUNT, &fbb)
+    ACWResult.add(HAS_STATUS: HAS_STATUS, &fbb)
+    ACWResult.add(HAS_EVALUATION_MODE: HAS_EVALUATION_MODE, &fbb)
+    ACWResult.add(HAS_OBSERVATION_COUNT: HAS_OBSERVATION_COUNT, &fbb)
     return ACWResult.endACWResult(&fbb, start: __start)
   }
 
@@ -1488,6 +2217,9 @@ public struct ACWResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
     try _v.visit(field: VT.CONSTRAINT_LABELS, fieldName: "CONSTRAINT_LABELS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.TRACKS, fieldName: "TRACKS", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWTrack>, ACWTrack>>.self)
     try _v.visit(field: VT.OBSERVATION_COUNT, fieldName: "OBSERVATION_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HAS_STATUS, fieldName: "HAS_STATUS", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_EVALUATION_MODE, fieldName: "HAS_EVALUATION_MODE", required: false, type: Bool.self)
+    try _v.visit(field: VT.HAS_OBSERVATION_COUNT, fieldName: "HAS_OBSERVATION_COUNT", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -1507,22 +2239,34 @@ public struct ACW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   private struct VT {
     static let REQUEST: VOffset = 4
     static let RESULT: VOffset = 6
+    static let CENTRAL_BODY: VOffset = 8
   }
 
   public var REQUEST: ACWRequest? { let o = _accessor.offset(VT.REQUEST); return o == 0 ? nil : ACWRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var RESULT: ACWResult? { let o = _accessor.offset(VT.RESULT); return o == 0 ? nil : ACWResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startACW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  ///  Appended slot 2. Mandatory in every new request and successful result.
+  ///  Request OPERATION must be 3 (access) or 4 (simulation); old modules reject
+  ///  these codes. Missing body fails acw-body-required; absence never means
+  ///  Earth. Operations 1/2 are archival only and are rejected by new runtimes.
+  ///  Result must echo the exact descriptor field values, including optional
+  ///  presence; requester rejects a missing/different echo. Raw table offsets
+  ///  are not identity. Explicit one-time archive conversion is outside runtime.
+  public var CENTRAL_BODY: BodyDescriptor? { let o = _accessor.offset(VT.CENTRAL_BODY); return o == 0 ? nil : BodyDescriptor(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startACW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST, at: VT.REQUEST) }
   public static func add(RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULT, at: VT.RESULT) }
+  public static func add(CENTRAL_BODY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTRAL_BODY, at: VT.CENTRAL_BODY) }
   public static func endACW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACW(
     _ fbb: inout FlatBufferBuilder,
     REQUESTOffset REQUEST: Offset = Offset(),
-    RESULTOffset RESULT: Offset = Offset()
+    RESULTOffset RESULT: Offset = Offset(),
+    CENTRAL_BODYOffset CENTRAL_BODY: Offset = Offset()
   ) -> Offset {
     let __start = ACW.startACW(&fbb)
     ACW.add(REQUEST: REQUEST, &fbb)
     ACW.add(RESULT: RESULT, &fbb)
+    ACW.add(CENTRAL_BODY: CENTRAL_BODY, &fbb)
     return ACW.endACW(&fbb, start: __start)
   }
 
@@ -1530,6 +2274,7 @@ public struct ACW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.REQUEST, fieldName: "REQUEST", required: false, type: ForwardOffset<ACWRequest>.self)
     try _v.visit(field: VT.RESULT, fieldName: "RESULT", required: false, type: ForwardOffset<ACWResult>.self)
+    try _v.visit(field: VT.CENTRAL_BODY, fieldName: "CENTRAL_BODY", required: false, type: ForwardOffset<BodyDescriptor>.self)
     _v.finish()
   }
 }

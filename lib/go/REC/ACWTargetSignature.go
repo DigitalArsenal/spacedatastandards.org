@@ -152,8 +152,110 @@ func (rcv *ACWTargetSignature) MutateEmitterEirpDbw(n float64) bool {
 	return rcv.MutateEMITTER_EIRP_DBW(n)
 }
 
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTargetSignature) HAS_RCS_M2() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTargetSignature) HasRcsM2() bool {
+	return rcv.HAS_RCS_M2()
+}
+
+/// Value presence: false means omitted; true precedes value validation.
+func (rcv *ACWTargetSignature) MutateHAS_RCS_M2(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *ACWTargetSignature) MutateHasRcsM2(n bool) bool {
+	return rcv.MutateHAS_RCS_M2(n)
+}
+
+func (rcv *ACWTargetSignature) HAS_DIAMETER_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTargetSignature) HasDiameterM() bool {
+	return rcv.HAS_DIAMETER_M()
+}
+
+func (rcv *ACWTargetSignature) MutateHAS_DIAMETER_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *ACWTargetSignature) MutateHasDiameterM(n bool) bool {
+	return rcv.MutateHAS_DIAMETER_M(n)
+}
+
+func (rcv *ACWTargetSignature) HAS_GEOMETRIC_ALBEDO() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTargetSignature) HasGeometricAlbedo() bool {
+	return rcv.HAS_GEOMETRIC_ALBEDO()
+}
+
+func (rcv *ACWTargetSignature) MutateHAS_GEOMETRIC_ALBEDO(n bool) bool {
+	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *ACWTargetSignature) MutateHasGeometricAlbedo(n bool) bool {
+	return rcv.MutateHAS_GEOMETRIC_ALBEDO(n)
+}
+
+func (rcv *ACWTargetSignature) HAS_EMITTER_FREQUENCY_HZ() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTargetSignature) HasEmitterFrequencyHz() bool {
+	return rcv.HAS_EMITTER_FREQUENCY_HZ()
+}
+
+func (rcv *ACWTargetSignature) MutateHAS_EMITTER_FREQUENCY_HZ(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *ACWTargetSignature) MutateHasEmitterFrequencyHz(n bool) bool {
+	return rcv.MutateHAS_EMITTER_FREQUENCY_HZ(n)
+}
+
+func (rcv *ACWTargetSignature) HAS_EMITTER_EIRP_DBW() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACWTargetSignature) HasEmitterEirpDbw() bool {
+	return rcv.HAS_EMITTER_EIRP_DBW()
+}
+
+func (rcv *ACWTargetSignature) MutateHAS_EMITTER_EIRP_DBW(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *ACWTargetSignature) MutateHasEmitterEirpDbw(n bool) bool {
+	return rcv.MutateHAS_EMITTER_EIRP_DBW(n)
+}
+
 func ACWTargetSignatureStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(10)
 }
 func ACWTargetSignatureAddRCS_M2(builder *flatbuffers.Builder, RCS_M2 float64) {
 	builder.PrependFloat64Slot(0, RCS_M2, 0.0)
@@ -184,6 +286,36 @@ func ACWTargetSignatureAddEMITTER_EIRP_DBW(builder *flatbuffers.Builder, EMITTER
 }
 func ACWTargetSignatureAddEmitterEirpDbw(builder *flatbuffers.Builder, EMITTER_EIRP_DBW float64) {
 	ACWTargetSignatureAddEMITTER_EIRP_DBW(builder, EMITTER_EIRP_DBW)
+}
+func ACWTargetSignatureAddHAS_RCS_M2(builder *flatbuffers.Builder, HAS_RCS_M2 bool) {
+	builder.PrependBoolSlot(5, HAS_RCS_M2, false)
+}
+func ACWTargetSignatureAddHasRcsM2(builder *flatbuffers.Builder, HAS_RCS_M2 bool) {
+	ACWTargetSignatureAddHAS_RCS_M2(builder, HAS_RCS_M2)
+}
+func ACWTargetSignatureAddHAS_DIAMETER_M(builder *flatbuffers.Builder, HAS_DIAMETER_M bool) {
+	builder.PrependBoolSlot(6, HAS_DIAMETER_M, false)
+}
+func ACWTargetSignatureAddHasDiameterM(builder *flatbuffers.Builder, HAS_DIAMETER_M bool) {
+	ACWTargetSignatureAddHAS_DIAMETER_M(builder, HAS_DIAMETER_M)
+}
+func ACWTargetSignatureAddHAS_GEOMETRIC_ALBEDO(builder *flatbuffers.Builder, HAS_GEOMETRIC_ALBEDO bool) {
+	builder.PrependBoolSlot(7, HAS_GEOMETRIC_ALBEDO, false)
+}
+func ACWTargetSignatureAddHasGeometricAlbedo(builder *flatbuffers.Builder, HAS_GEOMETRIC_ALBEDO bool) {
+	ACWTargetSignatureAddHAS_GEOMETRIC_ALBEDO(builder, HAS_GEOMETRIC_ALBEDO)
+}
+func ACWTargetSignatureAddHAS_EMITTER_FREQUENCY_HZ(builder *flatbuffers.Builder, HAS_EMITTER_FREQUENCY_HZ bool) {
+	builder.PrependBoolSlot(8, HAS_EMITTER_FREQUENCY_HZ, false)
+}
+func ACWTargetSignatureAddHasEmitterFrequencyHz(builder *flatbuffers.Builder, HAS_EMITTER_FREQUENCY_HZ bool) {
+	ACWTargetSignatureAddHAS_EMITTER_FREQUENCY_HZ(builder, HAS_EMITTER_FREQUENCY_HZ)
+}
+func ACWTargetSignatureAddHAS_EMITTER_EIRP_DBW(builder *flatbuffers.Builder, HAS_EMITTER_EIRP_DBW bool) {
+	builder.PrependBoolSlot(9, HAS_EMITTER_EIRP_DBW, false)
+}
+func ACWTargetSignatureAddHasEmitterEirpDbw(builder *flatbuffers.Builder, HAS_EMITTER_EIRP_DBW bool) {
+	ACWTargetSignatureAddHAS_EMITTER_EIRP_DBW(builder, HAS_EMITTER_EIRP_DBW)
 }
 func ACWTargetSignatureEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

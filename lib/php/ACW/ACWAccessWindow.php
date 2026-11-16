@@ -96,8 +96,9 @@ class ACWAccessWindow extends Table
     }
 
     /// Index into the flattened, depth-first constraint list of the constraint
-    /// whose transition opens the window; -1 when the window starts at the
-    /// first sample.
+    /// whose transition opens the window. A clipped start has no limiting
+    /// constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+    /// index is nonnegative and in range; the retained wire default is not a sentinel.
     /**
      * @return int
      */
@@ -107,8 +108,9 @@ class ACWAccessWindow extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
     }
 
-    /// Index of the constraint whose transition closes the window; -1 when the
-    /// window ends at the last sample.
+    /// Index of the constraint whose transition closes the window. A clipped end
+    /// has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+    /// and in range; the retained wire default is not a sentinel.
     /**
      * @return int
      */
@@ -160,22 +162,104 @@ class ACWAccessWindow extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Value presence: false means omitted; true precedes value validation.
+    /**
+     * @return bool
+     */
+    public function getHAS_START_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_END_JULIAN_DATE_TT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MAX_ELEVATION_RAD()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_SAMPLE_COUNT()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_START_LIMITING_CONSTRAINT_INDEX()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_END_LIMITING_CONSTRAINT_INDEX()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MIN_RANGE_M()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_MAX_RANGE_M()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHAS_EDGES_REFINED()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWAccessWindow(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWAccessWindow
      */
-    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT, $OBSERVER_ID, $START_LIMITING_CONSTRAINT_INDEX, $END_LIMITING_CONSTRAINT_INDEX, $START_LIMITING_CONSTRAINT_LABEL, $END_LIMITING_CONSTRAINT_LABEL, $MIN_RANGE_M, $MAX_RANGE_M, $EDGES_REFINED)
+    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT, $OBSERVER_ID, $START_LIMITING_CONSTRAINT_INDEX, $END_LIMITING_CONSTRAINT_INDEX, $START_LIMITING_CONSTRAINT_LABEL, $END_LIMITING_CONSTRAINT_LABEL, $MIN_RANGE_M, $MAX_RANGE_M, $EDGES_REFINED, $HAS_START_JULIAN_DATE_TT, $HAS_END_JULIAN_DATE_TT, $HAS_MAX_ELEVATION_RAD, $HAS_SAMPLE_COUNT, $HAS_START_LIMITING_CONSTRAINT_INDEX, $HAS_END_LIMITING_CONSTRAINT_INDEX, $HAS_MIN_RANGE_M, $HAS_MAX_RANGE_M, $HAS_EDGES_REFINED)
     {
-        $builder->startObject(13);
+        $builder->startObject(22);
         self::addSTATION_ID($builder, $STATION_ID);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
@@ -189,6 +273,15 @@ class ACWAccessWindow extends Table
         self::addMIN_RANGE_M($builder, $MIN_RANGE_M);
         self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
         self::addEDGES_REFINED($builder, $EDGES_REFINED);
+        self::addHAS_START_JULIAN_DATE_TT($builder, $HAS_START_JULIAN_DATE_TT);
+        self::addHAS_END_JULIAN_DATE_TT($builder, $HAS_END_JULIAN_DATE_TT);
+        self::addHAS_MAX_ELEVATION_RAD($builder, $HAS_MAX_ELEVATION_RAD);
+        self::addHAS_SAMPLE_COUNT($builder, $HAS_SAMPLE_COUNT);
+        self::addHAS_START_LIMITING_CONSTRAINT_INDEX($builder, $HAS_START_LIMITING_CONSTRAINT_INDEX);
+        self::addHAS_END_LIMITING_CONSTRAINT_INDEX($builder, $HAS_END_LIMITING_CONSTRAINT_INDEX);
+        self::addHAS_MIN_RANGE_M($builder, $HAS_MIN_RANGE_M);
+        self::addHAS_MAX_RANGE_M($builder, $HAS_MAX_RANGE_M);
+        self::addHAS_EDGES_REFINED($builder, $HAS_EDGES_REFINED);
         $o = $builder->endObject();
         return $o;
     }
@@ -321,6 +414,96 @@ class ACWAccessWindow extends Table
     public static function addEDGES_REFINED(FlatBufferBuilder $builder, $EDGES_REFINED)
     {
         $builder->addBoolX(12, $EDGES_REFINED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_START_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_START_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(13, $HAS_START_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_END_JULIAN_DATE_TT(FlatBufferBuilder $builder, $HAS_END_JULIAN_DATE_TT)
+    {
+        $builder->addBoolX(14, $HAS_END_JULIAN_DATE_TT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAX_ELEVATION_RAD(FlatBufferBuilder $builder, $HAS_MAX_ELEVATION_RAD)
+    {
+        $builder->addBoolX(15, $HAS_MAX_ELEVATION_RAD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_SAMPLE_COUNT(FlatBufferBuilder $builder, $HAS_SAMPLE_COUNT)
+    {
+        $builder->addBoolX(16, $HAS_SAMPLE_COUNT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_START_LIMITING_CONSTRAINT_INDEX(FlatBufferBuilder $builder, $HAS_START_LIMITING_CONSTRAINT_INDEX)
+    {
+        $builder->addBoolX(17, $HAS_START_LIMITING_CONSTRAINT_INDEX, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_END_LIMITING_CONSTRAINT_INDEX(FlatBufferBuilder $builder, $HAS_END_LIMITING_CONSTRAINT_INDEX)
+    {
+        $builder->addBoolX(18, $HAS_END_LIMITING_CONSTRAINT_INDEX, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MIN_RANGE_M(FlatBufferBuilder $builder, $HAS_MIN_RANGE_M)
+    {
+        $builder->addBoolX(19, $HAS_MIN_RANGE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_MAX_RANGE_M(FlatBufferBuilder $builder, $HAS_MAX_RANGE_M)
+    {
+        $builder->addBoolX(20, $HAS_MAX_RANGE_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_EDGES_REFINED(FlatBufferBuilder $builder, $HAS_EDGES_REFINED)
+    {
+        $builder->addBoolX(21, $HAS_EDGES_REFINED, false);
     }
 
     /**

@@ -119,6 +119,24 @@ class ACWResult : Table() {
             val o = __offset(18)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Value presence: false means omitted; true precedes value validation.
+     */
+    val hasStatus : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasEvaluationMode : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    val hasObservationCount : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWResult(_bb: ByteBuffer): ACWResult = getRootAsACWResult(_bb, ACWResult())
@@ -126,19 +144,22 @@ class ACWResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int, evaluationMode: Byte, constraintLabelsOffset: Int, tracksOffset: Int, observationCount: UInt) : Int {
-            builder.startTable(8)
+        fun createACWResult(builder: FlatBufferBuilder, status: Byte, errorMessageOffset: Int, windowsOffset: Int, traceIdOffset: Int, evaluationMode: Byte, constraintLabelsOffset: Int, tracksOffset: Int, observationCount: UInt, hasStatus: Boolean, hasEvaluationMode: Boolean, hasObservationCount: Boolean) : Int {
+            builder.startTable(11)
             addOBSERVATIONCOUNT(builder, observationCount)
             addTRACKS(builder, tracksOffset)
             addCONSTRAINTLABELS(builder, constraintLabelsOffset)
             addTRACEID(builder, traceIdOffset)
             addWINDOWS(builder, windowsOffset)
             addERRORMESSAGE(builder, errorMessageOffset)
+            addHASOBSERVATIONCOUNT(builder, hasObservationCount)
+            addHASEVALUATIONMODE(builder, hasEvaluationMode)
+            addHASSTATUS(builder, hasStatus)
             addEVALUATIONMODE(builder, evaluationMode)
             addSTATUS(builder, status)
             return endACWResult(builder)
         }
-        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startACWResult(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addERRORMESSAGE(builder: FlatBufferBuilder, errorMessage: Int) = builder.addOffset(1, errorMessage, 0)
         fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(2, windows, 0)
@@ -171,6 +192,9 @@ class ACWResult : Table() {
         }
         fun startTracksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addOBSERVATIONCOUNT(builder: FlatBufferBuilder, observationCount: UInt) = builder.addInt(7, observationCount.toInt(), 0)
+        fun addHASSTATUS(builder: FlatBufferBuilder, hasStatus: Boolean) = builder.addBoolean(8, hasStatus, false)
+        fun addHASEVALUATIONMODE(builder: FlatBufferBuilder, hasEvaluationMode: Boolean) = builder.addBoolean(9, hasEvaluationMode, false)
+        fun addHASOBSERVATIONCOUNT(builder: FlatBufferBuilder, hasObservationCount: Boolean) = builder.addBoolean(10, hasObservationCount, false)
         fun endACWResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

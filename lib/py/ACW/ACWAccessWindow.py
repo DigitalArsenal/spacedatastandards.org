@@ -78,8 +78,9 @@ class ACWAccessWindow(object):
         return None
 
     # Index into the flattened, depth-first constraint list of the constraint
-    # whose transition opens the window; -1 when the window starts at the
-    # first sample.
+    # whose transition opens the window. A clipped start has no limiting
+    # constraint: HAS_START_LIMITING_CONSTRAINT_INDEX is false. A present
+    # index is nonnegative and in range; the retained wire default is not a sentinel.
     # ACWAccessWindow
     def START_LIMITING_CONSTRAINT_INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -87,8 +88,9 @@ class ACWAccessWindow(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return -1
 
-    # Index of the constraint whose transition closes the window; -1 when the
-    # window ends at the last sample.
+    # Index of the constraint whose transition closes the window. A clipped end
+    # has HAS_END_LIMITING_CONSTRAINT_INDEX false. A present index is nonnegative
+    # and in range; the retained wire default is not a sentinel.
     # ACWAccessWindow
     def END_LIMITING_CONSTRAINT_INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -134,8 +136,72 @@ class ACWAccessWindow(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Value presence: false means omitted; true precedes value validation.
+    # ACWAccessWindow
+    def HAS_START_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_END_JULIAN_DATE_TT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_MAX_ELEVATION_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_SAMPLE_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_START_LIMITING_CONSTRAINT_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_END_LIMITING_CONSTRAINT_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_MIN_RANGE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_MAX_RANGE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ACWAccessWindow
+    def HAS_EDGES_REFINED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def ACWAccessWindowStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(22)
 
 def Start(builder):
     ACWAccessWindowStart(builder)
@@ -218,6 +284,60 @@ def ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED):
 def AddEDGES_REFINED(builder, EDGES_REFINED):
     ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED)
 
+def ACWAccessWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(13, HAS_START_JULIAN_DATE_TT, 0)
+
+def AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT):
+    ACWAccessWindowAddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT)
+
+def ACWAccessWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    builder.PrependBoolSlot(14, HAS_END_JULIAN_DATE_TT, 0)
+
+def AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT):
+    ACWAccessWindowAddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT)
+
+def ACWAccessWindowAddHAS_MAX_ELEVATION_RAD(builder, HAS_MAX_ELEVATION_RAD):
+    builder.PrependBoolSlot(15, HAS_MAX_ELEVATION_RAD, 0)
+
+def AddHAS_MAX_ELEVATION_RAD(builder, HAS_MAX_ELEVATION_RAD):
+    ACWAccessWindowAddHAS_MAX_ELEVATION_RAD(builder, HAS_MAX_ELEVATION_RAD)
+
+def ACWAccessWindowAddHAS_SAMPLE_COUNT(builder, HAS_SAMPLE_COUNT):
+    builder.PrependBoolSlot(16, HAS_SAMPLE_COUNT, 0)
+
+def AddHAS_SAMPLE_COUNT(builder, HAS_SAMPLE_COUNT):
+    ACWAccessWindowAddHAS_SAMPLE_COUNT(builder, HAS_SAMPLE_COUNT)
+
+def ACWAccessWindowAddHAS_START_LIMITING_CONSTRAINT_INDEX(builder, HAS_START_LIMITING_CONSTRAINT_INDEX):
+    builder.PrependBoolSlot(17, HAS_START_LIMITING_CONSTRAINT_INDEX, 0)
+
+def AddHAS_START_LIMITING_CONSTRAINT_INDEX(builder, HAS_START_LIMITING_CONSTRAINT_INDEX):
+    ACWAccessWindowAddHAS_START_LIMITING_CONSTRAINT_INDEX(builder, HAS_START_LIMITING_CONSTRAINT_INDEX)
+
+def ACWAccessWindowAddHAS_END_LIMITING_CONSTRAINT_INDEX(builder, HAS_END_LIMITING_CONSTRAINT_INDEX):
+    builder.PrependBoolSlot(18, HAS_END_LIMITING_CONSTRAINT_INDEX, 0)
+
+def AddHAS_END_LIMITING_CONSTRAINT_INDEX(builder, HAS_END_LIMITING_CONSTRAINT_INDEX):
+    ACWAccessWindowAddHAS_END_LIMITING_CONSTRAINT_INDEX(builder, HAS_END_LIMITING_CONSTRAINT_INDEX)
+
+def ACWAccessWindowAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M):
+    builder.PrependBoolSlot(19, HAS_MIN_RANGE_M, 0)
+
+def AddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M):
+    ACWAccessWindowAddHAS_MIN_RANGE_M(builder, HAS_MIN_RANGE_M)
+
+def ACWAccessWindowAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M):
+    builder.PrependBoolSlot(20, HAS_MAX_RANGE_M, 0)
+
+def AddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M):
+    ACWAccessWindowAddHAS_MAX_RANGE_M(builder, HAS_MAX_RANGE_M)
+
+def ACWAccessWindowAddHAS_EDGES_REFINED(builder, HAS_EDGES_REFINED):
+    builder.PrependBoolSlot(21, HAS_EDGES_REFINED, 0)
+
+def AddHAS_EDGES_REFINED(builder, HAS_EDGES_REFINED):
+    ACWAccessWindowAddHAS_EDGES_REFINED(builder, HAS_EDGES_REFINED)
+
 def ACWAccessWindowEnd(builder):
     return builder.EndObject()
 
@@ -243,6 +363,15 @@ class ACWAccessWindowT(object):
         MIN_RANGE_M = 0.0,
         MAX_RANGE_M = 0.0,
         EDGES_REFINED = False,
+        HAS_START_JULIAN_DATE_TT = False,
+        HAS_END_JULIAN_DATE_TT = False,
+        HAS_MAX_ELEVATION_RAD = False,
+        HAS_SAMPLE_COUNT = False,
+        HAS_START_LIMITING_CONSTRAINT_INDEX = False,
+        HAS_END_LIMITING_CONSTRAINT_INDEX = False,
+        HAS_MIN_RANGE_M = False,
+        HAS_MAX_RANGE_M = False,
+        HAS_EDGES_REFINED = False,
     ):
         self.STATION_ID = STATION_ID  # type: Optional[str]
         self.START_JULIAN_DATE_TT = START_JULIAN_DATE_TT  # type: float
@@ -257,6 +386,15 @@ class ACWAccessWindowT(object):
         self.MIN_RANGE_M = MIN_RANGE_M  # type: float
         self.MAX_RANGE_M = MAX_RANGE_M  # type: float
         self.EDGES_REFINED = EDGES_REFINED  # type: bool
+        self.HAS_START_JULIAN_DATE_TT = HAS_START_JULIAN_DATE_TT  # type: bool
+        self.HAS_END_JULIAN_DATE_TT = HAS_END_JULIAN_DATE_TT  # type: bool
+        self.HAS_MAX_ELEVATION_RAD = HAS_MAX_ELEVATION_RAD  # type: bool
+        self.HAS_SAMPLE_COUNT = HAS_SAMPLE_COUNT  # type: bool
+        self.HAS_START_LIMITING_CONSTRAINT_INDEX = HAS_START_LIMITING_CONSTRAINT_INDEX  # type: bool
+        self.HAS_END_LIMITING_CONSTRAINT_INDEX = HAS_END_LIMITING_CONSTRAINT_INDEX  # type: bool
+        self.HAS_MIN_RANGE_M = HAS_MIN_RANGE_M  # type: bool
+        self.HAS_MAX_RANGE_M = HAS_MAX_RANGE_M  # type: bool
+        self.HAS_EDGES_REFINED = HAS_EDGES_REFINED  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -292,6 +430,15 @@ class ACWAccessWindowT(object):
         self.MIN_RANGE_M = ACWAccessWindow.MIN_RANGE_M()
         self.MAX_RANGE_M = ACWAccessWindow.MAX_RANGE_M()
         self.EDGES_REFINED = ACWAccessWindow.EDGES_REFINED()
+        self.HAS_START_JULIAN_DATE_TT = ACWAccessWindow.HAS_START_JULIAN_DATE_TT()
+        self.HAS_END_JULIAN_DATE_TT = ACWAccessWindow.HAS_END_JULIAN_DATE_TT()
+        self.HAS_MAX_ELEVATION_RAD = ACWAccessWindow.HAS_MAX_ELEVATION_RAD()
+        self.HAS_SAMPLE_COUNT = ACWAccessWindow.HAS_SAMPLE_COUNT()
+        self.HAS_START_LIMITING_CONSTRAINT_INDEX = ACWAccessWindow.HAS_START_LIMITING_CONSTRAINT_INDEX()
+        self.HAS_END_LIMITING_CONSTRAINT_INDEX = ACWAccessWindow.HAS_END_LIMITING_CONSTRAINT_INDEX()
+        self.HAS_MIN_RANGE_M = ACWAccessWindow.HAS_MIN_RANGE_M()
+        self.HAS_MAX_RANGE_M = ACWAccessWindow.HAS_MAX_RANGE_M()
+        self.HAS_EDGES_REFINED = ACWAccessWindow.HAS_EDGES_REFINED()
 
     # ACWAccessWindowT
     def Pack(self, builder):
@@ -321,5 +468,14 @@ class ACWAccessWindowT(object):
         ACWAccessWindowAddMIN_RANGE_M(builder, self.MIN_RANGE_M)
         ACWAccessWindowAddMAX_RANGE_M(builder, self.MAX_RANGE_M)
         ACWAccessWindowAddEDGES_REFINED(builder, self.EDGES_REFINED)
+        ACWAccessWindowAddHAS_START_JULIAN_DATE_TT(builder, self.HAS_START_JULIAN_DATE_TT)
+        ACWAccessWindowAddHAS_END_JULIAN_DATE_TT(builder, self.HAS_END_JULIAN_DATE_TT)
+        ACWAccessWindowAddHAS_MAX_ELEVATION_RAD(builder, self.HAS_MAX_ELEVATION_RAD)
+        ACWAccessWindowAddHAS_SAMPLE_COUNT(builder, self.HAS_SAMPLE_COUNT)
+        ACWAccessWindowAddHAS_START_LIMITING_CONSTRAINT_INDEX(builder, self.HAS_START_LIMITING_CONSTRAINT_INDEX)
+        ACWAccessWindowAddHAS_END_LIMITING_CONSTRAINT_INDEX(builder, self.HAS_END_LIMITING_CONSTRAINT_INDEX)
+        ACWAccessWindowAddHAS_MIN_RANGE_M(builder, self.HAS_MIN_RANGE_M)
+        ACWAccessWindowAddHAS_MAX_RANGE_M(builder, self.HAS_MAX_RANGE_M)
+        ACWAccessWindowAddHAS_EDGES_REFINED(builder, self.HAS_EDGES_REFINED)
         ACWAccessWindow = ACWAccessWindowEnd(builder)
         return ACWAccessWindow

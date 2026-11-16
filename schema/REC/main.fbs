@@ -1,5 +1,5 @@
-// Hash: 5c8076966a3c6f63e900e431f05c9050c747eacf2560c6b03fce03ade73c9beb
-// Version: 1.44.89
+// Hash: 62302d5a3ea39b1889ffa7393c1e506ba5390e87454aeee0c690e3b5dc049ae6
+// Version: 1.44.90
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -36,6 +36,7 @@ include "../CDM/main.fbs";
 include "../CES/main.fbs";
 include "../CFP/main.fbs";
 include "../CHN/main.fbs";
+include "../CLG/main.fbs";
 include "../CLM/main.fbs";
 include "../CLT/main.fbs";
 include "../CME/main.fbs";
@@ -426,7 +427,8 @@ enum RecordTypeExtended : ushort {
   CME = 292,
   SWA = 293,
   SWS = 294,
-  SSY = 295
+  SSY = 295,
+  CLG = 296
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

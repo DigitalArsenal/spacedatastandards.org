@@ -21,19 +21,28 @@ public struct ACWBlackoutWindow : IFlatbufferObject
   public double START_JULIAN_DATE_TT { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Interval end as Julian Date in TT.
   public double END_JULIAN_DATE_TT { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Value presence: false means omitted; true precedes value validation.
+  public bool HAS_START_JULIAN_DATE_TT { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool HAS_END_JULIAN_DATE_TT { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<ACWBlackoutWindow> CreateACWBlackoutWindow(FlatBufferBuilder builder,
       double START_JULIAN_DATE_TT = 0.0,
-      double END_JULIAN_DATE_TT = 0.0) {
-    builder.StartTable(2);
+      double END_JULIAN_DATE_TT = 0.0,
+      bool HAS_START_JULIAN_DATE_TT = false,
+      bool HAS_END_JULIAN_DATE_TT = false) {
+    builder.StartTable(4);
     ACWBlackoutWindow.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
     ACWBlackoutWindow.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
+    ACWBlackoutWindow.AddHAS_END_JULIAN_DATE_TT(builder, HAS_END_JULIAN_DATE_TT);
+    ACWBlackoutWindow.AddHAS_START_JULIAN_DATE_TT(builder, HAS_START_JULIAN_DATE_TT);
     return ACWBlackoutWindow.EndACWBlackoutWindow(builder);
   }
 
-  public static void StartACWBlackoutWindow(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartACWBlackoutWindow(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(0, START_JULIAN_DATE_TT, 0.0); }
   public static void AddEND_JULIAN_DATE_TT(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.AddDouble(1, END_JULIAN_DATE_TT, 0.0); }
+  public static void AddHAS_START_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_START_JULIAN_DATE_TT) { builder.AddBool(2, HAS_START_JULIAN_DATE_TT, false); }
+  public static void AddHAS_END_JULIAN_DATE_TT(FlatBufferBuilder builder, bool HAS_END_JULIAN_DATE_TT) { builder.AddBool(3, HAS_END_JULIAN_DATE_TT, false); }
   public static Offset<ACWBlackoutWindow> EndACWBlackoutWindow(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWBlackoutWindow>(o);
@@ -46,13 +55,17 @@ public struct ACWBlackoutWindow : IFlatbufferObject
   public void UnPackTo(ACWBlackoutWindowT _o) {
     _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT;
     _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT;
+    _o.HAS_START_JULIAN_DATE_TT = this.HAS_START_JULIAN_DATE_TT;
+    _o.HAS_END_JULIAN_DATE_TT = this.HAS_END_JULIAN_DATE_TT;
   }
   public static Offset<ACWBlackoutWindow> Pack(FlatBufferBuilder builder, ACWBlackoutWindowT _o) {
     if (_o == null) return default(Offset<ACWBlackoutWindow>);
     return CreateACWBlackoutWindow(
       builder,
       _o.START_JULIAN_DATE_TT,
-      _o.END_JULIAN_DATE_TT);
+      _o.END_JULIAN_DATE_TT,
+      _o.HAS_START_JULIAN_DATE_TT,
+      _o.HAS_END_JULIAN_DATE_TT);
   }
 }
 
@@ -60,10 +73,14 @@ public class ACWBlackoutWindowT
 {
   public double START_JULIAN_DATE_TT { get; set; }
   public double END_JULIAN_DATE_TT { get; set; }
+  public bool HAS_START_JULIAN_DATE_TT { get; set; }
+  public bool HAS_END_JULIAN_DATE_TT { get; set; }
 
   public ACWBlackoutWindowT() {
     this.START_JULIAN_DATE_TT = 0.0;
     this.END_JULIAN_DATE_TT = 0.0;
+    this.HAS_START_JULIAN_DATE_TT = false;
+    this.HAS_END_JULIAN_DATE_TT = false;
   }
 }
 
@@ -75,6 +92,8 @@ static public class ACWBlackoutWindowVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*START_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 6 /*END_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*HAS_START_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*HAS_END_JULIAN_DATE_TT*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

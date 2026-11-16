@@ -64,8 +64,16 @@ LABEL(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Value presence: false means omitted; true precedes value validation.
+ */
+HAS_OPERATOR():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startACWConstraintSet(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 }
 
 static addOperator(builder:flatbuffers.Builder, OPERATOR:acwConstraintOperator) {
@@ -108,17 +116,22 @@ static addLabel(builder:flatbuffers.Builder, LABELOffset:flatbuffers.Offset) {
   builder.addFieldOffset(3, LABELOffset, 0);
 }
 
+static addHasOperator(builder:flatbuffers.Builder, HAS_OPERATOR:boolean) {
+  builder.addFieldInt8(4, +HAS_OPERATOR, +false);
+}
+
 static endACWConstraintSet(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWConstraintSet(builder:flatbuffers.Builder, OPERATOR:acwConstraintOperator, CONSTRAINTSOffset:flatbuffers.Offset, SETSOffset:flatbuffers.Offset, LABELOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createACWConstraintSet(builder:flatbuffers.Builder, OPERATOR:acwConstraintOperator, CONSTRAINTSOffset:flatbuffers.Offset, SETSOffset:flatbuffers.Offset, LABELOffset:flatbuffers.Offset, HAS_OPERATOR:boolean):flatbuffers.Offset {
   ACWConstraintSet.startACWConstraintSet(builder);
   ACWConstraintSet.addOperator(builder, OPERATOR);
   ACWConstraintSet.addConstraints(builder, CONSTRAINTSOffset);
   ACWConstraintSet.addSets(builder, SETSOffset);
   ACWConstraintSet.addLabel(builder, LABELOffset);
+  ACWConstraintSet.addHasOperator(builder, HAS_OPERATOR);
   return ACWConstraintSet.endACWConstraintSet(builder);
 }
 
@@ -127,7 +140,8 @@ unpack(): ACWConstraintSetT {
     this.OPERATOR(),
     this.bb!.createObjList<ACWConstraint, ACWConstraintT>(this.CONSTRAINTS.bind(this), this.constraintsLength()),
     this.bb!.createObjList<ACWConstraintSet, ACWConstraintSetT>(this.SETS.bind(this), this.setsLength()),
-    this.LABEL()
+    this.LABEL(),
+    this.HAS_OPERATOR()
   );
 }
 
@@ -137,6 +151,7 @@ unpackTo(_o: ACWConstraintSetT): void {
   _o.CONSTRAINTS = this.bb!.createObjList<ACWConstraint, ACWConstraintT>(this.CONSTRAINTS.bind(this), this.constraintsLength());
   _o.SETS = this.bb!.createObjList<ACWConstraintSet, ACWConstraintSetT>(this.SETS.bind(this), this.setsLength());
   _o.LABEL = this.LABEL();
+  _o.HAS_OPERATOR = this.HAS_OPERATOR();
 }
 }
 
@@ -145,7 +160,8 @@ constructor(
   public OPERATOR: acwConstraintOperator = acwConstraintOperator.ALL_OF,
   public CONSTRAINTS: (ACWConstraintT)[] = [],
   public SETS: (ACWConstraintSetT)[] = [],
-  public LABEL: string|Uint8Array|null = null
+  public LABEL: string|Uint8Array|null = null,
+  public HAS_OPERATOR: boolean = false
 ){}
 
 
@@ -158,7 +174,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.OPERATOR,
     CONSTRAINTS,
     SETS,
-    LABEL
+    LABEL,
+    this.HAS_OPERATOR
   );
 }
 }
