@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FlatSQL + Standards Explorer - SQL Querying &amp; Encryption Demo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-primary: #0a0a0f;
@@ -327,17 +326,25 @@ table SensitiveSatellite {
   </div>
 </div>
 
+<script type="importmap">
+{"imports": {
+  "flatbuffers": "/node_modules/flatbuffers/mjs/flatbuffers.js",
+  "flatc-wasm": "/node_modules/flatc-wasm/src/index.mjs",
+  "flatsql": "/node_modules/flatsql/wasm/index.js",
+  "hd-wallet-wasm": "/node_modules/hd-wallet-wasm/dist/runtime/index.mjs"
+}}
+</script>
 <script type="module">
-  import { StandardsExplorer } from '../src/index.js';
+  import { StandardsExplorer } from '../dist/standards-explorer.js';
   import { FlatcRunner } from 'flatc-wasm';
-  import { FlatSQLDatabase, FlatcAccessor } from 'flatsql';
+  import { FlatSQL } from 'flatsql';
+  import { binarySchema, frame, query, result } from '../../../scripts/flatsql-binary.mjs';
 
   // ── State ────────────────────────────────────────────────────────────────
   const state = {
     explorer: null,
     flatc: null,
     ommDB: null,
-    ommAccessor: null,
   };
 
   const $ = id => document.getElementById(id);
@@ -361,21 +368,15 @@ table OMM {
   CLASSIFICATION_TYPE: string;
 }
 root_type OMM;
+file_identifier "$OMM";
 `;
 
   // ── Sample Data ──────────────────────────────────────────────────────────
-  const SAMPLE_OMMS = [
-    { OBJECT_NAME: "ISS (ZARYA)", OBJECT_ID: "1998-067A", NORAD_CAT_ID: 25544, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T12:00:00Z", MEAN_MOTION: 15.489, ECCENTRICITY: 0.0001234, INCLINATION: 51.6416, RA_OF_ASC_NODE: 200.12, ARG_OF_PERICENTER: 120.57, MEAN_ANOMALY: 240.90, BSTAR: 0.000031, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "STARLINK-1007", OBJECT_ID: "2019-074A", NORAD_CAT_ID: 44713, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T10:30:00Z", MEAN_MOTION: 15.06, ECCENTRICITY: 0.0001567, INCLINATION: 53.0536, RA_OF_ASC_NODE: 145.68, ARG_OF_PERICENTER: 90.12, MEAN_ANOMALY: 270.46, BSTAR: 0.000045, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "HUBBLE", OBJECT_ID: "1990-037B", NORAD_CAT_ID: 20580, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T08:00:00Z", MEAN_MOTION: 15.09, ECCENTRICITY: 0.0002789, INCLINATION: 28.4698, RA_OF_ASC_NODE: 310.46, ARG_OF_PERICENTER: 50.79, MEAN_ANOMALY: 309.23, BSTAR: 0.000067, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "TERRA", OBJECT_ID: "1999-068A", NORAD_CAT_ID: 25994, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T06:00:00Z", MEAN_MOTION: 14.57, ECCENTRICITY: 0.0001123, INCLINATION: 98.2104, RA_OF_ASC_NODE: 45.68, ARG_OF_PERICENTER: 80.12, MEAN_ANOMALY: 280.46, BSTAR: 0.000023, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "LANDSAT 9", OBJECT_ID: "2021-088A", NORAD_CAT_ID: 49260, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T07:00:00Z", MEAN_MOTION: 14.57, ECCENTRICITY: 0.0001056, INCLINATION: 98.2207, RA_OF_ASC_NODE: 46.12, ARG_OF_PERICENTER: 81.46, MEAN_ANOMALY: 279.79, BSTAR: 0.000021, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "COSMOS 2251 DEB", OBJECT_ID: "1993-036BKC", NORAD_CAT_ID: 34567, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T09:00:00Z", MEAN_MOTION: 14.35, ECCENTRICITY: 0.0123456, INCLINATION: 74.0356, RA_OF_ASC_NODE: 180.23, ARG_OF_PERICENTER: 200.57, MEAN_ANOMALY: 159.89, BSTAR: 0.00012, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "TIANGONG", OBJECT_ID: "2021-035A", NORAD_CAT_ID: 48274, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T11:00:00Z", MEAN_MOTION: 15.60, ECCENTRICITY: 0.0003456, INCLINATION: 41.4700, RA_OF_ASC_NODE: 220.57, ARG_OF_PERICENTER: 150.89, MEAN_ANOMALY: 210.12, BSTAR: 0.000035, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "GPS BIIR-2", OBJECT_ID: "1997-035A", NORAD_CAT_ID: 24876, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T05:00:00Z", MEAN_MOTION: 2.0056, ECCENTRICITY: 0.0065432, INCLINATION: 55.7234, RA_OF_ASC_NODE: 260.12, ARG_OF_PERICENTER: 40.46, MEAN_ANOMALY: 320.79, BSTAR: 0.0, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "GOES 16", OBJECT_ID: "2016-071A", NORAD_CAT_ID: 41866, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T04:00:00Z", MEAN_MOTION: 1.0027, ECCENTRICITY: 0.0001789, INCLINATION: 0.0523, RA_OF_ASC_NODE: 75.23, ARG_OF_PERICENTER: 300.57, MEAN_ANOMALY: 60.89, BSTAR: 0.0, CLASSIFICATION_TYPE: "U" },
-    { OBJECT_NAME: "FENGYUN 1C DEB", OBJECT_ID: "1999-025DPZ", NORAD_CAT_ID: 39012, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T09:30:00Z", MEAN_MOTION: 14.10, ECCENTRICITY: 0.0234567, INCLINATION: 99.1234, RA_OF_ASC_NODE: 130.46, ARG_OF_PERICENTER: 170.79, MEAN_ANOMALY: 190.01, BSTAR: 0.00015, CLASSIFICATION_TYPE: "U" },
-  ];
+  const SAMPLE_OMMS = Array.from({ length: 10 }, (_, index) => ({
+    OBJECT_NAME: `synthetic-${index}`, OBJECT_ID: `fixture-${index}`, NORAD_CAT_ID: 90000 + index,
+    CENTER_NAME: 'EARTH', EPOCH: '2000-01-01T00:00:00Z', MEAN_MOTION: index * 2 + 1,
+    ECCENTRICITY: index * 0.003, INCLINATION: index * 15, BSTAR: index * 0.00001,
+  }));
 
   // ── Logging ──────────────────────────────────────────────────────────────
   function log(msg) {
@@ -424,16 +425,17 @@ root_type OMM;
       log(`Explorer ready: ${state.explorer.getStandards().length} standards`);
 
       log('Creating FlatSQL database...');
-      state.ommAccessor = new FlatcAccessor(state.flatc, OMM_SCHEMA);
-      state.ommDB = FlatSQLDatabase.fromSchema(OMM_SCHEMA, state.ommAccessor, 'omm-catalog');
-
-      // Insert sample data
+      state.ommDB = await FlatSQL.open({ root: 'sds-omm-demo' });
+      const schemaInput = { entry: '/OMM.fbs', files: { '/OMM.fbs': OMM_SCHEMA } };
+      await state.ommDB.registerSchema({ name: 'OMM', fileIdentifier: '$OMM',
+        bfbs: binarySchema(state.flatc, schemaInput) });
       for (const omm of SAMPLE_OMMS) {
-        state.ommDB.insert('OMM', omm);
+        const bytes = state.flatc.generateBinary(schemaInput, JSON.stringify(omm), { sizePrefix: false });
+        result(await state.ommDB.ingest('OMM', frame(bytes)));
       }
-
-      const stats = state.ommDB.getStats();
-      log(`Loaded ${stats[0]?.recordCount ?? 0} OMM records into FlatSQL`);
+      const count = (await query(state.ommDB, 'SELECT COUNT(*) FROM OMM')).rows[0][0];
+      if (count !== BigInt(SAMPLE_OMMS.length)) throw new Error('Stored record count differs');
+      log(`Loaded ${count} OMM records into FlatSQL 3.12.6`);
 
       // Update UI
       $('init-status').textContent = 'Ready';
@@ -443,15 +445,8 @@ root_type OMM;
       $('run-encryption-btn').disabled = false;
 
       // Show schema info
-      const schema = state.ommDB.getSchema();
-      let info = `<strong>Database:</strong> ${schema.name}<br>`;
-      for (const table of schema.tables) {
-        info += `<strong>Table:</strong> ${table.name} (${table.columns.length} columns)<br>`;
-        info += `<strong>Columns:</strong> ${table.columns.map(c => c.name).join(', ')}<br>`;
-        info += `<strong>Indexes:</strong> ${table.indexes.join(', ') || 'none'}<br>`;
-        info += `<strong>Records:</strong> ${stats[0]?.recordCount ?? 0}<br>`;
-      }
-      $('schema-info').innerHTML = info;
+      const fields = await query(state.ommDB, 'SELECT OBJECT_NAME, NORAD_CAT_ID, INCLINATION, MEAN_MOTION FROM OMM');
+      $('schema-info').textContent = `OMM: ${count} records; columns: ${fields.columns.join(', ')}`;
 
       log('Initialization complete');
     } catch (err) {
@@ -463,7 +458,7 @@ root_type OMM;
   }
 
   // ── Run SQL Query ────────────────────────────────────────────────────────
-  function runQuery() {
+  async function runQuery() {
     const sql = $('sql-input').value.trim();
     if (!sql || !state.ommDB) return;
 
@@ -471,7 +466,7 @@ root_type OMM;
     const start = performance.now();
 
     try {
-      const result = state.ommDB.query(sql);
+      const result = await query(state.ommDB, sql);
       const elapsed = (performance.now() - start).toFixed(2);
       $('query-results').innerHTML = renderResults(result);
       log(`Result: ${result.rows.length} rows in ${elapsed}ms`);
@@ -486,88 +481,30 @@ root_type OMM;
     const output = $('enc-results');
     output.textContent = 'Running encryption demo...\n\n';
 
-    const schema = {
-      entry: '/sat.fbs',
-      files: { '/sat.fbs': `
-namespace SDS;
-table SensitiveSatellite {
-  NORAD_CAT_ID: uint32 (key);
-  OBJECT_NAME: string;
-  CLASSIFICATION: string;
-  OWNER: string;
-  ORBIT_REGIME: string;
-  PRECISE_INCLINATION: double;
-  PRECISE_LONGITUDE: double;
-  SENSOR_TASKING: string;
-}
-root_type SensitiveSatellite;
-`}
-    };
-
-    const record = {
-      NORAD_CAT_ID: 90001,
-      OBJECT_NAME: "USA-224",
-      CLASSIFICATION: "CLASSIFIED",
-      OWNER: "US",
-      ORBIT_REGIME: "LEO-SSO",
-      PRECISE_INCLINATION: 97.8912,
-      PRECISE_LONGITUDE: -122.4567,
-      SENSOR_TASKING: "PRIORITY-1 IMAGING PACIFIC",
-    };
-
     try {
-      // Binary round-trip
-      const json = JSON.stringify(record);
-      const binary = state.flatc.generateBinary(schema, json);
-      const roundtripped = JSON.parse(state.flatc.generateJSON(schema, { path: '/s.bin', data: binary }));
-
-      output.textContent += `Record: ${record.OBJECT_NAME}\n`;
-      output.textContent += `JSON size: ${json.length} bytes\n`;
-      output.textContent += `FlatBuffer size: ${binary.byteLength} bytes\n`;
-      output.textContent += `Compression: ${((1 - binary.byteLength / json.length) * 100).toFixed(1)}%\n\n`;
-      output.textContent += `Round-trip verification:\n`;
-      output.textContent += `  OBJECT_NAME: ${roundtripped.OBJECT_NAME === record.OBJECT_NAME ? 'PASS' : 'FAIL'}\n`;
-      output.textContent += `  PRECISE_INCLINATION: ${roundtripped.PRECISE_INCLINATION === record.PRECISE_INCLINATION ? 'PASS' : 'FAIL'}\n`;
-      output.textContent += `  SENSOR_TASKING: ${roundtripped.SENSOR_TASKING === record.SENSOR_TASKING ? 'PASS' : 'FAIL'}\n\n`;
-
-      // Show hex comparison
-      const hex = Array.from(new Uint8Array(binary.buffer || binary))
-        .slice(0, 80)
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join(' ');
-      output.textContent += `FlatBuffer hex (first 80 bytes):\n${hex}\n\n`;
-
-      // Try encryption APIs
-      let encModule;
+      const { Builder, ByteBuffer } = await import('flatbuffers');
+      const { KMF, KMFT, encryptKMFBuffer, decryptKMFBuffer } = await import('../../../lib/js/KMF/main.js');
+      const key = crypto.getRandomValues(new Uint8Array(32));
       try {
-        encModule = await import('flatc-wasm');
-      } catch (e) {
-        encModule = null;
-      }
-
-      if (encModule?.x25519GenerateKeypair) {
-        output.textContent += `--- Per-Field Encryption ---\n\n`;
-        const keys = encModule.x25519GenerateKeypair();
-        output.textContent += `X25519 keypair generated\n`;
-        output.textContent += `Public key: ${Array.from(keys.publicKey).slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('')}...\n\n`;
-
-        output.textContent += `With (encrypted) attribute:\n`;
-        output.textContent += `  OBJECT_NAME, CLASSIFICATION, OWNER: plaintext (queryable)\n`;
-        output.textContent += `  PRECISE_INCLINATION, PRECISE_LONGITUDE: AES-256-CTR encrypted\n`;
-        output.textContent += `  SENSOR_TASKING: AES-256-CTR encrypted\n\n`;
-        output.textContent += `Key exchange: X25519 ECDH\n`;
-        output.textContent += `Key derivation: HKDF-SHA256\n`;
-        output.textContent += `Nonce: deterministic 96-bit derivation (record_index * 65536 + field_id)\n`;
-      } else {
-        output.textContent += `Note: Per-field encryption requires flatc-wasm with crypto support.\n`;
-        output.textContent += `The (encrypted) attribute marks fields for AES-256-CTR encryption.\n`;
-        output.textContent += `Non-encrypted fields remain indexable and queryable via FlatSQL.\n`;
-      }
-
-      log('Encryption demo complete');
+        const object = new KMFT('synthetic-key', 0, 0, 0, [...new TextEncoder().encode('synthetic-private-field')]);
+        const builder = new Builder(256);
+        KMF.finishKMFBuffer(builder, object.pack(builder));
+        const plain = builder.asUint8Array().slice();
+        const encrypted = plain.slice();
+        await encryptKMFBuffer(encrypted, key, 0);
+        if (encrypted.every((byte, i) => byte === plain[i])) throw new Error('Field did not change');
+        if (KMF.getRootAsKMF(new ByteBuffer(encrypted)).unpack().KEY_ID !== object.KEY_ID)
+          throw new Error('Public field changed');
+        const decrypted = encrypted.slice();
+        await decryptKMFBuffer(decrypted, key, 0);
+        if (!decrypted.every((byte, i) => byte === plain[i])) throw new Error('Decryption differs');
+        output.textContent = 'PASS: generated KMF field encryption, unchanged public key ID, byte-exact decryption.\n'
+          + 'AES-CTR does not authenticate ciphertext. Record indexes must be unique under each key.';
+        log('Generated KMF encryption check passed');
+      } finally { key.fill(0); }
     } catch (err) {
-      output.textContent += `Error: ${err.message}\n`;
-      log(`Encryption demo error: ${err.message}`);
+      output.textContent = `Encryption check failed: ${err.message}`;
+      log(`Encryption check failed: ${err.message}`);
     }
   }
 
@@ -600,6 +537,8 @@ root_type SensitiveSatellite;
       log(`Code gen error: ${err.message}`);
     }
   }
+
+  window.addEventListener('pagehide', () => { void state.ommDB?.close(); });
 
   // ── Event Listeners ──────────────────────────────────────────────────────
   $('run-query-btn').addEventListener('click', runQuery);

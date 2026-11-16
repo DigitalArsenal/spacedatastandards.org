@@ -1,11 +1,13 @@
-/** End-to-end encrypted KMF storage, key exchange, authentication and signing. */
+/** FlatSQL 3.12.6 has no HMAC entry point; this storage check does not authenticate ciphertext. */
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, mkdtemp, readdir, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { randomBytes, hkdfSync, createCipheriv } from 'node:crypto';
 import * as flatbuffers from 'flatbuffers';
 import * as cryptoAPI from 'flatc-wasm';
-import { FlatSQLDatabase, FlatcAccessor, StackedFlatBufferStore } from 'flatsql';
-import { initFlatSQL } from 'flatsql/wasm';
+import { FlatSQL } from 'flatsql';
+import { binarySchema, frame, frames, request, query, result } from './scripts/flatsql-binary.mjs';
 import { KMF, KMFT, encryptKMFBuffer, decryptKMFBuffer } from './lib/js/KMF/main.js';
 
 const failures = [];
@@ -16,7 +18,7 @@ async function step(name, check) {
   } catch (error) {
     failures.push(name);
     // Assertion values can contain test key material; only print the step.
-    console.error(`FAIL ${name}: ${error.code ?? error.name}${error.name === 'AssertionError' ? '' : ': ' + error.message}`);
+    console.error(`FAIL ${name}: ${error.code ?? error.name}${error.status === undefined ? '' : ' status=' + error.status}${error.name === 'AssertionError' ? '' : ': ' + error.message}`);
   }
 }
 function required(name) {
@@ -36,7 +38,9 @@ async function main() {
   const wrongKey = new Uint8Array(randomBytes(32));
   const records = [];
   let database;
-  let wasmDatabase;
+  const directory = await mkdtemp(join(tmpdir(), 'sds-kmf-'));
+  const encryptedRoot = join(directory, 'encrypted');
+  const controlRoot = join(directory, 'plaintext');
   try {
     await step('X25519 exchange and derived-key agreement (flatc-wasm)', async () => {
       await required('loadEncryptionWasm')();
@@ -60,7 +64,7 @@ async function main() {
     await step('generated KMF encryption, valid FlatBuffers, unchanged public fields', async () => {
       for (let index = 0; index < 5; index++) {
         const object = new KMFT(`test-key-${index}`, 0, 0, 0,
-          Array.from(randomBytes(32)), index + 1, 123456789n);
+          Array.from(Buffer.from(`privatekmfsecret${index}unsearchabletoken`)), index + 1, 123456789n);
         const builder = new flatbuffers.Builder(256);
         KMF.finishKMFBuffer(builder, object.pack(builder));
         const plain = new Uint8Array(builder.asUint8Array());
@@ -97,31 +101,97 @@ async function main() {
       assert.equal(records.length, 5);
     });
 
-    await step('encrypted KMF SQL storage, query, export and byte-exact decryption', async () => {
-      assert.equal(records.length, 5);
-      database = FlatSQLDatabase.fromSchema(schema, new FlatcAccessor(flatc, schema), 'kmf-encryption-test');
-      for (const record of records) database.insertRaw('KMF', record.encrypted);
-      const result = database.query('SELECT KEY_ID, VERSION, KEY_BYTES FROM KMF ORDER BY VERSION');
-      assert.equal(result.rows.length, 5);
-      for (let i = 0; i < records.length; i++) {
-        assert.equal(result.rows[i][0], records[i].object.KEY_ID);
-        assert.equal(result.rows[i][1], records[i].object.VERSION);
-        assert.deepEqual(result.rows[i][2], Array.from(KMF.getRootAsKMF(
-          new flatbuffers.ByteBuffer(records[i].encrypted)).keyBytesArray()));
+    const bfbs = binarySchema(flatc, schemaInput);
+    const open = root => FlatSQL.open({ root });
+    const register = db => db.registerSchema({ name: 'KMF', fileIdentifier: '$KMF', bfbs, fullText: true });
+    async function verifyStored(db, encrypted) {
+      const listed = await query(db, 'SELECT KEY_ID, VERSION, _cid FROM KMF ORDER BY VERSION');
+      assert.equal(listed.rows.length, 5, 'SQL finds every public field');
+      for (const [i, record] of records.entries()) {
+        const [id, version, cid] = listed.rows[i];
+        assert.equal(id, record.object.KEY_ID);
+        assert.equal(version, BigInt(record.object.VERSION));
+        assert.equal(typeof cid, 'string');
+        assert.ok(cid.length);
+        const byCid = frames(await db.execute(request('SELECT _data FROM KMF WHERE _cid = ?1', [cid]), { records: true }));
+        assert.equal(byCid.length, 1, 'content-address lookup returns one record');
+        assert.deepEqual(byCid[0], encrypted ? record.encrypted : record.plain);
+        const byKey = frames(await db.execute(request('SELECT _data FROM KMF WHERE KEY_ID = ?1', [id]), { records: true }));
+        assert.deepEqual(byKey, byCid, 'public key and content address return identical bytes');
+        const selected = await query(db, 'SELECT KEY_BYTES FROM KMF WHERE KEY_ID = ?1', [id]);
+        const wanted = KMF.getRootAsKMF(new flatbuffers.ByteBuffer(byCid[0])).keyBytesArray();
+        assert.deepEqual(selected.rows, [[wanted]], 'projection preserves the stored field');
+        const secret = new Uint8Array(record.object.KEY_BYTES);
+        const matches = await query(db, 'SELECT KEY_ID FROM KMF WHERE KEY_BYTES = ?1', [secret]);
+        assert.deepEqual(matches.rows, encrypted ? [] : [[id]], 'plaintext equality has a positive control');
+        const text = Buffer.from(secret).toString('utf8');
+        const textMatches = await query(db, 'SELECT KEY_ID FROM KMF WHERE CAST(KEY_BYTES AS TEXT) LIKE ?1', [`%${text}%`]);
+        assert.deepEqual(textMatches.rows, encrypted ? [] : [[id]], 'text query has a positive control');
+        if (encrypted) {
+          const wrong = byCid[0].slice();
+          await decryptKMFBuffer(wrong, wrongKey, record.index);
+          assert.notDeepEqual(wrong, record.plain);
+          const decrypted = byCid[0].slice();
+          await decryptKMFBuffer(decrypted, key, record.index);
+          assert.deepEqual(decrypted, record.plain);
+        }
       }
-      const restored = StackedFlatBufferStore.fromData(database.exportData());
-      const stored = [...restored.iterateTableRecords('KMF')];
-      assert.equal(stored.length, 5);
-      for (let i = 0; i < stored.length; i++) {
-        assert.deepEqual(stored[i].data, records[i].encrypted);
-        const wrong = stored[i].data.slice();
-        await decryptKMFBuffer(wrong, wrongKey, i);
-        assert.notDeepEqual(wrong, records[i].plain);
-        const decrypted = stored[i].data.slice();
-        await decryptKMFBuffer(decrypted, key, i);
-        assert.deepEqual(decrypted, records[i].plain);
+    }
+    async function verifySearch(db) {
+      // Public text is a positive control for the same full-text index.
+      const publicMatches = await query(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1 ORDER BY VERSION', ['"test-key"']);
+      assert.deepEqual(publicMatches.rows, records.map(({ object }) => [object.KEY_ID]));
+      for (const record of records) {
+        const text = Buffer.from(record.object.KEY_BYTES).toString('utf8');
+        assert.deepEqual((await query(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1', [text])).rows, []);
       }
-    });
+    }
+    async function scanFiles(root, expectPlaintext) {
+      let count = 0;
+      const found = new Set();
+      async function walk(path) {
+        for (const entry of await readdir(path, { withFileTypes: true })) {
+          const file = join(path, entry.name);
+          if (entry.isDirectory()) await walk(file);
+          else {
+            assert.ok(entry.isFile(), 'store contains only directories and regular files');
+            const bytes = await readFile(file);
+            count++;
+            for (const record of records) {
+              if (bytes.includes(Buffer.from(record.object.KEY_BYTES))) found.add(record.index);
+            }
+          }
+        }
+      }
+      await walk(root);
+      assert.ok(count > 0, 'persistent store wrote files');
+      assert.equal(found.size, expectPlaintext ? records.length : 0, 'disk scan includes every store file');
+      console.log(`Scanned ${count} ${expectPlaintext ? 'control' : 'encrypted'} store files`);
+    }
+    for (const encrypted of [false, true]) {
+      const label = encrypted ? 'encrypted' : 'plaintext control';
+      const root = encrypted ? encryptedRoot : controlRoot;
+      await step(`${label} FlatSQL 3.12.6 open, register and ingest`, async () => {
+        assert.equal(records.length, 5);
+        database = await open(root);
+        await register(database);
+        for (const record of records) result(await database.ingest('KMF', frame(encrypted ? record.encrypted : record.plain)));
+      });
+      await step(`${label} SQL, key/CID bytes and decryption`, () => verifyStored(database, encrypted));
+      await step(`${label} full-text public control and secret exclusion`, () => verifySearch(database));
+      await step(`${label} live store plaintext scan`, () => scanFiles(root, !encrypted));
+      await step(`${label} close and reopen`, async () => {
+        await database.close();
+        database = undefined;
+        database = await open(root);
+      });
+      await step(`${label} reopened SQL, key/CID bytes and decryption`, () => verifyStored(database, encrypted));
+      await step(`${label} reopened full-text control and secret exclusion`, () => verifySearch(database));
+      await step(`${label} reopened plaintext scan`, () => scanFiles(root, !encrypted));
+      await database?.close();
+      database = undefined;
+      await step(`${label} closed plaintext scan`, () => scanFiles(root, !encrypted));
+    }
 
     await step('record-index separation, reuse behavior and unauthenticated tampering', async () => {
       assert.equal(records.length, 5);
@@ -157,40 +227,9 @@ async function main() {
       } finally { keys.privateKey.fill(0); }
     });
 
-    await step('FlatSQL WASM key and HMAC configuration', async () => {
-      const engine = await initFlatSQL();
-      wasmDatabase = engine.createDatabase(schema, 'kmf-wasm-test');
-      wasmDatabase.registerFileId('$KMF', 'KMF');
-      wasmDatabase.setEncryptionKey(key);
-      assert.equal(wasmDatabase.isEncrypted(), true);
-      wasmDatabase.setHMACVerification(true);
-      assert.equal(wasmDatabase.isHMACEnabled(), true);
-    });
-    await step('FlatSQL WASM HMAC computation, verification and tamper rejection', async () => {
-      assert.ok(wasmDatabase);
-      assert.equal(records.length, 5);
-      for (const { encrypted } of records) {
-        const mac = wasmDatabase.computeHMAC(encrypted);
-        assert.equal(mac.length, 32);
-        assert.equal(wasmDatabase.verifyHMAC(encrypted, mac), true);
-        const tampered = encrypted.slice();
-        tampered[tampered.length - 1] ^= 1;
-        assert.equal(wasmDatabase.verifyHMAC(tampered, mac), false);
-      }
-    });
-    await step('FlatSQL WASM ingest counts, query and stored-record statistics', async () => {
-      assert.ok(wasmDatabase);
-      assert.equal(records.length, 5);
-      const ingested = records.map(({ encrypted }) => wasmDatabase.ingestOne(encrypted));
-      assert.deepEqual(ingested, [1, 2, 3, 4, 5], 'ingestOne returns consecutive row IDs');
-      const result = wasmDatabase.query('SELECT KEY_ID, VERSION FROM KMF ORDER BY VERSION');
-      console.log(`FlatSQL WASM query rows: ${result.rows.length}; stored records: ${wasmDatabase.getStats().find((table) => table.tableName === 'KMF')?.recordCount}`);
-      assert.deepEqual(result.rows, records.map(({ object }) => [object.KEY_ID, object.VERSION]));
-      assert.equal(wasmDatabase.getStats().find((table) => table.tableName === 'KMF').recordCount, 5);
-      assert.ok(wasmDatabase.exportData().length > 0);
-    });
   } finally {
-    wasmDatabase?.destroy();
+    await database?.close();
+    await rm(directory, { recursive: true, force: true });
     key.fill(0);
     wrongKey.fill(0);
     for (const record of records) { record.plain.fill(0); record.object.KEY_BYTES.fill(0); }
@@ -198,6 +237,6 @@ async function main() {
   assert.equal(failures.length, 0, `Failed steps: ${failures.join('; ')}`);
 }
 main().catch((error) => {
-  console.error(failures.length ? `Encryption check failed: ${failures.join('; ')}` : `Encryption setup failed: ${error.name}`);
+  console.error(failures.length ? `Encryption check failed: ${failures.join('; ')}` : `Encryption setup failed: ${error.name}: ${error.message}`);
   process.exitCode = 1;
 });
