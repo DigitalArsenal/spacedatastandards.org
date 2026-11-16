@@ -21,7 +21,10 @@
         "README",
         "LICENSE",
         "NOTICE",
-        "docs/ABA.md"
+        "docs/ABA.md",
+        "docs/clg-contract.md",
+        "docs/clg-scalar-presence.md",
+        "docs/clg-validation.md"
     ],
     "keywords": [
         "celestrak",

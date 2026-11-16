@@ -462,7 +462,7 @@ if(APPLE)
 endif()
 `);
       await run("cmake", ["-S", build, "-B", build], { timeout: 600 });
-      await run("cmake", ["--build", build, "-j", "8"], { timeout: 1500 });
+      await run("cmake", ["--build", build, "-j", "1"], { timeout: 1500 });
     }
     check(fs.existsSync(bin), "lobster binary was not built");
     const dir = work("lobster");
