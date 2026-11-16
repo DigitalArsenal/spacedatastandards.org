@@ -16,9 +16,7 @@ describe('Data Generation and Verification', () => {
 
     after(async () => {
         const files = await fs.readdir(dataPath);
-        for (const file of files) {
-            await fs.unlink(path.join(dataPath, file));
-        }
+        await Promise.all(files.map(file => fs.unlink(path.join(dataPath, file))));
     });
 
     const checkPropertyType = (value, schemaProp, jsonSchema) => {
@@ -74,6 +72,8 @@ describe('Data Generation and Verification', () => {
         await generateData(10, 5, dataPath);
 
         const files = await fs.readdir(dataPath);
+        const generatedStandards = [...new Set(files.map(file => file.split('.')[1].toUpperCase()))].sort();
+        expect(generatedStandards).to.deep.equal(Object.keys(standardsJSON.STANDARDS).sort());
         for (const file of files) {
             const buffer = await fs.readFile(path.join(dataPath, file));
             const flatbuffers = readFB(buffer);
@@ -103,6 +103,8 @@ describe('Data Generation and Verification', () => {
         await generateData(5, 2, dataPath);
 
         const files = await fs.readdir(dataPath);
+        const generatedStandards = [...new Set(files.map(file => file.split('.')[1].toUpperCase()))].sort();
+        expect(generatedStandards).to.deep.equal(Object.keys(standardsJSON.STANDARDS).sort());
         for (const file of files) {
             const buffer = await fs.readFile(path.join(dataPath, file));
             const flatbuffers = readFB(buffer);
@@ -132,6 +134,8 @@ describe('Data Generation and Verification', () => {
         await generateData(10, 1, dataPath);
 
         const files = await fs.readdir(dataPath);
+        const generatedStandards = [...new Set(files.map(file => file.split('.')[1].toUpperCase()))].sort();
+        expect(generatedStandards).to.deep.equal(Object.keys(standardsJSON.STANDARDS).sort());
         for (const file of files) {
             const filePath = path.join(dataPath, file);
             const readStream = createReadStream(filePath);
