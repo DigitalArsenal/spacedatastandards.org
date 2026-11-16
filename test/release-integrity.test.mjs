@@ -1,4 +1,5 @@
 import { strict as assert } from "node:assert";
+import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -29,6 +30,15 @@ function makeSandbox(codes = ["OMM", "CDM"], version = "1.0.0+1") {
 
   mkdirSync(join(root, "scripts"), { recursive: true });
   cpSync(checker, join(root, "scripts", "check-release-integrity.mjs"));
+
+  // Release assets are content-addressed and pinned from their actual bytes.
+  const asset = Buffer.from("export const release = '1.0.0';\n");
+  const digest = createHash("sha256").update(asset).digest("hex");
+  const assetPath = `dist/static-assets/release.${digest}.js`;
+  mkdirSync(join(root, "dist", "static-assets"), { recursive: true });
+  writeFileSync(join(root, assetPath), asset);
+  writeFileSync(join(root, "scripts", "static-assets.sha256.json"),
+    JSON.stringify({ files: { [assetPath]: digest } }, null, 2));
 
   const standards = {};
   for (const code of codes) {
@@ -174,7 +184,8 @@ describe("check-release-integrity", () => {
     commitAll("poison");
     const poisoned = git("rev-parse", "HEAD").trim();
 
-    assert.equal(runChecker(root, ["--rev", clean]).status, 0);
+    const cleanTree = runChecker(root, ["--rev", clean]);
+    assert.equal(cleanTree.status, 0, cleanTree.out);
     const bad = runChecker(root, ["--rev", poisoned]);
     assert.equal(bad.status, 1, bad.out);
     assert.match(bad.out, /schema\/OMM\/main\.fbs/);
