@@ -190,13 +190,24 @@ class DSS : flatbuffers.handle
     /// lane's rule; SetRetention changes it.
     def RETENTION() -> dssRetention:
         return dssRetention(flatbuffers.field_int8(buf_, pos_, 110, 0))
+    /// Subscribers following this dataset on this node now.
+    def SUBSCRIBER_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 112, 0)
+    /// Record bytes this node has sent to followers of this dataset since the
+    /// node started.
+    def SERVED_BYTES() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 114, 0)
+    /// Current rate of record bytes sent to followers of this dataset, in bytes
+    /// per second.
+    def SERVE_SPEED_BYTES_PER_SECOND() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 116, 0)
 
 def GetRootAsDSS(buf:string): return DSS { buf, flatbuffers.indirect(buf, 0) }
 
 struct DSSBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(54)
+        b_.StartObject(57)
         return this
     def add_STATUS(STATUS:dssSyncState):
         b_.PrependInt8Slot(0, STATUS, 0)
@@ -359,6 +370,15 @@ struct DSSBuilder:
         return this
     def add_RETENTION(RETENTION:dssRetention):
         b_.PrependInt8Slot(53, RETENTION, 0)
+        return this
+    def add_SUBSCRIBER_COUNT(SUBSCRIBER_COUNT:int):
+        b_.PrependUint32Slot(54, SUBSCRIBER_COUNT, 0)
+        return this
+    def add_SERVED_BYTES(SERVED_BYTES:int):
+        b_.PrependUint64Slot(55, SERVED_BYTES, 0)
+        return this
+    def add_SERVE_SPEED_BYTES_PER_SECOND(SERVE_SPEED_BYTES_PER_SECOND:int):
+        b_.PrependUint64Slot(56, SERVE_SPEED_BYTES_PER_SECOND, 0)
         return this
     def end():
         return b_.EndObject()

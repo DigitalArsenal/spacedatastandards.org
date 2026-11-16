@@ -198,6 +198,18 @@
         "RETENTION" : {
                 "$ref" : "#/definitions/dssRetention",
                 "description" : "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
+              },
+        "SUBSCRIBER_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Subscribers following this dataset on this node now."
+              },
+        "SERVED_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Record bytes this node has sent to followers of this dataset since the\nnode started."
+              },
+        "SERVE_SPEED_BYTES_PER_SECOND" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Current rate of record bytes sent to followers of this dataset, in bytes\nper second."
               }
       },
       "additionalProperties" : false

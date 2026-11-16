@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "build": "node build.js",
-    "dev": "npx serve examples"
+    "dev": "npx serve examples",
+    "demo:flatsql": "node examples/serve-flatsql.mjs"
   },
   "keywords": [
     "space-data-standards",
@@ -33,7 +34,7 @@
   "dependencies": {
     "flatc-wasm": "^26.1.15",
     "flatbuffers": "^25.9.23",
-    "flatsql": "^0.3.9",
+    "flatsql": "3.12.6",
     "spacedatastandards.org": "^1.65.0"
   },
   "devDependencies": {

@@ -840,7 +840,8 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HTTP_STATUS = 96,
     VT_BODY_REF_TOKEN = 98,
     VT_BODY_REF_SIZE = 100,
-    VT_RESUME_CURSOR = 102
+    VT_RESUME_CURSOR = 102,
+    VT_FOLLOW = 104
   };
   qrpKind KIND() const {
     return static_cast<qrpKind>(GetField<int8_t>(VT_KIND, 0));
@@ -1041,6 +1042,12 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *RESUME_CURSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RESUME_CURSOR);
   }
+  /// True requests that the server keep the stream open after sending stored
+  /// records and send further records as they are stored, within the credit
+  /// granted by later request messages on the same stream. False by default.
+  bool FOLLOW() const {
+    return GetField<uint8_t>(VT_FOLLOW, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1122,6 +1129,7 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_BODY_REF_SIZE, 8) &&
            VerifyOffset(verifier, VT_RESUME_CURSOR) &&
            verifier.VerifyString(RESUME_CURSOR()) &&
+           VerifyField<uint8_t>(verifier, VT_FOLLOW, 1) &&
            verifier.EndTable();
   }
 };
@@ -1280,6 +1288,9 @@ struct QRPBuilder {
   void add_RESUME_CURSOR(::flatbuffers::Offset<::flatbuffers::String> RESUME_CURSOR) {
     fbb_.AddOffset(QRP::VT_RESUME_CURSOR, RESUME_CURSOR);
   }
+  void add_FOLLOW(bool FOLLOW) {
+    fbb_.AddElement<uint8_t>(QRP::VT_FOLLOW, static_cast<uint8_t>(FOLLOW), 0);
+  }
   explicit QRPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1342,7 +1353,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRP(
     uint16_t HTTP_STATUS = 0,
     uint64_t BODY_REF_TOKEN = 0,
     uint64_t BODY_REF_SIZE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RESUME_CURSOR = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> RESUME_CURSOR = 0,
+    bool FOLLOW = false) {
   QRPBuilder builder_(_fbb);
   builder_.add_BODY_REF_SIZE(BODY_REF_SIZE);
   builder_.add_BODY_REF_TOKEN(BODY_REF_TOKEN);
@@ -1386,6 +1398,7 @@ inline ::flatbuffers::Offset<QRP> CreateQRP(
   builder_.add_MESSAGE(MESSAGE);
   builder_.add_ERROR_CODE(ERROR_CODE);
   builder_.add_HTTP_STATUS(HTTP_STATUS);
+  builder_.add_FOLLOW(FOLLOW);
   builder_.add_REPRESENTATION(REPRESENTATION);
   builder_.add_TIME_PROFILE(TIME_PROFILE);
   builder_.add_STALE(STALE);
@@ -1448,7 +1461,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRPDirect(
     uint16_t HTTP_STATUS = 0,
     uint64_t BODY_REF_TOKEN = 0,
     uint64_t BODY_REF_SIZE = 0,
-    const char *RESUME_CURSOR = nullptr) {
+    const char *RESUME_CURSOR = nullptr,
+    bool FOLLOW = false) {
   auto ERROR_CODE__ = ERROR_CODE ? _fbb.CreateString(ERROR_CODE) : 0;
   auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
@@ -1523,7 +1537,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRPDirect(
       HTTP_STATUS,
       BODY_REF_TOKEN,
       BODY_REF_SIZE,
-      RESUME_CURSOR__);
+      RESUME_CURSOR__,
+      FOLLOW);
 }
 
 inline const QRP *GetQRP(const void *buf) {

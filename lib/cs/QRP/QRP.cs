@@ -231,6 +231,10 @@ public struct QRP : IFlatbufferObject
   public ArraySegment<byte>? GetRESUME_CURSORBytes() { return __p.__vector_as_arraysegment(102); }
 #endif
   public byte[] GetRESUME_CURSORArray() { return __p.__vector_as_array<byte>(102); }
+  /// True requests that the server keep the stream open after sending stored
+  /// records and send further records as they are stored, within the credit
+  /// granted by later request messages on the same stream. False by default.
+  public bool FOLLOW { get { int o = __p.__offset(104); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<QRP> CreateQRP(FlatBufferBuilder builder,
       qrpKind KIND = qrpKind.Request,
@@ -282,8 +286,9 @@ public struct QRP : IFlatbufferObject
       ushort HTTP_STATUS = 0,
       ulong BODY_REF_TOKEN = 0,
       ulong BODY_REF_SIZE = 0,
-      StringOffset RESUME_CURSOROffset = default(StringOffset)) {
-    builder.StartTable(50);
+      StringOffset RESUME_CURSOROffset = default(StringOffset),
+      bool FOLLOW = false) {
+    builder.StartTable(51);
     QRP.AddBODY_REF_SIZE(builder, BODY_REF_SIZE);
     QRP.AddBODY_REF_TOKEN(builder, BODY_REF_TOKEN);
     QRP.AddMAX_BYTES(builder, MAX_BYTES);
@@ -326,6 +331,7 @@ public struct QRP : IFlatbufferObject
     QRP.AddMESSAGE(builder, MESSAGEOffset);
     QRP.AddERROR_CODE(builder, ERROR_CODEOffset);
     QRP.AddHTTP_STATUS(builder, HTTP_STATUS);
+    QRP.AddFOLLOW(builder, FOLLOW);
     QRP.AddREPRESENTATION(builder, REPRESENTATION);
     QRP.AddTIME_PROFILE(builder, TIME_PROFILE);
     QRP.AddSTALE(builder, STALE);
@@ -337,7 +343,7 @@ public struct QRP : IFlatbufferObject
     return QRP.EndQRP(builder);
   }
 
-  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(50); }
+  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(51); }
   public static void AddKIND(FlatBufferBuilder builder, qrpKind KIND) { builder.AddSbyte(0, (sbyte)KIND, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, qrpStatus STATUS) { builder.AddSbyte(1, (sbyte)STATUS, 0); }
   public static void AddERROR_CODE(FlatBufferBuilder builder, StringOffset ERROR_CODEOffset) { builder.AddOffset(2, ERROR_CODEOffset.Value, 0); }
@@ -413,6 +419,7 @@ public struct QRP : IFlatbufferObject
   public static void AddBODY_REF_TOKEN(FlatBufferBuilder builder, ulong BODY_REF_TOKEN) { builder.AddUlong(47, BODY_REF_TOKEN, 0); }
   public static void AddBODY_REF_SIZE(FlatBufferBuilder builder, ulong BODY_REF_SIZE) { builder.AddUlong(48, BODY_REF_SIZE, 0); }
   public static void AddRESUME_CURSOR(FlatBufferBuilder builder, StringOffset RESUME_CURSOROffset) { builder.AddOffset(49, RESUME_CURSOROffset.Value, 0); }
+  public static void AddFOLLOW(FlatBufferBuilder builder, bool FOLLOW) { builder.AddBool(50, FOLLOW, false); }
   public static Offset<QRP> EndQRP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<QRP>(o);
@@ -480,6 +487,7 @@ public struct QRP : IFlatbufferObject
     _o.BODY_REF_TOKEN = this.BODY_REF_TOKEN;
     _o.BODY_REF_SIZE = this.BODY_REF_SIZE;
     _o.RESUME_CURSOR = this.RESUME_CURSOR;
+    _o.FOLLOW = this.FOLLOW;
   }
   public static Offset<QRP> Pack(FlatBufferBuilder builder, QRPT _o) {
     if (_o == null) return default(Offset<QRP>);
@@ -582,7 +590,8 @@ public struct QRP : IFlatbufferObject
       _o.HTTP_STATUS,
       _o.BODY_REF_TOKEN,
       _o.BODY_REF_SIZE,
-      _RESUME_CURSOR);
+      _RESUME_CURSOR,
+      _o.FOLLOW);
   }
 }
 
@@ -638,6 +647,7 @@ public class QRPT
   public ulong BODY_REF_TOKEN { get; set; }
   public ulong BODY_REF_SIZE { get; set; }
   public string RESUME_CURSOR { get; set; }
+  public bool FOLLOW { get; set; }
 
   public QRPT() {
     this.KIND = qrpKind.Request;
@@ -690,6 +700,7 @@ public class QRPT
     this.BODY_REF_TOKEN = 0;
     this.BODY_REF_SIZE = 0;
     this.RESUME_CURSOR = null;
+    this.FOLLOW = false;
   }
   public static QRPT DeserializeFromBinary(byte[] fbBuffer) {
     return QRP.GetRootAsQRP(new ByteBuffer(fbBuffer)).UnPack();
@@ -757,6 +768,7 @@ static public class QRPVerify
       && verifier.VerifyField(tablePos, 98 /*BODY_REF_TOKEN*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 100 /*BODY_REF_SIZE*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 102 /*RESUME_CURSOR*/, false)
+      && verifier.VerifyField(tablePos, 104 /*FOLLOW*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

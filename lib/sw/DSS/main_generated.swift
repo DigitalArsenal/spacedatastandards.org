@@ -159,6 +159,9 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let REQUESTED_ACTION: VOffset = 106
     static let ORIGIN_ID: VOffset = 108
     static let RETENTION: VOffset = 110
+    static let SUBSCRIBER_COUNT: VOffset = 112
+    static let SERVED_BYTES: VOffset = 114
+    static let SERVE_SPEED_BYTES_PER_SECOND: VOffset = 116
   }
 
   public var STATUS: dssSyncState { let o = _accessor.offset(VT.STATUS); return o == 0 ? .idle : dssSyncState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .idle }
@@ -265,7 +268,15 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  follows its standard's default. A Subscribe without RETENTION keeps the
   ///  lane's rule; SetRetention changes it.
   public var RETENTION: dssRetention { let o = _accessor.offset(VT.RETENTION); return o == 0 ? .replacecurrent : dssRetention(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .replacecurrent }
-  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 54) }
+  ///  Subscribers following this dataset on this node now.
+  public var SUBSCRIBER_COUNT: UInt32 { let o = _accessor.offset(VT.SUBSCRIBER_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Record bytes this node has sent to followers of this dataset since the
+  ///  node started.
+  public var SERVED_BYTES: UInt64 { let o = _accessor.offset(VT.SERVED_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Current rate of record bytes sent to followers of this dataset, in bytes
+  ///  per second.
+  public var SERVE_SPEED_BYTES_PER_SECOND: UInt64 { let o = _accessor.offset(VT.SERVE_SPEED_BYTES_PER_SECOND); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startDSS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 57) }
   public static func add(STATUS: dssSyncState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(SYNCED_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYNCED_ROWS, def: 0, at: VT.SYNCED_ROWS) }
   public static func add(TOTAL_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_ROWS, def: 0, at: VT.TOTAL_ROWS) }
@@ -324,6 +335,9 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(REQUESTED_ACTION: dssAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUESTED_ACTION.rawValue, def: 0, at: VT.REQUESTED_ACTION) }
   public static func add(ORIGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN_ID, at: VT.ORIGIN_ID) }
   public static func add(RETENTION: dssRetention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETENTION.rawValue, def: 0, at: VT.RETENTION) }
+  public static func add(SUBSCRIBER_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SUBSCRIBER_COUNT, def: 0, at: VT.SUBSCRIBER_COUNT) }
+  public static func add(SERVED_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERVED_BYTES, def: 0, at: VT.SERVED_BYTES) }
+  public static func add(SERVE_SPEED_BYTES_PER_SECOND: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERVE_SPEED_BYTES_PER_SECOND, def: 0, at: VT.SERVE_SPEED_BYTES_PER_SECOND) }
   public static func endDSS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDSS(
     _ fbb: inout FlatBufferBuilder,
@@ -380,7 +394,10 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     LAST_SYNC_STARTED_AT: UInt64 = 0,
     REQUESTED_ACTION: dssAction = .none_,
     ORIGIN_IDOffset ORIGIN_ID: Offset = Offset(),
-    RETENTION: dssRetention = .replacecurrent
+    RETENTION: dssRetention = .replacecurrent,
+    SUBSCRIBER_COUNT: UInt32 = 0,
+    SERVED_BYTES: UInt64 = 0,
+    SERVE_SPEED_BYTES_PER_SECOND: UInt64 = 0
   ) -> Offset {
     let __start = DSS.startDSS(&fbb)
     DSS.add(STATUS: STATUS, &fbb)
@@ -437,6 +454,9 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     DSS.add(REQUESTED_ACTION: REQUESTED_ACTION, &fbb)
     DSS.add(ORIGIN_ID: ORIGIN_ID, &fbb)
     DSS.add(RETENTION: RETENTION, &fbb)
+    DSS.add(SUBSCRIBER_COUNT: SUBSCRIBER_COUNT, &fbb)
+    DSS.add(SERVED_BYTES: SERVED_BYTES, &fbb)
+    DSS.add(SERVE_SPEED_BYTES_PER_SECOND: SERVE_SPEED_BYTES_PER_SECOND, &fbb)
     return DSS.endDSS(&fbb, start: __start)
   }
 
@@ -496,6 +516,9 @@ public struct DSS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.REQUESTED_ACTION, fieldName: "REQUESTED_ACTION", required: false, type: dssAction.self)
     try _v.visit(field: VT.ORIGIN_ID, fieldName: "ORIGIN_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.RETENTION, fieldName: "RETENTION", required: false, type: dssRetention.self)
+    try _v.visit(field: VT.SUBSCRIBER_COUNT, fieldName: "SUBSCRIBER_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SERVED_BYTES, fieldName: "SERVED_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.SERVE_SPEED_BYTES_PER_SECOND, fieldName: "SERVE_SPEED_BYTES_PER_SECOND", required: false, type: UInt64.self)
     _v.finish()
   }
 }

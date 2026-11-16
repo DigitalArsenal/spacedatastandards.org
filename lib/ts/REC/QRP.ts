@@ -478,8 +478,18 @@ RESUME_CURSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True requests that the server keep the stream open after sending stored
+ * records and send further records as they are stored, within the credit
+ * granted by later request messages on the same stream. False by default.
+ */
+FOLLOW():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startQRP(builder:flatbuffers.Builder) {
-  builder.startObject(50);
+  builder.startObject(51);
 }
 
 static addKind(builder:flatbuffers.Builder, KIND:qrpKind) {
@@ -742,6 +752,10 @@ static addResumeCursor(builder:flatbuffers.Builder, RESUME_CURSOROffset:flatbuff
   builder.addFieldOffset(49, RESUME_CURSOROffset, 0);
 }
 
+static addFollow(builder:flatbuffers.Builder, FOLLOW:boolean) {
+  builder.addFieldInt8(50, +FOLLOW, +false);
+}
+
 static endQRP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -755,7 +769,7 @@ static finishSizePrefixedQRPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$QRP', true);
 }
 
-static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ERROR_CODEOffset:flatbuffers.Offset, MESSAGEOffset:flatbuffers.Offset, RETRY_AFTER_MS:number, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SQLOffset:flatbuffers.Offset, SEARCHOffset:flatbuffers.Offset, FILTERSOffset:flatbuffers.Offset, SORT_FIELDOffset:flatbuffers.Offset, SORT_DESC:boolean, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, BATCH_IDOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, ORIGIN_IDOffset:flatbuffers.Offset, FROM_EPOCH_MS:bigint, TO_EPOCH_MS:bigint, PAGE:number, LIMIT:number, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, RECORD_COUNT:number, TOTAL_COUNT:bigint, SCANNED:bigint, STORED:bigint, PARTIAL:boolean, TRUNCATED:boolean, AS_OF_MS:bigint, STALE:boolean, ELAPSED_MS:number, GENERATED_AT_MS:bigint, ETAGOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, ARCHIVE_IDOffset:flatbuffers.Offset, COLUMNSOffset:flatbuffers.Offset, TIME_PROFILE:qrpTimeProfile, PROFILE_EPOCH_MS:bigint, REPRESENTATION:qrpRepresentation, PARAMETERSOffset:flatbuffers.Offset, ROWSOffset:flatbuffers.Offset, TABLESOffset:flatbuffers.Offset, MAX_ELAPSED_MS:number, MAX_ROWS:bigint, MAX_BYTES:bigint, HTTP_STATUS:number, BODY_REF_TOKEN:bigint, BODY_REF_SIZE:bigint, RESUME_CURSOROffset:flatbuffers.Offset):flatbuffers.Offset {
+static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ERROR_CODEOffset:flatbuffers.Offset, MESSAGEOffset:flatbuffers.Offset, RETRY_AFTER_MS:number, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SQLOffset:flatbuffers.Offset, SEARCHOffset:flatbuffers.Offset, FILTERSOffset:flatbuffers.Offset, SORT_FIELDOffset:flatbuffers.Offset, SORT_DESC:boolean, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, BATCH_IDOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, ORIGIN_IDOffset:flatbuffers.Offset, FROM_EPOCH_MS:bigint, TO_EPOCH_MS:bigint, PAGE:number, LIMIT:number, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, RECORD_COUNT:number, TOTAL_COUNT:bigint, SCANNED:bigint, STORED:bigint, PARTIAL:boolean, TRUNCATED:boolean, AS_OF_MS:bigint, STALE:boolean, ELAPSED_MS:number, GENERATED_AT_MS:bigint, ETAGOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, ARCHIVE_IDOffset:flatbuffers.Offset, COLUMNSOffset:flatbuffers.Offset, TIME_PROFILE:qrpTimeProfile, PROFILE_EPOCH_MS:bigint, REPRESENTATION:qrpRepresentation, PARAMETERSOffset:flatbuffers.Offset, ROWSOffset:flatbuffers.Offset, TABLESOffset:flatbuffers.Offset, MAX_ELAPSED_MS:number, MAX_ROWS:bigint, MAX_BYTES:bigint, HTTP_STATUS:number, BODY_REF_TOKEN:bigint, BODY_REF_SIZE:bigint, RESUME_CURSOROffset:flatbuffers.Offset, FOLLOW:boolean):flatbuffers.Offset {
   QRP.startQRP(builder);
   QRP.addKind(builder, KIND);
   QRP.addStatus(builder, STATUS);
@@ -807,6 +821,7 @@ static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ER
   QRP.addBodyRefToken(builder, BODY_REF_TOKEN);
   QRP.addBodyRefSize(builder, BODY_REF_SIZE);
   QRP.addResumeCursor(builder, RESUME_CURSOROffset);
+  QRP.addFollow(builder, FOLLOW);
   return QRP.endQRP(builder);
 }
 
@@ -861,7 +876,8 @@ unpack(): QRPT {
     this.HTTP_STATUS(),
     this.BODY_REF_TOKEN(),
     this.BODY_REF_SIZE(),
-    this.RESUME_CURSOR()
+    this.RESUME_CURSOR(),
+    this.FOLLOW()
   );
 }
 
@@ -917,6 +933,7 @@ unpackTo(_o: QRPT): void {
   _o.BODY_REF_TOKEN = this.BODY_REF_TOKEN();
   _o.BODY_REF_SIZE = this.BODY_REF_SIZE();
   _o.RESUME_CURSOR = this.RESUME_CURSOR();
+  _o.FOLLOW = this.FOLLOW();
 }
 }
 
@@ -971,7 +988,8 @@ constructor(
   public HTTP_STATUS: number = 0,
   public BODY_REF_TOKEN: bigint = BigInt('0'),
   public BODY_REF_SIZE: bigint = BigInt('0'),
-  public RESUME_CURSOR: string|Uint8Array|null = null
+  public RESUME_CURSOR: string|Uint8Array|null = null,
+  public FOLLOW: boolean = false
 ){}
 
 
@@ -1050,7 +1068,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.HTTP_STATUS,
     this.BODY_REF_TOKEN,
     this.BODY_REF_SIZE,
-    RESUME_CURSOR
+    RESUME_CURSOR,
+    this.FOLLOW
   );
 }
 }

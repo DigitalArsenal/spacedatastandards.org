@@ -322,6 +322,10 @@
         "RESUME_CURSOR" : {
                 "type" : "string",
                 "description" : "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
+              },
+        "FOLLOW" : {
+                "type" : "boolean",
+                "description" : "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default."
               }
       },
       "additionalProperties" : false

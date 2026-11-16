@@ -124,6 +124,20 @@ Returns the standards package version string.
 | Swift | `swift` | `.swift` |
 | TypeScript | `ts` | `.ts` |
 
+## FlatSQL example
+
+From the repository root, install dependencies with `npm ci`, then run
+`npm --prefix packages/standards-explorer run demo:flatsql` and open the printed
+local URL. The local server supplies the cross-origin isolation headers needed
+by FlatSQL 3.12.6 and serves its WASM and runtime modules. Node 24 or later is
+required. `PORT` selects the listening port.
+
+The example uses binary reflection schemas, size-prefixed records and generated
+QRP queries. Its OPFS store retains synthetic OMM records across page loads.
+The encryption panel uses the generated KMF field helper; AES-CTR does not
+authenticate ciphertext. `npm run test:flatsql:browser` exercises the page with
+Playwright Chromium; `SDS_BROWSER_EXECUTABLE` selects an installed browser.
+
 ## License
 
 Apache-2.0

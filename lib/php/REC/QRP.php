@@ -536,22 +536,34 @@ class QRP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// True requests that the server keep the stream open after sending stored
+    /// records and send further records as they are stored, within the credit
+    /// granted by later request messages on the same stream. False by default.
+    /**
+     * @return bool
+     */
+    public function getFOLLOW()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startQRP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(50);
+        $builder->StartObject(51);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return QRP
      */
-    public static function createQRP(FlatBufferBuilder $builder, $KIND, $STATUS, $ERROR_CODE, $MESSAGE, $RETRY_AFTER_MS, $SCHEMA_NAME, $FILE_IDENTIFIER, $SQL, $SEARCH, $FILTERS, $SORT_FIELD, $SORT_DESC, $PROVIDER_ID, $SOURCE_NAME, $BATCH_ID, $PRODUCER_PEER_ID, $ORIGIN_ID, $FROM_EPOCH_MS, $TO_EPOCH_MS, $PAGE, $LIMIT, $CURSOR, $NEXT_CURSOR, $RECORD_COUNT, $TOTAL_COUNT, $SCANNED, $STORED, $PARTIAL, $TRUNCATED, $AS_OF_MS, $STALE, $ELAPSED_MS, $GENERATED_AT_MS, $ETAG, $CID, $ARCHIVE_ID, $COLUMNS, $TIME_PROFILE, $PROFILE_EPOCH_MS, $REPRESENTATION, $PARAMETERS, $ROWS, $TABLES, $MAX_ELAPSED_MS, $MAX_ROWS, $MAX_BYTES, $HTTP_STATUS, $BODY_REF_TOKEN, $BODY_REF_SIZE, $RESUME_CURSOR)
+    public static function createQRP(FlatBufferBuilder $builder, $KIND, $STATUS, $ERROR_CODE, $MESSAGE, $RETRY_AFTER_MS, $SCHEMA_NAME, $FILE_IDENTIFIER, $SQL, $SEARCH, $FILTERS, $SORT_FIELD, $SORT_DESC, $PROVIDER_ID, $SOURCE_NAME, $BATCH_ID, $PRODUCER_PEER_ID, $ORIGIN_ID, $FROM_EPOCH_MS, $TO_EPOCH_MS, $PAGE, $LIMIT, $CURSOR, $NEXT_CURSOR, $RECORD_COUNT, $TOTAL_COUNT, $SCANNED, $STORED, $PARTIAL, $TRUNCATED, $AS_OF_MS, $STALE, $ELAPSED_MS, $GENERATED_AT_MS, $ETAG, $CID, $ARCHIVE_ID, $COLUMNS, $TIME_PROFILE, $PROFILE_EPOCH_MS, $REPRESENTATION, $PARAMETERS, $ROWS, $TABLES, $MAX_ELAPSED_MS, $MAX_ROWS, $MAX_BYTES, $HTTP_STATUS, $BODY_REF_TOKEN, $BODY_REF_SIZE, $RESUME_CURSOR, $FOLLOW)
     {
-        $builder->startObject(50);
+        $builder->startObject(51);
         self::addKIND($builder, $KIND);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_CODE($builder, $ERROR_CODE);
@@ -602,6 +614,7 @@ class QRP extends Table
         self::addBODY_REF_TOKEN($builder, $BODY_REF_TOKEN);
         self::addBODY_REF_SIZE($builder, $BODY_REF_SIZE);
         self::addRESUME_CURSOR($builder, $RESUME_CURSOR);
+        self::addFOLLOW($builder, $FOLLOW);
         $o = $builder->endObject();
         return $o;
     }
@@ -1224,6 +1237,16 @@ class QRP extends Table
     public static function addRESUME_CURSOR(FlatBufferBuilder $builder, $RESUME_CURSOR)
     {
         $builder->addOffsetX(49, $RESUME_CURSOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addFOLLOW(FlatBufferBuilder $builder, $FOLLOW)
+    {
+        $builder->addBoolX(50, $FOLLOW, false);
     }
 
     /**

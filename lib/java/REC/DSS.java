@@ -193,6 +193,20 @@ public final class DSS extends com.google.flatbuffers.Table {
    * lane's rule; SetRetention changes it.
    */
   public byte RETENTION() { int o = __offset(110); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Subscribers following this dataset on this node now.
+   */
+  public long SUBSCRIBER_COUNT() { int o = __offset(112); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Record bytes this node has sent to followers of this dataset since the
+   * node started.
+   */
+  public long SERVED_BYTES() { int o = __offset(114); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Current rate of record bytes sent to followers of this dataset, in bytes
+   * per second.
+   */
+  public long SERVE_SPEED_BYTES_PER_SECOND() { int o = __offset(116); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createDSS(FlatBufferBuilder builder,
       byte STATUS,
@@ -248,8 +262,13 @@ public final class DSS extends com.google.flatbuffers.Table {
       long LAST_SYNC_STARTED_AT,
       byte REQUESTED_ACTION,
       int ORIGIN_IDOffset,
-      byte RETENTION) {
-    builder.startTable(54);
+      byte RETENTION,
+      long SUBSCRIBER_COUNT,
+      long SERVED_BYTES,
+      long SERVE_SPEED_BYTES_PER_SECOND) {
+    builder.startTable(57);
+    DSS.addServeSpeedBytesPerSecond(builder, SERVE_SPEED_BYTES_PER_SECOND);
+    DSS.addServedBytes(builder, SERVED_BYTES);
     DSS.addLastSyncStartedAt(builder, LAST_SYNC_STARTED_AT);
     DSS.addDeltaRows(builder, DELTA_ROWS);
     DSS.addFlatsqlMaterializationMs(builder, FLATSQL_MATERIALIZATION_MS);
@@ -268,6 +287,7 @@ public final class DSS extends com.google.flatbuffers.Table {
     DSS.addLocalRows(builder, LOCAL_ROWS);
     DSS.addTotalRows(builder, TOTAL_ROWS);
     DSS.addSyncedRows(builder, SYNCED_ROWS);
+    DSS.addSubscriberCount(builder, SUBSCRIBER_COUNT);
     DSS.addOriginId(builder, ORIGIN_IDOffset);
     DSS.addLastPnmCid(builder, LAST_PNM_CIDOffset);
     DSS.addLastPublicationCid(builder, LAST_PUBLICATION_CIDOffset);
@@ -307,7 +327,7 @@ public final class DSS extends com.google.flatbuffers.Table {
     return DSS.endDSS(builder);
   }
 
-  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(54); }
+  public static void startDSS(FlatBufferBuilder builder) { builder.startTable(57); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(0, STATUS, 0); }
   public static void addSyncedRows(FlatBufferBuilder builder, long SYNCED_ROWS) { builder.addLong(1, SYNCED_ROWS, 0L); }
   public static void addTotalRows(FlatBufferBuilder builder, long TOTAL_ROWS) { builder.addLong(2, TOTAL_ROWS, 0L); }
@@ -364,6 +384,9 @@ public final class DSS extends com.google.flatbuffers.Table {
   public static void addRequestedAction(FlatBufferBuilder builder, byte REQUESTED_ACTION) { builder.addByte(51, REQUESTED_ACTION, 0); }
   public static void addOriginId(FlatBufferBuilder builder, int ORIGIN_IDOffset) { builder.addOffset(52, ORIGIN_IDOffset, 0); }
   public static void addRetention(FlatBufferBuilder builder, byte RETENTION) { builder.addByte(53, RETENTION, 0); }
+  public static void addSubscriberCount(FlatBufferBuilder builder, long SUBSCRIBER_COUNT) { builder.addInt(54, (int) SUBSCRIBER_COUNT, (int) 0L); }
+  public static void addServedBytes(FlatBufferBuilder builder, long SERVED_BYTES) { builder.addLong(55, SERVED_BYTES, 0L); }
+  public static void addServeSpeedBytesPerSecond(FlatBufferBuilder builder, long SERVE_SPEED_BYTES_PER_SECOND) { builder.addLong(56, SERVE_SPEED_BYTES_PER_SECOND, 0L); }
   public static int endDSS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

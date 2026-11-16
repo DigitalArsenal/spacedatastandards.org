@@ -420,8 +420,34 @@ RETENTION():dssRetention {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : dssRetention.ReplaceCurrent;
 }
 
+/**
+ * Subscribers following this dataset on this node now.
+ */
+SUBSCRIBER_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Record bytes this node has sent to followers of this dataset since the
+ * node started.
+ */
+SERVED_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Current rate of record bytes sent to followers of this dataset, in bytes
+ * per second.
+ */
+SERVE_SPEED_BYTES_PER_SECOND():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startDSS(builder:flatbuffers.Builder) {
-  builder.startObject(54);
+  builder.startObject(57);
 }
 
 static addStatus(builder:flatbuffers.Builder, STATUS:dssSyncState) {
@@ -652,6 +678,18 @@ static addRetention(builder:flatbuffers.Builder, RETENTION:dssRetention) {
   builder.addFieldInt8(53, RETENTION, dssRetention.ReplaceCurrent);
 }
 
+static addSubscriberCount(builder:flatbuffers.Builder, SUBSCRIBER_COUNT:number) {
+  builder.addFieldInt32(54, SUBSCRIBER_COUNT, 0);
+}
+
+static addServedBytes(builder:flatbuffers.Builder, SERVED_BYTES:bigint) {
+  builder.addFieldInt64(55, SERVED_BYTES, BigInt('0'));
+}
+
+static addServeSpeedBytesPerSecond(builder:flatbuffers.Builder, SERVE_SPEED_BYTES_PER_SECOND:bigint) {
+  builder.addFieldInt64(56, SERVE_SPEED_BYTES_PER_SECOND, BigInt('0'));
+}
+
 static endDSS(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -665,7 +703,7 @@ static finishSizePrefixedDSSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$DSS', true);
 }
 
-static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:bigint, TOTAL_ROWS:bigint, LOCAL_ROWS:bigint, PINNED_ROWS:bigint, MISSING_ROWS:bigint, CACHED_BYTES:bigint, PINNED_BYTES:bigint, DOWNLOADED_BYTES:bigint, DOWNLOAD_SPEED_BYTES_PER_SECOND:bigint, MEASURED_WIRE_SPEED_BYTES_PER_SECOND:bigint, HAS_WIRE_SPEED_UTILIZATION:boolean, WIRE_SPEED_UTILIZATION:number, WIRE_SPEED_TARGET:number, HAS_WIRE_SPEED_TARGET_MET:boolean, WIRE_SPEED_TARGET_MET:boolean, MANIFEST_DISCOVERY_MS:bigint, NETWORK_TRANSFER_MS:bigint, VERIFICATION_MS:bigint, FLATSQL_MATERIALIZATION_MS:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_PUBLIC_KEYOffset:flatbuffers.Offset, SNAPSHOT_IDOffset:flatbuffers.Offset, HEADOffset:flatbuffers.Offset, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, HIGH_WATER_MARKOffset:flatbuffers.Offset, QUERY_PROFILEOffset:flatbuffers.Offset, CHUNK_HASHOffset:flatbuffers.Offset, SYNC_PROTOCOLOffset:flatbuffers.Offset, SYNC_FILTEROffset:flatbuffers.Offset, VERIFIED_CHUNKSOffset:flatbuffers.Offset, LAST_SYNCED_ATOffset:flatbuffers.Offset, ERROROffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, DATASET_IDOffset:flatbuffers.Offset, CONNECTOR_IDOffset:flatbuffers.Offset, CHANNEL_IDOffset:flatbuffers.Offset, TOPICOffset:flatbuffers.Offset, SUBSCRIBED:boolean, PIN_POLICY:dssPinPolicy, VISIBILITYOffset:flatbuffers.Offset, ENCRYPTION_STATEOffset:flatbuffers.Offset, GRANT_STATEOffset:flatbuffers.Offset, FEED_HEADOffset:flatbuffers.Offset, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset, LAST_PNM_CIDOffset:flatbuffers.Offset, DELTA_ROWS:bigint, LAST_SYNC_STARTED_AT:bigint, REQUESTED_ACTION:dssAction, ORIGIN_IDOffset:flatbuffers.Offset, RETENTION:dssRetention):flatbuffers.Offset {
+static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:bigint, TOTAL_ROWS:bigint, LOCAL_ROWS:bigint, PINNED_ROWS:bigint, MISSING_ROWS:bigint, CACHED_BYTES:bigint, PINNED_BYTES:bigint, DOWNLOADED_BYTES:bigint, DOWNLOAD_SPEED_BYTES_PER_SECOND:bigint, MEASURED_WIRE_SPEED_BYTES_PER_SECOND:bigint, HAS_WIRE_SPEED_UTILIZATION:boolean, WIRE_SPEED_UTILIZATION:number, WIRE_SPEED_TARGET:number, HAS_WIRE_SPEED_TARGET_MET:boolean, WIRE_SPEED_TARGET_MET:boolean, MANIFEST_DISCOVERY_MS:bigint, NETWORK_TRANSFER_MS:bigint, VERIFICATION_MS:bigint, FLATSQL_MATERIALIZATION_MS:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_PUBLIC_KEYOffset:flatbuffers.Offset, SNAPSHOT_IDOffset:flatbuffers.Offset, HEADOffset:flatbuffers.Offset, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, HIGH_WATER_MARKOffset:flatbuffers.Offset, QUERY_PROFILEOffset:flatbuffers.Offset, CHUNK_HASHOffset:flatbuffers.Offset, SYNC_PROTOCOLOffset:flatbuffers.Offset, SYNC_FILTEROffset:flatbuffers.Offset, VERIFIED_CHUNKSOffset:flatbuffers.Offset, LAST_SYNCED_ATOffset:flatbuffers.Offset, ERROROffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, DATASET_IDOffset:flatbuffers.Offset, CONNECTOR_IDOffset:flatbuffers.Offset, CHANNEL_IDOffset:flatbuffers.Offset, TOPICOffset:flatbuffers.Offset, SUBSCRIBED:boolean, PIN_POLICY:dssPinPolicy, VISIBILITYOffset:flatbuffers.Offset, ENCRYPTION_STATEOffset:flatbuffers.Offset, GRANT_STATEOffset:flatbuffers.Offset, FEED_HEADOffset:flatbuffers.Offset, LAST_PUBLICATION_CIDOffset:flatbuffers.Offset, LAST_PNM_CIDOffset:flatbuffers.Offset, DELTA_ROWS:bigint, LAST_SYNC_STARTED_AT:bigint, REQUESTED_ACTION:dssAction, ORIGIN_IDOffset:flatbuffers.Offset, RETENTION:dssRetention, SUBSCRIBER_COUNT:number, SERVED_BYTES:bigint, SERVE_SPEED_BYTES_PER_SECOND:bigint):flatbuffers.Offset {
   DSS.startDSS(builder);
   DSS.addStatus(builder, STATUS);
   DSS.addSyncedRows(builder, SYNCED_ROWS);
@@ -721,6 +759,9 @@ static createDSS(builder:flatbuffers.Builder, STATUS:dssSyncState, SYNCED_ROWS:b
   DSS.addRequestedAction(builder, REQUESTED_ACTION);
   DSS.addOriginId(builder, ORIGIN_IDOffset);
   DSS.addRetention(builder, RETENTION);
+  DSS.addSubscriberCount(builder, SUBSCRIBER_COUNT);
+  DSS.addServedBytes(builder, SERVED_BYTES);
+  DSS.addServeSpeedBytesPerSecond(builder, SERVE_SPEED_BYTES_PER_SECOND);
   return DSS.endDSS(builder);
 }
 
@@ -779,7 +820,10 @@ unpack(): DSST {
     this.LAST_SYNC_STARTED_AT(),
     this.REQUESTED_ACTION(),
     this.ORIGIN_ID(),
-    this.RETENTION()
+    this.RETENTION(),
+    this.SUBSCRIBER_COUNT(),
+    this.SERVED_BYTES(),
+    this.SERVE_SPEED_BYTES_PER_SECOND()
   );
 }
 
@@ -839,6 +883,9 @@ unpackTo(_o: DSST): void {
   _o.REQUESTED_ACTION = this.REQUESTED_ACTION();
   _o.ORIGIN_ID = this.ORIGIN_ID();
   _o.RETENTION = this.RETENTION();
+  _o.SUBSCRIBER_COUNT = this.SUBSCRIBER_COUNT();
+  _o.SERVED_BYTES = this.SERVED_BYTES();
+  _o.SERVE_SPEED_BYTES_PER_SECOND = this.SERVE_SPEED_BYTES_PER_SECOND();
 }
 }
 
@@ -897,7 +944,10 @@ constructor(
   public LAST_SYNC_STARTED_AT: bigint = BigInt('0'),
   public REQUESTED_ACTION: dssAction = dssAction.None,
   public ORIGIN_ID: string|Uint8Array|null = null,
-  public RETENTION: dssRetention = dssRetention.ReplaceCurrent
+  public RETENTION: dssRetention = dssRetention.ReplaceCurrent,
+  public SUBSCRIBER_COUNT: number = 0,
+  public SERVED_BYTES: bigint = BigInt('0'),
+  public SERVE_SPEED_BYTES_PER_SECOND: bigint = BigInt('0')
 ){}
 
 
@@ -985,7 +1035,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.LAST_SYNC_STARTED_AT,
     this.REQUESTED_ACTION,
     ORIGIN_ID,
-    this.RETENTION
+    this.RETENTION,
+    this.SUBSCRIBER_COUNT,
+    this.SERVED_BYTES,
+    this.SERVE_SPEED_BYTES_PER_SECOND
   );
 }
 }

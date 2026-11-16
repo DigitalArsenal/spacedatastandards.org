@@ -518,8 +518,18 @@ class QRP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True requests that the server keep the stream open after sending stored
+    # records and send further records as they are stored, within the credit
+    # granted by later request messages on the same stream. False by default.
+    # QRP
+    def FOLLOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def QRPStart(builder):
-    builder.StartObject(50)
+    builder.StartObject(51)
 
 def Start(builder):
     QRPStart(builder)
@@ -884,6 +894,12 @@ def QRPAddRESUME_CURSOR(builder, RESUME_CURSOR):
 def AddRESUME_CURSOR(builder, RESUME_CURSOR):
     QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
 
+def QRPAddFOLLOW(builder, FOLLOW):
+    builder.PrependBoolSlot(50, FOLLOW, 0)
+
+def AddFOLLOW(builder, FOLLOW):
+    QRPAddFOLLOW(builder, FOLLOW)
+
 def QRPEnd(builder):
     return builder.EndObject()
 
@@ -955,6 +971,7 @@ class QRPT(object):
         BODY_REF_TOKEN = 0,
         BODY_REF_SIZE = 0,
         RESUME_CURSOR = None,
+        FOLLOW = False,
     ):
         self.KIND = KIND  # type: int
         self.STATUS = STATUS  # type: int
@@ -1006,6 +1023,7 @@ class QRPT(object):
         self.BODY_REF_TOKEN = BODY_REF_TOKEN  # type: int
         self.BODY_REF_SIZE = BODY_REF_SIZE  # type: int
         self.RESUME_CURSOR = RESUME_CURSOR  # type: Optional[str]
+        self.FOLLOW = FOLLOW  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1113,6 +1131,7 @@ class QRPT(object):
         self.BODY_REF_TOKEN = QRP.BODY_REF_TOKEN()
         self.BODY_REF_SIZE = QRP.BODY_REF_SIZE()
         self.RESUME_CURSOR = QRP.RESUME_CURSOR()
+        self.FOLLOW = QRP.FOLLOW()
 
     # QRPT
     def Pack(self, builder):
@@ -1266,5 +1285,6 @@ class QRPT(object):
         QRPAddBODY_REF_SIZE(builder, self.BODY_REF_SIZE)
         if self.RESUME_CURSOR is not None:
             QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
+        QRPAddFOLLOW(builder, self.FOLLOW)
         QRP = QRPEnd(builder)
         return QRP

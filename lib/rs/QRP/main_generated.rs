@@ -1882,6 +1882,7 @@ impl<'a> QRP<'a> {
     pub const VT_BODY_REF_TOKEN: ::flatbuffers::VOffsetT = 98;
     pub const VT_BODY_REF_SIZE: ::flatbuffers::VOffsetT = 100;
     pub const VT_RESUME_CURSOR: ::flatbuffers::VOffsetT = 102;
+    pub const VT_FOLLOW: ::flatbuffers::VOffsetT = 104;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1936,6 +1937,7 @@ impl<'a> QRP<'a> {
         if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
         if let Some(x) = args.ERROR_CODE { builder.add_ERROR_CODE(x); }
         builder.add_HTTP_STATUS(args.HTTP_STATUS);
+        builder.add_FOLLOW(args.FOLLOW);
         builder.add_REPRESENTATION(args.REPRESENTATION);
         builder.add_TIME_PROFILE(args.TIME_PROFILE);
         builder.add_STALE(args.STALE);
@@ -2044,6 +2046,7 @@ impl<'a> QRP<'a> {
         let RESUME_CURSOR = self.RESUME_CURSOR().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let FOLLOW = self.FOLLOW();
         QRPT {
             KIND,
             STATUS,
@@ -2095,6 +2098,7 @@ impl<'a> QRP<'a> {
             BODY_REF_TOKEN,
             BODY_REF_SIZE,
             RESUME_CURSOR,
+            FOLLOW,
         }
     }
 
@@ -2546,6 +2550,17 @@ impl<'a> QRP<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(QRP::VT_RESUME_CURSOR, None)}
     }
+
+    /// True requests that the server keep the stream open after sending stored
+    /// records and send further records as they are stored, within the credit
+    /// granted by later request messages on the same stream. False by default.
+    #[inline]
+    pub fn FOLLOW(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(QRP::VT_FOLLOW, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for QRP<'_> {
@@ -2604,6 +2619,7 @@ impl ::flatbuffers::Verifiable for QRP<'_> {
             .visit_field::<u64>("BODY_REF_TOKEN", Self::VT_BODY_REF_TOKEN, false)?
             .visit_field::<u64>("BODY_REF_SIZE", Self::VT_BODY_REF_SIZE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RESUME_CURSOR", Self::VT_RESUME_CURSOR, false)?
+            .visit_field::<bool>("FOLLOW", Self::VT_FOLLOW, false)?
             .finish();
         Ok(())
     }
@@ -2660,6 +2676,7 @@ pub struct QRPArgs<'a> {
     pub BODY_REF_TOKEN: u64,
     pub BODY_REF_SIZE: u64,
     pub RESUME_CURSOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FOLLOW: bool,
 }
 
 impl<'a> Default for QRPArgs<'a> {
@@ -2716,6 +2733,7 @@ impl<'a> Default for QRPArgs<'a> {
             BODY_REF_TOKEN: 0,
             BODY_REF_SIZE: 0,
             RESUME_CURSOR: None,
+            FOLLOW: false,
         }
     }
 }
@@ -2977,6 +2995,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> QRPBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_FOLLOW(&mut self, FOLLOW: bool) {
+        self.fbb_.push_slot::<bool>(QRP::VT_FOLLOW, FOLLOW, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> QRPBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         QRPBuilder {
@@ -3045,6 +3068,7 @@ impl ::core::fmt::Debug for QRP<'_> {
         ds.field("BODY_REF_TOKEN", &self.BODY_REF_TOKEN());
         ds.field("BODY_REF_SIZE", &self.BODY_REF_SIZE());
         ds.field("RESUME_CURSOR", &self.RESUME_CURSOR());
+        ds.field("FOLLOW", &self.FOLLOW());
         ds.finish()
     }
 }
@@ -3102,6 +3126,7 @@ pub struct QRPT {
     pub BODY_REF_TOKEN: u64,
     pub BODY_REF_SIZE: u64,
     pub RESUME_CURSOR: Option<alloc::string::String>,
+    pub FOLLOW: bool,
 }
 
 impl Default for QRPT {
@@ -3157,6 +3182,7 @@ impl Default for QRPT {
             BODY_REF_TOKEN: 0,
             BODY_REF_SIZE: 0,
             RESUME_CURSOR: None,
+            FOLLOW: false,
         }
     }
 }
@@ -3262,6 +3288,7 @@ impl QRPT {
         let RESUME_CURSOR = self.RESUME_CURSOR.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let FOLLOW = self.FOLLOW;
         QRP::create(_fbb, &QRPArgs{
             KIND,
             STATUS,
@@ -3313,6 +3340,7 @@ impl QRPT {
             BODY_REF_TOKEN,
             BODY_REF_SIZE,
             RESUME_CURSOR,
+            FOLLOW,
         })
     }
 }

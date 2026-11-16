@@ -1,6 +1,6 @@
 // $QRP RESUME_CURSOR end to end through lib/js: the last page of a complete
 // scan carries an opaque resume cursor, and a Request sends it back. The field
-// is appended (the last vtable slot, after BODY_REF_SIZE), so a frame written
+// occupies its original vtable slot after BODY_REF_SIZE, so a frame written
 // before it existed reads RESUME_CURSOR as null and every earlier field keeps
 // its ordinal.
 import assert from 'node:assert/strict';
@@ -11,13 +11,17 @@ import { QRP, QRPT, qrpKind, qrpStatus } from '../lib/js/QRP/main.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 
-// Field order from the IDL itself: RESUME_CURSOR must be the last field.
+// RESUME_CURSOR retains field index 49; later fields are appended after it.
 const idl = readFileSync(`${root}schema/QRP/main.fbs`, 'utf8');
 const body = idl.slice(idl.indexOf('table QRP {'));
 const fields = [...body.slice(0, body.indexOf('\n}')).matchAll(/^\s+([A-Z][A-Z0-9_]*)\s*:/gm)].map((m) => m[1]);
-assert.equal(fields.at(-1), 'RESUME_CURSOR', 'RESUME_CURSOR is appended');
-assert.equal(fields.at(-2), 'BODY_REF_SIZE', 'BODY_REF_SIZE keeps its ordinal');
-const slot = 4 + 2 * (fields.length - 1);
+assert.equal(fields[49], 'RESUME_CURSOR', 'RESUME_CURSOR keeps field index 49');
+assert.equal(fields[48], 'BODY_REF_SIZE', 'BODY_REF_SIZE keeps field index 48');
+const slot = 4 + 2 * 49;
+assert.equal(slot, 102);
+assert.equal(fields[50], 'FOLLOW', 'FOLLOW keeps field index 50');
+const followSlot = 4 + 2 * 50;
+assert.equal(followSlot, 104);
 
 const finish = (build) => {
   const b = new flatbuffers.Builder(256);
@@ -74,4 +78,18 @@ const plain = read(finish((b) => {
 }));
 assert.equal(plain.RESUME_CURSOR(), null);
 console.log('PASS absent: RESUME_CURSOR reads null when not written');
+assert.equal(plain.FOLLOW(), false);
+assert.equal(plain.bb.__offset(plain.bb_pos, followSlot), 0);
+console.log('PASS absent: FOLLOW defaults to false when not written');
+
+// 4. A follow Request retains the cursor and occupies its appended slot.
+request.FOLLOW = true;
+const following = read(finish((b) => request.pack(b)));
+assert.equal(following.KIND(), qrpKind.Request);
+assert.equal(following.RESUME_CURSOR(), token);
+assert.equal(following.FOLLOW(), true);
+assert.notEqual(following.bb.__offset(following.bb_pos, slot), 0);
+assert.notEqual(following.bb.__offset(following.bb_pos, followSlot), 0);
+assert.equal(following.unpack().FOLLOW, true);
+console.log(`PASS follow: FOLLOW round-trips true in vtable slot ${followSlot}`);
 console.log('QRP-RESUME-CURSOR-E2E PASS');

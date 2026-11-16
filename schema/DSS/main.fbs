@@ -1,5 +1,5 @@
-// Hash: 3d6e0bcb8da2f8d7f8be6de1ebccdd44b510cf1f603d1cfa0f4098474ece7d42
-// Version: 1.99.3
+// Hash: 86bdf8265752c1fffd2366992e45a56e3ba83ed041c4dcf184de51975e64af1a
+// Version: 1.99.4
 // -----------------------------------END_HEADER
 /// Data Sync Status
 ///
@@ -138,6 +138,14 @@ table DSS {
   /// follows its standard's default. A Subscribe without RETENTION keeps the
   /// lane's rule; SetRetention changes it.
   RETENTION: dssRetention = ReplaceCurrent;
+  /// Subscribers following this dataset on this node now.
+  SUBSCRIBER_COUNT:uint32;
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  SERVED_BYTES:uint64;
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  SERVE_SPEED_BYTES_PER_SECOND:uint64;
 }
 
 root_type DSS;

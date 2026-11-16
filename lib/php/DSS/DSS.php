@@ -478,22 +478,54 @@ class DSS extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \dssRetention::ReplaceCurrent;
     }
 
+    /// Subscribers following this dataset on this node now.
+    /**
+     * @return uint
+     */
+    public function getSUBSCRIBER_COUNT()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Record bytes this node has sent to followers of this dataset since the
+    /// node started.
+    /**
+     * @return ulong
+     */
+    public function getSERVED_BYTES()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Current rate of record bytes sent to followers of this dataset, in bytes
+    /// per second.
+    /**
+     * @return ulong
+     */
+    public function getSERVE_SPEED_BYTES_PER_SECOND()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDSS(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(54);
+        $builder->StartObject(57);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DSS
      */
-    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR, $SCHEMA_NAME, $PROVIDER_ID, $SOURCE_NAME, $DATASET_ID, $CONNECTOR_ID, $CHANNEL_ID, $TOPIC, $SUBSCRIBED, $PIN_POLICY, $VISIBILITY, $ENCRYPTION_STATE, $GRANT_STATE, $FEED_HEAD, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $DELTA_ROWS, $LAST_SYNC_STARTED_AT, $REQUESTED_ACTION, $ORIGIN_ID, $RETENTION)
+    public static function createDSS(FlatBufferBuilder $builder, $STATUS, $SYNCED_ROWS, $TOTAL_ROWS, $LOCAL_ROWS, $PINNED_ROWS, $MISSING_ROWS, $CACHED_BYTES, $PINNED_BYTES, $DOWNLOADED_BYTES, $DOWNLOAD_SPEED_BYTES_PER_SECOND, $MEASURED_WIRE_SPEED_BYTES_PER_SECOND, $HAS_WIRE_SPEED_UTILIZATION, $WIRE_SPEED_UTILIZATION, $WIRE_SPEED_TARGET, $HAS_WIRE_SPEED_TARGET_MET, $WIRE_SPEED_TARGET_MET, $MANIFEST_DISCOVERY_MS, $NETWORK_TRANSFER_MS, $VERIFICATION_MS, $FLATSQL_MATERIALIZATION_MS, $PROVIDER_PEER_ID, $PROVIDER_PUBLIC_KEY, $SNAPSHOT_ID, $HEAD, $CURSOR, $NEXT_CURSOR, $HIGH_WATER_MARK, $QUERY_PROFILE, $CHUNK_HASH, $SYNC_PROTOCOL, $SYNC_FILTER, $VERIFIED_CHUNKS, $LAST_SYNCED_AT, $ERROR, $SCHEMA_NAME, $PROVIDER_ID, $SOURCE_NAME, $DATASET_ID, $CONNECTOR_ID, $CHANNEL_ID, $TOPIC, $SUBSCRIBED, $PIN_POLICY, $VISIBILITY, $ENCRYPTION_STATE, $GRANT_STATE, $FEED_HEAD, $LAST_PUBLICATION_CID, $LAST_PNM_CID, $DELTA_ROWS, $LAST_SYNC_STARTED_AT, $REQUESTED_ACTION, $ORIGIN_ID, $RETENTION, $SUBSCRIBER_COUNT, $SERVED_BYTES, $SERVE_SPEED_BYTES_PER_SECOND)
     {
-        $builder->startObject(54);
+        $builder->startObject(57);
         self::addSTATUS($builder, $STATUS);
         self::addSYNCED_ROWS($builder, $SYNCED_ROWS);
         self::addTOTAL_ROWS($builder, $TOTAL_ROWS);
@@ -548,6 +580,9 @@ class DSS extends Table
         self::addREQUESTED_ACTION($builder, $REQUESTED_ACTION);
         self::addORIGIN_ID($builder, $ORIGIN_ID);
         self::addRETENTION($builder, $RETENTION);
+        self::addSUBSCRIBER_COUNT($builder, $SUBSCRIBER_COUNT);
+        self::addSERVED_BYTES($builder, $SERVED_BYTES);
+        self::addSERVE_SPEED_BYTES_PER_SECOND($builder, $SERVE_SPEED_BYTES_PER_SECOND);
         $o = $builder->endObject();
         return $o;
     }
@@ -1114,6 +1149,36 @@ class DSS extends Table
     public static function addRETENTION(FlatBufferBuilder $builder, $RETENTION)
     {
         $builder->addSbyteX(53, $RETENTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSUBSCRIBER_COUNT(FlatBufferBuilder $builder, $SUBSCRIBER_COUNT)
+    {
+        $builder->addUintX(54, $SUBSCRIBER_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addSERVED_BYTES(FlatBufferBuilder $builder, $SERVED_BYTES)
+    {
+        $builder->addUlongX(55, $SERVED_BYTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addSERVE_SPEED_BYTES_PER_SECOND(FlatBufferBuilder $builder, $SERVE_SPEED_BYTES_PER_SECOND)
+    {
+        $builder->addUlongX(56, $SERVE_SPEED_BYTES_PER_SECOND, 0);
     }
 
     /**

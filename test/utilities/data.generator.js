@@ -8,7 +8,7 @@ import { writeFB } from '../../index.js';
 import { join } from 'path';
 import ipfsHash from 'pure-ipfs-only-hash';
 
-export const generateData = async (total = 10, numFiles = 5, dataPath = `test/output/data`, standardsToGenerate = Object.keys(standards)) => {
+export const generateData = async (total = 10, numFiles = 5, dataPath = `test/output/data`, standardsToGenerate = Object.keys(standardsJSON.STANDARDS)) => {
     if (!dataPath) return [];
     execSync(`rm -rf ${dataPath}/*.* && mkdir -p ${dataPath}`);
 
@@ -103,12 +103,12 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
     for (let i = 0; i < numFiles; i++) {
         for (let standard of standardsToGenerate) {
             let currentStandard = standardsJSON.STANDARDS[standard];
+            if (!currentStandard) throw new TypeError(`Missing catalog standard: ${standard}`);
             let tableName = refRootName(currentStandard.$ref);
             let parentClass = resolveTableModule(tableName);
 
             if (!tableName || !parentClass) {
-                console.log(`Skipping unknown standard: ${standard}`);
-                continue;
+                throw new TypeError(`Missing generated root for catalog standard: ${standard}`);
             }
 
             let objects = [];
