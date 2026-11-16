@@ -72,7 +72,9 @@ function runChecker(root, args) {
   return { status: result.status, out: `${result.stdout}${result.stderr}` };
 }
 
-describe("check-release-integrity", () => {
+describe("check-release-integrity", function () {
+  // Allow for measured fixture setup and Git/checker subprocess latency.
+  this.timeout(35000);
   const sandboxes = [];
   const sandbox = (...args) => {
     const made = makeSandbox(...args);
