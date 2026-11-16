@@ -414,4 +414,3 @@ Every enum value outside its declared and implemented domain fails with a true f
 | CLGResult | HAS_CHUNK_COUNT | bool | Presence metadata: false (including omission) = absent; true = supplied. No recursive flag. |
 | CLG | PAYLOAD | clgPayloadClass | HAS_PAYLOAD must be true before reading the value; false = omitted; true + zero = supplied zero. |
 | CLG | HAS_PAYLOAD | bool | Presence metadata: false (including omission) = absent; true = supplied. No recursive flag. |
-
