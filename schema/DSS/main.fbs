@@ -138,6 +138,14 @@ table DSS {
   /// follows its standard's default. A Subscribe without RETENTION keeps the
   /// lane's rule; SetRetention changes it.
   RETENTION: dssRetention = ReplaceCurrent;
+  /// Subscribers following this dataset on this node now.
+  SUBSCRIBER_COUNT:uint32;
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  SERVED_BYTES:uint64;
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  SERVE_SPEED_BYTES_PER_SECOND:uint64;
 }
 
 root_type DSS;
