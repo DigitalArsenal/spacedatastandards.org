@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
-import { execFile as execFileCallback } from "node:child_process";
+import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const execFile = promisify(execFileCallback);
 const archiveLanguages = [
   "cpp",
   "cs",
@@ -124,18 +123,33 @@ async function readJson(relativePath) {
 }
 
 async function readTarText(archivePath) {
-  const { stdout: listing } = await execFile("tar", ["-tzf", archivePath], {
-    maxBuffer: 1024 * 1024 * 8,
-  });
-  const entries = listing
-    .split("\n")
-    .map((entry) => entry.trim())
-    .filter((entry) => entry && !entry.endsWith("/"));
-  assert.ok(entries.length > 0, `${archivePath} should contain files`);
-  const { stdout } = await execFile("tar", ["-xOf", archivePath, ...entries], {
-    maxBuffer: 1024 * 1024 * 80,
-  });
-  return `${listing}\n${stdout}`;
+  const temporary = await fs.mkdtemp(path.join(tmpdir(), "sds-archive-parity-"));
+  async function tarToFile(args, name) {
+    const output = path.join(temporary, name);
+    const handle = await fs.open(output, "w");
+    try {
+      await new Promise((resolve, reject) => {
+        const child = spawn("tar", args, { stdio: ["ignore", handle.fd, "inherit"] });
+        child.once("error", reject);
+        child.once("close", (code, signal) => code === 0
+          ? resolve()
+          : reject(new Error(`tar failed for ${archivePath}: ${signal ?? code}`)));
+      });
+    } finally {
+      await handle.close();
+    }
+    return fs.readFile(output, "utf8");
+  }
+  try {
+    const listing = await tarToFile(["-tzf", archivePath], "listing");
+    const entries = listing.split("\n").map((entry) => entry.trim())
+      .filter((entry) => entry && !entry.endsWith("/"));
+    assert.ok(entries.length > 0, `${archivePath} should contain files`);
+    const contents = await tarToFile(["-xOf", archivePath, ...entries], "contents");
+    return `${listing}\n${contents}`;
+  } finally {
+    await fs.rm(temporary, { recursive: true, force: true });
+  }
 }
 
 async function listFiles(dir, extension) {
