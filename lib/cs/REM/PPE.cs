@@ -11,7 +11,8 @@ using global::Google.FlatBuffers;
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 public struct PPE : IFlatbufferObject
 {
   private Table __p;
@@ -86,6 +87,46 @@ public struct PPE : IFlatbufferObject
   public ushort NOMINAL_NUM_COEFFICIENTS { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Where this polynomial ephemeris comes from and the terms it travels under.
   public PVN? PROVENANCE { get { int o = __p.__offset(30); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  public string REFERENCE_EPOCH { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREFERENCE_EPOCHBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetREFERENCE_EPOCHBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetREFERENCE_EPOCHArray() { return __p.__vector_as_array<byte>(32); }
+  /// The builder and inputs of a derived ephemeris; absent for any other.
+  public PPEBuild? BUILD { get { int o = __p.__offset(34); return o != 0 ? (PPEBuild?)(new PPEBuild()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  /// never written.
+  public double UNSERVED_MID_SECONDS(int j) { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int UNSERVED_MID_SECONDSLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetUNSERVED_MID_SECONDSBytes() { return __p.__vector_as_span<double>(36, 8); }
+#else
+  public ArraySegment<byte>? GetUNSERVED_MID_SECONDSBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public double[] GetUNSERVED_MID_SECONDSArray() { return __p.__vector_as_array<double>(36); }
+  /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  public double UNSERVED_HALF_SPAN(int j) { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int UNSERVED_HALF_SPANLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetUNSERVED_HALF_SPANBytes() { return __p.__vector_as_span<double>(38, 8); }
+#else
+  public ArraySegment<byte>? GetUNSERVED_HALF_SPANBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public double[] GetUNSERVED_HALF_SPANArray() { return __p.__vector_as_array<double>(38); }
+  /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  public ppeWindowStatus UNSERVED_STATUS(int j) { int o = __p.__offset(40); return o != 0 ? (ppeWindowStatus)__p.bb.Get(__p.__vector(o) + j * 1) : (ppeWindowStatus)0; }
+  public int UNSERVED_STATUSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<ppeWindowStatus> GetUNSERVED_STATUSBytes() { return __p.__vector_as_span<ppeWindowStatus>(40, 1); }
+#else
+  public ArraySegment<byte>? GetUNSERVED_STATUSBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public ppeWindowStatus[] GetUNSERVED_STATUSArray() { int o = __p.__offset(40); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); ppeWindowStatus[] a = new ppeWindowStatus[l]; for (int i = 0; i < l; i++) { a[i] = (ppeWindowStatus)__p.bb.Get(p + i * 1); } return a; }
 
   public static Offset<PPE> CreatePPE(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -101,9 +142,19 @@ public struct PPE : IFlatbufferObject
       StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
       double NOMINAL_SEGMENT_SPAN = 0.0,
       ushort NOMINAL_NUM_COEFFICIENTS = 0,
-      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
-    builder.StartTable(14);
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
+      StringOffset REFERENCE_EPOCHOffset = default(StringOffset),
+      Offset<PPEBuild> BUILDOffset = default(Offset<PPEBuild>),
+      VectorOffset UNSERVED_MID_SECONDSOffset = default(VectorOffset),
+      VectorOffset UNSERVED_HALF_SPANOffset = default(VectorOffset),
+      VectorOffset UNSERVED_STATUSOffset = default(VectorOffset)) {
+    builder.StartTable(19);
     PPE.AddNOMINAL_SEGMENT_SPAN(builder, NOMINAL_SEGMENT_SPAN);
+    PPE.AddUNSERVED_STATUS(builder, UNSERVED_STATUSOffset);
+    PPE.AddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPANOffset);
+    PPE.AddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDSOffset);
+    PPE.AddBUILD(builder, BUILDOffset);
+    PPE.AddREFERENCE_EPOCH(builder, REFERENCE_EPOCHOffset);
     PPE.AddPROVENANCE(builder, PROVENANCEOffset);
     PPE.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PPE.AddORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDSOffset);
@@ -120,7 +171,7 @@ public struct PPE : IFlatbufferObject
     return PPE.EndPPE(builder);
   }
 
-  public static void StartPPE(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartPPE(FlatBufferBuilder builder) { builder.StartTable(19); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -150,6 +201,26 @@ public struct PPE : IFlatbufferObject
   public static void AddNOMINAL_SEGMENT_SPAN(FlatBufferBuilder builder, double NOMINAL_SEGMENT_SPAN) { builder.AddDouble(11, NOMINAL_SEGMENT_SPAN, 0.0); }
   public static void AddNOMINAL_NUM_COEFFICIENTS(FlatBufferBuilder builder, ushort NOMINAL_NUM_COEFFICIENTS) { builder.AddUshort(12, NOMINAL_NUM_COEFFICIENTS, 0); }
   public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(13, PROVENANCEOffset.Value, 0); }
+  public static void AddREFERENCE_EPOCH(FlatBufferBuilder builder, StringOffset REFERENCE_EPOCHOffset) { builder.AddOffset(14, REFERENCE_EPOCHOffset.Value, 0); }
+  public static void AddBUILD(FlatBufferBuilder builder, Offset<PPEBuild> BUILDOffset) { builder.AddOffset(15, BUILDOffset.Value, 0); }
+  public static void AddUNSERVED_MID_SECONDS(FlatBufferBuilder builder, VectorOffset UNSERVED_MID_SECONDSOffset) { builder.AddOffset(16, UNSERVED_MID_SECONDSOffset.Value, 0); }
+  public static VectorOffset CreateUNSERVED_MID_SECONDSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_MID_SECONDSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_MID_SECONDSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_MID_SECONDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUNSERVED_MID_SECONDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUNSERVED_HALF_SPAN(FlatBufferBuilder builder, VectorOffset UNSERVED_HALF_SPANOffset) { builder.AddOffset(17, UNSERVED_HALF_SPANOffset.Value, 0); }
+  public static VectorOffset CreateUNSERVED_HALF_SPANVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_HALF_SPANVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_HALF_SPANVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_HALF_SPANVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUNSERVED_HALF_SPANVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUNSERVED_STATUS(FlatBufferBuilder builder, VectorOffset UNSERVED_STATUSOffset) { builder.AddOffset(18, UNSERVED_STATUSOffset.Value, 0); }
+  public static VectorOffset CreateUNSERVED_STATUSVector(FlatBufferBuilder builder, ppeWindowStatus[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_STATUSVectorBlock(FlatBufferBuilder builder, ppeWindowStatus[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_STATUSVectorBlock(FlatBufferBuilder builder, ArraySegment<ppeWindowStatus> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSERVED_STATUSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<ppeWindowStatus>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUNSERVED_STATUSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PPE> EndPPE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PPE>(o);
@@ -179,6 +250,14 @@ public struct PPE : IFlatbufferObject
     _o.NOMINAL_SEGMENT_SPAN = this.NOMINAL_SEGMENT_SPAN;
     _o.NOMINAL_NUM_COEFFICIENTS = this.NOMINAL_NUM_COEFFICIENTS;
     _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.REFERENCE_EPOCH = this.REFERENCE_EPOCH;
+    _o.BUILD = this.BUILD.HasValue ? this.BUILD.Value.UnPack() : null;
+    _o.UNSERVED_MID_SECONDS = new List<double>();
+    for (var _j = 0; _j < this.UNSERVED_MID_SECONDSLength; ++_j) {_o.UNSERVED_MID_SECONDS.Add(this.UNSERVED_MID_SECONDS(_j));}
+    _o.UNSERVED_HALF_SPAN = new List<double>();
+    for (var _j = 0; _j < this.UNSERVED_HALF_SPANLength; ++_j) {_o.UNSERVED_HALF_SPAN.Add(this.UNSERVED_HALF_SPAN(_j));}
+    _o.UNSERVED_STATUS = new List<ppeWindowStatus>();
+    for (var _j = 0; _j < this.UNSERVED_STATUSLength; ++_j) {_o.UNSERVED_STATUS.Add(this.UNSERVED_STATUS(_j));}
   }
   public static Offset<PPE> Pack(FlatBufferBuilder builder, PPET _o) {
     if (_o == null) return default(Offset<PPE>);
@@ -207,6 +286,23 @@ public struct PPE : IFlatbufferObject
     }
     var _EPHEMERIS_SOURCE = _o.EPHEMERIS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_SOURCE);
     var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
+    var _REFERENCE_EPOCH = _o.REFERENCE_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_EPOCH);
+    var _BUILD = _o.BUILD == null ? default(Offset<PPEBuild>) : PPEBuild.Pack(builder, _o.BUILD);
+    var _UNSERVED_MID_SECONDS = default(VectorOffset);
+    if (_o.UNSERVED_MID_SECONDS != null) {
+      var __UNSERVED_MID_SECONDS = _o.UNSERVED_MID_SECONDS.ToArray();
+      _UNSERVED_MID_SECONDS = CreateUNSERVED_MID_SECONDSVector(builder, __UNSERVED_MID_SECONDS);
+    }
+    var _UNSERVED_HALF_SPAN = default(VectorOffset);
+    if (_o.UNSERVED_HALF_SPAN != null) {
+      var __UNSERVED_HALF_SPAN = _o.UNSERVED_HALF_SPAN.ToArray();
+      _UNSERVED_HALF_SPAN = CreateUNSERVED_HALF_SPANVector(builder, __UNSERVED_HALF_SPAN);
+    }
+    var _UNSERVED_STATUS = default(VectorOffset);
+    if (_o.UNSERVED_STATUS != null) {
+      var __UNSERVED_STATUS = _o.UNSERVED_STATUS.ToArray();
+      _UNSERVED_STATUS = CreateUNSERVED_STATUSVector(builder, __UNSERVED_STATUS);
+    }
     return CreatePPE(
       builder,
       _COMMENT,
@@ -222,7 +318,12 @@ public struct PPE : IFlatbufferObject
       _EPHEMERIS_SOURCE,
       _o.NOMINAL_SEGMENT_SPAN,
       _o.NOMINAL_NUM_COEFFICIENTS,
-      _PROVENANCE);
+      _PROVENANCE,
+      _REFERENCE_EPOCH,
+      _BUILD,
+      _UNSERVED_MID_SECONDS,
+      _UNSERVED_HALF_SPAN,
+      _UNSERVED_STATUS);
   }
 }
 
@@ -242,6 +343,11 @@ public class PPET
   public double NOMINAL_SEGMENT_SPAN { get; set; }
   public ushort NOMINAL_NUM_COEFFICIENTS { get; set; }
   public PVNT PROVENANCE { get; set; }
+  public string REFERENCE_EPOCH { get; set; }
+  public PPEBuildT BUILD { get; set; }
+  public List<double> UNSERVED_MID_SECONDS { get; set; }
+  public List<double> UNSERVED_HALF_SPAN { get; set; }
+  public List<ppeWindowStatus> UNSERVED_STATUS { get; set; }
 
   public PPET() {
     this.COMMENT = null;
@@ -258,6 +364,11 @@ public class PPET
     this.NOMINAL_SEGMENT_SPAN = 0.0;
     this.NOMINAL_NUM_COEFFICIENTS = 0;
     this.PROVENANCE = null;
+    this.REFERENCE_EPOCH = null;
+    this.BUILD = null;
+    this.UNSERVED_MID_SECONDS = null;
+    this.UNSERVED_HALF_SPAN = null;
+    this.UNSERVED_STATUS = null;
   }
   public static PPET DeserializeFromBinary(byte[] fbBuffer) {
     return PPE.GetRootAsPPE(new ByteBuffer(fbBuffer)).UnPack();
@@ -289,6 +400,11 @@ static public class PPEVerify
       && verifier.VerifyField(tablePos, 26 /*NOMINAL_SEGMENT_SPAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*NOMINAL_NUM_COEFFICIENTS*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTable(tablePos, 30 /*PROVENANCE*/, PVNVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 32 /*REFERENCE_EPOCH*/, false)
+      && verifier.VerifyTable(tablePos, 34 /*BUILD*/, PPEBuildVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 36 /*UNSERVED_MID_SECONDS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 38 /*UNSERVED_HALF_SPAN*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 40 /*UNSERVED_STATUS*/, 1 /*ppeWindowStatus*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -11,7 +11,8 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 class PPE extends Table
 {
     /**
@@ -205,22 +206,108 @@ class PPE extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+    /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+    public function getREFERENCE_EPOCH()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The builder and inputs of a derived ephemeris; absent for any other.
+    public function getBUILD()
+    {
+        $obj = new PPEBuild();
+        $o = $this->__offset(34);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+    /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+    /// never written.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getUNSERVED_MID_SECONDS($j)
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUNSERVED_MID_SECONDSLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getUNSERVED_HALF_SPAN($j)
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUNSERVED_HALF_SPANLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getUNSERVED_STATUS($j)
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \ppeWindowStatus::UNSPECIFIED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUNSERVED_STATUSLength()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUNSERVED_STATUSBytes()
+    {
+        return $this->__vector_as_bytes(40);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPPE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PPE
      */
-    public static function createPPE(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $DEFAULT_BASIS_TYPE, $POSITION_RECORDS, $ORBITAL_ELEMENT_RECORDS, $EPHEMERIS_SOURCE, $NOMINAL_SEGMENT_SPAN, $NOMINAL_NUM_COEFFICIENTS, $PROVENANCE)
+    public static function createPPE(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $DEFAULT_BASIS_TYPE, $POSITION_RECORDS, $ORBITAL_ELEMENT_RECORDS, $EPHEMERIS_SOURCE, $NOMINAL_SEGMENT_SPAN, $NOMINAL_NUM_COEFFICIENTS, $PROVENANCE, $REFERENCE_EPOCH, $BUILD, $UNSERVED_MID_SECONDS, $UNSERVED_HALF_SPAN, $UNSERVED_STATUS)
     {
-        $builder->startObject(14);
+        $builder->startObject(19);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addCENTER_NAME($builder, $CENTER_NAME);
@@ -235,6 +322,11 @@ class PPE extends Table
         self::addNOMINAL_SEGMENT_SPAN($builder, $NOMINAL_SEGMENT_SPAN);
         self::addNOMINAL_NUM_COEFFICIENTS($builder, $NOMINAL_NUM_COEFFICIENTS);
         self::addPROVENANCE($builder, $PROVENANCE);
+        self::addREFERENCE_EPOCH($builder, $REFERENCE_EPOCH);
+        self::addBUILD($builder, $BUILD);
+        self::addUNSERVED_MID_SECONDS($builder, $UNSERVED_MID_SECONDS);
+        self::addUNSERVED_HALF_SPAN($builder, $UNSERVED_HALF_SPAN);
+        self::addUNSERVED_STATUS($builder, $UNSERVED_STATUS);
         $o = $builder->endObject();
         return $o;
     }
@@ -449,6 +541,128 @@ class PPE extends Table
     public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
     {
         $builder->addOffsetX(13, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREFERENCE_EPOCH(FlatBufferBuilder $builder, $REFERENCE_EPOCH)
+    {
+        $builder->addOffsetX(14, $REFERENCE_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBUILD(FlatBufferBuilder $builder, $BUILD)
+    {
+        $builder->addOffsetX(15, $BUILD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUNSERVED_MID_SECONDS(FlatBufferBuilder $builder, $UNSERVED_MID_SECONDS)
+    {
+        $builder->addOffsetX(16, $UNSERVED_MID_SECONDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUNSERVED_MID_SECONDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUNSERVED_MID_SECONDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUNSERVED_HALF_SPAN(FlatBufferBuilder $builder, $UNSERVED_HALF_SPAN)
+    {
+        $builder->addOffsetX(17, $UNSERVED_HALF_SPAN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUNSERVED_HALF_SPANVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUNSERVED_HALF_SPANVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUNSERVED_STATUS(FlatBufferBuilder $builder, $UNSERVED_STATUS)
+    {
+        $builder->addOffsetX(18, $UNSERVED_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUNSERVED_STATUSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUNSERVED_STATUSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

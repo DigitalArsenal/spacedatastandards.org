@@ -215,8 +215,40 @@ RMS_POSITION_RESIDUAL():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+ * When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+ * in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+ * instant. NaN when not stated.
+ */
+EPOCH_MID_SECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+ * values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+ * A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+ * tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+ */
+POS_COEFF_HEAD_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 65535;
+}
+
+/**
+ * The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+ * A builder whose position and velocity series differ in length pads the shorter
+ * with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+ */
+VEL_COEFF_HEAD_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 65535;
+}
+
 static startPPEPositionRecord(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(16);
 }
 
 static addEpochMid(builder:flatbuffers.Builder, EPOCH_MIDOffset:flatbuffers.Offset) {
@@ -373,6 +405,18 @@ static addRmsPositionResidual(builder:flatbuffers.Builder, RMS_POSITION_RESIDUAL
   builder.addFieldFloat64(12, RMS_POSITION_RESIDUAL, 0.0);
 }
 
+static addEpochMidSeconds(builder:flatbuffers.Builder, EPOCH_MID_SECONDS:number) {
+  builder.addFieldFloat64(13, EPOCH_MID_SECONDS, NaN);
+}
+
+static addPosCoeffHeadCount(builder:flatbuffers.Builder, POS_COEFF_HEAD_COUNT:number) {
+  builder.addFieldInt16(14, POS_COEFF_HEAD_COUNT, 65535);
+}
+
+static addVelCoeffHeadCount(builder:flatbuffers.Builder, VEL_COEFF_HEAD_COUNT:number) {
+  builder.addFieldInt16(15, VEL_COEFF_HEAD_COUNT, 65535);
+}
+
 static endPPEPositionRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // EPOCH_MID
@@ -382,7 +426,7 @@ static endPPEPositionRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPPEPositionRecord(builder:flatbuffers.Builder, EPOCH_MIDOffset:flatbuffers.Offset, EPOCH_HALF_SPAN:number, NUM_COEFFICIENTS:number, BASIS_TYPE:polynomialBasisType, POS_COEFF_XOffset:flatbuffers.Offset, POS_COEFF_YOffset:flatbuffers.Offset, POS_COEFF_ZOffset:flatbuffers.Offset, HAS_VELOCITY_COEFFICIENTS:boolean, VEL_COEFF_XOffset:flatbuffers.Offset, VEL_COEFF_YOffset:flatbuffers.Offset, VEL_COEFF_ZOffset:flatbuffers.Offset, MAX_POSITION_RESIDUAL:number, RMS_POSITION_RESIDUAL:number):flatbuffers.Offset {
+static createPPEPositionRecord(builder:flatbuffers.Builder, EPOCH_MIDOffset:flatbuffers.Offset, EPOCH_HALF_SPAN:number, NUM_COEFFICIENTS:number, BASIS_TYPE:polynomialBasisType, POS_COEFF_XOffset:flatbuffers.Offset, POS_COEFF_YOffset:flatbuffers.Offset, POS_COEFF_ZOffset:flatbuffers.Offset, HAS_VELOCITY_COEFFICIENTS:boolean, VEL_COEFF_XOffset:flatbuffers.Offset, VEL_COEFF_YOffset:flatbuffers.Offset, VEL_COEFF_ZOffset:flatbuffers.Offset, MAX_POSITION_RESIDUAL:number, RMS_POSITION_RESIDUAL:number, EPOCH_MID_SECONDS:number, POS_COEFF_HEAD_COUNT:number, VEL_COEFF_HEAD_COUNT:number):flatbuffers.Offset {
   PPEPositionRecord.startPPEPositionRecord(builder);
   PPEPositionRecord.addEpochMid(builder, EPOCH_MIDOffset);
   PPEPositionRecord.addEpochHalfSpan(builder, EPOCH_HALF_SPAN);
@@ -397,6 +441,9 @@ static createPPEPositionRecord(builder:flatbuffers.Builder, EPOCH_MIDOffset:flat
   PPEPositionRecord.addVelCoeffZ(builder, VEL_COEFF_ZOffset);
   PPEPositionRecord.addMaxPositionResidual(builder, MAX_POSITION_RESIDUAL);
   PPEPositionRecord.addRmsPositionResidual(builder, RMS_POSITION_RESIDUAL);
+  PPEPositionRecord.addEpochMidSeconds(builder, EPOCH_MID_SECONDS);
+  PPEPositionRecord.addPosCoeffHeadCount(builder, POS_COEFF_HEAD_COUNT);
+  PPEPositionRecord.addVelCoeffHeadCount(builder, VEL_COEFF_HEAD_COUNT);
   return PPEPositionRecord.endPPEPositionRecord(builder);
 }
 
@@ -414,7 +461,10 @@ unpack(): PPEPositionRecordT {
     this.bb!.createScalarList<number>(this.VEL_COEFF_Y.bind(this), this.velCoeffYLength()),
     this.bb!.createScalarList<number>(this.VEL_COEFF_Z.bind(this), this.velCoeffZLength()),
     this.MAX_POSITION_RESIDUAL(),
-    this.RMS_POSITION_RESIDUAL()
+    this.RMS_POSITION_RESIDUAL(),
+    this.EPOCH_MID_SECONDS(),
+    this.POS_COEFF_HEAD_COUNT(),
+    this.VEL_COEFF_HEAD_COUNT()
   );
 }
 
@@ -433,6 +483,9 @@ unpackTo(_o: PPEPositionRecordT): void {
   _o.VEL_COEFF_Z = this.bb!.createScalarList<number>(this.VEL_COEFF_Z.bind(this), this.velCoeffZLength());
   _o.MAX_POSITION_RESIDUAL = this.MAX_POSITION_RESIDUAL();
   _o.RMS_POSITION_RESIDUAL = this.RMS_POSITION_RESIDUAL();
+  _o.EPOCH_MID_SECONDS = this.EPOCH_MID_SECONDS();
+  _o.POS_COEFF_HEAD_COUNT = this.POS_COEFF_HEAD_COUNT();
+  _o.VEL_COEFF_HEAD_COUNT = this.VEL_COEFF_HEAD_COUNT();
 }
 }
 
@@ -450,7 +503,10 @@ constructor(
   public VEL_COEFF_Y: (number)[] = [],
   public VEL_COEFF_Z: (number)[] = [],
   public MAX_POSITION_RESIDUAL: number = 0.0,
-  public RMS_POSITION_RESIDUAL: number = 0.0
+  public RMS_POSITION_RESIDUAL: number = 0.0,
+  public EPOCH_MID_SECONDS: number = NaN,
+  public POS_COEFF_HEAD_COUNT: number = 65535,
+  public VEL_COEFF_HEAD_COUNT: number = 65535
 ){}
 
 
@@ -476,7 +532,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     VEL_COEFF_Y,
     VEL_COEFF_Z,
     this.MAX_POSITION_RESIDUAL,
-    this.RMS_POSITION_RESIDUAL
+    this.RMS_POSITION_RESIDUAL,
+    this.EPOCH_MID_SECONDS,
+    this.POS_COEFF_HEAD_COUNT,
+    this.VEL_COEFF_HEAD_COUNT
   );
 }
 }

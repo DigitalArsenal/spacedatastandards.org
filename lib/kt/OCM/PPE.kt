@@ -22,7 +22,8 @@ import kotlin.math.sign
  *
  * A PPE message may contain position records, orbital element records, or both.
  * Records should be ordered chronologically by EPOCH_MID and should collectively
- * cover the time span [START_TIME, STOP_TIME] without gaps.
+ * cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+ * listed in UNSERVED_MID_SECONDS.
  */
 @Suppress("unused")
 class PPE : Table() {
@@ -212,6 +213,86 @@ class PPE : Table() {
             null
         }
     }
+    /**
+     * The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+     * TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+     */
+    val referenceEpoch : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val referenceEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun referenceEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * The builder and inputs of a derived ephemeris; absent for any other.
+     */
+    val build : PPEBuild? get() = build(PPEBuild())
+    fun build(obj: PPEBuild) : PPEBuild? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+     * Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+     * never written.
+     */
+    fun unservedMidSeconds(j: Int) : Double {
+        val o = __offset(36)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val unservedMidSecondsLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
+    val unservedMidSecondsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 8)
+    fun unservedMidSecondsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 8)
+    /**
+     * Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+     */
+    fun unservedHalfSpan(j: Int) : Double {
+        val o = __offset(38)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val unservedHalfSpanLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    val unservedHalfSpanAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 8)
+    fun unservedHalfSpanInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 8)
+    /**
+     * Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+     */
+    fun unservedStatus(j: Int) : UByte {
+        val o = __offset(40)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val unservedStatusLength : Int
+        get() {
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+        }
+    val unservedStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun unservedStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPE(_bb: ByteBuffer): PPE = getRootAsPPE(_bb, PPE())
@@ -220,9 +301,14 @@ class PPE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PPE")
-        fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort, provenanceOffset: Int) : Int {
-            builder.startTable(14)
+        fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort, provenanceOffset: Int, referenceEpochOffset: Int, buildOffset: Int, unservedMidSecondsOffset: Int, unservedHalfSpanOffset: Int, unservedStatusOffset: Int) : Int {
+            builder.startTable(19)
             addNOMINALSEGMENTSPAN(builder, nominalSegmentSpan)
+            addUNSERVEDSTATUS(builder, unservedStatusOffset)
+            addUNSERVEDHALFSPAN(builder, unservedHalfSpanOffset)
+            addUNSERVEDMIDSECONDS(builder, unservedMidSecondsOffset)
+            addBUILD(builder, buildOffset)
+            addREFERENCEEPOCH(builder, referenceEpochOffset)
             addPROVENANCE(builder, provenanceOffset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addORBITALELEMENTRECORDS(builder, orbitalElementRecordsOffset)
@@ -238,7 +324,7 @@ class PPE : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endPPE(builder)
         }
-        fun startPPE(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startPPE(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -277,6 +363,36 @@ class PPE : Table() {
         fun addNOMINALSEGMENTSPAN(builder: FlatBufferBuilder, nominalSegmentSpan: Double) = builder.addDouble(11, nominalSegmentSpan, 0.0)
         fun addNOMINALNUMCOEFFICIENTS(builder: FlatBufferBuilder, nominalNumCoefficients: UShort) = builder.addShort(12, nominalNumCoefficients.toShort(), 0)
         fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(13, provenance, 0)
+        fun addREFERENCEEPOCH(builder: FlatBufferBuilder, referenceEpoch: Int) = builder.addOffset(14, referenceEpoch, 0)
+        fun addBUILD(builder: FlatBufferBuilder, build: Int) = builder.addOffset(15, build, 0)
+        fun addUNSERVEDMIDSECONDS(builder: FlatBufferBuilder, unservedMidSeconds: Int) = builder.addOffset(16, unservedMidSeconds, 0)
+        fun createUnservedMidSecondsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUnservedMidSecondsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUNSERVEDHALFSPAN(builder: FlatBufferBuilder, unservedHalfSpan: Int) = builder.addOffset(17, unservedHalfSpan, 0)
+        fun createUnservedHalfSpanVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUnservedHalfSpanVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUNSERVEDSTATUS(builder: FlatBufferBuilder, unservedStatus: Int) = builder.addOffset(18, unservedStatus, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createUnservedStatusVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startUnservedStatusVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -95,6 +95,26 @@ export declare class PPEPositionRecord implements flatbuffers.IUnpackableObject<
      * RMS position fit residual over this segment (km). Optional quality metric.
      */
     RMS_POSITION_RESIDUAL(): number;
+    /**
+     * Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+     * When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+     * in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+     * instant. NaN when not stated.
+     */
+    EPOCH_MID_SECONDS(): number;
+    /**
+     * Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+     * values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+     * A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+     * tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+     */
+    POS_COEFF_HEAD_COUNT(): number;
+    /**
+     * The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+     * A builder whose position and velocity series differ in length pads the shorter
+     * with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+     */
+    VEL_COEFF_HEAD_COUNT(): number;
     static startPPEPositionRecord(builder: flatbuffers.Builder): void;
     static addEpochMid(builder: flatbuffers.Builder, EPOCH_MIDOffset: flatbuffers.Offset): void;
     static addEpochHalfSpan(builder: flatbuffers.Builder, EPOCH_HALF_SPAN: number): void;
@@ -145,8 +165,11 @@ export declare class PPEPositionRecord implements flatbuffers.IUnpackableObject<
     static startVelCoeffZVector(builder: flatbuffers.Builder, numElems: number): void;
     static addMaxPositionResidual(builder: flatbuffers.Builder, MAX_POSITION_RESIDUAL: number): void;
     static addRmsPositionResidual(builder: flatbuffers.Builder, RMS_POSITION_RESIDUAL: number): void;
+    static addEpochMidSeconds(builder: flatbuffers.Builder, EPOCH_MID_SECONDS: number): void;
+    static addPosCoeffHeadCount(builder: flatbuffers.Builder, POS_COEFF_HEAD_COUNT: number): void;
+    static addVelCoeffHeadCount(builder: flatbuffers.Builder, VEL_COEFF_HEAD_COUNT: number): void;
     static endPPEPositionRecord(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPPEPositionRecord(builder: flatbuffers.Builder, EPOCH_MIDOffset: flatbuffers.Offset, EPOCH_HALF_SPAN: number, NUM_COEFFICIENTS: number, BASIS_TYPE: polynomialBasisType, POS_COEFF_XOffset: flatbuffers.Offset, POS_COEFF_YOffset: flatbuffers.Offset, POS_COEFF_ZOffset: flatbuffers.Offset, HAS_VELOCITY_COEFFICIENTS: boolean, VEL_COEFF_XOffset: flatbuffers.Offset, VEL_COEFF_YOffset: flatbuffers.Offset, VEL_COEFF_ZOffset: flatbuffers.Offset, MAX_POSITION_RESIDUAL: number, RMS_POSITION_RESIDUAL: number): flatbuffers.Offset;
+    static createPPEPositionRecord(builder: flatbuffers.Builder, EPOCH_MIDOffset: flatbuffers.Offset, EPOCH_HALF_SPAN: number, NUM_COEFFICIENTS: number, BASIS_TYPE: polynomialBasisType, POS_COEFF_XOffset: flatbuffers.Offset, POS_COEFF_YOffset: flatbuffers.Offset, POS_COEFF_ZOffset: flatbuffers.Offset, HAS_VELOCITY_COEFFICIENTS: boolean, VEL_COEFF_XOffset: flatbuffers.Offset, VEL_COEFF_YOffset: flatbuffers.Offset, VEL_COEFF_ZOffset: flatbuffers.Offset, MAX_POSITION_RESIDUAL: number, RMS_POSITION_RESIDUAL: number, EPOCH_MID_SECONDS: number, POS_COEFF_HEAD_COUNT: number, VEL_COEFF_HEAD_COUNT: number): flatbuffers.Offset;
     unpack(): PPEPositionRecordT;
     unpackTo(_o: PPEPositionRecordT): void;
 }
@@ -164,7 +187,10 @@ export declare class PPEPositionRecordT implements flatbuffers.IGeneratedObject 
     VEL_COEFF_Z: (number)[];
     MAX_POSITION_RESIDUAL: number;
     RMS_POSITION_RESIDUAL: number;
-    constructor(EPOCH_MID?: string | Uint8Array | null, EPOCH_HALF_SPAN?: number, NUM_COEFFICIENTS?: number, BASIS_TYPE?: polynomialBasisType, POS_COEFF_X?: (number)[], POS_COEFF_Y?: (number)[], POS_COEFF_Z?: (number)[], HAS_VELOCITY_COEFFICIENTS?: boolean, VEL_COEFF_X?: (number)[], VEL_COEFF_Y?: (number)[], VEL_COEFF_Z?: (number)[], MAX_POSITION_RESIDUAL?: number, RMS_POSITION_RESIDUAL?: number);
+    EPOCH_MID_SECONDS: number;
+    POS_COEFF_HEAD_COUNT: number;
+    VEL_COEFF_HEAD_COUNT: number;
+    constructor(EPOCH_MID?: string | Uint8Array | null, EPOCH_HALF_SPAN?: number, NUM_COEFFICIENTS?: number, BASIS_TYPE?: polynomialBasisType, POS_COEFF_X?: (number)[], POS_COEFF_Y?: (number)[], POS_COEFF_Z?: (number)[], HAS_VELOCITY_COEFFICIENTS?: boolean, VEL_COEFF_X?: (number)[], VEL_COEFF_Y?: (number)[], VEL_COEFF_Z?: (number)[], MAX_POSITION_RESIDUAL?: number, RMS_POSITION_RESIDUAL?: number, EPOCH_MID_SECONDS?: number, POS_COEFF_HEAD_COUNT?: number, VEL_COEFF_HEAD_COUNT?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PPEPositionRecord.d.ts.map

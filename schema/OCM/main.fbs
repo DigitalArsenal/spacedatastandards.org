@@ -1,5 +1,5 @@
-// Hash: 6d519a40b28ad67713b5f4b7f74dd4609e49aed7e41f94cf883065ec2be4f2fa
-// Version: 2.1.10
+// Hash: a7daf548117e22885027989c8374bf329dfdbae3b547f99a45c1cccca02dafa4
+// Version: 2.1.11
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -1291,6 +1291,12 @@ table OCM {
   RPO_GEOMETRY: OCMRelativeGeometry;
   /// Inspection geometry; STATE_DATA is empty when this is present.
   RPO_INSPECTION: OCMInspectionGeometry;
+  /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  /// reader may ignore this. How many windows it holds is the publisher's choice.
+  /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  DERIVED_EPHEMERIS: PPE;
 }
 
 root_type OCM;

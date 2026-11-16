@@ -218,6 +218,12 @@ public struct OCM : IFlatbufferObject
   public OCMRelativeGeometry? RPO_GEOMETRY { get { int o = __p.__offset(82); return o != 0 ? (OCMRelativeGeometry?)(new OCMRelativeGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Inspection geometry; STATE_DATA is empty when this is present.
   public OCMInspectionGeometry? RPO_INSPECTION { get { int o = __p.__offset(84); return o != 0 ? (OCMInspectionGeometry?)(new OCMInspectionGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  /// reader may ignore this. How many windows it holds is the publisher's choice.
+  /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  public PPE? DERIVED_EPHEMERIS { get { int o = __p.__offset(86); return o != 0 ? (PPE?)(new PPE()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<OCM> CreateOCM(FlatBufferBuilder builder,
       Offset<Header> HEADEROffset = default(Offset<Header>),
@@ -260,9 +266,11 @@ public struct OCM : IFlatbufferObject
       VectorOffset SEED_SETSOffset = default(VectorOffset),
       Offset<OCMIntegrator> INTEGRATOROffset = default(Offset<OCMIntegrator>),
       Offset<OCMRelativeGeometry> RPO_GEOMETRYOffset = default(Offset<OCMRelativeGeometry>),
-      Offset<OCMInspectionGeometry> RPO_INSPECTIONOffset = default(Offset<OCMInspectionGeometry>)) {
-    builder.StartTable(41);
+      Offset<OCMInspectionGeometry> RPO_INSPECTIONOffset = default(Offset<OCMInspectionGeometry>),
+      Offset<PPE> DERIVED_EPHEMERISOffset = default(Offset<PPE>)) {
+    builder.StartTable(42);
     OCM.AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE);
+    OCM.AddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERISOffset);
     OCM.AddRPO_INSPECTION(builder, RPO_INSPECTIONOffset);
     OCM.AddRPO_GEOMETRY(builder, RPO_GEOMETRYOffset);
     OCM.AddINTEGRATOR(builder, INTEGRATOROffset);
@@ -306,7 +314,7 @@ public struct OCM : IFlatbufferObject
     return OCM.EndOCM(builder);
   }
 
-  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(41); }
+  public static void StartOCM(FlatBufferBuilder builder) { builder.StartTable(42); }
   public static void AddHEADER(FlatBufferBuilder builder, Offset<Header> HEADEROffset) { builder.AddOffset(0, HEADEROffset.Value, 0); }
   public static void AddMETADATA(FlatBufferBuilder builder, Offset<Metadata> METADATAOffset) { builder.AddOffset(1, METADATAOffset.Value, 0); }
   public static void AddTRAJ_TYPE(FlatBufferBuilder builder, trajectoryType TRAJ_TYPE) { builder.AddSbyte(2, (sbyte)TRAJ_TYPE, 0); }
@@ -418,6 +426,7 @@ public struct OCM : IFlatbufferObject
   public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<OCMIntegrator> INTEGRATOROffset) { builder.AddOffset(38, INTEGRATOROffset.Value, 0); }
   public static void AddRPO_GEOMETRY(FlatBufferBuilder builder, Offset<OCMRelativeGeometry> RPO_GEOMETRYOffset) { builder.AddOffset(39, RPO_GEOMETRYOffset.Value, 0); }
   public static void AddRPO_INSPECTION(FlatBufferBuilder builder, Offset<OCMInspectionGeometry> RPO_INSPECTIONOffset) { builder.AddOffset(40, RPO_INSPECTIONOffset.Value, 0); }
+  public static void AddDERIVED_EPHEMERIS(FlatBufferBuilder builder, Offset<PPE> DERIVED_EPHEMERISOffset) { builder.AddOffset(41, DERIVED_EPHEMERISOffset.Value, 0); }
   public static Offset<OCM> EndOCM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCM>(o);
@@ -485,6 +494,7 @@ public struct OCM : IFlatbufferObject
     _o.INTEGRATOR = this.INTEGRATOR.HasValue ? this.INTEGRATOR.Value.UnPack() : null;
     _o.RPO_GEOMETRY = this.RPO_GEOMETRY.HasValue ? this.RPO_GEOMETRY.Value.UnPack() : null;
     _o.RPO_INSPECTION = this.RPO_INSPECTION.HasValue ? this.RPO_INSPECTION.Value.UnPack() : null;
+    _o.DERIVED_EPHEMERIS = this.DERIVED_EPHEMERIS.HasValue ? this.DERIVED_EPHEMERIS.Value.UnPack() : null;
   }
   public static Offset<OCM> Pack(FlatBufferBuilder builder, OCMT _o) {
     if (_o == null) return default(Offset<OCM>);
@@ -588,6 +598,7 @@ public struct OCM : IFlatbufferObject
     var _INTEGRATOR = _o.INTEGRATOR == null ? default(Offset<OCMIntegrator>) : OCMIntegrator.Pack(builder, _o.INTEGRATOR);
     var _RPO_GEOMETRY = _o.RPO_GEOMETRY == null ? default(Offset<OCMRelativeGeometry>) : OCMRelativeGeometry.Pack(builder, _o.RPO_GEOMETRY);
     var _RPO_INSPECTION = _o.RPO_INSPECTION == null ? default(Offset<OCMInspectionGeometry>) : OCMInspectionGeometry.Pack(builder, _o.RPO_INSPECTION);
+    var _DERIVED_EPHEMERIS = _o.DERIVED_EPHEMERIS == null ? default(Offset<PPE>) : PPE.Pack(builder, _o.DERIVED_EPHEMERIS);
     return CreateOCM(
       builder,
       _HEADER,
@@ -630,7 +641,8 @@ public struct OCM : IFlatbufferObject
       _SEED_SETS,
       _INTEGRATOR,
       _RPO_GEOMETRY,
-      _RPO_INSPECTION);
+      _RPO_INSPECTION,
+      _DERIVED_EPHEMERIS);
   }
 }
 
@@ -677,6 +689,7 @@ public class OCMT
   public OCMIntegratorT INTEGRATOR { get; set; }
   public OCMRelativeGeometryT RPO_GEOMETRY { get; set; }
   public OCMInspectionGeometryT RPO_INSPECTION { get; set; }
+  public PPET DERIVED_EPHEMERIS { get; set; }
 
   public OCMT() {
     this.HEADER = null;
@@ -720,6 +733,7 @@ public class OCMT
     this.INTEGRATOR = null;
     this.RPO_GEOMETRY = null;
     this.RPO_INSPECTION = null;
+    this.DERIVED_EPHEMERIS = null;
   }
   public static OCMT DeserializeFromBinary(byte[] fbBuffer) {
     return OCM.GetRootAsOCM(new ByteBuffer(fbBuffer)).UnPack();
@@ -778,6 +792,7 @@ static public class OCMVerify
       && verifier.VerifyTable(tablePos, 80 /*INTEGRATOR*/, OCMIntegratorVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 82 /*RPO_GEOMETRY*/, OCMRelativeGeometryVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 84 /*RPO_INSPECTION*/, OCMInspectionGeometryVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 86 /*DERIVED_EPHEMERIS*/, PPEVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

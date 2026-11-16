@@ -1,5 +1,5 @@
-// Hash: 385ac6bc8cded5d39401d9fe64a880afc74485b1f15aab042e68dd8814775716
-// Version: 1.0.5
+// Hash: c50f7cf1ed064220705c936360e3b74a141af3d8630b39de43b06e75e4b29729
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../PVN/main.fbs";
 include "../RFM/main.fbs";
@@ -148,6 +148,62 @@ table PPEPositionRecord {
 
   /// RMS position fit residual over this segment (km). Optional quality metric.
   RMS_POSITION_RESIDUAL: double;
+
+  /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  /// instant. NaN when not stated.
+  EPOCH_MID_SECONDS: double = nan;
+
+  /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  POS_COEFF_HEAD_COUNT: uint16 = 65535;
+
+  /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  /// A builder whose position and velocity series differ in length pads the shorter
+  /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  VEL_COEFF_HEAD_COUNT: uint16 = 65535;
+}
+
+// =============================================================================
+// DERIVED EPHEMERIS: BUILDER, INPUTS AND UNSERVED WINDOWS
+// =============================================================================
+
+/// Why a window of a derived ephemeris has no record.
+enum ppeWindowStatus : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The theory refuses somewhere in the window (decay, space-weather inputs short).
+  THEORY_REFUSED = 1,
+  /// No window of the builder's shortest span holds its tolerance there.
+  TOLERANCE_NOT_HELD = 2
+}
+
+/// The builder of a derived ephemeris and the inputs its records are bound to.
+/// The records are a derived convenience: the source they were built from remains
+/// the authoritative content, and a reader may ignore them. BUILDER_NAME and
+/// BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+/// ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+table PPEBuild {
+  /// Name of the builder, as it publishes itself.
+  BUILDER_NAME: string;
+  /// Version of the builder.
+  BUILDER_VERSION: string;
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  BUILDER_DIGEST: [ubyte];
+  /// SHA-256 over the fields of the source record the builder reads, by the builder's
+  /// published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+  RECORD_DIGEST: [ubyte];
+  /// SHA-256 over the configuration and environment inputs the builder used that are not
+  /// in the source record (force-model configuration, space-weather data), by the builder's
+  /// published rule (32 bytes); empty when the builder uses none.
+  ENVIRONMENT_DIGEST: [ubyte];
+  /// Build tolerance per position axis in km. NaN when not stated.
+  TOL_POSITION: double = nan;
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+  TOL_VELOCITY: double = nan;
 }
 
 // =============================================================================
@@ -225,7 +281,8 @@ table PPEOrbitalElementRecord {
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 table PPE {
   /// Plain-text comments.
   COMMENT: [string];
@@ -275,6 +332,24 @@ table PPE {
 
   /// Where this polynomial ephemeris comes from and the terms it travels under.
   PROVENANCE:PVN;
+
+  /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  REFERENCE_EPOCH: string;
+
+  /// The builder and inputs of a derived ephemeris; absent for any other.
+  BUILD: PPEBuild;
+
+  /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  /// never written.
+  UNSERVED_MID_SECONDS: [double];
+
+  /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  UNSERVED_HALF_SPAN: [double];
+
+  /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  UNSERVED_STATUS: [ppeWindowStatus];
 }
 
 root_type PPE;

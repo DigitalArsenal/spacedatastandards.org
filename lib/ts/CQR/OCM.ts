@@ -17,6 +17,7 @@ import { OCMRelativeGeometry, OCMRelativeGeometryT } from './OCMRelativeGeometry
 import { OCMSeedSet, OCMSeedSetT } from './OCMSeedSet.js';
 import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
+import { PPE, PPET } from './PPE.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { PVN, PVNT } from './PVN.js';
@@ -536,8 +537,20 @@ RPO_INSPECTION(obj?:OCMInspectionGeometry):OCMInspectionGeometry|null {
   return offset ? (obj || new OCMInspectionGeometry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+ * named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+ * MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+ * reader may ignore this. How many windows it holds is the publisher's choice.
+ * TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+ */
+DERIVED_EPHEMERIS(obj?:PPE):PPE|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? (obj || new PPE()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(41);
+  builder.startObject(42);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -882,6 +895,10 @@ static addRpoInspection(builder:flatbuffers.Builder, RPO_INSPECTIONOffset:flatbu
   builder.addFieldOffset(40, RPO_INSPECTIONOffset, 0);
 }
 
+static addDerivedEphemeris(builder:flatbuffers.Builder, DERIVED_EPHEMERISOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, DERIVED_EPHEMERISOffset, 0);
+}
+
 static endOCM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -938,7 +955,8 @@ unpack(): OCMT {
     this.bb!.createObjList<OCMSeedSet, OCMSeedSetT>(this.SEED_SETS.bind(this), this.seedSetsLength()),
     (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null),
     (this.RPO_GEOMETRY() !== null ? this.RPO_GEOMETRY()!.unpack() : null),
-    (this.RPO_INSPECTION() !== null ? this.RPO_INSPECTION()!.unpack() : null)
+    (this.RPO_INSPECTION() !== null ? this.RPO_INSPECTION()!.unpack() : null),
+    (this.DERIVED_EPHEMERIS() !== null ? this.DERIVED_EPHEMERIS()!.unpack() : null)
   );
 }
 
@@ -985,6 +1003,7 @@ unpackTo(_o: OCMT): void {
   _o.INTEGRATOR = (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null);
   _o.RPO_GEOMETRY = (this.RPO_GEOMETRY() !== null ? this.RPO_GEOMETRY()!.unpack() : null);
   _o.RPO_INSPECTION = (this.RPO_INSPECTION() !== null ? this.RPO_INSPECTION()!.unpack() : null);
+  _o.DERIVED_EPHEMERIS = (this.DERIVED_EPHEMERIS() !== null ? this.DERIVED_EPHEMERIS()!.unpack() : null);
 }
 }
 
@@ -1030,7 +1049,8 @@ constructor(
   public SEED_SETS: (OCMSeedSetT)[] = [],
   public INTEGRATOR: OCMIntegratorT|null = null,
   public RPO_GEOMETRY: OCMRelativeGeometryT|null = null,
-  public RPO_INSPECTION: OCMInspectionGeometryT|null = null
+  public RPO_INSPECTION: OCMInspectionGeometryT|null = null,
+  public DERIVED_EPHEMERIS: PPET|null = null
 ){}
 
 
@@ -1068,6 +1088,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const INTEGRATOR = (this.INTEGRATOR !== null ? this.INTEGRATOR!.pack(builder) : 0);
   const RPO_GEOMETRY = (this.RPO_GEOMETRY !== null ? this.RPO_GEOMETRY!.pack(builder) : 0);
   const RPO_INSPECTION = (this.RPO_INSPECTION !== null ? this.RPO_INSPECTION!.pack(builder) : 0);
+  const DERIVED_EPHEMERIS = (this.DERIVED_EPHEMERIS !== null ? this.DERIVED_EPHEMERIS!.pack(builder) : 0);
 
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
@@ -1111,6 +1132,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.addIntegrator(builder, INTEGRATOR);
   OCM.addRpoGeometry(builder, RPO_GEOMETRY);
   OCM.addRpoInspection(builder, RPO_INSPECTION);
+  OCM.addDerivedEphemeris(builder, DERIVED_EPHEMERIS);
 
   return OCM.endOCM(builder);
 }

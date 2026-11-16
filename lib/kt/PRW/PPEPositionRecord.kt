@@ -214,6 +214,38 @@ class PPEPositionRecord : Table() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+     * When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+     * in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+     * instant. NaN when not stated.
+     */
+    val epochMidSeconds : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+     * values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+     * A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+     * tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+     */
+    val posCoeffHeadCount : UShort
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 65535u
+        }
+    /**
+     * The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+     * A builder whose position and velocity series differ in length pads the shorter
+     * with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+     */
+    val velCoeffHeadCount : UShort
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 65535u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPEPositionRecord(_bb: ByteBuffer): PPEPositionRecord = getRootAsPPEPositionRecord(_bb, PPEPositionRecord())
@@ -221,8 +253,9 @@ class PPEPositionRecord : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPPEPositionRecord(builder: FlatBufferBuilder, epochMidOffset: Int, epochHalfSpan: Double, numCoefficients: UShort, basisType: Byte, posCoeffXOffset: Int, posCoeffYOffset: Int, posCoeffZOffset: Int, hasVelocityCoefficients: Boolean, velCoeffXOffset: Int, velCoeffYOffset: Int, velCoeffZOffset: Int, maxPositionResidual: Double, rmsPositionResidual: Double) : Int {
-            builder.startTable(13)
+        fun createPPEPositionRecord(builder: FlatBufferBuilder, epochMidOffset: Int, epochHalfSpan: Double, numCoefficients: UShort, basisType: Byte, posCoeffXOffset: Int, posCoeffYOffset: Int, posCoeffZOffset: Int, hasVelocityCoefficients: Boolean, velCoeffXOffset: Int, velCoeffYOffset: Int, velCoeffZOffset: Int, maxPositionResidual: Double, rmsPositionResidual: Double, epochMidSeconds: Double, posCoeffHeadCount: UShort, velCoeffHeadCount: UShort) : Int {
+            builder.startTable(16)
+            addEPOCHMIDSECONDS(builder, epochMidSeconds)
             addRMSPOSITIONRESIDUAL(builder, rmsPositionResidual)
             addMAXPOSITIONRESIDUAL(builder, maxPositionResidual)
             addEPOCHHALFSPAN(builder, epochHalfSpan)
@@ -233,12 +266,14 @@ class PPEPositionRecord : Table() {
             addPOSCOEFFY(builder, posCoeffYOffset)
             addPOSCOEFFX(builder, posCoeffXOffset)
             addEPOCHMID(builder, epochMidOffset)
+            addVELCOEFFHEADCOUNT(builder, velCoeffHeadCount)
+            addPOSCOEFFHEADCOUNT(builder, posCoeffHeadCount)
             addNUMCOEFFICIENTS(builder, numCoefficients)
             addHASVELOCITYCOEFFICIENTS(builder, hasVelocityCoefficients)
             addBASISTYPE(builder, basisType)
             return endPPEPositionRecord(builder)
         }
-        fun startPPEPositionRecord(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startPPEPositionRecord(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addEPOCHMID(builder: FlatBufferBuilder, epochMid: Int) = builder.addOffset(0, epochMid, 0)
         fun addEPOCHHALFSPAN(builder: FlatBufferBuilder, epochHalfSpan: Double) = builder.addDouble(1, epochHalfSpan, 0.0)
         fun addNUMCOEFFICIENTS(builder: FlatBufferBuilder, numCoefficients: UShort) = builder.addShort(2, numCoefficients.toShort(), 0)
@@ -300,6 +335,9 @@ class PPEPositionRecord : Table() {
         fun startVelCoeffZVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addMAXPOSITIONRESIDUAL(builder: FlatBufferBuilder, maxPositionResidual: Double) = builder.addDouble(11, maxPositionResidual, 0.0)
         fun addRMSPOSITIONRESIDUAL(builder: FlatBufferBuilder, rmsPositionResidual: Double) = builder.addDouble(12, rmsPositionResidual, 0.0)
+        fun addEPOCHMIDSECONDS(builder: FlatBufferBuilder, epochMidSeconds: Double) = builder.addDouble(13, epochMidSeconds, Double.NaN)
+        fun addPOSCOEFFHEADCOUNT(builder: FlatBufferBuilder, posCoeffHeadCount: UShort) = builder.addShort(14, posCoeffHeadCount.toShort(), 65535)
+        fun addVELCOEFFHEADCOUNT(builder: FlatBufferBuilder, velCoeffHeadCount: UShort) = builder.addShort(15, velCoeffHeadCount.toShort(), 65535)
         fun endPPEPositionRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

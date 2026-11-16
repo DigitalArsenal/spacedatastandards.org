@@ -6931,7 +6931,8 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SEED_SETS = 78,
     VT_INTEGRATOR = 80,
     VT_RPO_GEOMETRY = 82,
-    VT_RPO_INSPECTION = 84
+    VT_RPO_INSPECTION = 84,
+    VT_DERIVED_EPHEMERIS = 86
   };
   /// Header section of the OCM.
   const Header *HEADER() const {
@@ -7146,6 +7147,14 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const OCMInspectionGeometry *RPO_INSPECTION() const {
     return GetPointer<const OCMInspectionGeometry *>(VT_RPO_INSPECTION);
   }
+  /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  /// reader may ignore this. How many windows it holds is the publisher's choice.
+  /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  const PPE *DERIVED_EPHEMERIS() const {
+    return GetPointer<const PPE *>(VT_DERIVED_EPHEMERIS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -7234,6 +7243,8 @@ struct OCM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(RPO_GEOMETRY()) &&
            VerifyOffset(verifier, VT_RPO_INSPECTION) &&
            verifier.VerifyTable(RPO_INSPECTION()) &&
+           VerifyOffset(verifier, VT_DERIVED_EPHEMERIS) &&
+           verifier.VerifyTable(DERIVED_EPHEMERIS()) &&
            verifier.EndTable();
   }
 };
@@ -7365,6 +7376,9 @@ struct OCMBuilder {
   void add_RPO_INSPECTION(::flatbuffers::Offset<OCMInspectionGeometry> RPO_INSPECTION) {
     fbb_.AddOffset(OCM::VT_RPO_INSPECTION, RPO_INSPECTION);
   }
+  void add_DERIVED_EPHEMERIS(::flatbuffers::Offset<PPE> DERIVED_EPHEMERIS) {
+    fbb_.AddOffset(OCM::VT_DERIVED_EPHEMERIS, DERIVED_EPHEMERIS);
+  }
   explicit OCMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -7418,9 +7432,11 @@ inline ::flatbuffers::Offset<OCM> CreateOCM(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OCMSeedSet>>> SEED_SETS = 0,
     ::flatbuffers::Offset<OCMIntegrator> INTEGRATOR = 0,
     ::flatbuffers::Offset<OCMRelativeGeometry> RPO_GEOMETRY = 0,
-    ::flatbuffers::Offset<OCMInspectionGeometry> RPO_INSPECTION = 0) {
+    ::flatbuffers::Offset<OCMInspectionGeometry> RPO_INSPECTION = 0,
+    ::flatbuffers::Offset<PPE> DERIVED_EPHEMERIS = 0) {
   OCMBuilder builder_(_fbb);
   builder_.add_STATE_STEP_SIZE(STATE_STEP_SIZE);
+  builder_.add_DERIVED_EPHEMERIS(DERIVED_EPHEMERIS);
   builder_.add_RPO_INSPECTION(RPO_INSPECTION);
   builder_.add_RPO_GEOMETRY(RPO_GEOMETRY);
   builder_.add_INTEGRATOR(INTEGRATOR);
@@ -7506,7 +7522,8 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
     const std::vector<::flatbuffers::Offset<OCMSeedSet>> *SEED_SETS = nullptr,
     ::flatbuffers::Offset<OCMIntegrator> INTEGRATOR = 0,
     ::flatbuffers::Offset<OCMRelativeGeometry> RPO_GEOMETRY = 0,
-    ::flatbuffers::Offset<OCMInspectionGeometry> RPO_INSPECTION = 0) {
+    ::flatbuffers::Offset<OCMInspectionGeometry> RPO_INSPECTION = 0,
+    ::flatbuffers::Offset<PPE> DERIVED_EPHEMERIS = 0) {
   auto TRAJ_TYPE_DESCRIPTION__ = TRAJ_TYPE_DESCRIPTION ? _fbb.CreateString(TRAJ_TYPE_DESCRIPTION) : 0;
   auto STATE_DATA__ = STATE_DATA ? _fbb.CreateVector<double>(*STATE_DATA) : 0;
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
@@ -7569,7 +7586,8 @@ inline ::flatbuffers::Offset<OCM> CreateOCMDirect(
       SEED_SETS__,
       INTEGRATOR,
       RPO_GEOMETRY,
-      RPO_INSPECTION);
+      RPO_INSPECTION,
+      DERIVED_EPHEMERIS);
 }
 
 inline const OCM *GetOCM(const void *buf) {

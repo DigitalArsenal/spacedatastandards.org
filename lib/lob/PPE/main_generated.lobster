@@ -42,7 +42,18 @@ enum sizeShapeProfile:
     /// Radius of periapsis (km). Preferred for hyperbolic orbits.
     sizeShapeProfile_R_PERIAPSIS = 1
 
+/// Why a window of a derived ephemeris has no record.
+enum ppeWindowStatus:
+    /// Not stated.
+    ppeWindowStatus_UNSPECIFIED = 0
+    /// The theory refuses somewhere in the window (decay, space-weather inputs short).
+    ppeWindowStatus_THEORY_REFUSED = 1
+    /// No window of the builder's shortest span holds its tolerance there.
+    ppeWindowStatus_TOLERANCE_NOT_HELD = 2
+
 class PPEPositionRecord
+
+class PPEBuild
 
 class PPEOrbitalElementRecord
 
@@ -122,13 +133,30 @@ class PPEPositionRecord : flatbuffers.handle
     /// RMS position fit residual over this segment (km). Optional quality metric.
     def RMS_POSITION_RESIDUAL() -> float:
         return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+    /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+    /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+    /// instant. NaN when not stated.
+    def EPOCH_MID_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, nan)
+    /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+    /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+    /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+    /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+    def POS_COEFF_HEAD_COUNT() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 32, 65535)
+    /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+    /// A builder whose position and velocity series differ in length pads the shorter
+    /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+    def VEL_COEFF_HEAD_COUNT() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 34, 65535)
 
 def GetRootAsPPEPositionRecord(buf:string): return PPEPositionRecord { buf, flatbuffers.indirect(buf, 0) }
 
 struct PPEPositionRecordBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(16)
         return this
     def add_EPOCH_MID(EPOCH_MID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH_MID)
@@ -168,6 +196,15 @@ struct PPEPositionRecordBuilder:
         return this
     def add_RMS_POSITION_RESIDUAL(RMS_POSITION_RESIDUAL:float):
         b_.PrependFloat64Slot(12, RMS_POSITION_RESIDUAL, 0.0)
+        return this
+    def add_EPOCH_MID_SECONDS(EPOCH_MID_SECONDS:float):
+        b_.PrependFloat64Slot(13, EPOCH_MID_SECONDS, nan)
+        return this
+    def add_POS_COEFF_HEAD_COUNT(POS_COEFF_HEAD_COUNT:int):
+        b_.PrependUint16Slot(14, POS_COEFF_HEAD_COUNT, 65535)
+        return this
+    def add_VEL_COEFF_HEAD_COUNT(VEL_COEFF_HEAD_COUNT:int):
+        b_.PrependUint16Slot(15, VEL_COEFF_HEAD_COUNT, 65535)
         return this
     def end():
         return b_.EndObject()
@@ -212,6 +249,95 @@ def PPEPositionRecordStartVELCOEFFZVector(b_:flatbuffers.builder, n_:int):
 def PPEPositionRecordCreateVELCOEFFZVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// The builder of a derived ephemeris and the inputs its records are bound to.
+/// The records are a derived convenience: the source they were built from remains
+/// the authoritative content, and a reader may ignore them. BUILDER_NAME and
+/// BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+/// ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+class PPEBuild : flatbuffers.handle
+    /// Name of the builder, as it publishes itself.
+    def BUILDER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Version of the builder.
+    def BUILDER_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// SHA-256 of the builder's executable artifact (32 bytes).
+    def BUILDER_DIGEST(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 1)
+    def BUILDER_DIGEST_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// SHA-256 over the fields of the source record the builder reads, by the builder's
+    /// published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+    def RECORD_DIGEST(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+    def RECORD_DIGEST_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// SHA-256 over the configuration and environment inputs the builder used that are not
+    /// in the source record (force-model configuration, space-weather data), by the builder's
+    /// published rule (32 bytes); empty when the builder uses none.
+    def ENVIRONMENT_DIGEST(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 1)
+    def ENVIRONMENT_DIGEST_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Build tolerance per position axis in km. NaN when not stated.
+    def TOL_POSITION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, nan)
+    /// Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+    def TOL_VELOCITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, nan)
+
+def GetRootAsPPEBuild(buf:string): return PPEBuild { buf, flatbuffers.indirect(buf, 0) }
+
+struct PPEBuildBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_BUILDER_NAME(BUILDER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, BUILDER_NAME)
+        return this
+    def add_BUILDER_VERSION(BUILDER_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, BUILDER_VERSION)
+        return this
+    def add_BUILDER_DIGEST(BUILDER_DIGEST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, BUILDER_DIGEST)
+        return this
+    def add_RECORD_DIGEST(RECORD_DIGEST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, RECORD_DIGEST)
+        return this
+    def add_ENVIRONMENT_DIGEST(ENVIRONMENT_DIGEST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ENVIRONMENT_DIGEST)
+        return this
+    def add_TOL_POSITION(TOL_POSITION:float):
+        b_.PrependFloat64Slot(5, TOL_POSITION, nan)
+        return this
+    def add_TOL_VELOCITY(TOL_VELOCITY:float):
+        b_.PrependFloat64Slot(6, TOL_VELOCITY, nan)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PPEBuildStartBUILDERDIGESTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PPEBuildCreateBUILDERDIGESTVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def PPEBuildStartRECORDDIGESTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PPEBuildCreateRECORDDIGESTVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def PPEBuildStartENVIRONMENTDIGESTVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PPEBuildCreateENVIRONMENTDIGESTVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
 /// A single time-segment record of polynomial coefficients for classical orbital elements.
@@ -387,7 +513,8 @@ def PPEOrbitalElementRecordCreateCOEFFANOMALYVector(b_:flatbuffers.builder, v_:[
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 class PPE : flatbuffers.handle
     /// Plain-text comments.
     def COMMENT(i:int) -> string:
@@ -447,13 +574,38 @@ class PPE : flatbuffers.handle
     def PROVENANCE() -> PVN?:
         let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: PVN { buf_, o } else: nil
+    /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+    /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+    def REFERENCE_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// The builder and inputs of a derived ephemeris; absent for any other.
+    def BUILD() -> PPEBuild?:
+        let o = flatbuffers.field_table(buf_, pos_, 34)
+        return if o: PPEBuild { buf_, o } else: nil
+    /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+    /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+    /// never written.
+    def UNSERVED_MID_SECONDS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 8)
+    def UNSERVED_MID_SECONDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+    def UNSERVED_HALF_SPAN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 8)
+    def UNSERVED_HALF_SPAN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
+    /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+    def UNSERVED_STATUS(i:int) -> ppeWindowStatus:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1)
+    def UNSERVED_STATUS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
 
 def GetRootAsPPE(buf:string): return PPE { buf, flatbuffers.indirect(buf, 0) }
 
 struct PPEBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(19)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -497,6 +649,21 @@ struct PPEBuilder:
     def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, PROVENANCE)
         return this
+    def add_REFERENCE_EPOCH(REFERENCE_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, REFERENCE_EPOCH)
+        return this
+    def add_BUILD(BUILD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, BUILD)
+        return this
+    def add_UNSERVED_MID_SECONDS(UNSERVED_MID_SECONDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, UNSERVED_MID_SECONDS)
+        return this
+    def add_UNSERVED_HALF_SPAN(UNSERVED_HALF_SPAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, UNSERVED_HALF_SPAN)
+        return this
+    def add_UNSERVED_STATUS(UNSERVED_STATUS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, UNSERVED_STATUS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -519,4 +686,25 @@ def PPEStartORBITALELEMENTRECORDSVector(b_:flatbuffers.builder, n_:int):
 def PPECreateORBITALELEMENTRECORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PPEStartUNSERVEDMIDSECONDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def PPECreateUNSERVEDMIDSECONDSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def PPEStartUNSERVEDHALFSPANVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def PPECreateUNSERVEDHALFSPANVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def PPEStartUNSERVEDSTATUSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PPECreateUNSERVEDSTATUSVector(b_:flatbuffers.builder, v_:[ppeWindowStatus]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

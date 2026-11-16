@@ -14589,6 +14589,7 @@ impl<'a> OCM<'a> {
     pub const VT_INTEGRATOR: ::flatbuffers::VOffsetT = 80;
     pub const VT_RPO_GEOMETRY: ::flatbuffers::VOffsetT = 82;
     pub const VT_RPO_INSPECTION: ::flatbuffers::VOffsetT = 84;
+    pub const VT_DERIVED_EPHEMERIS: ::flatbuffers::VOffsetT = 86;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -14602,6 +14603,7 @@ impl<'a> OCM<'a> {
     ) -> ::flatbuffers::WIPOffset<OCM<'bldr>> {
         let mut builder = OCMBuilder::new(_fbb);
         builder.add_STATE_STEP_SIZE(args.STATE_STEP_SIZE);
+        if let Some(x) = args.DERIVED_EPHEMERIS { builder.add_DERIVED_EPHEMERIS(x); }
         if let Some(x) = args.RPO_INSPECTION { builder.add_RPO_INSPECTION(x); }
         if let Some(x) = args.RPO_GEOMETRY { builder.add_RPO_GEOMETRY(x); }
         if let Some(x) = args.INTEGRATOR { builder.add_INTEGRATOR(x); }
@@ -14753,6 +14755,9 @@ impl<'a> OCM<'a> {
         let RPO_INSPECTION = self.RPO_INSPECTION().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let DERIVED_EPHEMERIS = self.DERIVED_EPHEMERIS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         OCMT {
             HEADER,
             METADATA,
@@ -14795,6 +14800,7 @@ impl<'a> OCM<'a> {
             INTEGRATOR,
             RPO_GEOMETRY,
             RPO_INSPECTION,
+            DERIVED_EPHEMERIS,
         }
     }
 
@@ -15215,6 +15221,19 @@ impl<'a> OCM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OCMInspectionGeometry>>(OCM::VT_RPO_INSPECTION, None)}
     }
+
+    /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+    /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+    /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+    /// reader may ignore this. How many windows it holds is the publisher's choice.
+    /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+    #[inline]
+    pub fn DERIVED_EPHEMERIS(&self) -> Option<PPE<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PPE>>(OCM::VT_DERIVED_EPHEMERIS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCM<'_> {
@@ -15264,6 +15283,7 @@ impl ::flatbuffers::Verifiable for OCM<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<OCMIntegrator>>("INTEGRATOR", Self::VT_INTEGRATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<OCMRelativeGeometry>>("RPO_GEOMETRY", Self::VT_RPO_GEOMETRY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<OCMInspectionGeometry>>("RPO_INSPECTION", Self::VT_RPO_INSPECTION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PPE>>("DERIVED_EPHEMERIS", Self::VT_DERIVED_EPHEMERIS, false)?
             .finish();
         Ok(())
     }
@@ -15311,6 +15331,7 @@ pub struct OCMArgs<'a> {
     pub INTEGRATOR: Option<::flatbuffers::WIPOffset<OCMIntegrator<'a>>>,
     pub RPO_GEOMETRY: Option<::flatbuffers::WIPOffset<OCMRelativeGeometry<'a>>>,
     pub RPO_INSPECTION: Option<::flatbuffers::WIPOffset<OCMInspectionGeometry<'a>>>,
+    pub DERIVED_EPHEMERIS: Option<::flatbuffers::WIPOffset<PPE<'a>>>,
 }
 
 impl<'a> Default for OCMArgs<'a> {
@@ -15358,6 +15379,7 @@ impl<'a> Default for OCMArgs<'a> {
             INTEGRATOR: None,
             RPO_GEOMETRY: None,
             RPO_INSPECTION: None,
+            DERIVED_EPHEMERIS: None,
         }
     }
 }
@@ -15574,6 +15596,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_DERIVED_EPHEMERIS(&mut self, DERIVED_EPHEMERIS: ::flatbuffers::WIPOffset<PPE<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PPE>>(OCM::VT_DERIVED_EPHEMERIS, DERIVED_EPHEMERIS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMBuilder {
@@ -15633,6 +15660,7 @@ impl ::core::fmt::Debug for OCM<'_> {
         ds.field("INTEGRATOR", &self.INTEGRATOR());
         ds.field("RPO_GEOMETRY", &self.RPO_GEOMETRY());
         ds.field("RPO_INSPECTION", &self.RPO_INSPECTION());
+        ds.field("DERIVED_EPHEMERIS", &self.DERIVED_EPHEMERIS());
         ds.finish()
     }
 }
@@ -15681,6 +15709,7 @@ pub struct OCMT {
     pub INTEGRATOR: Option<alloc::boxed::Box<OCMIntegratorT>>,
     pub RPO_GEOMETRY: Option<alloc::boxed::Box<OCMRelativeGeometryT>>,
     pub RPO_INSPECTION: Option<alloc::boxed::Box<OCMInspectionGeometryT>>,
+    pub DERIVED_EPHEMERIS: Option<alloc::boxed::Box<PPET>>,
 }
 
 impl Default for OCMT {
@@ -15727,6 +15756,7 @@ impl Default for OCMT {
             INTEGRATOR: None,
             RPO_GEOMETRY: None,
             RPO_INSPECTION: None,
+            DERIVED_EPHEMERIS: None,
         }
     }
 }
@@ -15843,6 +15873,9 @@ impl OCMT {
         let RPO_INSPECTION = self.RPO_INSPECTION.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let DERIVED_EPHEMERIS = self.DERIVED_EPHEMERIS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         OCM::create(_fbb, &OCMArgs{
             HEADER,
             METADATA,
@@ -15885,6 +15918,7 @@ impl OCMT {
             INTEGRATOR,
             RPO_GEOMETRY,
             RPO_INSPECTION,
+            DERIVED_EPHEMERIS,
         })
     }
 }

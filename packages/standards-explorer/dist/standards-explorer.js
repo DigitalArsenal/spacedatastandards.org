@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.284.0+1794869202319",
+  version: "1.285.0+1794869891338",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
@@ -8423,8 +8423,8 @@ file_identifier "$PRG";`,
       ]
     },
     PPE: {
-      IDL: `// Hash: 385ac6bc8cded5d39401d9fe64a880afc74485b1f15aab042e68dd8814775716
-// Version: 1.0.5
+      IDL: `// Hash: c50f7cf1ed064220705c936360e3b74a141af3d8630b39de43b06e75e4b29729
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../PVN/main.fbs";
 include "../RFM/main.fbs";
@@ -8573,6 +8573,62 @@ table PPEPositionRecord {
 
   /// RMS position fit residual over this segment (km). Optional quality metric.
   RMS_POSITION_RESIDUAL: double;
+
+  /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  /// instant. NaN when not stated.
+  EPOCH_MID_SECONDS: double = nan;
+
+  /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  POS_COEFF_HEAD_COUNT: uint16 = 65535;
+
+  /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  /// A builder whose position and velocity series differ in length pads the shorter
+  /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  VEL_COEFF_HEAD_COUNT: uint16 = 65535;
+}
+
+// =============================================================================
+// DERIVED EPHEMERIS: BUILDER, INPUTS AND UNSERVED WINDOWS
+// =============================================================================
+
+/// Why a window of a derived ephemeris has no record.
+enum ppeWindowStatus : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The theory refuses somewhere in the window (decay, space-weather inputs short).
+  THEORY_REFUSED = 1,
+  /// No window of the builder's shortest span holds its tolerance there.
+  TOLERANCE_NOT_HELD = 2
+}
+
+/// The builder of a derived ephemeris and the inputs its records are bound to.
+/// The records are a derived convenience: the source they were built from remains
+/// the authoritative content, and a reader may ignore them. BUILDER_NAME and
+/// BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+/// ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+table PPEBuild {
+  /// Name of the builder, as it publishes itself.
+  BUILDER_NAME: string;
+  /// Version of the builder.
+  BUILDER_VERSION: string;
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  BUILDER_DIGEST: [ubyte];
+  /// SHA-256 over the fields of the source record the builder reads, by the builder's
+  /// published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+  RECORD_DIGEST: [ubyte];
+  /// SHA-256 over the configuration and environment inputs the builder used that are not
+  /// in the source record (force-model configuration, space-weather data), by the builder's
+  /// published rule (32 bytes); empty when the builder uses none.
+  ENVIRONMENT_DIGEST: [ubyte];
+  /// Build tolerance per position axis in km. NaN when not stated.
+  TOL_POSITION: double = nan;
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+  TOL_VELOCITY: double = nan;
 }
 
 // =============================================================================
@@ -8650,7 +8706,8 @@ table PPEOrbitalElementRecord {
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 table PPE {
   /// Plain-text comments.
   COMMENT: [string];
@@ -8700,6 +8757,24 @@ table PPE {
 
   /// Where this polynomial ephemeris comes from and the terms it travels under.
   PROVENANCE:PVN;
+
+  /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  REFERENCE_EPOCH: string;
+
+  /// The builder and inputs of a derived ephemeris; absent for any other.
+  BUILD: PPEBuild;
+
+  /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  /// never written.
+  UNSERVED_MID_SECONDS: [double];
+
+  /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  UNSERVED_HALF_SPAN: [double];
+
+  /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  UNSERVED_STATUS: [ppeWindowStatus];
 }
 
 root_type PPE;
@@ -29153,8 +29228,8 @@ file_identifier "$TDM";`,
       ]
     },
     OCM: {
-      IDL: `// Hash: 6d519a40b28ad67713b5f4b7f74dd4609e49aed7e41f94cf883065ec2be4f2fa
-// Version: 2.1.10
+      IDL: `// Hash: a7daf548117e22885027989c8374bf329dfdbae3b547f99a45c1cccca02dafa4
+// Version: 2.1.11
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -30446,6 +30521,12 @@ table OCM {
   RPO_GEOMETRY: OCMRelativeGeometry;
   /// Inspection geometry; STATE_DATA is empty when this is present.
   RPO_INSPECTION: OCMInspectionGeometry;
+  /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  /// reader may ignore this. How many windows it holds is the publisher's choice.
+  /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  DERIVED_EPHEMERIS: PPE;
 }
 
 root_type OCM;
@@ -56512,6 +56593,14 @@ Decoding applies the inverses from the last back.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         meanElementSource: {
           type: "string",
           enum: [
@@ -58724,6 +58813,22 @@ Decoding applies the inverses from the last back.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -58732,6 +58837,56 @@ Decoding applies the inverses from the last back.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -58828,7 +58983,7 @@ Decoding applies the inverses from the last back.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -58896,6 +59051,35 @@ Decoding applies the inverses from the last back.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -65053,6 +65237,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -73115,6 +73303,14 @@ turned into a number.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -75218,6 +75414,22 @@ turned into a number.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -75226,6 +75438,56 @@ turned into a number.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -75322,7 +75584,7 @@ turned into a number.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -75390,6 +75652,35 @@ turned into a number.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -82036,6 +82327,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -86363,6 +86658,14 @@ verbatim what that source states about itself.`,
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -88725,6 +89028,22 @@ verbatim what that source states about itself.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -88733,6 +89052,56 @@ verbatim what that source states about itself.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -88829,7 +89198,7 @@ verbatim what that source states about itself.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -88897,6 +89266,35 @@ verbatim what that source states about itself.`,
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -97926,6 +98324,14 @@ turned into a number.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         PVN: {
           type: "object",
           description: "Product Provenance",
@@ -98943,6 +99349,22 @@ turned into a number.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -98951,6 +99373,56 @@ turned into a number.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -99047,7 +99519,7 @@ turned into a number.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -99115,6 +99587,35 @@ turned into a number.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -103757,6 +104258,14 @@ provider's reviewed register). Never free text.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -106101,6 +106610,22 @@ provider's reviewed register). Never free text.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -106109,6 +106634,56 @@ provider's reviewed register). Never free text.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -106205,7 +106780,7 @@ provider's reviewed register). Never free text.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -106273,6 +106848,35 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -112919,6 +113523,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -131602,6 +132210,14 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -132879,6 +133495,22 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -132887,6 +133519,56 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -132983,7 +133665,7 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -133051,6 +133733,35 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -141815,6 +142526,14 @@ Decoding applies the inverses from the last back.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         RFMOrigin: {
           type: "object",
           description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -142832,6 +143551,22 @@ Decoding applies the inverses from the last back.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -142840,6 +143575,56 @@ Decoding applies the inverses from the last back.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -142936,7 +143721,7 @@ Decoding applies the inverses from the last back.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -143004,6 +143789,35 @@ Decoding applies the inverses from the last back.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -146776,6 +147590,14 @@ format class are named by $NCD's container format.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -148929,6 +149751,22 @@ format class are named by $NCD's container format.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -148937,6 +149775,56 @@ format class are named by $NCD's container format.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -149033,7 +149921,7 @@ format class are named by $NCD's container format.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -149101,6 +149989,35 @@ format class are named by $NCD's container format.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -155747,6 +156664,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -162524,6 +163445,14 @@ stated.`
           enum: [
             "SMA",
             "R_PERIAPSIS"
+          ]
+        },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
           ]
         },
         ncdContainerFormat: {
@@ -182725,6 +183654,22 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -182733,6 +183678,56 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -182829,7 +183824,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -182897,6 +183892,35 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -188907,6 +189931,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -264791,6 +265819,14 @@ balance service's own rate.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -267064,6 +268100,22 @@ balance service's own rate.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -267072,6 +268124,56 @@ balance service's own rate.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -267168,7 +268270,7 @@ balance service's own rate.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -267236,6 +268338,35 @@ balance service's own rate.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -277456,6 +278587,14 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -278664,6 +279803,22 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -278672,6 +279827,56 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -278768,7 +279973,7 @@ serves the request, e.g. "bulk", "query", "status", "activity",
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -278836,6 +280041,35 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -291008,6 +292242,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         ppsAttitudeMode: {
           type: "string",
           enum: [
@@ -292862,6 +294104,22 @@ compressed). Nothing hashes the payload before the protocol hash.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -292870,6 +294128,56 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -292966,7 +294274,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -293034,6 +294342,35 @@ compressed). Nothing hashes the payload before the protocol hash.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -300412,6 +301749,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -303008,6 +304353,22 @@ compressed). Nothing hashes the payload before the protocol hash.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -303016,6 +304377,56 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -303112,7 +304523,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -303180,6 +304591,35 @@ compressed). Nothing hashes the payload before the protocol hash.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -309342,6 +310782,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -329645,6 +331089,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         meanElementSource: {
           type: "string",
           enum: [
@@ -331821,6 +333273,22 @@ compressed). Nothing hashes the payload before the protocol hash.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -331829,6 +333297,56 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -331925,7 +333443,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -331993,6 +333511,35 @@ compressed). Nothing hashes the payload before the protocol hash.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -338150,6 +339697,10 @@ stated.`
             RPO_INSPECTION: {
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present."
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it."
             }
           },
           additionalProperties: false
@@ -351797,6 +353348,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "R_PERIAPSIS"
           ]
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -354846,6 +356405,22 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -354854,6 +356429,56 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity."
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -354950,7 +356575,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -355018,6 +356643,35 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH."
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other."
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written."
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS."
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS."
             }
           },
           additionalProperties: false
@@ -422335,6 +423989,30 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         meanElementSource: {
           type: "string",
           enum: [
@@ -429985,6 +431663,22 @@ Decoding applies the inverses from the last back.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -429993,6 +431687,65 @@ Decoding applies the inverses from the last back.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -430162,7 +431915,7 @@ Decoding applies the inverses from the last back.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -430347,6 +432100,40 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -444897,6 +446684,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -461841,6 +463633,30 @@ turned into a number.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -469306,6 +471122,22 @@ turned into a number.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -469314,6 +471146,65 @@ turned into a number.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -469483,7 +471374,7 @@ turned into a number.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -469668,6 +471559,40 @@ turned into a number.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -484945,6 +486870,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -496118,6 +498048,30 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -506558,6 +508512,22 @@ verbatim what that source states about itself.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -506566,6 +508536,65 @@ verbatim what that source states about itself.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -506735,7 +508764,7 @@ verbatim what that source states about itself.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -506920,6 +508949,40 @@ verbatim what that source states about itself.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -524931,6 +526994,30 @@ turned into a number.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         PVN: {
           type: "object",
           description: "Product Provenance",
@@ -528677,6 +530764,22 @@ turned into a number.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -528685,6 +530788,65 @@ turned into a number.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -528854,7 +531016,7 @@ turned into a number.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -529039,6 +531201,40 @@ turned into a number.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -548418,6 +550614,30 @@ provider's reviewed register). Never free text.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -556578,6 +558798,22 @@ provider's reviewed register). Never free text.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -556586,6 +558822,65 @@ provider's reviewed register). Never free text.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -556755,7 +559050,7 @@ provider's reviewed register). Never free text.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -556940,6 +559235,40 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -572217,6 +574546,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -608307,6 +610641,30 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -612903,6 +615261,22 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -612911,6 +615285,65 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -613080,7 +615513,7 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -613265,6 +615698,40 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -630979,6 +633446,30 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         RFMOrigin: {
           type: "object",
           description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
@@ -634725,6 +637216,22 @@ Decoding applies the inverses from the last back.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -634733,6 +637240,65 @@ Decoding applies the inverses from the last back.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -634902,7 +637468,7 @@ Decoding applies the inverses from the last back.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -635087,6 +637653,40 @@ Decoding applies the inverses from the last back.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -642910,6 +645510,30 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         covarianceCalibration: {
           type: "string",
           enum: [
@@ -650520,6 +653144,22 @@ format class are named by $NCD's container format.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -650528,6 +653168,65 @@ format class are named by $NCD's container format.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -650697,7 +653396,7 @@ format class are named by $NCD's container format.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -650882,6 +653581,40 @@ format class are named by $NCD's container format.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -666159,6 +668892,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -683326,6 +686064,30 @@ stated.`,
             R_PERIAPSIS: {
               value: 1,
               description: "Radius of periapsis (km). Preferred for hyperbolic orbits."
+            }
+          }
+        },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
             }
           }
         },
@@ -732100,6 +734862,22 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -732108,6 +734886,65 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -732277,7 +735114,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -732462,6 +735299,40 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -743159,6 +746030,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -875307,6 +878183,30 @@ balance service's own rate.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -885412,6 +888312,22 @@ balance service's own rate.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -885420,6 +888336,65 @@ balance service's own rate.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -885589,7 +888564,7 @@ balance service's own rate.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -885774,6 +888749,40 @@ balance service's own rate.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -914115,6 +917124,30 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         maneuverStatus: {
           type: "string",
           enum: [
@@ -918469,6 +921502,22 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -918477,6 +921526,65 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -918646,7 +921754,7 @@ serves the request, e.g. "bulk", "query", "status", "activity",
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -918831,6 +921939,40 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -941077,6 +944219,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         ppsAttitudeMode: {
           type: "string",
           enum: [
@@ -946005,6 +949171,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -946013,6 +949195,65 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -946182,7 +949423,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -946367,6 +949608,40 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -964781,6 +968056,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -975853,6 +979152,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -975861,6 +979176,65 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -976030,7 +979404,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -976215,6 +979589,40 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -987224,6 +990632,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -1026448,6 +1029861,30 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         meanElementSource: {
           type: "string",
           enum: [
@@ -1033982,6 +1037419,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -1033990,6 +1037443,65 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -1034159,7 +1037671,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -1034344,6 +1037856,40 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false
@@ -1048894,6 +1052440,11 @@ stated.`,
               $ref: "#/definitions/OCMInspectionGeometry",
               description: "Inspection geometry; STATE_DATA is empty when this is present.",
               "x-flatbuffer-type": "OCMInspectionGeometry"
+            },
+            DERIVED_EPHEMERIS: {
+              $ref: "#/definitions/PPE",
+              description: "The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder\nnamed in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.\nMEAN_ELEMENTS and the record's other fields remain the authoritative content; a\nreader may ignore this. How many windows it holds is the publisher's choice.\nTRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.",
+              "x-flatbuffer-type": "PPE"
             }
           },
           additionalProperties: false
@@ -1077426,6 +1080977,30 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             }
           }
         },
+        ppeWindowStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refuses somewhere in the window (decay, space-weather inputs short)."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "No window of the builder's shortest span holds its tolerance there."
+            }
+          }
+        },
         ncdContainerFormat: {
           type: "string",
           enum: [
@@ -1088842,6 +1092417,22 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             RMS_POSITION_RESIDUAL: {
               type: "number",
               description: "RMS position fit residual over this segment (km). Optional quality metric."
+            },
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.\nWhen present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t\nin seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same\ninstant. NaN when not stated."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32\nvalues, carried widened (exactly) in the binary64 vectors; those below are binary64.\nA builder that packs a series k-major (x, y, z per index k, binary64 head then binary32\ntail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.\nA builder whose position and velocity series differ in length pads the shorter\nwith zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged."
             }
           },
           required: [
@@ -1088850,6 +1092441,65 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "POS_COEFF_Y",
             "POS_COEFF_Z"
           ],
+          additionalProperties: false
+        },
+        PPEBuild: {
+          type: "object",
+          description: "The builder of a derived ephemeris and the inputs its records are bound to.\nThe records are a derived convenience: the source they were built from remains\nthe authoritative content, and a reader may ignore them. BUILDER_NAME and\nBUILDER_VERSION identify the published rule that defines RECORD_DIGEST and\nENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, as it publishes itself.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the fields of the source record the builder reads, by the builder's\npublished rule (32 bytes). A mismatch with the record a consumer holds voids the records.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that are not\nin the source record (force-model configuration, space-weather data), by the builder's\npublished rule (32 bytes); empty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
           additionalProperties: false
         },
         PPEOrbitalElementRecord: {
@@ -1089019,7 +1092669,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
         },
         PPE: {
           type: "object",
-          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+          description: "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps, except the windows\nlisted in UNSERVED_MID_SECONDS.",
           properties: {
             COMMENT: {
               type: "array",
@@ -1089204,6 +1092854,40 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               $ref: "#/definitions/PVN",
               description: "Where this polynomial ephemeris comes from and the terms it travels under.",
               "x-flatbuffer-type": "PVN"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in\nTIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILD: {
+              $ref: "#/definitions/PPEBuild",
+              description: "The builder and inputs of a derived ephemeris; absent for any other.",
+              "x-flatbuffer-type": "PPEBuild"
+            },
+            UNSERVED_MID_SECONDS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Middle of each window no record serves, in seconds after REFERENCE_EPOCH.\nSuch a window is a gap in POSITION_RECORDS; a record with no coefficients is\nnever written.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_HALF_SPAN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[double]"
+            },
+            UNSERVED_STATUS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ppeWindowStatus"
+              },
+              description: "Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.",
+              "x-flatbuffer-type": "[ppeWindowStatus]"
             }
           },
           additionalProperties: false

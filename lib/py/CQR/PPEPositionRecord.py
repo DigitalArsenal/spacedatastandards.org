@@ -274,8 +274,40 @@ class PPEPositionRecord(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+    # When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+    # in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+    # instant. NaN when not stated.
+    # PPEPositionRecord
+    def EPOCH_MID_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+    # values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+    # A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+    # tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+    # PPEPositionRecord
+    def POS_COEFF_HEAD_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 65535
+
+    # The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+    # A builder whose position and velocity series differ in length pads the shorter
+    # with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+    # PPEPositionRecord
+    def VEL_COEFF_HEAD_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 65535
+
 def PPEPositionRecordStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(16)
 
 def Start(builder):
     PPEPositionRecordStart(builder)
@@ -454,6 +486,24 @@ def PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL):
 def AddRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL):
     PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL)
 
+def PPEPositionRecordAddEPOCH_MID_SECONDS(builder, EPOCH_MID_SECONDS):
+    builder.PrependFloat64Slot(13, EPOCH_MID_SECONDS, float('nan'))
+
+def AddEPOCH_MID_SECONDS(builder, EPOCH_MID_SECONDS):
+    PPEPositionRecordAddEPOCH_MID_SECONDS(builder, EPOCH_MID_SECONDS)
+
+def PPEPositionRecordAddPOS_COEFF_HEAD_COUNT(builder, POS_COEFF_HEAD_COUNT):
+    builder.PrependUint16Slot(14, POS_COEFF_HEAD_COUNT, 65535)
+
+def AddPOS_COEFF_HEAD_COUNT(builder, POS_COEFF_HEAD_COUNT):
+    PPEPositionRecordAddPOS_COEFF_HEAD_COUNT(builder, POS_COEFF_HEAD_COUNT)
+
+def PPEPositionRecordAddVEL_COEFF_HEAD_COUNT(builder, VEL_COEFF_HEAD_COUNT):
+    builder.PrependUint16Slot(15, VEL_COEFF_HEAD_COUNT, 65535)
+
+def AddVEL_COEFF_HEAD_COUNT(builder, VEL_COEFF_HEAD_COUNT):
+    PPEPositionRecordAddVEL_COEFF_HEAD_COUNT(builder, VEL_COEFF_HEAD_COUNT)
+
 def PPEPositionRecordEnd(builder):
     return builder.EndObject()
 
@@ -483,6 +533,9 @@ class PPEPositionRecordT(object):
         VEL_COEFF_Z = None,
         MAX_POSITION_RESIDUAL = 0.0,
         RMS_POSITION_RESIDUAL = 0.0,
+        EPOCH_MID_SECONDS = float('nan'),
+        POS_COEFF_HEAD_COUNT = 65535,
+        VEL_COEFF_HEAD_COUNT = 65535,
     ):
         self.EPOCH_MID = EPOCH_MID  # type: Optional[str]
         self.EPOCH_HALF_SPAN = EPOCH_HALF_SPAN  # type: float
@@ -497,6 +550,9 @@ class PPEPositionRecordT(object):
         self.VEL_COEFF_Z = VEL_COEFF_Z  # type: Optional[List[float]]
         self.MAX_POSITION_RESIDUAL = MAX_POSITION_RESIDUAL  # type: float
         self.RMS_POSITION_RESIDUAL = RMS_POSITION_RESIDUAL  # type: float
+        self.EPOCH_MID_SECONDS = EPOCH_MID_SECONDS  # type: float
+        self.POS_COEFF_HEAD_COUNT = POS_COEFF_HEAD_COUNT  # type: int
+        self.VEL_COEFF_HEAD_COUNT = VEL_COEFF_HEAD_COUNT  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -568,6 +624,9 @@ class PPEPositionRecordT(object):
                 self.VEL_COEFF_Z = PPEPositionRecord.VEL_COEFF_ZAsNumpy()
         self.MAX_POSITION_RESIDUAL = PPEPositionRecord.MAX_POSITION_RESIDUAL()
         self.RMS_POSITION_RESIDUAL = PPEPositionRecord.RMS_POSITION_RESIDUAL()
+        self.EPOCH_MID_SECONDS = PPEPositionRecord.EPOCH_MID_SECONDS()
+        self.POS_COEFF_HEAD_COUNT = PPEPositionRecord.POS_COEFF_HEAD_COUNT()
+        self.VEL_COEFF_HEAD_COUNT = PPEPositionRecord.VEL_COEFF_HEAD_COUNT()
 
     # PPEPositionRecordT
     def Pack(self, builder):
@@ -642,5 +701,8 @@ class PPEPositionRecordT(object):
             PPEPositionRecordAddVEL_COEFF_Z(builder, VEL_COEFF_Z)
         PPEPositionRecordAddMAX_POSITION_RESIDUAL(builder, self.MAX_POSITION_RESIDUAL)
         PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder, self.RMS_POSITION_RESIDUAL)
+        PPEPositionRecordAddEPOCH_MID_SECONDS(builder, self.EPOCH_MID_SECONDS)
+        PPEPositionRecordAddPOS_COEFF_HEAD_COUNT(builder, self.POS_COEFF_HEAD_COUNT)
+        PPEPositionRecordAddVEL_COEFF_HEAD_COUNT(builder, self.VEL_COEFF_HEAD_COUNT)
         PPEPositionRecord = PPEPositionRecordEnd(builder)
         return PPEPositionRecord

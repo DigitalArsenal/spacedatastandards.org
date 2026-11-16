@@ -328,6 +328,109 @@ impl<'a> ::flatbuffers::Verifiable for sizeShapeProfile {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for sizeShapeProfile {}
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PPE_WINDOW_STATUS: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PPE_WINDOW_STATUS: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PPE_WINDOW_STATUS: [ppeWindowStatus; 3] = [
+    ppeWindowStatus::UNSPECIFIED,
+    ppeWindowStatus::THEORY_REFUSED,
+    ppeWindowStatus::TOLERANCE_NOT_HELD,
+];
+
+/// Why a window of a derived ephemeris has no record.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ppeWindowStatus(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl ppeWindowStatus {
+    /// Not stated.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// The theory refuses somewhere in the window (decay, space-weather inputs short).
+    pub const THEORY_REFUSED: Self = Self(1);
+    /// No window of the builder's shortest span holds its tolerance there.
+    pub const TOLERANCE_NOT_HELD: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::THEORY_REFUSED,
+        Self::TOLERANCE_NOT_HELD,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::THEORY_REFUSED => Some("THEORY_REFUSED"),
+            Self::TOLERANCE_NOT_HELD => Some("TOLERANCE_NOT_HELD"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for ppeWindowStatus {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ppeWindowStatus {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for ppeWindowStatus {
+    type Output = ppeWindowStatus;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for ppeWindowStatus {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for ppeWindowStatus {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for ppeWindowStatus {}
+
 pub enum PPEPositionRecordOffset {}
 
 /// A single time-segment record of polynomial coefficients for Cartesian position
@@ -370,6 +473,9 @@ impl<'a> PPEPositionRecord<'a> {
     pub const VT_VEL_COEFF_Z: ::flatbuffers::VOffsetT = 24;
     pub const VT_MAX_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 26;
     pub const VT_RMS_POSITION_RESIDUAL: ::flatbuffers::VOffsetT = 28;
+    pub const VT_EPOCH_MID_SECONDS: ::flatbuffers::VOffsetT = 30;
+    pub const VT_POS_COEFF_HEAD_COUNT: ::flatbuffers::VOffsetT = 32;
+    pub const VT_VEL_COEFF_HEAD_COUNT: ::flatbuffers::VOffsetT = 34;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -382,6 +488,7 @@ impl<'a> PPEPositionRecord<'a> {
         args: &'args PPEPositionRecordArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PPEPositionRecord<'bldr>> {
         let mut builder = PPEPositionRecordBuilder::new(_fbb);
+        builder.add_EPOCH_MID_SECONDS(args.EPOCH_MID_SECONDS);
         builder.add_RMS_POSITION_RESIDUAL(args.RMS_POSITION_RESIDUAL);
         builder.add_MAX_POSITION_RESIDUAL(args.MAX_POSITION_RESIDUAL);
         builder.add_EPOCH_HALF_SPAN(args.EPOCH_HALF_SPAN);
@@ -392,6 +499,8 @@ impl<'a> PPEPositionRecord<'a> {
         if let Some(x) = args.POS_COEFF_Y { builder.add_POS_COEFF_Y(x); }
         if let Some(x) = args.POS_COEFF_X { builder.add_POS_COEFF_X(x); }
         if let Some(x) = args.EPOCH_MID { builder.add_EPOCH_MID(x); }
+        builder.add_VEL_COEFF_HEAD_COUNT(args.VEL_COEFF_HEAD_COUNT);
+        builder.add_POS_COEFF_HEAD_COUNT(args.POS_COEFF_HEAD_COUNT);
         builder.add_NUM_COEFFICIENTS(args.NUM_COEFFICIENTS);
         builder.add_HAS_VELOCITY_COEFFICIENTS(args.HAS_VELOCITY_COEFFICIENTS);
         builder.add_BASIS_TYPE(args.BASIS_TYPE);
@@ -430,6 +539,9 @@ impl<'a> PPEPositionRecord<'a> {
         });
         let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL();
         let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL();
+        let EPOCH_MID_SECONDS = self.EPOCH_MID_SECONDS();
+        let POS_COEFF_HEAD_COUNT = self.POS_COEFF_HEAD_COUNT();
+        let VEL_COEFF_HEAD_COUNT = self.VEL_COEFF_HEAD_COUNT();
         PPEPositionRecordT {
             EPOCH_MID,
             EPOCH_HALF_SPAN,
@@ -444,6 +556,9 @@ impl<'a> PPEPositionRecord<'a> {
             VEL_COEFF_Z,
             MAX_POSITION_RESIDUAL,
             RMS_POSITION_RESIDUAL,
+            EPOCH_MID_SECONDS,
+            POS_COEFF_HEAD_COUNT,
+            VEL_COEFF_HEAD_COUNT,
         }
     }
 
@@ -573,6 +688,41 @@ impl<'a> PPEPositionRecord<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, Some(0.0)).unwrap()}
     }
+
+    /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+    /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+    /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+    /// instant. NaN when not stated.
+    #[inline]
+    pub fn EPOCH_MID_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PPEPositionRecord::VT_EPOCH_MID_SECONDS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+    /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+    /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+    /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+    #[inline]
+    pub fn POS_COEFF_HEAD_COUNT(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PPEPositionRecord::VT_POS_COEFF_HEAD_COUNT, Some(65535)).unwrap()}
+    }
+
+    /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+    /// A builder whose position and velocity series differ in length pads the shorter
+    /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+    #[inline]
+    pub fn VEL_COEFF_HEAD_COUNT(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PPEPositionRecord::VT_VEL_COEFF_HEAD_COUNT, Some(65535)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PPEPositionRecord<'_> {
@@ -594,6 +744,9 @@ impl ::flatbuffers::Verifiable for PPEPositionRecord<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("VEL_COEFF_Z", Self::VT_VEL_COEFF_Z, false)?
             .visit_field::<f64>("MAX_POSITION_RESIDUAL", Self::VT_MAX_POSITION_RESIDUAL, false)?
             .visit_field::<f64>("RMS_POSITION_RESIDUAL", Self::VT_RMS_POSITION_RESIDUAL, false)?
+            .visit_field::<f64>("EPOCH_MID_SECONDS", Self::VT_EPOCH_MID_SECONDS, false)?
+            .visit_field::<u16>("POS_COEFF_HEAD_COUNT", Self::VT_POS_COEFF_HEAD_COUNT, false)?
+            .visit_field::<u16>("VEL_COEFF_HEAD_COUNT", Self::VT_VEL_COEFF_HEAD_COUNT, false)?
             .finish();
         Ok(())
     }
@@ -613,6 +766,9 @@ pub struct PPEPositionRecordArgs<'a> {
     pub VEL_COEFF_Z: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub MAX_POSITION_RESIDUAL: f64,
     pub RMS_POSITION_RESIDUAL: f64,
+    pub EPOCH_MID_SECONDS: f64,
+    pub POS_COEFF_HEAD_COUNT: u16,
+    pub VEL_COEFF_HEAD_COUNT: u16,
 }
 
 impl<'a> Default for PPEPositionRecordArgs<'a> {
@@ -632,6 +788,9 @@ impl<'a> Default for PPEPositionRecordArgs<'a> {
             VEL_COEFF_Z: None,
             MAX_POSITION_RESIDUAL: 0.0,
             RMS_POSITION_RESIDUAL: 0.0,
+            EPOCH_MID_SECONDS: f64::NAN,
+            POS_COEFF_HEAD_COUNT: 65535,
+            VEL_COEFF_HEAD_COUNT: 65535,
         }
     }
 }
@@ -708,6 +867,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEPositionRecordBuilder<'a, 
     }
 
     #[inline]
+    pub fn add_EPOCH_MID_SECONDS(&mut self, EPOCH_MID_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(PPEPositionRecord::VT_EPOCH_MID_SECONDS, EPOCH_MID_SECONDS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_POS_COEFF_HEAD_COUNT(&mut self, POS_COEFF_HEAD_COUNT: u16) {
+        self.fbb_.push_slot::<u16>(PPEPositionRecord::VT_POS_COEFF_HEAD_COUNT, POS_COEFF_HEAD_COUNT, 65535);
+    }
+
+    #[inline]
+    pub fn add_VEL_COEFF_HEAD_COUNT(&mut self, VEL_COEFF_HEAD_COUNT: u16) {
+        self.fbb_.push_slot::<u16>(PPEPositionRecord::VT_VEL_COEFF_HEAD_COUNT, VEL_COEFF_HEAD_COUNT, 65535);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEPositionRecordBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PPEPositionRecordBuilder {
@@ -743,6 +917,9 @@ impl ::core::fmt::Debug for PPEPositionRecord<'_> {
         ds.field("VEL_COEFF_Z", &self.VEL_COEFF_Z());
         ds.field("MAX_POSITION_RESIDUAL", &self.MAX_POSITION_RESIDUAL());
         ds.field("RMS_POSITION_RESIDUAL", &self.RMS_POSITION_RESIDUAL());
+        ds.field("EPOCH_MID_SECONDS", &self.EPOCH_MID_SECONDS());
+        ds.field("POS_COEFF_HEAD_COUNT", &self.POS_COEFF_HEAD_COUNT());
+        ds.field("VEL_COEFF_HEAD_COUNT", &self.VEL_COEFF_HEAD_COUNT());
         ds.finish()
     }
 }
@@ -763,6 +940,9 @@ pub struct PPEPositionRecordT {
     pub VEL_COEFF_Z: Option<alloc::vec::Vec<f64>>,
     pub MAX_POSITION_RESIDUAL: f64,
     pub RMS_POSITION_RESIDUAL: f64,
+    pub EPOCH_MID_SECONDS: f64,
+    pub POS_COEFF_HEAD_COUNT: u16,
+    pub VEL_COEFF_HEAD_COUNT: u16,
 }
 
 impl Default for PPEPositionRecordT {
@@ -781,6 +961,9 @@ impl Default for PPEPositionRecordT {
             VEL_COEFF_Z: None,
             MAX_POSITION_RESIDUAL: 0.0,
             RMS_POSITION_RESIDUAL: 0.0,
+            EPOCH_MID_SECONDS: f64::NAN,
+            POS_COEFF_HEAD_COUNT: 65535,
+            VEL_COEFF_HEAD_COUNT: 65535,
         }
     }
 }
@@ -821,6 +1004,9 @@ impl PPEPositionRecordT {
         });
         let MAX_POSITION_RESIDUAL = self.MAX_POSITION_RESIDUAL;
         let RMS_POSITION_RESIDUAL = self.RMS_POSITION_RESIDUAL;
+        let EPOCH_MID_SECONDS = self.EPOCH_MID_SECONDS;
+        let POS_COEFF_HEAD_COUNT = self.POS_COEFF_HEAD_COUNT;
+        let VEL_COEFF_HEAD_COUNT = self.VEL_COEFF_HEAD_COUNT;
         PPEPositionRecord::create(_fbb, &PPEPositionRecordArgs{
             EPOCH_MID,
             EPOCH_HALF_SPAN,
@@ -835,6 +1021,330 @@ impl PPEPositionRecordT {
             VEL_COEFF_Z,
             MAX_POSITION_RESIDUAL,
             RMS_POSITION_RESIDUAL,
+            EPOCH_MID_SECONDS,
+            POS_COEFF_HEAD_COUNT,
+            VEL_COEFF_HEAD_COUNT,
+        })
+    }
+}
+
+pub enum PPEBuildOffset {}
+
+/// The builder of a derived ephemeris and the inputs its records are bound to.
+/// The records are a derived convenience: the source they were built from remains
+/// the authoritative content, and a reader may ignore them. BUILDER_NAME and
+/// BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+/// ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PPEBuild<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PPEBuild<'a> {
+    type Inner = PPEBuild<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PPEBuild<'a> {
+    pub const VT_BUILDER_NAME: ::flatbuffers::VOffsetT = 4;
+    pub const VT_BUILDER_VERSION: ::flatbuffers::VOffsetT = 6;
+    pub const VT_BUILDER_DIGEST: ::flatbuffers::VOffsetT = 8;
+    pub const VT_RECORD_DIGEST: ::flatbuffers::VOffsetT = 10;
+    pub const VT_ENVIRONMENT_DIGEST: ::flatbuffers::VOffsetT = 12;
+    pub const VT_TOL_POSITION: ::flatbuffers::VOffsetT = 14;
+    pub const VT_TOL_VELOCITY: ::flatbuffers::VOffsetT = 16;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PPEBuild { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PPEBuildArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PPEBuild<'bldr>> {
+        let mut builder = PPEBuildBuilder::new(_fbb);
+        builder.add_TOL_VELOCITY(args.TOL_VELOCITY);
+        builder.add_TOL_POSITION(args.TOL_POSITION);
+        if let Some(x) = args.ENVIRONMENT_DIGEST { builder.add_ENVIRONMENT_DIGEST(x); }
+        if let Some(x) = args.RECORD_DIGEST { builder.add_RECORD_DIGEST(x); }
+        if let Some(x) = args.BUILDER_DIGEST { builder.add_BUILDER_DIGEST(x); }
+        if let Some(x) = args.BUILDER_VERSION { builder.add_BUILDER_VERSION(x); }
+        if let Some(x) = args.BUILDER_NAME { builder.add_BUILDER_NAME(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PPEBuildT {
+        let BUILDER_NAME = self.BUILDER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let BUILDER_VERSION = self.BUILDER_VERSION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let BUILDER_DIGEST = self.BUILDER_DIGEST().map(|x| {
+            x.into_iter().collect()
+        });
+        let RECORD_DIGEST = self.RECORD_DIGEST().map(|x| {
+            x.into_iter().collect()
+        });
+        let ENVIRONMENT_DIGEST = self.ENVIRONMENT_DIGEST().map(|x| {
+            x.into_iter().collect()
+        });
+        let TOL_POSITION = self.TOL_POSITION();
+        let TOL_VELOCITY = self.TOL_VELOCITY();
+        PPEBuildT {
+            BUILDER_NAME,
+            BUILDER_VERSION,
+            BUILDER_DIGEST,
+            RECORD_DIGEST,
+            ENVIRONMENT_DIGEST,
+            TOL_POSITION,
+            TOL_VELOCITY,
+        }
+    }
+
+    /// Name of the builder, as it publishes itself.
+    #[inline]
+    pub fn BUILDER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEBuild::VT_BUILDER_NAME, None)}
+    }
+
+    /// Version of the builder.
+    #[inline]
+    pub fn BUILDER_VERSION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPEBuild::VT_BUILDER_VERSION, None)}
+    }
+
+    /// SHA-256 of the builder's executable artifact (32 bytes).
+    #[inline]
+    pub fn BUILDER_DIGEST(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PPEBuild::VT_BUILDER_DIGEST, None)}
+    }
+
+    /// SHA-256 over the fields of the source record the builder reads, by the builder's
+    /// published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+    #[inline]
+    pub fn RECORD_DIGEST(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PPEBuild::VT_RECORD_DIGEST, None)}
+    }
+
+    /// SHA-256 over the configuration and environment inputs the builder used that are not
+    /// in the source record (force-model configuration, space-weather data), by the builder's
+    /// published rule (32 bytes); empty when the builder uses none.
+    #[inline]
+    pub fn ENVIRONMENT_DIGEST(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PPEBuild::VT_ENVIRONMENT_DIGEST, None)}
+    }
+
+    /// Build tolerance per position axis in km. NaN when not stated.
+    #[inline]
+    pub fn TOL_POSITION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PPEBuild::VT_TOL_POSITION, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+    #[inline]
+    pub fn TOL_VELOCITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PPEBuild::VT_TOL_VELOCITY, Some(f64::NAN)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PPEBuild<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUILDER_NAME", Self::VT_BUILDER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUILDER_VERSION", Self::VT_BUILDER_VERSION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("BUILDER_DIGEST", Self::VT_BUILDER_DIGEST, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RECORD_DIGEST", Self::VT_RECORD_DIGEST, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("ENVIRONMENT_DIGEST", Self::VT_ENVIRONMENT_DIGEST, false)?
+            .visit_field::<f64>("TOL_POSITION", Self::VT_TOL_POSITION, false)?
+            .visit_field::<f64>("TOL_VELOCITY", Self::VT_TOL_VELOCITY, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PPEBuildArgs<'a> {
+    pub BUILDER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUILDER_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUILDER_DIGEST: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub RECORD_DIGEST: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub ENVIRONMENT_DIGEST: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub TOL_POSITION: f64,
+    pub TOL_VELOCITY: f64,
+}
+
+impl<'a> Default for PPEBuildArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PPEBuildArgs {
+            BUILDER_NAME: None,
+            BUILDER_VERSION: None,
+            BUILDER_DIGEST: None,
+            RECORD_DIGEST: None,
+            ENVIRONMENT_DIGEST: None,
+            TOL_POSITION: f64::NAN,
+            TOL_VELOCITY: f64::NAN,
+        }
+    }
+}
+
+pub struct PPEBuildBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuildBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_BUILDER_NAME(&mut self, BUILDER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEBuild::VT_BUILDER_NAME, BUILDER_NAME);
+    }
+
+    #[inline]
+    pub fn add_BUILDER_VERSION(&mut self, BUILDER_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEBuild::VT_BUILDER_VERSION, BUILDER_VERSION);
+    }
+
+    #[inline]
+    pub fn add_BUILDER_DIGEST(&mut self, BUILDER_DIGEST: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEBuild::VT_BUILDER_DIGEST, BUILDER_DIGEST);
+    }
+
+    #[inline]
+    pub fn add_RECORD_DIGEST(&mut self, RECORD_DIGEST: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEBuild::VT_RECORD_DIGEST, RECORD_DIGEST);
+    }
+
+    #[inline]
+    pub fn add_ENVIRONMENT_DIGEST(&mut self, ENVIRONMENT_DIGEST: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPEBuild::VT_ENVIRONMENT_DIGEST, ENVIRONMENT_DIGEST);
+    }
+
+    #[inline]
+    pub fn add_TOL_POSITION(&mut self, TOL_POSITION: f64) {
+        self.fbb_.push_slot::<f64>(PPEBuild::VT_TOL_POSITION, TOL_POSITION, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_TOL_VELOCITY(&mut self, TOL_VELOCITY: f64) {
+        self.fbb_.push_slot::<f64>(PPEBuild::VT_TOL_VELOCITY, TOL_VELOCITY, f64::NAN);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEBuildBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PPEBuildBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PPEBuild<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PPEBuild<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PPEBuild");
+        ds.field("BUILDER_NAME", &self.BUILDER_NAME());
+        ds.field("BUILDER_VERSION", &self.BUILDER_VERSION());
+        ds.field("BUILDER_DIGEST", &self.BUILDER_DIGEST());
+        ds.field("RECORD_DIGEST", &self.RECORD_DIGEST());
+        ds.field("ENVIRONMENT_DIGEST", &self.ENVIRONMENT_DIGEST());
+        ds.field("TOL_POSITION", &self.TOL_POSITION());
+        ds.field("TOL_VELOCITY", &self.TOL_VELOCITY());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PPEBuildT {
+    pub BUILDER_NAME: Option<alloc::string::String>,
+    pub BUILDER_VERSION: Option<alloc::string::String>,
+    pub BUILDER_DIGEST: Option<alloc::vec::Vec<u8>>,
+    pub RECORD_DIGEST: Option<alloc::vec::Vec<u8>>,
+    pub ENVIRONMENT_DIGEST: Option<alloc::vec::Vec<u8>>,
+    pub TOL_POSITION: f64,
+    pub TOL_VELOCITY: f64,
+}
+
+impl Default for PPEBuildT {
+    fn default() -> Self {
+        Self {
+            BUILDER_NAME: None,
+            BUILDER_VERSION: None,
+            BUILDER_DIGEST: None,
+            RECORD_DIGEST: None,
+            ENVIRONMENT_DIGEST: None,
+            TOL_POSITION: f64::NAN,
+            TOL_VELOCITY: f64::NAN,
+        }
+    }
+}
+
+impl PPEBuildT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PPEBuild<'b>> {
+        let BUILDER_NAME = self.BUILDER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let BUILDER_VERSION = self.BUILDER_VERSION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let BUILDER_DIGEST = self.BUILDER_DIGEST.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let RECORD_DIGEST = self.RECORD_DIGEST.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let ENVIRONMENT_DIGEST = self.ENVIRONMENT_DIGEST.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TOL_POSITION = self.TOL_POSITION;
+        let TOL_VELOCITY = self.TOL_VELOCITY;
+        PPEBuild::create(_fbb, &PPEBuildArgs{
+            BUILDER_NAME,
+            BUILDER_VERSION,
+            BUILDER_DIGEST,
+            RECORD_DIGEST,
+            ENVIRONMENT_DIGEST,
+            TOL_POSITION,
+            TOL_VELOCITY,
         })
     }
 }
@@ -1388,7 +1898,8 @@ pub enum PPEOffset {}
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 #[derive(Copy, Clone, PartialEq)]
 pub struct PPE<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1418,6 +1929,11 @@ impl<'a> PPE<'a> {
     pub const VT_NOMINAL_SEGMENT_SPAN: ::flatbuffers::VOffsetT = 26;
     pub const VT_NOMINAL_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 28;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_REFERENCE_EPOCH: ::flatbuffers::VOffsetT = 32;
+    pub const VT_BUILD: ::flatbuffers::VOffsetT = 34;
+    pub const VT_UNSERVED_MID_SECONDS: ::flatbuffers::VOffsetT = 36;
+    pub const VT_UNSERVED_HALF_SPAN: ::flatbuffers::VOffsetT = 38;
+    pub const VT_UNSERVED_STATUS: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1431,6 +1947,11 @@ impl<'a> PPE<'a> {
     ) -> ::flatbuffers::WIPOffset<PPE<'bldr>> {
         let mut builder = PPEBuilder::new(_fbb);
         builder.add_NOMINAL_SEGMENT_SPAN(args.NOMINAL_SEGMENT_SPAN);
+        if let Some(x) = args.UNSERVED_STATUS { builder.add_UNSERVED_STATUS(x); }
+        if let Some(x) = args.UNSERVED_HALF_SPAN { builder.add_UNSERVED_HALF_SPAN(x); }
+        if let Some(x) = args.UNSERVED_MID_SECONDS { builder.add_UNSERVED_MID_SECONDS(x); }
+        if let Some(x) = args.BUILD { builder.add_BUILD(x); }
+        if let Some(x) = args.REFERENCE_EPOCH { builder.add_REFERENCE_EPOCH(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.ORBITAL_ELEMENT_RECORDS { builder.add_ORBITAL_ELEMENT_RECORDS(x); }
@@ -1482,6 +2003,21 @@ impl<'a> PPE<'a> {
         let PROVENANCE = self.PROVENANCE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let REFERENCE_EPOCH = self.REFERENCE_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let BUILD = self.BUILD().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let UNSERVED_MID_SECONDS = self.UNSERVED_MID_SECONDS().map(|x| {
+            x.into_iter().collect()
+        });
+        let UNSERVED_HALF_SPAN = self.UNSERVED_HALF_SPAN().map(|x| {
+            x.into_iter().collect()
+        });
+        let UNSERVED_STATUS = self.UNSERVED_STATUS().map(|x| {
+            x.into_iter().collect()
+        });
         PPET {
             COMMENT,
             OBJECT,
@@ -1497,6 +2033,11 @@ impl<'a> PPE<'a> {
             NOMINAL_SEGMENT_SPAN,
             NOMINAL_NUM_COEFFICIENTS,
             PROVENANCE,
+            REFERENCE_EPOCH,
+            BUILD,
+            UNSERVED_MID_SECONDS,
+            UNSERVED_HALF_SPAN,
+            UNSERVED_STATUS,
         }
     }
 
@@ -1632,6 +2173,54 @@ impl<'a> PPE<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(PPE::VT_PROVENANCE, None)}
     }
+
+    /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+    /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+    #[inline]
+    pub fn REFERENCE_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PPE::VT_REFERENCE_EPOCH, None)}
+    }
+
+    /// The builder and inputs of a derived ephemeris; absent for any other.
+    #[inline]
+    pub fn BUILD(&self) -> Option<PPEBuild<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PPEBuild>>(PPE::VT_BUILD, None)}
+    }
+
+    /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+    /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+    /// never written.
+    #[inline]
+    pub fn UNSERVED_MID_SECONDS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPE::VT_UNSERVED_MID_SECONDS, None)}
+    }
+
+    /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+    #[inline]
+    pub fn UNSERVED_HALF_SPAN(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PPE::VT_UNSERVED_HALF_SPAN, None)}
+    }
+
+    /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+    #[inline]
+    pub fn UNSERVED_STATUS(&self) -> Option<::flatbuffers::Vector<'a, ppeWindowStatus>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ppeWindowStatus>>>(PPE::VT_UNSERVED_STATUS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PPE<'_> {
@@ -1654,6 +2243,11 @@ impl ::flatbuffers::Verifiable for PPE<'_> {
             .visit_field::<f64>("NOMINAL_SEGMENT_SPAN", Self::VT_NOMINAL_SEGMENT_SPAN, false)?
             .visit_field::<u16>("NOMINAL_NUM_COEFFICIENTS", Self::VT_NOMINAL_NUM_COEFFICIENTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_EPOCH", Self::VT_REFERENCE_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PPEBuild>>("BUILD", Self::VT_BUILD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("UNSERVED_MID_SECONDS", Self::VT_UNSERVED_MID_SECONDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("UNSERVED_HALF_SPAN", Self::VT_UNSERVED_HALF_SPAN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ppeWindowStatus>>>("UNSERVED_STATUS", Self::VT_UNSERVED_STATUS, false)?
             .finish();
         Ok(())
     }
@@ -1674,6 +2268,11 @@ pub struct PPEArgs<'a> {
     pub NOMINAL_SEGMENT_SPAN: f64,
     pub NOMINAL_NUM_COEFFICIENTS: u16,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
+    pub REFERENCE_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUILD: Option<::flatbuffers::WIPOffset<PPEBuild<'a>>>,
+    pub UNSERVED_MID_SECONDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub UNSERVED_HALF_SPAN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub UNSERVED_STATUS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ppeWindowStatus>>>,
 }
 
 impl<'a> Default for PPEArgs<'a> {
@@ -1694,6 +2293,11 @@ impl<'a> Default for PPEArgs<'a> {
             NOMINAL_SEGMENT_SPAN: 0.0,
             NOMINAL_NUM_COEFFICIENTS: 0,
             PROVENANCE: None,
+            REFERENCE_EPOCH: None,
+            BUILD: None,
+            UNSERVED_MID_SECONDS: None,
+            UNSERVED_HALF_SPAN: None,
+            UNSERVED_STATUS: None,
         }
     }
 }
@@ -1775,6 +2379,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_REFERENCE_EPOCH(&mut self, REFERENCE_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_REFERENCE_EPOCH, REFERENCE_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_BUILD(&mut self, BUILD: ::flatbuffers::WIPOffset<PPEBuild<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PPEBuild>>(PPE::VT_BUILD, BUILD);
+    }
+
+    #[inline]
+    pub fn add_UNSERVED_MID_SECONDS(&mut self, UNSERVED_MID_SECONDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_UNSERVED_MID_SECONDS, UNSERVED_MID_SECONDS);
+    }
+
+    #[inline]
+    pub fn add_UNSERVED_HALF_SPAN(&mut self, UNSERVED_HALF_SPAN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_UNSERVED_HALF_SPAN, UNSERVED_HALF_SPAN);
+    }
+
+    #[inline]
+    pub fn add_UNSERVED_STATUS(&mut self, UNSERVED_STATUS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ppeWindowStatus>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PPE::VT_UNSERVED_STATUS, UNSERVED_STATUS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PPEBuilder {
@@ -1807,6 +2436,11 @@ impl ::core::fmt::Debug for PPE<'_> {
         ds.field("NOMINAL_SEGMENT_SPAN", &self.NOMINAL_SEGMENT_SPAN());
         ds.field("NOMINAL_NUM_COEFFICIENTS", &self.NOMINAL_NUM_COEFFICIENTS());
         ds.field("PROVENANCE", &self.PROVENANCE());
+        ds.field("REFERENCE_EPOCH", &self.REFERENCE_EPOCH());
+        ds.field("BUILD", &self.BUILD());
+        ds.field("UNSERVED_MID_SECONDS", &self.UNSERVED_MID_SECONDS());
+        ds.field("UNSERVED_HALF_SPAN", &self.UNSERVED_HALF_SPAN());
+        ds.field("UNSERVED_STATUS", &self.UNSERVED_STATUS());
         ds.finish()
     }
 }
@@ -1828,6 +2462,11 @@ pub struct PPET {
     pub NOMINAL_SEGMENT_SPAN: f64,
     pub NOMINAL_NUM_COEFFICIENTS: u16,
     pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
+    pub REFERENCE_EPOCH: Option<alloc::string::String>,
+    pub BUILD: Option<alloc::boxed::Box<PPEBuildT>>,
+    pub UNSERVED_MID_SECONDS: Option<alloc::vec::Vec<f64>>,
+    pub UNSERVED_HALF_SPAN: Option<alloc::vec::Vec<f64>>,
+    pub UNSERVED_STATUS: Option<alloc::vec::Vec<ppeWindowStatus>>,
 }
 
 impl Default for PPET {
@@ -1847,6 +2486,11 @@ impl Default for PPET {
             NOMINAL_SEGMENT_SPAN: 0.0,
             NOMINAL_NUM_COEFFICIENTS: 0,
             PROVENANCE: None,
+            REFERENCE_EPOCH: None,
+            BUILD: None,
+            UNSERVED_MID_SECONDS: None,
+            UNSERVED_HALF_SPAN: None,
+            UNSERVED_STATUS: None,
         }
     }
 }
@@ -1890,6 +2534,21 @@ impl PPET {
         let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let REFERENCE_EPOCH = self.REFERENCE_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let BUILD = self.BUILD.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let UNSERVED_MID_SECONDS = self.UNSERVED_MID_SECONDS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let UNSERVED_HALF_SPAN = self.UNSERVED_HALF_SPAN.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let UNSERVED_STATUS = self.UNSERVED_STATUS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         PPE::create(_fbb, &PPEArgs{
             COMMENT,
             OBJECT,
@@ -1905,6 +2564,11 @@ impl PPET {
             NOMINAL_SEGMENT_SPAN,
             NOMINAL_NUM_COEFFICIENTS,
             PROVENANCE,
+            REFERENCE_EPOCH,
+            BUILD,
+            UNSERVED_MID_SECONDS,
+            UNSERVED_HALF_SPAN,
+            UNSERVED_STATUS,
         })
     }
 }

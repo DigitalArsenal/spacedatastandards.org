@@ -249,22 +249,60 @@ class PPEPositionRecord extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+    /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+    /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+    /// instant. NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getEPOCH_MID_SECONDS()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+    /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+    /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+    /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+    /**
+     * @return ushort
+     */
+    public function getPOS_COEFF_HEAD_COUNT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 65535;
+    }
+
+    /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+    /// A builder whose position and velocity series differ in length pads the shorter
+    /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+    /**
+     * @return ushort
+     */
+    public function getVEL_COEFF_HEAD_COUNT()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 65535;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPPEPositionRecord(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PPEPositionRecord
      */
-    public static function createPPEPositionRecord(FlatBufferBuilder $builder, $EPOCH_MID, $EPOCH_HALF_SPAN, $NUM_COEFFICIENTS, $BASIS_TYPE, $POS_COEFF_X, $POS_COEFF_Y, $POS_COEFF_Z, $HAS_VELOCITY_COEFFICIENTS, $VEL_COEFF_X, $VEL_COEFF_Y, $VEL_COEFF_Z, $MAX_POSITION_RESIDUAL, $RMS_POSITION_RESIDUAL)
+    public static function createPPEPositionRecord(FlatBufferBuilder $builder, $EPOCH_MID, $EPOCH_HALF_SPAN, $NUM_COEFFICIENTS, $BASIS_TYPE, $POS_COEFF_X, $POS_COEFF_Y, $POS_COEFF_Z, $HAS_VELOCITY_COEFFICIENTS, $VEL_COEFF_X, $VEL_COEFF_Y, $VEL_COEFF_Z, $MAX_POSITION_RESIDUAL, $RMS_POSITION_RESIDUAL, $EPOCH_MID_SECONDS, $POS_COEFF_HEAD_COUNT, $VEL_COEFF_HEAD_COUNT)
     {
-        $builder->startObject(13);
+        $builder->startObject(16);
         self::addEPOCH_MID($builder, $EPOCH_MID);
         self::addEPOCH_HALF_SPAN($builder, $EPOCH_HALF_SPAN);
         self::addNUM_COEFFICIENTS($builder, $NUM_COEFFICIENTS);
@@ -278,6 +316,9 @@ class PPEPositionRecord extends Table
         self::addVEL_COEFF_Z($builder, $VEL_COEFF_Z);
         self::addMAX_POSITION_RESIDUAL($builder, $MAX_POSITION_RESIDUAL);
         self::addRMS_POSITION_RESIDUAL($builder, $RMS_POSITION_RESIDUAL);
+        self::addEPOCH_MID_SECONDS($builder, $EPOCH_MID_SECONDS);
+        self::addPOS_COEFF_HEAD_COUNT($builder, $POS_COEFF_HEAD_COUNT);
+        self::addVEL_COEFF_HEAD_COUNT($builder, $VEL_COEFF_HEAD_COUNT);
         $o = $builder->endObject();
         $builder->required($o, 4);  // EPOCH_MID
         $builder->required($o, 12);  // POS_COEFF_X
@@ -558,6 +599,36 @@ class PPEPositionRecord extends Table
     public static function addRMS_POSITION_RESIDUAL(FlatBufferBuilder $builder, $RMS_POSITION_RESIDUAL)
     {
         $builder->addDoubleX(12, $RMS_POSITION_RESIDUAL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEPOCH_MID_SECONDS(FlatBufferBuilder $builder, $EPOCH_MID_SECONDS)
+    {
+        $builder->addDoubleX(13, $EPOCH_MID_SECONDS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addPOS_COEFF_HEAD_COUNT(FlatBufferBuilder $builder, $POS_COEFF_HEAD_COUNT)
+    {
+        $builder->addUshortX(14, $POS_COEFF_HEAD_COUNT, 65535);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addVEL_COEFF_HEAD_COUNT(FlatBufferBuilder $builder, $VEL_COEFF_HEAD_COUNT)
+    {
+        $builder->addUshortX(15, $VEL_COEFF_HEAD_COUNT, 65535);
     }
 
     /**

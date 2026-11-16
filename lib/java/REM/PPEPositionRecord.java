@@ -132,6 +132,26 @@ public final class PPEPositionRecord extends com.google.flatbuffers.Table {
    * RMS position fit residual over this segment (km). Optional quality metric.
    */
   public double RMS_POSITION_RESIDUAL() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+   * When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+   * in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+   * instant. NaN when not stated.
+   */
+  public double EPOCH_MID_SECONDS() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+   * values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+   * A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+   * tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+   */
+  public int POS_COEFF_HEAD_COUNT() { int o = __offset(32); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 65535; }
+  /**
+   * The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+   * A builder whose position and velocity series differ in length pads the shorter
+   * with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+   */
+  public int VEL_COEFF_HEAD_COUNT() { int o = __offset(34); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 65535; }
 
   public static int createPPEPositionRecord(FlatBufferBuilder builder,
       int EPOCH_MIDOffset,
@@ -146,8 +166,12 @@ public final class PPEPositionRecord extends com.google.flatbuffers.Table {
       int VEL_COEFF_YOffset,
       int VEL_COEFF_ZOffset,
       double MAX_POSITION_RESIDUAL,
-      double RMS_POSITION_RESIDUAL) {
-    builder.startTable(13);
+      double RMS_POSITION_RESIDUAL,
+      double EPOCH_MID_SECONDS,
+      int POS_COEFF_HEAD_COUNT,
+      int VEL_COEFF_HEAD_COUNT) {
+    builder.startTable(16);
+    PPEPositionRecord.addEpochMidSeconds(builder, EPOCH_MID_SECONDS);
     PPEPositionRecord.addRmsPositionResidual(builder, RMS_POSITION_RESIDUAL);
     PPEPositionRecord.addMaxPositionResidual(builder, MAX_POSITION_RESIDUAL);
     PPEPositionRecord.addEpochHalfSpan(builder, EPOCH_HALF_SPAN);
@@ -158,13 +182,15 @@ public final class PPEPositionRecord extends com.google.flatbuffers.Table {
     PPEPositionRecord.addPosCoeffY(builder, POS_COEFF_YOffset);
     PPEPositionRecord.addPosCoeffX(builder, POS_COEFF_XOffset);
     PPEPositionRecord.addEpochMid(builder, EPOCH_MIDOffset);
+    PPEPositionRecord.addVelCoeffHeadCount(builder, VEL_COEFF_HEAD_COUNT);
+    PPEPositionRecord.addPosCoeffHeadCount(builder, POS_COEFF_HEAD_COUNT);
     PPEPositionRecord.addNumCoefficients(builder, NUM_COEFFICIENTS);
     PPEPositionRecord.addHasVelocityCoefficients(builder, HAS_VELOCITY_COEFFICIENTS);
     PPEPositionRecord.addBasisType(builder, BASIS_TYPE);
     return PPEPositionRecord.endPPEPositionRecord(builder);
   }
 
-  public static void startPPEPositionRecord(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPPEPositionRecord(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addEpochMid(FlatBufferBuilder builder, int EPOCH_MIDOffset) { builder.addOffset(0, EPOCH_MIDOffset, 0); }
   public static void addEpochHalfSpan(FlatBufferBuilder builder, double EPOCH_HALF_SPAN) { builder.addDouble(1, EPOCH_HALF_SPAN, 0.0); }
   public static void addNumCoefficients(FlatBufferBuilder builder, int NUM_COEFFICIENTS) { builder.addShort(2, (short) NUM_COEFFICIENTS, (short) 0); }
@@ -190,6 +216,9 @@ public final class PPEPositionRecord extends com.google.flatbuffers.Table {
   public static void startVelCoeffZVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addMaxPositionResidual(FlatBufferBuilder builder, double MAX_POSITION_RESIDUAL) { builder.addDouble(11, MAX_POSITION_RESIDUAL, 0.0); }
   public static void addRmsPositionResidual(FlatBufferBuilder builder, double RMS_POSITION_RESIDUAL) { builder.addDouble(12, RMS_POSITION_RESIDUAL, 0.0); }
+  public static void addEpochMidSeconds(FlatBufferBuilder builder, double EPOCH_MID_SECONDS) { builder.addDouble(13, EPOCH_MID_SECONDS, Double.NaN); }
+  public static void addPosCoeffHeadCount(FlatBufferBuilder builder, int POS_COEFF_HEAD_COUNT) { builder.addShort(14, (short) POS_COEFF_HEAD_COUNT, (short) 65535); }
+  public static void addVelCoeffHeadCount(FlatBufferBuilder builder, int VEL_COEFF_HEAD_COUNT) { builder.addShort(15, (short) VEL_COEFF_HEAD_COUNT, (short) 65535); }
   public static int endPPEPositionRecord(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // EPOCH_MID

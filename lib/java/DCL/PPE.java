@@ -22,7 +22,8 @@ import java.nio.ByteOrder;
  *
  * A PPE message may contain position records, orbital element records, or both.
  * Records should be ordered chronologically by EPOCH_MID and should collectively
- * cover the time span [START_TIME, STOP_TIME] without gaps.
+ * cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+ * listed in UNSERVED_MID_SECONDS.
  */
 @SuppressWarnings("unused")
 public final class PPE extends com.google.flatbuffers.Table {
@@ -118,6 +119,47 @@ public final class PPE extends com.google.flatbuffers.Table {
    */
   public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
   public PVN PROVENANCE(PVN obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+   * TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+   */
+  public String REFERENCE_EPOCH() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REFERENCE_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer REFERENCE_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * The builder and inputs of a derived ephemeris; absent for any other.
+   */
+  public PPEBuild BUILD() { return BUILD(new PPEBuild()); }
+  public PPEBuild BUILD(PPEBuild obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+   * Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+   * never written.
+   */
+  public double UNSERVED_MID_SECONDS(int j) { int o = __offset(36); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int UNSERVED_MID_SECONDSLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector unservedMidSecondsVector() { return unservedMidSecondsVector(new DoubleVector()); }
+  public DoubleVector unservedMidSecondsVector(DoubleVector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer UNSERVED_MID_SECONDSAsByteBuffer() { return __vector_as_bytebuffer(36, 8); }
+  public ByteBuffer UNSERVED_MID_SECONDSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 8); }
+  /**
+   * Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+   */
+  public double UNSERVED_HALF_SPAN(int j) { int o = __offset(38); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int UNSERVED_HALF_SPANLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector unservedHalfSpanVector() { return unservedHalfSpanVector(new DoubleVector()); }
+  public DoubleVector unservedHalfSpanVector(DoubleVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer UNSERVED_HALF_SPANAsByteBuffer() { return __vector_as_bytebuffer(38, 8); }
+  public ByteBuffer UNSERVED_HALF_SPANInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 8); }
+  /**
+   * Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+   */
+  public int UNSERVED_STATUS(int j) { int o = __offset(40); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int UNSERVED_STATUSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector unservedStatusVector() { return unservedStatusVector(new ByteVector()); }
+  public ByteVector unservedStatusVector(ByteVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer UNSERVED_STATUSAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer UNSERVED_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
 
   public static int createPPE(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -133,9 +175,19 @@ public final class PPE extends com.google.flatbuffers.Table {
       int EPHEMERIS_SOURCEOffset,
       double NOMINAL_SEGMENT_SPAN,
       int NOMINAL_NUM_COEFFICIENTS,
-      int PROVENANCEOffset) {
-    builder.startTable(14);
+      int PROVENANCEOffset,
+      int REFERENCE_EPOCHOffset,
+      int BUILDOffset,
+      int UNSERVED_MID_SECONDSOffset,
+      int UNSERVED_HALF_SPANOffset,
+      int UNSERVED_STATUSOffset) {
+    builder.startTable(19);
     PPE.addNominalSegmentSpan(builder, NOMINAL_SEGMENT_SPAN);
+    PPE.addUnservedStatus(builder, UNSERVED_STATUSOffset);
+    PPE.addUnservedHalfSpan(builder, UNSERVED_HALF_SPANOffset);
+    PPE.addUnservedMidSeconds(builder, UNSERVED_MID_SECONDSOffset);
+    PPE.addBuild(builder, BUILDOffset);
+    PPE.addReferenceEpoch(builder, REFERENCE_EPOCHOffset);
     PPE.addProvenance(builder, PROVENANCEOffset);
     PPE.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PPE.addOrbitalElementRecords(builder, ORBITAL_ELEMENT_RECORDSOffset);
@@ -152,7 +204,7 @@ public final class PPE extends com.google.flatbuffers.Table {
     return PPE.endPPE(builder);
   }
 
-  public static void startPPE(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startPPE(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -173,6 +225,18 @@ public final class PPE extends com.google.flatbuffers.Table {
   public static void addNominalSegmentSpan(FlatBufferBuilder builder, double NOMINAL_SEGMENT_SPAN) { builder.addDouble(11, NOMINAL_SEGMENT_SPAN, 0.0); }
   public static void addNominalNumCoefficients(FlatBufferBuilder builder, int NOMINAL_NUM_COEFFICIENTS) { builder.addShort(12, (short) NOMINAL_NUM_COEFFICIENTS, (short) 0); }
   public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(13, PROVENANCEOffset, 0); }
+  public static void addReferenceEpoch(FlatBufferBuilder builder, int REFERENCE_EPOCHOffset) { builder.addOffset(14, REFERENCE_EPOCHOffset, 0); }
+  public static void addBuild(FlatBufferBuilder builder, int BUILDOffset) { builder.addOffset(15, BUILDOffset, 0); }
+  public static void addUnservedMidSeconds(FlatBufferBuilder builder, int UNSERVED_MID_SECONDSOffset) { builder.addOffset(16, UNSERVED_MID_SECONDSOffset, 0); }
+  public static int createUnservedMidSecondsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startUnservedMidSecondsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUnservedHalfSpan(FlatBufferBuilder builder, int UNSERVED_HALF_SPANOffset) { builder.addOffset(17, UNSERVED_HALF_SPANOffset, 0); }
+  public static int createUnservedHalfSpanVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startUnservedHalfSpanVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUnservedStatus(FlatBufferBuilder builder, int UNSERVED_STATUSOffset) { builder.addOffset(18, UNSERVED_STATUSOffset, 0); }
+  public static int createUnservedStatusVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createUnservedStatusVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startUnservedStatusVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPPE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

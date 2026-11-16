@@ -1,10 +1,12 @@
 import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
+import { PPEBuild, PPEBuildT } from './PPEBuild.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
+import { ppeWindowStatus } from './ppeWindowStatus.js';
 import { timingStandard } from './timingStandard.js';
 /**
  * Polynomial Ephemeris — top-level message containing metadata and
@@ -12,7 +14,8 @@ import { timingStandard } from './timingStandard.js';
  *
  * A PPE message may contain position records, orbital element records, or both.
  * Records should be ordered chronologically by EPOCH_MID and should collectively
- * cover the time span [START_TIME, STOP_TIME] without gaps.
+ * cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+ * listed in UNSERVED_MID_SECONDS.
  */
 export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
     bb: flatbuffers.ByteBuffer | null;
@@ -92,6 +95,36 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
      * Where this polynomial ephemeris comes from and the terms it travels under.
      */
     PROVENANCE(obj?: PVN): PVN | null;
+    /**
+     * The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+     * TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+     */
+    REFERENCE_EPOCH(): string | null;
+    REFERENCE_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The builder and inputs of a derived ephemeris; absent for any other.
+     */
+    BUILD(obj?: PPEBuild): PPEBuild | null;
+    /**
+     * Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+     * Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+     * never written.
+     */
+    UNSERVED_MID_SECONDS(index: number): number | null;
+    unservedMidSecondsLength(): number;
+    unservedMidSecondsArray(): Float64Array | null;
+    /**
+     * Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+     */
+    UNSERVED_HALF_SPAN(index: number): number | null;
+    unservedHalfSpanLength(): number;
+    unservedHalfSpanArray(): Float64Array | null;
+    /**
+     * Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+     */
+    UNSERVED_STATUS(index: number): ppeWindowStatus | null;
+    unservedStatusLength(): number;
+    unservedStatusArray(): Uint8Array | null;
     static startPPE(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -113,6 +146,25 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
     static addNominalSegmentSpan(builder: flatbuffers.Builder, NOMINAL_SEGMENT_SPAN: number): void;
     static addNominalNumCoefficients(builder: flatbuffers.Builder, NOMINAL_NUM_COEFFICIENTS: number): void;
     static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
+    static addReferenceEpoch(builder: flatbuffers.Builder, REFERENCE_EPOCHOffset: flatbuffers.Offset): void;
+    static addBuild(builder: flatbuffers.Builder, BUILDOffset: flatbuffers.Offset): void;
+    static addUnservedMidSeconds(builder: flatbuffers.Builder, UNSERVED_MID_SECONDSOffset: flatbuffers.Offset): void;
+    static createUnservedMidSecondsVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createUnservedMidSecondsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startUnservedMidSecondsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addUnservedHalfSpan(builder: flatbuffers.Builder, UNSERVED_HALF_SPANOffset: flatbuffers.Offset): void;
+    static createUnservedHalfSpanVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createUnservedHalfSpanVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startUnservedHalfSpanVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addUnservedStatus(builder: flatbuffers.Builder, UNSERVED_STATUSOffset: flatbuffers.Offset): void;
+    static createUnservedStatusVector(builder: flatbuffers.Builder, data: ppeWindowStatus[]): flatbuffers.Offset;
+    static startUnservedStatusVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPPE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -134,7 +186,12 @@ export declare class PPET implements flatbuffers.IGeneratedObject {
     NOMINAL_SEGMENT_SPAN: number;
     NOMINAL_NUM_COEFFICIENTS: number;
     PROVENANCE: PVNT | null;
-    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number, PROVENANCE?: PVNT | null);
+    REFERENCE_EPOCH: string | Uint8Array | null;
+    BUILD: PPEBuildT | null;
+    UNSERVED_MID_SECONDS: (number)[];
+    UNSERVED_HALF_SPAN: (number)[];
+    UNSERVED_STATUS: (ppeWindowStatus)[];
+    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number, PROVENANCE?: PVNT | null, REFERENCE_EPOCH?: string | Uint8Array | null, BUILD?: PPEBuildT | null, UNSERVED_MID_SECONDS?: (number)[], UNSERVED_HALF_SPAN?: (number)[], UNSERVED_STATUS?: (ppeWindowStatus)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PPE.d.ts.map

@@ -6963,10 +6963,17 @@ class OCM {
   ///  Inspection geometry; STATE_DATA is empty when this is present.
   OCMInspectionGeometry? get RPO_INSPECTION => OCMInspectionGeometry.reader.vTableGetNullable(_bc, _bcOffset, 84);
   OCMInspectionGeometry? get rpoInspection => RPO_INSPECTION;
+  ///  The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  ///  named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  ///  MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  ///  reader may ignore this. How many windows it holds is the publisher's choice.
+  ///  TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  PPE? get DERIVED_EPHEMERIS => PPE.reader.vTableGetNullable(_bc, _bcOffset, 86);
+  PPE? get derivedEphemeris => DERIVED_EPHEMERIS;
 
   @override
   String toString() {
-    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}, trajectoryBlocks: ${trajectoryBlocks}, covarianceBlocks: ${covarianceBlocks}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}, meanElements: ${meanElements}, covPropagation: ${covPropagation}, covParameterKinds: ${covParameterKinds}, trajBasis: ${trajBasis}, seedSets: ${seedSets}, INTEGRATOR: ${INTEGRATOR}, rpoGeometry: ${rpoGeometry}, rpoInspection: ${rpoInspection}}';
+    return 'OCM{HEADER: ${HEADER}, METADATA: ${METADATA}, trajType: ${trajType}, trajTypeDescription: ${trajTypeDescription}, stateStepSize: ${stateStepSize}, stateVectorSize: ${stateVectorSize}, stateData: ${stateData}, covarianceData: ${covarianceData}, polynomialPositionRecords: ${polynomialPositionRecords}, polynomialOeRecords: ${polynomialOeRecords}, physicalProperties: ${physicalProperties}, maneuverData: ${maneuverData}, PERTURBATIONS: ${PERTURBATIONS}, orbitDetermination: ${orbitDetermination}, userDefinedParameters: ${userDefinedParameters}, centerName: ${centerName}, trajRefFrame: ${trajRefFrame}, trajFrameEpoch: ${trajFrameEpoch}, covRefFrame: ${covRefFrame}, orbRevnum: ${orbRevnum}, orbAveraging: ${orbAveraging}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, stateEpochs: ${stateEpochs}, covType: ${covType}, covOrdering: ${covOrdering}, covSize: ${covSize}, covParameters: ${covParameters}, covUnits: ${covUnits}, trajectoryBlocks: ${trajectoryBlocks}, covarianceBlocks: ${covarianceBlocks}, PROVENANCE: ${PROVENANCE}, covRealism: ${covRealism}, meanElements: ${meanElements}, covPropagation: ${covPropagation}, covParameterKinds: ${covParameterKinds}, trajBasis: ${trajBasis}, seedSets: ${seedSets}, INTEGRATOR: ${INTEGRATOR}, rpoGeometry: ${rpoGeometry}, rpoInspection: ${rpoInspection}, derivedEphemeris: ${derivedEphemeris}}';
   }
 }
 
@@ -6984,7 +6991,7 @@ class OCMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(41);
+    fbBuilder.startTable(42);
   }
 
   int addHeaderOffset(int? offset) {
@@ -7151,6 +7158,10 @@ class OCMBuilder {
     fbBuilder.addOffset(40, offset);
     return fbBuilder.offset;
   }
+  int addDerivedEphemerisOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -7199,6 +7210,7 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
   final OCMIntegratorObjectBuilder? _INTEGRATOR;
   final OCMRelativeGeometryObjectBuilder? _RPO_GEOMETRY;
   final OCMInspectionGeometryObjectBuilder? _RPO_INSPECTION;
+  final PPEObjectBuilder? _DERIVED_EPHEMERIS;
 
   OCMObjectBuilder({
     HeaderObjectBuilder? HEADER,
@@ -7278,6 +7290,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     OCMRelativeGeometryObjectBuilder? rpoGeometry,
     OCMInspectionGeometryObjectBuilder? RPO_INSPECTION,
     OCMInspectionGeometryObjectBuilder? rpoInspection,
+    PPEObjectBuilder? DERIVED_EPHEMERIS,
+    PPEObjectBuilder? derivedEphemeris,
   })
       : _HEADER = HEADER,
         _METADATA = METADATA,
@@ -7319,7 +7333,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
         _SEED_SETS = seedSets ?? SEED_SETS,
         _INTEGRATOR = INTEGRATOR,
         _RPO_GEOMETRY = rpoGeometry ?? RPO_GEOMETRY,
-        _RPO_INSPECTION = rpoInspection ?? RPO_INSPECTION;
+        _RPO_INSPECTION = rpoInspection ?? RPO_INSPECTION,
+        _DERIVED_EPHEMERIS = derivedEphemeris ?? DERIVED_EPHEMERIS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -7377,7 +7392,8 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     final int? INTEGRATOROffset = _INTEGRATOR?.getOrCreateOffset(fbBuilder);
     final int? RPO_GEOMETRYOffset = _RPO_GEOMETRY?.getOrCreateOffset(fbBuilder);
     final int? RPO_INSPECTIONOffset = _RPO_INSPECTION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(41);
+    final int? DERIVED_EPHEMERISOffset = _DERIVED_EPHEMERIS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(42);
     fbBuilder.addOffset(0, HEADEROffset);
     fbBuilder.addOffset(1, METADATAOffset);
     fbBuilder.addInt8(2, _TRAJ_TYPE?.value);
@@ -7419,6 +7435,7 @@ class OCMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(38, INTEGRATOROffset);
     fbBuilder.addOffset(39, RPO_GEOMETRYOffset);
     fbBuilder.addOffset(40, RPO_INSPECTIONOffset);
+    fbBuilder.addOffset(41, DERIVED_EPHEMERISOffset);
     return fbBuilder.endTable();
   }
 

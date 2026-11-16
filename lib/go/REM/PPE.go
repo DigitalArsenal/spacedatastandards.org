@@ -11,7 +11,8 @@ import (
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 type PPE struct {
 	_tab flatbuffers.Table
 }
@@ -367,8 +368,179 @@ func (rcv *PPE) Provenance(obj *PVN) *PVN {
 }
 
 /// Where this polynomial ephemeris comes from and the terms it travels under.
+/// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+/// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+func (rcv *PPE) REFERENCE_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PPE) ReferenceEpoch() []byte {
+	return rcv.REFERENCE_EPOCH()
+}
+
+/// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+/// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+/// The builder and inputs of a derived ephemeris; absent for any other.
+func (rcv *PPE) BUILD(obj *PPEBuild) *PPEBuild {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PPEBuild)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PPE) Build(obj *PPEBuild) *PPEBuild {
+	return rcv.BUILD(obj)
+}
+
+/// The builder and inputs of a derived ephemeris; absent for any other.
+/// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+/// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+/// never written.
+func (rcv *PPE) UNSERVED_MID_SECONDS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedMidSeconds(j int) float64 {
+	return rcv.UNSERVED_MID_SECONDS(j)
+}
+
+func (rcv *PPE) UNSERVED_MID_SECONDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedMidSecondsLength() int {
+	return rcv.UNSERVED_MID_SECONDSLength()
+}
+
+/// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+/// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+/// never written.
+func (rcv *PPE) MutateUNSERVED_MID_SECONDS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *PPE) MutateUnservedMidSeconds(j int, n float64) bool {
+	return rcv.MutateUNSERVED_MID_SECONDS(j, n)
+}
+
+/// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+func (rcv *PPE) UNSERVED_HALF_SPAN(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedHalfSpan(j int) float64 {
+	return rcv.UNSERVED_HALF_SPAN(j)
+}
+
+func (rcv *PPE) UNSERVED_HALF_SPANLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedHalfSpanLength() int {
+	return rcv.UNSERVED_HALF_SPANLength()
+}
+
+/// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+func (rcv *PPE) MutateUNSERVED_HALF_SPAN(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *PPE) MutateUnservedHalfSpan(j int, n float64) bool {
+	return rcv.MutateUNSERVED_HALF_SPAN(j, n)
+}
+
+/// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+func (rcv *PPE) UNSERVED_STATUS(j int) ppeWindowStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return ppeWindowStatus(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedStatus(j int) ppeWindowStatus {
+	return rcv.UNSERVED_STATUS(j)
+}
+
+func (rcv *PPE) UNSERVED_STATUSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PPE) UnservedStatusLength() int {
+	return rcv.UNSERVED_STATUSLength()
+}
+
+func (rcv *PPE) UNSERVED_STATUSBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PPE) UnservedStatusBytes() []byte {
+	return rcv.UNSERVED_STATUSBytes()
+}
+
+/// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+func (rcv *PPE) MutateUNSERVED_STATUS(j int, n ppeWindowStatus) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
+	}
+	return false
+}
+
+func (rcv *PPE) MutateUnservedStatus(j int, n ppeWindowStatus) bool {
+	return rcv.MutateUNSERVED_STATUS(j, n)
+}
+
 func PPEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(19)
 }
 func PPEAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -471,6 +643,54 @@ func PPEAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffs
 }
 func PPEAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
 	PPEAddPROVENANCE(builder, PROVENANCE)
+}
+func PPEAddREFERENCE_EPOCH(builder *flatbuffers.Builder, REFERENCE_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(REFERENCE_EPOCH), 0)
+}
+func PPEAddReferenceEpoch(builder *flatbuffers.Builder, REFERENCE_EPOCH flatbuffers.UOffsetT) {
+	PPEAddREFERENCE_EPOCH(builder, REFERENCE_EPOCH)
+}
+func PPEAddBUILD(builder *flatbuffers.Builder, BUILD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(BUILD), 0)
+}
+func PPEAddBuild(builder *flatbuffers.Builder, BUILD flatbuffers.UOffsetT) {
+	PPEAddBUILD(builder, BUILD)
+}
+func PPEAddUNSERVED_MID_SECONDS(builder *flatbuffers.Builder, UNSERVED_MID_SECONDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(UNSERVED_MID_SECONDS), 0)
+}
+func PPEAddUnservedMidSeconds(builder *flatbuffers.Builder, UNSERVED_MID_SECONDS flatbuffers.UOffsetT) {
+	PPEAddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDS)
+}
+func PPEStartUNSERVED_MID_SECONDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func PPEStartUnservedMidSecondsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartUNSERVED_MID_SECONDSVector(builder, numElems)
+}
+func PPEAddUNSERVED_HALF_SPAN(builder *flatbuffers.Builder, UNSERVED_HALF_SPAN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(UNSERVED_HALF_SPAN), 0)
+}
+func PPEAddUnservedHalfSpan(builder *flatbuffers.Builder, UNSERVED_HALF_SPAN flatbuffers.UOffsetT) {
+	PPEAddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPAN)
+}
+func PPEStartUNSERVED_HALF_SPANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func PPEStartUnservedHalfSpanVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartUNSERVED_HALF_SPANVector(builder, numElems)
+}
+func PPEAddUNSERVED_STATUS(builder *flatbuffers.Builder, UNSERVED_STATUS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(UNSERVED_STATUS), 0)
+}
+func PPEAddUnservedStatus(builder *flatbuffers.Builder, UNSERVED_STATUS flatbuffers.UOffsetT) {
+	PPEAddUNSERVED_STATUS(builder, UNSERVED_STATUS)
+}
+func PPEStartUNSERVED_STATUSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PPEStartUnservedStatusVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartUNSERVED_STATUSVector(builder, numElems)
 }
 func PPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

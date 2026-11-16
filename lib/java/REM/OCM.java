@@ -322,6 +322,15 @@ public final class OCM extends com.google.flatbuffers.Table {
    */
   public OCMInspectionGeometry RPO_INSPECTION() { return RPO_INSPECTION(new OCMInspectionGeometry()); }
   public OCMInspectionGeometry RPO_INSPECTION(OCMInspectionGeometry obj) { int o = __offset(84); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+   * named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+   * MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+   * reader may ignore this. How many windows it holds is the publisher's choice.
+   * TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+   */
+  public PPE DERIVED_EPHEMERIS() { return DERIVED_EPHEMERIS(new PPE()); }
+  public PPE DERIVED_EPHEMERIS(PPE obj) { int o = __offset(86); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createOCM(FlatBufferBuilder builder,
       int HEADEROffset,
@@ -364,9 +373,11 @@ public final class OCM extends com.google.flatbuffers.Table {
       int SEED_SETSOffset,
       int INTEGRATOROffset,
       int RPO_GEOMETRYOffset,
-      int RPO_INSPECTIONOffset) {
-    builder.startTable(41);
+      int RPO_INSPECTIONOffset,
+      int DERIVED_EPHEMERISOffset) {
+    builder.startTable(42);
     OCM.addStateStepSize(builder, STATE_STEP_SIZE);
+    OCM.addDerivedEphemeris(builder, DERIVED_EPHEMERISOffset);
     OCM.addRpoInspection(builder, RPO_INSPECTIONOffset);
     OCM.addRpoGeometry(builder, RPO_GEOMETRYOffset);
     OCM.addIntegrator(builder, INTEGRATOROffset);
@@ -410,7 +421,7 @@ public final class OCM extends com.google.flatbuffers.Table {
     return OCM.endOCM(builder);
   }
 
-  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(41); }
+  public static void startOCM(FlatBufferBuilder builder) { builder.startTable(42); }
   public static void addHeader(FlatBufferBuilder builder, int HEADEROffset) { builder.addOffset(0, HEADEROffset, 0); }
   public static void addMetadata(FlatBufferBuilder builder, int METADATAOffset) { builder.addOffset(1, METADATAOffset, 0); }
   public static void addTrajType(FlatBufferBuilder builder, byte TRAJ_TYPE) { builder.addByte(2, TRAJ_TYPE, 0); }
@@ -481,6 +492,7 @@ public final class OCM extends com.google.flatbuffers.Table {
   public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOROffset) { builder.addOffset(38, INTEGRATOROffset, 0); }
   public static void addRpoGeometry(FlatBufferBuilder builder, int RPO_GEOMETRYOffset) { builder.addOffset(39, RPO_GEOMETRYOffset, 0); }
   public static void addRpoInspection(FlatBufferBuilder builder, int RPO_INSPECTIONOffset) { builder.addOffset(40, RPO_INSPECTIONOffset, 0); }
+  public static void addDerivedEphemeris(FlatBufferBuilder builder, int DERIVED_EPHEMERISOffset) { builder.addOffset(41, DERIVED_EPHEMERISOffset, 0); }
   public static int endOCM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

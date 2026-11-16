@@ -3658,13 +3658,21 @@ class OCM : flatbuffers.handle
     def RPO_INSPECTION() -> OCMInspectionGeometry?:
         let o = flatbuffers.field_table(buf_, pos_, 84)
         return if o: OCMInspectionGeometry { buf_, o } else: nil
+    /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+    /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+    /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+    /// reader may ignore this. How many windows it holds is the publisher's choice.
+    /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+    def DERIVED_EPHEMERIS() -> PPE?:
+        let o = flatbuffers.field_table(buf_, pos_, 86)
+        return if o: PPE { buf_, o } else: nil
 
 def GetRootAsOCM(buf:string): return OCM { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(41)
+        b_.StartObject(42)
         return this
     def add_HEADER(HEADER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, HEADER)
@@ -3788,6 +3796,9 @@ struct OCMBuilder:
         return this
     def add_RPO_INSPECTION(RPO_INSPECTION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(40, RPO_INSPECTION)
+        return this
+    def add_DERIVED_EPHEMERIS(DERIVED_EPHEMERIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, DERIVED_EPHEMERIS)
         return this
     def end():
         return b_.EndObject()

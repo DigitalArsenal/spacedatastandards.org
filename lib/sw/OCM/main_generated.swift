@@ -3914,6 +3914,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let INTEGRATOR: VOffset = 80
     static let RPO_GEOMETRY: VOffset = 82
     static let RPO_INSPECTION: VOffset = 84
+    static let DERIVED_EPHEMERIS: VOffset = 86
   }
 
   ///  Header section of the OCM.
@@ -4055,7 +4056,13 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var RPO_GEOMETRY: OCMRelativeGeometry? { let o = _accessor.offset(VT.RPO_GEOMETRY); return o == 0 ? nil : OCMRelativeGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Inspection geometry; STATE_DATA is empty when this is present.
   public var RPO_INSPECTION: OCMInspectionGeometry? { let o = _accessor.offset(VT.RPO_INSPECTION); return o == 0 ? nil : OCMInspectionGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
+  ///  The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  ///  named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  ///  MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  ///  reader may ignore this. How many windows it holds is the publisher's choice.
+  ///  TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  public var DERIVED_EPHEMERIS: PPE? { let o = _accessor.offset(VT.DERIVED_EPHEMERIS); return o == 0 ? nil : PPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startOCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 42) }
   public static func add(HEADER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEADER, at: VT.HEADER) }
   public static func add(METADATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA, at: VT.METADATA) }
   public static func add(TRAJ_TYPE: trajectoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRAJ_TYPE.rawValue, def: 0, at: VT.TRAJ_TYPE) }
@@ -4097,6 +4104,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(INTEGRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATOR, at: VT.INTEGRATOR) }
   public static func add(RPO_GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RPO_GEOMETRY, at: VT.RPO_GEOMETRY) }
   public static func add(RPO_INSPECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RPO_INSPECTION, at: VT.RPO_INSPECTION) }
+  public static func add(DERIVED_EPHEMERIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_EPHEMERIS, at: VT.DERIVED_EPHEMERIS) }
   public static func endOCM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCM(
     _ fbb: inout FlatBufferBuilder,
@@ -4140,7 +4148,8 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SEED_SETSVectorOffset SEED_SETS: Offset = Offset(),
     INTEGRATOROffset INTEGRATOR: Offset = Offset(),
     RPO_GEOMETRYOffset RPO_GEOMETRY: Offset = Offset(),
-    RPO_INSPECTIONOffset RPO_INSPECTION: Offset = Offset()
+    RPO_INSPECTIONOffset RPO_INSPECTION: Offset = Offset(),
+    DERIVED_EPHEMERISOffset DERIVED_EPHEMERIS: Offset = Offset()
   ) -> Offset {
     let __start = OCM.startOCM(&fbb)
     OCM.add(HEADER: HEADER, &fbb)
@@ -4184,6 +4193,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OCM.add(INTEGRATOR: INTEGRATOR, &fbb)
     OCM.add(RPO_GEOMETRY: RPO_GEOMETRY, &fbb)
     OCM.add(RPO_INSPECTION: RPO_INSPECTION, &fbb)
+    OCM.add(DERIVED_EPHEMERIS: DERIVED_EPHEMERIS, &fbb)
     return OCM.endOCM(&fbb, start: __start)
   }
 
@@ -4230,6 +4240,7 @@ public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: ForwardOffset<OCMIntegrator>.self)
     try _v.visit(field: VT.RPO_GEOMETRY, fieldName: "RPO_GEOMETRY", required: false, type: ForwardOffset<OCMRelativeGeometry>.self)
     try _v.visit(field: VT.RPO_INSPECTION, fieldName: "RPO_INSPECTION", required: false, type: ForwardOffset<OCMInspectionGeometry>.self)
+    try _v.visit(field: VT.DERIVED_EPHEMERIS, fieldName: "DERIVED_EPHEMERIS", required: false, type: ForwardOffset<PPE>.self)
     _v.finish()
   }
 }

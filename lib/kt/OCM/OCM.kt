@@ -606,6 +606,22 @@ class OCM : Table() {
             null
         }
     }
+    /**
+     * The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+     * named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+     * MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+     * reader may ignore this. How many windows it holds is the publisher's choice.
+     * TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+     */
+    val derivedEphemeris : PPE? get() = derivedEphemeris(PPE())
+    fun derivedEphemeris(obj: PPE) : PPE? {
+        val o = __offset(86)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
@@ -614,9 +630,10 @@ class OCM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OCM")
-        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int, meanElementsOffset: Int, covPropagationOffset: Int, covParameterKindsOffset: Int, trajBasis: UByte, seedSetsOffset: Int, integratorOffset: Int, rpoGeometryOffset: Int, rpoInspectionOffset: Int) : Int {
-            builder.startTable(41)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int, meanElementsOffset: Int, covPropagationOffset: Int, covParameterKindsOffset: Int, trajBasis: UByte, seedSetsOffset: Int, integratorOffset: Int, rpoGeometryOffset: Int, rpoInspectionOffset: Int, derivedEphemerisOffset: Int) : Int {
+            builder.startTable(42)
             addSTATESTEPSIZE(builder, stateStepSize)
+            addDERIVEDEPHEMERIS(builder, derivedEphemerisOffset)
             addRPOINSPECTION(builder, rpoInspectionOffset)
             addRPOGEOMETRY(builder, rpoGeometryOffset)
             addINTEGRATOR(builder, integratorOffset)
@@ -659,7 +676,7 @@ class OCM : Table() {
             addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(41)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(42)
         fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
         fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
@@ -814,6 +831,7 @@ class OCM : Table() {
         fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(38, integrator, 0)
         fun addRPOGEOMETRY(builder: FlatBufferBuilder, rpoGeometry: Int) = builder.addOffset(39, rpoGeometry, 0)
         fun addRPOINSPECTION(builder: FlatBufferBuilder, rpoInspection: Int) = builder.addOffset(40, rpoInspection, 0)
+        fun addDERIVEDEPHEMERIS(builder: FlatBufferBuilder, derivedEphemeris: Int) = builder.addOffset(41, derivedEphemeris, 0)
         fun endOCM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

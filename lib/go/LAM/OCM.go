@@ -1136,8 +1136,35 @@ func (rcv *OCM) RpoInspection(obj *OCMInspectionGeometry) *OCMInspectionGeometry
 }
 
 /// Inspection geometry; STATE_DATA is empty when this is present.
+/// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+/// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+/// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+/// reader may ignore this. How many windows it holds is the publisher's choice.
+/// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+func (rcv *OCM) DERIVED_EPHEMERIS(obj *PPE) *PPE {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PPE)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *OCM) DerivedEphemeris(obj *PPE) *PPE {
+	return rcv.DERIVED_EPHEMERIS(obj)
+}
+
+/// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+/// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+/// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+/// reader may ignore this. How many windows it holds is the publisher's choice.
+/// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
 func OCMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(41)
+	builder.StartObject(42)
 }
 func OCMAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HEADER), 0)
@@ -1468,6 +1495,12 @@ func OCMAddRPO_INSPECTION(builder *flatbuffers.Builder, RPO_INSPECTION flatbuffe
 }
 func OCMAddRpoInspection(builder *flatbuffers.Builder, RPO_INSPECTION flatbuffers.UOffsetT) {
 	OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
+}
+func OCMAddDERIVED_EPHEMERIS(builder *flatbuffers.Builder, DERIVED_EPHEMERIS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(DERIVED_EPHEMERIS), 0)
+}
+func OCMAddDerivedEphemeris(builder *flatbuffers.Builder, DERIVED_EPHEMERIS flatbuffers.UOffsetT) {
+	OCMAddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERIS)
 }
 func OCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -5,11 +5,13 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CAT, CATT } from './CAT.js';
+import { PPEBuild, PPEBuildT } from './PPEBuild.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
+import { ppeWindowStatus } from './ppeWindowStatus.js';
 import { timingStandard } from './timingStandard.js';
 
 
@@ -19,7 +21,8 @@ import { timingStandard } from './timingStandard.js';
  *
  * A PPE message may contain position records, orbital element records, or both.
  * Records should be ordered chronologically by EPOCH_MID and should collectively
- * cover the time span [START_TIME, STOP_TIME] without gaps.
+ * cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+ * listed in UNSERVED_MID_SECONDS.
  */
 export class PPE implements flatbuffers.IUnpackableObject<PPET> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -187,8 +190,83 @@ PROVENANCE(obj?:PVN):PVN|null {
   return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+ * TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+ */
+REFERENCE_EPOCH():string|null
+REFERENCE_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REFERENCE_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * The builder and inputs of a derived ephemeris; absent for any other.
+ */
+BUILD(obj?:PPEBuild):PPEBuild|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new PPEBuild()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+ * Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+ * never written.
+ */
+UNSERVED_MID_SECONDS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+unservedMidSecondsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+unservedMidSecondsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+ */
+UNSERVED_HALF_SPAN(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+unservedHalfSpanLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+unservedHalfSpanArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+ */
+UNSERVED_STATUS(index: number):ppeWindowStatus|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
+}
+
+unservedStatusLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+unservedStatusArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPPE(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(19);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -283,6 +361,72 @@ static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.O
   builder.addFieldOffset(13, PROVENANCEOffset, 0);
 }
 
+static addReferenceEpoch(builder:flatbuffers.Builder, REFERENCE_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, REFERENCE_EPOCHOffset, 0);
+}
+
+static addBuild(builder:flatbuffers.Builder, BUILDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, BUILDOffset, 0);
+}
+
+static addUnservedMidSeconds(builder:flatbuffers.Builder, UNSERVED_MID_SECONDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, UNSERVED_MID_SECONDSOffset, 0);
+}
+
+static createUnservedMidSecondsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createUnservedMidSecondsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createUnservedMidSecondsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUnservedMidSecondsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addUnservedHalfSpan(builder:flatbuffers.Builder, UNSERVED_HALF_SPANOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, UNSERVED_HALF_SPANOffset, 0);
+}
+
+static createUnservedHalfSpanVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createUnservedHalfSpanVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createUnservedHalfSpanVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUnservedHalfSpanVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addUnservedStatus(builder:flatbuffers.Builder, UNSERVED_STATUSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, UNSERVED_STATUSOffset, 0);
+}
+
+static createUnservedStatusVector(builder:flatbuffers.Builder, data:ppeWindowStatus[]):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUnservedStatusVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPPE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -312,7 +456,12 @@ unpack(): PPET {
     this.EPHEMERIS_SOURCE(),
     this.NOMINAL_SEGMENT_SPAN(),
     this.NOMINAL_NUM_COEFFICIENTS(),
-    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.REFERENCE_EPOCH(),
+    (this.BUILD() !== null ? this.BUILD()!.unpack() : null),
+    this.bb!.createScalarList<number>(this.UNSERVED_MID_SECONDS.bind(this), this.unservedMidSecondsLength()),
+    this.bb!.createScalarList<number>(this.UNSERVED_HALF_SPAN.bind(this), this.unservedHalfSpanLength()),
+    this.bb!.createScalarList<ppeWindowStatus>(this.UNSERVED_STATUS.bind(this), this.unservedStatusLength())
   );
 }
 
@@ -332,6 +481,11 @@ unpackTo(_o: PPET): void {
   _o.NOMINAL_SEGMENT_SPAN = this.NOMINAL_SEGMENT_SPAN();
   _o.NOMINAL_NUM_COEFFICIENTS = this.NOMINAL_NUM_COEFFICIENTS();
   _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.REFERENCE_EPOCH = this.REFERENCE_EPOCH();
+  _o.BUILD = (this.BUILD() !== null ? this.BUILD()!.unpack() : null);
+  _o.UNSERVED_MID_SECONDS = this.bb!.createScalarList<number>(this.UNSERVED_MID_SECONDS.bind(this), this.unservedMidSecondsLength());
+  _o.UNSERVED_HALF_SPAN = this.bb!.createScalarList<number>(this.UNSERVED_HALF_SPAN.bind(this), this.unservedHalfSpanLength());
+  _o.UNSERVED_STATUS = this.bb!.createScalarList<ppeWindowStatus>(this.UNSERVED_STATUS.bind(this), this.unservedStatusLength());
 }
 }
 
@@ -350,7 +504,12 @@ constructor(
   public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
   public NOMINAL_SEGMENT_SPAN: number = 0.0,
   public NOMINAL_NUM_COEFFICIENTS: number = 0,
-  public PROVENANCE: PVNT|null = null
+  public PROVENANCE: PVNT|null = null,
+  public REFERENCE_EPOCH: string|Uint8Array|null = null,
+  public BUILD: PPEBuildT|null = null,
+  public UNSERVED_MID_SECONDS: (number)[] = [],
+  public UNSERVED_HALF_SPAN: (number)[] = [],
+  public UNSERVED_STATUS: (ppeWindowStatus)[] = []
 ){}
 
 
@@ -365,6 +524,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORBITAL_ELEMENT_RECORDS = PPE.createOrbitalElementRecordsVector(builder, builder.createObjectOffsetList(this.ORBITAL_ELEMENT_RECORDS));
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const REFERENCE_EPOCH = (this.REFERENCE_EPOCH !== null ? builder.createString(this.REFERENCE_EPOCH!) : 0);
+  const BUILD = (this.BUILD !== null ? this.BUILD!.pack(builder) : 0);
+  const UNSERVED_MID_SECONDS = PPE.createUnservedMidSecondsVector(builder, this.UNSERVED_MID_SECONDS);
+  const UNSERVED_HALF_SPAN = PPE.createUnservedHalfSpanVector(builder, this.UNSERVED_HALF_SPAN);
+  const UNSERVED_STATUS = PPE.createUnservedStatusVector(builder, this.UNSERVED_STATUS);
 
   PPE.startPPE(builder);
   PPE.addComment(builder, COMMENT);
@@ -381,6 +545,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PPE.addNominalSegmentSpan(builder, this.NOMINAL_SEGMENT_SPAN);
   PPE.addNominalNumCoefficients(builder, this.NOMINAL_NUM_COEFFICIENTS);
   PPE.addProvenance(builder, PROVENANCE);
+  PPE.addReferenceEpoch(builder, REFERENCE_EPOCH);
+  PPE.addBuild(builder, BUILD);
+  PPE.addUnservedMidSeconds(builder, UNSERVED_MID_SECONDS);
+  PPE.addUnservedHalfSpan(builder, UNSERVED_HALF_SPAN);
+  PPE.addUnservedStatus(builder, UNSERVED_STATUS);
 
   return PPE.endPPE(builder);
 }

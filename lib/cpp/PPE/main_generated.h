@@ -21,6 +21,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct PPEPositionRecord;
 struct PPEPositionRecordBuilder;
 
+struct PPEBuild;
+struct PPEBuildBuilder;
+
 struct PPEOrbitalElementRecord;
 struct PPEOrbitalElementRecordBuilder;
 
@@ -147,6 +150,43 @@ inline const char *EnumNamesizeShapeProfile(sizeShapeProfile e) {
   return EnumNamessizeShapeProfile()[index];
 }
 
+/// Why a window of a derived ephemeris has no record.
+enum ppeWindowStatus : uint8_t {
+  /// Not stated.
+  ppeWindowStatus_UNSPECIFIED = 0,
+  /// The theory refuses somewhere in the window (decay, space-weather inputs short).
+  ppeWindowStatus_THEORY_REFUSED = 1,
+  /// No window of the builder's shortest span holds its tolerance there.
+  ppeWindowStatus_TOLERANCE_NOT_HELD = 2,
+  ppeWindowStatus_MIN = ppeWindowStatus_UNSPECIFIED,
+  ppeWindowStatus_MAX = ppeWindowStatus_TOLERANCE_NOT_HELD
+};
+
+inline const ppeWindowStatus (&EnumValuesppeWindowStatus())[3] {
+  static const ppeWindowStatus values[] = {
+    ppeWindowStatus_UNSPECIFIED,
+    ppeWindowStatus_THEORY_REFUSED,
+    ppeWindowStatus_TOLERANCE_NOT_HELD
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesppeWindowStatus() {
+  static const char * const names[4] = {
+    "UNSPECIFIED",
+    "THEORY_REFUSED",
+    "TOLERANCE_NOT_HELD",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameppeWindowStatus(ppeWindowStatus e) {
+  if (::flatbuffers::IsOutRange(e, ppeWindowStatus_UNSPECIFIED, ppeWindowStatus_TOLERANCE_NOT_HELD)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesppeWindowStatus()[index];
+}
+
 /// A single time-segment record of polynomial coefficients for Cartesian position
 /// (and optionally velocity). Coefficients are stored per axis.
 ///
@@ -174,7 +214,10 @@ struct PPEPositionRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_VEL_COEFF_Y = 22,
     VT_VEL_COEFF_Z = 24,
     VT_MAX_POSITION_RESIDUAL = 26,
-    VT_RMS_POSITION_RESIDUAL = 28
+    VT_RMS_POSITION_RESIDUAL = 28,
+    VT_EPOCH_MID_SECONDS = 30,
+    VT_POS_COEFF_HEAD_COUNT = 32,
+    VT_VEL_COEFF_HEAD_COUNT = 34
   };
   /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
   /// Together with EPOCH_HALF_SPAN, defines the time interval:
@@ -238,6 +281,26 @@ struct PPEPositionRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double RMS_POSITION_RESIDUAL() const {
     return GetField<double>(VT_RMS_POSITION_RESIDUAL, 0.0);
   }
+  /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  /// instant. NaN when not stated.
+  double EPOCH_MID_SECONDS() const {
+    return GetField<double>(VT_EPOCH_MID_SECONDS, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  uint16_t POS_COEFF_HEAD_COUNT() const {
+    return GetField<uint16_t>(VT_POS_COEFF_HEAD_COUNT, 65535);
+  }
+  /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  /// A builder whose position and velocity series differ in length pads the shorter
+  /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  uint16_t VEL_COEFF_HEAD_COUNT() const {
+    return GetField<uint16_t>(VT_VEL_COEFF_HEAD_COUNT, 65535);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -261,6 +324,9 @@ struct PPEPositionRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            verifier.VerifyVector(VEL_COEFF_Z()) &&
            VerifyField<double>(verifier, VT_MAX_POSITION_RESIDUAL, 8) &&
            VerifyField<double>(verifier, VT_RMS_POSITION_RESIDUAL, 8) &&
+           VerifyField<double>(verifier, VT_EPOCH_MID_SECONDS, 8) &&
+           VerifyField<uint16_t>(verifier, VT_POS_COEFF_HEAD_COUNT, 2) &&
+           VerifyField<uint16_t>(verifier, VT_VEL_COEFF_HEAD_COUNT, 2) &&
            verifier.EndTable();
   }
 };
@@ -308,6 +374,15 @@ struct PPEPositionRecordBuilder {
   void add_RMS_POSITION_RESIDUAL(double RMS_POSITION_RESIDUAL) {
     fbb_.AddElement<double>(PPEPositionRecord::VT_RMS_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL, 0.0);
   }
+  void add_EPOCH_MID_SECONDS(double EPOCH_MID_SECONDS) {
+    fbb_.AddElement<double>(PPEPositionRecord::VT_EPOCH_MID_SECONDS, EPOCH_MID_SECONDS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_POS_COEFF_HEAD_COUNT(uint16_t POS_COEFF_HEAD_COUNT) {
+    fbb_.AddElement<uint16_t>(PPEPositionRecord::VT_POS_COEFF_HEAD_COUNT, POS_COEFF_HEAD_COUNT, 65535);
+  }
+  void add_VEL_COEFF_HEAD_COUNT(uint16_t VEL_COEFF_HEAD_COUNT) {
+    fbb_.AddElement<uint16_t>(PPEPositionRecord::VT_VEL_COEFF_HEAD_COUNT, VEL_COEFF_HEAD_COUNT, 65535);
+  }
   explicit PPEPositionRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -337,8 +412,12 @@ inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecord(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Y = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> VEL_COEFF_Z = 0,
     double MAX_POSITION_RESIDUAL = 0.0,
-    double RMS_POSITION_RESIDUAL = 0.0) {
+    double RMS_POSITION_RESIDUAL = 0.0,
+    double EPOCH_MID_SECONDS = std::numeric_limits<double>::quiet_NaN(),
+    uint16_t POS_COEFF_HEAD_COUNT = 65535,
+    uint16_t VEL_COEFF_HEAD_COUNT = 65535) {
   PPEPositionRecordBuilder builder_(_fbb);
+  builder_.add_EPOCH_MID_SECONDS(EPOCH_MID_SECONDS);
   builder_.add_RMS_POSITION_RESIDUAL(RMS_POSITION_RESIDUAL);
   builder_.add_MAX_POSITION_RESIDUAL(MAX_POSITION_RESIDUAL);
   builder_.add_EPOCH_HALF_SPAN(EPOCH_HALF_SPAN);
@@ -349,6 +428,8 @@ inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecord(
   builder_.add_POS_COEFF_Y(POS_COEFF_Y);
   builder_.add_POS_COEFF_X(POS_COEFF_X);
   builder_.add_EPOCH_MID(EPOCH_MID);
+  builder_.add_VEL_COEFF_HEAD_COUNT(VEL_COEFF_HEAD_COUNT);
+  builder_.add_POS_COEFF_HEAD_COUNT(POS_COEFF_HEAD_COUNT);
   builder_.add_NUM_COEFFICIENTS(NUM_COEFFICIENTS);
   builder_.add_HAS_VELOCITY_COEFFICIENTS(HAS_VELOCITY_COEFFICIENTS);
   builder_.add_BASIS_TYPE(BASIS_TYPE);
@@ -369,7 +450,10 @@ inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecordDirect(
     const std::vector<double> *VEL_COEFF_Y = nullptr,
     const std::vector<double> *VEL_COEFF_Z = nullptr,
     double MAX_POSITION_RESIDUAL = 0.0,
-    double RMS_POSITION_RESIDUAL = 0.0) {
+    double RMS_POSITION_RESIDUAL = 0.0,
+    double EPOCH_MID_SECONDS = std::numeric_limits<double>::quiet_NaN(),
+    uint16_t POS_COEFF_HEAD_COUNT = 65535,
+    uint16_t VEL_COEFF_HEAD_COUNT = 65535) {
   auto EPOCH_MID__ = EPOCH_MID ? _fbb.CreateString(EPOCH_MID) : 0;
   auto POS_COEFF_X__ = POS_COEFF_X ? _fbb.CreateVector<double>(*POS_COEFF_X) : 0;
   auto POS_COEFF_Y__ = POS_COEFF_Y ? _fbb.CreateVector<double>(*POS_COEFF_Y) : 0;
@@ -391,7 +475,157 @@ inline ::flatbuffers::Offset<PPEPositionRecord> CreatePPEPositionRecordDirect(
       VEL_COEFF_Y__,
       VEL_COEFF_Z__,
       MAX_POSITION_RESIDUAL,
-      RMS_POSITION_RESIDUAL);
+      RMS_POSITION_RESIDUAL,
+      EPOCH_MID_SECONDS,
+      POS_COEFF_HEAD_COUNT,
+      VEL_COEFF_HEAD_COUNT);
+}
+
+/// The builder of a derived ephemeris and the inputs its records are bound to.
+/// The records are a derived convenience: the source they were built from remains
+/// the authoritative content, and a reader may ignore them. BUILDER_NAME and
+/// BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+/// ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+struct PPEBuild FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PPEBuildBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_BUILDER_NAME = 4,
+    VT_BUILDER_VERSION = 6,
+    VT_BUILDER_DIGEST = 8,
+    VT_RECORD_DIGEST = 10,
+    VT_ENVIRONMENT_DIGEST = 12,
+    VT_TOL_POSITION = 14,
+    VT_TOL_VELOCITY = 16
+  };
+  /// Name of the builder, as it publishes itself.
+  const ::flatbuffers::String *BUILDER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BUILDER_NAME);
+  }
+  /// Version of the builder.
+  const ::flatbuffers::String *BUILDER_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BUILDER_VERSION);
+  }
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  const ::flatbuffers::Vector<uint8_t> *BUILDER_DIGEST() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_BUILDER_DIGEST);
+  }
+  /// SHA-256 over the fields of the source record the builder reads, by the builder's
+  /// published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+  const ::flatbuffers::Vector<uint8_t> *RECORD_DIGEST() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RECORD_DIGEST);
+  }
+  /// SHA-256 over the configuration and environment inputs the builder used that are not
+  /// in the source record (force-model configuration, space-weather data), by the builder's
+  /// published rule (32 bytes); empty when the builder uses none.
+  const ::flatbuffers::Vector<uint8_t> *ENVIRONMENT_DIGEST() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_ENVIRONMENT_DIGEST);
+  }
+  /// Build tolerance per position axis in km. NaN when not stated.
+  double TOL_POSITION() const {
+    return GetField<double>(VT_TOL_POSITION, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+  double TOL_VELOCITY() const {
+    return GetField<double>(VT_TOL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_BUILDER_NAME) &&
+           verifier.VerifyString(BUILDER_NAME()) &&
+           VerifyOffset(verifier, VT_BUILDER_VERSION) &&
+           verifier.VerifyString(BUILDER_VERSION()) &&
+           VerifyOffset(verifier, VT_BUILDER_DIGEST) &&
+           verifier.VerifyVector(BUILDER_DIGEST()) &&
+           VerifyOffset(verifier, VT_RECORD_DIGEST) &&
+           verifier.VerifyVector(RECORD_DIGEST()) &&
+           VerifyOffset(verifier, VT_ENVIRONMENT_DIGEST) &&
+           verifier.VerifyVector(ENVIRONMENT_DIGEST()) &&
+           VerifyField<double>(verifier, VT_TOL_POSITION, 8) &&
+           VerifyField<double>(verifier, VT_TOL_VELOCITY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct PPEBuildBuilder {
+  typedef PPEBuild Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_BUILDER_NAME(::flatbuffers::Offset<::flatbuffers::String> BUILDER_NAME) {
+    fbb_.AddOffset(PPEBuild::VT_BUILDER_NAME, BUILDER_NAME);
+  }
+  void add_BUILDER_VERSION(::flatbuffers::Offset<::flatbuffers::String> BUILDER_VERSION) {
+    fbb_.AddOffset(PPEBuild::VT_BUILDER_VERSION, BUILDER_VERSION);
+  }
+  void add_BUILDER_DIGEST(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> BUILDER_DIGEST) {
+    fbb_.AddOffset(PPEBuild::VT_BUILDER_DIGEST, BUILDER_DIGEST);
+  }
+  void add_RECORD_DIGEST(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECORD_DIGEST) {
+    fbb_.AddOffset(PPEBuild::VT_RECORD_DIGEST, RECORD_DIGEST);
+  }
+  void add_ENVIRONMENT_DIGEST(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENVIRONMENT_DIGEST) {
+    fbb_.AddOffset(PPEBuild::VT_ENVIRONMENT_DIGEST, ENVIRONMENT_DIGEST);
+  }
+  void add_TOL_POSITION(double TOL_POSITION) {
+    fbb_.AddElement<double>(PPEBuild::VT_TOL_POSITION, TOL_POSITION, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_TOL_VELOCITY(double TOL_VELOCITY) {
+    fbb_.AddElement<double>(PPEBuild::VT_TOL_VELOCITY, TOL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  explicit PPEBuildBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PPEBuild> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PPEBuild>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PPEBuild> CreatePPEBuild(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> BUILDER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BUILDER_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> BUILDER_DIGEST = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RECORD_DIGEST = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENVIRONMENT_DIGEST = 0,
+    double TOL_POSITION = std::numeric_limits<double>::quiet_NaN(),
+    double TOL_VELOCITY = std::numeric_limits<double>::quiet_NaN()) {
+  PPEBuildBuilder builder_(_fbb);
+  builder_.add_TOL_VELOCITY(TOL_VELOCITY);
+  builder_.add_TOL_POSITION(TOL_POSITION);
+  builder_.add_ENVIRONMENT_DIGEST(ENVIRONMENT_DIGEST);
+  builder_.add_RECORD_DIGEST(RECORD_DIGEST);
+  builder_.add_BUILDER_DIGEST(BUILDER_DIGEST);
+  builder_.add_BUILDER_VERSION(BUILDER_VERSION);
+  builder_.add_BUILDER_NAME(BUILDER_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PPEBuild> CreatePPEBuildDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *BUILDER_NAME = nullptr,
+    const char *BUILDER_VERSION = nullptr,
+    const std::vector<uint8_t> *BUILDER_DIGEST = nullptr,
+    const std::vector<uint8_t> *RECORD_DIGEST = nullptr,
+    const std::vector<uint8_t> *ENVIRONMENT_DIGEST = nullptr,
+    double TOL_POSITION = std::numeric_limits<double>::quiet_NaN(),
+    double TOL_VELOCITY = std::numeric_limits<double>::quiet_NaN()) {
+  auto BUILDER_NAME__ = BUILDER_NAME ? _fbb.CreateString(BUILDER_NAME) : 0;
+  auto BUILDER_VERSION__ = BUILDER_VERSION ? _fbb.CreateString(BUILDER_VERSION) : 0;
+  auto BUILDER_DIGEST__ = BUILDER_DIGEST ? _fbb.CreateVector<uint8_t>(*BUILDER_DIGEST) : 0;
+  auto RECORD_DIGEST__ = RECORD_DIGEST ? _fbb.CreateVector<uint8_t>(*RECORD_DIGEST) : 0;
+  auto ENVIRONMENT_DIGEST__ = ENVIRONMENT_DIGEST ? _fbb.CreateVector<uint8_t>(*ENVIRONMENT_DIGEST) : 0;
+  return CreatePPEBuild(
+      _fbb,
+      BUILDER_NAME__,
+      BUILDER_VERSION__,
+      BUILDER_DIGEST__,
+      RECORD_DIGEST__,
+      ENVIRONMENT_DIGEST__,
+      TOL_POSITION,
+      TOL_VELOCITY);
 }
 
 /// A single time-segment record of polynomial coefficients for classical orbital elements.
@@ -658,7 +892,8 @@ inline ::flatbuffers::Offset<PPEOrbitalElementRecord> CreatePPEOrbitalElementRec
 ///
 /// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
-/// cover the time span [START_TIME, STOP_TIME] without gaps.
+/// cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+/// listed in UNSERVED_MID_SECONDS.
 struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PPEBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -675,7 +910,12 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EPHEMERIS_SOURCE = 24,
     VT_NOMINAL_SEGMENT_SPAN = 26,
     VT_NOMINAL_NUM_COEFFICIENTS = 28,
-    VT_PROVENANCE = 30
+    VT_PROVENANCE = 30,
+    VT_REFERENCE_EPOCH = 32,
+    VT_BUILD = 34,
+    VT_UNSERVED_MID_SECONDS = 36,
+    VT_UNSERVED_HALF_SPAN = 38,
+    VT_UNSERVED_STATUS = 40
   };
   /// Plain-text comments.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
@@ -740,6 +980,29 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PVN *PROVENANCE() const {
     return GetPointer<const PVN *>(VT_PROVENANCE);
   }
+  /// The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  /// TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  const ::flatbuffers::String *REFERENCE_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_EPOCH);
+  }
+  /// The builder and inputs of a derived ephemeris; absent for any other.
+  const PPEBuild *BUILD() const {
+    return GetPointer<const PPEBuild *>(VT_BUILD);
+  }
+  /// Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  /// Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  /// never written.
+  const ::flatbuffers::Vector<double> *UNSERVED_MID_SECONDS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_UNSERVED_MID_SECONDS);
+  }
+  /// Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  const ::flatbuffers::Vector<double> *UNSERVED_HALF_SPAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_UNSERVED_HALF_SPAN);
+  }
+  /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  const ::flatbuffers::Vector<uint8_t> *UNSERVED_STATUS() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_UNSERVED_STATUS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -770,6 +1033,16 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint16_t>(verifier, VT_NOMINAL_NUM_COEFFICIENTS, 2) &&
            VerifyOffset(verifier, VT_PROVENANCE) &&
            verifier.VerifyTable(PROVENANCE()) &&
+           VerifyOffset(verifier, VT_REFERENCE_EPOCH) &&
+           verifier.VerifyString(REFERENCE_EPOCH()) &&
+           VerifyOffset(verifier, VT_BUILD) &&
+           verifier.VerifyTable(BUILD()) &&
+           VerifyOffset(verifier, VT_UNSERVED_MID_SECONDS) &&
+           verifier.VerifyVector(UNSERVED_MID_SECONDS()) &&
+           VerifyOffset(verifier, VT_UNSERVED_HALF_SPAN) &&
+           verifier.VerifyVector(UNSERVED_HALF_SPAN()) &&
+           VerifyOffset(verifier, VT_UNSERVED_STATUS) &&
+           verifier.VerifyVector(UNSERVED_STATUS()) &&
            verifier.EndTable();
   }
 };
@@ -820,6 +1093,21 @@ struct PPEBuilder {
   void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
     fbb_.AddOffset(PPE::VT_PROVENANCE, PROVENANCE);
   }
+  void add_REFERENCE_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_EPOCH) {
+    fbb_.AddOffset(PPE::VT_REFERENCE_EPOCH, REFERENCE_EPOCH);
+  }
+  void add_BUILD(::flatbuffers::Offset<PPEBuild> BUILD) {
+    fbb_.AddOffset(PPE::VT_BUILD, BUILD);
+  }
+  void add_UNSERVED_MID_SECONDS(::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSERVED_MID_SECONDS) {
+    fbb_.AddOffset(PPE::VT_UNSERVED_MID_SECONDS, UNSERVED_MID_SECONDS);
+  }
+  void add_UNSERVED_HALF_SPAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSERVED_HALF_SPAN) {
+    fbb_.AddOffset(PPE::VT_UNSERVED_HALF_SPAN, UNSERVED_HALF_SPAN);
+  }
+  void add_UNSERVED_STATUS(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> UNSERVED_STATUS) {
+    fbb_.AddOffset(PPE::VT_UNSERVED_STATUS, UNSERVED_STATUS);
+  }
   explicit PPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -846,9 +1134,19 @@ inline ::flatbuffers::Offset<PPE> CreatePPE(
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
     double NOMINAL_SEGMENT_SPAN = 0.0,
     uint16_t NOMINAL_NUM_COEFFICIENTS = 0,
-    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_EPOCH = 0,
+    ::flatbuffers::Offset<PPEBuild> BUILD = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSERVED_MID_SECONDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSERVED_HALF_SPAN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> UNSERVED_STATUS = 0) {
   PPEBuilder builder_(_fbb);
   builder_.add_NOMINAL_SEGMENT_SPAN(NOMINAL_SEGMENT_SPAN);
+  builder_.add_UNSERVED_STATUS(UNSERVED_STATUS);
+  builder_.add_UNSERVED_HALF_SPAN(UNSERVED_HALF_SPAN);
+  builder_.add_UNSERVED_MID_SECONDS(UNSERVED_MID_SECONDS);
+  builder_.add_BUILD(BUILD);
+  builder_.add_REFERENCE_EPOCH(REFERENCE_EPOCH);
   builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
   builder_.add_ORBITAL_ELEMENT_RECORDS(ORBITAL_ELEMENT_RECORDS);
@@ -880,7 +1178,12 @@ inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
     const char *EPHEMERIS_SOURCE = nullptr,
     double NOMINAL_SEGMENT_SPAN = 0.0,
     uint16_t NOMINAL_NUM_COEFFICIENTS = 0,
-    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    const char *REFERENCE_EPOCH = nullptr,
+    ::flatbuffers::Offset<PPEBuild> BUILD = 0,
+    const std::vector<double> *UNSERVED_MID_SECONDS = nullptr,
+    const std::vector<double> *UNSERVED_HALF_SPAN = nullptr,
+    const std::vector<uint8_t> *UNSERVED_STATUS = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
@@ -888,6 +1191,10 @@ inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
   auto POSITION_RECORDS__ = POSITION_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEPositionRecord>>(*POSITION_RECORDS) : 0;
   auto ORBITAL_ELEMENT_RECORDS__ = ORBITAL_ELEMENT_RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<PPEOrbitalElementRecord>>(*ORBITAL_ELEMENT_RECORDS) : 0;
   auto EPHEMERIS_SOURCE__ = EPHEMERIS_SOURCE ? _fbb.CreateString(EPHEMERIS_SOURCE) : 0;
+  auto REFERENCE_EPOCH__ = REFERENCE_EPOCH ? _fbb.CreateString(REFERENCE_EPOCH) : 0;
+  auto UNSERVED_MID_SECONDS__ = UNSERVED_MID_SECONDS ? _fbb.CreateVector<double>(*UNSERVED_MID_SECONDS) : 0;
+  auto UNSERVED_HALF_SPAN__ = UNSERVED_HALF_SPAN ? _fbb.CreateVector<double>(*UNSERVED_HALF_SPAN) : 0;
+  auto UNSERVED_STATUS__ = UNSERVED_STATUS ? _fbb.CreateVector<uint8_t>(*UNSERVED_STATUS) : 0;
   return CreatePPE(
       _fbb,
       COMMENT__,
@@ -903,7 +1210,12 @@ inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
       EPHEMERIS_SOURCE__,
       NOMINAL_SEGMENT_SPAN,
       NOMINAL_NUM_COEFFICIENTS,
-      PROVENANCE);
+      PROVENANCE,
+      REFERENCE_EPOCH__,
+      BUILD,
+      UNSERVED_MID_SECONDS__,
+      UNSERVED_HALF_SPAN__,
+      UNSERVED_STATUS__);
 }
 
 inline const PPE *GetPPE(const void *buf) {

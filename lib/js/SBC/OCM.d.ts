@@ -12,6 +12,7 @@ import { OCMRelativeGeometry, OCMRelativeGeometryT } from './OCMRelativeGeometry
 import { OCMSeedSet, OCMSeedSetT } from './OCMSeedSet.js';
 import { OCMTrajectoryBlock, OCMTrajectoryBlockT } from './OCMTrajectoryBlock.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
+import { PPE, PPET } from './PPE.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { PVN, PVNT } from './PVN.js';
@@ -273,6 +274,14 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      * Inspection geometry; STATE_DATA is empty when this is present.
      */
     RPO_INSPECTION(obj?: OCMInspectionGeometry): OCMInspectionGeometry | null;
+    /**
+     * The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+     * named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+     * MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+     * reader may ignore this. How many windows it holds is the publisher's choice.
+     * TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+     */
+    DERIVED_EPHEMERIS(obj?: PPE): PPE | null;
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
@@ -351,6 +360,7 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static addIntegrator(builder: flatbuffers.Builder, INTEGRATOROffset: flatbuffers.Offset): void;
     static addRpoGeometry(builder: flatbuffers.Builder, RPO_GEOMETRYOffset: flatbuffers.Offset): void;
     static addRpoInspection(builder: flatbuffers.Builder, RPO_INSPECTIONOffset: flatbuffers.Offset): void;
+    static addDerivedEphemeris(builder: flatbuffers.Builder, DERIVED_EPHEMERISOffset: flatbuffers.Offset): void;
     static endOCM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedOCMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -399,7 +409,8 @@ export declare class OCMT implements flatbuffers.IGeneratedObject {
     INTEGRATOR: OCMIntegratorT | null;
     RPO_GEOMETRY: OCMRelativeGeometryT | null;
     RPO_INSPECTION: OCMInspectionGeometryT | null;
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[], COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_SIZE?: number, COV_PARAMETERS?: (string)[], COV_UNITS?: (string)[], TRAJECTORY_BLOCKS?: (OCMTrajectoryBlockT)[], COVARIANCE_BLOCKS?: (OCMCovarianceBlockT)[], PROVENANCE?: PVNT | null, COV_REALISM?: (CVRT)[], MEAN_ELEMENTS?: OCMMeanElementsT | null, COV_PROPAGATION?: OCMCovariancePropagationT | null, COV_PARAMETER_KINDS?: (prwDynamicParameter)[], TRAJ_BASIS?: ocmTrajectoryBasis, SEED_SETS?: (OCMSeedSetT)[], INTEGRATOR?: OCMIntegratorT | null, RPO_GEOMETRY?: OCMRelativeGeometryT | null, RPO_INSPECTION?: OCMInspectionGeometryT | null);
+    DERIVED_EPHEMERIS: PPET | null;
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[], CENTER_NAME?: string | Uint8Array | null, TRAJ_REF_FRAME?: RFMT | null, TRAJ_FRAME_EPOCH?: string | Uint8Array | null, COV_REF_FRAME?: RFMT | null, ORB_REVNUM?: number, ORB_AVERAGING?: string | Uint8Array | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, STATE_EPOCHS?: (string)[], COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_SIZE?: number, COV_PARAMETERS?: (string)[], COV_UNITS?: (string)[], TRAJECTORY_BLOCKS?: (OCMTrajectoryBlockT)[], COVARIANCE_BLOCKS?: (OCMCovarianceBlockT)[], PROVENANCE?: PVNT | null, COV_REALISM?: (CVRT)[], MEAN_ELEMENTS?: OCMMeanElementsT | null, COV_PROPAGATION?: OCMCovariancePropagationT | null, COV_PARAMETER_KINDS?: (prwDynamicParameter)[], TRAJ_BASIS?: ocmTrajectoryBasis, SEED_SETS?: (OCMSeedSetT)[], INTEGRATOR?: OCMIntegratorT | null, RPO_GEOMETRY?: OCMRelativeGeometryT | null, RPO_INSPECTION?: OCMInspectionGeometryT | null, DERIVED_EPHEMERIS?: PPET | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

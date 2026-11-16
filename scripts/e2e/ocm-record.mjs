@@ -50,11 +50,18 @@ const CHANGED_TABLES = {
   OrbitDetermination: [47, '245dc5864e8381c7', ['FIT_STATISTICS:OCMFitStatistics=']],
   OCM: [33, 'f861ac1130361534', ['MEAN_ELEMENTS:OCMMeanElements=', 'COV_PROPAGATION:OCMCovariancePropagation=',
     'COV_PARAMETER_KINDS:[prwDynamicParameter]=', 'TRAJ_BASIS:ocmTrajectoryBasis=UNSPECIFIED', 'SEED_SETS:[OCMSeedSet]=',
-    'INTEGRATOR:OCMIntegrator=', 'RPO_GEOMETRY:OCMRelativeGeometry=', 'RPO_INSPECTION:OCMInspectionGeometry=']],
+    'INTEGRATOR:OCMIntegrator=', 'RPO_GEOMETRY:OCMRelativeGeometry=', 'RPO_INSPECTION:OCMInspectionGeometry=',
+    'DERIVED_EPHEMERIS:PPE=']],
+  // 1.285.0: the derived ephemeris (scripts/e2e/ppe-derived-ephemeris.mjs).
+  PPE: [14, '47afc56efc7c1a8d', ['REFERENCE_EPOCH:string=', 'BUILD:PPEBuild=', 'UNSERVED_MID_SECONDS:[double]=',
+    'UNSERVED_HALF_SPAN:[double]=', 'UNSERVED_STATUS:[ppeWindowStatus]=']],
+  PPEPositionRecord: [13, 'c2f395b504b48cb8', ['EPOCH_MID_SECONDS:double=nan', 'POS_COEFF_HEAD_COUNT:uint16=65535',
+    'VEL_COEFF_HEAD_COUNT:uint16=65535']],
   PCFFitPolicy: [17, '8b169698906c3135', ['WEATHER_HORIZON_DAYS:ushort=30']],
   PCFOutput: [3, 'd9fed6a075087887', ['EPOCHS:[string]=', 'START_TIME:string=', 'STOP_TIME:string=']],
   CVR: [18, '47539c60ddc3d947', ['TRUTH_EPOCHS:uint=', ...['1', '3'].flatMap((s) => [1, 2, 3].map((a) => `COVERAGE_${s}_SIGMA_AXIS${a}:double=nan`))]],
-  PVN: [8, '7ed6295d2d012013', ['SOURCE_URL:string=', 'SOURCE_VERSION:string=', 'RETRIEVED_AT:string=', 'SOURCE_SHA256:string=', 'SOURCE_BYTES:uint64=']],
+  PVN: [8, '7ed6295d2d012013', ['SOURCE_URL:string=', 'SOURCE_VERSION:string=', 'RETRIEVED_AT:string=', 'SOURCE_SHA256:string=', 'SOURCE_BYTES:uint64=',
+    'PRODUCER_SHA256:string=']],
 };
 const CHANGED_ENUMS = {
   meanElementSource: [4, '18bc06bd5df374c0', ['AP=5', 'UNSPECIFIED=6']],
@@ -84,11 +91,12 @@ TFRMStateVector TFRMVector3 TFrequencyRange TIDM TLCC TMET TOCMCovarianceBlock T
 TPCE TPCEEvaluationContext TPCEEvaluationRequest TPCEEvaluationResult TPCEParameterCatalog TPCEParameterCondition
 TPCEParameterDescriptor TPCEParameterRef TPCEParameterSample TPCEParameterValue TPCEStopReport TPCEStopRequest TPCF
 TPCFEcom2 TPCFEpochStore TPCFEventDefinition TPCFExpression TPCFExpressionTerm TPCFForceModel TPCFGaussianPrior
-TPCFIntegratorSettings TPCFSpaceWeather TPLD TPPE TPPEOrbitalElementRecord TPPEPositionRecord TPhysicalProperties
+TPCFIntegratorSettings TPCFSpaceWeather TPLD TPPEOrbitalElementRecord TPhysicalProperties
 TRFM TRFMCoordinateSystem TRFMCoordinateSystemWrapper TRFMLocalAlignedConstrainedAxes TRFMObjectReferencedAxes
 TRFMOrigin TSpacecraftFrameWrapper TStateVector TStokesParameters TTIM TTIMCcsdsTimeCode TTIMConversionRequest
 TTIMConversionResult TTIMInstant TUserDefinedParameters`.split(/\s+/);
-const UNCHANGED_DIGEST = 'e01d58b07826b8bf032cd56b54e20622fc00a817b6d556a2a148224543e760f9';
+// 1.285.0 moved TPPE and TPPEPositionRecord to CHANGED_TABLES (DERIVED_EPHEMERIS); the 143 left digest the same at 1.275.0.
+const UNCHANGED_DIGEST = '74b50a1e5b3e23774745420d0d529f5ee22abe328e909d1957ccad7aabd5d4e5';
 const NEW_TABLES = {
   OCMHeldOutDay: 'DAY:ushort=;STATES:uint=;RMS_KM:double=nan',
   OCMFitStatistics: 'FIT_STATES:uint=;FIT_RMS_KM:double=nan;FIT_MAX_KM:double=nan;FIT_RADIAL_RMS_KM:double=nan;FIT_IN_TRACK_RMS_KM:double=nan;'

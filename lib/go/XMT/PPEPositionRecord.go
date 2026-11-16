@@ -4,6 +4,7 @@ package XMT
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 /// A single time-segment record of polynomial coefficients for Cartesian position
@@ -459,8 +460,90 @@ func (rcv *PPEPositionRecord) MutateRmsPositionResidual(n float64) bool {
 	return rcv.MutateRMS_POSITION_RESIDUAL(n)
 }
 
+/// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+/// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+/// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+/// instant. NaN when not stated.
+func (rcv *PPEPositionRecord) EPOCH_MID_SECONDS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *PPEPositionRecord) EpochMidSeconds() float64 {
+	return rcv.EPOCH_MID_SECONDS()
+}
+
+/// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+/// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+/// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+/// instant. NaN when not stated.
+func (rcv *PPEPositionRecord) MutateEPOCH_MID_SECONDS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *PPEPositionRecord) MutateEpochMidSeconds(n float64) bool {
+	return rcv.MutateEPOCH_MID_SECONDS(n)
+}
+
+/// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+/// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+/// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+/// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+func (rcv *PPEPositionRecord) POS_COEFF_HEAD_COUNT() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 65535
+}
+
+func (rcv *PPEPositionRecord) PosCoeffHeadCount() uint16 {
+	return rcv.POS_COEFF_HEAD_COUNT()
+}
+
+/// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+/// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+/// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+/// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+func (rcv *PPEPositionRecord) MutatePOS_COEFF_HEAD_COUNT(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(32, n)
+}
+
+func (rcv *PPEPositionRecord) MutatePosCoeffHeadCount(n uint16) bool {
+	return rcv.MutatePOS_COEFF_HEAD_COUNT(n)
+}
+
+/// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+/// A builder whose position and velocity series differ in length pads the shorter
+/// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+func (rcv *PPEPositionRecord) VEL_COEFF_HEAD_COUNT() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 65535
+}
+
+func (rcv *PPEPositionRecord) VelCoeffHeadCount() uint16 {
+	return rcv.VEL_COEFF_HEAD_COUNT()
+}
+
+/// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+/// A builder whose position and velocity series differ in length pads the shorter
+/// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+func (rcv *PPEPositionRecord) MutateVEL_COEFF_HEAD_COUNT(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(34, n)
+}
+
+func (rcv *PPEPositionRecord) MutateVelCoeffHeadCount(n uint16) bool {
+	return rcv.MutateVEL_COEFF_HEAD_COUNT(n)
+}
+
 func PPEPositionRecordStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(16)
 }
 func PPEPositionRecordAddEPOCH_MID(builder *flatbuffers.Builder, EPOCH_MID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH_MID), 0)
@@ -575,6 +658,24 @@ func PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder *flatbuffers.Builder, RMS
 }
 func PPEPositionRecordAddRmsPositionResidual(builder *flatbuffers.Builder, RMS_POSITION_RESIDUAL float64) {
 	PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL)
+}
+func PPEPositionRecordAddEPOCH_MID_SECONDS(builder *flatbuffers.Builder, EPOCH_MID_SECONDS float64) {
+	builder.PrependFloat64Slot(13, EPOCH_MID_SECONDS, float64(math.NaN()))
+}
+func PPEPositionRecordAddEpochMidSeconds(builder *flatbuffers.Builder, EPOCH_MID_SECONDS float64) {
+	PPEPositionRecordAddEPOCH_MID_SECONDS(builder, EPOCH_MID_SECONDS)
+}
+func PPEPositionRecordAddPOS_COEFF_HEAD_COUNT(builder *flatbuffers.Builder, POS_COEFF_HEAD_COUNT uint16) {
+	builder.PrependUint16Slot(14, POS_COEFF_HEAD_COUNT, 65535)
+}
+func PPEPositionRecordAddPosCoeffHeadCount(builder *flatbuffers.Builder, POS_COEFF_HEAD_COUNT uint16) {
+	PPEPositionRecordAddPOS_COEFF_HEAD_COUNT(builder, POS_COEFF_HEAD_COUNT)
+}
+func PPEPositionRecordAddVEL_COEFF_HEAD_COUNT(builder *flatbuffers.Builder, VEL_COEFF_HEAD_COUNT uint16) {
+	builder.PrependUint16Slot(15, VEL_COEFF_HEAD_COUNT, 65535)
+}
+func PPEPositionRecordAddVelCoeffHeadCount(builder *flatbuffers.Builder, VEL_COEFF_HEAD_COUNT uint16) {
+	PPEPositionRecordAddVEL_COEFF_HEAD_COUNT(builder, VEL_COEFF_HEAD_COUNT)
 }
 func PPEPositionRecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

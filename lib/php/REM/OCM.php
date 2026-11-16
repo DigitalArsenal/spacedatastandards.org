@@ -604,22 +604,34 @@ class OCM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+    /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+    /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+    /// reader may ignore this. How many windows it holds is the publisher's choice.
+    /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+    public function getDERIVED_EPHEMERIS()
+    {
+        $obj = new PPE();
+        $o = $this->__offset(86);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(41);
+        $builder->StartObject(42);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS, $PROVENANCE, $COV_REALISM, $MEAN_ELEMENTS, $COV_PROPAGATION, $COV_PARAMETER_KINDS, $TRAJ_BASIS, $SEED_SETS, $INTEGRATOR, $RPO_GEOMETRY, $RPO_INSPECTION)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS, $CENTER_NAME, $TRAJ_REF_FRAME, $TRAJ_FRAME_EPOCH, $COV_REF_FRAME, $ORB_REVNUM, $ORB_AVERAGING, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $STATE_EPOCHS, $COV_TYPE, $COV_ORDERING, $COV_SIZE, $COV_PARAMETERS, $COV_UNITS, $TRAJECTORY_BLOCKS, $COVARIANCE_BLOCKS, $PROVENANCE, $COV_REALISM, $MEAN_ELEMENTS, $COV_PROPAGATION, $COV_PARAMETER_KINDS, $TRAJ_BASIS, $SEED_SETS, $INTEGRATOR, $RPO_GEOMETRY, $RPO_INSPECTION, $DERIVED_EPHEMERIS)
     {
-        $builder->startObject(41);
+        $builder->startObject(42);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
@@ -661,6 +673,7 @@ class OCM extends Table
         self::addINTEGRATOR($builder, $INTEGRATOR);
         self::addRPO_GEOMETRY($builder, $RPO_GEOMETRY);
         self::addRPO_INSPECTION($builder, $RPO_INSPECTION);
+        self::addDERIVED_EPHEMERIS($builder, $DERIVED_EPHEMERIS);
         $o = $builder->endObject();
         return $o;
     }
@@ -1409,6 +1422,16 @@ class OCM extends Table
     public static function addRPO_INSPECTION(FlatBufferBuilder $builder, $RPO_INSPECTION)
     {
         $builder->addOffsetX(40, $RPO_INSPECTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDERIVED_EPHEMERIS(FlatBufferBuilder $builder, $DERIVED_EPHEMERIS)
+    {
+        $builder->addOffsetX(41, $DERIVED_EPHEMERIS, 0);
     }
 
     /**

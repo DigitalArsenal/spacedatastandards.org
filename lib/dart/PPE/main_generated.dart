@@ -127,6 +127,43 @@ class _sizeShapeProfileReader extends fb.Reader<sizeShapeProfile> {
       sizeShapeProfile.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Why a window of a derived ephemeris has no record.
+enum ppeWindowStatus {
+  UNSPECIFIED(0),
+  THEORY_REFUSED(1),
+  TOLERANCE_NOT_HELD(2);
+
+  final int value;
+  const ppeWindowStatus(this.value);
+
+  factory ppeWindowStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return ppeWindowStatus.UNSPECIFIED;
+      case 1: return ppeWindowStatus.THEORY_REFUSED;
+      case 2: return ppeWindowStatus.TOLERANCE_NOT_HELD;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static ppeWindowStatus? _createOrNull(int? value) =>
+      value == null ? null : ppeWindowStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<ppeWindowStatus> reader = _ppeWindowStatusReader();
+}
+
+class _ppeWindowStatusReader extends fb.Reader<ppeWindowStatus> {
+  const _ppeWindowStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ppeWindowStatus read(fb.BufferContext bc, int offset) =>
+      ppeWindowStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 ///  A single time-segment record of polynomial coefficients for Cartesian position
 ///  (and optionally velocity). Coefficients are stored per axis.
 ///
@@ -200,10 +237,27 @@ class PPEPositionRecord {
   ///  RMS position fit residual over this segment (km). Optional quality metric.
   double get RMS_POSITION_RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   double get rmsPositionResidual => RMS_POSITION_RESIDUAL;
+  ///  Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  ///  When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  ///  in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  ///  instant. NaN when not stated.
+  double get EPOCH_MID_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, double.nan);
+  double get epochMidSeconds => EPOCH_MID_SECONDS;
+  ///  Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  ///  values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  ///  A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  ///  tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  int get POS_COEFF_HEAD_COUNT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 32, 65535);
+  int get posCoeffHeadCount => POS_COEFF_HEAD_COUNT;
+  ///  The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  ///  A builder whose position and velocity series differ in length pads the shorter
+  ///  with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  int get VEL_COEFF_HEAD_COUNT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 34, 65535);
+  int get velCoeffHeadCount => VEL_COEFF_HEAD_COUNT;
 
   @override
   String toString() {
-    return 'PPEPositionRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, posCoeffX: ${posCoeffX}, posCoeffY: ${posCoeffY}, posCoeffZ: ${posCoeffZ}, hasVelocityCoefficients: ${hasVelocityCoefficients}, velCoeffX: ${velCoeffX}, velCoeffY: ${velCoeffY}, velCoeffZ: ${velCoeffZ}, maxPositionResidual: ${maxPositionResidual}, rmsPositionResidual: ${rmsPositionResidual}}';
+    return 'PPEPositionRecord{epochMid: ${epochMid}, epochHalfSpan: ${epochHalfSpan}, numCoefficients: ${numCoefficients}, basisType: ${basisType}, posCoeffX: ${posCoeffX}, posCoeffY: ${posCoeffY}, posCoeffZ: ${posCoeffZ}, hasVelocityCoefficients: ${hasVelocityCoefficients}, velCoeffX: ${velCoeffX}, velCoeffY: ${velCoeffY}, velCoeffZ: ${velCoeffZ}, maxPositionResidual: ${maxPositionResidual}, rmsPositionResidual: ${rmsPositionResidual}, epochMidSeconds: ${epochMidSeconds}, posCoeffHeadCount: ${posCoeffHeadCount}, velCoeffHeadCount: ${velCoeffHeadCount}}';
   }
 }
 
@@ -221,7 +275,7 @@ class PPEPositionRecordBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(16);
   }
 
   int addEpochMidOffset(int? offset) {
@@ -276,6 +330,18 @@ class PPEPositionRecordBuilder {
     fbBuilder.addFloat64(12, RMS_POSITION_RESIDUAL);
     return fbBuilder.offset;
   }
+  int addEpochMidSeconds(double? EPOCH_MID_SECONDS) {
+    fbBuilder.addFloat64(13, EPOCH_MID_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addPosCoeffHeadCount(int? POS_COEFF_HEAD_COUNT) {
+    fbBuilder.addUint16(14, POS_COEFF_HEAD_COUNT);
+    return fbBuilder.offset;
+  }
+  int addVelCoeffHeadCount(int? VEL_COEFF_HEAD_COUNT) {
+    fbBuilder.addUint16(15, VEL_COEFF_HEAD_COUNT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -296,6 +362,9 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _VEL_COEFF_Z;
   final double? _MAX_POSITION_RESIDUAL;
   final double? _RMS_POSITION_RESIDUAL;
+  final double? _EPOCH_MID_SECONDS;
+  final int? _POS_COEFF_HEAD_COUNT;
+  final int? _VEL_COEFF_HEAD_COUNT;
 
   PPEPositionRecordObjectBuilder({
     String? EPOCH_MID,
@@ -324,6 +393,12 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
     double? maxPositionResidual,
     double? RMS_POSITION_RESIDUAL,
     double? rmsPositionResidual,
+    double? EPOCH_MID_SECONDS,
+    double? epochMidSeconds,
+    int? POS_COEFF_HEAD_COUNT,
+    int? posCoeffHeadCount,
+    int? VEL_COEFF_HEAD_COUNT,
+    int? velCoeffHeadCount,
   })
       : _EPOCH_MID = epochMid ?? EPOCH_MID,
         _EPOCH_HALF_SPAN = epochHalfSpan ?? EPOCH_HALF_SPAN,
@@ -337,7 +412,10 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
         _VEL_COEFF_Y = velCoeffY ?? VEL_COEFF_Y,
         _VEL_COEFF_Z = velCoeffZ ?? VEL_COEFF_Z,
         _MAX_POSITION_RESIDUAL = maxPositionResidual ?? MAX_POSITION_RESIDUAL,
-        _RMS_POSITION_RESIDUAL = rmsPositionResidual ?? RMS_POSITION_RESIDUAL;
+        _RMS_POSITION_RESIDUAL = rmsPositionResidual ?? RMS_POSITION_RESIDUAL,
+        _EPOCH_MID_SECONDS = epochMidSeconds ?? EPOCH_MID_SECONDS,
+        _POS_COEFF_HEAD_COUNT = posCoeffHeadCount ?? POS_COEFF_HEAD_COUNT,
+        _VEL_COEFF_HEAD_COUNT = velCoeffHeadCount ?? VEL_COEFF_HEAD_COUNT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -356,7 +434,7 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_VEL_COEFF_Y!);
     final int? VEL_COEFF_ZOffset = _VEL_COEFF_Z == null ? null
         : fbBuilder.writeListFloat64(_VEL_COEFF_Z!);
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(16);
     fbBuilder.addOffset(0, EPOCH_MIDOffset);
     fbBuilder.addFloat64(1, _EPOCH_HALF_SPAN);
     fbBuilder.addUint16(2, _NUM_COEFFICIENTS);
@@ -370,6 +448,173 @@ class PPEPositionRecordObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, VEL_COEFF_ZOffset);
     fbBuilder.addFloat64(11, _MAX_POSITION_RESIDUAL);
     fbBuilder.addFloat64(12, _RMS_POSITION_RESIDUAL);
+    fbBuilder.addFloat64(13, _EPOCH_MID_SECONDS);
+    fbBuilder.addUint16(14, _POS_COEFF_HEAD_COUNT);
+    fbBuilder.addUint16(15, _VEL_COEFF_HEAD_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The builder of a derived ephemeris and the inputs its records are bound to.
+///  The records are a derived convenience: the source they were built from remains
+///  the authoritative content, and a reader may ignore them. BUILDER_NAME and
+///  BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+///  ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+class PPEBuild {
+  PPEBuild._(this._bc, this._bcOffset);
+  factory PPEBuild(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PPEBuild> reader = _PPEBuildReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Name of the builder, as it publishes itself.
+  String? get BUILDER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get builderName => BUILDER_NAME;
+  ///  Version of the builder.
+  String? get BUILDER_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get builderVersion => BUILDER_VERSION;
+  ///  SHA-256 of the builder's executable artifact (32 bytes).
+  List<int>? get BUILDER_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get builderDigest => BUILDER_DIGEST;
+  ///  SHA-256 over the fields of the source record the builder reads, by the builder's
+  ///  published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+  List<int>? get RECORD_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get recordDigest => RECORD_DIGEST;
+  ///  SHA-256 over the configuration and environment inputs the builder used that are not
+  ///  in the source record (force-model configuration, space-weather data), by the builder's
+  ///  published rule (32 bytes); empty when the builder uses none.
+  List<int>? get ENVIRONMENT_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get environmentDigest => ENVIRONMENT_DIGEST;
+  ///  Build tolerance per position axis in km. NaN when not stated.
+  double get TOL_POSITION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get tolPosition => TOL_POSITION;
+  ///  Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+  double get TOL_VELOCITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, double.nan);
+  double get tolVelocity => TOL_VELOCITY;
+
+  @override
+  String toString() {
+    return 'PPEBuild{builderName: ${builderName}, builderVersion: ${builderVersion}, builderDigest: ${builderDigest}, recordDigest: ${recordDigest}, environmentDigest: ${environmentDigest}, tolPosition: ${tolPosition}, tolVelocity: ${tolVelocity}}';
+  }
+}
+
+class _PPEBuildReader extends fb.TableReader<PPEBuild> {
+  const _PPEBuildReader();
+
+  @override
+  PPEBuild createObject(fb.BufferContext bc, int offset) =>
+    PPEBuild._(bc, offset);
+}
+
+class PPEBuildBuilder {
+  PPEBuildBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addBuilderNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addBuilderVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addBuilderDigestOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRecordDigestOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironmentDigestOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTolPosition(double? TOL_POSITION) {
+    fbBuilder.addFloat64(5, TOL_POSITION);
+    return fbBuilder.offset;
+  }
+  int addTolVelocity(double? TOL_VELOCITY) {
+    fbBuilder.addFloat64(6, TOL_VELOCITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PPEBuildObjectBuilder extends fb.ObjectBuilder {
+  final String? _BUILDER_NAME;
+  final String? _BUILDER_VERSION;
+  final List<int>? _BUILDER_DIGEST;
+  final List<int>? _RECORD_DIGEST;
+  final List<int>? _ENVIRONMENT_DIGEST;
+  final double? _TOL_POSITION;
+  final double? _TOL_VELOCITY;
+
+  PPEBuildObjectBuilder({
+    String? BUILDER_NAME,
+    String? builderName,
+    String? BUILDER_VERSION,
+    String? builderVersion,
+    List<int>? BUILDER_DIGEST,
+    List<int>? builderDigest,
+    List<int>? RECORD_DIGEST,
+    List<int>? recordDigest,
+    List<int>? ENVIRONMENT_DIGEST,
+    List<int>? environmentDigest,
+    double? TOL_POSITION,
+    double? tolPosition,
+    double? TOL_VELOCITY,
+    double? tolVelocity,
+  })
+      : _BUILDER_NAME = builderName ?? BUILDER_NAME,
+        _BUILDER_VERSION = builderVersion ?? BUILDER_VERSION,
+        _BUILDER_DIGEST = builderDigest ?? BUILDER_DIGEST,
+        _RECORD_DIGEST = recordDigest ?? RECORD_DIGEST,
+        _ENVIRONMENT_DIGEST = environmentDigest ?? ENVIRONMENT_DIGEST,
+        _TOL_POSITION = tolPosition ?? TOL_POSITION,
+        _TOL_VELOCITY = tolVelocity ?? TOL_VELOCITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? BUILDER_NAMEOffset = _BUILDER_NAME == null ? null
+        : fbBuilder.writeString(_BUILDER_NAME!);
+    final int? BUILDER_VERSIONOffset = _BUILDER_VERSION == null ? null
+        : fbBuilder.writeString(_BUILDER_VERSION!);
+    final int? BUILDER_DIGESTOffset = _BUILDER_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_BUILDER_DIGEST!);
+    final int? RECORD_DIGESTOffset = _RECORD_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_RECORD_DIGEST!);
+    final int? ENVIRONMENT_DIGESTOffset = _ENVIRONMENT_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_ENVIRONMENT_DIGEST!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, BUILDER_NAMEOffset);
+    fbBuilder.addOffset(1, BUILDER_VERSIONOffset);
+    fbBuilder.addOffset(2, BUILDER_DIGESTOffset);
+    fbBuilder.addOffset(3, RECORD_DIGESTOffset);
+    fbBuilder.addOffset(4, ENVIRONMENT_DIGESTOffset);
+    fbBuilder.addFloat64(5, _TOL_POSITION);
+    fbBuilder.addFloat64(6, _TOL_VELOCITY);
     return fbBuilder.endTable();
   }
 
@@ -648,7 +893,8 @@ class PPEOrbitalElementRecordObjectBuilder extends fb.ObjectBuilder {
 ///
 ///  A PPE message may contain position records, orbital element records, or both.
 ///  Records should be ordered chronologically by EPOCH_MID and should collectively
-///  cover the time span [START_TIME, STOP_TIME] without gaps.
+///  cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+///  listed in UNSERVED_MID_SECONDS.
 class PPE {
   PPE._(this._bc, this._bcOffset);
   factory PPE(List<int> bytes) {
@@ -707,10 +953,27 @@ class PPE {
   int get nominalNumCoefficients => NOMINAL_NUM_COEFFICIENTS;
   ///  Where this polynomial ephemeris comes from and the terms it travels under.
   PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  ///  TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  String? get REFERENCE_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  String? get referenceEpoch => REFERENCE_EPOCH;
+  ///  The builder and inputs of a derived ephemeris; absent for any other.
+  PPEBuild? get BUILD => PPEBuild.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  ///  Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  ///  never written.
+  List<double>? get UNSERVED_MID_SECONDS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get unservedMidSeconds => UNSERVED_MID_SECONDS;
+  ///  Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  List<double>? get UNSERVED_HALF_SPAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  List<double>? get unservedHalfSpan => UNSERVED_HALF_SPAN;
+  ///  Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  List<ppeWindowStatus>? get UNSERVED_STATUS => const fb.ListReader<ppeWindowStatus>(ppeWindowStatus.reader).vTableGetNullable(_bc, _bcOffset, 40);
+  List<ppeWindowStatus>? get unservedStatus => UNSERVED_STATUS;
 
   @override
   String toString() {
-    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}, PROVENANCE: ${PROVENANCE}}';
+    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}, PROVENANCE: ${PROVENANCE}, referenceEpoch: ${referenceEpoch}, BUILD: ${BUILD}, unservedMidSeconds: ${unservedMidSeconds}, unservedHalfSpan: ${unservedHalfSpan}, unservedStatus: ${unservedStatus}}';
   }
 }
 
@@ -728,7 +991,7 @@ class PPEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(19);
   }
 
   int addCommentOffset(int? offset) {
@@ -787,6 +1050,26 @@ class PPEBuilder {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
+  int addReferenceEpochOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addBuildOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addUnservedMidSecondsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addUnservedHalfSpanOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addUnservedStatusOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -808,6 +1091,11 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
   final double? _NOMINAL_SEGMENT_SPAN;
   final int? _NOMINAL_NUM_COEFFICIENTS;
   final PVNObjectBuilder? _PROVENANCE;
+  final String? _REFERENCE_EPOCH;
+  final PPEBuildObjectBuilder? _BUILD;
+  final List<double>? _UNSERVED_MID_SECONDS;
+  final List<double>? _UNSERVED_HALF_SPAN;
+  final List<ppeWindowStatus>? _UNSERVED_STATUS;
 
   PPEObjectBuilder({
     List<String>? COMMENT,
@@ -835,6 +1123,15 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     int? NOMINAL_NUM_COEFFICIENTS,
     int? nominalNumCoefficients,
     PVNObjectBuilder? PROVENANCE,
+    String? REFERENCE_EPOCH,
+    String? referenceEpoch,
+    PPEBuildObjectBuilder? BUILD,
+    List<double>? UNSERVED_MID_SECONDS,
+    List<double>? unservedMidSeconds,
+    List<double>? UNSERVED_HALF_SPAN,
+    List<double>? unservedHalfSpan,
+    List<ppeWindowStatus>? UNSERVED_STATUS,
+    List<ppeWindowStatus>? unservedStatus,
   })
       : _COMMENT = COMMENT,
         _OBJECT = OBJECT,
@@ -849,7 +1146,12 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
         _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
         _NOMINAL_SEGMENT_SPAN = nominalSegmentSpan ?? NOMINAL_SEGMENT_SPAN,
         _NOMINAL_NUM_COEFFICIENTS = nominalNumCoefficients ?? NOMINAL_NUM_COEFFICIENTS,
-        _PROVENANCE = PROVENANCE;
+        _PROVENANCE = PROVENANCE,
+        _REFERENCE_EPOCH = referenceEpoch ?? REFERENCE_EPOCH,
+        _BUILD = BUILD,
+        _UNSERVED_MID_SECONDS = unservedMidSeconds ?? UNSERVED_MID_SECONDS,
+        _UNSERVED_HALF_SPAN = unservedHalfSpan ?? UNSERVED_HALF_SPAN,
+        _UNSERVED_STATUS = unservedStatus ?? UNSERVED_STATUS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -871,7 +1173,16 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
         : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(14);
+    final int? REFERENCE_EPOCHOffset = _REFERENCE_EPOCH == null ? null
+        : fbBuilder.writeString(_REFERENCE_EPOCH!);
+    final int? BUILDOffset = _BUILD?.getOrCreateOffset(fbBuilder);
+    final int? UNSERVED_MID_SECONDSOffset = _UNSERVED_MID_SECONDS == null ? null
+        : fbBuilder.writeListFloat64(_UNSERVED_MID_SECONDS!);
+    final int? UNSERVED_HALF_SPANOffset = _UNSERVED_HALF_SPAN == null ? null
+        : fbBuilder.writeListFloat64(_UNSERVED_HALF_SPAN!);
+    final int? UNSERVED_STATUSOffset = _UNSERVED_STATUS == null ? null
+        : fbBuilder.writeListUint8(_UNSERVED_STATUS!.map((f) => f.value).toList());
+    fbBuilder.startTable(19);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
@@ -886,6 +1197,11 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(11, _NOMINAL_SEGMENT_SPAN);
     fbBuilder.addUint16(12, _NOMINAL_NUM_COEFFICIENTS);
     fbBuilder.addOffset(13, PROVENANCEOffset);
+    fbBuilder.addOffset(14, REFERENCE_EPOCHOffset);
+    fbBuilder.addOffset(15, BUILDOffset);
+    fbBuilder.addOffset(16, UNSERVED_MID_SECONDSOffset);
+    fbBuilder.addOffset(17, UNSERVED_HALF_SPANOffset);
+    fbBuilder.addOffset(18, UNSERVED_STATUSOffset);
     return fbBuilder.endTable();
   }
 

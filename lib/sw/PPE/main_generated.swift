@@ -66,6 +66,23 @@ public enum sizeShapeProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 }
 
 
+///  Why a window of a derived ephemeris has no record.
+public enum ppeWindowStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Not stated.
+  case unspecified = 0
+  ///  The theory refuses somewhere in the window (decay, space-weather inputs short).
+  case theoryRefused = 1
+  ///  No window of the builder's shortest span holds its tolerance there.
+  case toleranceNotHeld = 2
+
+  public static var max: ppeWindowStatus { return .toleranceNotHeld }
+  public static var min: ppeWindowStatus { return .unspecified }
+}
+
+
 ///  A single time-segment record of polynomial coefficients for Cartesian position
 ///  (and optionally velocity). Coefficients are stored per axis.
 ///
@@ -103,6 +120,9 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
     static let VEL_COEFF_Z: VOffset = 24
     static let MAX_POSITION_RESIDUAL: VOffset = 26
     static let RMS_POSITION_RESIDUAL: VOffset = 28
+    static let EPOCH_MID_SECONDS: VOffset = 30
+    static let POS_COEFF_HEAD_COUNT: VOffset = 32
+    static let VEL_COEFF_HEAD_COUNT: VOffset = 34
   }
 
   ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
@@ -148,7 +168,21 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public var MAX_POSITION_RESIDUAL: Double { let o = _accessor.offset(VT.MAX_POSITION_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  RMS position fit residual over this segment (km). Optional quality metric.
   public var RMS_POSITION_RESIDUAL: Double { let o = _accessor.offset(VT.RMS_POSITION_RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPPEPositionRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  ///  When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  ///  in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  ///  instant. NaN when not stated.
+  public var EPOCH_MID_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_MID_SECONDS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  ///  values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  ///  A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  ///  tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  public var POS_COEFF_HEAD_COUNT: UInt16 { let o = _accessor.offset(VT.POS_COEFF_HEAD_COUNT); return o == 0 ? 65535 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  ///  A builder whose position and velocity series differ in length pads the shorter
+  ///  with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  public var VEL_COEFF_HEAD_COUNT: UInt16 { let o = _accessor.offset(VT.VEL_COEFF_HEAD_COUNT); return o == 0 ? 65535 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startPPEPositionRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(EPOCH_MID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_MID, at: VT.EPOCH_MID) }
   public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VT.EPOCH_HALF_SPAN) }
   public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VT.NUM_COEFFICIENTS) }
@@ -163,6 +197,9 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public static func addVectorOf(VEL_COEFF_Z: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_Z, at: VT.VEL_COEFF_Z) }
   public static func add(MAX_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_POSITION_RESIDUAL, def: 0.0, at: VT.MAX_POSITION_RESIDUAL) }
   public static func add(RMS_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_POSITION_RESIDUAL, def: 0.0, at: VT.RMS_POSITION_RESIDUAL) }
+  public static func add(EPOCH_MID_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_MID_SECONDS, def: .nan, at: VT.EPOCH_MID_SECONDS) }
+  public static func add(POS_COEFF_HEAD_COUNT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_COEFF_HEAD_COUNT, def: 65535, at: VT.POS_COEFF_HEAD_COUNT) }
+  public static func add(VEL_COEFF_HEAD_COUNT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VEL_COEFF_HEAD_COUNT, def: 65535, at: VT.VEL_COEFF_HEAD_COUNT) }
   public static func endPPEPositionRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 14, 16]); return end }
   public static func createPPEPositionRecord(
     _ fbb: inout FlatBufferBuilder,
@@ -178,7 +215,10 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
     VEL_COEFF_YVectorOffset VEL_COEFF_Y: Offset = Offset(),
     VEL_COEFF_ZVectorOffset VEL_COEFF_Z: Offset = Offset(),
     MAX_POSITION_RESIDUAL: Double = 0.0,
-    RMS_POSITION_RESIDUAL: Double = 0.0
+    RMS_POSITION_RESIDUAL: Double = 0.0,
+    EPOCH_MID_SECONDS: Double = .nan,
+    POS_COEFF_HEAD_COUNT: UInt16 = 65535,
+    VEL_COEFF_HEAD_COUNT: UInt16 = 65535
   ) -> Offset {
     let __start = PPEPositionRecord.startPPEPositionRecord(&fbb)
     PPEPositionRecord.add(EPOCH_MID: EPOCH_MID, &fbb)
@@ -194,6 +234,9 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
     PPEPositionRecord.addVectorOf(VEL_COEFF_Z: VEL_COEFF_Z, &fbb)
     PPEPositionRecord.add(MAX_POSITION_RESIDUAL: MAX_POSITION_RESIDUAL, &fbb)
     PPEPositionRecord.add(RMS_POSITION_RESIDUAL: RMS_POSITION_RESIDUAL, &fbb)
+    PPEPositionRecord.add(EPOCH_MID_SECONDS: EPOCH_MID_SECONDS, &fbb)
+    PPEPositionRecord.add(POS_COEFF_HEAD_COUNT: POS_COEFF_HEAD_COUNT, &fbb)
+    PPEPositionRecord.add(VEL_COEFF_HEAD_COUNT: VEL_COEFF_HEAD_COUNT, &fbb)
     return PPEPositionRecord.endPPEPositionRecord(&fbb, start: __start)
   }
 
@@ -212,6 +255,100 @@ public struct PPEPositionRecord: FlatBufferVerifiableTable, FlatbuffersVectorIni
     try _v.visit(field: VT.VEL_COEFF_Z, fieldName: "VEL_COEFF_Z", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.MAX_POSITION_RESIDUAL, fieldName: "MAX_POSITION_RESIDUAL", required: false, type: Double.self)
     try _v.visit(field: VT.RMS_POSITION_RESIDUAL, fieldName: "RMS_POSITION_RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH_MID_SECONDS, fieldName: "EPOCH_MID_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.POS_COEFF_HEAD_COUNT, fieldName: "POS_COEFF_HEAD_COUNT", required: false, type: UInt16.self)
+    try _v.visit(field: VT.VEL_COEFF_HEAD_COUNT, fieldName: "VEL_COEFF_HEAD_COUNT", required: false, type: UInt16.self)
+    _v.finish()
+  }
+}
+
+///  The builder of a derived ephemeris and the inputs its records are bound to.
+///  The records are a derived convenience: the source they were built from remains
+///  the authoritative content, and a reader may ignore them. BUILDER_NAME and
+///  BUILDER_VERSION identify the published rule that defines RECORD_DIGEST and
+///  ENVIRONMENT_DIGEST; a consumer that cannot reproduce both must not use the records.
+public struct PPEBuild: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PPE" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEBuild.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let BUILDER_NAME: VOffset = 4
+    static let BUILDER_VERSION: VOffset = 6
+    static let BUILDER_DIGEST: VOffset = 8
+    static let RECORD_DIGEST: VOffset = 10
+    static let ENVIRONMENT_DIGEST: VOffset = 12
+    static let TOL_POSITION: VOffset = 14
+    static let TOL_VELOCITY: VOffset = 16
+  }
+
+  ///  Name of the builder, as it publishes itself.
+  public var BUILDER_NAME: String? { let o = _accessor.offset(VT.BUILDER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUILDER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUILDER_NAME) }
+  ///  Version of the builder.
+  public var BUILDER_VERSION: String? { let o = _accessor.offset(VT.BUILDER_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUILDER_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUILDER_VERSION) }
+  ///  SHA-256 of the builder's executable artifact (32 bytes).
+  public var BUILDER_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BUILDER_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToBuilderDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BUILDER_DIGEST, body: body) }
+  ///  SHA-256 over the fields of the source record the builder reads, by the builder's
+  ///  published rule (32 bytes). A mismatch with the record a consumer holds voids the records.
+  public var RECORD_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RECORD_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToRecordDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RECORD_DIGEST, body: body) }
+  ///  SHA-256 over the configuration and environment inputs the builder used that are not
+  ///  in the source record (force-model configuration, space-weather data), by the builder's
+  ///  published rule (32 bytes); empty when the builder uses none.
+  public var ENVIRONMENT_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ENVIRONMENT_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToEnvironmentDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENVIRONMENT_DIGEST, body: body) }
+  ///  Build tolerance per position axis in km. NaN when not stated.
+  public var TOL_POSITION: Double { let o = _accessor.offset(VT.TOL_POSITION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Build tolerance per velocity axis in km/s. NaN when not stated or without velocity.
+  public var TOL_VELOCITY: Double { let o = _accessor.offset(VT.TOL_VELOCITY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPPEBuild(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(BUILDER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_NAME, at: VT.BUILDER_NAME) }
+  public static func add(BUILDER_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_VERSION, at: VT.BUILDER_VERSION) }
+  public static func addVectorOf(BUILDER_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_DIGEST, at: VT.BUILDER_DIGEST) }
+  public static func addVectorOf(RECORD_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_DIGEST, at: VT.RECORD_DIGEST) }
+  public static func addVectorOf(ENVIRONMENT_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT_DIGEST, at: VT.ENVIRONMENT_DIGEST) }
+  public static func add(TOL_POSITION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOL_POSITION, def: .nan, at: VT.TOL_POSITION) }
+  public static func add(TOL_VELOCITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOL_VELOCITY, def: .nan, at: VT.TOL_VELOCITY) }
+  public static func endPPEBuild(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPPEBuild(
+    _ fbb: inout FlatBufferBuilder,
+    BUILDER_NAMEOffset BUILDER_NAME: Offset = Offset(),
+    BUILDER_VERSIONOffset BUILDER_VERSION: Offset = Offset(),
+    BUILDER_DIGESTVectorOffset BUILDER_DIGEST: Offset = Offset(),
+    RECORD_DIGESTVectorOffset RECORD_DIGEST: Offset = Offset(),
+    ENVIRONMENT_DIGESTVectorOffset ENVIRONMENT_DIGEST: Offset = Offset(),
+    TOL_POSITION: Double = .nan,
+    TOL_VELOCITY: Double = .nan
+  ) -> Offset {
+    let __start = PPEBuild.startPPEBuild(&fbb)
+    PPEBuild.add(BUILDER_NAME: BUILDER_NAME, &fbb)
+    PPEBuild.add(BUILDER_VERSION: BUILDER_VERSION, &fbb)
+    PPEBuild.addVectorOf(BUILDER_DIGEST: BUILDER_DIGEST, &fbb)
+    PPEBuild.addVectorOf(RECORD_DIGEST: RECORD_DIGEST, &fbb)
+    PPEBuild.addVectorOf(ENVIRONMENT_DIGEST: ENVIRONMENT_DIGEST, &fbb)
+    PPEBuild.add(TOL_POSITION: TOL_POSITION, &fbb)
+    PPEBuild.add(TOL_VELOCITY: TOL_VELOCITY, &fbb)
+    return PPEBuild.endPPEBuild(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.BUILDER_NAME, fieldName: "BUILDER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUILDER_VERSION, fieldName: "BUILDER_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUILDER_DIGEST, fieldName: "BUILDER_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.RECORD_DIGEST, fieldName: "RECORD_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ENVIRONMENT_DIGEST, fieldName: "ENVIRONMENT_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TOL_POSITION, fieldName: "TOL_POSITION", required: false, type: Double.self)
+    try _v.visit(field: VT.TOL_VELOCITY, fieldName: "TOL_VELOCITY", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -373,7 +510,8 @@ public struct PPEOrbitalElementRecord: FlatBufferVerifiableTable, FlatbuffersVec
 ///
 ///  A PPE message may contain position records, orbital element records, or both.
 ///  Records should be ordered chronologically by EPOCH_MID and should collectively
-///  cover the time span [START_TIME, STOP_TIME] without gaps.
+///  cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+///  listed in UNSERVED_MID_SECONDS.
 public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -400,6 +538,11 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let NOMINAL_SEGMENT_SPAN: VOffset = 26
     static let NOMINAL_NUM_COEFFICIENTS: VOffset = 28
     static let PROVENANCE: VOffset = 30
+    static let REFERENCE_EPOCH: VOffset = 32
+    static let BUILD: VOffset = 34
+    static let UNSERVED_MID_SECONDS: VOffset = 36
+    static let UNSERVED_HALF_SPAN: VOffset = 38
+    static let UNSERVED_STATUS: VOffset = 40
   }
 
   ///  Plain-text comments.
@@ -441,7 +584,23 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var NOMINAL_NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VT.NOMINAL_NUM_COEFFICIENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Where this polynomial ephemeris comes from and the terms it travels under.
   public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  ///  The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+  ///  TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+  public var REFERENCE_EPOCH: String? { let o = _accessor.offset(VT.REFERENCE_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_EPOCH) }
+  ///  The builder and inputs of a derived ephemeris; absent for any other.
+  public var BUILD: PPEBuild? { let o = _accessor.offset(VT.BUILD); return o == 0 ? nil : PPEBuild(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+  ///  Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+  ///  never written.
+  public var UNSERVED_MID_SECONDS: FlatbufferVector<Double> { return _accessor.vector(at: VT.UNSERVED_MID_SECONDS, byteSize: 8) }
+  public func withUnsafePointerToUnservedMidSeconds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.UNSERVED_MID_SECONDS, body: body) }
+  ///  Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+  public var UNSERVED_HALF_SPAN: FlatbufferVector<Double> { return _accessor.vector(at: VT.UNSERVED_HALF_SPAN, byteSize: 8) }
+  public func withUnsafePointerToUnservedHalfSpan<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.UNSERVED_HALF_SPAN, body: body) }
+  ///  Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+  public var UNSERVED_STATUS: FlatbufferVector<ppeWindowStatus> { return _accessor.vector(at: VT.UNSERVED_STATUS, byteSize: 1) }
+  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VT.OBJECT) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
@@ -456,6 +615,11 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(NOMINAL_SEGMENT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_SEGMENT_SPAN, def: 0.0, at: VT.NOMINAL_SEGMENT_SPAN) }
   public static func add(NOMINAL_NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_NUM_COEFFICIENTS, def: 0, at: VT.NOMINAL_NUM_COEFFICIENTS) }
   public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(REFERENCE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_EPOCH, at: VT.REFERENCE_EPOCH) }
+  public static func add(BUILD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILD, at: VT.BUILD) }
+  public static func addVectorOf(UNSERVED_MID_SECONDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNSERVED_MID_SECONDS, at: VT.UNSERVED_MID_SECONDS) }
+  public static func addVectorOf(UNSERVED_HALF_SPAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNSERVED_HALF_SPAN, at: VT.UNSERVED_HALF_SPAN) }
+  public static func addVectorOf(UNSERVED_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNSERVED_STATUS, at: VT.UNSERVED_STATUS) }
   public static func endPPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPPE(
     _ fbb: inout FlatBufferBuilder,
@@ -472,7 +636,12 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset = Offset(),
     NOMINAL_SEGMENT_SPAN: Double = 0.0,
     NOMINAL_NUM_COEFFICIENTS: UInt16 = 0,
-    PROVENANCEOffset PROVENANCE: Offset = Offset()
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    REFERENCE_EPOCHOffset REFERENCE_EPOCH: Offset = Offset(),
+    BUILDOffset BUILD: Offset = Offset(),
+    UNSERVED_MID_SECONDSVectorOffset UNSERVED_MID_SECONDS: Offset = Offset(),
+    UNSERVED_HALF_SPANVectorOffset UNSERVED_HALF_SPAN: Offset = Offset(),
+    UNSERVED_STATUSVectorOffset UNSERVED_STATUS: Offset = Offset()
   ) -> Offset {
     let __start = PPE.startPPE(&fbb)
     PPE.addVectorOf(COMMENT: COMMENT, &fbb)
@@ -489,6 +658,11 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PPE.add(NOMINAL_SEGMENT_SPAN: NOMINAL_SEGMENT_SPAN, &fbb)
     PPE.add(NOMINAL_NUM_COEFFICIENTS: NOMINAL_NUM_COEFFICIENTS, &fbb)
     PPE.add(PROVENANCE: PROVENANCE, &fbb)
+    PPE.add(REFERENCE_EPOCH: REFERENCE_EPOCH, &fbb)
+    PPE.add(BUILD: BUILD, &fbb)
+    PPE.addVectorOf(UNSERVED_MID_SECONDS: UNSERVED_MID_SECONDS, &fbb)
+    PPE.addVectorOf(UNSERVED_HALF_SPAN: UNSERVED_HALF_SPAN, &fbb)
+    PPE.addVectorOf(UNSERVED_STATUS: UNSERVED_STATUS, &fbb)
     return PPE.endPPE(&fbb, start: __start)
   }
 
@@ -508,6 +682,11 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.NOMINAL_SEGMENT_SPAN, fieldName: "NOMINAL_SEGMENT_SPAN", required: false, type: Double.self)
     try _v.visit(field: VT.NOMINAL_NUM_COEFFICIENTS, fieldName: "NOMINAL_NUM_COEFFICIENTS", required: false, type: UInt16.self)
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.REFERENCE_EPOCH, fieldName: "REFERENCE_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUILD, fieldName: "BUILD", required: false, type: ForwardOffset<PPEBuild>.self)
+    try _v.visit(field: VT.UNSERVED_MID_SECONDS, fieldName: "UNSERVED_MID_SECONDS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.UNSERVED_HALF_SPAN, fieldName: "UNSERVED_HALF_SPAN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.UNSERVED_STATUS, fieldName: "UNSERVED_STATUS", required: false, type: ForwardOffset<Vector<ppeWindowStatus, ppeWindowStatus>>.self)
     _v.finish()
   }
 }

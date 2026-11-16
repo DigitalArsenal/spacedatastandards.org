@@ -112,6 +112,20 @@ public struct PPEPositionRecord : IFlatbufferObject
   public double MAX_POSITION_RESIDUAL { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// RMS position fit residual over this segment (km). Optional quality metric.
   public double RMS_POSITION_RESIDUAL { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Middle of the window in seconds after the message's REFERENCE_EPOCH, in TIME_SYSTEM.
+  /// When present it governs evaluation: tau = (t - EPOCH_MID_SECONDS) / EPOCH_HALF_SPAN with t
+  /// in seconds after REFERENCE_EPOCH; EPOCH_MID remains the readable statement of the same
+  /// instant. NaN when not stated.
+  public double EPOCH_MID_SECONDS { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Position coefficients at index POS_COEFF_HEAD_COUNT and above are exact binary32
+  /// values, carried widened (exactly) in the binary64 vectors; those below are binary64.
+  /// A builder that packs a series k-major (x, y, z per index k, binary64 head then binary32
+  /// tail) reorders to and from POS_COEFF_X/Y/Z exactly. 65535 when not stated.
+  public ushort POS_COEFF_HEAD_COUNT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)65535; } }
+  /// The same as POS_COEFF_HEAD_COUNT for VEL_COEFF_X/Y/Z. 65535 when not stated.
+  /// A builder whose position and velocity series differ in length pads the shorter
+  /// with zero coefficients to NUM_COEFFICIENTS, which leaves every evaluation unchanged.
+  public ushort VEL_COEFF_HEAD_COUNT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)65535; } }
 
   public static Offset<PPEPositionRecord> CreatePPEPositionRecord(FlatBufferBuilder builder,
       StringOffset EPOCH_MIDOffset = default(StringOffset),
@@ -126,8 +140,12 @@ public struct PPEPositionRecord : IFlatbufferObject
       VectorOffset VEL_COEFF_YOffset = default(VectorOffset),
       VectorOffset VEL_COEFF_ZOffset = default(VectorOffset),
       double MAX_POSITION_RESIDUAL = 0.0,
-      double RMS_POSITION_RESIDUAL = 0.0) {
-    builder.StartTable(13);
+      double RMS_POSITION_RESIDUAL = 0.0,
+      double EPOCH_MID_SECONDS = Double.NaN,
+      ushort POS_COEFF_HEAD_COUNT = 65535,
+      ushort VEL_COEFF_HEAD_COUNT = 65535) {
+    builder.StartTable(16);
+    PPEPositionRecord.AddEPOCH_MID_SECONDS(builder, EPOCH_MID_SECONDS);
     PPEPositionRecord.AddRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL);
     PPEPositionRecord.AddMAX_POSITION_RESIDUAL(builder, MAX_POSITION_RESIDUAL);
     PPEPositionRecord.AddEPOCH_HALF_SPAN(builder, EPOCH_HALF_SPAN);
@@ -138,13 +156,15 @@ public struct PPEPositionRecord : IFlatbufferObject
     PPEPositionRecord.AddPOS_COEFF_Y(builder, POS_COEFF_YOffset);
     PPEPositionRecord.AddPOS_COEFF_X(builder, POS_COEFF_XOffset);
     PPEPositionRecord.AddEPOCH_MID(builder, EPOCH_MIDOffset);
+    PPEPositionRecord.AddVEL_COEFF_HEAD_COUNT(builder, VEL_COEFF_HEAD_COUNT);
+    PPEPositionRecord.AddPOS_COEFF_HEAD_COUNT(builder, POS_COEFF_HEAD_COUNT);
     PPEPositionRecord.AddNUM_COEFFICIENTS(builder, NUM_COEFFICIENTS);
     PPEPositionRecord.AddHAS_VELOCITY_COEFFICIENTS(builder, HAS_VELOCITY_COEFFICIENTS);
     PPEPositionRecord.AddBASIS_TYPE(builder, BASIS_TYPE);
     return PPEPositionRecord.EndPPEPositionRecord(builder);
   }
 
-  public static void StartPPEPositionRecord(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPPEPositionRecord(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddEPOCH_MID(FlatBufferBuilder builder, StringOffset EPOCH_MIDOffset) { builder.AddOffset(0, EPOCH_MIDOffset.Value, 0); }
   public static void AddEPOCH_HALF_SPAN(FlatBufferBuilder builder, double EPOCH_HALF_SPAN) { builder.AddDouble(1, EPOCH_HALF_SPAN, 0.0); }
   public static void AddNUM_COEFFICIENTS(FlatBufferBuilder builder, ushort NUM_COEFFICIENTS) { builder.AddUshort(2, NUM_COEFFICIENTS, 0); }
@@ -188,6 +208,9 @@ public struct PPEPositionRecord : IFlatbufferObject
   public static void StartVEL_COEFF_ZVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddMAX_POSITION_RESIDUAL(FlatBufferBuilder builder, double MAX_POSITION_RESIDUAL) { builder.AddDouble(11, MAX_POSITION_RESIDUAL, 0.0); }
   public static void AddRMS_POSITION_RESIDUAL(FlatBufferBuilder builder, double RMS_POSITION_RESIDUAL) { builder.AddDouble(12, RMS_POSITION_RESIDUAL, 0.0); }
+  public static void AddEPOCH_MID_SECONDS(FlatBufferBuilder builder, double EPOCH_MID_SECONDS) { builder.AddDouble(13, EPOCH_MID_SECONDS, Double.NaN); }
+  public static void AddPOS_COEFF_HEAD_COUNT(FlatBufferBuilder builder, ushort POS_COEFF_HEAD_COUNT) { builder.AddUshort(14, POS_COEFF_HEAD_COUNT, 65535); }
+  public static void AddVEL_COEFF_HEAD_COUNT(FlatBufferBuilder builder, ushort VEL_COEFF_HEAD_COUNT) { builder.AddUshort(15, VEL_COEFF_HEAD_COUNT, 65535); }
   public static Offset<PPEPositionRecord> EndPPEPositionRecord(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // EPOCH_MID
@@ -221,6 +244,9 @@ public struct PPEPositionRecord : IFlatbufferObject
     for (var _j = 0; _j < this.VEL_COEFF_ZLength; ++_j) {_o.VEL_COEFF_Z.Add(this.VEL_COEFF_Z(_j));}
     _o.MAX_POSITION_RESIDUAL = this.MAX_POSITION_RESIDUAL;
     _o.RMS_POSITION_RESIDUAL = this.RMS_POSITION_RESIDUAL;
+    _o.EPOCH_MID_SECONDS = this.EPOCH_MID_SECONDS;
+    _o.POS_COEFF_HEAD_COUNT = this.POS_COEFF_HEAD_COUNT;
+    _o.VEL_COEFF_HEAD_COUNT = this.VEL_COEFF_HEAD_COUNT;
   }
   public static Offset<PPEPositionRecord> Pack(FlatBufferBuilder builder, PPEPositionRecordT _o) {
     if (_o == null) return default(Offset<PPEPositionRecord>);
@@ -269,7 +295,10 @@ public struct PPEPositionRecord : IFlatbufferObject
       _VEL_COEFF_Y,
       _VEL_COEFF_Z,
       _o.MAX_POSITION_RESIDUAL,
-      _o.RMS_POSITION_RESIDUAL);
+      _o.RMS_POSITION_RESIDUAL,
+      _o.EPOCH_MID_SECONDS,
+      _o.POS_COEFF_HEAD_COUNT,
+      _o.VEL_COEFF_HEAD_COUNT);
   }
 }
 
@@ -288,6 +317,9 @@ public class PPEPositionRecordT
   public List<double> VEL_COEFF_Z { get; set; }
   public double MAX_POSITION_RESIDUAL { get; set; }
   public double RMS_POSITION_RESIDUAL { get; set; }
+  public double EPOCH_MID_SECONDS { get; set; }
+  public ushort POS_COEFF_HEAD_COUNT { get; set; }
+  public ushort VEL_COEFF_HEAD_COUNT { get; set; }
 
   public PPEPositionRecordT() {
     this.EPOCH_MID = null;
@@ -303,6 +335,9 @@ public class PPEPositionRecordT
     this.VEL_COEFF_Z = null;
     this.MAX_POSITION_RESIDUAL = 0.0;
     this.RMS_POSITION_RESIDUAL = 0.0;
+    this.EPOCH_MID_SECONDS = Double.NaN;
+    this.POS_COEFF_HEAD_COUNT = 65535;
+    this.VEL_COEFF_HEAD_COUNT = 65535;
   }
 }
 
@@ -325,6 +360,9 @@ static public class PPEPositionRecordVerify
       && verifier.VerifyVectorOfData(tablePos, 24 /*VEL_COEFF_Z*/, 8 /*double*/, false)
       && verifier.VerifyField(tablePos, 26 /*MAX_POSITION_RESIDUAL*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*RMS_POSITION_RESIDUAL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*EPOCH_MID_SECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*POS_COEFF_HEAD_COUNT*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 34 /*VEL_COEFF_HEAD_COUNT*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

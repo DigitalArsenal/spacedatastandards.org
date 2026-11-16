@@ -701,8 +701,24 @@ class OCM(object):
             return obj
         return None
 
+    # The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+    # named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+    # MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+    # reader may ignore this. How many windows it holds is the publisher's choice.
+    # TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+    # OCM
+    def DERIVED_EPHEMERIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PPE import PPE
+            obj = PPE()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def OCMStart(builder):
-    builder.StartObject(41)
+    builder.StartObject(42)
 
 def Start(builder):
     OCMStart(builder)
@@ -1133,6 +1149,12 @@ def OCMAddRPO_INSPECTION(builder, RPO_INSPECTION):
 def AddRPO_INSPECTION(builder, RPO_INSPECTION):
     OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
 
+def OCMAddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERIS):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_EPHEMERIS), 0)
+
+def AddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERIS):
+    OCMAddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERIS)
+
 def OCMEnd(builder):
     return builder.EndObject()
 
@@ -1152,6 +1174,7 @@ import OCMRelativeGeometry
 import OCMSeedSet
 import OCMTrajectoryBlock
 import OrbitDetermination
+import PPE
 import PPEOrbitalElementRecord
 import PPEPositionRecord
 import PVN
@@ -1210,6 +1233,7 @@ class OCMT(object):
         INTEGRATOR = None,
         RPO_GEOMETRY = None,
         RPO_INSPECTION = None,
+        DERIVED_EPHEMERIS = None,
     ):
         self.HEADER = HEADER  # type: Optional[Header.HeaderT]
         self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
@@ -1252,6 +1276,7 @@ class OCMT(object):
         self.INTEGRATOR = INTEGRATOR  # type: Optional[OCMIntegrator.OCMIntegratorT]
         self.RPO_GEOMETRY = RPO_GEOMETRY  # type: Optional[OCMRelativeGeometry.OCMRelativeGeometryT]
         self.RPO_INSPECTION = RPO_INSPECTION  # type: Optional[OCMInspectionGeometry.OCMInspectionGeometryT]
+        self.DERIVED_EPHEMERIS = DERIVED_EPHEMERIS  # type: Optional[PPE.PPET]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1411,6 +1436,8 @@ class OCMT(object):
             self.RPO_GEOMETRY = OCMRelativeGeometry.OCMRelativeGeometryT.InitFromObj(OCM.RPO_GEOMETRY())
         if OCM.RPO_INSPECTION() is not None:
             self.RPO_INSPECTION = OCMInspectionGeometry.OCMInspectionGeometryT.InitFromObj(OCM.RPO_INSPECTION())
+        if OCM.DERIVED_EPHEMERIS() is not None:
+            self.DERIVED_EPHEMERIS = PPE.PPET.InitFromObj(OCM.DERIVED_EPHEMERIS())
 
     # OCMT
     def Pack(self, builder):
@@ -1564,6 +1591,8 @@ class OCMT(object):
             RPO_GEOMETRY = self.RPO_GEOMETRY.Pack(builder)
         if self.RPO_INSPECTION is not None:
             RPO_INSPECTION = self.RPO_INSPECTION.Pack(builder)
+        if self.DERIVED_EPHEMERIS is not None:
+            DERIVED_EPHEMERIS = self.DERIVED_EPHEMERIS.Pack(builder)
         OCMStart(builder)
         if self.HEADER is not None:
             OCMAddHEADER(builder, HEADER)
@@ -1639,5 +1668,7 @@ class OCMT(object):
             OCMAddRPO_GEOMETRY(builder, RPO_GEOMETRY)
         if self.RPO_INSPECTION is not None:
             OCMAddRPO_INSPECTION(builder, RPO_INSPECTION)
+        if self.DERIVED_EPHEMERIS is not None:
+            OCMAddDERIVED_EPHEMERIS(builder, DERIVED_EPHEMERIS)
         OCM = OCMEnd(builder)
         return OCM

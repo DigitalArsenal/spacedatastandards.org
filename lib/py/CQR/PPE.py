@@ -11,7 +11,8 @@ np = import_numpy()
 #
 # A PPE message may contain position records, orbital element records, or both.
 # Records should be ordered chronologically by EPOCH_MID and should collectively
-# cover the time span [START_TIME, STOP_TIME] without gaps.
+# cover the time span [START_TIME, STOP_TIME] without gaps, except the windows
+# listed in UNSERVED_MID_SECONDS.
 class PPE(object):
     __slots__ = ['_tab']
 
@@ -214,8 +215,115 @@ class PPE(object):
             return obj
         return None
 
+    # The epoch EPOCH_MID_SECONDS and UNSERVED_MID_SECONDS count from (ISO 8601, in
+    # TIME_SYSTEM). For an ephemeris derived from an $OCM, its MEAN_ELEMENTS.EPOCH.
+    # PPE
+    def REFERENCE_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The builder and inputs of a derived ephemeris; absent for any other.
+    # PPE
+    def BUILD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PPEBuild import PPEBuild
+            obj = PPEBuild()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Middle of each window no record serves, in seconds after REFERENCE_EPOCH.
+    # Such a window is a gap in POSITION_RECORDS; a record with no coefficients is
+    # never written.
+    # PPE
+    def UNSERVED_MID_SECONDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # PPE
+    def UNSERVED_MID_SECONDSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # PPE
+    def UNSERVED_MID_SECONDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PPE
+    def UNSERVED_MID_SECONDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
+    # Half-span of each unserved window in seconds, in the order of UNSERVED_MID_SECONDS.
+    # PPE
+    def UNSERVED_HALF_SPAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # PPE
+    def UNSERVED_HALF_SPANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # PPE
+    def UNSERVED_HALF_SPANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PPE
+    def UNSERVED_HALF_SPANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
+    # PPE
+    def UNSERVED_STATUS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PPE
+    def UNSERVED_STATUSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PPE
+    def UNSERVED_STATUSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PPE
+    def UNSERVED_STATUSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
 def PPEStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(19)
 
 def Start(builder):
     PPEStart(builder)
@@ -340,6 +448,84 @@ def PPEAddPROVENANCE(builder, PROVENANCE):
 def AddPROVENANCE(builder, PROVENANCE):
     PPEAddPROVENANCE(builder, PROVENANCE)
 
+def PPEAddREFERENCE_EPOCH(builder, REFERENCE_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_EPOCH), 0)
+
+def AddREFERENCE_EPOCH(builder, REFERENCE_EPOCH):
+    PPEAddREFERENCE_EPOCH(builder, REFERENCE_EPOCH)
+
+def PPEAddBUILD(builder, BUILD):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BUILD), 0)
+
+def AddBUILD(builder, BUILD):
+    PPEAddBUILD(builder, BUILD)
+
+def PPEAddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(UNSERVED_MID_SECONDS), 0)
+
+def AddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDS):
+    PPEAddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDS)
+
+def PPEStartUNSERVED_MID_SECONDSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartUNSERVED_MID_SECONDSVector(builder, numElems):
+    return PPEStartUNSERVED_MID_SECONDSVector(builder, numElems)
+
+def PPECreateUNSERVED_MID_SECONDSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateUNSERVED_MID_SECONDSVector(builder, data):
+    return PPECreateUNSERVED_MID_SECONDSVector(builder, data)
+
+def PPEAddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPAN):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(UNSERVED_HALF_SPAN), 0)
+
+def AddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPAN):
+    PPEAddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPAN)
+
+def PPEStartUNSERVED_HALF_SPANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartUNSERVED_HALF_SPANVector(builder, numElems):
+    return PPEStartUNSERVED_HALF_SPANVector(builder, numElems)
+
+def PPECreateUNSERVED_HALF_SPANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateUNSERVED_HALF_SPANVector(builder, data):
+    return PPECreateUNSERVED_HALF_SPANVector(builder, data)
+
+def PPEAddUNSERVED_STATUS(builder, UNSERVED_STATUS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(UNSERVED_STATUS), 0)
+
+def AddUNSERVED_STATUS(builder, UNSERVED_STATUS):
+    PPEAddUNSERVED_STATUS(builder, UNSERVED_STATUS)
+
+def PPEStartUNSERVED_STATUSVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartUNSERVED_STATUSVector(builder, numElems):
+    return PPEStartUNSERVED_STATUSVector(builder, numElems)
+
+def PPECreateUNSERVED_STATUSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateUNSERVED_STATUSVector(builder, data):
+    return PPECreateUNSERVED_STATUSVector(builder, data)
+
 def PPEEnd(builder):
     return builder.EndObject()
 
@@ -347,6 +533,7 @@ def End(builder):
     return PPEEnd(builder)
 
 import CAT
+import PPEBuild
 import PPEOrbitalElementRecord
 import PPEPositionRecord
 import PVN
@@ -375,6 +562,11 @@ class PPET(object):
         NOMINAL_SEGMENT_SPAN = 0.0,
         NOMINAL_NUM_COEFFICIENTS = 0,
         PROVENANCE = None,
+        REFERENCE_EPOCH = None,
+        BUILD = None,
+        UNSERVED_MID_SECONDS = None,
+        UNSERVED_HALF_SPAN = None,
+        UNSERVED_STATUS = None,
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
@@ -390,6 +582,11 @@ class PPET(object):
         self.NOMINAL_SEGMENT_SPAN = NOMINAL_SEGMENT_SPAN  # type: float
         self.NOMINAL_NUM_COEFFICIENTS = NOMINAL_NUM_COEFFICIENTS  # type: int
         self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
+        self.REFERENCE_EPOCH = REFERENCE_EPOCH  # type: Optional[str]
+        self.BUILD = BUILD  # type: Optional[PPEBuild.PPEBuildT]
+        self.UNSERVED_MID_SECONDS = UNSERVED_MID_SECONDS  # type: Optional[List[float]]
+        self.UNSERVED_HALF_SPAN = UNSERVED_HALF_SPAN  # type: Optional[List[float]]
+        self.UNSERVED_STATUS = UNSERVED_STATUS  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -446,6 +643,30 @@ class PPET(object):
         self.NOMINAL_NUM_COEFFICIENTS = PPE.NOMINAL_NUM_COEFFICIENTS()
         if PPE.PROVENANCE() is not None:
             self.PROVENANCE = PVN.PVNT.InitFromObj(PPE.PROVENANCE())
+        self.REFERENCE_EPOCH = PPE.REFERENCE_EPOCH()
+        if PPE.BUILD() is not None:
+            self.BUILD = PPEBuild.PPEBuildT.InitFromObj(PPE.BUILD())
+        if not PPE.UNSERVED_MID_SECONDSIsNone():
+            if np is None:
+                self.UNSERVED_MID_SECONDS = []
+                for i in range(PPE.UNSERVED_MID_SECONDSLength()):
+                    self.UNSERVED_MID_SECONDS.append(PPE.UNSERVED_MID_SECONDS(i))
+            else:
+                self.UNSERVED_MID_SECONDS = PPE.UNSERVED_MID_SECONDSAsNumpy()
+        if not PPE.UNSERVED_HALF_SPANIsNone():
+            if np is None:
+                self.UNSERVED_HALF_SPAN = []
+                for i in range(PPE.UNSERVED_HALF_SPANLength()):
+                    self.UNSERVED_HALF_SPAN.append(PPE.UNSERVED_HALF_SPAN(i))
+            else:
+                self.UNSERVED_HALF_SPAN = PPE.UNSERVED_HALF_SPANAsNumpy()
+        if not PPE.UNSERVED_STATUSIsNone():
+            if np is None:
+                self.UNSERVED_STATUS = []
+                for i in range(PPE.UNSERVED_STATUSLength()):
+                    self.UNSERVED_STATUS.append(PPE.UNSERVED_STATUS(i))
+            else:
+                self.UNSERVED_STATUS = PPE.UNSERVED_STATUSAsNumpy()
 
     # PPET
     def Pack(self, builder):
@@ -487,6 +708,34 @@ class PPET(object):
             EPHEMERIS_SOURCE = builder.CreateString(self.EPHEMERIS_SOURCE)
         if self.PROVENANCE is not None:
             PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.REFERENCE_EPOCH is not None:
+            REFERENCE_EPOCH = builder.CreateString(self.REFERENCE_EPOCH)
+        if self.BUILD is not None:
+            BUILD = self.BUILD.Pack(builder)
+        if self.UNSERVED_MID_SECONDS is not None:
+            if np is not None and type(self.UNSERVED_MID_SECONDS) is np.ndarray:
+                UNSERVED_MID_SECONDS = builder.CreateNumpyVector(self.UNSERVED_MID_SECONDS)
+            else:
+                PPEStartUNSERVED_MID_SECONDSVector(builder, len(self.UNSERVED_MID_SECONDS))
+                for i in reversed(range(len(self.UNSERVED_MID_SECONDS))):
+                    builder.PrependFloat64(self.UNSERVED_MID_SECONDS[i])
+                UNSERVED_MID_SECONDS = builder.EndVector()
+        if self.UNSERVED_HALF_SPAN is not None:
+            if np is not None and type(self.UNSERVED_HALF_SPAN) is np.ndarray:
+                UNSERVED_HALF_SPAN = builder.CreateNumpyVector(self.UNSERVED_HALF_SPAN)
+            else:
+                PPEStartUNSERVED_HALF_SPANVector(builder, len(self.UNSERVED_HALF_SPAN))
+                for i in reversed(range(len(self.UNSERVED_HALF_SPAN))):
+                    builder.PrependFloat64(self.UNSERVED_HALF_SPAN[i])
+                UNSERVED_HALF_SPAN = builder.EndVector()
+        if self.UNSERVED_STATUS is not None:
+            if np is not None and type(self.UNSERVED_STATUS) is np.ndarray:
+                UNSERVED_STATUS = builder.CreateNumpyVector(self.UNSERVED_STATUS)
+            else:
+                PPEStartUNSERVED_STATUSVector(builder, len(self.UNSERVED_STATUS))
+                for i in reversed(range(len(self.UNSERVED_STATUS))):
+                    builder.PrependUint8(self.UNSERVED_STATUS[i])
+                UNSERVED_STATUS = builder.EndVector()
         PPEStart(builder)
         if self.COMMENT is not None:
             PPEAddCOMMENT(builder, COMMENT)
@@ -512,5 +761,15 @@ class PPET(object):
         PPEAddNOMINAL_NUM_COEFFICIENTS(builder, self.NOMINAL_NUM_COEFFICIENTS)
         if self.PROVENANCE is not None:
             PPEAddPROVENANCE(builder, PROVENANCE)
+        if self.REFERENCE_EPOCH is not None:
+            PPEAddREFERENCE_EPOCH(builder, REFERENCE_EPOCH)
+        if self.BUILD is not None:
+            PPEAddBUILD(builder, BUILD)
+        if self.UNSERVED_MID_SECONDS is not None:
+            PPEAddUNSERVED_MID_SECONDS(builder, UNSERVED_MID_SECONDS)
+        if self.UNSERVED_HALF_SPAN is not None:
+            PPEAddUNSERVED_HALF_SPAN(builder, UNSERVED_HALF_SPAN)
+        if self.UNSERVED_STATUS is not None:
+            PPEAddUNSERVED_STATUS(builder, UNSERVED_STATUS)
         PPE = PPEEnd(builder)
         return PPE
