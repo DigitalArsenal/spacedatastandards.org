@@ -321,8 +321,8 @@ describe("scenario controls schema consolidation", () => {
     for (const [label, source] of [
       ["VST schema", vstSource],
       ["SCN schema", scnSource],
-      ["VST Field Explorer schema", vstSchema],
-      ["SCN Field Explorer schema", scnSchema],
+      ["VST Field Explorer schema", ownDefinitionSurface(vstSchema, vstSource)],
+      ["SCN Field Explorer schema", ownDefinitionSurface(scnSchema, scnSource)],
     ]) {
       assertNoScenarioUnitSuffixFields(label, source);
     }
