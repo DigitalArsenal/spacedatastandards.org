@@ -32,9 +32,11 @@ import TIM.main_generated
 /// and REQUEST and leaves the result fields empty; the answer echoes the
 /// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 /// a stated frame and its magnitude), ARCS (the coasts and transfers between
-/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
-/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+/// states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+/// the options the planner weighed (OPTIONS) and the problem's own solution
+/// detail. A planner that cannot solve the problem answers with STATUS and
+/// ERROR_CODE instead.
 ///
 /// MPL is the plan; $MNV is the maneuver that happened (or that operations
 /// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -450,7 +452,8 @@ class mplBurn : flatbuffers.handle
     /// Burn duration, s; 0 = impulsive.
     def DURATION_S() -> float:
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    /// Propellant consumed, kg; 0 = not computed.
+    /// Propellant consumed, kg; 0 = not computed (the request did not state
+    /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
     def DELTA_MASS_KG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
     /// The orbit the burn's axes are built from (the chaser's for an absolute
@@ -1709,13 +1712,34 @@ class mplRequest : flatbuffers.handle
     def GEOMETRY() -> mplGeometryRequest?:
         let o = flatbuffers.field_table(buf_, pos_, 16)
         return if o: mplGeometryRequest { buf_, o } else: nil
+    /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+    /// 0 = not stated.
+    def INITIAL_MASS_KG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+    /// stated.
+    ///
+    /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+    /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+    /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+    /// a burn leaving mass m (kg) consumes
+    /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+    /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+    /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+    /// sum. A burn of nonzero DURATION_S is taken the same way, with
+    /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+    /// specific impulse). With either input not stated, DELTA_MASS_KG and
+    /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+    /// InvalidRequest.
+    def SPECIFIC_IMPULSE_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
 
 def GetRootAsmplRequest(buf:string): return mplRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct mplRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(9)
         return this
     def add_MU_KM3_S2(MU_KM3_S2:float):
         b_.PrependFloat64Slot(0, MU_KM3_S2, 0.0)
@@ -1737,6 +1761,12 @@ struct mplRequestBuilder:
         return this
     def add_GEOMETRY(GEOMETRY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, GEOMETRY)
+        return this
+    def add_INITIAL_MASS_KG(INITIAL_MASS_KG:float):
+        b_.PrependFloat64Slot(7, INITIAL_MASS_KG, 0.0)
+        return this
+    def add_SPECIFIC_IMPULSE_S(SPECIFIC_IMPULSE_S:float):
+        b_.PrependFloat64Slot(8, SPECIFIC_IMPULSE_S, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -2470,7 +2500,8 @@ class MPL : flatbuffers.handle
     /// Time from the plan's start to its end, s.
     def TOTAL_TIME_S() -> float:
         return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
-    /// Propellant for the whole plan, kg; 0 = not computed.
+    /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+    /// 0 = not computed.
     def TOTAL_DELTA_MASS_KG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     /// Solver evidence for the plan as a whole.

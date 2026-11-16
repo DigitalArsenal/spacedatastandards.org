@@ -27,6 +27,25 @@ public struct mplRequest : IFlatbufferObject
   public mplRelativeRequest? RELATIVE { get { int o = __p.__offset(12); return o != 0 ? (mplRelativeRequest?)(new mplRelativeRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public mplRendezvousRequest? RENDEZVOUS { get { int o = __p.__offset(14); return o != 0 ? (mplRendezvousRequest?)(new mplRendezvousRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public mplGeometryRequest? GEOMETRY { get { int o = __p.__offset(16); return o != 0 ? (mplGeometryRequest?)(new mplGeometryRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+  /// 0 = not stated.
+  public double INITIAL_MASS_KG { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  /// stated.
+  ///
+  /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  /// a burn leaving mass m (kg) consumes
+  /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  /// sum. A burn of nonzero DURATION_S is taken the same way, with
+  /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  /// specific impulse). With either input not stated, DELTA_MASS_KG and
+  /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  /// InvalidRequest.
+  public double SPECIFIC_IMPULSE_S { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<mplRequest> CreatemplRequest(FlatBufferBuilder builder,
       double MU_KM3_S2 = 0.0,
@@ -35,8 +54,12 @@ public struct mplRequest : IFlatbufferObject
       Offset<mplPhasingRequest> PHASINGOffset = default(Offset<mplPhasingRequest>),
       Offset<mplRelativeRequest> RELATIVEOffset = default(Offset<mplRelativeRequest>),
       Offset<mplRendezvousRequest> RENDEZVOUSOffset = default(Offset<mplRendezvousRequest>),
-      Offset<mplGeometryRequest> GEOMETRYOffset = default(Offset<mplGeometryRequest>)) {
-    builder.StartTable(7);
+      Offset<mplGeometryRequest> GEOMETRYOffset = default(Offset<mplGeometryRequest>),
+      double INITIAL_MASS_KG = 0.0,
+      double SPECIFIC_IMPULSE_S = 0.0) {
+    builder.StartTable(9);
+    mplRequest.AddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S);
+    mplRequest.AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG);
     mplRequest.AddMU_KM3_S2(builder, MU_KM3_S2);
     mplRequest.AddGEOMETRY(builder, GEOMETRYOffset);
     mplRequest.AddRENDEZVOUS(builder, RENDEZVOUSOffset);
@@ -47,7 +70,7 @@ public struct mplRequest : IFlatbufferObject
     return mplRequest.EndmplRequest(builder);
   }
 
-  public static void StartmplRequest(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartmplRequest(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddMU_KM3_S2(FlatBufferBuilder builder, double MU_KM3_S2) { builder.AddDouble(0, MU_KM3_S2, 0.0); }
   public static void AddTRANSFER(FlatBufferBuilder builder, Offset<mplTransferRequest> TRANSFEROffset) { builder.AddOffset(1, TRANSFEROffset.Value, 0); }
   public static void AddLAMBERT(FlatBufferBuilder builder, Offset<mplLambertRequest> LAMBERTOffset) { builder.AddOffset(2, LAMBERTOffset.Value, 0); }
@@ -55,6 +78,8 @@ public struct mplRequest : IFlatbufferObject
   public static void AddRELATIVE(FlatBufferBuilder builder, Offset<mplRelativeRequest> RELATIVEOffset) { builder.AddOffset(4, RELATIVEOffset.Value, 0); }
   public static void AddRENDEZVOUS(FlatBufferBuilder builder, Offset<mplRendezvousRequest> RENDEZVOUSOffset) { builder.AddOffset(5, RENDEZVOUSOffset.Value, 0); }
   public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<mplGeometryRequest> GEOMETRYOffset) { builder.AddOffset(6, GEOMETRYOffset.Value, 0); }
+  public static void AddINITIAL_MASS_KG(FlatBufferBuilder builder, double INITIAL_MASS_KG) { builder.AddDouble(7, INITIAL_MASS_KG, 0.0); }
+  public static void AddSPECIFIC_IMPULSE_S(FlatBufferBuilder builder, double SPECIFIC_IMPULSE_S) { builder.AddDouble(8, SPECIFIC_IMPULSE_S, 0.0); }
   public static Offset<mplRequest> EndmplRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<mplRequest>(o);
@@ -72,6 +97,8 @@ public struct mplRequest : IFlatbufferObject
     _o.RELATIVE = this.RELATIVE.HasValue ? this.RELATIVE.Value.UnPack() : null;
     _o.RENDEZVOUS = this.RENDEZVOUS.HasValue ? this.RENDEZVOUS.Value.UnPack() : null;
     _o.GEOMETRY = this.GEOMETRY.HasValue ? this.GEOMETRY.Value.UnPack() : null;
+    _o.INITIAL_MASS_KG = this.INITIAL_MASS_KG;
+    _o.SPECIFIC_IMPULSE_S = this.SPECIFIC_IMPULSE_S;
   }
   public static Offset<mplRequest> Pack(FlatBufferBuilder builder, mplRequestT _o) {
     if (_o == null) return default(Offset<mplRequest>);
@@ -89,7 +116,9 @@ public struct mplRequest : IFlatbufferObject
       _PHASING,
       _RELATIVE,
       _RENDEZVOUS,
-      _GEOMETRY);
+      _GEOMETRY,
+      _o.INITIAL_MASS_KG,
+      _o.SPECIFIC_IMPULSE_S);
   }
 }
 
@@ -102,6 +131,8 @@ public class mplRequestT
   public mplRelativeRequestT RELATIVE { get; set; }
   public mplRendezvousRequestT RENDEZVOUS { get; set; }
   public mplGeometryRequestT GEOMETRY { get; set; }
+  public double INITIAL_MASS_KG { get; set; }
+  public double SPECIFIC_IMPULSE_S { get; set; }
 
   public mplRequestT() {
     this.MU_KM3_S2 = 0.0;
@@ -111,6 +142,8 @@ public class mplRequestT
     this.RELATIVE = null;
     this.RENDEZVOUS = null;
     this.GEOMETRY = null;
+    this.INITIAL_MASS_KG = 0.0;
+    this.SPECIFIC_IMPULSE_S = 0.0;
   }
 }
 
@@ -127,6 +160,8 @@ static public class mplRequestVerify
       && verifier.VerifyTable(tablePos, 12 /*RELATIVE*/, mplRelativeRequestVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 14 /*RENDEZVOUS*/, mplRendezvousRequestVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 16 /*GEOMETRY*/, mplGeometryRequestVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 18 /*INITIAL_MASS_KG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*SPECIFIC_IMPULSE_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

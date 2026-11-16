@@ -257,7 +257,8 @@ func (rcv *mplBurn) MutateDurationS(n float64) bool {
 	return rcv.MutateDURATION_S(n)
 }
 
-/// Propellant consumed, kg; 0 = not computed.
+/// Propellant consumed, kg; 0 = not computed (the request did not state
+/// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
 func (rcv *mplBurn) DELTA_MASS_KG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -270,7 +271,8 @@ func (rcv *mplBurn) DeltaMassKg() float64 {
 	return rcv.DELTA_MASS_KG()
 }
 
-/// Propellant consumed, kg; 0 = not computed.
+/// Propellant consumed, kg; 0 = not computed (the request did not state
+/// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
 func (rcv *mplBurn) MutateDELTA_MASS_KG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }

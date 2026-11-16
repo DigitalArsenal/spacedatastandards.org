@@ -183,7 +183,8 @@ TOTAL_TIME_S():number {
 }
 
 /**
- * Propellant for the whole plan, kg; 0 = not computed.
+ * Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+ * 0 = not computed.
  */
 TOTAL_DELTA_MASS_KG():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);

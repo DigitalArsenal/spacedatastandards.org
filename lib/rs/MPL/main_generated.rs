@@ -63,9 +63,11 @@ pub const ENUM_VALUES_MPL_PROBLEM: [mplProblem; 19] = [
 /// and REQUEST and leaves the result fields empty; the answer echoes the
 /// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 /// a stated frame and its magnitude), ARCS (the coasts and transfers between
-/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
-/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+/// states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+/// the options the planner weighed (OPTIONS) and the problem's own solution
+/// detail. A planner that cannot solve the problem answers with STATUS and
+/// ERROR_CODE instead.
 ///
 /// MPL is the plan; $MNV is the maneuver that happened (or that operations
 /// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -2366,7 +2368,8 @@ impl<'a> mplBurn<'a> {
         unsafe { self._tab.get::<f64>(mplBurn::VT_DURATION_S, Some(0.0)).unwrap()}
     }
 
-    /// Propellant consumed, kg; 0 = not computed.
+    /// Propellant consumed, kg; 0 = not computed (the request did not state
+    /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
     #[inline]
     pub fn DELTA_MASS_KG(&self) -> f64 {
         // Safety:
@@ -7783,6 +7786,8 @@ impl<'a> mplRequest<'a> {
     pub const VT_RELATIVE: ::flatbuffers::VOffsetT = 12;
     pub const VT_RENDEZVOUS: ::flatbuffers::VOffsetT = 14;
     pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 16;
+    pub const VT_INITIAL_MASS_KG: ::flatbuffers::VOffsetT = 18;
+    pub const VT_SPECIFIC_IMPULSE_S: ::flatbuffers::VOffsetT = 20;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -7795,6 +7800,8 @@ impl<'a> mplRequest<'a> {
         args: &'args mplRequestArgs<'args>
     ) -> ::flatbuffers::WIPOffset<mplRequest<'bldr>> {
         let mut builder = mplRequestBuilder::new(_fbb);
+        builder.add_SPECIFIC_IMPULSE_S(args.SPECIFIC_IMPULSE_S);
+        builder.add_INITIAL_MASS_KG(args.INITIAL_MASS_KG);
         builder.add_MU_KM3_S2(args.MU_KM3_S2);
         if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
         if let Some(x) = args.RENDEZVOUS { builder.add_RENDEZVOUS(x); }
@@ -7825,6 +7832,8 @@ impl<'a> mplRequest<'a> {
         let GEOMETRY = self.GEOMETRY().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let INITIAL_MASS_KG = self.INITIAL_MASS_KG();
+        let SPECIFIC_IMPULSE_S = self.SPECIFIC_IMPULSE_S();
         mplRequestT {
             MU_KM3_S2,
             TRANSFER,
@@ -7833,6 +7842,8 @@ impl<'a> mplRequest<'a> {
             RELATIVE,
             RENDEZVOUS,
             GEOMETRY,
+            INITIAL_MASS_KG,
+            SPECIFIC_IMPULSE_S,
         }
     }
 
@@ -7893,6 +7904,39 @@ impl<'a> mplRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<mplGeometryRequest>>(mplRequest::VT_GEOMETRY, None)}
     }
+
+    /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+    /// 0 = not stated.
+    #[inline]
+    pub fn INITIAL_MASS_KG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(mplRequest::VT_INITIAL_MASS_KG, Some(0.0)).unwrap()}
+    }
+
+    /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+    /// stated.
+    ///
+    /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+    /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+    /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+    /// a burn leaving mass m (kg) consumes
+    /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+    /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+    /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+    /// sum. A burn of nonzero DURATION_S is taken the same way, with
+    /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+    /// specific impulse). With either input not stated, DELTA_MASS_KG and
+    /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+    /// InvalidRequest.
+    #[inline]
+    pub fn SPECIFIC_IMPULSE_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(mplRequest::VT_SPECIFIC_IMPULSE_S, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for mplRequest<'_> {
@@ -7908,6 +7952,8 @@ impl ::flatbuffers::Verifiable for mplRequest<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<mplRelativeRequest>>("RELATIVE", Self::VT_RELATIVE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<mplRendezvousRequest>>("RENDEZVOUS", Self::VT_RENDEZVOUS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<mplGeometryRequest>>("GEOMETRY", Self::VT_GEOMETRY, false)?
+            .visit_field::<f64>("INITIAL_MASS_KG", Self::VT_INITIAL_MASS_KG, false)?
+            .visit_field::<f64>("SPECIFIC_IMPULSE_S", Self::VT_SPECIFIC_IMPULSE_S, false)?
             .finish();
         Ok(())
     }
@@ -7921,6 +7967,8 @@ pub struct mplRequestArgs<'a> {
     pub RELATIVE: Option<::flatbuffers::WIPOffset<mplRelativeRequest<'a>>>,
     pub RENDEZVOUS: Option<::flatbuffers::WIPOffset<mplRendezvousRequest<'a>>>,
     pub GEOMETRY: Option<::flatbuffers::WIPOffset<mplGeometryRequest<'a>>>,
+    pub INITIAL_MASS_KG: f64,
+    pub SPECIFIC_IMPULSE_S: f64,
 }
 
 impl<'a> Default for mplRequestArgs<'a> {
@@ -7934,6 +7982,8 @@ impl<'a> Default for mplRequestArgs<'a> {
             RELATIVE: None,
             RENDEZVOUS: None,
             GEOMETRY: None,
+            INITIAL_MASS_KG: 0.0,
+            SPECIFIC_IMPULSE_S: 0.0,
         }
     }
 }
@@ -7980,6 +8030,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> mplRequestBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_INITIAL_MASS_KG(&mut self, INITIAL_MASS_KG: f64) {
+        self.fbb_.push_slot::<f64>(mplRequest::VT_INITIAL_MASS_KG, INITIAL_MASS_KG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SPECIFIC_IMPULSE_S(&mut self, SPECIFIC_IMPULSE_S: f64) {
+        self.fbb_.push_slot::<f64>(mplRequest::VT_SPECIFIC_IMPULSE_S, SPECIFIC_IMPULSE_S, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> mplRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         mplRequestBuilder {
@@ -8005,6 +8065,8 @@ impl ::core::fmt::Debug for mplRequest<'_> {
         ds.field("RELATIVE", &self.RELATIVE());
         ds.field("RENDEZVOUS", &self.RENDEZVOUS());
         ds.field("GEOMETRY", &self.GEOMETRY());
+        ds.field("INITIAL_MASS_KG", &self.INITIAL_MASS_KG());
+        ds.field("SPECIFIC_IMPULSE_S", &self.SPECIFIC_IMPULSE_S());
         ds.finish()
     }
 }
@@ -8019,6 +8081,8 @@ pub struct mplRequestT {
     pub RELATIVE: Option<alloc::boxed::Box<mplRelativeRequestT>>,
     pub RENDEZVOUS: Option<alloc::boxed::Box<mplRendezvousRequestT>>,
     pub GEOMETRY: Option<alloc::boxed::Box<mplGeometryRequestT>>,
+    pub INITIAL_MASS_KG: f64,
+    pub SPECIFIC_IMPULSE_S: f64,
 }
 
 impl Default for mplRequestT {
@@ -8031,6 +8095,8 @@ impl Default for mplRequestT {
             RELATIVE: None,
             RENDEZVOUS: None,
             GEOMETRY: None,
+            INITIAL_MASS_KG: 0.0,
+            SPECIFIC_IMPULSE_S: 0.0,
         }
     }
 }
@@ -8059,6 +8125,8 @@ impl mplRequestT {
         let GEOMETRY = self.GEOMETRY.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let INITIAL_MASS_KG = self.INITIAL_MASS_KG;
+        let SPECIFIC_IMPULSE_S = self.SPECIFIC_IMPULSE_S;
         mplRequest::create(_fbb, &mplRequestArgs{
             MU_KM3_S2,
             TRANSFER,
@@ -8067,6 +8135,8 @@ impl mplRequestT {
             RELATIVE,
             RENDEZVOUS,
             GEOMETRY,
+            INITIAL_MASS_KG,
+            SPECIFIC_IMPULSE_S,
         })
     }
 }
@@ -10900,7 +10970,8 @@ impl<'a> MPL<'a> {
         unsafe { self._tab.get::<f64>(MPL::VT_TOTAL_TIME_S, Some(0.0)).unwrap()}
     }
 
-    /// Propellant for the whole plan, kg; 0 = not computed.
+    /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+    /// 0 = not computed.
     #[inline]
     pub fn TOTAL_DELTA_MASS_KG(&self) -> f64 {
         // Safety:

@@ -37,9 +37,11 @@ import '../TIM/main_generated.dart';
 ///  and REQUEST and leaves the result fields empty; the answer echoes the
 ///  request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 ///  a stated frame and its magnitude), ARCS (the coasts and transfers between
-///  burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-///  planner weighed (OPTIONS) and the problem's own solution detail. A planner
-///  that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+///  burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+///  states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+///  the options the planner weighed (OPTIONS) and the problem's own solution
+///  detail. A planner that cannot solve the problem answers with STATUS and
+///  ERROR_CODE instead.
 ///
 ///  MPL is the plan; $MNV is the maneuver that happened (or that operations
 ///  committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -974,7 +976,8 @@ class mplBurn {
   ///  Burn duration, s; 0 = impulsive.
   double get DURATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   double get durationS => DURATION_S;
-  ///  Propellant consumed, kg; 0 = not computed.
+  ///  Propellant consumed, kg; 0 = not computed (the request did not state
+  ///  INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   double get DELTA_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
   double get deltaMassKg => DELTA_MASS_KG;
   ///  The orbit the burn's axes are built from (the chaser's for an absolute
@@ -3610,10 +3613,31 @@ class mplRequest {
   mplRelativeRequest? get RELATIVE => mplRelativeRequest.reader.vTableGetNullable(_bc, _bcOffset, 12);
   mplRendezvousRequest? get RENDEZVOUS => mplRendezvousRequest.reader.vTableGetNullable(_bc, _bcOffset, 14);
   mplGeometryRequest? get GEOMETRY => mplGeometryRequest.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Mass of the spacecraft at the plan's start, before its first burn, kg;
+  ///  0 = not stated.
+  double get INITIAL_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get initialMassKg => INITIAL_MASS_KG;
+  ///  Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  ///  stated.
+  ///
+  ///  With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  ///  fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  ///  the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  ///  a burn leaving mass m (kg) consumes
+  ///  m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  ///  delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  ///  and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  ///  sum. A burn of nonzero DURATION_S is taken the same way, with
+  ///  MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  ///  specific impulse). With either input not stated, DELTA_MASS_KG and
+  ///  TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  ///  InvalidRequest.
+  double get SPECIFIC_IMPULSE_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get specificImpulseS => SPECIFIC_IMPULSE_S;
 
   @override
   String toString() {
-    return 'mplRequest{muKm3S2: ${muKm3S2}, TRANSFER: ${TRANSFER}, LAMBERT: ${LAMBERT}, PHASING: ${PHASING}, RELATIVE: ${RELATIVE}, RENDEZVOUS: ${RENDEZVOUS}, GEOMETRY: ${GEOMETRY}}';
+    return 'mplRequest{muKm3S2: ${muKm3S2}, TRANSFER: ${TRANSFER}, LAMBERT: ${LAMBERT}, PHASING: ${PHASING}, RELATIVE: ${RELATIVE}, RENDEZVOUS: ${RENDEZVOUS}, GEOMETRY: ${GEOMETRY}, initialMassKg: ${initialMassKg}, specificImpulseS: ${specificImpulseS}}';
   }
 }
 
@@ -3631,7 +3655,7 @@ class mplRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(9);
   }
 
   int addMuKm3S2(double? MU_KM3_S2) {
@@ -3662,6 +3686,14 @@ class mplRequestBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addInitialMassKg(double? INITIAL_MASS_KG) {
+    fbBuilder.addFloat64(7, INITIAL_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addSpecificImpulseS(double? SPECIFIC_IMPULSE_S) {
+    fbBuilder.addFloat64(8, SPECIFIC_IMPULSE_S);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3676,6 +3708,8 @@ class mplRequestObjectBuilder extends fb.ObjectBuilder {
   final mplRelativeRequestObjectBuilder? _RELATIVE;
   final mplRendezvousRequestObjectBuilder? _RENDEZVOUS;
   final mplGeometryRequestObjectBuilder? _GEOMETRY;
+  final double? _INITIAL_MASS_KG;
+  final double? _SPECIFIC_IMPULSE_S;
 
   mplRequestObjectBuilder({
     double? MU_KM3_S2,
@@ -3686,6 +3720,10 @@ class mplRequestObjectBuilder extends fb.ObjectBuilder {
     mplRelativeRequestObjectBuilder? RELATIVE,
     mplRendezvousRequestObjectBuilder? RENDEZVOUS,
     mplGeometryRequestObjectBuilder? GEOMETRY,
+    double? INITIAL_MASS_KG,
+    double? initialMassKg,
+    double? SPECIFIC_IMPULSE_S,
+    double? specificImpulseS,
   })
       : _MU_KM3_S2 = muKm3S2 ?? MU_KM3_S2,
         _TRANSFER = TRANSFER,
@@ -3693,7 +3731,9 @@ class mplRequestObjectBuilder extends fb.ObjectBuilder {
         _PHASING = PHASING,
         _RELATIVE = RELATIVE,
         _RENDEZVOUS = RENDEZVOUS,
-        _GEOMETRY = GEOMETRY;
+        _GEOMETRY = GEOMETRY,
+        _INITIAL_MASS_KG = initialMassKg ?? INITIAL_MASS_KG,
+        _SPECIFIC_IMPULSE_S = specificImpulseS ?? SPECIFIC_IMPULSE_S;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3704,7 +3744,7 @@ class mplRequestObjectBuilder extends fb.ObjectBuilder {
     final int? RELATIVEOffset = _RELATIVE?.getOrCreateOffset(fbBuilder);
     final int? RENDEZVOUSOffset = _RENDEZVOUS?.getOrCreateOffset(fbBuilder);
     final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(9);
     fbBuilder.addFloat64(0, _MU_KM3_S2);
     fbBuilder.addOffset(1, TRANSFEROffset);
     fbBuilder.addOffset(2, LAMBERTOffset);
@@ -3712,6 +3752,8 @@ class mplRequestObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, RELATIVEOffset);
     fbBuilder.addOffset(5, RENDEZVOUSOffset);
     fbBuilder.addOffset(6, GEOMETRYOffset);
+    fbBuilder.addFloat64(7, _INITIAL_MASS_KG);
+    fbBuilder.addFloat64(8, _SPECIFIC_IMPULSE_S);
     return fbBuilder.endTable();
   }
 
@@ -4959,7 +5001,8 @@ class MPL {
   ///  Time from the plan's start to its end, s.
   double get TOTAL_TIME_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   double get totalTimeS => TOTAL_TIME_S;
-  ///  Propellant for the whole plan, kg; 0 = not computed.
+  ///  Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  ///  0 = not computed.
   double get TOTAL_DELTA_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
   double get totalDeltaMassKg => TOTAL_DELTA_MASS_KG;
   ///  Solver evidence for the plan as a whole.

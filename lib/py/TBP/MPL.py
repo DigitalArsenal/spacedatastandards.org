@@ -199,7 +199,8 @@ class MPL(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Propellant for the whole plan, kg; 0 = not computed.
+    # Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+    # 0 = not computed.
     # MPL
     def TOTAL_DELTA_MASS_KG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))

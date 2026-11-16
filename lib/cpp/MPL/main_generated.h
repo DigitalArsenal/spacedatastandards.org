@@ -98,9 +98,11 @@ struct MPLBuilder;
 /// and REQUEST and leaves the result fields empty; the answer echoes the
 /// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 /// a stated frame and its magnitude), ARCS (the coasts and transfers between
-/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
-/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+/// states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+/// the options the planner weighed (OPTIONS) and the problem's own solution
+/// detail. A planner that cannot solve the problem answers with STATUS and
+/// ERROR_CODE instead.
 ///
 /// MPL is the plan; $MNV is the maneuver that happened (or that operations
 /// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -1044,7 +1046,8 @@ struct mplBurn FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DURATION_S() const {
     return GetField<double>(VT_DURATION_S, 0.0);
   }
-  /// Propellant consumed, kg; 0 = not computed.
+  /// Propellant consumed, kg; 0 = not computed (the request did not state
+  /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   double DELTA_MASS_KG() const {
     return GetField<double>(VT_DELTA_MASS_KG, 0.0);
   }
@@ -3448,7 +3451,9 @@ struct mplRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PHASING = 10,
     VT_RELATIVE = 12,
     VT_RENDEZVOUS = 14,
-    VT_GEOMETRY = 16
+    VT_GEOMETRY = 16,
+    VT_INITIAL_MASS_KG = 18,
+    VT_SPECIFIC_IMPULSE_S = 20
   };
   /// Gravitational parameter of the central body, km^3/s^2; 0 = Earth
   /// (398600.4418).
@@ -3473,6 +3478,29 @@ struct mplRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const mplGeometryRequest *GEOMETRY() const {
     return GetPointer<const mplGeometryRequest *>(VT_GEOMETRY);
   }
+  /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+  /// 0 = not stated.
+  double INITIAL_MASS_KG() const {
+    return GetField<double>(VT_INITIAL_MASS_KG, 0.0);
+  }
+  /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  /// stated.
+  ///
+  /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  /// a burn leaving mass m (kg) consumes
+  /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  /// sum. A burn of nonzero DURATION_S is taken the same way, with
+  /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  /// specific impulse). With either input not stated, DELTA_MASS_KG and
+  /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  /// InvalidRequest.
+  double SPECIFIC_IMPULSE_S() const {
+    return GetField<double>(VT_SPECIFIC_IMPULSE_S, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3489,6 +3517,8 @@ struct mplRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(RENDEZVOUS()) &&
            VerifyOffset(verifier, VT_GEOMETRY) &&
            verifier.VerifyTable(GEOMETRY()) &&
+           VerifyField<double>(verifier, VT_INITIAL_MASS_KG, 8) &&
+           VerifyField<double>(verifier, VT_SPECIFIC_IMPULSE_S, 8) &&
            verifier.EndTable();
   }
 };
@@ -3518,6 +3548,12 @@ struct mplRequestBuilder {
   void add_GEOMETRY(::flatbuffers::Offset<mplGeometryRequest> GEOMETRY) {
     fbb_.AddOffset(mplRequest::VT_GEOMETRY, GEOMETRY);
   }
+  void add_INITIAL_MASS_KG(double INITIAL_MASS_KG) {
+    fbb_.AddElement<double>(mplRequest::VT_INITIAL_MASS_KG, INITIAL_MASS_KG, 0.0);
+  }
+  void add_SPECIFIC_IMPULSE_S(double SPECIFIC_IMPULSE_S) {
+    fbb_.AddElement<double>(mplRequest::VT_SPECIFIC_IMPULSE_S, SPECIFIC_IMPULSE_S, 0.0);
+  }
   explicit mplRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3537,8 +3573,12 @@ inline ::flatbuffers::Offset<mplRequest> CreatemplRequest(
     ::flatbuffers::Offset<mplPhasingRequest> PHASING = 0,
     ::flatbuffers::Offset<mplRelativeRequest> RELATIVE = 0,
     ::flatbuffers::Offset<mplRendezvousRequest> RENDEZVOUS = 0,
-    ::flatbuffers::Offset<mplGeometryRequest> GEOMETRY = 0) {
+    ::flatbuffers::Offset<mplGeometryRequest> GEOMETRY = 0,
+    double INITIAL_MASS_KG = 0.0,
+    double SPECIFIC_IMPULSE_S = 0.0) {
   mplRequestBuilder builder_(_fbb);
+  builder_.add_SPECIFIC_IMPULSE_S(SPECIFIC_IMPULSE_S);
+  builder_.add_INITIAL_MASS_KG(INITIAL_MASS_KG);
   builder_.add_MU_KM3_S2(MU_KM3_S2);
   builder_.add_GEOMETRY(GEOMETRY);
   builder_.add_RENDEZVOUS(RENDEZVOUS);
@@ -4756,7 +4796,8 @@ struct MPL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TOTAL_TIME_S() const {
     return GetField<double>(VT_TOTAL_TIME_S, 0.0);
   }
-  /// Propellant for the whole plan, kg; 0 = not computed.
+  /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  /// 0 = not computed.
   double TOTAL_DELTA_MASS_KG() const {
     return GetField<double>(VT_TOTAL_DELTA_MASS_KG, 0.0);
   }

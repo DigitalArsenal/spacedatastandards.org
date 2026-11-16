@@ -105,8 +105,39 @@ class mplRequest(object):
             return obj
         return None
 
+    # Mass of the spacecraft at the plan's start, before its first burn, kg;
+    # 0 = not stated.
+    # mplRequest
+    def INITIAL_MASS_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Specific impulse of the engine that flies the plan's burns, s; 0 = not
+    # stated.
+    #
+    # With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+    # fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+    # the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+    # a burn leaving mass m (kg) consumes
+    # m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+    # delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+    # and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+    # sum. A burn of nonzero DURATION_S is taken the same way, with
+    # MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+    # specific impulse). With either input not stated, DELTA_MASS_KG and
+    # TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+    # InvalidRequest.
+    # mplRequest
+    def SPECIFIC_IMPULSE_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def mplRequestStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(9)
 
 def Start(builder):
     mplRequestStart(builder)
@@ -153,6 +184,18 @@ def mplRequestAddGEOMETRY(builder, GEOMETRY):
 def AddGEOMETRY(builder, GEOMETRY):
     mplRequestAddGEOMETRY(builder, GEOMETRY)
 
+def mplRequestAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG):
+    builder.PrependFloat64Slot(7, INITIAL_MASS_KG, 0.0)
+
+def AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG):
+    mplRequestAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG)
+
+def mplRequestAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S):
+    builder.PrependFloat64Slot(8, SPECIFIC_IMPULSE_S, 0.0)
+
+def AddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S):
+    mplRequestAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S)
+
 def mplRequestEnd(builder):
     return builder.EndObject()
 
@@ -182,6 +225,8 @@ class mplRequestT(object):
         RELATIVE = None,
         RENDEZVOUS = None,
         GEOMETRY = None,
+        INITIAL_MASS_KG = 0.0,
+        SPECIFIC_IMPULSE_S = 0.0,
     ):
         self.MU_KM3_S2 = MU_KM3_S2  # type: float
         self.TRANSFER = TRANSFER  # type: Optional[mplTransferRequest.mplTransferRequestT]
@@ -190,6 +235,8 @@ class mplRequestT(object):
         self.RELATIVE = RELATIVE  # type: Optional[mplRelativeRequest.mplRelativeRequestT]
         self.RENDEZVOUS = RENDEZVOUS  # type: Optional[mplRendezvousRequest.mplRendezvousRequestT]
         self.GEOMETRY = GEOMETRY  # type: Optional[mplGeometryRequest.mplGeometryRequestT]
+        self.INITIAL_MASS_KG = INITIAL_MASS_KG  # type: float
+        self.SPECIFIC_IMPULSE_S = SPECIFIC_IMPULSE_S  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -225,6 +272,8 @@ class mplRequestT(object):
             self.RENDEZVOUS = mplRendezvousRequest.mplRendezvousRequestT.InitFromObj(mplRequest.RENDEZVOUS())
         if mplRequest.GEOMETRY() is not None:
             self.GEOMETRY = mplGeometryRequest.mplGeometryRequestT.InitFromObj(mplRequest.GEOMETRY())
+        self.INITIAL_MASS_KG = mplRequest.INITIAL_MASS_KG()
+        self.SPECIFIC_IMPULSE_S = mplRequest.SPECIFIC_IMPULSE_S()
 
     # mplRequestT
     def Pack(self, builder):
@@ -254,5 +303,7 @@ class mplRequestT(object):
             mplRequestAddRENDEZVOUS(builder, RENDEZVOUS)
         if self.GEOMETRY is not None:
             mplRequestAddGEOMETRY(builder, GEOMETRY)
+        mplRequestAddINITIAL_MASS_KG(builder, self.INITIAL_MASS_KG)
+        mplRequestAddSPECIFIC_IMPULSE_S(builder, self.SPECIFIC_IMPULSE_S)
         mplRequest = mplRequestEnd(builder)
         return mplRequest

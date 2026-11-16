@@ -118,7 +118,8 @@ DURATION_S():number {
 }
 
 /**
- * Propellant consumed, kg; 0 = not computed.
+ * Propellant consumed, kg; 0 = not computed (the request did not state
+ * INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
  */
 DELTA_MASS_KG():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);

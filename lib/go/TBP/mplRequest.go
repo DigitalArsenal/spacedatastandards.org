@@ -169,8 +169,82 @@ func (rcv *mplRequest) Geometry(obj *mplGeometryRequest) *mplGeometryRequest {
 	return rcv.GEOMETRY(obj)
 }
 
+/// Mass of the spacecraft at the plan's start, before its first burn, kg;
+/// 0 = not stated.
+func (rcv *mplRequest) INITIAL_MASS_KG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *mplRequest) InitialMassKg() float64 {
+	return rcv.INITIAL_MASS_KG()
+}
+
+/// Mass of the spacecraft at the plan's start, before its first burn, kg;
+/// 0 = not stated.
+func (rcv *mplRequest) MutateINITIAL_MASS_KG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *mplRequest) MutateInitialMassKg(n float64) bool {
+	return rcv.MutateINITIAL_MASS_KG(n)
+}
+
+/// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+/// stated.
+///
+/// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+/// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+/// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+/// a burn leaving mass m (kg) consumes
+/// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+/// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+/// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+/// sum. A burn of nonzero DURATION_S is taken the same way, with
+/// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+/// specific impulse). With either input not stated, DELTA_MASS_KG and
+/// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+/// InvalidRequest.
+func (rcv *mplRequest) SPECIFIC_IMPULSE_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *mplRequest) SpecificImpulseS() float64 {
+	return rcv.SPECIFIC_IMPULSE_S()
+}
+
+/// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+/// stated.
+///
+/// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+/// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+/// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+/// a burn leaving mass m (kg) consumes
+/// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+/// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+/// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+/// sum. A burn of nonzero DURATION_S is taken the same way, with
+/// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+/// specific impulse). With either input not stated, DELTA_MASS_KG and
+/// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+/// InvalidRequest.
+func (rcv *mplRequest) MutateSPECIFIC_IMPULSE_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *mplRequest) MutateSpecificImpulseS(n float64) bool {
+	return rcv.MutateSPECIFIC_IMPULSE_S(n)
+}
+
 func mplRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(9)
 }
 func mplRequestAddMU_KM3_S2(builder *flatbuffers.Builder, MU_KM3_S2 float64) {
 	builder.PrependFloat64Slot(0, MU_KM3_S2, 0.0)
@@ -213,6 +287,18 @@ func mplRequestAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UO
 }
 func mplRequestAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	mplRequestAddGEOMETRY(builder, GEOMETRY)
+}
+func mplRequestAddINITIAL_MASS_KG(builder *flatbuffers.Builder, INITIAL_MASS_KG float64) {
+	builder.PrependFloat64Slot(7, INITIAL_MASS_KG, 0.0)
+}
+func mplRequestAddInitialMassKg(builder *flatbuffers.Builder, INITIAL_MASS_KG float64) {
+	mplRequestAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG)
+}
+func mplRequestAddSPECIFIC_IMPULSE_S(builder *flatbuffers.Builder, SPECIFIC_IMPULSE_S float64) {
+	builder.PrependFloat64Slot(8, SPECIFIC_IMPULSE_S, 0.0)
+}
+func mplRequestAddSpecificImpulseS(builder *flatbuffers.Builder, SPECIFIC_IMPULSE_S float64) {
+	mplRequestAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S)
 }
 func mplRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

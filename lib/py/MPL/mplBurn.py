@@ -124,7 +124,8 @@ class mplBurn(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Propellant consumed, kg; 0 = not computed.
+    # Propellant consumed, kg; 0 = not computed (the request did not state
+    # INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
     # mplBurn
     def DELTA_MASS_KG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
