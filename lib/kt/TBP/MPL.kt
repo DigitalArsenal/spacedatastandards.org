@@ -206,7 +206,8 @@ class MPL : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Propellant for the whole plan, kg; 0 = not computed.
+     * Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+     * 0 = not computed.
      */
     val totalDeltaMassKg : Double
         get() {

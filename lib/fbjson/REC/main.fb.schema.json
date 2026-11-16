@@ -108403,7 +108403,7 @@
         },
         "DELTA_MASS_KG": {
           "type": "number",
-          "description": "Propellant consumed, kg; 0 = not computed.",
+          "description": "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).",
           "x-flatbuffer-type": "double"
         },
         "REFERENCE_ORBIT": {
@@ -109599,6 +109599,16 @@
         "GEOMETRY": {
           "$ref": "#/definitions/mplGeometryRequest",
           "x-flatbuffer-type": "mplGeometryRequest"
+        },
+        "INITIAL_MASS_KG": {
+          "type": "number",
+          "description": "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated.",
+          "x-flatbuffer-type": "double"
+        },
+        "SPECIFIC_IMPULSE_S": {
+          "type": "number",
+          "description": "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest.",
+          "x-flatbuffer-type": "double"
         }
       },
       "additionalProperties": false
@@ -110309,7 +110319,7 @@
         },
         "TOTAL_DELTA_MASS_KG": {
           "type": "number",
-          "description": "Propellant for the whole plan, kg; 0 = not computed.",
+          "description": "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed.",
           "x-flatbuffer-type": "double"
         },
         "SOLVER": {

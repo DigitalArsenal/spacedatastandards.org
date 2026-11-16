@@ -141,7 +141,8 @@ class mplBurn extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Propellant consumed, kg; 0 = not computed.
+    /// Propellant consumed, kg; 0 = not computed (the request did not state
+    /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
     /**
      * @return double
      */

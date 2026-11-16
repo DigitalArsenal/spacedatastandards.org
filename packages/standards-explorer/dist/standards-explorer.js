@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.283.0+1794852391169",
+  version: "1.284.0+1794869202319",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
@@ -22385,8 +22385,8 @@ file_identifier "$APR";`,
       ]
     },
     MPL: {
-      IDL: `// Hash: f403677464a6e25768a61a75c9e41066c0a783a1dd462d40b4d0bdb77af75ad9
-// Version: 1.248.0
+      IDL: `// Hash: bb448d3bb478d6138c99e518e5814dcf1ca98cb3e1d3356778e5f5a28a36802b
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../OEM/main.fbs";
 include "../MNV/main.fbs";
@@ -22410,9 +22410,11 @@ include "../CDM/main.fbs";
 /// and REQUEST and leaves the result fields empty; the answer echoes the
 /// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 /// a stated frame and its magnitude), ARCS (the coasts and transfers between
-/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
-/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+/// states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+/// the options the planner weighed (OPTIONS) and the problem's own solution
+/// detail. A planner that cannot solve the problem answers with STATUS and
+/// ERROR_CODE instead.
 ///
 /// MPL is the plan; $MNV is the maneuver that happened (or that operations
 /// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -22692,7 +22694,8 @@ table mplBurn {
   MAGNITUDE_KM_S: double;
   /// Burn duration, s; 0 = impulsive.
   DURATION_S: double;
-  /// Propellant consumed, kg; 0 = not computed.
+  /// Propellant consumed, kg; 0 = not computed (the request did not state
+  /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   DELTA_MASS_KG: double;
   /// The orbit the burn's axes are built from (the chaser's for an absolute
   /// burn, the reference orbit at the burn for a relative-motion leg); empty
@@ -23090,6 +23093,25 @@ table mplRequest {
   RELATIVE: mplRelativeRequest;
   RENDEZVOUS: mplRendezvousRequest;
   GEOMETRY: mplGeometryRequest;
+  /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+  /// 0 = not stated.
+  INITIAL_MASS_KG: double;
+  /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  /// stated.
+  ///
+  /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  /// a burn leaving mass m (kg) consumes
+  /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  /// sum. A burn of nonzero DURATION_S is taken the same way, with
+  /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  /// specific impulse). With either input not stated, DELTA_MASS_KG and
+  /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  /// InvalidRequest.
+  SPECIFIC_IMPULSE_S: double;
 }
 
 // ---------------------------------------------------------------------------
@@ -23287,7 +23309,8 @@ table MPL {
   TOTAL_DELTA_V_KM_S: double;
   /// Time from the plan's start to its end, s.
   TOTAL_TIME_S: double;
-  /// Propellant for the whole plan, kg; 0 = not computed.
+  /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  /// 0 = not computed.
   TOTAL_DELTA_MASS_KG: double;
   /// Solver evidence for the plan as a whole.
   SOLVER: mplSolver;
@@ -134508,7 +134531,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed."
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest)."
             },
             REFERENCE_ORBIT: {
               $ref: "#/definitions/mplElements",
@@ -135230,6 +135253,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated."
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest."
             }
           },
           additionalProperties: false
@@ -135674,7 +135705,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed."
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed."
             },
             SOLVER: {
               $ref: "#/definitions/mplSolver",
@@ -215661,7 +215692,7 @@ provider's reviewed register). Never free text.`
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed."
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest)."
             },
             REFERENCE_ORBIT: {
               $ref: "#/definitions/mplElements",
@@ -216383,6 +216414,14 @@ provider's reviewed register). Never free text.`
             },
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated."
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest."
             }
           },
           additionalProperties: false
@@ -216827,7 +216866,7 @@ provider's reviewed register). Never free text.`
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed."
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed."
             },
             SOLVER: {
               $ref: "#/definitions/mplSolver",
@@ -280277,7 +280316,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed."
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest)."
             },
             REFERENCE_ORBIT: {
               $ref: "#/definitions/mplElements",
@@ -280999,6 +281038,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated."
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest."
             }
           },
           additionalProperties: false
@@ -281443,7 +281490,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed."
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed."
             },
             SOLVER: {
               $ref: "#/definitions/mplSolver",
@@ -615256,7 +615303,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed.",
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).",
               "x-flatbuffer-type": "double"
             },
             REFERENCE_ORBIT: {
@@ -616452,6 +616499,16 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest",
               "x-flatbuffer-type": "mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -617162,7 +617219,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed.",
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed.",
               "x-flatbuffer-type": "double"
             },
             SOLVER: {
@@ -782400,7 +782457,7 @@ provider's reviewed register). Never free text.`,
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed.",
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).",
               "x-flatbuffer-type": "double"
             },
             REFERENCE_ORBIT: {
@@ -783596,6 +783653,16 @@ provider's reviewed register). Never free text.`,
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest",
               "x-flatbuffer-type": "mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -784306,7 +784373,7 @@ provider's reviewed register). Never free text.`,
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed.",
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed.",
               "x-flatbuffer-type": "double"
             },
             SOLVER: {
@@ -920802,7 +920869,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant consumed, kg; 0 = not computed.",
+              description: "Propellant consumed, kg; 0 = not computed (the request did not state\nINITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).",
               "x-flatbuffer-type": "double"
             },
             REFERENCE_ORBIT: {
@@ -921998,6 +922065,16 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             GEOMETRY: {
               $ref: "#/definitions/mplGeometryRequest",
               "x-flatbuffer-type": "mplGeometryRequest"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              description: "Mass of the spacecraft at the plan's start, before its first burn, kg;\n0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              description: "Specific impulse of the engine that flies the plan's burns, s; 0 = not\nstated.\n\nWith INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner\nfills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from\nthe ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,\na burn leaving mass m (kg) consumes\nm * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's\ndelta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,\nand the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the\nsum. A burn of nonzero DURATION_S is taken the same way, with\nMAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant\nspecific impulse). With either input not stated, DELTA_MASS_KG and\nTOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an\nInvalidRequest.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -922708,7 +922785,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             TOTAL_DELTA_MASS_KG: {
               type: "number",
-              description: "Propellant for the whole plan, kg; 0 = not computed.",
+              description: "Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;\n0 = not computed.",
               "x-flatbuffer-type": "double"
             },
             SOLVER: {
@@ -1100723,7 +1100800,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

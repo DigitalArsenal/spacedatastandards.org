@@ -51,7 +51,8 @@ public struct mplBurn : IFlatbufferObject
   public double MAGNITUDE_KM_S { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Burn duration, s; 0 = impulsive.
   public double DURATION_S { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Propellant consumed, kg; 0 = not computed.
+  /// Propellant consumed, kg; 0 = not computed (the request did not state
+  /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   public double DELTA_MASS_KG { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// The orbit the burn's axes are built from (the chaser's for an absolute
   /// burn, the reference orbit at the burn for a relative-motion leg); empty

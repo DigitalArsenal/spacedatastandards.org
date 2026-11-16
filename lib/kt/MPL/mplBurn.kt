@@ -120,7 +120,8 @@ class mplBurn : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Propellant consumed, kg; 0 = not computed.
+     * Propellant consumed, kg; 0 = not computed (the request did not state
+     * INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
      */
     val deltaMassKg : Double
         get() {

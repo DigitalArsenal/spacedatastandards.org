@@ -73,8 +73,39 @@ GEOMETRY(obj?:mplGeometryRequest):mplGeometryRequest|null {
   return offset ? (obj || new mplGeometryRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Mass of the spacecraft at the plan's start, before its first burn, kg;
+ * 0 = not stated.
+ */
+INITIAL_MASS_KG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Specific impulse of the engine that flies the plan's burns, s; 0 = not
+ * stated.
+ *
+ * With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+ * fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+ * the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+ * a burn leaving mass m (kg) consumes
+ * m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+ * delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+ * and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+ * sum. A burn of nonzero DURATION_S is taken the same way, with
+ * MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+ * specific impulse). With either input not stated, DELTA_MASS_KG and
+ * TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+ * InvalidRequest.
+ */
+SPECIFIC_IMPULSE_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startmplRequest(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(9);
 }
 
 static addMuKm3S2(builder:flatbuffers.Builder, MU_KM3_S2:number) {
@@ -105,6 +136,14 @@ static addGeometry(builder:flatbuffers.Builder, GEOMETRYOffset:flatbuffers.Offse
   builder.addFieldOffset(6, GEOMETRYOffset, 0);
 }
 
+static addInitialMassKg(builder:flatbuffers.Builder, INITIAL_MASS_KG:number) {
+  builder.addFieldFloat64(7, INITIAL_MASS_KG, 0.0);
+}
+
+static addSpecificImpulseS(builder:flatbuffers.Builder, SPECIFIC_IMPULSE_S:number) {
+  builder.addFieldFloat64(8, SPECIFIC_IMPULSE_S, 0.0);
+}
+
 static endmplRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -119,7 +158,9 @@ unpack(): mplRequestT {
     (this.PHASING() !== null ? this.PHASING()!.unpack() : null),
     (this.RELATIVE() !== null ? this.RELATIVE()!.unpack() : null),
     (this.RENDEZVOUS() !== null ? this.RENDEZVOUS()!.unpack() : null),
-    (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null)
+    (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
+    this.INITIAL_MASS_KG(),
+    this.SPECIFIC_IMPULSE_S()
   );
 }
 
@@ -132,6 +173,8 @@ unpackTo(_o: mplRequestT): void {
   _o.RELATIVE = (this.RELATIVE() !== null ? this.RELATIVE()!.unpack() : null);
   _o.RENDEZVOUS = (this.RENDEZVOUS() !== null ? this.RENDEZVOUS()!.unpack() : null);
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
+  _o.INITIAL_MASS_KG = this.INITIAL_MASS_KG();
+  _o.SPECIFIC_IMPULSE_S = this.SPECIFIC_IMPULSE_S();
 }
 }
 
@@ -143,7 +186,9 @@ constructor(
   public PHASING: mplPhasingRequestT|null = null,
   public RELATIVE: mplRelativeRequestT|null = null,
   public RENDEZVOUS: mplRendezvousRequestT|null = null,
-  public GEOMETRY: mplGeometryRequestT|null = null
+  public GEOMETRY: mplGeometryRequestT|null = null,
+  public INITIAL_MASS_KG: number = 0.0,
+  public SPECIFIC_IMPULSE_S: number = 0.0
 ){}
 
 
@@ -163,6 +208,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   mplRequest.addRelative(builder, RELATIVE);
   mplRequest.addRendezvous(builder, RENDEZVOUS);
   mplRequest.addGeometry(builder, GEOMETRY);
+  mplRequest.addInitialMassKg(builder, this.INITIAL_MASS_KG);
+  mplRequest.addSpecificImpulseS(builder, this.SPECIFIC_IMPULSE_S);
 
   return mplRequest.endmplRequest(builder);
 }

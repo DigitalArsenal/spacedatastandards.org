@@ -95,22 +95,57 @@ class mplRequest extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+    /// 0 = not stated.
+    /**
+     * @return double
+     */
+    public function getINITIAL_MASS_KG()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+    /// stated.
+    ///
+    /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+    /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+    /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+    /// a burn leaving mass m (kg) consumes
+    /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+    /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+    /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+    /// sum. A burn of nonzero DURATION_S is taken the same way, with
+    /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+    /// specific impulse). With either input not stated, DELTA_MASS_KG and
+    /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+    /// InvalidRequest.
+    /**
+     * @return double
+     */
+    public function getSPECIFIC_IMPULSE_S()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startmplRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return mplRequest
      */
-    public static function createmplRequest(FlatBufferBuilder $builder, $MU_KM3_S2, $TRANSFER, $LAMBERT, $PHASING, $RELATIVE, $RENDEZVOUS, $GEOMETRY)
+    public static function createmplRequest(FlatBufferBuilder $builder, $MU_KM3_S2, $TRANSFER, $LAMBERT, $PHASING, $RELATIVE, $RENDEZVOUS, $GEOMETRY, $INITIAL_MASS_KG, $SPECIFIC_IMPULSE_S)
     {
-        $builder->startObject(7);
+        $builder->startObject(9);
         self::addMU_KM3_S2($builder, $MU_KM3_S2);
         self::addTRANSFER($builder, $TRANSFER);
         self::addLAMBERT($builder, $LAMBERT);
@@ -118,6 +153,8 @@ class mplRequest extends Table
         self::addRELATIVE($builder, $RELATIVE);
         self::addRENDEZVOUS($builder, $RENDEZVOUS);
         self::addGEOMETRY($builder, $GEOMETRY);
+        self::addINITIAL_MASS_KG($builder, $INITIAL_MASS_KG);
+        self::addSPECIFIC_IMPULSE_S($builder, $SPECIFIC_IMPULSE_S);
         $o = $builder->endObject();
         return $o;
     }
@@ -190,6 +227,26 @@ class mplRequest extends Table
     public static function addGEOMETRY(FlatBufferBuilder $builder, $GEOMETRY)
     {
         $builder->addOffsetX(6, $GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINITIAL_MASS_KG(FlatBufferBuilder $builder, $INITIAL_MASS_KG)
+    {
+        $builder->addDoubleX(7, $INITIAL_MASS_KG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSPECIFIC_IMPULSE_S(FlatBufferBuilder $builder, $SPECIFIC_IMPULSE_S)
+    {
+        $builder->addDoubleX(8, $SPECIFIC_IMPULSE_S, 0.0);
     }
 
     /**

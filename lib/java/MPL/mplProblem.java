@@ -19,9 +19,11 @@
  * and REQUEST and leaves the result fields empty; the answer echoes the
  * request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
  * a stated frame and its magnitude), ARCS (the coasts and transfers between
- * burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
- * planner weighed (OPTIONS) and the problem's own solution detail. A planner
- * that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+ * burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+ * states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+ * the options the planner weighed (OPTIONS) and the problem's own solution
+ * detail. A planner that cannot solve the problem answers with STATUS and
+ * ERROR_CODE instead.
  *
  * MPL is the plan; $MNV is the maneuver that happened (or that operations
  * committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its

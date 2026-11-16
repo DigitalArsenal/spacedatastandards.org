@@ -87,7 +87,8 @@ public struct MPL : IFlatbufferObject
   public double TOTAL_DELTA_V_KM_S { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Time from the plan's start to its end, s.
   public double TOTAL_TIME_S { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Propellant for the whole plan, kg; 0 = not computed.
+  /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  /// 0 = not computed.
   public double TOTAL_DELTA_MASS_KG { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Solver evidence for the plan as a whole.
   public mplSolver? SOLVER { get { int o = __p.__offset(38); return o != 0 ? (mplSolver?)(new mplSolver()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }

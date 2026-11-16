@@ -103,7 +103,8 @@ public final class MPL extends com.google.flatbuffers.Table {
    */
   public double TOTAL_TIME_S() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Propellant for the whole plan, kg; 0 = not computed.
+   * Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+   * 0 = not computed.
    */
   public double TOTAL_DELTA_MASS_KG() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

@@ -45,6 +45,29 @@ public final class mplRequest extends com.google.flatbuffers.Table {
   public mplRendezvousRequest RENDEZVOUS(mplRendezvousRequest obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public mplGeometryRequest GEOMETRY() { return GEOMETRY(new mplGeometryRequest()); }
   public mplGeometryRequest GEOMETRY(mplGeometryRequest obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Mass of the spacecraft at the plan's start, before its first burn, kg;
+   * 0 = not stated.
+   */
+  public double INITIAL_MASS_KG() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Specific impulse of the engine that flies the plan's burns, s; 0 = not
+   * stated.
+   *
+   * With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+   * fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+   * the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+   * a burn leaving mass m (kg) consumes
+   * m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+   * delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+   * and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+   * sum. A burn of nonzero DURATION_S is taken the same way, with
+   * MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+   * specific impulse). With either input not stated, DELTA_MASS_KG and
+   * TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+   * InvalidRequest.
+   */
+  public double SPECIFIC_IMPULSE_S() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createmplRequest(FlatBufferBuilder builder,
       double MU_KM3_S2,
@@ -53,8 +76,12 @@ public final class mplRequest extends com.google.flatbuffers.Table {
       int PHASINGOffset,
       int RELATIVEOffset,
       int RENDEZVOUSOffset,
-      int GEOMETRYOffset) {
-    builder.startTable(7);
+      int GEOMETRYOffset,
+      double INITIAL_MASS_KG,
+      double SPECIFIC_IMPULSE_S) {
+    builder.startTable(9);
+    mplRequest.addSpecificImpulseS(builder, SPECIFIC_IMPULSE_S);
+    mplRequest.addInitialMassKg(builder, INITIAL_MASS_KG);
     mplRequest.addMuKm3S2(builder, MU_KM3_S2);
     mplRequest.addGeometry(builder, GEOMETRYOffset);
     mplRequest.addRendezvous(builder, RENDEZVOUSOffset);
@@ -65,7 +92,7 @@ public final class mplRequest extends com.google.flatbuffers.Table {
     return mplRequest.endmplRequest(builder);
   }
 
-  public static void startmplRequest(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startmplRequest(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addMuKm3S2(FlatBufferBuilder builder, double MU_KM3_S2) { builder.addDouble(0, MU_KM3_S2, 0.0); }
   public static void addTransfer(FlatBufferBuilder builder, int TRANSFEROffset) { builder.addOffset(1, TRANSFEROffset, 0); }
   public static void addLambert(FlatBufferBuilder builder, int LAMBERTOffset) { builder.addOffset(2, LAMBERTOffset, 0); }
@@ -73,6 +100,8 @@ public final class mplRequest extends com.google.flatbuffers.Table {
   public static void addRelative(FlatBufferBuilder builder, int RELATIVEOffset) { builder.addOffset(4, RELATIVEOffset, 0); }
   public static void addRendezvous(FlatBufferBuilder builder, int RENDEZVOUSOffset) { builder.addOffset(5, RENDEZVOUSOffset, 0); }
   public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(6, GEOMETRYOffset, 0); }
+  public static void addInitialMassKg(FlatBufferBuilder builder, double INITIAL_MASS_KG) { builder.addDouble(7, INITIAL_MASS_KG, 0.0); }
+  public static void addSpecificImpulseS(FlatBufferBuilder builder, double SPECIFIC_IMPULSE_S) { builder.addDouble(8, SPECIFIC_IMPULSE_S, 0.0); }
   public static int endmplRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

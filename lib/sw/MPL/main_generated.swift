@@ -26,9 +26,11 @@ import FlatBuffers
 ///  and REQUEST and leaves the result fields empty; the answer echoes the
 ///  request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 ///  a stated frame and its magnitude), ARCS (the coasts and transfers between
-///  burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-///  planner weighed (OPTIONS) and the problem's own solution detail. A planner
-///  that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+///  burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+///  states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+///  the options the planner weighed (OPTIONS) and the problem's own solution
+///  detail. A planner that cannot solve the problem answers with STATUS and
+///  ERROR_CODE instead.
 ///
 ///  MPL is the plan; $MNV is the maneuver that happened (or that operations
 ///  committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -567,7 +569,8 @@ public struct mplBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable
   public var MAGNITUDE_KM_S: Double { let o = _accessor.offset(VT.MAGNITUDE_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Burn duration, s; 0 = impulsive.
   public var DURATION_S: Double { let o = _accessor.offset(VT.DURATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Propellant consumed, kg; 0 = not computed.
+  ///  Propellant consumed, kg; 0 = not computed (the request did not state
+  ///  INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   public var DELTA_MASS_KG: Double { let o = _accessor.offset(VT.DELTA_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The orbit the burn's axes are built from (the chaser's for an absolute
   ///  burn, the reference orbit at the burn for a relative-motion leg); empty
@@ -2074,6 +2077,8 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let RELATIVE: VOffset = 12
     static let RENDEZVOUS: VOffset = 14
     static let GEOMETRY: VOffset = 16
+    static let INITIAL_MASS_KG: VOffset = 18
+    static let SPECIFIC_IMPULSE_S: VOffset = 20
   }
 
   ///  Gravitational parameter of the central body, km^3/s^2; 0 = Earth
@@ -2085,7 +2090,26 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public var RELATIVE: mplRelativeRequest? { let o = _accessor.offset(VT.RELATIVE); return o == 0 ? nil : mplRelativeRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var RENDEZVOUS: mplRendezvousRequest? { let o = _accessor.offset(VT.RENDEZVOUS); return o == 0 ? nil : mplRendezvousRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var GEOMETRY: mplGeometryRequest? { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? nil : mplGeometryRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startmplRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  Mass of the spacecraft at the plan's start, before its first burn, kg;
+  ///  0 = not stated.
+  public var INITIAL_MASS_KG: Double { let o = _accessor.offset(VT.INITIAL_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  ///  stated.
+  ///
+  ///  With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  ///  fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  ///  the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  ///  a burn leaving mass m (kg) consumes
+  ///  m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  ///  delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  ///  and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  ///  sum. A burn of nonzero DURATION_S is taken the same way, with
+  ///  MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  ///  specific impulse). With either input not stated, DELTA_MASS_KG and
+  ///  TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  ///  InvalidRequest.
+  public var SPECIFIC_IMPULSE_S: Double { let o = _accessor.offset(VT.SPECIFIC_IMPULSE_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startmplRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(MU_KM3_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MU_KM3_S2, def: 0.0, at: VT.MU_KM3_S2) }
   public static func add(TRANSFER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFER, at: VT.TRANSFER) }
   public static func add(LAMBERT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAMBERT, at: VT.LAMBERT) }
@@ -2093,6 +2117,8 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(RELATIVE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RELATIVE, at: VT.RELATIVE) }
   public static func add(RENDEZVOUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RENDEZVOUS, at: VT.RENDEZVOUS) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
+  public static func add(INITIAL_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_MASS_KG, def: 0.0, at: VT.INITIAL_MASS_KG) }
+  public static func add(SPECIFIC_IMPULSE_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECIFIC_IMPULSE_S, def: 0.0, at: VT.SPECIFIC_IMPULSE_S) }
   public static func endmplRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createmplRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -2102,7 +2128,9 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     PHASINGOffset PHASING: Offset = Offset(),
     RELATIVEOffset RELATIVE: Offset = Offset(),
     RENDEZVOUSOffset RENDEZVOUS: Offset = Offset(),
-    GEOMETRYOffset GEOMETRY: Offset = Offset()
+    GEOMETRYOffset GEOMETRY: Offset = Offset(),
+    INITIAL_MASS_KG: Double = 0.0,
+    SPECIFIC_IMPULSE_S: Double = 0.0
   ) -> Offset {
     let __start = mplRequest.startmplRequest(&fbb)
     mplRequest.add(MU_KM3_S2: MU_KM3_S2, &fbb)
@@ -2112,6 +2140,8 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     mplRequest.add(RELATIVE: RELATIVE, &fbb)
     mplRequest.add(RENDEZVOUS: RENDEZVOUS, &fbb)
     mplRequest.add(GEOMETRY: GEOMETRY, &fbb)
+    mplRequest.add(INITIAL_MASS_KG: INITIAL_MASS_KG, &fbb)
+    mplRequest.add(SPECIFIC_IMPULSE_S: SPECIFIC_IMPULSE_S, &fbb)
     return mplRequest.endmplRequest(&fbb, start: __start)
   }
 
@@ -2124,6 +2154,8 @@ public struct mplRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.RELATIVE, fieldName: "RELATIVE", required: false, type: ForwardOffset<mplRelativeRequest>.self)
     try _v.visit(field: VT.RENDEZVOUS, fieldName: "RENDEZVOUS", required: false, type: ForwardOffset<mplRendezvousRequest>.self)
     try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: ForwardOffset<mplGeometryRequest>.self)
+    try _v.visit(field: VT.INITIAL_MASS_KG, fieldName: "INITIAL_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECIFIC_IMPULSE_S, fieldName: "SPECIFIC_IMPULSE_S", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2874,7 +2906,8 @@ public struct MPL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var TOTAL_DELTA_V_KM_S: Double { let o = _accessor.offset(VT.TOTAL_DELTA_V_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time from the plan's start to its end, s.
   public var TOTAL_TIME_S: Double { let o = _accessor.offset(VT.TOTAL_TIME_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Propellant for the whole plan, kg; 0 = not computed.
+  ///  Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  ///  0 = not computed.
   public var TOTAL_DELTA_MASS_KG: Double { let o = _accessor.offset(VT.TOTAL_DELTA_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Solver evidence for the plan as a whole.
   public var SOLVER: mplSolver? { let o = _accessor.offset(VT.SOLVER); return o == 0 ? nil : mplSolver(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }

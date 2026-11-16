@@ -1,5 +1,5 @@
-// Hash: f403677464a6e25768a61a75c9e41066c0a783a1dd462d40b4d0bdb77af75ad9
-// Version: 1.248.0
+// Hash: bb448d3bb478d6138c99e518e5814dcf1ca98cb3e1d3356778e5f5a28a36802b
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../OEM/main.fbs";
 include "../MNV/main.fbs";
@@ -23,9 +23,11 @@ include "../CDM/main.fbs";
 /// and REQUEST and leaves the result fields empty; the answer echoes the
 /// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
 /// a stated frame and its magnitude), ARCS (the coasts and transfers between
-/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
-/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
-/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S and, when the request
+/// states the spacecraft's mass and specific impulse, TOTAL_DELTA_MASS_KG),
+/// the options the planner weighed (OPTIONS) and the problem's own solution
+/// detail. A planner that cannot solve the problem answers with STATUS and
+/// ERROR_CODE instead.
 ///
 /// MPL is the plan; $MNV is the maneuver that happened (or that operations
 /// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
@@ -305,7 +307,8 @@ table mplBurn {
   MAGNITUDE_KM_S: double;
   /// Burn duration, s; 0 = impulsive.
   DURATION_S: double;
-  /// Propellant consumed, kg; 0 = not computed.
+  /// Propellant consumed, kg; 0 = not computed (the request did not state
+  /// INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
   DELTA_MASS_KG: double;
   /// The orbit the burn's axes are built from (the chaser's for an absolute
   /// burn, the reference orbit at the burn for a relative-motion leg); empty
@@ -703,6 +706,25 @@ table mplRequest {
   RELATIVE: mplRelativeRequest;
   RENDEZVOUS: mplRendezvousRequest;
   GEOMETRY: mplGeometryRequest;
+  /// Mass of the spacecraft at the plan's start, before its first burn, kg;
+  /// 0 = not stated.
+  INITIAL_MASS_KG: double;
+  /// Specific impulse of the engine that flies the plan's burns, s; 0 = not
+  /// stated.
+  ///
+  /// With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+  /// fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+  /// the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+  /// a burn leaving mass m (kg) consumes
+  /// m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+  /// delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+  /// and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+  /// sum. A burn of nonzero DURATION_S is taken the same way, with
+  /// MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+  /// specific impulse). With either input not stated, DELTA_MASS_KG and
+  /// TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+  /// InvalidRequest.
+  SPECIFIC_IMPULSE_S: double;
 }
 
 // ---------------------------------------------------------------------------
@@ -900,7 +922,8 @@ table MPL {
   TOTAL_DELTA_V_KM_S: double;
   /// Time from the plan's start to its end, s.
   TOTAL_TIME_S: double;
-  /// Propellant for the whole plan, kg; 0 = not computed.
+  /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+  /// 0 = not computed.
   TOTAL_DELTA_MASS_KG: double;
   /// Solver evidence for the plan as a whole.
   SOLVER: mplSolver;

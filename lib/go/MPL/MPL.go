@@ -370,7 +370,8 @@ func (rcv *MPL) MutateTotalTimeS(n float64) bool {
 	return rcv.MutateTOTAL_TIME_S(n)
 }
 
-/// Propellant for the whole plan, kg; 0 = not computed.
+/// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+/// 0 = not computed.
 func (rcv *MPL) TOTAL_DELTA_MASS_KG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -383,7 +384,8 @@ func (rcv *MPL) TotalDeltaMassKg() float64 {
 	return rcv.TOTAL_DELTA_MASS_KG()
 }
 
-/// Propellant for the whole plan, kg; 0 = not computed.
+/// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+/// 0 = not computed.
 func (rcv *MPL) MutateTOTAL_DELTA_MASS_KG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
 }

@@ -197,7 +197,8 @@ class MPL extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Propellant for the whole plan, kg; 0 = not computed.
+    /// Propellant for the whole plan, kg: the sum of the burns' DELTA_MASS_KG;
+    /// 0 = not computed.
     /**
      * @return double
      */

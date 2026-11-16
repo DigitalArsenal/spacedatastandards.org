@@ -74,7 +74,8 @@ public final class mplBurn extends com.google.flatbuffers.Table {
    */
   public double DURATION_S() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Propellant consumed, kg; 0 = not computed.
+   * Propellant consumed, kg; 0 = not computed (the request did not state
+   * INITIAL_MASS_KG and SPECIFIC_IMPULSE_S; see mplRequest).
    */
   public double DELTA_MASS_KG() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

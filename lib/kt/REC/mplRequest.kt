@@ -93,6 +93,37 @@ class mplRequest : Table() {
             null
         }
     }
+    /**
+     * Mass of the spacecraft at the plan's start, before its first burn, kg;
+     * 0 = not stated.
+     */
+    val initialMassKg : Double
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Specific impulse of the engine that flies the plan's burns, s; 0 = not
+     * stated.
+     *
+     * With INITIAL_MASS_KG and SPECIFIC_IMPULSE_S both stated, the planner
+     * fills each burn's DELTA_MASS_KG and the plan's TOTAL_DELTA_MASS_KG from
+     * the ideal rocket equation: taking BURNS in plan order from INITIAL_MASS_KG,
+     * a burn leaving mass m (kg) consumes
+     * m * (1 - exp(-dv / (SPECIFIC_IMPULSE_S * g0))) kg, where dv is the burn's
+     * delta-v in m/s (MAGNITUDE_KM_S * 1000) and g0 = 9.80665 m/s^2 exactly,
+     * and the next burn starts from what is left; TOTAL_DELTA_MASS_KG is the
+     * sum. A burn of nonzero DURATION_S is taken the same way, with
+     * MAGNITUDE_KM_S as the delta-v its thrust delivers (exact for a constant
+     * specific impulse). With either input not stated, DELTA_MASS_KG and
+     * TOTAL_DELTA_MASS_KG stay 0 (not computed). A negative value is an
+     * InvalidRequest.
+     */
+    val specificImpulseS : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsmplRequest(_bb: ByteBuffer): mplRequest = getRootAsmplRequest(_bb, mplRequest())
@@ -100,8 +131,10 @@ class mplRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createmplRequest(builder: FlatBufferBuilder, muKm3S2: Double, transferOffset: Int, lambertOffset: Int, phasingOffset: Int, relativeOffset: Int, rendezvousOffset: Int, geometryOffset: Int) : Int {
-            builder.startTable(7)
+        fun createmplRequest(builder: FlatBufferBuilder, muKm3S2: Double, transferOffset: Int, lambertOffset: Int, phasingOffset: Int, relativeOffset: Int, rendezvousOffset: Int, geometryOffset: Int, initialMassKg: Double, specificImpulseS: Double) : Int {
+            builder.startTable(9)
+            addSPECIFICIMPULSES(builder, specificImpulseS)
+            addINITIALMASSKG(builder, initialMassKg)
             addMUKM3S2(builder, muKm3S2)
             addGEOMETRY(builder, geometryOffset)
             addRENDEZVOUS(builder, rendezvousOffset)
@@ -111,7 +144,7 @@ class mplRequest : Table() {
             addTRANSFER(builder, transferOffset)
             return endmplRequest(builder)
         }
-        fun startmplRequest(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startmplRequest(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addMUKM3S2(builder: FlatBufferBuilder, muKm3S2: Double) = builder.addDouble(0, muKm3S2, 0.0)
         fun addTRANSFER(builder: FlatBufferBuilder, transfer: Int) = builder.addOffset(1, transfer, 0)
         fun addLAMBERT(builder: FlatBufferBuilder, lambert: Int) = builder.addOffset(2, lambert, 0)
@@ -119,6 +152,8 @@ class mplRequest : Table() {
         fun addRELATIVE(builder: FlatBufferBuilder, relative: Int) = builder.addOffset(4, relative, 0)
         fun addRENDEZVOUS(builder: FlatBufferBuilder, rendezvous: Int) = builder.addOffset(5, rendezvous, 0)
         fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(6, geometry, 0)
+        fun addINITIALMASSKG(builder: FlatBufferBuilder, initialMassKg: Double) = builder.addDouble(7, initialMassKg, 0.0)
+        fun addSPECIFICIMPULSES(builder: FlatBufferBuilder, specificImpulseS: Double) = builder.addDouble(8, specificImpulseS, 0.0)
         fun endmplRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
