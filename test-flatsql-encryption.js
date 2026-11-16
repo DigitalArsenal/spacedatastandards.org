@@ -1,4 +1,7 @@
-/** FlatSQL 3.12.6 has no HMAC entry point; this storage check does not authenticate ciphertext. */
+/**
+ * FlatSQL 3.12.6 has no HMAC entry point; this storage check does not authenticate ciphertext.
+ * docs/API-3.12.md requires retrying the entire full-text query on BUSY; this check bounds that wait to 60 seconds.
+ */
 import assert from 'node:assert/strict';
 import { readFile, mkdtemp, readdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -6,7 +9,8 @@ import { tmpdir } from 'node:os';
 import { randomBytes, hkdfSync, createCipheriv } from 'node:crypto';
 import * as flatbuffers from 'flatbuffers';
 import * as cryptoAPI from 'flatc-wasm';
-import { FlatSQL } from 'flatsql';
+import { FlatSQL, FlatSQLError } from 'flatsql';
+import { setTimeout as delay } from 'node:timers/promises';
 import { binarySchema, frame, frames, request, query, result } from './scripts/flatsql-binary.mjs';
 import { KMF, KMFT, encryptKMFBuffer, decryptKMFBuffer } from './lib/js/KMF/main.js';
 
@@ -24,6 +28,34 @@ async function step(name, check) {
 function required(name) {
   assert.equal(typeof cryptoAPI[name], 'function', `flatc-wasm export ${name}`);
   return cryptoAPI[name];
+}
+
+async function fullTextQuery(db, sql, parameters) {
+  const started = performance.now();
+  const deadline = started + 60000;
+  const signal = AbortSignal.timeout(60000);
+  const bytes = request(sql, parameters);
+  let busy = 0;
+  let lastBusy;
+  try {
+    for (;;) {
+      const remaining = deadline - performance.now();
+      if (remaining <= 0) throw new Error('Full-text query exceeded the 60000 ms BUSY bound', { cause: lastBusy });
+      try {
+        // execute discards collected pages on failure; result requires a complete terminal summary.
+        const answer = result(await db.execute(bytes, { signal, timeoutMs: Math.min(30000, Math.ceil(remaining)) }));
+        if (performance.now() >= deadline) throw new Error('Full-text query exceeded the 60000 ms bound');
+        return answer;
+      } catch (error) {
+        if (!(error instanceof FlatSQLError) || error.status !== -6) throw error;
+        busy++;
+        lastBusy = error;
+      }
+      await delay(Math.min(100, Math.max(0, deadline - performance.now())));
+    }
+  } finally {
+    console.log(`Full-text query: waited ${(performance.now() - started).toFixed(1)} ms; BUSY answers: ${busy}`);
+  }
 }
 
 async function main() {
@@ -139,11 +171,11 @@ async function main() {
     }
     async function verifySearch(db) {
       // Public text is a positive control for the same full-text index.
-      const publicMatches = await query(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1 ORDER BY VERSION', ['"test-key"']);
+      const publicMatches = await fullTextQuery(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1 ORDER BY VERSION', ['"test-key"']);
       assert.deepEqual(publicMatches.rows, records.map(({ object }) => [object.KEY_ID]));
       for (const record of records) {
         const text = Buffer.from(record.object.KEY_BYTES).toString('utf8');
-        assert.deepEqual((await query(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1', [text])).rows, []);
+        assert.deepEqual((await fullTextQuery(db, 'SELECT KEY_ID FROM KMF WHERE _search MATCH ?1', [text])).rows, []);
       }
     }
     async function scanFiles(root, expectPlaintext) {
