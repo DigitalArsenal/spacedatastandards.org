@@ -503,6 +503,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let BODY_REF_TOKEN: VOffset = 98
     static let BODY_REF_SIZE: VOffset = 100
     static let RESUME_CURSOR: VOffset = 102
+    static let FOLLOW: VOffset = 104
   }
 
   public var KIND: qrpKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .request : qrpKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .request }
@@ -622,7 +623,11 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  after that point, and its own last page carries a fresh RESUME_CURSOR.
   public var RESUME_CURSOR: String? { let o = _accessor.offset(VT.RESUME_CURSOR); return o == 0 ? nil : _accessor.string(at: o) }
   public var RESUME_CURSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESUME_CURSOR) }
-  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
+  ///  True requests that the server keep the stream open after sending stored
+  ///  records and send further records as they are stored, within the credit
+  ///  granted by later request messages on the same stream. False by default.
+  public var FOLLOW: Bool { let o = _accessor.offset(VT.FOLLOW); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 51) }
   public static func add(KIND: qrpKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(STATUS: qrpStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
@@ -677,6 +682,8 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(BODY_REF_TOKEN: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_TOKEN, def: 0, at: VT.BODY_REF_TOKEN) }
   public static func add(BODY_REF_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_SIZE, def: 0, at: VT.BODY_REF_SIZE) }
   public static func add(RESUME_CURSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESUME_CURSOR, at: VT.RESUME_CURSOR) }
+  public static func add(FOLLOW: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOLLOW, def: false,
+   at: VT.FOLLOW) }
   public static func endQRP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createQRP(
     _ fbb: inout FlatBufferBuilder,
@@ -729,7 +736,8 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     HTTP_STATUS: UInt16 = 0,
     BODY_REF_TOKEN: UInt64 = 0,
     BODY_REF_SIZE: UInt64 = 0,
-    RESUME_CURSOROffset RESUME_CURSOR: Offset = Offset()
+    RESUME_CURSOROffset RESUME_CURSOR: Offset = Offset(),
+    FOLLOW: Bool = false
   ) -> Offset {
     let __start = QRP.startQRP(&fbb)
     QRP.add(KIND: KIND, &fbb)
@@ -782,6 +790,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     QRP.add(BODY_REF_TOKEN: BODY_REF_TOKEN, &fbb)
     QRP.add(BODY_REF_SIZE: BODY_REF_SIZE, &fbb)
     QRP.add(RESUME_CURSOR: RESUME_CURSOR, &fbb)
+    QRP.add(FOLLOW: FOLLOW, &fbb)
     return QRP.endQRP(&fbb, start: __start)
   }
 
@@ -837,6 +846,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.BODY_REF_TOKEN, fieldName: "BODY_REF_TOKEN", required: false, type: UInt64.self)
     try _v.visit(field: VT.BODY_REF_SIZE, fieldName: "BODY_REF_SIZE", required: false, type: UInt64.self)
     try _v.visit(field: VT.RESUME_CURSOR, fieldName: "RESUME_CURSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FOLLOW, fieldName: "FOLLOW", required: false, type: Bool.self)
     _v.finish()
   }
 }

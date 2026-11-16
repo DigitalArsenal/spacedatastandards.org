@@ -962,10 +962,14 @@ class QRP {
   ///  after that point, and its own last page carries a fresh RESUME_CURSOR.
   String? get RESUME_CURSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
   String? get resumeCursor => RESUME_CURSOR;
+  ///  True requests that the server keep the stream open after sending stored
+  ///  records and send further records as they are stored, within the credit
+  ///  granted by later request messages on the same stream. False by default.
+  bool get FOLLOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 104, false);
 
   @override
   String toString() {
-    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}, timeProfile: ${timeProfile}, profileEpochMs: ${profileEpochMs}, REPRESENTATION: ${REPRESENTATION}, PARAMETERS: ${PARAMETERS}, ROWS: ${ROWS}, TABLES: ${TABLES}, maxElapsedMs: ${maxElapsedMs}, maxRows: ${maxRows}, maxBytes: ${maxBytes}, httpStatus: ${httpStatus}, bodyRefToken: ${bodyRefToken}, bodyRefSize: ${bodyRefSize}, resumeCursor: ${resumeCursor}}';
+    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}, timeProfile: ${timeProfile}, profileEpochMs: ${profileEpochMs}, REPRESENTATION: ${REPRESENTATION}, PARAMETERS: ${PARAMETERS}, ROWS: ${ROWS}, TABLES: ${TABLES}, maxElapsedMs: ${maxElapsedMs}, maxRows: ${maxRows}, maxBytes: ${maxBytes}, httpStatus: ${httpStatus}, bodyRefToken: ${bodyRefToken}, bodyRefSize: ${bodyRefSize}, resumeCursor: ${resumeCursor}, FOLLOW: ${FOLLOW}}';
   }
 }
 
@@ -983,7 +987,7 @@ class QRPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(51);
   }
 
   int addKind(qrpKind? KIND) {
@@ -1186,6 +1190,10 @@ class QRPBuilder {
     fbBuilder.addOffset(49, offset);
     return fbBuilder.offset;
   }
+  int addFollow(bool? FOLLOW) {
+    fbBuilder.addBool(50, FOLLOW);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1243,6 +1251,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
   final int? _BODY_REF_TOKEN;
   final int? _BODY_REF_SIZE;
   final String? _RESUME_CURSOR;
+  final bool? _FOLLOW;
 
   QRPObjectBuilder({
     qrpKind? KIND,
@@ -1324,6 +1333,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     int? bodyRefSize,
     String? RESUME_CURSOR,
     String? resumeCursor,
+    bool? FOLLOW,
   })
       : _KIND = KIND,
         _STATUS = STATUS,
@@ -1374,7 +1384,8 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         _HTTP_STATUS = httpStatus ?? HTTP_STATUS,
         _BODY_REF_TOKEN = bodyRefToken ?? BODY_REF_TOKEN,
         _BODY_REF_SIZE = bodyRefSize ?? BODY_REF_SIZE,
-        _RESUME_CURSOR = resumeCursor ?? RESUME_CURSOR;
+        _RESUME_CURSOR = resumeCursor ?? RESUME_CURSOR,
+        _FOLLOW = FOLLOW;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1425,7 +1436,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_TABLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? RESUME_CURSOROffset = _RESUME_CURSOR == null ? null
         : fbBuilder.writeString(_RESUME_CURSOR!);
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(51);
     fbBuilder.addInt8(0, _KIND?.value);
     fbBuilder.addInt8(1, _STATUS?.value);
     fbBuilder.addOffset(2, ERROR_CODEOffset);
@@ -1476,6 +1487,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(47, _BODY_REF_TOKEN);
     fbBuilder.addUint64(48, _BODY_REF_SIZE);
     fbBuilder.addOffset(49, RESUME_CURSOROffset);
+    fbBuilder.addBool(50, _FOLLOW);
     return fbBuilder.endTable();
   }
 

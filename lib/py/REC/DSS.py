@@ -442,8 +442,34 @@ class DSS(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Subscribers following this dataset on this node now.
+    # DSS
+    def SUBSCRIBER_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Record bytes this node has sent to followers of this dataset since the
+    # node started.
+    # DSS
+    def SERVED_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Current rate of record bytes sent to followers of this dataset, in bytes
+    # per second.
+    # DSS
+    def SERVE_SPEED_BYTES_PER_SECOND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
 def DSSStart(builder):
-    builder.StartObject(54)
+    builder.StartObject(57)
 
 def Start(builder):
     DSSStart(builder)
@@ -784,6 +810,24 @@ def DSSAddRETENTION(builder, RETENTION):
 def AddRETENTION(builder, RETENTION):
     DSSAddRETENTION(builder, RETENTION)
 
+def DSSAddSUBSCRIBER_COUNT(builder, SUBSCRIBER_COUNT):
+    builder.PrependUint32Slot(54, SUBSCRIBER_COUNT, 0)
+
+def AddSUBSCRIBER_COUNT(builder, SUBSCRIBER_COUNT):
+    DSSAddSUBSCRIBER_COUNT(builder, SUBSCRIBER_COUNT)
+
+def DSSAddSERVED_BYTES(builder, SERVED_BYTES):
+    builder.PrependUint64Slot(55, SERVED_BYTES, 0)
+
+def AddSERVED_BYTES(builder, SERVED_BYTES):
+    DSSAddSERVED_BYTES(builder, SERVED_BYTES)
+
+def DSSAddSERVE_SPEED_BYTES_PER_SECOND(builder, SERVE_SPEED_BYTES_PER_SECOND):
+    builder.PrependUint64Slot(56, SERVE_SPEED_BYTES_PER_SECOND, 0)
+
+def AddSERVE_SPEED_BYTES_PER_SECOND(builder, SERVE_SPEED_BYTES_PER_SECOND):
+    DSSAddSERVE_SPEED_BYTES_PER_SECOND(builder, SERVE_SPEED_BYTES_PER_SECOND)
+
 def DSSEnd(builder):
     return builder.EndObject()
 
@@ -854,6 +898,9 @@ class DSST(object):
         REQUESTED_ACTION = 0,
         ORIGIN_ID = None,
         RETENTION = 0,
+        SUBSCRIBER_COUNT = 0,
+        SERVED_BYTES = 0,
+        SERVE_SPEED_BYTES_PER_SECOND = 0,
     ):
         self.STATUS = STATUS  # type: int
         self.SYNCED_ROWS = SYNCED_ROWS  # type: int
@@ -909,6 +956,9 @@ class DSST(object):
         self.REQUESTED_ACTION = REQUESTED_ACTION  # type: int
         self.ORIGIN_ID = ORIGIN_ID  # type: Optional[str]
         self.RETENTION = RETENTION  # type: int
+        self.SUBSCRIBER_COUNT = SUBSCRIBER_COUNT  # type: int
+        self.SERVED_BYTES = SERVED_BYTES  # type: int
+        self.SERVE_SPEED_BYTES_PER_SECOND = SERVE_SPEED_BYTES_PER_SECOND  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -988,6 +1038,9 @@ class DSST(object):
         self.REQUESTED_ACTION = DSS.REQUESTED_ACTION()
         self.ORIGIN_ID = DSS.ORIGIN_ID()
         self.RETENTION = DSS.RETENTION()
+        self.SUBSCRIBER_COUNT = DSS.SUBSCRIBER_COUNT()
+        self.SERVED_BYTES = DSS.SERVED_BYTES()
+        self.SERVE_SPEED_BYTES_PER_SECOND = DSS.SERVE_SPEED_BYTES_PER_SECOND()
 
     # DSST
     def Pack(self, builder):
@@ -1136,5 +1189,8 @@ class DSST(object):
         if self.ORIGIN_ID is not None:
             DSSAddORIGIN_ID(builder, ORIGIN_ID)
         DSSAddRETENTION(builder, self.RETENTION)
+        DSSAddSUBSCRIBER_COUNT(builder, self.SUBSCRIBER_COUNT)
+        DSSAddSERVED_BYTES(builder, self.SERVED_BYTES)
+        DSSAddSERVE_SPEED_BYTES_PER_SECOND(builder, self.SERVE_SPEED_BYTES_PER_SECOND)
         DSS = DSSEnd(builder)
         return DSS

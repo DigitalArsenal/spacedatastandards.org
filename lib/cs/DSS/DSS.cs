@@ -258,6 +258,14 @@ public struct DSS : IFlatbufferObject
   /// follows its standard's default. A Subscribe without RETENTION keeps the
   /// lane's rule; SetRetention changes it.
   public dssRetention RETENTION { get { int o = __p.__offset(110); return o != 0 ? (dssRetention)__p.bb.GetSbyte(o + __p.bb_pos) : dssRetention.ReplaceCurrent; } }
+  /// Subscribers following this dataset on this node now.
+  public uint SUBSCRIBER_COUNT { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  public ulong SERVED_BYTES { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  public ulong SERVE_SPEED_BYTES_PER_SECOND { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<DSS> CreateDSS(FlatBufferBuilder builder,
       dssSyncState STATUS = dssSyncState.IDLE,
@@ -313,8 +321,13 @@ public struct DSS : IFlatbufferObject
       ulong LAST_SYNC_STARTED_AT = 0,
       dssAction REQUESTED_ACTION = dssAction.None,
       StringOffset ORIGIN_IDOffset = default(StringOffset),
-      dssRetention RETENTION = dssRetention.ReplaceCurrent) {
-    builder.StartTable(54);
+      dssRetention RETENTION = dssRetention.ReplaceCurrent,
+      uint SUBSCRIBER_COUNT = 0,
+      ulong SERVED_BYTES = 0,
+      ulong SERVE_SPEED_BYTES_PER_SECOND = 0) {
+    builder.StartTable(57);
+    DSS.AddSERVE_SPEED_BYTES_PER_SECOND(builder, SERVE_SPEED_BYTES_PER_SECOND);
+    DSS.AddSERVED_BYTES(builder, SERVED_BYTES);
     DSS.AddLAST_SYNC_STARTED_AT(builder, LAST_SYNC_STARTED_AT);
     DSS.AddDELTA_ROWS(builder, DELTA_ROWS);
     DSS.AddFLATSQL_MATERIALIZATION_MS(builder, FLATSQL_MATERIALIZATION_MS);
@@ -333,6 +346,7 @@ public struct DSS : IFlatbufferObject
     DSS.AddLOCAL_ROWS(builder, LOCAL_ROWS);
     DSS.AddTOTAL_ROWS(builder, TOTAL_ROWS);
     DSS.AddSYNCED_ROWS(builder, SYNCED_ROWS);
+    DSS.AddSUBSCRIBER_COUNT(builder, SUBSCRIBER_COUNT);
     DSS.AddORIGIN_ID(builder, ORIGIN_IDOffset);
     DSS.AddLAST_PNM_CID(builder, LAST_PNM_CIDOffset);
     DSS.AddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CIDOffset);
@@ -372,7 +386,7 @@ public struct DSS : IFlatbufferObject
     return DSS.EndDSS(builder);
   }
 
-  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(54); }
+  public static void StartDSS(FlatBufferBuilder builder) { builder.StartTable(57); }
   public static void AddSTATUS(FlatBufferBuilder builder, dssSyncState STATUS) { builder.AddSbyte(0, (sbyte)STATUS, 0); }
   public static void AddSYNCED_ROWS(FlatBufferBuilder builder, ulong SYNCED_ROWS) { builder.AddUlong(1, SYNCED_ROWS, 0); }
   public static void AddTOTAL_ROWS(FlatBufferBuilder builder, ulong TOTAL_ROWS) { builder.AddUlong(2, TOTAL_ROWS, 0); }
@@ -432,6 +446,9 @@ public struct DSS : IFlatbufferObject
   public static void AddREQUESTED_ACTION(FlatBufferBuilder builder, dssAction REQUESTED_ACTION) { builder.AddSbyte(51, (sbyte)REQUESTED_ACTION, 0); }
   public static void AddORIGIN_ID(FlatBufferBuilder builder, StringOffset ORIGIN_IDOffset) { builder.AddOffset(52, ORIGIN_IDOffset.Value, 0); }
   public static void AddRETENTION(FlatBufferBuilder builder, dssRetention RETENTION) { builder.AddSbyte(53, (sbyte)RETENTION, 0); }
+  public static void AddSUBSCRIBER_COUNT(FlatBufferBuilder builder, uint SUBSCRIBER_COUNT) { builder.AddUint(54, SUBSCRIBER_COUNT, 0); }
+  public static void AddSERVED_BYTES(FlatBufferBuilder builder, ulong SERVED_BYTES) { builder.AddUlong(55, SERVED_BYTES, 0); }
+  public static void AddSERVE_SPEED_BYTES_PER_SECOND(FlatBufferBuilder builder, ulong SERVE_SPEED_BYTES_PER_SECOND) { builder.AddUlong(56, SERVE_SPEED_BYTES_PER_SECOND, 0); }
   public static Offset<DSS> EndDSS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DSS>(o);
@@ -499,6 +516,9 @@ public struct DSS : IFlatbufferObject
     _o.REQUESTED_ACTION = this.REQUESTED_ACTION;
     _o.ORIGIN_ID = this.ORIGIN_ID;
     _o.RETENTION = this.RETENTION;
+    _o.SUBSCRIBER_COUNT = this.SUBSCRIBER_COUNT;
+    _o.SERVED_BYTES = this.SERVED_BYTES;
+    _o.SERVE_SPEED_BYTES_PER_SECOND = this.SERVE_SPEED_BYTES_PER_SECOND;
   }
   public static Offset<DSS> Pack(FlatBufferBuilder builder, DSST _o) {
     if (_o == null) return default(Offset<DSS>);
@@ -590,7 +610,10 @@ public struct DSS : IFlatbufferObject
       _o.LAST_SYNC_STARTED_AT,
       _o.REQUESTED_ACTION,
       _ORIGIN_ID,
-      _o.RETENTION);
+      _o.RETENTION,
+      _o.SUBSCRIBER_COUNT,
+      _o.SERVED_BYTES,
+      _o.SERVE_SPEED_BYTES_PER_SECOND);
   }
 }
 
@@ -650,6 +673,9 @@ public class DSST
   public dssAction REQUESTED_ACTION { get; set; }
   public string ORIGIN_ID { get; set; }
   public dssRetention RETENTION { get; set; }
+  public uint SUBSCRIBER_COUNT { get; set; }
+  public ulong SERVED_BYTES { get; set; }
+  public ulong SERVE_SPEED_BYTES_PER_SECOND { get; set; }
 
   public DSST() {
     this.STATUS = dssSyncState.IDLE;
@@ -706,6 +732,9 @@ public class DSST
     this.REQUESTED_ACTION = dssAction.None;
     this.ORIGIN_ID = null;
     this.RETENTION = dssRetention.ReplaceCurrent;
+    this.SUBSCRIBER_COUNT = 0;
+    this.SERVED_BYTES = 0;
+    this.SERVE_SPEED_BYTES_PER_SECOND = 0;
   }
   public static DSST DeserializeFromBinary(byte[] fbBuffer) {
     return DSS.GetRootAsDSS(new ByteBuffer(fbBuffer)).UnPack();
@@ -777,6 +806,9 @@ static public class DSSVerify
       && verifier.VerifyField(tablePos, 106 /*REQUESTED_ACTION*/, 1 /*dssAction*/, 1, false)
       && verifier.VerifyString(tablePos, 108 /*ORIGIN_ID*/, false)
       && verifier.VerifyField(tablePos, 110 /*RETENTION*/, 1 /*dssRetention*/, 1, false)
+      && verifier.VerifyField(tablePos, 112 /*SUBSCRIBER_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 114 /*SERVED_BYTES*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 116 /*SERVE_SPEED_BYTES_PER_SECOND*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

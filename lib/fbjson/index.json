@@ -242482,6 +242482,11 @@
                             "type": "string",
                             "description": "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "FOLLOW": {
+                            "type": "boolean",
+                            "description": "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default.",
+                            "x-flatbuffer-type": "bool"
                         }
                     },
                     "additionalProperties": false
@@ -257597,6 +257602,27 @@
                                 }
                             },
                             "x-flatbuffer-default": "ReplaceCurrent"
+                        },
+                        "SUBSCRIBER_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Subscribers following this dataset on this node now.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SERVED_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Record bytes this node has sent to followers of this dataset since the\nnode started.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "SERVE_SPEED_BYTES_PER_SECOND": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Current rate of record bytes sent to followers of this dataset, in bytes\nper second.",
+                            "x-flatbuffer-type": "uint64"
                         }
                     },
                     "additionalProperties": false
@@ -391448,6 +391474,27 @@
                                 }
                             },
                             "x-flatbuffer-default": "ReplaceCurrent"
+                        },
+                        "SUBSCRIBER_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Subscribers following this dataset on this node now.",
+                            "x-flatbuffer-type": "uint32"
+                        },
+                        "SERVED_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Record bytes this node has sent to followers of this dataset since the\nnode started.",
+                            "x-flatbuffer-type": "uint64"
+                        },
+                        "SERVE_SPEED_BYTES_PER_SECOND": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Current rate of record bytes sent to followers of this dataset, in bytes\nper second.",
+                            "x-flatbuffer-type": "uint64"
                         }
                     },
                     "additionalProperties": false
@@ -432691,6 +432738,11 @@
                             "type": "string",
                             "description": "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "FOLLOW": {
+                            "type": "boolean",
+                            "description": "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default.",
+                            "x-flatbuffer-type": "bool"
                         }
                     },
                     "additionalProperties": false

@@ -522,6 +522,32 @@ class DSS : Table() {
             val o = __offset(110)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Subscribers following this dataset on this node now.
+     */
+    val subscriberCount : UInt
+        get() {
+            val o = __offset(112)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Record bytes this node has sent to followers of this dataset since the
+     * node started.
+     */
+    val servedBytes : ULong
+        get() {
+            val o = __offset(114)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Current rate of record bytes sent to followers of this dataset, in bytes
+     * per second.
+     */
+    val serveSpeedBytesPerSecond : ULong
+        get() {
+            val o = __offset(116)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDSS(_bb: ByteBuffer): DSS = getRootAsDSS(_bb, DSS())
@@ -530,8 +556,10 @@ class DSS : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DSS")
-        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int, retention: Byte) : Int {
-            builder.startTable(54)
+        fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int, retention: Byte, subscriberCount: UInt, servedBytes: ULong, serveSpeedBytesPerSecond: ULong) : Int {
+            builder.startTable(57)
+            addSERVESPEEDBYTESPERSECOND(builder, serveSpeedBytesPerSecond)
+            addSERVEDBYTES(builder, servedBytes)
             addLASTSYNCSTARTEDAT(builder, lastSyncStartedAt)
             addDELTAROWS(builder, deltaRows)
             addFLATSQLMATERIALIZATIONMS(builder, flatsqlMaterializationMs)
@@ -550,6 +578,7 @@ class DSS : Table() {
             addLOCALROWS(builder, localRows)
             addTOTALROWS(builder, totalRows)
             addSYNCEDROWS(builder, syncedRows)
+            addSUBSCRIBERCOUNT(builder, subscriberCount)
             addORIGINID(builder, originIdOffset)
             addLASTPNMCID(builder, lastPnmCidOffset)
             addLASTPUBLICATIONCID(builder, lastPublicationCidOffset)
@@ -588,7 +617,7 @@ class DSS : Table() {
             addSTATUS(builder, status)
             return endDSS(builder)
         }
-        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(54)
+        fun startDSS(builder: FlatBufferBuilder) = builder.startTable(57)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(0, status, 0)
         fun addSYNCEDROWS(builder: FlatBufferBuilder, syncedRows: ULong) = builder.addLong(1, syncedRows.toLong(), 0)
         fun addTOTALROWS(builder: FlatBufferBuilder, totalRows: ULong) = builder.addLong(2, totalRows.toLong(), 0)
@@ -651,6 +680,9 @@ class DSS : Table() {
         fun addREQUESTEDACTION(builder: FlatBufferBuilder, requestedAction: Byte) = builder.addByte(51, requestedAction, 0)
         fun addORIGINID(builder: FlatBufferBuilder, originId: Int) = builder.addOffset(52, originId, 0)
         fun addRETENTION(builder: FlatBufferBuilder, retention: Byte) = builder.addByte(53, retention, 0)
+        fun addSUBSCRIBERCOUNT(builder: FlatBufferBuilder, subscriberCount: UInt) = builder.addInt(54, subscriberCount.toInt(), 0)
+        fun addSERVEDBYTES(builder: FlatBufferBuilder, servedBytes: ULong) = builder.addLong(55, servedBytes.toLong(), 0)
+        fun addSERVESPEEDBYTESPERSECOND(builder: FlatBufferBuilder, serveSpeedBytesPerSecond: ULong) = builder.addLong(56, serveSpeedBytesPerSecond.toLong(), 0)
         fun endDSS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

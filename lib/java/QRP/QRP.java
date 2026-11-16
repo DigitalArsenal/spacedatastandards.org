@@ -261,6 +261,12 @@ public final class QRP extends com.google.flatbuffers.Table {
   public String RESUME_CURSOR() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer RESUME_CURSORAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
   public ByteBuffer RESUME_CURSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * True requests that the server keep the stream open after sending stored
+   * records and send further records as they are stored, within the credit
+   * granted by later request messages on the same stream. False by default.
+   */
+  public boolean FOLLOW() { int o = __offset(104); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createQRP(FlatBufferBuilder builder,
       byte KIND,
@@ -312,8 +318,9 @@ public final class QRP extends com.google.flatbuffers.Table {
       int HTTP_STATUS,
       long BODY_REF_TOKEN,
       long BODY_REF_SIZE,
-      int RESUME_CURSOROffset) {
-    builder.startTable(50);
+      int RESUME_CURSOROffset,
+      boolean FOLLOW) {
+    builder.startTable(51);
     QRP.addBodyRefSize(builder, BODY_REF_SIZE);
     QRP.addBodyRefToken(builder, BODY_REF_TOKEN);
     QRP.addMaxBytes(builder, MAX_BYTES);
@@ -356,6 +363,7 @@ public final class QRP extends com.google.flatbuffers.Table {
     QRP.addMessage(builder, MESSAGEOffset);
     QRP.addErrorCode(builder, ERROR_CODEOffset);
     QRP.addHttpStatus(builder, HTTP_STATUS);
+    QRP.addFollow(builder, FOLLOW);
     QRP.addRepresentation(builder, REPRESENTATION);
     QRP.addTimeProfile(builder, TIME_PROFILE);
     QRP.addStale(builder, STALE);
@@ -367,7 +375,7 @@ public final class QRP extends com.google.flatbuffers.Table {
     return QRP.endQRP(builder);
   }
 
-  public static void startQRP(FlatBufferBuilder builder) { builder.startTable(50); }
+  public static void startQRP(FlatBufferBuilder builder) { builder.startTable(51); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(0, KIND, 0); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(1, STATUS, 0); }
   public static void addErrorCode(FlatBufferBuilder builder, int ERROR_CODEOffset) { builder.addOffset(2, ERROR_CODEOffset, 0); }
@@ -428,6 +436,7 @@ public final class QRP extends com.google.flatbuffers.Table {
   public static void addBodyRefToken(FlatBufferBuilder builder, long BODY_REF_TOKEN) { builder.addLong(47, BODY_REF_TOKEN, 0L); }
   public static void addBodyRefSize(FlatBufferBuilder builder, long BODY_REF_SIZE) { builder.addLong(48, BODY_REF_SIZE, 0L); }
   public static void addResumeCursor(FlatBufferBuilder builder, int RESUME_CURSOROffset) { builder.addOffset(49, RESUME_CURSOROffset, 0); }
+  public static void addFollow(FlatBufferBuilder builder, boolean FOLLOW) { builder.addBoolean(50, FOLLOW, false); }
   public static int endQRP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

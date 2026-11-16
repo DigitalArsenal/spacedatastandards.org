@@ -968,8 +968,78 @@ func (rcv *DSS) MutateRetention(n dssRetention) bool {
 	return rcv.MutateRETENTION(n)
 }
 
+/// Subscribers following this dataset on this node now.
+func (rcv *DSS) SUBSCRIBER_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DSS) SubscriberCount() uint32 {
+	return rcv.SUBSCRIBER_COUNT()
+}
+
+/// Subscribers following this dataset on this node now.
+func (rcv *DSS) MutateSUBSCRIBER_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(112, n)
+}
+
+func (rcv *DSS) MutateSubscriberCount(n uint32) bool {
+	return rcv.MutateSUBSCRIBER_COUNT(n)
+}
+
+/// Record bytes this node has sent to followers of this dataset since the
+/// node started.
+func (rcv *DSS) SERVED_BYTES() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DSS) ServedBytes() uint64 {
+	return rcv.SERVED_BYTES()
+}
+
+/// Record bytes this node has sent to followers of this dataset since the
+/// node started.
+func (rcv *DSS) MutateSERVED_BYTES(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(114, n)
+}
+
+func (rcv *DSS) MutateServedBytes(n uint64) bool {
+	return rcv.MutateSERVED_BYTES(n)
+}
+
+/// Current rate of record bytes sent to followers of this dataset, in bytes
+/// per second.
+func (rcv *DSS) SERVE_SPEED_BYTES_PER_SECOND() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DSS) ServeSpeedBytesPerSecond() uint64 {
+	return rcv.SERVE_SPEED_BYTES_PER_SECOND()
+}
+
+/// Current rate of record bytes sent to followers of this dataset, in bytes
+/// per second.
+func (rcv *DSS) MutateSERVE_SPEED_BYTES_PER_SECOND(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(116, n)
+}
+
+func (rcv *DSS) MutateServeSpeedBytesPerSecond(n uint64) bool {
+	return rcv.MutateSERVE_SPEED_BYTES_PER_SECOND(n)
+}
+
 func DSSStart(builder *flatbuffers.Builder) {
-	builder.StartObject(54)
+	builder.StartObject(57)
 }
 func DSSAddSTATUS(builder *flatbuffers.Builder, STATUS dssSyncState) {
 	builder.PrependInt8Slot(0, int8(STATUS), 0)
@@ -1300,6 +1370,24 @@ func DSSAddRETENTION(builder *flatbuffers.Builder, RETENTION dssRetention) {
 }
 func DSSAddRetention(builder *flatbuffers.Builder, RETENTION dssRetention) {
 	DSSAddRETENTION(builder, RETENTION)
+}
+func DSSAddSUBSCRIBER_COUNT(builder *flatbuffers.Builder, SUBSCRIBER_COUNT uint32) {
+	builder.PrependUint32Slot(54, SUBSCRIBER_COUNT, 0)
+}
+func DSSAddSubscriberCount(builder *flatbuffers.Builder, SUBSCRIBER_COUNT uint32) {
+	DSSAddSUBSCRIBER_COUNT(builder, SUBSCRIBER_COUNT)
+}
+func DSSAddSERVED_BYTES(builder *flatbuffers.Builder, SERVED_BYTES uint64) {
+	builder.PrependUint64Slot(55, SERVED_BYTES, 0)
+}
+func DSSAddServedBytes(builder *flatbuffers.Builder, SERVED_BYTES uint64) {
+	DSSAddSERVED_BYTES(builder, SERVED_BYTES)
+}
+func DSSAddSERVE_SPEED_BYTES_PER_SECOND(builder *flatbuffers.Builder, SERVE_SPEED_BYTES_PER_SECOND uint64) {
+	builder.PrependUint64Slot(56, SERVE_SPEED_BYTES_PER_SECOND, 0)
+}
+func DSSAddServeSpeedBytesPerSecond(builder *flatbuffers.Builder, SERVE_SPEED_BYTES_PER_SECOND uint64) {
+	DSSAddSERVE_SPEED_BYTES_PER_SECOND(builder, SERVE_SPEED_BYTES_PER_SECOND)
 }
 func DSSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.282.0+1794755039602",
+  version: "1.283.0+1794852391169",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
@@ -11164,8 +11164,8 @@ file_identifier "$SRO";`,
       ]
     },
     QRP: {
-      IDL: `// Hash: faf94c0cd27f0784520811b831f838cb9ed01b2b70c6e84a687b29ba29d721ed
-// Version: 1.207.2
+      IDL: `// Hash: ac19566f659edf12b7ac61161b9e958a842931d1e09fc1dbddc9540c493211c3
+// Version: 1.207.3
 // -----------------------------------END_HEADER
 /// Query Page (QRP)
 /// Description
@@ -11411,6 +11411,10 @@ table QRP {
   /// present on the last page; a request with it returns only rows stored
   /// after that point, and its own last page carries a fresh RESUME_CURSOR.
   RESUME_CURSOR: string;
+  /// True requests that the server keep the stream open after sending stored
+  /// records and send further records as they are stored, within the credit
+  /// granted by later request messages on the same stream. False by default.
+  FOLLOW:bool;
 }
 
 root_type QRP;
@@ -12294,8 +12298,8 @@ file_identifier "$MET";`,
       ]
     },
     DSS: {
-      IDL: `// Hash: 3d6e0bcb8da2f8d7f8be6de1ebccdd44b510cf1f603d1cfa0f4098474ece7d42
-// Version: 1.99.3
+      IDL: `// Hash: 86bdf8265752c1fffd2366992e45a56e3ba83ed041c4dcf184de51975e64af1a
+// Version: 1.99.4
 // -----------------------------------END_HEADER
 /// Data Sync Status
 ///
@@ -12434,6 +12438,14 @@ table DSS {
   /// follows its standard's default. A Subscribe without RETENTION keeps the
   /// lane's rule; SetRetention changes it.
   RETENTION: dssRetention = ReplaceCurrent;
+  /// Subscribers following this dataset on this node now.
+  SUBSCRIBER_COUNT:uint32;
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  SERVED_BYTES:uint64;
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  SERVE_SPEED_BYTES_PER_SECOND:uint64;
 }
 
 root_type DSS;
@@ -129509,6 +129521,10 @@ verbatim what that source states about itself.`,
             RESUME_CURSOR: {
               type: "string",
               description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
+            },
+            FOLLOW: {
+              type: "boolean",
+              description: "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default."
             }
           },
           additionalProperties: false
@@ -136596,6 +136612,24 @@ compressed). Nothing hashes the payload before the protocol hash.`
             RETENTION: {
               $ref: "#/definitions/dssRetention",
               description: "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
+            },
+            SUBSCRIBER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Subscribers following this dataset on this node now."
+            },
+            SERVED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Record bytes this node has sent to followers of this dataset since the\nnode started."
+            },
+            SERVE_SPEED_BYTES_PER_SECOND: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Current rate of record bytes sent to followers of this dataset, in bytes\nper second."
             }
           },
           additionalProperties: false
@@ -195314,6 +195348,24 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             RETENTION: {
               $ref: "#/definitions/dssRetention",
               description: "How this node keeps a lane's publications. ReplaceCurrent supersedes the\nprevious batch of the lane with each new publication so the lane holds\none current set; KeepAll keeps every publication in the store and pins\nnone; ArchiveAll keeps and pins every publication so history stays\nretrievable by content identifier. A lane without a rule of its own\nfollows its standard's default. A Subscribe without RETENTION keeps the\nlane's rule; SetRetention changes it."
+            },
+            SUBSCRIBER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Subscribers following this dataset on this node now."
+            },
+            SERVED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Record bytes this node has sent to followers of this dataset since the\nnode started."
+            },
+            SERVE_SPEED_BYTES_PER_SECOND: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Current rate of record bytes sent to followers of this dataset, in bytes\nper second."
             }
           },
           additionalProperties: false
@@ -223348,6 +223400,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             RESUME_CURSOR: {
               type: "string",
               description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
+            },
+            FOLLOW: {
+              type: "boolean",
+              description: "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default."
             }
           },
           additionalProperties: false
@@ -603588,6 +603644,11 @@ verbatim what that source states about itself.`,
               type: "string",
               description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
               "x-flatbuffer-type": "string"
+            },
+            FOLLOW: {
+              type: "boolean",
+              description: "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default.",
+              "x-flatbuffer-type": "bool"
             }
           },
           additionalProperties: false
@@ -618740,6 +618801,27 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 }
               },
               "x-flatbuffer-default": "ReplaceCurrent"
+            },
+            SUBSCRIBER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Subscribers following this dataset on this node now.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SERVED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Record bytes this node has sent to followers of this dataset since the\nnode started.",
+              "x-flatbuffer-type": "uint64"
+            },
+            SERVE_SPEED_BYTES_PER_SECOND: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Current rate of record bytes sent to followers of this dataset, in bytes\nper second.",
+              "x-flatbuffer-type": "uint64"
             }
           },
           additionalProperties: false
@@ -752671,6 +752753,27 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 }
               },
               "x-flatbuffer-default": "ReplaceCurrent"
+            },
+            SUBSCRIBER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Subscribers following this dataset on this node now.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SERVED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Record bytes this node has sent to followers of this dataset since the\nnode started.",
+              "x-flatbuffer-type": "uint64"
+            },
+            SERVE_SPEED_BYTES_PER_SECOND: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Current rate of record bytes sent to followers of this dataset, in bytes\nper second.",
+              "x-flatbuffer-type": "uint64"
             }
           },
           additionalProperties: false
@@ -793948,6 +794051,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "string",
               description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
               "x-flatbuffer-type": "string"
+            },
+            FOLLOW: {
+              type: "boolean",
+              description: "True requests that the server keep the stream open after sending stored\nrecords and send further records as they are stored, within the credit\ngranted by later request messages on the same stream. False by default.",
+              "x-flatbuffer-type": "bool"
             }
           },
           additionalProperties: false
@@ -1100615,7 +1100723,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

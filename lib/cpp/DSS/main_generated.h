@@ -253,7 +253,10 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LAST_SYNC_STARTED_AT = 104,
     VT_REQUESTED_ACTION = 106,
     VT_ORIGIN_ID = 108,
-    VT_RETENTION = 110
+    VT_RETENTION = 110,
+    VT_SUBSCRIBER_COUNT = 112,
+    VT_SERVED_BYTES = 114,
+    VT_SERVE_SPEED_BYTES_PER_SECOND = 116
   };
   dssSyncState STATUS() const {
     return static_cast<dssSyncState>(GetField<int8_t>(VT_STATUS, 0));
@@ -440,6 +443,20 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   dssRetention RETENTION() const {
     return static_cast<dssRetention>(GetField<int8_t>(VT_RETENTION, 0));
   }
+  /// Subscribers following this dataset on this node now.
+  uint32_t SUBSCRIBER_COUNT() const {
+    return GetField<uint32_t>(VT_SUBSCRIBER_COUNT, 0);
+  }
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  uint64_t SERVED_BYTES() const {
+    return GetField<uint64_t>(VT_SERVED_BYTES, 0);
+  }
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  uint64_t SERVE_SPEED_BYTES_PER_SECOND() const {
+    return GetField<uint64_t>(VT_SERVE_SPEED_BYTES_PER_SECOND, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -526,6 +543,9 @@ struct DSS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_ORIGIN_ID) &&
            verifier.VerifyString(ORIGIN_ID()) &&
            VerifyField<int8_t>(verifier, VT_RETENTION, 1) &&
+           VerifyField<uint32_t>(verifier, VT_SUBSCRIBER_COUNT, 4) &&
+           VerifyField<uint64_t>(verifier, VT_SERVED_BYTES, 8) &&
+           VerifyField<uint64_t>(verifier, VT_SERVE_SPEED_BYTES_PER_SECOND, 8) &&
            verifier.EndTable();
   }
 };
@@ -696,6 +716,15 @@ struct DSSBuilder {
   void add_RETENTION(dssRetention RETENTION) {
     fbb_.AddElement<int8_t>(DSS::VT_RETENTION, static_cast<int8_t>(RETENTION), 0);
   }
+  void add_SUBSCRIBER_COUNT(uint32_t SUBSCRIBER_COUNT) {
+    fbb_.AddElement<uint32_t>(DSS::VT_SUBSCRIBER_COUNT, SUBSCRIBER_COUNT, 0);
+  }
+  void add_SERVED_BYTES(uint64_t SERVED_BYTES) {
+    fbb_.AddElement<uint64_t>(DSS::VT_SERVED_BYTES, SERVED_BYTES, 0);
+  }
+  void add_SERVE_SPEED_BYTES_PER_SECOND(uint64_t SERVE_SPEED_BYTES_PER_SECOND) {
+    fbb_.AddElement<uint64_t>(DSS::VT_SERVE_SPEED_BYTES_PER_SECOND, SERVE_SPEED_BYTES_PER_SECOND, 0);
+  }
   explicit DSSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -762,8 +791,13 @@ inline ::flatbuffers::Offset<DSS> CreateDSS(
     uint64_t LAST_SYNC_STARTED_AT = 0,
     dssAction REQUESTED_ACTION = dssAction_None,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGIN_ID = 0,
-    dssRetention RETENTION = dssRetention_ReplaceCurrent) {
+    dssRetention RETENTION = dssRetention_ReplaceCurrent,
+    uint32_t SUBSCRIBER_COUNT = 0,
+    uint64_t SERVED_BYTES = 0,
+    uint64_t SERVE_SPEED_BYTES_PER_SECOND = 0) {
   DSSBuilder builder_(_fbb);
+  builder_.add_SERVE_SPEED_BYTES_PER_SECOND(SERVE_SPEED_BYTES_PER_SECOND);
+  builder_.add_SERVED_BYTES(SERVED_BYTES);
   builder_.add_LAST_SYNC_STARTED_AT(LAST_SYNC_STARTED_AT);
   builder_.add_DELTA_ROWS(DELTA_ROWS);
   builder_.add_FLATSQL_MATERIALIZATION_MS(FLATSQL_MATERIALIZATION_MS);
@@ -782,6 +816,7 @@ inline ::flatbuffers::Offset<DSS> CreateDSS(
   builder_.add_LOCAL_ROWS(LOCAL_ROWS);
   builder_.add_TOTAL_ROWS(TOTAL_ROWS);
   builder_.add_SYNCED_ROWS(SYNCED_ROWS);
+  builder_.add_SUBSCRIBER_COUNT(SUBSCRIBER_COUNT);
   builder_.add_ORIGIN_ID(ORIGIN_ID);
   builder_.add_LAST_PNM_CID(LAST_PNM_CID);
   builder_.add_LAST_PUBLICATION_CID(LAST_PUBLICATION_CID);
@@ -876,7 +911,10 @@ inline ::flatbuffers::Offset<DSS> CreateDSSDirect(
     uint64_t LAST_SYNC_STARTED_AT = 0,
     dssAction REQUESTED_ACTION = dssAction_None,
     const char *ORIGIN_ID = nullptr,
-    dssRetention RETENTION = dssRetention_ReplaceCurrent) {
+    dssRetention RETENTION = dssRetention_ReplaceCurrent,
+    uint32_t SUBSCRIBER_COUNT = 0,
+    uint64_t SERVED_BYTES = 0,
+    uint64_t SERVE_SPEED_BYTES_PER_SECOND = 0) {
   auto PROVIDER_PEER_ID__ = PROVIDER_PEER_ID ? _fbb.CreateString(PROVIDER_PEER_ID) : 0;
   auto PROVIDER_PUBLIC_KEY__ = PROVIDER_PUBLIC_KEY ? _fbb.CreateString(PROVIDER_PUBLIC_KEY) : 0;
   auto SNAPSHOT_ID__ = SNAPSHOT_ID ? _fbb.CreateString(SNAPSHOT_ID) : 0;
@@ -960,7 +998,10 @@ inline ::flatbuffers::Offset<DSS> CreateDSSDirect(
       LAST_SYNC_STARTED_AT,
       REQUESTED_ACTION,
       ORIGIN_ID__,
-      RETENTION);
+      RETENTION,
+      SUBSCRIBER_COUNT,
+      SERVED_BYTES,
+      SERVE_SPEED_BYTES_PER_SECOND);
 }
 
 inline const DSS *GetDSS(const void *buf) {

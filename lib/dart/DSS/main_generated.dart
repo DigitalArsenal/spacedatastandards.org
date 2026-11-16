@@ -312,10 +312,21 @@ class DSS {
   ///  follows its standard's default. A Subscribe without RETENTION keeps the
   ///  lane's rule; SetRetention changes it.
   dssRetention get RETENTION => dssRetention.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 110, 0));
+  ///  Subscribers following this dataset on this node now.
+  int get SUBSCRIBER_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 112, 0);
+  int get subscriberCount => SUBSCRIBER_COUNT;
+  ///  Record bytes this node has sent to followers of this dataset since the
+  ///  node started.
+  int get SERVED_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 114, 0);
+  int get servedBytes => SERVED_BYTES;
+  ///  Current rate of record bytes sent to followers of this dataset, in bytes
+  ///  per second.
+  int get SERVE_SPEED_BYTES_PER_SECOND => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 116, 0);
+  int get serveSpeedBytesPerSecond => SERVE_SPEED_BYTES_PER_SECOND;
 
   @override
   String toString() {
-    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}, schemaName: ${schemaName}, providerId: ${providerId}, sourceName: ${sourceName}, datasetId: ${datasetId}, connectorId: ${connectorId}, channelId: ${channelId}, TOPIC: ${TOPIC}, SUBSCRIBED: ${SUBSCRIBED}, pinPolicy: ${pinPolicy}, VISIBILITY: ${VISIBILITY}, encryptionState: ${encryptionState}, grantState: ${grantState}, feedHead: ${feedHead}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, deltaRows: ${deltaRows}, lastSyncStartedAt: ${lastSyncStartedAt}, requestedAction: ${requestedAction}, originId: ${originId}, RETENTION: ${RETENTION}}';
+    return 'DSS{STATUS: ${STATUS}, syncedRows: ${syncedRows}, totalRows: ${totalRows}, localRows: ${localRows}, pinnedRows: ${pinnedRows}, missingRows: ${missingRows}, cachedBytes: ${cachedBytes}, pinnedBytes: ${pinnedBytes}, downloadedBytes: ${downloadedBytes}, downloadSpeedBytesPerSecond: ${downloadSpeedBytesPerSecond}, measuredWireSpeedBytesPerSecond: ${measuredWireSpeedBytesPerSecond}, hasWireSpeedUtilization: ${hasWireSpeedUtilization}, wireSpeedUtilization: ${wireSpeedUtilization}, wireSpeedTarget: ${wireSpeedTarget}, hasWireSpeedTargetMet: ${hasWireSpeedTargetMet}, wireSpeedTargetMet: ${wireSpeedTargetMet}, manifestDiscoveryMs: ${manifestDiscoveryMs}, networkTransferMs: ${networkTransferMs}, verificationMs: ${verificationMs}, flatsqlMaterializationMs: ${flatsqlMaterializationMs}, providerPeerId: ${providerPeerId}, providerPublicKey: ${providerPublicKey}, snapshotId: ${snapshotId}, HEAD: ${HEAD}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, highWaterMark: ${highWaterMark}, queryProfile: ${queryProfile}, chunkHash: ${chunkHash}, syncProtocol: ${syncProtocol}, syncFilter: ${syncFilter}, verifiedChunks: ${verifiedChunks}, lastSyncedAt: ${lastSyncedAt}, ERROR: ${ERROR}, schemaName: ${schemaName}, providerId: ${providerId}, sourceName: ${sourceName}, datasetId: ${datasetId}, connectorId: ${connectorId}, channelId: ${channelId}, TOPIC: ${TOPIC}, SUBSCRIBED: ${SUBSCRIBED}, pinPolicy: ${pinPolicy}, VISIBILITY: ${VISIBILITY}, encryptionState: ${encryptionState}, grantState: ${grantState}, feedHead: ${feedHead}, lastPublicationCid: ${lastPublicationCid}, lastPnmCid: ${lastPnmCid}, deltaRows: ${deltaRows}, lastSyncStartedAt: ${lastSyncStartedAt}, requestedAction: ${requestedAction}, originId: ${originId}, RETENTION: ${RETENTION}, subscriberCount: ${subscriberCount}, servedBytes: ${servedBytes}, serveSpeedBytesPerSecond: ${serveSpeedBytesPerSecond}}';
   }
 }
 
@@ -333,7 +344,7 @@ class DSSBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(54);
+    fbBuilder.startTable(57);
   }
 
   int addStatus(dssSyncState? STATUS) {
@@ -552,6 +563,18 @@ class DSSBuilder {
     fbBuilder.addInt8(53, RETENTION?.value);
     return fbBuilder.offset;
   }
+  int addSubscriberCount(int? SUBSCRIBER_COUNT) {
+    fbBuilder.addUint32(54, SUBSCRIBER_COUNT);
+    return fbBuilder.offset;
+  }
+  int addServedBytes(int? SERVED_BYTES) {
+    fbBuilder.addUint64(55, SERVED_BYTES);
+    return fbBuilder.offset;
+  }
+  int addServeSpeedBytesPerSecond(int? SERVE_SPEED_BYTES_PER_SECOND) {
+    fbBuilder.addUint64(56, SERVE_SPEED_BYTES_PER_SECOND);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -613,6 +636,9 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
   final dssAction? _REQUESTED_ACTION;
   final String? _ORIGIN_ID;
   final dssRetention? _RETENTION;
+  final int? _SUBSCRIBER_COUNT;
+  final int? _SERVED_BYTES;
+  final int? _SERVE_SPEED_BYTES_PER_SECOND;
 
   DSSObjectBuilder({
     dssSyncState? STATUS,
@@ -715,6 +741,12 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     String? ORIGIN_ID,
     String? originId,
     dssRetention? RETENTION,
+    int? SUBSCRIBER_COUNT,
+    int? subscriberCount,
+    int? SERVED_BYTES,
+    int? servedBytes,
+    int? SERVE_SPEED_BYTES_PER_SECOND,
+    int? serveSpeedBytesPerSecond,
   })
       : _STATUS = STATUS,
         _SYNCED_ROWS = syncedRows ?? SYNCED_ROWS,
@@ -769,7 +801,10 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         _LAST_SYNC_STARTED_AT = lastSyncStartedAt ?? LAST_SYNC_STARTED_AT,
         _REQUESTED_ACTION = requestedAction ?? REQUESTED_ACTION,
         _ORIGIN_ID = originId ?? ORIGIN_ID,
-        _RETENTION = RETENTION;
+        _RETENTION = RETENTION,
+        _SUBSCRIBER_COUNT = subscriberCount ?? SUBSCRIBER_COUNT,
+        _SERVED_BYTES = servedBytes ?? SERVED_BYTES,
+        _SERVE_SPEED_BYTES_PER_SECOND = serveSpeedBytesPerSecond ?? SERVE_SPEED_BYTES_PER_SECOND;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -830,7 +865,7 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_LAST_PNM_CID!);
     final int? ORIGIN_IDOffset = _ORIGIN_ID == null ? null
         : fbBuilder.writeString(_ORIGIN_ID!);
-    fbBuilder.startTable(54);
+    fbBuilder.startTable(57);
     fbBuilder.addInt8(0, _STATUS?.value);
     fbBuilder.addUint64(1, _SYNCED_ROWS);
     fbBuilder.addUint64(2, _TOTAL_ROWS);
@@ -885,6 +920,9 @@ class DSSObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(51, _REQUESTED_ACTION?.value);
     fbBuilder.addOffset(52, ORIGIN_IDOffset);
     fbBuilder.addInt8(53, _RETENTION?.value);
+    fbBuilder.addUint32(54, _SUBSCRIBER_COUNT);
+    fbBuilder.addUint64(55, _SERVED_BYTES);
+    fbBuilder.addUint64(56, _SERVE_SPEED_BYTES_PER_SECOND);
     return fbBuilder.endTable();
   }
 

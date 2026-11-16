@@ -526,6 +526,9 @@ impl<'a> DSS<'a> {
     pub const VT_REQUESTED_ACTION: ::flatbuffers::VOffsetT = 106;
     pub const VT_ORIGIN_ID: ::flatbuffers::VOffsetT = 108;
     pub const VT_RETENTION: ::flatbuffers::VOffsetT = 110;
+    pub const VT_SUBSCRIBER_COUNT: ::flatbuffers::VOffsetT = 112;
+    pub const VT_SERVED_BYTES: ::flatbuffers::VOffsetT = 114;
+    pub const VT_SERVE_SPEED_BYTES_PER_SECOND: ::flatbuffers::VOffsetT = 116;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -538,6 +541,8 @@ impl<'a> DSS<'a> {
         args: &'args DSSArgs<'args>
     ) -> ::flatbuffers::WIPOffset<DSS<'bldr>> {
         let mut builder = DSSBuilder::new(_fbb);
+        builder.add_SERVE_SPEED_BYTES_PER_SECOND(args.SERVE_SPEED_BYTES_PER_SECOND);
+        builder.add_SERVED_BYTES(args.SERVED_BYTES);
         builder.add_LAST_SYNC_STARTED_AT(args.LAST_SYNC_STARTED_AT);
         builder.add_DELTA_ROWS(args.DELTA_ROWS);
         builder.add_FLATSQL_MATERIALIZATION_MS(args.FLATSQL_MATERIALIZATION_MS);
@@ -556,6 +561,7 @@ impl<'a> DSS<'a> {
         builder.add_LOCAL_ROWS(args.LOCAL_ROWS);
         builder.add_TOTAL_ROWS(args.TOTAL_ROWS);
         builder.add_SYNCED_ROWS(args.SYNCED_ROWS);
+        builder.add_SUBSCRIBER_COUNT(args.SUBSCRIBER_COUNT);
         if let Some(x) = args.ORIGIN_ID { builder.add_ORIGIN_ID(x); }
         if let Some(x) = args.LAST_PNM_CID { builder.add_LAST_PNM_CID(x); }
         if let Some(x) = args.LAST_PUBLICATION_CID { builder.add_LAST_PUBLICATION_CID(x); }
@@ -706,6 +712,9 @@ impl<'a> DSS<'a> {
             alloc::string::ToString::to_string(x)
         });
         let RETENTION = self.RETENTION();
+        let SUBSCRIBER_COUNT = self.SUBSCRIBER_COUNT();
+        let SERVED_BYTES = self.SERVED_BYTES();
+        let SERVE_SPEED_BYTES_PER_SECOND = self.SERVE_SPEED_BYTES_PER_SECOND();
         DSST {
             STATUS,
             SYNCED_ROWS,
@@ -761,6 +770,9 @@ impl<'a> DSS<'a> {
             REQUESTED_ACTION,
             ORIGIN_ID,
             RETENTION,
+            SUBSCRIBER_COUNT,
+            SERVED_BYTES,
+            SERVE_SPEED_BYTES_PER_SECOND,
         }
     }
 
@@ -1218,6 +1230,35 @@ impl<'a> DSS<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<dssRetention>(DSS::VT_RETENTION, Some(dssRetention::ReplaceCurrent)).unwrap()}
     }
+
+    /// Subscribers following this dataset on this node now.
+    #[inline]
+    pub fn SUBSCRIBER_COUNT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(DSS::VT_SUBSCRIBER_COUNT, Some(0)).unwrap()}
+    }
+
+    /// Record bytes this node has sent to followers of this dataset since the
+    /// node started.
+    #[inline]
+    pub fn SERVED_BYTES(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(DSS::VT_SERVED_BYTES, Some(0)).unwrap()}
+    }
+
+    /// Current rate of record bytes sent to followers of this dataset, in bytes
+    /// per second.
+    #[inline]
+    pub fn SERVE_SPEED_BYTES_PER_SECOND(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(DSS::VT_SERVE_SPEED_BYTES_PER_SECOND, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for DSS<'_> {
@@ -1280,6 +1321,9 @@ impl ::flatbuffers::Verifiable for DSS<'_> {
             .visit_field::<dssAction>("REQUESTED_ACTION", Self::VT_REQUESTED_ACTION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGIN_ID", Self::VT_ORIGIN_ID, false)?
             .visit_field::<dssRetention>("RETENTION", Self::VT_RETENTION, false)?
+            .visit_field::<u32>("SUBSCRIBER_COUNT", Self::VT_SUBSCRIBER_COUNT, false)?
+            .visit_field::<u64>("SERVED_BYTES", Self::VT_SERVED_BYTES, false)?
+            .visit_field::<u64>("SERVE_SPEED_BYTES_PER_SECOND", Self::VT_SERVE_SPEED_BYTES_PER_SECOND, false)?
             .finish();
         Ok(())
     }
@@ -1340,6 +1384,9 @@ pub struct DSSArgs<'a> {
     pub REQUESTED_ACTION: dssAction,
     pub ORIGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub RETENTION: dssRetention,
+    pub SUBSCRIBER_COUNT: u32,
+    pub SERVED_BYTES: u64,
+    pub SERVE_SPEED_BYTES_PER_SECOND: u64,
 }
 
 impl<'a> Default for DSSArgs<'a> {
@@ -1400,6 +1447,9 @@ impl<'a> Default for DSSArgs<'a> {
             REQUESTED_ACTION: dssAction::None,
             ORIGIN_ID: None,
             RETENTION: dssRetention::ReplaceCurrent,
+            SUBSCRIBER_COUNT: 0,
+            SERVED_BYTES: 0,
+            SERVE_SPEED_BYTES_PER_SECOND: 0,
         }
     }
 }
@@ -1681,6 +1731,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DSSBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_SUBSCRIBER_COUNT(&mut self, SUBSCRIBER_COUNT: u32) {
+        self.fbb_.push_slot::<u32>(DSS::VT_SUBSCRIBER_COUNT, SUBSCRIBER_COUNT, 0);
+    }
+
+    #[inline]
+    pub fn add_SERVED_BYTES(&mut self, SERVED_BYTES: u64) {
+        self.fbb_.push_slot::<u64>(DSS::VT_SERVED_BYTES, SERVED_BYTES, 0);
+    }
+
+    #[inline]
+    pub fn add_SERVE_SPEED_BYTES_PER_SECOND(&mut self, SERVE_SPEED_BYTES_PER_SECOND: u64) {
+        self.fbb_.push_slot::<u64>(DSS::VT_SERVE_SPEED_BYTES_PER_SECOND, SERVE_SPEED_BYTES_PER_SECOND, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DSSBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         DSSBuilder {
@@ -1753,6 +1818,9 @@ impl ::core::fmt::Debug for DSS<'_> {
         ds.field("REQUESTED_ACTION", &self.REQUESTED_ACTION());
         ds.field("ORIGIN_ID", &self.ORIGIN_ID());
         ds.field("RETENTION", &self.RETENTION());
+        ds.field("SUBSCRIBER_COUNT", &self.SUBSCRIBER_COUNT());
+        ds.field("SERVED_BYTES", &self.SERVED_BYTES());
+        ds.field("SERVE_SPEED_BYTES_PER_SECOND", &self.SERVE_SPEED_BYTES_PER_SECOND());
         ds.finish()
     }
 }
@@ -1814,6 +1882,9 @@ pub struct DSST {
     pub REQUESTED_ACTION: dssAction,
     pub ORIGIN_ID: Option<alloc::string::String>,
     pub RETENTION: dssRetention,
+    pub SUBSCRIBER_COUNT: u32,
+    pub SERVED_BYTES: u64,
+    pub SERVE_SPEED_BYTES_PER_SECOND: u64,
 }
 
 impl Default for DSST {
@@ -1873,6 +1944,9 @@ impl Default for DSST {
             REQUESTED_ACTION: dssAction::None,
             ORIGIN_ID: None,
             RETENTION: dssRetention::ReplaceCurrent,
+            SUBSCRIBER_COUNT: 0,
+            SERVED_BYTES: 0,
+            SERVE_SPEED_BYTES_PER_SECOND: 0,
         }
     }
 }
@@ -1992,6 +2066,9 @@ impl DSST {
             _fbb.create_string(x)
         });
         let RETENTION = self.RETENTION;
+        let SUBSCRIBER_COUNT = self.SUBSCRIBER_COUNT;
+        let SERVED_BYTES = self.SERVED_BYTES;
+        let SERVE_SPEED_BYTES_PER_SECOND = self.SERVE_SPEED_BYTES_PER_SECOND;
         DSS::create(_fbb, &DSSArgs{
             STATUS,
             SYNCED_ROWS,
@@ -2047,6 +2124,9 @@ impl DSST {
             REQUESTED_ACTION,
             ORIGIN_ID,
             RETENTION,
+            SUBSCRIBER_COUNT,
+            SERVED_BYTES,
+            SERVE_SPEED_BYTES_PER_SECOND,
         })
     }
 }

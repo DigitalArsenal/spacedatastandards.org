@@ -467,13 +467,18 @@ class QRP : flatbuffers.handle
     /// after that point, and its own last page carries a fresh RESUME_CURSOR.
     def RESUME_CURSOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 102)
+    /// True requests that the server keep the stream open after sending stored
+    /// records and send further records as they are stored, within the credit
+    /// granted by later request messages on the same stream. False by default.
+    def FOLLOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 104, 0))
 
 def GetRootAsQRP(buf:string): return QRP { buf, flatbuffers.indirect(buf, 0) }
 
 struct QRPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(50)
+        b_.StartObject(51)
         return this
     def add_KIND(KIND:qrpKind):
         b_.PrependInt8Slot(0, KIND, 0)
@@ -624,6 +629,9 @@ struct QRPBuilder:
         return this
     def add_RESUME_CURSOR(RESUME_CURSOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(49, RESUME_CURSOR)
+        return this
+    def add_FOLLOW(FOLLOW:bool):
+        b_.PrependBoolSlot(50, FOLLOW, 0)
         return this
     def end():
         return b_.EndObject()

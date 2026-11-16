@@ -1063,8 +1063,34 @@ func (rcv *QRP) ResumeCursor() []byte {
 /// Opaque cursor that resumes after the last row of this complete scan;
 /// present on the last page; a request with it returns only rows stored
 /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+/// True requests that the server keep the stream open after sending stored
+/// records and send further records as they are stored, within the credit
+/// granted by later request messages on the same stream. False by default.
+func (rcv *QRP) FOLLOW() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *QRP) Follow() bool {
+	return rcv.FOLLOW()
+}
+
+/// True requests that the server keep the stream open after sending stored
+/// records and send further records as they are stored, within the credit
+/// granted by later request messages on the same stream. False by default.
+func (rcv *QRP) MutateFOLLOW(n bool) bool {
+	return rcv._tab.MutateBoolSlot(104, n)
+}
+
+func (rcv *QRP) MutateFollow(n bool) bool {
+	return rcv.MutateFOLLOW(n)
+}
+
 func QRPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(50)
+	builder.StartObject(51)
 }
 func QRPAddKIND(builder *flatbuffers.Builder, KIND qrpKind) {
 	builder.PrependInt8Slot(0, int8(KIND), 0)
@@ -1395,6 +1421,12 @@ func QRPAddRESUME_CURSOR(builder *flatbuffers.Builder, RESUME_CURSOR flatbuffers
 }
 func QRPAddResumeCursor(builder *flatbuffers.Builder, RESUME_CURSOR flatbuffers.UOffsetT) {
 	QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
+}
+func QRPAddFOLLOW(builder *flatbuffers.Builder, FOLLOW bool) {
+	builder.PrependBoolSlot(50, FOLLOW, false)
+}
+func QRPAddFollow(builder *flatbuffers.Builder, FOLLOW bool) {
+	QRPAddFOLLOW(builder, FOLLOW)
 }
 func QRPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
