@@ -13,11 +13,20 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "../CVR/main_generated.h"
+#include "../PVN/main_generated.h"
+
 struct DPMCompletenessIndex;
 struct DPMCompletenessIndexBuilder;
 
 struct DPMAsset;
 struct DPMAssetBuilder;
+
+struct DPMRealismModel;
+struct DPMRealismModelBuilder;
+
+struct DPMDerivedBuild;
+struct DPMDerivedBuildBuilder;
 
 struct DPMSourceBatch;
 struct DPMSourceBatchBuilder;
@@ -288,7 +297,10 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SCHEMA_NAME = 24,
     VT_SCHEMA_HASH = 26,
     VT_CONTENT_KEY_ID = 28,
-    VT_THROUGH_SEQ = 30
+    VT_THROUGH_SEQ = 30,
+    VT_RECORD_PROVENANCE = 32,
+    VT_DERIVED_BUILD = 34,
+    VT_COV_REALISM_MODELS = 36
   };
   /// Asset role.
   publicationAssetKind ASSET_KIND() const {
@@ -366,6 +378,28 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint64_t THROUGH_SEQ() const {
     return GetField<uint64_t>(VT_THROUGH_SEQ, 0);
   }
+  /// The provenance of every record of this asset that carries none of its own
+  /// ($MOR records never do): stated once for the asset instead of in each
+  /// record. A record's own PROVENANCE, where its standard has one, governs that
+  /// record. Absent: the records state their own or have none.
+  const PVN *RECORD_PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_RECORD_PROVENANCE);
+  }
+  /// The builder of the derived polynomial rows the asset's records carry
+  /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  /// carry no derived rows, or a reader must ignore them. It holds for this
+  /// asset only: a reader sets it aside before reading another asset, and
+  /// judges compatibility by every field, never by a version string alone.
+  const DPMDerivedBuild *DERIVED_BUILD() const {
+    return GetPointer<const DPMDerivedBuild *>(VT_DERIVED_BUILD);
+  }
+  /// The covariance realism models the asset's records name by ID ($MOR
+  /// COV_REALISM_ID), each stated once with its population figures. IDs are
+  /// 1 or more and unique within the asset; a reader refuses a list that
+  /// repeats one.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *COV_REALISM_MODELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *>(VT_COV_REALISM_MODELS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -393,6 +427,13 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_CONTENT_KEY_ID) &&
            verifier.VerifyString(CONTENT_KEY_ID()) &&
            VerifyField<uint64_t>(verifier, VT_THROUGH_SEQ, 8) &&
+           VerifyOffset(verifier, VT_RECORD_PROVENANCE) &&
+           verifier.VerifyTable(RECORD_PROVENANCE()) &&
+           VerifyOffset(verifier, VT_DERIVED_BUILD) &&
+           verifier.VerifyTable(DERIVED_BUILD()) &&
+           VerifyOffset(verifier, VT_COV_REALISM_MODELS) &&
+           verifier.VerifyVector(COV_REALISM_MODELS()) &&
+           verifier.VerifyVectorOfTables(COV_REALISM_MODELS()) &&
            verifier.EndTable();
   }
 };
@@ -443,6 +484,15 @@ struct DPMAssetBuilder {
   void add_THROUGH_SEQ(uint64_t THROUGH_SEQ) {
     fbb_.AddElement<uint64_t>(DPMAsset::VT_THROUGH_SEQ, THROUGH_SEQ, 0);
   }
+  void add_RECORD_PROVENANCE(::flatbuffers::Offset<PVN> RECORD_PROVENANCE) {
+    fbb_.AddOffset(DPMAsset::VT_RECORD_PROVENANCE, RECORD_PROVENANCE);
+  }
+  void add_DERIVED_BUILD(::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD) {
+    fbb_.AddOffset(DPMAsset::VT_DERIVED_BUILD, DERIVED_BUILD);
+  }
+  void add_COV_REALISM_MODELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>>> COV_REALISM_MODELS) {
+    fbb_.AddOffset(DPMAsset::VT_COV_REALISM_MODELS, COV_REALISM_MODELS);
+  }
   explicit DPMAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -469,10 +519,16 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_HASH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0,
-    uint64_t THROUGH_SEQ = 0) {
+    uint64_t THROUGH_SEQ = 0,
+    ::flatbuffers::Offset<PVN> RECORD_PROVENANCE = 0,
+    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>>> COV_REALISM_MODELS = 0) {
   DPMAssetBuilder builder_(_fbb);
   builder_.add_THROUGH_SEQ(THROUGH_SEQ);
   builder_.add_BYTE_LENGTH(BYTE_LENGTH);
+  builder_.add_COV_REALISM_MODELS(COV_REALISM_MODELS);
+  builder_.add_DERIVED_BUILD(DERIVED_BUILD);
+  builder_.add_RECORD_PROVENANCE(RECORD_PROVENANCE);
   builder_.add_CONTENT_KEY_ID(CONTENT_KEY_ID);
   builder_.add_SCHEMA_HASH(SCHEMA_HASH);
   builder_.add_SCHEMA_NAME(SCHEMA_NAME);
@@ -503,7 +559,10 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
     const char *SCHEMA_NAME = nullptr,
     const char *SCHEMA_HASH = nullptr,
     const char *CONTENT_KEY_ID = nullptr,
-    uint64_t THROUGH_SEQ = 0) {
+    uint64_t THROUGH_SEQ = 0,
+    ::flatbuffers::Offset<PVN> RECORD_PROVENANCE = 0,
+    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0,
+    const std::vector<::flatbuffers::Offset<DPMRealismModel>> *COV_REALISM_MODELS = nullptr) {
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
@@ -514,6 +573,7 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
   auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateString(SCHEMA_HASH) : 0;
   auto CONTENT_KEY_ID__ = CONTENT_KEY_ID ? _fbb.CreateString(CONTENT_KEY_ID) : 0;
+  auto COV_REALISM_MODELS__ = COV_REALISM_MODELS ? _fbb.CreateVector<::flatbuffers::Offset<DPMRealismModel>>(*COV_REALISM_MODELS) : 0;
   return CreateDPMAsset(
       _fbb,
       ASSET_KIND,
@@ -529,7 +589,200 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
       SCHEMA_NAME__,
       SCHEMA_HASH__,
       CONTENT_KEY_ID__,
-      THROUGH_SEQ);
+      THROUGH_SEQ,
+      RECORD_PROVENANCE,
+      DERIVED_BUILD,
+      COV_REALISM_MODELS__);
+}
+
+/// One covariance realism model of an asset: the realism entry its records
+/// would otherwise each repeat.
+struct DPMRealismModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DPMRealismModelBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_REALISM = 6
+  };
+  /// The model's number within the asset, 1 or more; a record names it.
+  uint16_t ID() const {
+    return GetField<uint16_t>(VT_ID, 0);
+  }
+  /// The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  /// entry of each record that names this ID.
+  const CVR *REALISM() const {
+    return GetPointer<const CVR *>(VT_REALISM);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_ID, 2) &&
+           VerifyOffset(verifier, VT_REALISM) &&
+           verifier.VerifyTable(REALISM()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DPMRealismModelBuilder {
+  typedef DPMRealismModel Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ID(uint16_t ID) {
+    fbb_.AddElement<uint16_t>(DPMRealismModel::VT_ID, ID, 0);
+  }
+  void add_REALISM(::flatbuffers::Offset<CVR> REALISM) {
+    fbb_.AddOffset(DPMRealismModel::VT_REALISM, REALISM);
+  }
+  explicit DPMRealismModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DPMRealismModel> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DPMRealismModel>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DPMRealismModel> CreateDPMRealismModel(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t ID = 0,
+    ::flatbuffers::Offset<CVR> REALISM = 0) {
+  DPMRealismModelBuilder builder_(_fbb);
+  builder_.add_REALISM(REALISM);
+  builder_.add_ID(ID);
+  return builder_.Finish();
+}
+
+/// Who built the derived polynomial rows of an asset's records, and under what:
+/// the per-asset part of $PPE PPEBuild, same names and meanings. The per-record
+/// RECORD_DIGEST is not stated: rows carried inside the record they derive from
+/// are bound to it by the record itself. A reader that cannot reproduce
+/// BUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.
+struct DPMDerivedBuild FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DPMDerivedBuildBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_BUILDER_NAME = 4,
+    VT_BUILDER_VERSION = 6,
+    VT_BUILDER_DIGEST = 8,
+    VT_ENVIRONMENT_DIGEST = 10,
+    VT_TOL_POSITION = 12,
+    VT_TOL_VELOCITY = 14
+  };
+  /// Name of the builder, e.g. sdn-ap.
+  const ::flatbuffers::String *BUILDER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BUILDER_NAME);
+  }
+  /// Version of the builder.
+  const ::flatbuffers::String *BUILDER_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BUILDER_VERSION);
+  }
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  const ::flatbuffers::Vector<uint8_t> *BUILDER_DIGEST() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_BUILDER_DIGEST);
+  }
+  /// SHA-256 over the configuration and environment inputs the builder used that
+  /// are not in the source record, by the builder's published rule (32 bytes);
+  /// empty when the builder uses none.
+  const ::flatbuffers::Vector<uint8_t> *ENVIRONMENT_DIGEST() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_ENVIRONMENT_DIGEST);
+  }
+  /// Build tolerance per position axis in km. NaN when not stated.
+  double TOL_POSITION() const {
+    return GetField<double>(VT_TOL_POSITION, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without
+  /// velocity.
+  double TOL_VELOCITY() const {
+    return GetField<double>(VT_TOL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_BUILDER_NAME) &&
+           verifier.VerifyString(BUILDER_NAME()) &&
+           VerifyOffset(verifier, VT_BUILDER_VERSION) &&
+           verifier.VerifyString(BUILDER_VERSION()) &&
+           VerifyOffset(verifier, VT_BUILDER_DIGEST) &&
+           verifier.VerifyVector(BUILDER_DIGEST()) &&
+           VerifyOffset(verifier, VT_ENVIRONMENT_DIGEST) &&
+           verifier.VerifyVector(ENVIRONMENT_DIGEST()) &&
+           VerifyField<double>(verifier, VT_TOL_POSITION, 8) &&
+           VerifyField<double>(verifier, VT_TOL_VELOCITY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct DPMDerivedBuildBuilder {
+  typedef DPMDerivedBuild Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_BUILDER_NAME(::flatbuffers::Offset<::flatbuffers::String> BUILDER_NAME) {
+    fbb_.AddOffset(DPMDerivedBuild::VT_BUILDER_NAME, BUILDER_NAME);
+  }
+  void add_BUILDER_VERSION(::flatbuffers::Offset<::flatbuffers::String> BUILDER_VERSION) {
+    fbb_.AddOffset(DPMDerivedBuild::VT_BUILDER_VERSION, BUILDER_VERSION);
+  }
+  void add_BUILDER_DIGEST(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> BUILDER_DIGEST) {
+    fbb_.AddOffset(DPMDerivedBuild::VT_BUILDER_DIGEST, BUILDER_DIGEST);
+  }
+  void add_ENVIRONMENT_DIGEST(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENVIRONMENT_DIGEST) {
+    fbb_.AddOffset(DPMDerivedBuild::VT_ENVIRONMENT_DIGEST, ENVIRONMENT_DIGEST);
+  }
+  void add_TOL_POSITION(double TOL_POSITION) {
+    fbb_.AddElement<double>(DPMDerivedBuild::VT_TOL_POSITION, TOL_POSITION, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_TOL_VELOCITY(double TOL_VELOCITY) {
+    fbb_.AddElement<double>(DPMDerivedBuild::VT_TOL_VELOCITY, TOL_VELOCITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  explicit DPMDerivedBuildBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DPMDerivedBuild> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DPMDerivedBuild>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DPMDerivedBuild> CreateDPMDerivedBuild(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> BUILDER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BUILDER_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> BUILDER_DIGEST = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> ENVIRONMENT_DIGEST = 0,
+    double TOL_POSITION = std::numeric_limits<double>::quiet_NaN(),
+    double TOL_VELOCITY = std::numeric_limits<double>::quiet_NaN()) {
+  DPMDerivedBuildBuilder builder_(_fbb);
+  builder_.add_TOL_VELOCITY(TOL_VELOCITY);
+  builder_.add_TOL_POSITION(TOL_POSITION);
+  builder_.add_ENVIRONMENT_DIGEST(ENVIRONMENT_DIGEST);
+  builder_.add_BUILDER_DIGEST(BUILDER_DIGEST);
+  builder_.add_BUILDER_VERSION(BUILDER_VERSION);
+  builder_.add_BUILDER_NAME(BUILDER_NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<DPMDerivedBuild> CreateDPMDerivedBuildDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *BUILDER_NAME = nullptr,
+    const char *BUILDER_VERSION = nullptr,
+    const std::vector<uint8_t> *BUILDER_DIGEST = nullptr,
+    const std::vector<uint8_t> *ENVIRONMENT_DIGEST = nullptr,
+    double TOL_POSITION = std::numeric_limits<double>::quiet_NaN(),
+    double TOL_VELOCITY = std::numeric_limits<double>::quiet_NaN()) {
+  auto BUILDER_NAME__ = BUILDER_NAME ? _fbb.CreateString(BUILDER_NAME) : 0;
+  auto BUILDER_VERSION__ = BUILDER_VERSION ? _fbb.CreateString(BUILDER_VERSION) : 0;
+  auto BUILDER_DIGEST__ = BUILDER_DIGEST ? _fbb.CreateVector<uint8_t>(*BUILDER_DIGEST) : 0;
+  auto ENVIRONMENT_DIGEST__ = ENVIRONMENT_DIGEST ? _fbb.CreateVector<uint8_t>(*ENVIRONMENT_DIGEST) : 0;
+  return CreateDPMDerivedBuild(
+      _fbb,
+      BUILDER_NAME__,
+      BUILDER_VERSION__,
+      BUILDER_DIGEST__,
+      ENVIRONMENT_DIGEST__,
+      TOL_POSITION,
+      TOL_VELOCITY);
 }
 
 /// Source batch metadata bound into the dataset publication.

@@ -1,0 +1,66 @@
+// Hash: 8b41ee71054317441a31c851da2249e32d8fbd173693949b3476f7dbeccf6542
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Crypto-native Subscription Authorization (SUB)
+// Description
+// Models a recurring ON-CHAIN charge authorization that `$ENT`/`$ACL.AUTO_RENEW`
+// cannot express (those are processor-shaped). Binds an entitlement and listing
+// to the on-chain recurring mechanism (allowance / delegate / re-authorize),
+// the settlement descriptor that charges it, and the period/amount schedule.
+
+include "../SCX/main.fbs";
+
+/// On-chain recurring charge mechanism.
+enum recurringChargeMethod : byte {
+  /// ERC-20 allowance the settlement contract draws per period
+  Erc20Allowance,
+  /// EVM delegated / session-key authorization
+  EvmDelegate,
+  /// Solana delegated token authority
+  SolDelegate,
+  /// No standing authorization; the buyer re-authorizes each period
+  ReAuthorizePerPeriod
+}
+
+/// Lifecycle of a crypto-native subscription authorization.
+enum subscriptionLifecycleStatus : byte {
+  /// Charging on schedule
+  Active,
+  /// Temporarily paused by the buyer or store
+  Paused,
+  /// Cancelled by the buyer; no further charges
+  Cancelled,
+  /// A scheduled charge failed / authorization expired
+  Lapsed
+}
+
+/// Crypto-native Subscription Authorization
+table SUB {
+  /// Stable subscription identifier
+  SUBSCRIPTION_ID: string (required);
+  /// Reference to the durable entitlement (`$ENT.ENTITLEMENT_ID`)
+  ENTITLEMENT_ID: string;
+  /// Listing this subscription pays for (`$PLG.PLUGIN_ID` / `$STF.LISTING_ID`)
+  LISTING_ID: string;
+  /// On-chain recurring mechanism
+  AUTH_KIND: recurringChargeMethod;
+  /// Settlement descriptor (chain, splitter, token) that charges each period
+  CHAIN_SETTLEMENT: SCX;
+  /// Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)
+  PERIOD_DAYS: uint32;
+  /// Charge per period in the smallest unit of CURRENCY
+  AMOUNT_PER_PERIOD: uint64;
+  /// Currency / token symbol, e.g. "USDC"
+  CURRENCY: string;
+  /// Unix ms of the next scheduled charge
+  NEXT_CHARGE_AT: uint64;
+  /// Maximum number of periods; 0 = until cancelled
+  MAX_PERIODS: uint32;
+  /// Subscription lifecycle status
+  STATUS: subscriptionLifecycleStatus;
+  /// Buyer's Ed25519 authorization signature over the terms
+  SIGNATURE: [ubyte];
+}
+
+root_type SUB;
+file_identifier "$SUB";

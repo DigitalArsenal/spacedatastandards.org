@@ -1,0 +1,55 @@
+// Hash: 5ba0fa058c36d237c12980fee6e0f5f9e21d28db3e346cdb51b9c3b7dc5177cc
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum TimeScale : byte {
+  UTC,                    // Coordinated Universal Time,
+  TAI,                    // International Atomic Time,
+  TT,                     // Terrestrial Time,
+  TDB,                    // Barycentric Dynamical Time,
+  TCG,                    // Geocentric Coordinate Time,
+  TCB,                    // Barycentric Coordinate Time,
+  GPS,                    // GPS Time,
+  GLONASS,                // GLONASS Time,
+  GALILEO,                // Galileo System Time,
+  BEIDOU,                 // BeiDou Time,
+  UT1,                    // Universal Time 1,
+  LOCAL_MEAN_SOLAR,
+  LOCAL_APPARENT_SOLAR,
+  SIDEREAL
+}
+
+enum DateFormat : byte {
+  ISO8601,                // YYYY-MM-DDTHH:MM:SS.sssZ,
+  JULIAN_DATE,            // Days since 4713 BC Jan 1,
+  MODIFIED_JULIAN_DATE,   // JD - 2400000.5,
+  GPS_WEEK_SOW,           // GPS week and seconds of week,
+  YEAR_DOY,               // Year and day of year,
+  UNIX_EPOCH,             // Seconds since 1970-01-01,
+  MISSION_ELAPSED         // Seconds since mission start
+}
+
+enum ClockType : byte {
+  CESIUM,
+  RUBIDIUM,
+  QUARTZ_TCXO,
+  QUARTZ_OCXO,
+  HYDROGEN_MASER,
+  GPS_DISCIPLINED
+}
+
+/// Time Systems
+table TME {
+  COMMAND:string;
+  CONVERSION_REQUEST:string;
+  LEAP_SECOND_QUERY:string;
+  EOP_QUERY:string;
+  SIDEREAL_QUERY:string;
+  INTERVAL_REQUEST:string;
+  SOLAR_POSITION_QUERY:string;
+  LUNAR_POSITION_QUERY:string;
+  SUNRISE_SUNSET_QUERY:[double];
+  CLOCK_PROPAGATION:string;
+}
+
+root_type TME;
+file_identifier "$TME";

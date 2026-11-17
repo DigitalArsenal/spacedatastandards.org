@@ -45,6 +45,19 @@ enum pcfBlendShape:
     /// Cubic Hermite matching of position and velocity across the window.
     pcfBlendShape_HERMITE = 1
 
+/// What answers a request time outside an element-set propagator's window
+/// (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+/// only.
+enum pcfFallbackPropagator:
+    /// Nothing: the state is NaN with a status that says outside the window.
+    pcfFallbackPropagator_NONE = 0
+    /// SGP4 on the object's own SGP4 set.
+    pcfFallbackPropagator_SGP4 = 1
+    /// SGP4-XP on the object's own SGP4-XP set.
+    pcfFallbackPropagator_SGP4XP = 2
+    /// The host routes the request elsewhere: no state, a status that asks for it.
+    pcfFallbackPropagator_HOST = 3
+
 enum pcfWeatherExtension:
     /// The provider's own rule (the numerical propagator refuses, the advanced
     /// mean-element propagator chains forecasts).
@@ -1357,13 +1370,38 @@ class PCFEpochStore : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
     def THEORIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Window before each selected set's epoch inside which the set's own
+    /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+    /// not set. Setting any of the window and fallback fields below to a value
+    /// other than its default enables the window; a side left at -1 is then 7.
+    def WINDOW_BEFORE_DAYS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, -1.0)
+    /// Window after each selected set's epoch, days of 86400 seconds, boundary
+    /// included. Default -1: not set. Every set that contributes to a blend must
+    /// contain the requested time.
+    def WINDOW_AFTER_DAYS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, -1.0)
+    /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+    /// object's own set of that theory, matched by catalog number and
+    /// international designator; a missing or ambiguous set yields no state.
+    def FALLBACK_PROPAGATOR() -> pcfFallbackPropagator:
+        return pcfFallbackPropagator(flatbuffers.field_uint8(buf_, pos_, 20, 0))
+    /// The fallback also answers inside the window when the propagator excludes
+    /// or refuses the object or the time. Default false. A missing row, an
+    /// allocation failure or a pool failure is not a refusal.
+    def FALLBACK_ON_REFUSAL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// The fallback also answers inside the window while the propagator's own row
+    /// for the requested time is not built yet. Default false.
+    def FALLBACK_WHILE_PENDING() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
 
 def GetRootAsPCFEpochStore(buf:string): return PCFEpochStore { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFEpochStoreBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(11)
         return this
     def add_CACHE_DAYS(CACHE_DAYS:float):
         b_.PrependFloat64Slot(0, CACHE_DAYS, 7.0)
@@ -1382,6 +1420,21 @@ struct PCFEpochStoreBuilder:
         return this
     def add_THEORIES(THEORIES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, THEORIES)
+        return this
+    def add_WINDOW_BEFORE_DAYS(WINDOW_BEFORE_DAYS:float):
+        b_.PrependFloat64Slot(6, WINDOW_BEFORE_DAYS, -1.0)
+        return this
+    def add_WINDOW_AFTER_DAYS(WINDOW_AFTER_DAYS:float):
+        b_.PrependFloat64Slot(7, WINDOW_AFTER_DAYS, -1.0)
+        return this
+    def add_FALLBACK_PROPAGATOR(FALLBACK_PROPAGATOR:pcfFallbackPropagator):
+        b_.PrependUint8Slot(8, FALLBACK_PROPAGATOR, 0)
+        return this
+    def add_FALLBACK_ON_REFUSAL(FALLBACK_ON_REFUSAL:bool):
+        b_.PrependBoolSlot(9, FALLBACK_ON_REFUSAL, 0)
+        return this
+    def add_FALLBACK_WHILE_PENDING(FALLBACK_WHILE_PENDING:bool):
+        b_.PrependBoolSlot(10, FALLBACK_WHILE_PENDING, 0)
         return this
     def end():
         return b_.EndObject()

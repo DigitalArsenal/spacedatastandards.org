@@ -1,0 +1,89 @@
+// Hash: caca5d61640738a49652afeeaa24bd81fc458e69f4b66e11b02cda8e3dd343ed
+// Version: 1.202.0
+// -----------------------------------END_HEADER
+enum trhHardwareKind : ubyte {
+  UNSPECIFIED = 0,
+  ANTENNA = 1,
+  TRANSMITTER = 2,
+  RECEIVER = 3,
+  TRANSPONDER = 4
+}
+
+enum trhTurnaroundMode : ubyte {
+  UNSPECIFIED = 0,
+  COHERENT = 1,
+  NONCOHERENT = 2,
+  REGENERATIVE = 3
+}
+
+table TRHAntenna {
+  HARDWARE_ID: string (required);
+  FREQUENCY_HZ: double;
+  BANDWIDTH_HZ: double;
+  GAIN_DBI: double;
+  PHASE_CENTER_DELAY_SECONDS: double;
+}
+
+table TRHTransmitter {
+  HARDWARE_ID: string (required);
+  FREQUENCY_HZ: double;
+  POWER_WATTS: double;
+  MODULATION: string;
+  HARDWARE_DELAY_SECONDS: double;
+  ANTENNA_ID: string;
+}
+
+table TRHReceiver {
+  HARDWARE_ID: string (required);
+  CENTER_FREQUENCY_HZ: double;
+  BANDWIDTH_HZ: double;
+  SYSTEM_NOISE_TEMPERATURE_KELVIN: double;
+  HARDWARE_DELAY_SECONDS: double;
+  ANTENNA_ID: string;
+}
+
+table TRHTransponder {
+  HARDWARE_ID: string (required);
+  TURNAROUND_MODE: trhTurnaroundMode = UNSPECIFIED;
+  TURNAROUND_NUMERATOR: uint;
+  TURNAROUND_DENOMINATOR: uint;
+  GROUP_DELAY_SECONDS: double;
+  RECEIVER_ID: string;
+  TRANSMITTER_ID: string;
+}
+
+table TRHHardwareRef {
+  HARDWARE_KIND: trhHardwareKind = UNSPECIFIED;
+  HARDWARE_ID: string (required);
+}
+
+table TRHInstallation {
+  OWNER_OBJECT_ID: string (required);
+  HARDWARE: [TRHHardwareRef];
+  CLOCK_BIAS_SECONDS: double;
+  CLOCK_DRIFT_SECONDS_PER_SECOND: double;
+}
+
+table TRHAttestation {
+  SIGNING_PUBLIC_KEY: string (required);
+  SIGNED_AT: string;
+  SIGNATURE: [ubyte] (required);
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+/// Tracking Hardware. Installations attach antennas, transmitters, receivers
+/// and transponders to either a surface site or a tracked object. Delays are
+/// seconds, frequencies hertz, temperatures kelvin and powers watts. JSON
+/// projections preserve these IDL-capitalized field names exactly.
+table TRH {
+  ANTENNAS: [TRHAntenna];
+  TRANSMITTERS: [TRHTransmitter];
+  RECEIVERS: [TRHReceiver];
+  TRANSPONDERS: [TRHTransponder];
+  INSTALLATIONS: [TRHInstallation];
+  TRACE_ID: string;
+  ATTESTATION: TRHAttestation;
+}
+
+root_type TRH;
+file_identifier "$TRH";

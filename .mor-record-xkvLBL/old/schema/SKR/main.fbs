@@ -1,0 +1,138 @@
+// Hash: 80280a7edbd5c27712de1f103cbb2340134e2a18d286c77ed87aa305e9b844a7
+// Version: 1.225.0
+// -----------------------------------END_HEADER
+include "../SKQ/main.fbs";
+
+// Sky Query Result (SKR)
+// Description
+// The answer to one `$SKQ`. Which fields are present follows QUERY_KIND;
+// the rest are absent. Rows are named by the ROW numbers the catalogue
+// records were given on ingest, and every direction is right ascension and
+// declination on GCRS axes, reduced as the query's PLACE asked.
+//
+// ORDER. HITS are brightest first, rows of unknown brightness last, ties by
+// ROW. OCCULTATIONS are ordered by BODY_ID, then by TRACK_FRACTION.
+// EXCLUSIONS follow the query's POINTINGS.
+//
+// PHOTOMETRY is a table: MAGNITUDES and DERIVATIONS hold ROW_COUNT x
+// BAND_IDS entries, row-major, and a band the row cannot be stated in is NaN.
+//
+// ATTITUDE. ROTATION takes camera-frame vectors to GCRS:
+// v_gcrs = ROTATION * v_camera, row-major. QUATERNION is the same rotation
+// as (w, x, y, z) with w >= 0.
+
+/// Outcome of a sky query.
+/// Append new values only; never reorder or reuse existing values.
+enum skrStatus : ubyte {
+  OK = 0,
+  /// IDENTIFY found no consistent match.
+  UNSOLVED = 1,
+  /// IDENTIFY was given fewer than three detections.
+  TOO_FEW_DETECTIONS = 2,
+  /// Fewer than three catalogue rows pass the magnitude limit.
+  NO_CATALOG = 3,
+  /// The query was malformed; MESSAGE says how.
+  BAD_REQUEST = 4
+}
+
+/// A row that answers a CONE or FIELD_OF_VIEW query.
+struct SKRHit {
+  ROW: uint32;
+  /// SKTPoint FLAGS bits for the row.
+  FLAGS: uint32;
+  RA_DEG: double;
+  DEC_DEG: double;
+  /// Angle from the centre or boresight.
+  SEPARATION_DEG: double;
+  /// Field coordinates: angles along the field's x and y axes (the
+  /// standard coordinates of a cone query). NaN behind the tangent plane.
+  FIELD_X_DEG: double;
+  FIELD_Y_DEG: double;
+  /// Magnitude in the query's band; NaN when unknown.
+  MAG: float;
+  RESERVED: uint32;
+}
+
+/// A row a body's disc passes over.
+struct SKROccultation {
+  BODY_ID: uint32;
+  ROW: uint32;
+  /// Closest approach of the body's centre to the row.
+  MIN_SEPARATION_DEG: double;
+  /// Where along the track the closest approach falls, from 0 (start) to 1
+  /// (end).
+  TRACK_FRACTION: double;
+  MAG: float;
+  RESERVED: uint32;
+}
+
+/// Bright rows near one pointing.
+struct SKRExclusion {
+  POINTING_ID: uint32;
+  /// Rows within the radius at least as bright as the threshold.
+  VIOLATING_COUNT: uint32;
+  /// The brightest of them; 4294967295 when there are none.
+  BRIGHTEST_ROW: uint32;
+  RESERVED: uint32;
+  BRIGHTEST_SEPARATION_DEG: double;
+  BRIGHTEST_MAG: float;
+  RESERVED2: uint32;
+}
+
+/// Sky Query Result: the answer to one `$SKQ`.
+table SKR {
+  /// QUERY_ID of the query answered.
+  QUERY_ID: string;
+  QUERY_KIND: skqQueryKind = UNSPECIFIED;
+  STATUS: skrStatus = OK;
+  /// Why a query failed.
+  MESSAGE: string;
+  /// Epoch and reduction the answer is for, copied from the query.
+  EPOCH_JD_TT: double = nan;
+  EPOCH_JD_TT_FRACTION: double = 0;
+  PLACE: sktPlaceKind = APPARENT;
+
+  /// Catalogue rows held.
+  ROW_COUNT: uint32;
+  /// INGEST: rows added by the ingest answered.
+  ROWS_ADDED: uint32;
+  /// INGEST: records refused by verification.
+  REJECTED_COUNT: uint32;
+  /// Band descriptors held.
+  BAND_COUNT: uint32;
+
+  /// CONE and FIELD_OF_VIEW: rows matched before MAX_RESULTS applied.
+  MATCHED_COUNT: uint32;
+  HITS: [SKRHit];
+
+  /// SYNTHETIC_PHOTOMETRY: bands of the table's columns.
+  BAND_IDS: [string];
+  /// SYNTHETIC_PHOTOMETRY: ROW_COUNT x BAND_IDS magnitudes, row-major.
+  MAGNITUDES: [float];
+  /// SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout.
+  DERIVATIONS: [phbDerivation];
+
+  /// IDENTIFY: detections matched.
+  MATCHED_DETECTIONS: uint32;
+  /// IDENTIFY: camera-to-GCRS rotation, nine entries, row-major.
+  ROTATION: [double];
+  /// IDENTIFY: the same rotation as (w, x, y, z).
+  QUATERNION: [double];
+  /// IDENTIFY: RMS angle between matched detections and their rows.
+  RESIDUAL_RMS_ARCSEC: double = nan;
+  /// IDENTIFY: direction of the camera's +z axis.
+  BORESIGHT_RA_DEG: double = nan;
+  BORESIGHT_DEC_DEG: double = nan;
+  /// IDENTIFY: row matched to each detection, in detection order;
+  /// 4294967295 when unmatched.
+  MATCHED_ROWS: [uint32];
+
+  /// OCCULTATION: rows passed over.
+  OCCULTATIONS: [SKROccultation];
+
+  /// BRIGHT_STAR_EXCLUSION: one verdict per pointing.
+  EXCLUSIONS: [SKRExclusion];
+}
+
+root_type SKR;
+file_identifier "$SKR";

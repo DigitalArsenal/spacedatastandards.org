@@ -1,0 +1,63 @@
+// Hash: d5f930c0ced1bc0b178e006ac9ac2820ad1e34e2d2ded8bb0cf5b7ad3ab64baf
+// Version: 1.272.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+
+// Space Weather Alert (SWA)
+//
+// One issued space weather message (alert, warning, watch, summary) with its
+// text verbatim and the times and scale level the producer read from it.
+
+/// Message class. Append only.
+enum swaMessageKind : byte {
+  Unspecified,
+  Alert,
+  Warning,
+  Watch,
+  Summary,
+  Forecast,
+  Cancellation,
+  Custom
+}
+
+/// NOAA scale of the message. Append only.
+enum swaScaleFamily : byte {
+  None,
+  Geomagnetic,
+  SolarRadiation,
+  RadioBlackout
+}
+
+/// Space Weather Alert
+table SWA {
+  /// Product identity, verbatim (e.g. K05A, EF3A).
+  PRODUCT_ID: string (required);
+  /// Message code and serial number, verbatim (e.g. ALTK05, 2051).
+  MESSAGE_CODE: string;
+  SERIAL_NUMBER: string;
+  /// Serial this message continues, extends or cancels, verbatim.
+  REFERS_TO_SERIAL: string;
+  KIND: swaMessageKind = Unspecified;
+  ISSUED_AT: string (required);
+  /// Times stated in the text, RFC 3339 UTC; absent when not stated.
+  BEGIN_TIME: string;
+  END_TIME: string;
+  VALID_FROM: string;
+  VALID_TO: string;
+  SCALE_FAMILY: swaScaleFamily = None;
+  /// Scale level 1-5; 0 when none is stated.
+  SCALE_LEVEL: ubyte;
+  /// The message, verbatim.
+  MESSAGE: string (required);
+  PROVENANCE: PVN (required);
+  SOURCE_CID: string;
+  SOURCE_DIGEST: string;
+  RETRIEVED_AT: string;
+}
+
+table SWACOLLECTION {
+  RECORDS: [SWA];
+}
+
+root_type SWA;
+file_identifier "$SWA";

@@ -1,0 +1,23 @@
+// Hash: a59dbc2bb7436c3a1d8cf58012f66c0a877a29f3ebab6bcba96d20c23200254f
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Space Data Link Security (CCSDS 355.0-B-1)
+table SDL {
+  /// Security Parameter Index
+  SPI:ushort;
+  /// Initialization vector length in bytes
+  IV_LENGTH:ubyte;
+  /// Initialization vector
+  IV:[ubyte];
+  /// MAC length in bytes
+  MAC_LENGTH:ubyte;
+  /// Message authentication code
+  MAC:[ubyte];
+  /// Pad length
+  PAD_LENGTH:ubyte;
+  /// Security payload
+  PAYLOAD:[ubyte];
+}
+
+root_type SDL;
+file_identifier "$SDL";

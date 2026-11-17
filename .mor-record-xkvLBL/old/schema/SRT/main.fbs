@@ -1,0 +1,135 @@
+// Hash: 37bc242ee6a02e6599223023b33a6bd0a0ce9fb31fbd605a47a4a8810e915a59
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../DTT/main.fbs";
+// Surface Raster Tile (SRT)
+//
+// One tile or window of a gridded surface quantity that is not terrain:
+// categorical classes (land cover) or height above ground (canopy height).
+// PAYLOAD carries the native samples only, with no palette conversion,
+// resampling or rounding. Payload reference, provenance and tiling scheme are
+// shared with DTT; DTT is unchanged.
+
+/// What the samples measure. Append only.
+enum srtQuantity : byte {
+  /// Not stated. Ordinal 0 so an unset field is never read as a real quantity.
+  UNSPECIFIED,
+  /// Integer class codes resolved by CLASS_LEGEND.
+  CATEGORICAL_CLASS,
+  /// Height above local ground (e.g. canopy height), never terrain.
+  HEIGHT_ABOVE_GROUND,
+  /// A quantity this enum does not model; QUANTITY_NAME names it.
+  CUSTOM
+}
+
+/// Stored sample type, before SCALE_FACTOR and ADD_OFFSET.
+enum srtSampleType : byte {
+  UNSPECIFIED,
+  UINT8,
+  INT8,
+  UINT16,
+  INT16,
+  UINT32,
+  INT32,
+  FLOAT32,
+  FLOAT64
+}
+
+/// Whether a sample is the cell area or the cell corner point.
+enum srtPixelRegistration : byte {
+  UNSPECIFIED,
+  /// Sample represents the whole cell area (GDAL PixelIsArea).
+  AREA,
+  /// Sample represents the point at the cell corner (GDAL PixelIsPoint).
+  POINT
+}
+
+/// Encoding of PAYLOAD.
+enum srtPayloadFormat : byte {
+  UNSPECIFIED,
+  /// A GeoTIFF file, verbatim.
+  RASTER_GEOTIFF,
+  /// Bare samples, rows from the north-west corner, little-endian.
+  SAMPLES_ROW_MAJOR_LE,
+  /// A format this enum does not model; PAYLOAD.MEDIA_TYPE names it.
+  CUSTOM
+}
+
+/// One class of a categorical raster.
+table SRTClass {
+  /// Sample value of the class.
+  CODE: int32;
+  /// Source label, verbatim.
+  LABEL: string (required);
+  /// Source display color, 0xRRGGBBAA.
+  COLOR_RGBA: uint32;
+}
+
+/// Surface Raster Tile
+table SRT {
+  /// Stable identity of the tileset this tile belongs to.
+  TILESET_ID: string (required);
+  /// Human-readable tileset name.
+  TILESET_NAME: string;
+  /// What the samples measure.
+  QUANTITY: srtQuantity;
+  /// Source quantity name, verbatim.
+  QUANTITY_NAME: string;
+  /// UCUM unit of the scaled value (m for canopy height); absent for classes.
+  UNIT: string;
+  /// Stored sample type.
+  SAMPLE_TYPE: srtSampleType;
+  /// value = sample * SCALE_FACTOR + ADD_OFFSET.
+  SCALE_FACTOR: double = 1.0;
+  /// value = sample * SCALE_FACTOR + ADD_OFFSET.
+  ADD_OFFSET: double = 0.0;
+  /// Stored sample value meaning no data (WorldCover: 0).
+  NO_DATA_VALUE: double = nan;
+  /// Class legend; required when QUANTITY = CATEGORICAL_CLASS.
+  CLASS_LEGEND: [SRTClass];
+  /// Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857).
+  CRS: string (required);
+  /// GDAL geotransform, 6 values, mapping pixel corners to CRS units.
+  AFFINE_TRANSFORM: [double];
+  /// Pixel registration.
+  PIXEL_REGISTRATION: srtPixelRegistration;
+  /// Grid width in samples.
+  GRID_WIDTH: uint32;
+  /// Grid height in samples.
+  GRID_HEIGHT: uint32;
+  /// Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR).
+  TILING_SCHEME: dttTilingScheme;
+  /// Pyramid level.
+  LEVEL: uint32;
+  /// Pyramid column.
+  X: uint32;
+  /// Pyramid row.
+  Y: uint32;
+  /// Geographic bounding box, west edge in degrees.
+  WEST_DEG: double;
+  /// Geographic bounding box, south edge in degrees.
+  SOUTH_DEG: double;
+  /// Geographic bounding box, east edge in degrees.
+  EAST_DEG: double;
+  /// Geographic bounding box, north edge in degrees.
+  NORTH_DEG: double;
+  /// Horizontal datum name, verbatim.
+  HORIZONTAL_DATUM_NAME: string;
+  /// Encoding of PAYLOAD.
+  PAYLOAD_FORMAT: srtPayloadFormat;
+  /// Native samples only: no palette conversion, resampling or rounding.
+  PAYLOAD: DTTPayloadRef (required);
+  /// Minimum scaled value in the tile.
+  MIN_VALUE: double = nan;
+  /// Maximum scaled value in the tile.
+  MAX_VALUE: double = nan;
+  /// Fraction of samples that are not NO_DATA_VALUE, 0 to 1.
+  DATA_COVERAGE_FRACTION: double = nan;
+  /// Dataset epoch of the samples, RFC 3339 UTC.
+  EPOCH: string;
+  /// Dataset, retrieval and license lineage.
+  PROVENANCE: DTTProvenance (required);
+}
+
+root_type SRT;
+file_identifier "$SRT";

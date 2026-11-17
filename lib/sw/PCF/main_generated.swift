@@ -71,6 +71,27 @@ public enum pcfBlendShape: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 }
 
 
+///  What answers a request time outside an element-set propagator's window
+///  (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+///  only.
+public enum pcfFallbackPropagator: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Nothing: the state is NaN with a status that says outside the window.
+  case none_ = 0
+  ///  SGP4 on the object's own SGP4 set.
+  case sgp4 = 1
+  ///  SGP4-XP on the object's own SGP4-XP set.
+  case sgp4xp = 2
+  ///  The host routes the request elsewhere: no state, a status that asks for it.
+  case host = 3
+
+  public static var max: pcfFallbackPropagator { return .host }
+  public static var min: pcfFallbackPropagator { return .none_ }
+}
+
+
 public enum pcfWeatherExtension: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
@@ -1770,6 +1791,11 @@ public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     static let BLEND_WINDOW_SECONDS: VOffset = 10
     static let BLEND_SHAPE: VOffset = 12
     static let THEORIES: VOffset = 14
+    static let WINDOW_BEFORE_DAYS: VOffset = 16
+    static let WINDOW_AFTER_DAYS: VOffset = 18
+    static let FALLBACK_PROPAGATOR: VOffset = 20
+    static let FALLBACK_ON_REFUSAL: VOffset = 22
+    static let FALLBACK_WHILE_PENDING: VOffset = 24
   }
 
   ///  Days of element sets kept, counted back from now by epoch. Default 7.
@@ -1786,13 +1812,40 @@ public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   public var BLEND_SHAPE: pcfBlendShape { let o = _accessor.offset(VT.BLEND_SHAPE); return o == 0 ? .smoothstep : pcfBlendShape(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .smoothstep }
   ///  Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   public var THEORIES: FlatbufferVector<pcfTheory> { return _accessor.vector(at: VT.THEORIES, byteSize: 1) }
-  public static func startPCFEpochStore(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  ///  Window before each selected set's epoch inside which the set's own
+  ///  propagator answers, days of 86400 seconds, boundary included. Default -1:
+  ///  not set. Setting any of the window and fallback fields below to a value
+  ///  other than its default enables the window; a side left at -1 is then 7.
+  public var WINDOW_BEFORE_DAYS: Double { let o = _accessor.offset(VT.WINDOW_BEFORE_DAYS); return o == 0 ? -1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Window after each selected set's epoch, days of 86400 seconds, boundary
+  ///  included. Default -1: not set. Every set that contributes to a blend must
+  ///  contain the requested time.
+  public var WINDOW_AFTER_DAYS: Double { let o = _accessor.offset(VT.WINDOW_AFTER_DAYS); return o == 0 ? -1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  ///  object's own set of that theory, matched by catalog number and
+  ///  international designator; a missing or ambiguous set yields no state.
+  public var FALLBACK_PROPAGATOR: pcfFallbackPropagator { let o = _accessor.offset(VT.FALLBACK_PROPAGATOR); return o == 0 ? .none_ : pcfFallbackPropagator(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  The fallback also answers inside the window when the propagator excludes
+  ///  or refuses the object or the time. Default false. A missing row, an
+  ///  allocation failure or a pool failure is not a refusal.
+  public var FALLBACK_ON_REFUSAL: Bool { let o = _accessor.offset(VT.FALLBACK_ON_REFUSAL); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The fallback also answers inside the window while the propagator's own row
+  ///  for the requested time is not built yet. Default false.
+  public var FALLBACK_WHILE_PENDING: Bool { let o = _accessor.offset(VT.FALLBACK_WHILE_PENDING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPCFEpochStore(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(CACHE_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CACHE_DAYS, def: 7.0, at: VT.CACHE_DAYS) }
   public static func add(MAX_SETS_PER_OBJECT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SETS_PER_OBJECT, def: 0, at: VT.MAX_SETS_PER_OBJECT) }
   public static func add(SELECTION: pcfEpochSelection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTION.rawValue, def: 0, at: VT.SELECTION) }
   public static func add(BLEND_WINDOW_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_WINDOW_SECONDS, def: 3600.0, at: VT.BLEND_WINDOW_SECONDS) }
   public static func add(BLEND_SHAPE: pcfBlendShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_SHAPE.rawValue, def: 0, at: VT.BLEND_SHAPE) }
   public static func addVectorOf(THEORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THEORIES, at: VT.THEORIES) }
+  public static func add(WINDOW_BEFORE_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_BEFORE_DAYS, def: -1.0, at: VT.WINDOW_BEFORE_DAYS) }
+  public static func add(WINDOW_AFTER_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_AFTER_DAYS, def: -1.0, at: VT.WINDOW_AFTER_DAYS) }
+  public static func add(FALLBACK_PROPAGATOR: pcfFallbackPropagator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FALLBACK_PROPAGATOR.rawValue, def: 0, at: VT.FALLBACK_PROPAGATOR) }
+  public static func add(FALLBACK_ON_REFUSAL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FALLBACK_ON_REFUSAL, def: false,
+   at: VT.FALLBACK_ON_REFUSAL) }
+  public static func add(FALLBACK_WHILE_PENDING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FALLBACK_WHILE_PENDING, def: false,
+   at: VT.FALLBACK_WHILE_PENDING) }
   public static func endPCFEpochStore(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFEpochStore(
     _ fbb: inout FlatBufferBuilder,
@@ -1801,7 +1854,12 @@ public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     SELECTION: pcfEpochSelection = .nearest,
     BLEND_WINDOW_SECONDS: Double = 3600.0,
     BLEND_SHAPE: pcfBlendShape = .smoothstep,
-    THEORIESVectorOffset THEORIES: Offset = Offset()
+    THEORIESVectorOffset THEORIES: Offset = Offset(),
+    WINDOW_BEFORE_DAYS: Double = -1.0,
+    WINDOW_AFTER_DAYS: Double = -1.0,
+    FALLBACK_PROPAGATOR: pcfFallbackPropagator = .none_,
+    FALLBACK_ON_REFUSAL: Bool = false,
+    FALLBACK_WHILE_PENDING: Bool = false
   ) -> Offset {
     let __start = PCFEpochStore.startPCFEpochStore(&fbb)
     PCFEpochStore.add(CACHE_DAYS: CACHE_DAYS, &fbb)
@@ -1810,6 +1868,11 @@ public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     PCFEpochStore.add(BLEND_WINDOW_SECONDS: BLEND_WINDOW_SECONDS, &fbb)
     PCFEpochStore.add(BLEND_SHAPE: BLEND_SHAPE, &fbb)
     PCFEpochStore.addVectorOf(THEORIES: THEORIES, &fbb)
+    PCFEpochStore.add(WINDOW_BEFORE_DAYS: WINDOW_BEFORE_DAYS, &fbb)
+    PCFEpochStore.add(WINDOW_AFTER_DAYS: WINDOW_AFTER_DAYS, &fbb)
+    PCFEpochStore.add(FALLBACK_PROPAGATOR: FALLBACK_PROPAGATOR, &fbb)
+    PCFEpochStore.add(FALLBACK_ON_REFUSAL: FALLBACK_ON_REFUSAL, &fbb)
+    PCFEpochStore.add(FALLBACK_WHILE_PENDING: FALLBACK_WHILE_PENDING, &fbb)
     return PCFEpochStore.endPCFEpochStore(&fbb, start: __start)
   }
 
@@ -1821,6 +1884,11 @@ public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     try _v.visit(field: VT.BLEND_WINDOW_SECONDS, fieldName: "BLEND_WINDOW_SECONDS", required: false, type: Double.self)
     try _v.visit(field: VT.BLEND_SHAPE, fieldName: "BLEND_SHAPE", required: false, type: pcfBlendShape.self)
     try _v.visit(field: VT.THEORIES, fieldName: "THEORIES", required: false, type: ForwardOffset<Vector<pcfTheory, pcfTheory>>.self)
+    try _v.visit(field: VT.WINDOW_BEFORE_DAYS, fieldName: "WINDOW_BEFORE_DAYS", required: false, type: Double.self)
+    try _v.visit(field: VT.WINDOW_AFTER_DAYS, fieldName: "WINDOW_AFTER_DAYS", required: false, type: Double.self)
+    try _v.visit(field: VT.FALLBACK_PROPAGATOR, fieldName: "FALLBACK_PROPAGATOR", required: false, type: pcfFallbackPropagator.self)
+    try _v.visit(field: VT.FALLBACK_ON_REFUSAL, fieldName: "FALLBACK_ON_REFUSAL", required: false, type: Bool.self)
+    try _v.visit(field: VT.FALLBACK_WHILE_PENDING, fieldName: "FALLBACK_WHILE_PENDING", required: false, type: Bool.self)
     _v.finish()
   }
 }

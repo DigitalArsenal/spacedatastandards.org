@@ -210,8 +210,138 @@ func (rcv *PCFEpochStore) MutateTheories(j int, n pcfTheory) bool {
 	return rcv.MutateTHEORIES(j, n)
 }
 
+/// Window before each selected set's epoch inside which the set's own
+/// propagator answers, days of 86400 seconds, boundary included. Default -1:
+/// not set. Setting any of the window and fallback fields below to a value
+/// other than its default enables the window; a side left at -1 is then 7.
+func (rcv *PCFEpochStore) WINDOW_BEFORE_DAYS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return -1.0
+}
+
+func (rcv *PCFEpochStore) WindowBeforeDays() float64 {
+	return rcv.WINDOW_BEFORE_DAYS()
+}
+
+/// Window before each selected set's epoch inside which the set's own
+/// propagator answers, days of 86400 seconds, boundary included. Default -1:
+/// not set. Setting any of the window and fallback fields below to a value
+/// other than its default enables the window; a side left at -1 is then 7.
+func (rcv *PCFEpochStore) MutateWINDOW_BEFORE_DAYS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *PCFEpochStore) MutateWindowBeforeDays(n float64) bool {
+	return rcv.MutateWINDOW_BEFORE_DAYS(n)
+}
+
+/// Window after each selected set's epoch, days of 86400 seconds, boundary
+/// included. Default -1: not set. Every set that contributes to a blend must
+/// contain the requested time.
+func (rcv *PCFEpochStore) WINDOW_AFTER_DAYS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return -1.0
+}
+
+func (rcv *PCFEpochStore) WindowAfterDays() float64 {
+	return rcv.WINDOW_AFTER_DAYS()
+}
+
+/// Window after each selected set's epoch, days of 86400 seconds, boundary
+/// included. Default -1: not set. Every set that contributes to a blend must
+/// contain the requested time.
+func (rcv *PCFEpochStore) MutateWINDOW_AFTER_DAYS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *PCFEpochStore) MutateWindowAfterDays(n float64) bool {
+	return rcv.MutateWINDOW_AFTER_DAYS(n)
+}
+
+/// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+/// object's own set of that theory, matched by catalog number and
+/// international designator; a missing or ambiguous set yields no state.
+func (rcv *PCFEpochStore) FALLBACK_PROPAGATOR() pcfFallbackPropagator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return pcfFallbackPropagator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PCFEpochStore) FallbackPropagator() pcfFallbackPropagator {
+	return rcv.FALLBACK_PROPAGATOR()
+}
+
+/// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+/// object's own set of that theory, matched by catalog number and
+/// international designator; a missing or ambiguous set yields no state.
+func (rcv *PCFEpochStore) MutateFALLBACK_PROPAGATOR(n pcfFallbackPropagator) bool {
+	return rcv._tab.MutateByteSlot(20, byte(n))
+}
+
+func (rcv *PCFEpochStore) MutateFallbackPropagator(n pcfFallbackPropagator) bool {
+	return rcv.MutateFALLBACK_PROPAGATOR(n)
+}
+
+/// The fallback also answers inside the window when the propagator excludes
+/// or refuses the object or the time. Default false. A missing row, an
+/// allocation failure or a pool failure is not a refusal.
+func (rcv *PCFEpochStore) FALLBACK_ON_REFUSAL() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PCFEpochStore) FallbackOnRefusal() bool {
+	return rcv.FALLBACK_ON_REFUSAL()
+}
+
+/// The fallback also answers inside the window when the propagator excludes
+/// or refuses the object or the time. Default false. A missing row, an
+/// allocation failure or a pool failure is not a refusal.
+func (rcv *PCFEpochStore) MutateFALLBACK_ON_REFUSAL(n bool) bool {
+	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *PCFEpochStore) MutateFallbackOnRefusal(n bool) bool {
+	return rcv.MutateFALLBACK_ON_REFUSAL(n)
+}
+
+/// The fallback also answers inside the window while the propagator's own row
+/// for the requested time is not built yet. Default false.
+func (rcv *PCFEpochStore) FALLBACK_WHILE_PENDING() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *PCFEpochStore) FallbackWhilePending() bool {
+	return rcv.FALLBACK_WHILE_PENDING()
+}
+
+/// The fallback also answers inside the window while the propagator's own row
+/// for the requested time is not built yet. Default false.
+func (rcv *PCFEpochStore) MutateFALLBACK_WHILE_PENDING(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *PCFEpochStore) MutateFallbackWhilePending(n bool) bool {
+	return rcv.MutateFALLBACK_WHILE_PENDING(n)
+}
+
 func PCFEpochStoreStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(11)
 }
 func PCFEpochStoreAddCACHE_DAYS(builder *flatbuffers.Builder, CACHE_DAYS float64) {
 	builder.PrependFloat64Slot(0, CACHE_DAYS, 7.0)
@@ -254,6 +384,36 @@ func PCFEpochStoreStartTHEORIESVector(builder *flatbuffers.Builder, numElems int
 }
 func PCFEpochStoreStartTheoriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PCFEpochStoreStartTHEORIESVector(builder, numElems)
+}
+func PCFEpochStoreAddWINDOW_BEFORE_DAYS(builder *flatbuffers.Builder, WINDOW_BEFORE_DAYS float64) {
+	builder.PrependFloat64Slot(6, WINDOW_BEFORE_DAYS, -1.0)
+}
+func PCFEpochStoreAddWindowBeforeDays(builder *flatbuffers.Builder, WINDOW_BEFORE_DAYS float64) {
+	PCFEpochStoreAddWINDOW_BEFORE_DAYS(builder, WINDOW_BEFORE_DAYS)
+}
+func PCFEpochStoreAddWINDOW_AFTER_DAYS(builder *flatbuffers.Builder, WINDOW_AFTER_DAYS float64) {
+	builder.PrependFloat64Slot(7, WINDOW_AFTER_DAYS, -1.0)
+}
+func PCFEpochStoreAddWindowAfterDays(builder *flatbuffers.Builder, WINDOW_AFTER_DAYS float64) {
+	PCFEpochStoreAddWINDOW_AFTER_DAYS(builder, WINDOW_AFTER_DAYS)
+}
+func PCFEpochStoreAddFALLBACK_PROPAGATOR(builder *flatbuffers.Builder, FALLBACK_PROPAGATOR pcfFallbackPropagator) {
+	builder.PrependByteSlot(8, byte(FALLBACK_PROPAGATOR), 0)
+}
+func PCFEpochStoreAddFallbackPropagator(builder *flatbuffers.Builder, FALLBACK_PROPAGATOR pcfFallbackPropagator) {
+	PCFEpochStoreAddFALLBACK_PROPAGATOR(builder, FALLBACK_PROPAGATOR)
+}
+func PCFEpochStoreAddFALLBACK_ON_REFUSAL(builder *flatbuffers.Builder, FALLBACK_ON_REFUSAL bool) {
+	builder.PrependBoolSlot(9, FALLBACK_ON_REFUSAL, false)
+}
+func PCFEpochStoreAddFallbackOnRefusal(builder *flatbuffers.Builder, FALLBACK_ON_REFUSAL bool) {
+	PCFEpochStoreAddFALLBACK_ON_REFUSAL(builder, FALLBACK_ON_REFUSAL)
+}
+func PCFEpochStoreAddFALLBACK_WHILE_PENDING(builder *flatbuffers.Builder, FALLBACK_WHILE_PENDING bool) {
+	builder.PrependBoolSlot(10, FALLBACK_WHILE_PENDING, false)
+}
+func PCFEpochStoreAddFallbackWhilePending(builder *flatbuffers.Builder, FALLBACK_WHILE_PENDING bool) {
+	PCFEpochStoreAddFALLBACK_WHILE_PENDING(builder, FALLBACK_WHILE_PENDING)
 }
 func PCFEpochStoreEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

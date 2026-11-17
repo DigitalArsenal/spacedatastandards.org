@@ -52,5 +52,7 @@ export enum RecordTypeExtended {
   CME = 292,
   SWA = 293,
   SWS = 294,
-  SSY = 295
+  SSY = 295,
+  MOR = 296,
+  DRB = 297
 }

@@ -1,0 +1,24 @@
+/**
+ * The radiation pressure model a set states, PERTURBATIONS.SOLAR_RAD_PRESSURE of its $OCM. Append new
+ * values only.
+ */
+export declare enum morRadiationModel {
+    /**
+     * No text: the theory's own radiation pressure on AGOM.
+     */
+    UNSTATED = 0,
+    /**
+     * "SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".
+     */
+    SPHERE_ECOM2_Y0 = 1,
+    /**
+     * "SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".
+     */
+    SPHERE_OUTPUT_MAP = 2,
+    /**
+     * "SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL.
+     * 2015)".
+     */
+    SPHERE_OUTPUT_MAP_ECOM2_Y0 = 3
+}
+//# sourceMappingURL=morRadiationModel.d.ts.map

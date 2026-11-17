@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { pcfBlendShape } from './pcfBlendShape.js';
 import { pcfEpochSelection } from './pcfEpochSelection.js';
+import { pcfFallbackPropagator } from './pcfFallbackPropagator.js';
 import { pcfTheory } from './pcfTheory.js';
 
 
@@ -92,8 +93,58 @@ theoriesArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Window before each selected set's epoch inside which the set's own
+ * propagator answers, days of 86400 seconds, boundary included. Default -1:
+ * not set. Setting any of the window and fallback fields below to a value
+ * other than its default enables the window; a side left at -1 is then 7.
+ */
+WINDOW_BEFORE_DAYS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : -1.0;
+}
+
+/**
+ * Window after each selected set's epoch, days of 86400 seconds, boundary
+ * included. Default -1: not set. Every set that contributes to a blend must
+ * contain the requested time.
+ */
+WINDOW_AFTER_DAYS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : -1.0;
+}
+
+/**
+ * What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+ * object's own set of that theory, matched by catalog number and
+ * international designator; a missing or ambiguous set yields no state.
+ */
+FALLBACK_PROPAGATOR():pcfFallbackPropagator {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfFallbackPropagator.NONE;
+}
+
+/**
+ * The fallback also answers inside the window when the propagator excludes
+ * or refuses the object or the time. Default false. A missing row, an
+ * allocation failure or a pool failure is not a refusal.
+ */
+FALLBACK_ON_REFUSAL():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * The fallback also answers inside the window while the propagator's own row
+ * for the requested time is not built yet. Default false.
+ */
+FALLBACK_WHILE_PENDING():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startPCFEpochStore(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(11);
 }
 
 static addCacheDays(builder:flatbuffers.Builder, CACHE_DAYS:number) {
@@ -132,12 +183,32 @@ static startTheoriesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addWindowBeforeDays(builder:flatbuffers.Builder, WINDOW_BEFORE_DAYS:number) {
+  builder.addFieldFloat64(6, WINDOW_BEFORE_DAYS, -1.0);
+}
+
+static addWindowAfterDays(builder:flatbuffers.Builder, WINDOW_AFTER_DAYS:number) {
+  builder.addFieldFloat64(7, WINDOW_AFTER_DAYS, -1.0);
+}
+
+static addFallbackPropagator(builder:flatbuffers.Builder, FALLBACK_PROPAGATOR:pcfFallbackPropagator) {
+  builder.addFieldInt8(8, FALLBACK_PROPAGATOR, pcfFallbackPropagator.NONE);
+}
+
+static addFallbackOnRefusal(builder:flatbuffers.Builder, FALLBACK_ON_REFUSAL:boolean) {
+  builder.addFieldInt8(9, +FALLBACK_ON_REFUSAL, +false);
+}
+
+static addFallbackWhilePending(builder:flatbuffers.Builder, FALLBACK_WHILE_PENDING:boolean) {
+  builder.addFieldInt8(10, +FALLBACK_WHILE_PENDING, +false);
+}
+
 static endPCFEpochStore(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPCFEpochStore(builder:flatbuffers.Builder, CACHE_DAYS:number, MAX_SETS_PER_OBJECT:number, SELECTION:pcfEpochSelection, BLEND_WINDOW_SECONDS:number, BLEND_SHAPE:pcfBlendShape, THEORIESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPCFEpochStore(builder:flatbuffers.Builder, CACHE_DAYS:number, MAX_SETS_PER_OBJECT:number, SELECTION:pcfEpochSelection, BLEND_WINDOW_SECONDS:number, BLEND_SHAPE:pcfBlendShape, THEORIESOffset:flatbuffers.Offset, WINDOW_BEFORE_DAYS:number, WINDOW_AFTER_DAYS:number, FALLBACK_PROPAGATOR:pcfFallbackPropagator, FALLBACK_ON_REFUSAL:boolean, FALLBACK_WHILE_PENDING:boolean):flatbuffers.Offset {
   PCFEpochStore.startPCFEpochStore(builder);
   PCFEpochStore.addCacheDays(builder, CACHE_DAYS);
   PCFEpochStore.addMaxSetsPerObject(builder, MAX_SETS_PER_OBJECT);
@@ -145,6 +216,11 @@ static createPCFEpochStore(builder:flatbuffers.Builder, CACHE_DAYS:number, MAX_S
   PCFEpochStore.addBlendWindowSeconds(builder, BLEND_WINDOW_SECONDS);
   PCFEpochStore.addBlendShape(builder, BLEND_SHAPE);
   PCFEpochStore.addTheories(builder, THEORIESOffset);
+  PCFEpochStore.addWindowBeforeDays(builder, WINDOW_BEFORE_DAYS);
+  PCFEpochStore.addWindowAfterDays(builder, WINDOW_AFTER_DAYS);
+  PCFEpochStore.addFallbackPropagator(builder, FALLBACK_PROPAGATOR);
+  PCFEpochStore.addFallbackOnRefusal(builder, FALLBACK_ON_REFUSAL);
+  PCFEpochStore.addFallbackWhilePending(builder, FALLBACK_WHILE_PENDING);
   return PCFEpochStore.endPCFEpochStore(builder);
 }
 
@@ -155,7 +231,12 @@ unpack(): PCFEpochStoreT {
     this.SELECTION(),
     this.BLEND_WINDOW_SECONDS(),
     this.BLEND_SHAPE(),
-    this.bb!.createScalarList<pcfTheory>(this.THEORIES.bind(this), this.theoriesLength())
+    this.bb!.createScalarList<pcfTheory>(this.THEORIES.bind(this), this.theoriesLength()),
+    this.WINDOW_BEFORE_DAYS(),
+    this.WINDOW_AFTER_DAYS(),
+    this.FALLBACK_PROPAGATOR(),
+    this.FALLBACK_ON_REFUSAL(),
+    this.FALLBACK_WHILE_PENDING()
   );
 }
 
@@ -167,6 +248,11 @@ unpackTo(_o: PCFEpochStoreT): void {
   _o.BLEND_WINDOW_SECONDS = this.BLEND_WINDOW_SECONDS();
   _o.BLEND_SHAPE = this.BLEND_SHAPE();
   _o.THEORIES = this.bb!.createScalarList<pcfTheory>(this.THEORIES.bind(this), this.theoriesLength());
+  _o.WINDOW_BEFORE_DAYS = this.WINDOW_BEFORE_DAYS();
+  _o.WINDOW_AFTER_DAYS = this.WINDOW_AFTER_DAYS();
+  _o.FALLBACK_PROPAGATOR = this.FALLBACK_PROPAGATOR();
+  _o.FALLBACK_ON_REFUSAL = this.FALLBACK_ON_REFUSAL();
+  _o.FALLBACK_WHILE_PENDING = this.FALLBACK_WHILE_PENDING();
 }
 }
 
@@ -177,7 +263,12 @@ constructor(
   public SELECTION: pcfEpochSelection = pcfEpochSelection.NEAREST,
   public BLEND_WINDOW_SECONDS: number = 3600.0,
   public BLEND_SHAPE: pcfBlendShape = pcfBlendShape.SMOOTHSTEP,
-  public THEORIES: (pcfTheory)[] = []
+  public THEORIES: (pcfTheory)[] = [],
+  public WINDOW_BEFORE_DAYS: number = -1.0,
+  public WINDOW_AFTER_DAYS: number = -1.0,
+  public FALLBACK_PROPAGATOR: pcfFallbackPropagator = pcfFallbackPropagator.NONE,
+  public FALLBACK_ON_REFUSAL: boolean = false,
+  public FALLBACK_WHILE_PENDING: boolean = false
 ){}
 
 
@@ -190,7 +281,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SELECTION,
     this.BLEND_WINDOW_SECONDS,
     this.BLEND_SHAPE,
-    THEORIES
+    THEORIES,
+    this.WINDOW_BEFORE_DAYS,
+    this.WINDOW_AFTER_DAYS,
+    this.FALLBACK_PROPAGATOR,
+    this.FALLBACK_ON_REFUSAL,
+    this.FALLBACK_WHILE_PENDING
   );
 }
 }

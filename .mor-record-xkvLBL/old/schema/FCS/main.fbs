@@ -1,0 +1,47 @@
+// Hash: 7167fcc5f984a8ce91b1145b2e55ae36fac9015997990a95e09d8d25feae8c0b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum FCSMode : byte {
+  OFF = 0,            // FCS disabled
+  STANDBY = 1,        // Powered, no solution
+  RANGING = 2,        // Acquiring range
+  TRACKING = 3,       // Tracking target
+  SOLUTION = 4,       // Valid fire solution
+  CCIP = 5,           // Continuously Computed Impact Point
+  CCRP = 6,           // Continuously Computed Release Point
+  MANUAL = 7,         // Manual override
+}
+
+enum LeadMethod : byte {
+  NONE = 0,           // No lead
+  PREDICTIVE = 1,     // Full trajectory prediction
+  COLLISION = 2,      // Collision course
+  CONSTANT_BEARING = 3, // Constant bearing approach
+  PURSUIT = 4,        // Pure pursuit
+}
+
+enum RangefinderType : byte {
+  STADIAMETRIC = 0,   // Optical stadiametric
+  STEREOSCOPIC = 1,   // Stereoscopic
+  COINCIDENCE = 2,    // Coincidence
+  LASER = 3,          // Laser rangefinder
+  RADAR = 4,          // Radar ranging
+}
+
+/// Fire Control Systems
+table FCS {
+  MODE:ubyte;
+  LEAD_METHOD:ubyte;
+  RANGEFINDER_TYPE:ubyte;
+  AMMO_SELECTED:ubyte;
+  TARGET:string;
+  SOLUTION:string;
+  LAST_RANGE:double;
+  RANGE_RATE:double;
+  ROUNDS_REMAINING:ushort;
+  TEMPERATURE:float;
+  RESERVED:[uint8];
+}
+
+root_type FCS;
+file_identifier "$FCS";

@@ -40,6 +40,26 @@ public struct PCFEpochStore : IFlatbufferObject
   public ArraySegment<byte>? GetTHEORIESBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public pcfTheory[] GetTHEORIESArray() { int o = __p.__offset(14); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); pcfTheory[] a = new pcfTheory[l]; for (int i = 0; i < l; i++) { a[i] = (pcfTheory)__p.bb.Get(p + i * 1); } return a; }
+  /// Window before each selected set's epoch inside which the set's own
+  /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+  /// not set. Setting any of the window and fallback fields below to a value
+  /// other than its default enables the window; a side left at -1 is then 7.
+  public double WINDOW_BEFORE_DAYS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)-1.0; } }
+  /// Window after each selected set's epoch, days of 86400 seconds, boundary
+  /// included. Default -1: not set. Every set that contributes to a blend must
+  /// contain the requested time.
+  public double WINDOW_AFTER_DAYS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)-1.0; } }
+  /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  /// object's own set of that theory, matched by catalog number and
+  /// international designator; a missing or ambiguous set yields no state.
+  public pcfFallbackPropagator FALLBACK_PROPAGATOR { get { int o = __p.__offset(20); return o != 0 ? (pcfFallbackPropagator)__p.bb.Get(o + __p.bb_pos) : pcfFallbackPropagator.NONE; } }
+  /// The fallback also answers inside the window when the propagator excludes
+  /// or refuses the object or the time. Default false. A missing row, an
+  /// allocation failure or a pool failure is not a refusal.
+  public bool FALLBACK_ON_REFUSAL { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// The fallback also answers inside the window while the propagator's own row
+  /// for the requested time is not built yet. Default false.
+  public bool FALLBACK_WHILE_PENDING { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<PCFEpochStore> CreatePCFEpochStore(FlatBufferBuilder builder,
       double CACHE_DAYS = 7.0,
@@ -47,18 +67,28 @@ public struct PCFEpochStore : IFlatbufferObject
       pcfEpochSelection SELECTION = pcfEpochSelection.NEAREST,
       double BLEND_WINDOW_SECONDS = 3600.0,
       pcfBlendShape BLEND_SHAPE = pcfBlendShape.SMOOTHSTEP,
-      VectorOffset THEORIESOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      VectorOffset THEORIESOffset = default(VectorOffset),
+      double WINDOW_BEFORE_DAYS = -1.0,
+      double WINDOW_AFTER_DAYS = -1.0,
+      pcfFallbackPropagator FALLBACK_PROPAGATOR = pcfFallbackPropagator.NONE,
+      bool FALLBACK_ON_REFUSAL = false,
+      bool FALLBACK_WHILE_PENDING = false) {
+    builder.StartTable(11);
+    PCFEpochStore.AddWINDOW_AFTER_DAYS(builder, WINDOW_AFTER_DAYS);
+    PCFEpochStore.AddWINDOW_BEFORE_DAYS(builder, WINDOW_BEFORE_DAYS);
     PCFEpochStore.AddBLEND_WINDOW_SECONDS(builder, BLEND_WINDOW_SECONDS);
     PCFEpochStore.AddCACHE_DAYS(builder, CACHE_DAYS);
     PCFEpochStore.AddTHEORIES(builder, THEORIESOffset);
     PCFEpochStore.AddMAX_SETS_PER_OBJECT(builder, MAX_SETS_PER_OBJECT);
+    PCFEpochStore.AddFALLBACK_WHILE_PENDING(builder, FALLBACK_WHILE_PENDING);
+    PCFEpochStore.AddFALLBACK_ON_REFUSAL(builder, FALLBACK_ON_REFUSAL);
+    PCFEpochStore.AddFALLBACK_PROPAGATOR(builder, FALLBACK_PROPAGATOR);
     PCFEpochStore.AddBLEND_SHAPE(builder, BLEND_SHAPE);
     PCFEpochStore.AddSELECTION(builder, SELECTION);
     return PCFEpochStore.EndPCFEpochStore(builder);
   }
 
-  public static void StartPCFEpochStore(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartPCFEpochStore(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddCACHE_DAYS(FlatBufferBuilder builder, double CACHE_DAYS) { builder.AddDouble(0, CACHE_DAYS, 7.0); }
   public static void AddMAX_SETS_PER_OBJECT(FlatBufferBuilder builder, uint MAX_SETS_PER_OBJECT) { builder.AddUint(1, MAX_SETS_PER_OBJECT, 0); }
   public static void AddSELECTION(FlatBufferBuilder builder, pcfEpochSelection SELECTION) { builder.AddByte(2, (byte)SELECTION, 0); }
@@ -70,6 +100,11 @@ public struct PCFEpochStore : IFlatbufferObject
   public static VectorOffset CreateTHEORIESVectorBlock(FlatBufferBuilder builder, ArraySegment<pcfTheory> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTHEORIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<pcfTheory>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTHEORIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddWINDOW_BEFORE_DAYS(FlatBufferBuilder builder, double WINDOW_BEFORE_DAYS) { builder.AddDouble(6, WINDOW_BEFORE_DAYS, -1.0); }
+  public static void AddWINDOW_AFTER_DAYS(FlatBufferBuilder builder, double WINDOW_AFTER_DAYS) { builder.AddDouble(7, WINDOW_AFTER_DAYS, -1.0); }
+  public static void AddFALLBACK_PROPAGATOR(FlatBufferBuilder builder, pcfFallbackPropagator FALLBACK_PROPAGATOR) { builder.AddByte(8, (byte)FALLBACK_PROPAGATOR, 0); }
+  public static void AddFALLBACK_ON_REFUSAL(FlatBufferBuilder builder, bool FALLBACK_ON_REFUSAL) { builder.AddBool(9, FALLBACK_ON_REFUSAL, false); }
+  public static void AddFALLBACK_WHILE_PENDING(FlatBufferBuilder builder, bool FALLBACK_WHILE_PENDING) { builder.AddBool(10, FALLBACK_WHILE_PENDING, false); }
   public static Offset<PCFEpochStore> EndPCFEpochStore(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFEpochStore>(o);
@@ -87,6 +122,11 @@ public struct PCFEpochStore : IFlatbufferObject
     _o.BLEND_SHAPE = this.BLEND_SHAPE;
     _o.THEORIES = new List<pcfTheory>();
     for (var _j = 0; _j < this.THEORIESLength; ++_j) {_o.THEORIES.Add(this.THEORIES(_j));}
+    _o.WINDOW_BEFORE_DAYS = this.WINDOW_BEFORE_DAYS;
+    _o.WINDOW_AFTER_DAYS = this.WINDOW_AFTER_DAYS;
+    _o.FALLBACK_PROPAGATOR = this.FALLBACK_PROPAGATOR;
+    _o.FALLBACK_ON_REFUSAL = this.FALLBACK_ON_REFUSAL;
+    _o.FALLBACK_WHILE_PENDING = this.FALLBACK_WHILE_PENDING;
   }
   public static Offset<PCFEpochStore> Pack(FlatBufferBuilder builder, PCFEpochStoreT _o) {
     if (_o == null) return default(Offset<PCFEpochStore>);
@@ -102,7 +142,12 @@ public struct PCFEpochStore : IFlatbufferObject
       _o.SELECTION,
       _o.BLEND_WINDOW_SECONDS,
       _o.BLEND_SHAPE,
-      _THEORIES);
+      _THEORIES,
+      _o.WINDOW_BEFORE_DAYS,
+      _o.WINDOW_AFTER_DAYS,
+      _o.FALLBACK_PROPAGATOR,
+      _o.FALLBACK_ON_REFUSAL,
+      _o.FALLBACK_WHILE_PENDING);
   }
 }
 
@@ -114,6 +159,11 @@ public class PCFEpochStoreT
   public double BLEND_WINDOW_SECONDS { get; set; }
   public pcfBlendShape BLEND_SHAPE { get; set; }
   public List<pcfTheory> THEORIES { get; set; }
+  public double WINDOW_BEFORE_DAYS { get; set; }
+  public double WINDOW_AFTER_DAYS { get; set; }
+  public pcfFallbackPropagator FALLBACK_PROPAGATOR { get; set; }
+  public bool FALLBACK_ON_REFUSAL { get; set; }
+  public bool FALLBACK_WHILE_PENDING { get; set; }
 
   public PCFEpochStoreT() {
     this.CACHE_DAYS = 7.0;
@@ -122,6 +172,11 @@ public class PCFEpochStoreT
     this.BLEND_WINDOW_SECONDS = 3600.0;
     this.BLEND_SHAPE = pcfBlendShape.SMOOTHSTEP;
     this.THEORIES = null;
+    this.WINDOW_BEFORE_DAYS = -1.0;
+    this.WINDOW_AFTER_DAYS = -1.0;
+    this.FALLBACK_PROPAGATOR = pcfFallbackPropagator.NONE;
+    this.FALLBACK_ON_REFUSAL = false;
+    this.FALLBACK_WHILE_PENDING = false;
   }
 }
 
@@ -137,6 +192,11 @@ static public class PCFEpochStoreVerify
       && verifier.VerifyField(tablePos, 10 /*BLEND_WINDOW_SECONDS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*BLEND_SHAPE*/, 1 /*pcfBlendShape*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 14 /*THEORIES*/, 1 /*pcfTheory*/, false)
+      && verifier.VerifyField(tablePos, 16 /*WINDOW_BEFORE_DAYS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*WINDOW_AFTER_DAYS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*FALLBACK_PROPAGATOR*/, 1 /*pcfFallbackPropagator*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*FALLBACK_ON_REFUSAL*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*FALLBACK_WHILE_PENDING*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

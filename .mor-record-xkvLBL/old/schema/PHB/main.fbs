@@ -1,0 +1,192 @@
+// Hash: 90873ee8e5bb092e1d9069a839b449d2ff6b0f1983914c935fbb0a43c83e1df8
+// Version: 1.224.0
+// -----------------------------------END_HEADER
+// Photometric Band (PHB)
+// Description
+// One photometric passband, from gamma rays to radio, and the measurement a
+// source record carries in it. `$PHB` is the descriptor: where the band sits
+// on the spectrum, how wide it is, which magnitude system it is calibrated
+// in and what flux a magnitude of zero means. `PHBMeasurement` is the value:
+// one source's brightness in one band. `$STR`, `$CSO` and `$SKT` carry
+// `PHBMeasurement` vectors and name bands by BAND_ID, so a consumer can
+// render, compare or synthesise any band a source was measured in without a
+// per-band field.
+//
+// ONE SPECTRAL AXIS. Every band is placed on vacuum wavelength in
+// nanometres, whatever unit its community states it in. Energy and
+// frequency convert exactly:
+//   wavelength_nm = 1239.841984 / energy_eV
+//   wavelength_nm = 299792458e9 / frequency_Hz
+// A gamma-ray band therefore has a wavelength of order 1e-6 nm and a radio
+// band of order 1e8 nm; both are ordinary doubles.
+//
+// REGIME IS THE MODE KEY. SPECTRAL_REGIME is the coarse class a viewer
+// switches between (the "X-ray sky", the "infrared sky"). It is derived from
+// the effective wavelength by the boundaries documented on each member and
+// is carried so a consumer never re-derives it inconsistently.
+//
+// ABSENT IS NOT ZERO. Every scalar that can be unknown defaults to NaN. A
+// band whose zero point, width or response is unknown leaves the field
+// absent, and a measurement without an uncertainty leaves UNCERTAINTY
+// absent; neither is ever written as zero.
+
+/// Coarse spectral region a band belongs to, by effective wavelength.
+/// Append new values only; never reorder or reuse existing values.
+enum phbSpectralRegime : ubyte {
+  UNSPECIFIED = 0,
+  /// Photon energy above 100 keV (wavelength below 0.0124 nm).
+  GAMMA_RAY = 1,
+  /// 10 keV to 100 keV (0.0124 nm to 0.124 nm).
+  HARD_X_RAY = 2,
+  /// 0.1 keV to 10 keV (0.124 nm to 12.4 nm).
+  SOFT_X_RAY = 3,
+  /// 12.4 nm to 91.2 nm.
+  EXTREME_ULTRAVIOLET = 4,
+  /// 91.2 nm to 200 nm.
+  FAR_ULTRAVIOLET = 5,
+  /// 200 nm to 380 nm.
+  NEAR_ULTRAVIOLET = 6,
+  /// 380 nm to 750 nm.
+  VISIBLE = 7,
+  /// 0.75 um to 5 um.
+  NEAR_INFRARED = 8,
+  /// 5 um to 40 um.
+  MID_INFRARED = 9,
+  /// 40 um to 350 um.
+  FAR_INFRARED = 10,
+  /// 350 um to 1 mm.
+  SUBMILLIMETRE = 11,
+  /// 1 mm to 10 cm (3 GHz to 300 GHz).
+  MICROWAVE = 12,
+  /// Longer than 10 cm (below 3 GHz).
+  RADIO = 13
+}
+
+/// Calibration system a magnitude is stated in.
+/// Append new values only; never reorder or reuse existing values.
+enum phbMagnitudeSystem : ubyte {
+  UNSPECIFIED = 0,
+  /// Zero magnitude is the flux of the standard A0 V reference star.
+  VEGA = 1,
+  /// Zero magnitude is a flux density of 3631 Jy per unit frequency.
+  AB = 2,
+  /// Zero magnitude is a flux density of 3.631e-9 erg s-1 cm-2 A-1 per unit
+  /// wavelength.
+  ST = 3,
+  /// Instrument-specific system; ZERO_POINT_JY states the calibration.
+  INSTRUMENTAL = 4,
+  /// The value is not a magnitude (a flux, a count rate, a temperature).
+  NOT_A_MAGNITUDE = 5
+}
+
+/// Physical quantity a measurement VALUE states.
+/// Append new values only; never reorder or reuse existing values.
+enum phbQuantity : ubyte {
+  UNSPECIFIED = 0,
+  /// Magnitude in the band's SYSTEM.
+  MAGNITUDE = 1,
+  /// Spectral flux density per unit frequency, janskys (1e-26 W m-2 Hz-1).
+  FLUX_DENSITY_JY = 2,
+  /// Band-integrated energy flux, W m-2.
+  ENERGY_FLUX_W_PER_M2 = 3,
+  /// Band-integrated photon flux, photons m-2 s-1.
+  PHOTON_FLUX_PER_M2_S = 4,
+  /// Detected count rate of the stated instrument, counts s-1.
+  COUNT_RATE_PER_S = 5,
+  /// Brightness temperature, kelvin.
+  BRIGHTNESS_TEMPERATURE_K = 6
+}
+
+/// How a measurement was obtained.
+/// Append new values only; never reorder or reuse existing values.
+enum phbDerivation : ubyte {
+  UNSPECIFIED = 0,
+  /// Observed in this band.
+  MEASURED = 1,
+  /// Converted from a measurement in another band or system by a stated
+  /// transformation.
+  TRANSFORMED = 2,
+  /// Synthesised from a spectral energy distribution or a model atmosphere;
+  /// never observed in this band.
+  MODELLED = 3
+}
+
+/// Whether a measurement is a detection or a bound.
+/// Append new values only; never reorder or reuse existing values.
+enum phbBoundKind : ubyte {
+  /// A detection: VALUE is the measured brightness.
+  DETECTION = 0,
+  /// Not detected: the source is fainter than VALUE (a flux upper limit, a
+  /// magnitude lower bound).
+  UPPER_LIMIT = 1,
+  /// Saturated or confused: the source is at least as bright as VALUE.
+  LOWER_LIMIT = 2
+}
+
+/// One source's brightness in one band.
+table PHBMeasurement {
+  /// Band identifier; resolves to a `$PHB` BAND_ID.
+  BAND_ID: string;
+  /// Coarse region of the band, copied from its descriptor so a consumer
+  /// can select a mode without resolving the band.
+  SPECTRAL_REGIME: phbSpectralRegime = UNSPECIFIED;
+  /// Effective wavelength of the band, nanometres (vacuum). Copied from the
+  /// descriptor; required for synthesis when the descriptor is not at hand.
+  WAVELENGTH_EFF_NM: double = nan;
+  /// Quantity VALUE states.
+  QUANTITY: phbQuantity = MAGNITUDE;
+  /// Calibration system when QUANTITY is MAGNITUDE.
+  MAGNITUDE_SYSTEM: phbMagnitudeSystem = UNSPECIFIED;
+  /// The measurement, in QUANTITY's units.
+  VALUE: double = nan;
+  /// One-sigma uncertainty of VALUE, same units.
+  UNCERTAINTY: double = nan;
+  /// Detection or bound.
+  BOUND: phbBoundKind = DETECTION;
+  /// How the value was obtained.
+  DERIVATION: phbDerivation = UNSPECIFIED;
+  /// Mid-time of the observation, Modified Julian Date (TT), for sources
+  /// whose brightness varies. Absent for a catalogue mean.
+  EPOCH_MJD: double = nan;
+  /// Number of observations averaged into VALUE; 0 when unstated.
+  OBSERVATION_COUNT: uint32;
+}
+
+/// Photometric Band: one passband's place on the spectrum and its calibration.
+table PHB {
+  /// Stable band identifier, unique within the publishing catalogue, e.g.
+  /// "V", "Ks", "0.5-2keV", "1.4GHz". Measurements refer to it.
+  BAND_ID: string (required);
+  /// Human-readable name.
+  NAME: string;
+  /// Name of the photometric system the band belongs to, as the defining
+  /// publication states it.
+  SYSTEM_NAME: string;
+  /// Coarse spectral region, by WAVELENGTH_EFF_NM.
+  SPECTRAL_REGIME: phbSpectralRegime = UNSPECIFIED;
+  /// Effective (pivot) wavelength, nanometres, vacuum.
+  WAVELENGTH_EFF_NM: double = nan;
+  /// Short edge of the band at half maximum response, nanometres.
+  WAVELENGTH_MIN_NM: double = nan;
+  /// Long edge of the band at half maximum response, nanometres.
+  WAVELENGTH_MAX_NM: double = nan;
+  /// Calibration system of magnitudes stated in the band.
+  MAGNITUDE_SYSTEM: phbMagnitudeSystem = UNSPECIFIED;
+  /// Flux density at the effective wavelength of a zero-magnitude source,
+  /// janskys.
+  ZERO_POINT_JY: double = nan;
+  /// Wavelengths the response curve is sampled at, nanometres, ascending.
+  RESPONSE_WAVELENGTH_NM: [double];
+  /// Relative system response at each RESPONSE_WAVELENGTH_NM sample,
+  /// peak-normalised to 1. Photon-counting unless RESPONSE_IS_ENERGY.
+  RESPONSE: [float];
+  /// True when RESPONSE is an energy-counting response.
+  RESPONSE_IS_ENERGY: bool;
+  /// Reference to the publication that defines the band.
+  CITATION: string;
+  /// URL of the band's defining document or response table.
+  DEFINITION_URL: string;
+}
+
+root_type PHB;
+file_identifier "$PHB";

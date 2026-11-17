@@ -1,0 +1,59 @@
+// Hash: 0bb5970ea035508d8e55a9903c55df3d44c6b8cf197aadf3fcd9ac19a15ef0ca
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum thrusterType : byte {
+  CHEMICAL_MONO,
+  CHEMICAL_BI,
+  COLD_GAS,
+  ELECTRIC_HALL,
+  ELECTRIC_ION,
+  ELECTRIC_PPT,
+  ELECTRIC_ARCJET,
+  ELECTRIC_RESISTOJET,
+  ELECTRIC_COLLOID,
+  SOLID,
+  HYBRID,
+  NUCLEAR_THERMAL,
+  SOLAR_THERMAL
+}
+
+/// On-Orbit Thruster
+table OOT {
+  /// Unique identifier
+  ID:string;
+  /// Reference to parent on-orbit object
+  ID_ON_ORBIT:string;
+  /// Reference to thruster specification
+  ID_THRUSTER:string;
+  /// Thruster name or designation
+  NAME:string;
+  /// Thruster type
+  TYPE:thrusterType;
+  /// Number of thrusters of this type
+  QUANTITY:uint;
+  /// Thrust output in Newtons
+  THRUST:double;
+  /// Specific impulse in seconds
+  ISP:double;
+  /// Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)
+  PROPELLANT:string;
+  /// Total propellant mass in kg
+  PROPELLANT_MASS:double;
+  /// Remaining propellant mass in kg
+  PROPELLANT_REMAINING:double;
+  /// Total delta-V capability in m/s
+  DELTA_V_TOTAL:double;
+  /// Remaining delta-V in m/s
+  DELTA_V_REMAINING:double;
+  /// Total impulse in Newton-seconds
+  TOTAL_IMPULSE:double;
+  /// Thruster dry mass in kg
+  MASS:double;
+  /// Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)
+  PURPOSE:string;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type OOT;
+file_identifier "$OOT";

@@ -1,0 +1,37 @@
+// Hash: f722f539320b4cec9b89a0e4af6bb5924757667244b566d666f5450cdfc488d3
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// Telemetry Transfer Frame (CCSDS 132.0-B-2)
+table TMF {
+  /// Transfer frame version
+  VERSION:ubyte;
+  /// Spacecraft identifier
+  SPACECRAFT_ID:ushort;
+  /// Virtual channel identifier
+  VIRTUAL_CHANNEL_ID:ubyte;
+  /// Operational control field flag
+  OCF_FLAG:bool;
+  /// Master channel frame count
+  MASTER_FRAME_COUNT:ubyte;
+  /// Virtual channel frame count
+  VIRTUAL_FRAME_COUNT:ubyte;
+  /// Secondary header flag
+  SEC_HDR_FLAG:bool;
+  /// Synchronization flag
+  SYNCH_FLAG:bool;
+  /// Packet order flag
+  PACKET_ORDER_FLAG:bool;
+  /// Segment length identifier
+  SEGMENT_LENGTH_ID:ubyte;
+  /// First header pointer
+  FIRST_HDR_POINTER:ushort;
+  /// Data field
+  DATA:[ubyte];
+  /// Operational control field
+  OCF:[ubyte];
+  /// Frame error control field
+  FECF:ushort;
+}
+
+root_type TMF;
+file_identifier "$TMF";

@@ -1,0 +1,61 @@
+// Hash: 1d674a4d180475f5fbf34d52acdd0bc36f97f370e2928112db6c2456ea99ce6e
+// Version: 1.285.0
+// -----------------------------------END_HEADER
+// Derived Row Build (DRB)
+// Description
+// A request to build the derived polynomial rows (the preseed) of a stream of element-set records, and the
+// outcome of each record. The rows land in the records themselves ($MOR WINDOWS, $OCM DERIVED_EPHEMERIS); the
+// builder's statement lands once per asset in $DPM DPMAsset.DERIVED_BUILD.
+//
+// A builder takes three inputs on three ports: the records; this request; and the RECEIVER's configuration,
+// the exact $PCF the receiving module will load, passed untouched (absent when the receiver loads none). The
+// request is never inside those $PCF bytes: the environment digest hashes them exactly, followed by one flags
+// byte made from this request (bit 0 POSITION_ONLY, bit 1 WIDE_RECORDS). The builder returns every record, in
+// input order, with its rows or without, and this request again with OUTCOMES filled.
+
+/// Why a record carries no rows. A record with rows has no outcome entry; a window no record serves is
+/// stated inside the rows ($MOR morWindowStatus, $PPE ppeWindowStatus). Append new values only.
+enum drbRecordOutcome : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The receiver serves this record without rows by its own rule (for example a record it never serves
+  /// from rows: several sets, another theory, a wide record without WIDE_RECORDS).
+  EXCLUDED = 1,
+  /// The theory refuses the record as a whole: no window can be made.
+  SOURCE_REFUSED = 2,
+  /// The record carries what rows cannot stand for: a forecast or a hand-over.
+  UNSUPPORTED = 3,
+  /// No rows were asked for this record.
+  NOT_REQUESTED = 4
+}
+
+/// The outcome of one input record that carries no rows.
+struct DRBOutcome {
+  /// Position of the record in the input stream, from 0.
+  RECORD_INDEX: uint32;
+  /// Why it carries no rows.
+  OUTCOME: drbRecordOutcome;
+}
+
+/// Derived Row Build.
+table DRB {
+  /// SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the
+  /// builder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use
+  /// the rows.
+  RECEIVER_ARTIFACT_SHA256: [ubyte];
+  /// Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR
+  /// EPOCH_UNIX_US).
+  START_UNIX_US: int64;
+  /// Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2.
+  WINDOW_COUNT: ubyte = 1;
+  /// Position series only, no velocity series (flags bit 0).
+  POSITION_ONLY: bool = false;
+  /// Rows also for the receiver's wide records (flags bit 1).
+  WIDE_RECORDS: bool = false;
+  /// In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in
+  /// the request a builder receives.
+  OUTCOMES: [DRBOutcome];
+}
+
+root_type DRB;
+file_identifier "$DRB";

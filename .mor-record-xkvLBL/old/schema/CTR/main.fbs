@@ -1,0 +1,33 @@
+// Hash: dab5d80eaef2995b6a7502233c9248052cb5d33fc6b1e8fd43ac807b3fcb382c
+// Version: 1.0.1
+// -----------------------------------END_HEADER
+/// Country Identity Message
+table CTR {
+  /// ISO 3166 Numeric code
+  ID: string;
+  
+  /// Country name
+  NAME: string;
+
+  /// GENC code
+  GENC_CODE: string;
+
+  /// ISO 3166 Alpha-2 code
+  ALPHA_2_CODE: string;
+
+  /// ISO 3166 Alpha-3 code
+  ALPHA_3_CODE: string;
+
+  /// Stanag code
+  STANAG_CODE: string;
+
+  /// Internet country code top-level domain (ccTLD)
+  INTERNET_CCTLD: string;
+
+  /// Additional comments
+  COMMENT: string;
+}
+
+
+root_type CTR;
+file_identifier "$CTR";

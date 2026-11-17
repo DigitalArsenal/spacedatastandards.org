@@ -1,0 +1,73 @@
+// Hash: c82c7d362982f1c9d437167d08251db57f014d0a5679d415e90c499fe8b0ff9a
+// Version: 0.0.3
+// -----------------------------------END_HEADER
+enum geoStationKeeping : byte {
+  ACTIVE,
+  DRIFTING,
+  INCLINED,
+  GRAVEYARD,
+  REPOSITIONING,
+  UNKNOWN
+}
+
+enum geoConfidence : byte {
+  HIGH,
+  MEDIUM,
+  LOW,
+  TENTATIVE
+}
+
+enum troughType : byte {
+  EAST,
+  WEST,
+  NEITHER
+}
+
+/// GEO Spacecraft Status
+table GEO {
+  /// Unique identifier
+  ID:string;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// On-orbit reference identifier
+  ON_ORBIT:string;
+  /// Station-keeping status
+  STATION_KEEPING:geoStationKeeping;
+  /// Subsatellite point longitude (degrees east)
+  SS:double;
+  /// Longitude of ascending node (degrees)
+  SC:double;
+  /// Relative energy (km^2/s^2)
+  RELATIVE_ENERGY:double;
+  /// Longitude drift rate (degrees/day)
+  LONGITUDE_RATE:double;
+  /// Western longitude boundary of slot (degrees east)
+  LONGITUDE_MIN:double;
+  /// Eastern longitude boundary of slot (degrees east)
+  LONGITUDE_MAX:double;
+  /// Assessment confidence level
+  CONFIDENCE:geoConfidence;
+  /// Trough type (east/west gravitational well)
+  TROUGH:troughType;
+  /// Plane change status description
+  PLANE_CHANGE_STATUS:string;
+  /// True if object is lost/not tracked
+  LOST_FLAG:bool;
+  /// True if semi-annual correction applied
+  SEMI_ANNUAL_CORR_FLAG:bool;
+  /// Current operational status
+  OBJECT_STATUS:string;
+  /// Inclination (degrees)
+  INCLINATION:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Epoch of status (ISO 8601)
+  EPOCH:string;
+  /// Reference to raw data file
+  RAW_FILE_URI:string;
+}
+
+root_type GEO;
+file_identifier "$GEO";

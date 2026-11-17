@@ -1,0 +1,190 @@
+// Hash: 3991bcc6a307a5574f264e41b555ec4323d866c1bc37c5a64ec57be6b9fae999
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+/// Capability class represented by an emission-limit curve.
+enum rfeEmissionMaskClass : byte {
+  UNSPECIFIED = 0,
+  IN_BAND,
+  OUT_OF_BAND,
+  SPURIOUS,
+  HARMONIC,
+  BROADBAND_NOISE,
+  CONDUCTED,
+  RADIATED,
+  SUSCEPTIBILITY
+}
+
+/// Physical path to which an emission-limit curve applies.
+enum rfeEmissionPath : byte {
+  UNSPECIFIED = 0,
+  ANTENNA_PORT,
+  POWER_LEAD,
+  SIGNAL_LEAD,
+  ENCLOSURE,
+  FREE_SPACE,
+  STRUCTURE
+}
+
+enum emitterType : byte {
+  RADAR,
+  COMMUNICATIONS,
+  NAVIGATION,
+  JAMMER,
+  BEACON,
+  TRANSPONDER,
+  DATA_LINK,
+  TELEMETRY,
+  EW,
+  UNKNOWN
+}
+
+enum signalModulation : byte {
+  CW,
+  PULSE,
+  FMCW,
+  CHIRP,
+  BPSK,
+  QPSK,
+  FSK,
+  AM,
+  FM,
+  SPREAD_SPECTRUM,
+  PHASED_ARRAY,
+  AGILE,
+  UNKNOWN
+}
+
+/// One point of an emission-limit curve. FREQUENCY_OFFSET_HZ is signed and is
+/// relative to RFEEmissionMask.REFERENCE_FREQUENCY_HZ. VALUE is expressed in
+/// the mask's required UNITS.
+table RFEEmissionMaskPoint {
+  FREQUENCY_OFFSET_HZ: double;
+  VALUE: double;
+}
+
+/// Provenance of an emitter descriptor or emission mask. Capability schemas
+/// carry model names and citations as data so the IDL remains provider-neutral.
+table RFEProvenance {
+  SOURCE: string (required);
+  SOURCE_QUERY: string;
+  MODEL_NAME: string;
+  MODEL_VERSION: string;
+  CITATION: string;
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  MODULE_CONTENT_HASH: string;
+  COMPUTED_AT: uint64;
+}
+
+/// A replayable spurious, harmonic, out-of-band, noise, conducted, radiated,
+/// or susceptibility limit curve.
+table RFEEmissionMask {
+  MASK_ID: string (required);
+  NAME: string;
+  CLASS: rfeEmissionMaskClass = UNSPECIFIED;
+  PATH: rfeEmissionPath = UNSPECIFIED;
+  /// Unit token applying to every point VALUE, for example dBW, dBW/Hz, dBuV,
+  /// or dBuA. A point with no unit is not publishable.
+  UNITS: string (required);
+  REFERENCE_FREQUENCY_HZ: double;
+  REFERENCE_BANDWIDTH_HZ: double;
+  POINTS: [RFEEmissionMaskPoint] (required);
+  PROVENANCE: RFEProvenance (required);
+}
+
+/// RF Emitter Detail Record
+table rfEmitterDetail {
+  /// Mode name or identifier
+  MODE_NAME:string;
+  /// Center frequency in MHz
+  FREQUENCY:double;
+  /// Frequency minimum in MHz
+  FREQ_MIN:double;
+  /// Frequency maximum in MHz
+  FREQ_MAX:double;
+  /// Pulse repetition interval in microseconds
+  PRI:double;
+  /// PRI minimum in microseconds
+  PRI_MIN:double;
+  /// PRI maximum in microseconds
+  PRI_MAX:double;
+  /// Pulse width in microseconds
+  PULSE_WIDTH:double;
+  /// Pulse width minimum in microseconds
+  PW_MIN:double;
+  /// Pulse width maximum in microseconds
+  PW_MAX:double;
+  /// Scan period in seconds
+  SCAN_PERIOD:double;
+  /// Effective radiated power in dBW
+  ERP:double;
+  /// Signal modulation
+  MODULATION:signalModulation;
+  /// Antenna pattern type
+  ANTENNA_PATTERN:string;
+  /// 3dB beamwidth in degrees
+  BEAMWIDTH:double;
+  /// Emission and susceptibility limit curves applicable to this operating
+  /// mode. Curves are evaluated in point order after sorting by frequency.
+  EMISSION_MASKS:[RFEEmissionMask];
+}
+
+/// RF Emitter
+table RFE {
+  /// Unique emitter identifier
+  ID:string;
+  /// Reference to parent entity
+  ID_ENTITY:string;
+  /// Emitter name or designation
+  NAME:string;
+  /// Emitter type
+  TYPE:emitterType;
+  /// Parent entity designator
+  ENTITY:string;
+  /// ELNOT (Electronic Notation)
+  ELNOT:string;
+  /// NATO reporting name
+  NATO_NAME:string;
+  /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  PLATFORM_TYPE:string;
+  /// Country of origin
+  COUNTRY:string;
+  /// Primary function description
+  FUNCTION:string;
+  /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  BAND:string;
+  /// Minimum operating frequency in MHz
+  FREQ_MIN:double;
+  /// Maximum operating frequency in MHz
+  FREQ_MAX:double;
+  /// Peak power in kW
+  PEAK_POWER:double;
+  /// Average power in kW
+  AVG_POWER:double;
+  /// Antenna gain in dBi
+  ANTENNA_GAIN:double;
+  /// Number of operating modes
+  NUM_MODES:uint;
+  /// Emitter operating mode details
+  RF_EMITTER_DETAILS:[rfEmitterDetail];
+  /// Threat level assessment
+  THREAT_LEVEL:string;
+  /// Additional notes
+  NOTES:string;
+  /// Provenance of the root emitter descriptor.
+  PROVENANCE:RFEProvenance;
+  /// Unix ms this record was serialized.
+  COMPUTED_AT:uint64;
+  /// `$EPM` identifier of the producing node.
+  PRODUCER_ID:string;
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE:[ubyte];
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE:[ubyte];
+}
+
+root_type RFE;
+file_identifier "$RFE";

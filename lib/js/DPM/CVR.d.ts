@@ -1,0 +1,204 @@
+import * as flatbuffers from 'flatbuffers';
+import { covarianceCalibration } from './covarianceCalibration.js';
+import { covarianceRule } from './covarianceRule.js';
+/**
+ * Covariance Realism
+ */
+export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
+    bb: flatbuffers.ByteBuffer | null;
+    bb_pos: number;
+    __init(i: number, bb: flatbuffers.ByteBuffer): CVR;
+    static getRootAsCVR(bb: flatbuffers.ByteBuffer, obj?: CVR): CVR;
+    static getSizePrefixedRootAsCVR(bb: flatbuffers.ByteBuffer, obj?: CVR): CVR;
+    static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * The rule that produced the covariance. In a CCSDS covariance block,
+     * Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
+     * SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+     * MODEL_ID as COV_BASIS_ID.
+     */
+    RULE(): covarianceRule;
+    /**
+     * Identifier of the error model (SourceModel, PooledModel) or of the
+     * measured realism factor (ScaledFit) the covariance came from. Empty for
+     * Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+     * EVIDENCE identifies the history estimator and its configuration.
+     */
+    MODEL_ID(): string | null;
+    MODEL_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Orbit regime of the cell, as the model names it.
+     */
+    REGIME(): string | null;
+    REGIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Age of the element set at the covariance's epoch, in days. NaN when the
+     * covariance is not an element set's.
+     */
+    AGE_DAYS(): number;
+    /**
+     * Prediction horizon of the cell, in days: the element-set age its
+     * statistics were measured at. NaN when no cell applies.
+     */
+    HORIZON_DAYS(): number;
+    /**
+     * Lineage of the reference data the cell was measured on (a PVN LINEAGE).
+     * The test speaks for a covariance whose source has this lineage; for any
+     * other lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.
+     */
+    MEASURED_LINEAGE(): string | null;
+    MEASURED_LINEAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Window of the held-out reference states the test used: an ISO 8601 UTC
+     * interval, start/end.
+     */
+    TEST_WINDOW(): string | null;
+    TEST_WINDOW(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Mean of d2/3 over the held-out samples. NaN when not measured.
+     */
+    MEAN_D2_OVER_3(): number;
+    /**
+     * Share of the held-out samples inside the 95 % region, 0 to 1. NaN when
+     * not measured.
+     */
+    COVERAGE_95(): number;
+    /**
+     * Number of held-out samples the test used.
+     */
+    SAMPLES(): number;
+    /**
+     * Number of distinct objects the samples came from.
+     */
+    OBJECTS(): number;
+    /**
+     * Factor the covariance was multiplied by to make it realistic. NaN when
+     * none was applied.
+     */
+    SCALE_FACTOR(): number;
+    /**
+     * The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and
+     * COVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3
+     * objects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell
+     * never measured.
+     */
+    CALIBRATION(): covarianceCalibration;
+    /**
+     * Identifier of the report or record that holds the test.
+     */
+    EVIDENCE(): string | null;
+    EVIDENCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Number of retained older/newer element-set residual pairs from this
+     * object in the age bin containing AGE_DAYS, after rejection/clipping.
+     * Zero means no retained pairs; never the held-out test count SAMPLES.
+     */
+    HISTORY_SAMPLES(): number;
+    /**
+     * Number of distinct older element sets contributing HISTORY_SAMPLES.
+     * Zero means none; never the distinct calibration-object count OBJECTS.
+     */
+    HISTORY_SETS(): number;
+    /**
+     * ISO 8601 UTC start/end interval spanning the element-set epochs used
+     * in the object's history fit. Empty when no history was used. This is
+     * training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+     */
+    HISTORY_WINDOW(): string | null;
+    HISTORY_WINDOW(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Dimensionless population-prior fraction alpha in the covariance blend
+     * P = (1-alpha) H + alpha P_prior, where H is the history error second
+     * moment and P_prior includes the population model's realism scaling.
+     * Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+     * or unknown. For interpolation across bins, report the correspondingly
+     * interpolated alpha. EVIDENCE must identify the estimator/configuration,
+     * retained-count bin, participating bins and their weights so the blend
+     * can be reconstructed; the scalar alone does not describe that mixture.
+     * This is not SCALE_FACTOR, which multiplies a covariance. History-only
+     * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+     */
+    SHRINKAGE_WEIGHT(): number;
+    /**
+     * Distinct truth epochs among the SAMPLES: predictions that share one truth
+     * state count once here. 0 when not stated.
+     */
+    TRUTH_EPOCHS(): number;
+    /**
+     * Share of the held-out samples whose error lies inside the 1-sigma band of
+     * the first, second and third axis of the covariance's frame (radial,
+     * in-track and cross-track for an RTN or curvilinear covariance), 0 to 1;
+     * nominal 0.6827 for Gaussian errors. NaN when not measured.
+     */
+    COVERAGE_1_SIGMA_AXIS1(): number;
+    COVERAGE_1_SIGMA_AXIS2(): number;
+    COVERAGE_1_SIGMA_AXIS3(): number;
+    /**
+     * As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.
+     */
+    COVERAGE_3_SIGMA_AXIS1(): number;
+    COVERAGE_3_SIGMA_AXIS2(): number;
+    COVERAGE_3_SIGMA_AXIS3(): number;
+    static startCVR(builder: flatbuffers.Builder): void;
+    static addRule(builder: flatbuffers.Builder, RULE: covarianceRule): void;
+    static addModelId(builder: flatbuffers.Builder, MODEL_IDOffset: flatbuffers.Offset): void;
+    static addRegime(builder: flatbuffers.Builder, REGIMEOffset: flatbuffers.Offset): void;
+    static addAgeDays(builder: flatbuffers.Builder, AGE_DAYS: number): void;
+    static addHorizonDays(builder: flatbuffers.Builder, HORIZON_DAYS: number): void;
+    static addMeasuredLineage(builder: flatbuffers.Builder, MEASURED_LINEAGEOffset: flatbuffers.Offset): void;
+    static addTestWindow(builder: flatbuffers.Builder, TEST_WINDOWOffset: flatbuffers.Offset): void;
+    static addMeanD2Over3(builder: flatbuffers.Builder, MEAN_D2_OVER_3: number): void;
+    static addCoverage95(builder: flatbuffers.Builder, COVERAGE_95: number): void;
+    static addSamples(builder: flatbuffers.Builder, SAMPLES: number): void;
+    static addObjects(builder: flatbuffers.Builder, OBJECTS: number): void;
+    static addScaleFactor(builder: flatbuffers.Builder, SCALE_FACTOR: number): void;
+    static addCalibration(builder: flatbuffers.Builder, CALIBRATION: covarianceCalibration): void;
+    static addEvidence(builder: flatbuffers.Builder, EVIDENCEOffset: flatbuffers.Offset): void;
+    static addHistorySamples(builder: flatbuffers.Builder, HISTORY_SAMPLES: number): void;
+    static addHistorySets(builder: flatbuffers.Builder, HISTORY_SETS: number): void;
+    static addHistoryWindow(builder: flatbuffers.Builder, HISTORY_WINDOWOffset: flatbuffers.Offset): void;
+    static addShrinkageWeight(builder: flatbuffers.Builder, SHRINKAGE_WEIGHT: number): void;
+    static addTruthEpochs(builder: flatbuffers.Builder, TRUTH_EPOCHS: number): void;
+    static addCoverage1SigmaAxis1(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS1: number): void;
+    static addCoverage1SigmaAxis2(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS2: number): void;
+    static addCoverage1SigmaAxis3(builder: flatbuffers.Builder, COVERAGE_1_SIGMA_AXIS3: number): void;
+    static addCoverage3SigmaAxis1(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS1: number): void;
+    static addCoverage3SigmaAxis2(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS2: number): void;
+    static addCoverage3SigmaAxis3(builder: flatbuffers.Builder, COVERAGE_3_SIGMA_AXIS3: number): void;
+    static endCVR(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static finishCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static finishSizePrefixedCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
+    static createCVR(builder: flatbuffers.Builder, RULE: covarianceRule, MODEL_IDOffset: flatbuffers.Offset, REGIMEOffset: flatbuffers.Offset, AGE_DAYS: number, HORIZON_DAYS: number, MEASURED_LINEAGEOffset: flatbuffers.Offset, TEST_WINDOWOffset: flatbuffers.Offset, MEAN_D2_OVER_3: number, COVERAGE_95: number, SAMPLES: number, OBJECTS: number, SCALE_FACTOR: number, CALIBRATION: covarianceCalibration, EVIDENCEOffset: flatbuffers.Offset, HISTORY_SAMPLES: number, HISTORY_SETS: number, HISTORY_WINDOWOffset: flatbuffers.Offset, SHRINKAGE_WEIGHT: number, TRUTH_EPOCHS: number, COVERAGE_1_SIGMA_AXIS1: number, COVERAGE_1_SIGMA_AXIS2: number, COVERAGE_1_SIGMA_AXIS3: number, COVERAGE_3_SIGMA_AXIS1: number, COVERAGE_3_SIGMA_AXIS2: number, COVERAGE_3_SIGMA_AXIS3: number): flatbuffers.Offset;
+    unpack(): CVRT;
+    unpackTo(_o: CVRT): void;
+}
+export declare class CVRT implements flatbuffers.IGeneratedObject {
+    RULE: covarianceRule;
+    MODEL_ID: string | Uint8Array | null;
+    REGIME: string | Uint8Array | null;
+    AGE_DAYS: number;
+    HORIZON_DAYS: number;
+    MEASURED_LINEAGE: string | Uint8Array | null;
+    TEST_WINDOW: string | Uint8Array | null;
+    MEAN_D2_OVER_3: number;
+    COVERAGE_95: number;
+    SAMPLES: number;
+    OBJECTS: number;
+    SCALE_FACTOR: number;
+    CALIBRATION: covarianceCalibration;
+    EVIDENCE: string | Uint8Array | null;
+    HISTORY_SAMPLES: number;
+    HISTORY_SETS: number;
+    HISTORY_WINDOW: string | Uint8Array | null;
+    SHRINKAGE_WEIGHT: number;
+    TRUTH_EPOCHS: number;
+    COVERAGE_1_SIGMA_AXIS1: number;
+    COVERAGE_1_SIGMA_AXIS2: number;
+    COVERAGE_1_SIGMA_AXIS3: number;
+    COVERAGE_3_SIGMA_AXIS1: number;
+    COVERAGE_3_SIGMA_AXIS2: number;
+    COVERAGE_3_SIGMA_AXIS3: number;
+    constructor(RULE?: covarianceRule, MODEL_ID?: string | Uint8Array | null, REGIME?: string | Uint8Array | null, AGE_DAYS?: number, HORIZON_DAYS?: number, MEASURED_LINEAGE?: string | Uint8Array | null, TEST_WINDOW?: string | Uint8Array | null, MEAN_D2_OVER_3?: number, COVERAGE_95?: number, SAMPLES?: number, OBJECTS?: number, SCALE_FACTOR?: number, CALIBRATION?: covarianceCalibration, EVIDENCE?: string | Uint8Array | null, HISTORY_SAMPLES?: number, HISTORY_SETS?: number, HISTORY_WINDOW?: string | Uint8Array | null, SHRINKAGE_WEIGHT?: number, TRUTH_EPOCHS?: number, COVERAGE_1_SIGMA_AXIS1?: number, COVERAGE_1_SIGMA_AXIS2?: number, COVERAGE_1_SIGMA_AXIS3?: number, COVERAGE_3_SIGMA_AXIS1?: number, COVERAGE_3_SIGMA_AXIS2?: number, COVERAGE_3_SIGMA_AXIS3?: number);
+    pack(builder: flatbuffers.Builder): flatbuffers.Offset;
+}
+//# sourceMappingURL=CVR.d.ts.map

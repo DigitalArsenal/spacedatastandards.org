@@ -2,11 +2,19 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+export * from './covarianceCalibration.js';
+export * from './covarianceRule.js';
+export * from './CVR.js';
 export * from './DPM.js';
 export * from './DPMAsset.js';
 export * from './DPMCompletenessIndex.js';
+export * from './DPMDerivedBuild.js';
 export * from './DPMEncryptionBinding.js';
 export * from './DPMQueryBinding.js';
+export * from './DPMRealismModel.js';
 export * from './DPMSourceBatch.js';
 export * from './dpmTransportKind.js';
 export * from './publicationAssetKind.js';
+export * from './PVN.js';
+export * from './pvnLicenseClass.js';
+export * from './pvnSourceKind.js';

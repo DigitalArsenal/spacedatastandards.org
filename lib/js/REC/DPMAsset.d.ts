@@ -1,4 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
+import { DPMDerivedBuild, DPMDerivedBuildT } from './DPMDerivedBuild.js';
+import { DPMRealismModel, DPMRealismModelT } from './DPMRealismModel.js';
+import { PVN, PVNT } from './PVN.js';
 import { dpmTransportKind } from './dpmTransportKind.js';
 import { publicationAssetKind } from './publicationAssetKind.js';
 /**
@@ -97,6 +100,29 @@ export declare class DPMAsset implements flatbuffers.IUnpackableObject<DPMAssetT
      * assets of a FlatSQL feed; 0 when not applicable.
      */
     THROUGH_SEQ(): bigint;
+    /**
+     * The provenance of every record of this asset that carries none of its own
+     * ($MOR records never do): stated once for the asset instead of in each
+     * record. A record's own PROVENANCE, where its standard has one, governs that
+     * record. Absent: the records state their own or have none.
+     */
+    RECORD_PROVENANCE(obj?: PVN): PVN | null;
+    /**
+     * The builder of the derived polynomial rows the asset's records carry
+     * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+     * carry no derived rows, or a reader must ignore them. It holds for this
+     * asset only: a reader sets it aside before reading another asset, and
+     * judges compatibility by every field, never by a version string alone.
+     */
+    DERIVED_BUILD(obj?: DPMDerivedBuild): DPMDerivedBuild | null;
+    /**
+     * The covariance realism models the asset's records name by ID ($MOR
+     * COV_REALISM_ID), each stated once with its population figures. IDs are
+     * 1 or more and unique within the asset; a reader refuses a list that
+     * repeats one.
+     */
+    COV_REALISM_MODELS(index: number, obj?: DPMRealismModel): DPMRealismModel | null;
+    covRealismModelsLength(): number;
     static startDPMAsset(builder: flatbuffers.Builder): void;
     static addAssetKind(builder: flatbuffers.Builder, ASSET_KIND: publicationAssetKind): void;
     static addTransportKind(builder: flatbuffers.Builder, TRANSPORT_KIND: dpmTransportKind): void;
@@ -112,8 +138,12 @@ export declare class DPMAsset implements flatbuffers.IUnpackableObject<DPMAssetT
     static addSchemaHash(builder: flatbuffers.Builder, SCHEMA_HASHOffset: flatbuffers.Offset): void;
     static addContentKeyId(builder: flatbuffers.Builder, CONTENT_KEY_IDOffset: flatbuffers.Offset): void;
     static addThroughSeq(builder: flatbuffers.Builder, THROUGH_SEQ: bigint): void;
+    static addRecordProvenance(builder: flatbuffers.Builder, RECORD_PROVENANCEOffset: flatbuffers.Offset): void;
+    static addDerivedBuild(builder: flatbuffers.Builder, DERIVED_BUILDOffset: flatbuffers.Offset): void;
+    static addCovRealismModels(builder: flatbuffers.Builder, COV_REALISM_MODELSOffset: flatbuffers.Offset): void;
+    static createCovRealismModelsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startCovRealismModelsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endDPMAsset(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createDPMAsset(builder: flatbuffers.Builder, ASSET_KIND: publicationAssetKind, TRANSPORT_KIND: dpmTransportKind, CIDOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, FILE_NAMEOffset: flatbuffers.Offset, FILE_IDOffset: flatbuffers.Offset, TRANSPORT_PROTOCOLOffset: flatbuffers.Offset, BYTE_LENGTH: bigint, BYTE_SHA256Offset: flatbuffers.Offset, DATA_ROOTOffset: flatbuffers.Offset, SCHEMA_NAMEOffset: flatbuffers.Offset, SCHEMA_HASHOffset: flatbuffers.Offset, CONTENT_KEY_IDOffset: flatbuffers.Offset, THROUGH_SEQ: bigint): flatbuffers.Offset;
     unpack(): DPMAssetT;
     unpackTo(_o: DPMAssetT): void;
 }
@@ -132,7 +162,10 @@ export declare class DPMAssetT implements flatbuffers.IGeneratedObject {
     SCHEMA_HASH: string | Uint8Array | null;
     CONTENT_KEY_ID: string | Uint8Array | null;
     THROUGH_SEQ: bigint;
-    constructor(ASSET_KIND?: publicationAssetKind, TRANSPORT_KIND?: dpmTransportKind, CID?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: string | Uint8Array | null, FILE_NAME?: string | Uint8Array | null, FILE_ID?: string | Uint8Array | null, TRANSPORT_PROTOCOL?: string | Uint8Array | null, BYTE_LENGTH?: bigint, BYTE_SHA256?: string | Uint8Array | null, DATA_ROOT?: string | Uint8Array | null, SCHEMA_NAME?: string | Uint8Array | null, SCHEMA_HASH?: string | Uint8Array | null, CONTENT_KEY_ID?: string | Uint8Array | null, THROUGH_SEQ?: bigint);
+    RECORD_PROVENANCE: PVNT | null;
+    DERIVED_BUILD: DPMDerivedBuildT | null;
+    COV_REALISM_MODELS: (DPMRealismModelT)[];
+    constructor(ASSET_KIND?: publicationAssetKind, TRANSPORT_KIND?: dpmTransportKind, CID?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: string | Uint8Array | null, FILE_NAME?: string | Uint8Array | null, FILE_ID?: string | Uint8Array | null, TRANSPORT_PROTOCOL?: string | Uint8Array | null, BYTE_LENGTH?: bigint, BYTE_SHA256?: string | Uint8Array | null, DATA_ROOT?: string | Uint8Array | null, SCHEMA_NAME?: string | Uint8Array | null, SCHEMA_HASH?: string | Uint8Array | null, CONTENT_KEY_ID?: string | Uint8Array | null, THROUGH_SEQ?: bigint, RECORD_PROVENANCE?: PVNT | null, DERIVED_BUILD?: DPMDerivedBuildT | null, COV_REALISM_MODELS?: (DPMRealismModelT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DPMAsset.d.ts.map

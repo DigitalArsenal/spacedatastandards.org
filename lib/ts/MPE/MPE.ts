@@ -124,8 +124,25 @@ TARGETER(obj?:MPETargeterSolution):MPETargeterSolution|null {
   return offset ? (obj || new MPETargeterSolution()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+ * SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+ */
+BTERM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+ */
+AGOM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startMPE(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(13);
 }
 
 static addEntityId(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset) {
@@ -172,6 +189,14 @@ static addTargeter(builder:flatbuffers.Builder, TARGETEROffset:flatbuffers.Offse
   builder.addFieldOffset(10, TARGETEROffset, 0);
 }
 
+static addBterm(builder:flatbuffers.Builder, BTERM:number) {
+  builder.addFieldFloat64(11, BTERM, 0.0);
+}
+
+static addAgom(builder:flatbuffers.Builder, AGOM:number) {
+  builder.addFieldFloat64(12, AGOM, 0.0);
+}
+
 static endMPE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -198,7 +223,9 @@ unpack(): MPET {
     this.MEAN_ANOMALY(),
     this.BSTAR(),
     this.MEAN_ELEMENT_THEORY(),
-    (this.TARGETER() !== null ? this.TARGETER()!.unpack() : null)
+    (this.TARGETER() !== null ? this.TARGETER()!.unpack() : null),
+    this.BTERM(),
+    this.AGOM()
   );
 }
 
@@ -215,6 +242,8 @@ unpackTo(_o: MPET): void {
   _o.BSTAR = this.BSTAR();
   _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY();
   _o.TARGETER = (this.TARGETER() !== null ? this.TARGETER()!.unpack() : null);
+  _o.BTERM = this.BTERM();
+  _o.AGOM = this.AGOM();
 }
 }
 
@@ -230,7 +259,9 @@ constructor(
   public MEAN_ANOMALY: number = 0.0,
   public BSTAR: number = 0.0,
   public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.SGP4,
-  public TARGETER: MPETargeterSolutionT|null = null
+  public TARGETER: MPETargeterSolutionT|null = null,
+  public BTERM: number = 0.0,
+  public AGOM: number = 0.0
 ){}
 
 
@@ -250,6 +281,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   MPE.addBstar(builder, this.BSTAR);
   MPE.addMeanElementTheory(builder, this.MEAN_ELEMENT_THEORY);
   MPE.addTargeter(builder, TARGETER);
+  MPE.addBterm(builder, this.BTERM);
+  MPE.addAgom(builder, this.AGOM);
 
   return MPE.endMPE(builder);
 }

@@ -1,0 +1,197 @@
+// Hash: f60012b5d307a70a9cdd1ebcdb6c1d08f112da858810b248f14409ea49fcceb6
+// Version: 2.0.3
+// -----------------------------------END_HEADER
+include "../PNM/main.fbs";
+include "../CAT/main.fbs";
+include "../EPM/main.fbs";
+include "../RFM/main.fbs";
+
+enum screeningVolumeShape : byte {
+  ELLIPSOID,
+  BOX
+}
+
+enum covarianceAlgorithm : byte {
+  CALCULATED,
+  DEFAULT
+}
+
+/// MANEUVERABLE of a CDM object (CCSDS 508.0-B-1): whether it can maneuver.
+/// UNSPECIFIED is the zero value: the record does not state it.
+enum cdmManeuverable : byte {
+  UNSPECIFIED = 0,
+  YES = 1,
+  NO = 2,
+  NOT_APPLICABLE = 3
+}
+
+table CDMObject {
+  /// A comment
+  COMMENT:string;
+  // Catalog Definition
+  OBJECT:CAT;
+  /// Point of Contact
+  POC:EPM;
+  /// Operator contact position
+  OPERATOR_CONTACT_POSITION:string;
+  /// Operator organization
+  OPERATOR_ORGANIZATION:string;
+  /// Ephemeris name
+  EPHEMERIS_NAME:string;
+  /// Covariance method
+  COVARIANCE_METHOD:covarianceAlgorithm;
+  /// Reference Frame in which the object position is defined
+  REFERENCE_FRAME:RFM;
+  /// Gravity model
+  GRAVITY_MODEL:string;
+  /// Atmospheric model
+  ATMOSPHERIC_MODEL:string;
+  /// N-body perturbations
+  N_BODY_PERTURBATIONS:string;
+  /// Solar radiation pressure
+  SOLAR_RAD_PRESSURE:bool;
+  /// Earth tides
+  EARTH_TIDES:bool;
+  /// Intrack thrust
+  INTRACK_THRUST:bool;
+  /// Time of last observation start
+  TIME_LASTOB_START:string;
+  /// Time of last observation end
+  TIME_LASTOB_END:string;
+  /// Recommended observation data span
+  RECOMMENDED_OD_SPAN:double;
+  /// Actual observation data span
+  ACTUAL_OD_SPAN:double;
+  /// Number of observations available
+  OBS_AVAILABLE:uint;
+  /// Number of observations used
+  OBS_USED:uint;
+  /// Number of tracks available
+  TRACKS_AVAILABLE:uint;
+  /// Number of tracks used
+  TRACKS_USED:uint;
+  /// Residuals accepted
+  RESIDUALS_ACCEPTED:double;
+  /// Weighted root mean square
+  WEIGHTED_RMS:double;
+  /// Area of the object
+  AREA_PC:double;
+  /// Area of the object drag
+  AREA_DRG:double;
+  /// Area of the object solar radiation pressure
+  AREA_SRP:double;
+  /// Object's area-to-mass ratio
+  CR_AREA_OVER_MASS:double;
+  /// Object's thrust acceleration
+  THRUST_ACCELERATION:double;
+  /// Object's solar flux
+  SEDR:double;
+  /// X-coordinate of the object's position in RTN coordinates
+  X:double;
+  /// Y-coordinate of the object's position in RTN
+  Y:double;
+  /// Z-coordinate of the object's position in RTN
+  Z:double;
+  /// X-coordinate of the object's position in RTN coordinates
+  X_DOT:double;
+  /// Y-coordinate of the object's position in RTN
+  Y_DOT:double;
+  /// Z-coordinate of the object's position in RTN
+  Z_DOT:double;
+  /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+  /// Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+  ///         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+  ///         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+  ///         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+  ///         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+  ///         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+  COVARIANCE:[double];
+
+  /// OBJECT_DESIGNATOR (CCSDS 508.0-B-1): the object's identifier in CATALOG_NAME,
+  /// as written. A numeric designator is also OBJECT.NORAD_CAT_ID.
+  OBJECT_DESIGNATOR:string;
+  /// CATALOG_NAME (CCSDS 508.0-B-1): the satellite catalog OBJECT_DESIGNATOR is in.
+  CATALOG_NAME:string;
+  /// MANEUVERABLE (CCSDS 508.0-B-1): YES, NO or N/A. OBJECT.MANEUVERABLE holds the
+  /// same fact as a flag, true for YES.
+  MANEUVERABLE:cdmManeuverable;
+  /// CD_AREA_OVER_MASS (CCSDS 508.0-B-1): drag area over mass, m**2/kg.
+  CD_AREA_OVER_MASS:double;
+}
+
+/// Conjunction Data Message
+///
+/// Units of the record: lengths in km (MISS_DISTANCE, RELATIVE_POSITION_*,
+/// SCREEN_VOLUME_*, X, Y, Z), speeds in km/s, and the 6x6 position/velocity part
+/// of each object's COVARIANCE (the first 21 cells) in km**2, km**2/s and
+/// km**2/s**2. The message text states metres: CCSDS 508.0-B-1 gives
+/// MISS_DISTANCE = 715 [m], which this record holds as 0.715. The cells of
+/// COVARIANCE beyond the first 21 (the drag, solar radiation pressure and thrust
+/// terms) are held as the message states them.
+table CDM {
+  /// The version of the CCSDS CDM standard used
+  CCSDS_CDM_VERS:double;
+  /// The date the CDM message was created
+  CREATION_DATE:string;
+  /// The originator of the CDM message
+  ORIGINATOR:string;
+  /// The intended recipient of the CDM message
+  MESSAGE_FOR:string;
+  /// A unique identifier for the CDM message
+  MESSAGE_ID:string;
+  /// Time of closest approach
+  TCA:string;
+  /// The miss distance between the two objects
+  MISS_DISTANCE:double;
+  /// The relative speed between the two objects
+  RELATIVE_SPEED:double;
+  /// The relative position R component
+  RELATIVE_POSITION_R:double;
+  /// The relative position T component
+  RELATIVE_POSITION_T:double;
+  /// The relative position N component
+  RELATIVE_POSITION_N:double;
+  /// The relative velocity R component
+  RELATIVE_VELOCITY_R:double;
+  /// The relative velocity T component
+  RELATIVE_VELOCITY_T:double;
+  /// The relative velocity N component
+  RELATIVE_VELOCITY_N:double;
+  /// The start time of the screening period
+  START_SCREEN_PERIOD:string;
+  /// The end time of the screening period
+  STOP_SCREEN_PERIOD:string;
+  /// The reference frame for the screening volume
+  SCREEN_VOLUME_FRAME:RFM;
+  /// The shape of the screening volume
+  SCREEN_VOLUME_SHAPE:screeningVolumeShape;
+  /// The X dimension of the screening volume
+  SCREEN_VOLUME_X:double;
+  /// The Y dimension of the screening volume
+  SCREEN_VOLUME_Y:double;
+  /// The Z dimension of the screening volume
+  SCREEN_VOLUME_Z:double;
+  /// The time the objects entered the screening volume
+  SCREEN_ENTRY_TIME:string;
+  /// The time the objects exited the screening volume
+  SCREEN_EXIT_TIME:string;
+  /// The probability of collision between the two objects
+  COLLISION_PROBABILITY:double;
+  /// The method used to calculate the collision probability
+  COLLISION_PROBABILITY_METHOD:string;
+  /// The first object in the CDM message
+  OBJECT1:CDMObject;
+  /// The second object in the CDM message
+  OBJECT2:CDMObject;
+  /// Data Source for the positional information for Object 1
+  OBJECT1_DATASOURCE:PNM;
+  /// Data Source for the positional information for Object 2
+  OBJECT2_DATASOURCE:PNM;
+  /// COMMENT lines of the message header and of its relative metadata and data
+  /// (CCSDS 508.0-B-1), in message order, joined by a line feed.
+  COMMENT:string;
+}
+
+
+root_type CDM;
+file_identifier "$CDM";

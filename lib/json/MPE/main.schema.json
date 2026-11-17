@@ -144,6 +144,14 @@
         "TARGETER" : {
                 "$ref" : "#/definitions/MPETargeterSolution",
                 "description" : "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+              },
+        "BTERM" : {
+                "type" : "number",
+                "description" : "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4."
+              },
+        "AGOM" : {
+                "type" : "number",
+                "description" : "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4."
               }
       },
       "additionalProperties" : false

@@ -332,6 +332,116 @@ impl<'a> ::flatbuffers::Verifiable for pcfBlendShape {
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfBlendShape {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_FALLBACK_PROPAGATOR: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_FALLBACK_PROPAGATOR: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_FALLBACK_PROPAGATOR: [pcfFallbackPropagator; 4] = [
+    pcfFallbackPropagator::NONE,
+    pcfFallbackPropagator::SGP4,
+    pcfFallbackPropagator::SGP4XP,
+    pcfFallbackPropagator::HOST,
+];
+
+/// What answers a request time outside an element-set propagator's window
+/// (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+/// only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfFallbackPropagator(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfFallbackPropagator {
+    /// Nothing: the state is NaN with a status that says outside the window.
+    pub const NONE: Self = Self(0);
+    /// SGP4 on the object's own SGP4 set.
+    pub const SGP4: Self = Self(1);
+    /// SGP4-XP on the object's own SGP4-XP set.
+    pub const SGP4XP: Self = Self(2);
+    /// The host routes the request elsewhere: no state, a status that asks for it.
+    pub const HOST: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::SGP4,
+        Self::SGP4XP,
+        Self::HOST,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::SGP4 => Some("SGP4"),
+            Self::SGP4XP => Some("SGP4XP"),
+            Self::HOST => Some("HOST"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfFallbackPropagator {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfFallbackPropagator {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfFallbackPropagator {
+    type Output = pcfFallbackPropagator;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfFallbackPropagator {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfFallbackPropagator {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfFallbackPropagator {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PCF_WEATHER_EXTENSION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -6931,6 +7041,11 @@ impl<'a> PCFEpochStore<'a> {
     pub const VT_BLEND_WINDOW_SECONDS: ::flatbuffers::VOffsetT = 10;
     pub const VT_BLEND_SHAPE: ::flatbuffers::VOffsetT = 12;
     pub const VT_THEORIES: ::flatbuffers::VOffsetT = 14;
+    pub const VT_WINDOW_BEFORE_DAYS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_WINDOW_AFTER_DAYS: ::flatbuffers::VOffsetT = 18;
+    pub const VT_FALLBACK_PROPAGATOR: ::flatbuffers::VOffsetT = 20;
+    pub const VT_FALLBACK_ON_REFUSAL: ::flatbuffers::VOffsetT = 22;
+    pub const VT_FALLBACK_WHILE_PENDING: ::flatbuffers::VOffsetT = 24;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6943,10 +7058,15 @@ impl<'a> PCFEpochStore<'a> {
         args: &'args PCFEpochStoreArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PCFEpochStore<'bldr>> {
         let mut builder = PCFEpochStoreBuilder::new(_fbb);
+        builder.add_WINDOW_AFTER_DAYS(args.WINDOW_AFTER_DAYS);
+        builder.add_WINDOW_BEFORE_DAYS(args.WINDOW_BEFORE_DAYS);
         builder.add_BLEND_WINDOW_SECONDS(args.BLEND_WINDOW_SECONDS);
         builder.add_CACHE_DAYS(args.CACHE_DAYS);
         if let Some(x) = args.THEORIES { builder.add_THEORIES(x); }
         builder.add_MAX_SETS_PER_OBJECT(args.MAX_SETS_PER_OBJECT);
+        builder.add_FALLBACK_WHILE_PENDING(args.FALLBACK_WHILE_PENDING);
+        builder.add_FALLBACK_ON_REFUSAL(args.FALLBACK_ON_REFUSAL);
+        builder.add_FALLBACK_PROPAGATOR(args.FALLBACK_PROPAGATOR);
         builder.add_BLEND_SHAPE(args.BLEND_SHAPE);
         builder.add_SELECTION(args.SELECTION);
         builder.finish()
@@ -6961,6 +7081,11 @@ impl<'a> PCFEpochStore<'a> {
         let THEORIES = self.THEORIES().map(|x| {
             x.into_iter().collect()
         });
+        let WINDOW_BEFORE_DAYS = self.WINDOW_BEFORE_DAYS();
+        let WINDOW_AFTER_DAYS = self.WINDOW_AFTER_DAYS();
+        let FALLBACK_PROPAGATOR = self.FALLBACK_PROPAGATOR();
+        let FALLBACK_ON_REFUSAL = self.FALLBACK_ON_REFUSAL();
+        let FALLBACK_WHILE_PENDING = self.FALLBACK_WHILE_PENDING();
         PCFEpochStoreT {
             CACHE_DAYS,
             MAX_SETS_PER_OBJECT,
@@ -6968,6 +7093,11 @@ impl<'a> PCFEpochStore<'a> {
             BLEND_WINDOW_SECONDS,
             BLEND_SHAPE,
             THEORIES,
+            WINDOW_BEFORE_DAYS,
+            WINDOW_AFTER_DAYS,
+            FALLBACK_PROPAGATOR,
+            FALLBACK_ON_REFUSAL,
+            FALLBACK_WHILE_PENDING,
         }
     }
 
@@ -7026,6 +7156,61 @@ impl<'a> PCFEpochStore<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, pcfTheory>>>(PCFEpochStore::VT_THEORIES, None)}
     }
+
+    /// Window before each selected set's epoch inside which the set's own
+    /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+    /// not set. Setting any of the window and fallback fields below to a value
+    /// other than its default enables the window; a side left at -1 is then 7.
+    #[inline]
+    pub fn WINDOW_BEFORE_DAYS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFEpochStore::VT_WINDOW_BEFORE_DAYS, Some(-1.0)).unwrap()}
+    }
+
+    /// Window after each selected set's epoch, days of 86400 seconds, boundary
+    /// included. Default -1: not set. Every set that contributes to a blend must
+    /// contain the requested time.
+    #[inline]
+    pub fn WINDOW_AFTER_DAYS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFEpochStore::VT_WINDOW_AFTER_DAYS, Some(-1.0)).unwrap()}
+    }
+
+    /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+    /// object's own set of that theory, matched by catalog number and
+    /// international designator; a missing or ambiguous set yields no state.
+    #[inline]
+    pub fn FALLBACK_PROPAGATOR(&self) -> pcfFallbackPropagator {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfFallbackPropagator>(PCFEpochStore::VT_FALLBACK_PROPAGATOR, Some(pcfFallbackPropagator::NONE)).unwrap()}
+    }
+
+    /// The fallback also answers inside the window when the propagator excludes
+    /// or refuses the object or the time. Default false. A missing row, an
+    /// allocation failure or a pool failure is not a refusal.
+    #[inline]
+    pub fn FALLBACK_ON_REFUSAL(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PCFEpochStore::VT_FALLBACK_ON_REFUSAL, Some(false)).unwrap()}
+    }
+
+    /// The fallback also answers inside the window while the propagator's own row
+    /// for the requested time is not built yet. Default false.
+    #[inline]
+    pub fn FALLBACK_WHILE_PENDING(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(PCFEpochStore::VT_FALLBACK_WHILE_PENDING, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFEpochStore<'_> {
@@ -7040,6 +7225,11 @@ impl ::flatbuffers::Verifiable for PCFEpochStore<'_> {
             .visit_field::<f64>("BLEND_WINDOW_SECONDS", Self::VT_BLEND_WINDOW_SECONDS, false)?
             .visit_field::<pcfBlendShape>("BLEND_SHAPE", Self::VT_BLEND_SHAPE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, pcfTheory>>>("THEORIES", Self::VT_THEORIES, false)?
+            .visit_field::<f64>("WINDOW_BEFORE_DAYS", Self::VT_WINDOW_BEFORE_DAYS, false)?
+            .visit_field::<f64>("WINDOW_AFTER_DAYS", Self::VT_WINDOW_AFTER_DAYS, false)?
+            .visit_field::<pcfFallbackPropagator>("FALLBACK_PROPAGATOR", Self::VT_FALLBACK_PROPAGATOR, false)?
+            .visit_field::<bool>("FALLBACK_ON_REFUSAL", Self::VT_FALLBACK_ON_REFUSAL, false)?
+            .visit_field::<bool>("FALLBACK_WHILE_PENDING", Self::VT_FALLBACK_WHILE_PENDING, false)?
             .finish();
         Ok(())
     }
@@ -7052,6 +7242,11 @@ pub struct PCFEpochStoreArgs<'a> {
     pub BLEND_WINDOW_SECONDS: f64,
     pub BLEND_SHAPE: pcfBlendShape,
     pub THEORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, pcfTheory>>>,
+    pub WINDOW_BEFORE_DAYS: f64,
+    pub WINDOW_AFTER_DAYS: f64,
+    pub FALLBACK_PROPAGATOR: pcfFallbackPropagator,
+    pub FALLBACK_ON_REFUSAL: bool,
+    pub FALLBACK_WHILE_PENDING: bool,
 }
 
 impl<'a> Default for PCFEpochStoreArgs<'a> {
@@ -7064,6 +7259,11 @@ impl<'a> Default for PCFEpochStoreArgs<'a> {
             BLEND_WINDOW_SECONDS: 3600.0,
             BLEND_SHAPE: pcfBlendShape::SMOOTHSTEP,
             THEORIES: None,
+            WINDOW_BEFORE_DAYS: -1.0,
+            WINDOW_AFTER_DAYS: -1.0,
+            FALLBACK_PROPAGATOR: pcfFallbackPropagator::NONE,
+            FALLBACK_ON_REFUSAL: false,
+            FALLBACK_WHILE_PENDING: false,
         }
     }
 }
@@ -7105,6 +7305,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEpochStoreBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_WINDOW_BEFORE_DAYS(&mut self, WINDOW_BEFORE_DAYS: f64) {
+        self.fbb_.push_slot::<f64>(PCFEpochStore::VT_WINDOW_BEFORE_DAYS, WINDOW_BEFORE_DAYS, -1.0);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_AFTER_DAYS(&mut self, WINDOW_AFTER_DAYS: f64) {
+        self.fbb_.push_slot::<f64>(PCFEpochStore::VT_WINDOW_AFTER_DAYS, WINDOW_AFTER_DAYS, -1.0);
+    }
+
+    #[inline]
+    pub fn add_FALLBACK_PROPAGATOR(&mut self, FALLBACK_PROPAGATOR: pcfFallbackPropagator) {
+        self.fbb_.push_slot::<pcfFallbackPropagator>(PCFEpochStore::VT_FALLBACK_PROPAGATOR, FALLBACK_PROPAGATOR, pcfFallbackPropagator::NONE);
+    }
+
+    #[inline]
+    pub fn add_FALLBACK_ON_REFUSAL(&mut self, FALLBACK_ON_REFUSAL: bool) {
+        self.fbb_.push_slot::<bool>(PCFEpochStore::VT_FALLBACK_ON_REFUSAL, FALLBACK_ON_REFUSAL, false);
+    }
+
+    #[inline]
+    pub fn add_FALLBACK_WHILE_PENDING(&mut self, FALLBACK_WHILE_PENDING: bool) {
+        self.fbb_.push_slot::<bool>(PCFEpochStore::VT_FALLBACK_WHILE_PENDING, FALLBACK_WHILE_PENDING, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFEpochStoreBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFEpochStoreBuilder {
@@ -7129,6 +7354,11 @@ impl ::core::fmt::Debug for PCFEpochStore<'_> {
         ds.field("BLEND_WINDOW_SECONDS", &self.BLEND_WINDOW_SECONDS());
         ds.field("BLEND_SHAPE", &self.BLEND_SHAPE());
         ds.field("THEORIES", &self.THEORIES());
+        ds.field("WINDOW_BEFORE_DAYS", &self.WINDOW_BEFORE_DAYS());
+        ds.field("WINDOW_AFTER_DAYS", &self.WINDOW_AFTER_DAYS());
+        ds.field("FALLBACK_PROPAGATOR", &self.FALLBACK_PROPAGATOR());
+        ds.field("FALLBACK_ON_REFUSAL", &self.FALLBACK_ON_REFUSAL());
+        ds.field("FALLBACK_WHILE_PENDING", &self.FALLBACK_WHILE_PENDING());
         ds.finish()
     }
 }
@@ -7142,6 +7372,11 @@ pub struct PCFEpochStoreT {
     pub BLEND_WINDOW_SECONDS: f64,
     pub BLEND_SHAPE: pcfBlendShape,
     pub THEORIES: Option<alloc::vec::Vec<pcfTheory>>,
+    pub WINDOW_BEFORE_DAYS: f64,
+    pub WINDOW_AFTER_DAYS: f64,
+    pub FALLBACK_PROPAGATOR: pcfFallbackPropagator,
+    pub FALLBACK_ON_REFUSAL: bool,
+    pub FALLBACK_WHILE_PENDING: bool,
 }
 
 impl Default for PCFEpochStoreT {
@@ -7153,6 +7388,11 @@ impl Default for PCFEpochStoreT {
             BLEND_WINDOW_SECONDS: 3600.0,
             BLEND_SHAPE: pcfBlendShape::SMOOTHSTEP,
             THEORIES: None,
+            WINDOW_BEFORE_DAYS: -1.0,
+            WINDOW_AFTER_DAYS: -1.0,
+            FALLBACK_PROPAGATOR: pcfFallbackPropagator::NONE,
+            FALLBACK_ON_REFUSAL: false,
+            FALLBACK_WHILE_PENDING: false,
         }
     }
 }
@@ -7170,6 +7410,11 @@ impl PCFEpochStoreT {
         let THEORIES = self.THEORIES.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let WINDOW_BEFORE_DAYS = self.WINDOW_BEFORE_DAYS;
+        let WINDOW_AFTER_DAYS = self.WINDOW_AFTER_DAYS;
+        let FALLBACK_PROPAGATOR = self.FALLBACK_PROPAGATOR;
+        let FALLBACK_ON_REFUSAL = self.FALLBACK_ON_REFUSAL;
+        let FALLBACK_WHILE_PENDING = self.FALLBACK_WHILE_PENDING;
         PCFEpochStore::create(_fbb, &PCFEpochStoreArgs{
             CACHE_DAYS,
             MAX_SETS_PER_OBJECT,
@@ -7177,6 +7422,11 @@ impl PCFEpochStoreT {
             BLEND_WINDOW_SECONDS,
             BLEND_SHAPE,
             THEORIES,
+            WINDOW_BEFORE_DAYS,
+            WINDOW_AFTER_DAYS,
+            FALLBACK_PROPAGATOR,
+            FALLBACK_ON_REFUSAL,
+            FALLBACK_WHILE_PENDING,
         })
     }
 }

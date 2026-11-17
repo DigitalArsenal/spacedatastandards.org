@@ -1,5 +1,5 @@
-// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
-// Version: 1.0.8
+// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -47,6 +47,20 @@ enum pcfBlendShape : ubyte {
   SMOOTHSTEP = 0,
   /// Cubic Hermite matching of position and velocity across the window.
   HERMITE = 1
+}
+
+/// What answers a request time outside an element-set propagator's window
+/// (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+/// only.
+enum pcfFallbackPropagator : ubyte {
+  /// Nothing: the state is NaN with a status that says outside the window.
+  NONE = 0,
+  /// SGP4 on the object's own SGP4 set.
+  SGP4 = 1,
+  /// SGP4-XP on the object's own SGP4-XP set.
+  SGP4XP = 2,
+  /// The host routes the request elsewhere: no state, a status that asks for it.
+  HOST = 3
 }
 
 enum pcfWeatherExtension : ubyte {
@@ -726,6 +740,26 @@ table PCFEpochStore {
   BLEND_SHAPE:pcfBlendShape = SMOOTHSTEP;
   /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   THEORIES:[pcfTheory];
+  /// Window before each selected set's epoch inside which the set's own
+  /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+  /// not set. Setting any of the window and fallback fields below to a value
+  /// other than its default enables the window; a side left at -1 is then 7.
+  WINDOW_BEFORE_DAYS:double = -1;
+  /// Window after each selected set's epoch, days of 86400 seconds, boundary
+  /// included. Default -1: not set. Every set that contributes to a blend must
+  /// contain the requested time.
+  WINDOW_AFTER_DAYS:double = -1;
+  /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  /// object's own set of that theory, matched by catalog number and
+  /// international designator; a missing or ambiguous set yields no state.
+  FALLBACK_PROPAGATOR:pcfFallbackPropagator = NONE;
+  /// The fallback also answers inside the window when the propagator excludes
+  /// or refuses the object or the time. Default false. A missing row, an
+  /// allocation failure or a pool failure is not a refusal.
+  FALLBACK_ON_REFUSAL:bool = false;
+  /// The fallback also answers inside the window while the propagator's own row
+  /// for the requested time is not built yet. Default false.
+  FALLBACK_WHILE_PENDING:bool = false;
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures

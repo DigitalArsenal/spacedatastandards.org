@@ -730,6 +730,8 @@ impl<'a> MPE<'a> {
     pub const VT_BSTAR: ::flatbuffers::VOffsetT = 20;
     pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 22;
     pub const VT_TARGETER: ::flatbuffers::VOffsetT = 24;
+    pub const VT_BTERM: ::flatbuffers::VOffsetT = 26;
+    pub const VT_AGOM: ::flatbuffers::VOffsetT = 28;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -742,6 +744,8 @@ impl<'a> MPE<'a> {
         args: &'args MPEArgs<'args>
     ) -> ::flatbuffers::WIPOffset<MPE<'bldr>> {
         let mut builder = MPEBuilder::new(_fbb);
+        builder.add_AGOM(args.AGOM);
+        builder.add_BTERM(args.BTERM);
         builder.add_BSTAR(args.BSTAR);
         builder.add_MEAN_ANOMALY(args.MEAN_ANOMALY);
         builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
@@ -772,6 +776,8 @@ impl<'a> MPE<'a> {
         let TARGETER = self.TARGETER().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let BTERM = self.BTERM();
+        let AGOM = self.AGOM();
         MPET {
             ENTITY_ID,
             EPOCH,
@@ -784,6 +790,8 @@ impl<'a> MPE<'a> {
             BSTAR,
             MEAN_ELEMENT_THEORY,
             TARGETER,
+            BTERM,
+            AGOM,
         }
     }
 
@@ -886,6 +894,25 @@ impl<'a> MPE<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<MPETargeterSolution>>(MPE::VT_TARGETER, None)}
     }
+
+    /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+    /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+    #[inline]
+    pub fn BTERM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MPE::VT_BTERM, Some(0.0)).unwrap()}
+    }
+
+    /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+    #[inline]
+    pub fn AGOM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MPE::VT_AGOM, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for MPE<'_> {
@@ -905,6 +932,8 @@ impl ::flatbuffers::Verifiable for MPE<'_> {
             .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
             .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<MPETargeterSolution>>("TARGETER", Self::VT_TARGETER, false)?
+            .visit_field::<f64>("BTERM", Self::VT_BTERM, false)?
+            .visit_field::<f64>("AGOM", Self::VT_AGOM, false)?
             .finish();
         Ok(())
     }
@@ -922,6 +951,8 @@ pub struct MPEArgs<'a> {
     pub BSTAR: f64,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
     pub TARGETER: Option<::flatbuffers::WIPOffset<MPETargeterSolution<'a>>>,
+    pub BTERM: f64,
+    pub AGOM: f64,
 }
 
 impl<'a> Default for MPEArgs<'a> {
@@ -939,6 +970,8 @@ impl<'a> Default for MPEArgs<'a> {
             BSTAR: 0.0,
             MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
             TARGETER: None,
+            BTERM: 0.0,
+            AGOM: 0.0,
         }
     }
 }
@@ -1005,6 +1038,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MPEBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_BTERM(&mut self, BTERM: f64) {
+        self.fbb_.push_slot::<f64>(MPE::VT_BTERM, BTERM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_AGOM(&mut self, AGOM: f64) {
+        self.fbb_.push_slot::<f64>(MPE::VT_AGOM, AGOM, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MPEBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         MPEBuilder {
@@ -1034,6 +1077,8 @@ impl ::core::fmt::Debug for MPE<'_> {
         ds.field("BSTAR", &self.BSTAR());
         ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
         ds.field("TARGETER", &self.TARGETER());
+        ds.field("BTERM", &self.BTERM());
+        ds.field("AGOM", &self.AGOM());
         ds.finish()
     }
 }
@@ -1052,6 +1097,8 @@ pub struct MPET {
     pub BSTAR: f64,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
     pub TARGETER: Option<alloc::boxed::Box<MPETargeterSolutionT>>,
+    pub BTERM: f64,
+    pub AGOM: f64,
 }
 
 impl Default for MPET {
@@ -1068,6 +1115,8 @@ impl Default for MPET {
             BSTAR: 0.0,
             MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
             TARGETER: None,
+            BTERM: 0.0,
+            AGOM: 0.0,
         }
     }
 }
@@ -1092,6 +1141,8 @@ impl MPET {
         let TARGETER = self.TARGETER.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let BTERM = self.BTERM;
+        let AGOM = self.AGOM;
         MPE::create(_fbb, &MPEArgs{
             ENTITY_ID,
             EPOCH,
@@ -1104,6 +1155,8 @@ impl MPET {
             BSTAR,
             MEAN_ELEMENT_THEORY,
             TARGETER,
+            BTERM,
+            AGOM,
         })
     }
 }

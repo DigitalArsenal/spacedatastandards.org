@@ -1,0 +1,125 @@
+// Hash: 3d2746966e103475e86309b4db76aefb0c34964d0f1c2c20788bea0c148296cc
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// CoT (Cursor on Target)
+//
+// Cursor on Target is an XML-based messaging protocol developed by MITRE
+// for sharing situational awareness information. It is widely used in
+// military and emergency response applications for sharing position
+// reports, sensor data, and other tactical information.
+// Reference: MIL-STD Cursor on Target Message Router, ATAK/TAK ecosystem
+
+enum COTHowType : byte {
+  /// Human entered or generated
+  HE,
+  /// Human estimated
+  H_E,
+  /// Machine generated via GPS
+  M_G,
+  /// Machine generated via sensor
+  M_S,
+  /// Machine fused
+  M_F,
+  /// Machine inferred
+  M_I,
+  /// Configured
+  M_C
+}
+
+/// CoT Point - geographical point with error estimates
+table COTPoint {
+  /// Latitude in decimal degrees (WGS84)
+  LATITUDE:double;
+  /// Longitude in decimal degrees (WGS84)
+  LONGITUDE:double;
+  /// Height above WGS84 ellipsoid in meters
+  HAE:double;
+  /// Circular error in meters (95% confidence)
+  CE:double;
+  /// Linear error (vertical) in meters (95% confidence)
+  LE:double;
+}
+
+/// CoT Detail - extensible detail element
+table COTDetail {
+  /// Contact callsign
+  CALLSIGN:string;
+  /// Contact endpoint (e.g. IP:port)
+  ENDPOINT:string;
+  /// Contact phone number
+  PHONE:string;
+  /// Track course in degrees true
+  COURSE:double;
+  /// Track speed in m/s
+  SPEED:double;
+  /// Group name/team
+  GROUP_NAME:string;
+  /// Group role
+  GROUP_ROLE:string;
+  /// Status (battery percentage, etc.)
+  STATUS_BATTERY:double;
+  /// Status readiness
+  STATUS_READINESS:bool;
+  /// Precision location source
+  PREC_LOCATION_SOURCE:string;
+  /// Precision location altitude source
+  PREC_ALTSRC:string;
+  /// UID of the device
+  UID_DROID:string;
+  /// Remarks text
+  REMARKS:string;
+  /// Remarks source
+  REMARKS_SOURCE:string;
+  /// Remarks timestamp (ISO 8601)
+  REMARKS_TIME:string;
+  /// Link UID (for related events)
+  LINK_UID:string;
+  /// Link type
+  LINK_TYPE:string;
+  /// Link relation
+  LINK_RELATION:string;
+  /// Color in ARGB integer format
+  COLOR:int32;
+  /// Stroke weight for drawing
+  STROKE_WEIGHT:double;
+  /// Fill color in ARGB integer format
+  FILL_COLOR:int32;
+  /// Labeled flag
+  LABELLED:bool;
+  /// Archive flag
+  ARCHIVE:bool;
+  /// Raw XML detail content (for extensions not covered above)
+  RAW_XML:string;
+}
+
+/// Cursor on Target Event
+table COT {
+  /// Schema version
+  VERSION:string;
+  /// Globally unique event identifier
+  UID:string;
+  /// CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)
+  /// e.g. "a-f-G-U-C" = atom, friend, Ground, Unit, Combat
+  TYPE:string;
+  /// How the event was generated (e.g. "m-g" = machine GPS)
+  HOW:COTHowType;
+  /// Time the event was generated (ISO 8601)
+  TIME:string;
+  /// Time the event information was valid (ISO 8601)
+  START:string;
+  /// Time the event information is no longer valid (ISO 8601)
+  STALE:string;
+  /// Access control marking
+  ACCESS:string;
+  /// Quality of service
+  QOS:string;
+  /// Operational status
+  OPEX:string;
+  /// Point location
+  POINT:COTPoint;
+  /// Detailed event information
+  DETAIL:COTDetail;
+}
+
+root_type COT;
+file_identifier "$COT";

@@ -1,0 +1,30 @@
+// Hash: 99b966d3445829ce9615303b8f597479d067133a30ccdbc9c46c4ce6e5994d26
+// Version: 1.144.0
+// -----------------------------------END_HEADER
+/// Trust Edge Record - Durable directed trust assertion for an SDN trust graph.
+///
+/// A TRE records one directed truster -> trustee assertion. The current trust
+/// graph is a projection over the latest TRE records by EDGE_ID, with deleted
+/// records acting as tombstones. Implementations must still validate the
+/// projected graph for acyclicity before accepting it.
+table TRE {
+  /// Stable edge identifier, normally "truster->trustee".
+  EDGE_ID: string;
+  /// Trusting node identifier.
+  TRUSTER_ID: string (required);
+  /// Trusted node identifier.
+  TRUSTEE_ID: string (required);
+  /// Truster-assigned edge weight in the range [0, 1].
+  WEIGHT: double;
+  /// Unix timestamp in milliseconds when this edge was last updated.
+  UPDATED_AT: uint64;
+  /// True when this record tombstones the edge from the current graph.
+  DELETED: bool;
+  /// Peer ID of the node/provider that issued this trust edge record.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the trust edge record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type TRE;
+file_identifier "$TRE";

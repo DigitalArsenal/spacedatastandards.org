@@ -172,22 +172,68 @@ class DPMAsset extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
+    /// The provenance of every record of this asset that carries none of its own
+    /// ($MOR records never do): stated once for the asset instead of in each
+    /// record. A record's own PROVENANCE, where its standard has one, governs that
+    /// record. Absent: the records state their own or have none.
+    public function getRECORD_PROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// The builder of the derived polynomial rows the asset's records carry
+    /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+    /// carry no derived rows, or a reader must ignore them. It holds for this
+    /// asset only: a reader sets it aside before reading another asset, and
+    /// judges compatibility by every field, never by a version string alone.
+    public function getDERIVED_BUILD()
+    {
+        $obj = new DPMDerivedBuild();
+        $o = $this->__offset(34);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// The covariance realism models the asset's records name by ID ($MOR
+    /// COV_REALISM_ID), each stated once with its population figures. IDs are
+    /// 1 or more and unique within the asset; a reader refuses a list that
+    /// repeats one.
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOV_REALISM_MODELS($j)
+    {
+        $o = $this->__offset(36);
+        $obj = new DPMRealismModel();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_REALISM_MODELSLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDPMAsset(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPMAsset
      */
-    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $TRANSPORT_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $FILE_ID, $TRANSPORT_PROTOCOL, $BYTE_LENGTH, $BYTE_SHA256, $DATA_ROOT, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID, $THROUGH_SEQ)
+    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $TRANSPORT_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $FILE_ID, $TRANSPORT_PROTOCOL, $BYTE_LENGTH, $BYTE_SHA256, $DATA_ROOT, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID, $THROUGH_SEQ, $RECORD_PROVENANCE, $DERIVED_BUILD, $COV_REALISM_MODELS)
     {
-        $builder->startObject(14);
+        $builder->startObject(17);
         self::addASSET_KIND($builder, $ASSET_KIND);
         self::addTRANSPORT_KIND($builder, $TRANSPORT_KIND);
         self::addCID($builder, $CID);
@@ -202,6 +248,9 @@ class DPMAsset extends Table
         self::addSCHEMA_HASH($builder, $SCHEMA_HASH);
         self::addCONTENT_KEY_ID($builder, $CONTENT_KEY_ID);
         self::addTHROUGH_SEQ($builder, $THROUGH_SEQ);
+        self::addRECORD_PROVENANCE($builder, $RECORD_PROVENANCE);
+        self::addDERIVED_BUILD($builder, $DERIVED_BUILD);
+        self::addCOV_REALISM_MODELS($builder, $COV_REALISM_MODELS);
         $o = $builder->endObject();
         return $o;
     }
@@ -344,6 +393,60 @@ class DPMAsset extends Table
     public static function addTHROUGH_SEQ(FlatBufferBuilder $builder, $THROUGH_SEQ)
     {
         $builder->addUlongX(13, $THROUGH_SEQ, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRECORD_PROVENANCE(FlatBufferBuilder $builder, $RECORD_PROVENANCE)
+    {
+        $builder->addOffsetX(14, $RECORD_PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDERIVED_BUILD(FlatBufferBuilder $builder, $DERIVED_BUILD)
+    {
+        $builder->addOffsetX(15, $DERIVED_BUILD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_REALISM_MODELS(FlatBufferBuilder $builder, $COV_REALISM_MODELS)
+    {
+        $builder->addOffsetX(16, $COV_REALISM_MODELS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_REALISM_MODELSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_REALISM_MODELSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -127,6 +127,47 @@ class _pcfBlendShapeReader extends fb.Reader<pcfBlendShape> {
       pcfBlendShape.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  What answers a request time outside an element-set propagator's window
+///  (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+///  only.
+enum pcfFallbackPropagator {
+  NONE(0),
+  SGP4(1),
+  SGP4XP(2),
+  HOST(3);
+
+  final int value;
+  const pcfFallbackPropagator(this.value);
+
+  factory pcfFallbackPropagator.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfFallbackPropagator.NONE;
+      case 1: return pcfFallbackPropagator.SGP4;
+      case 2: return pcfFallbackPropagator.SGP4XP;
+      case 3: return pcfFallbackPropagator.HOST;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfFallbackPropagator? _createOrNull(int? value) =>
+      value == null ? null : pcfFallbackPropagator.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pcfFallbackPropagator> reader = _pcfFallbackPropagatorReader();
+}
+
+class _pcfFallbackPropagatorReader extends fb.Reader<pcfFallbackPropagator> {
+  const _pcfFallbackPropagatorReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfFallbackPropagator read(fb.BufferContext bc, int offset) =>
+      pcfFallbackPropagator.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 enum pcfWeatherExtension {
   UNSPECIFIED(0),
   REFUSE(1),
@@ -3082,10 +3123,35 @@ class PCFEpochStore {
   pcfBlendShape get blendShape => BLEND_SHAPE;
   ///  Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   List<pcfTheory>? get THEORIES => const fb.ListReader<pcfTheory>(pcfTheory.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Window before each selected set's epoch inside which the set's own
+  ///  propagator answers, days of 86400 seconds, boundary included. Default -1:
+  ///  not set. Setting any of the window and fallback fields below to a value
+  ///  other than its default enables the window; a side left at -1 is then 7.
+  double get WINDOW_BEFORE_DAYS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, -1.0);
+  double get windowBeforeDays => WINDOW_BEFORE_DAYS;
+  ///  Window after each selected set's epoch, days of 86400 seconds, boundary
+  ///  included. Default -1: not set. Every set that contributes to a blend must
+  ///  contain the requested time.
+  double get WINDOW_AFTER_DAYS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, -1.0);
+  double get windowAfterDays => WINDOW_AFTER_DAYS;
+  ///  What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  ///  object's own set of that theory, matched by catalog number and
+  ///  international designator; a missing or ambiguous set yields no state.
+  pcfFallbackPropagator get FALLBACK_PROPAGATOR => pcfFallbackPropagator.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  pcfFallbackPropagator get fallbackPropagator => FALLBACK_PROPAGATOR;
+  ///  The fallback also answers inside the window when the propagator excludes
+  ///  or refuses the object or the time. Default false. A missing row, an
+  ///  allocation failure or a pool failure is not a refusal.
+  bool get FALLBACK_ON_REFUSAL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  bool get fallbackOnRefusal => FALLBACK_ON_REFUSAL;
+  ///  The fallback also answers inside the window while the propagator's own row
+  ///  for the requested time is not built yet. Default false.
+  bool get FALLBACK_WHILE_PENDING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get fallbackWhilePending => FALLBACK_WHILE_PENDING;
 
   @override
   String toString() {
-    return 'PCFEpochStore{cacheDays: ${cacheDays}, maxSetsPerObject: ${maxSetsPerObject}, SELECTION: ${SELECTION}, blendWindowSeconds: ${blendWindowSeconds}, blendShape: ${blendShape}, THEORIES: ${THEORIES}}';
+    return 'PCFEpochStore{cacheDays: ${cacheDays}, maxSetsPerObject: ${maxSetsPerObject}, SELECTION: ${SELECTION}, blendWindowSeconds: ${blendWindowSeconds}, blendShape: ${blendShape}, THEORIES: ${THEORIES}, windowBeforeDays: ${windowBeforeDays}, windowAfterDays: ${windowAfterDays}, fallbackPropagator: ${fallbackPropagator}, fallbackOnRefusal: ${fallbackOnRefusal}, fallbackWhilePending: ${fallbackWhilePending}}';
   }
 }
 
@@ -3103,7 +3169,7 @@ class PCFEpochStoreBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(11);
   }
 
   int addCacheDays(double? CACHE_DAYS) {
@@ -3130,6 +3196,26 @@ class PCFEpochStoreBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addWindowBeforeDays(double? WINDOW_BEFORE_DAYS) {
+    fbBuilder.addFloat64(6, WINDOW_BEFORE_DAYS);
+    return fbBuilder.offset;
+  }
+  int addWindowAfterDays(double? WINDOW_AFTER_DAYS) {
+    fbBuilder.addFloat64(7, WINDOW_AFTER_DAYS);
+    return fbBuilder.offset;
+  }
+  int addFallbackPropagator(pcfFallbackPropagator? FALLBACK_PROPAGATOR) {
+    fbBuilder.addUint8(8, FALLBACK_PROPAGATOR?.value);
+    return fbBuilder.offset;
+  }
+  int addFallbackOnRefusal(bool? FALLBACK_ON_REFUSAL) {
+    fbBuilder.addBool(9, FALLBACK_ON_REFUSAL);
+    return fbBuilder.offset;
+  }
+  int addFallbackWhilePending(bool? FALLBACK_WHILE_PENDING) {
+    fbBuilder.addBool(10, FALLBACK_WHILE_PENDING);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3143,6 +3229,11 @@ class PCFEpochStoreObjectBuilder extends fb.ObjectBuilder {
   final double? _BLEND_WINDOW_SECONDS;
   final pcfBlendShape? _BLEND_SHAPE;
   final List<pcfTheory>? _THEORIES;
+  final double? _WINDOW_BEFORE_DAYS;
+  final double? _WINDOW_AFTER_DAYS;
+  final pcfFallbackPropagator? _FALLBACK_PROPAGATOR;
+  final bool? _FALLBACK_ON_REFUSAL;
+  final bool? _FALLBACK_WHILE_PENDING;
 
   PCFEpochStoreObjectBuilder({
     double? CACHE_DAYS,
@@ -3155,26 +3246,46 @@ class PCFEpochStoreObjectBuilder extends fb.ObjectBuilder {
     pcfBlendShape? BLEND_SHAPE,
     pcfBlendShape? blendShape,
     List<pcfTheory>? THEORIES,
+    double? WINDOW_BEFORE_DAYS,
+    double? windowBeforeDays,
+    double? WINDOW_AFTER_DAYS,
+    double? windowAfterDays,
+    pcfFallbackPropagator? FALLBACK_PROPAGATOR,
+    pcfFallbackPropagator? fallbackPropagator,
+    bool? FALLBACK_ON_REFUSAL,
+    bool? fallbackOnRefusal,
+    bool? FALLBACK_WHILE_PENDING,
+    bool? fallbackWhilePending,
   })
       : _CACHE_DAYS = cacheDays ?? CACHE_DAYS,
         _MAX_SETS_PER_OBJECT = maxSetsPerObject ?? MAX_SETS_PER_OBJECT,
         _SELECTION = SELECTION,
         _BLEND_WINDOW_SECONDS = blendWindowSeconds ?? BLEND_WINDOW_SECONDS,
         _BLEND_SHAPE = blendShape ?? BLEND_SHAPE,
-        _THEORIES = THEORIES;
+        _THEORIES = THEORIES,
+        _WINDOW_BEFORE_DAYS = windowBeforeDays ?? WINDOW_BEFORE_DAYS,
+        _WINDOW_AFTER_DAYS = windowAfterDays ?? WINDOW_AFTER_DAYS,
+        _FALLBACK_PROPAGATOR = fallbackPropagator ?? FALLBACK_PROPAGATOR,
+        _FALLBACK_ON_REFUSAL = fallbackOnRefusal ?? FALLBACK_ON_REFUSAL,
+        _FALLBACK_WHILE_PENDING = fallbackWhilePending ?? FALLBACK_WHILE_PENDING;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? THEORIESOffset = _THEORIES == null ? null
         : fbBuilder.writeListUint8(_THEORIES!.map((f) => f.value).toList());
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(11);
     fbBuilder.addFloat64(0, _CACHE_DAYS);
     fbBuilder.addUint32(1, _MAX_SETS_PER_OBJECT);
     fbBuilder.addUint8(2, _SELECTION?.value);
     fbBuilder.addFloat64(3, _BLEND_WINDOW_SECONDS);
     fbBuilder.addUint8(4, _BLEND_SHAPE?.value);
     fbBuilder.addOffset(5, THEORIESOffset);
+    fbBuilder.addFloat64(6, _WINDOW_BEFORE_DAYS);
+    fbBuilder.addFloat64(7, _WINDOW_AFTER_DAYS);
+    fbBuilder.addUint8(8, _FALLBACK_PROPAGATOR?.value);
+    fbBuilder.addBool(9, _FALLBACK_ON_REFUSAL);
+    fbBuilder.addBool(10, _FALLBACK_WHILE_PENDING);
     return fbBuilder.endTable();
   }
 

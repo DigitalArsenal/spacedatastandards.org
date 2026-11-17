@@ -123,28 +123,93 @@ class PCFEpochStore extends Table
         return $this->__vector_as_bytes(14);
     }
 
+    /// Window before each selected set's epoch inside which the set's own
+    /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+    /// not set. Setting any of the window and fallback fields below to a value
+    /// other than its default enables the window; a side left at -1 is then 7.
+    /**
+     * @return double
+     */
+    public function getWINDOW_BEFORE_DAYS()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : -1.0;
+    }
+
+    /// Window after each selected set's epoch, days of 86400 seconds, boundary
+    /// included. Default -1: not set. Every set that contributes to a blend must
+    /// contain the requested time.
+    /**
+     * @return double
+     */
+    public function getWINDOW_AFTER_DAYS()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : -1.0;
+    }
+
+    /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+    /// object's own set of that theory, matched by catalog number and
+    /// international designator; a missing or ambiguous set yields no state.
+    /**
+     * @return byte
+     */
+    public function getFALLBACK_PROPAGATOR()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfFallbackPropagator::NONE;
+    }
+
+    /// The fallback also answers inside the window when the propagator excludes
+    /// or refuses the object or the time. Default false. A missing row, an
+    /// allocation failure or a pool failure is not a refusal.
+    /**
+     * @return bool
+     */
+    public function getFALLBACK_ON_REFUSAL()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// The fallback also answers inside the window while the propagator's own row
+    /// for the requested time is not built yet. Default false.
+    /**
+     * @return bool
+     */
+    public function getFALLBACK_WHILE_PENDING()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCFEpochStore(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFEpochStore
      */
-    public static function createPCFEpochStore(FlatBufferBuilder $builder, $CACHE_DAYS, $MAX_SETS_PER_OBJECT, $SELECTION, $BLEND_WINDOW_SECONDS, $BLEND_SHAPE, $THEORIES)
+    public static function createPCFEpochStore(FlatBufferBuilder $builder, $CACHE_DAYS, $MAX_SETS_PER_OBJECT, $SELECTION, $BLEND_WINDOW_SECONDS, $BLEND_SHAPE, $THEORIES, $WINDOW_BEFORE_DAYS, $WINDOW_AFTER_DAYS, $FALLBACK_PROPAGATOR, $FALLBACK_ON_REFUSAL, $FALLBACK_WHILE_PENDING)
     {
-        $builder->startObject(6);
+        $builder->startObject(11);
         self::addCACHE_DAYS($builder, $CACHE_DAYS);
         self::addMAX_SETS_PER_OBJECT($builder, $MAX_SETS_PER_OBJECT);
         self::addSELECTION($builder, $SELECTION);
         self::addBLEND_WINDOW_SECONDS($builder, $BLEND_WINDOW_SECONDS);
         self::addBLEND_SHAPE($builder, $BLEND_SHAPE);
         self::addTHEORIES($builder, $THEORIES);
+        self::addWINDOW_BEFORE_DAYS($builder, $WINDOW_BEFORE_DAYS);
+        self::addWINDOW_AFTER_DAYS($builder, $WINDOW_AFTER_DAYS);
+        self::addFALLBACK_PROPAGATOR($builder, $FALLBACK_PROPAGATOR);
+        self::addFALLBACK_ON_REFUSAL($builder, $FALLBACK_ON_REFUSAL);
+        self::addFALLBACK_WHILE_PENDING($builder, $FALLBACK_WHILE_PENDING);
         $o = $builder->endObject();
         return $o;
     }
@@ -231,6 +296,56 @@ class PCFEpochStore extends Table
     public static function startTHEORIESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWINDOW_BEFORE_DAYS(FlatBufferBuilder $builder, $WINDOW_BEFORE_DAYS)
+    {
+        $builder->addDoubleX(6, $WINDOW_BEFORE_DAYS, -1.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWINDOW_AFTER_DAYS(FlatBufferBuilder $builder, $WINDOW_AFTER_DAYS)
+    {
+        $builder->addDoubleX(7, $WINDOW_AFTER_DAYS, -1.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addFALLBACK_PROPAGATOR(FlatBufferBuilder $builder, $FALLBACK_PROPAGATOR)
+    {
+        $builder->addByteX(8, $FALLBACK_PROPAGATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addFALLBACK_ON_REFUSAL(FlatBufferBuilder $builder, $FALLBACK_ON_REFUSAL)
+    {
+        $builder->addBoolX(9, $FALLBACK_ON_REFUSAL, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addFALLBACK_WHILE_PENDING(FlatBufferBuilder $builder, $FALLBACK_WHILE_PENDING)
+    {
+        $builder->addBoolX(10, $FALLBACK_WHILE_PENDING, false);
     }
 
     /**

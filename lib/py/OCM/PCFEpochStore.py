@@ -101,8 +101,58 @@ class PCFEpochStore(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
+    # Window before each selected set's epoch inside which the set's own
+    # propagator answers, days of 86400 seconds, boundary included. Default -1:
+    # not set. Setting any of the window and fallback fields below to a value
+    # other than its default enables the window; a side left at -1 is then 7.
+    # PCFEpochStore
+    def WINDOW_BEFORE_DAYS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return -1.0
+
+    # Window after each selected set's epoch, days of 86400 seconds, boundary
+    # included. Default -1: not set. Every set that contributes to a blend must
+    # contain the requested time.
+    # PCFEpochStore
+    def WINDOW_AFTER_DAYS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return -1.0
+
+    # What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+    # object's own set of that theory, matched by catalog number and
+    # international designator; a missing or ambiguous set yields no state.
+    # PCFEpochStore
+    def FALLBACK_PROPAGATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # The fallback also answers inside the window when the propagator excludes
+    # or refuses the object or the time. Default false. A missing row, an
+    # allocation failure or a pool failure is not a refusal.
+    # PCFEpochStore
+    def FALLBACK_ON_REFUSAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # The fallback also answers inside the window while the propagator's own row
+    # for the requested time is not built yet. Default false.
+    # PCFEpochStore
+    def FALLBACK_WHILE_PENDING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def PCFEpochStoreStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(11)
 
 def Start(builder):
     PCFEpochStoreStart(builder)
@@ -159,6 +209,36 @@ def PCFEpochStoreCreateTHEORIESVector(builder, data):
 def CreateTHEORIESVector(builder, data):
     return PCFEpochStoreCreateTHEORIESVector(builder, data)
 
+def PCFEpochStoreAddWINDOW_BEFORE_DAYS(builder, WINDOW_BEFORE_DAYS):
+    builder.PrependFloat64Slot(6, WINDOW_BEFORE_DAYS, -1.0)
+
+def AddWINDOW_BEFORE_DAYS(builder, WINDOW_BEFORE_DAYS):
+    PCFEpochStoreAddWINDOW_BEFORE_DAYS(builder, WINDOW_BEFORE_DAYS)
+
+def PCFEpochStoreAddWINDOW_AFTER_DAYS(builder, WINDOW_AFTER_DAYS):
+    builder.PrependFloat64Slot(7, WINDOW_AFTER_DAYS, -1.0)
+
+def AddWINDOW_AFTER_DAYS(builder, WINDOW_AFTER_DAYS):
+    PCFEpochStoreAddWINDOW_AFTER_DAYS(builder, WINDOW_AFTER_DAYS)
+
+def PCFEpochStoreAddFALLBACK_PROPAGATOR(builder, FALLBACK_PROPAGATOR):
+    builder.PrependUint8Slot(8, FALLBACK_PROPAGATOR, 0)
+
+def AddFALLBACK_PROPAGATOR(builder, FALLBACK_PROPAGATOR):
+    PCFEpochStoreAddFALLBACK_PROPAGATOR(builder, FALLBACK_PROPAGATOR)
+
+def PCFEpochStoreAddFALLBACK_ON_REFUSAL(builder, FALLBACK_ON_REFUSAL):
+    builder.PrependBoolSlot(9, FALLBACK_ON_REFUSAL, 0)
+
+def AddFALLBACK_ON_REFUSAL(builder, FALLBACK_ON_REFUSAL):
+    PCFEpochStoreAddFALLBACK_ON_REFUSAL(builder, FALLBACK_ON_REFUSAL)
+
+def PCFEpochStoreAddFALLBACK_WHILE_PENDING(builder, FALLBACK_WHILE_PENDING):
+    builder.PrependBoolSlot(10, FALLBACK_WHILE_PENDING, 0)
+
+def AddFALLBACK_WHILE_PENDING(builder, FALLBACK_WHILE_PENDING):
+    PCFEpochStoreAddFALLBACK_WHILE_PENDING(builder, FALLBACK_WHILE_PENDING)
+
 def PCFEpochStoreEnd(builder):
     return builder.EndObject()
 
@@ -181,6 +261,11 @@ class PCFEpochStoreT(object):
         BLEND_WINDOW_SECONDS = 3600.0,
         BLEND_SHAPE = 0,
         THEORIES = None,
+        WINDOW_BEFORE_DAYS = -1.0,
+        WINDOW_AFTER_DAYS = -1.0,
+        FALLBACK_PROPAGATOR = 0,
+        FALLBACK_ON_REFUSAL = False,
+        FALLBACK_WHILE_PENDING = False,
     ):
         self.CACHE_DAYS = CACHE_DAYS  # type: float
         self.MAX_SETS_PER_OBJECT = MAX_SETS_PER_OBJECT  # type: int
@@ -188,6 +273,11 @@ class PCFEpochStoreT(object):
         self.BLEND_WINDOW_SECONDS = BLEND_WINDOW_SECONDS  # type: float
         self.BLEND_SHAPE = BLEND_SHAPE  # type: int
         self.THEORIES = THEORIES  # type: Optional[List[int]]
+        self.WINDOW_BEFORE_DAYS = WINDOW_BEFORE_DAYS  # type: float
+        self.WINDOW_AFTER_DAYS = WINDOW_AFTER_DAYS  # type: float
+        self.FALLBACK_PROPAGATOR = FALLBACK_PROPAGATOR  # type: int
+        self.FALLBACK_ON_REFUSAL = FALLBACK_ON_REFUSAL  # type: bool
+        self.FALLBACK_WHILE_PENDING = FALLBACK_WHILE_PENDING  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -222,6 +312,11 @@ class PCFEpochStoreT(object):
                     self.THEORIES.append(PCFEpochStore.THEORIES(i))
             else:
                 self.THEORIES = PCFEpochStore.THEORIESAsNumpy()
+        self.WINDOW_BEFORE_DAYS = PCFEpochStore.WINDOW_BEFORE_DAYS()
+        self.WINDOW_AFTER_DAYS = PCFEpochStore.WINDOW_AFTER_DAYS()
+        self.FALLBACK_PROPAGATOR = PCFEpochStore.FALLBACK_PROPAGATOR()
+        self.FALLBACK_ON_REFUSAL = PCFEpochStore.FALLBACK_ON_REFUSAL()
+        self.FALLBACK_WHILE_PENDING = PCFEpochStore.FALLBACK_WHILE_PENDING()
 
     # PCFEpochStoreT
     def Pack(self, builder):
@@ -241,5 +336,10 @@ class PCFEpochStoreT(object):
         PCFEpochStoreAddBLEND_SHAPE(builder, self.BLEND_SHAPE)
         if self.THEORIES is not None:
             PCFEpochStoreAddTHEORIES(builder, THEORIES)
+        PCFEpochStoreAddWINDOW_BEFORE_DAYS(builder, self.WINDOW_BEFORE_DAYS)
+        PCFEpochStoreAddWINDOW_AFTER_DAYS(builder, self.WINDOW_AFTER_DAYS)
+        PCFEpochStoreAddFALLBACK_PROPAGATOR(builder, self.FALLBACK_PROPAGATOR)
+        PCFEpochStoreAddFALLBACK_ON_REFUSAL(builder, self.FALLBACK_ON_REFUSAL)
+        PCFEpochStoreAddFALLBACK_WHILE_PENDING(builder, self.FALLBACK_WHILE_PENDING)
         PCFEpochStore = PCFEpochStoreEnd(builder)
         return PCFEpochStore

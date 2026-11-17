@@ -1,0 +1,22 @@
+/**
+ * Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+ * covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+ * COVARIANCE_DATA only. Append new values only.
+ */
+export declare enum morCovarianceFloor {
+    /**
+     * No covariance.
+     */
+    UNSTATED = 0,
+    /**
+     * At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+     * reader of AP sets does not use this covariance (its states fly).
+     */
+    WRITER_THEORY_STATE = 1,
+    /**
+     * At the two-body state of the set's own mean elements: PRODUCER exactly
+     * "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+     */
+    MEAN_ELEMENTS_TWO_BODY = 2
+}
+//# sourceMappingURL=morCovarianceFloor.d.ts.map

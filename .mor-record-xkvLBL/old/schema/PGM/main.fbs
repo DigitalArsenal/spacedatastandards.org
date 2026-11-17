@@ -1,0 +1,49 @@
+// Hash: 46f8cf50a659b2218bf8c87d6b16ce1bbad4563b996000bb449a33a53a10e9c1
+// Version: 1.145.0
+// -----------------------------------END_HEADER
+/// Peer Group Membership Record - Durable peer group state for an SDN node.
+///
+/// PGM records describe one named peer group and its current member peer IDs.
+/// The current peer group registry is a projection over the latest PGM records
+/// by GROUP_NAME, with deleted records acting as tombstones.
+enum peerGroupTrustCategory : byte {
+  Untrusted,
+  Limited,
+  Standard,
+  Trusted,
+  Admin
+}
+
+/// String metadata key/value attached to a peer group.
+table PGMMetadataEntry {
+  /// Metadata key.
+  KEY: string;
+  /// Metadata value.
+  VALUE: string;
+}
+
+table PGM {
+  /// Unique peer group name.
+  GROUP_NAME: string (required);
+  /// Optional group description.
+  DESCRIPTION: string;
+  /// Default trust level for peers in this group.
+  DEFAULT_TRUST_LEVEL: peerGroupTrustCategory = Standard;
+  /// libp2p peer IDs that belong to this group.
+  MEMBERS: [string];
+  /// Unix timestamp in milliseconds when this group was created.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds when this group record was last updated.
+  UPDATED_AT: uint64;
+  /// Additional group metadata as string key/value entries.
+  METADATA: [PGMMetadataEntry];
+  /// True when this record tombstones the group from the current registry.
+  DELETED: bool;
+  /// Peer ID of the node/provider that issued this group record.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the peer group record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type PGM;
+file_identifier "$PGM";

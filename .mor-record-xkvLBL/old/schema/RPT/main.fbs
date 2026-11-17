@@ -1,0 +1,46 @@
+// Hash: bc4c6043a767ecf4d834e55d9da926cdaf1b317caee63d470dc0e78747bf58ec
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Verifiable Report (RPT)
+// Description
+// A signed report descriptor emitted with every export: the template that
+// rendered it, the source query it rendered from, and content hashes so any
+// recipient can re-derive the report and verify it against its query + hash —
+// no server round-trip required for verification.
+
+/// Verifiable Report descriptor
+table RPT {
+  /// Stable report identifier
+  REPORT_ID: string (required);
+  /// Identifier of the report template used to render
+  TEMPLATE_ID: string;
+  /// Version of the report template
+  TEMPLATE_VERSION: string;
+  /// Display title of the report
+  TITLE: string;
+  /// FlatSQL source query the report renders from
+  SOURCE_QUERY: string;
+  /// SHA-256 over the canonical source-query result stream, so the data the
+  /// report was rendered from can be re-derived and verified
+  SOURCE_DATA_HASH: [ubyte];
+  /// SHA-256 of the rendered report artifact
+  CONTENT_HASH: [ubyte];
+  /// MIME type of the rendered artifact, e.g. "application/pdf", "text/html",
+  /// "text/csv"
+  CONTENT_TYPE: string;
+  /// Optional IPFS CID of the rendered artifact
+  CONTENT_CID: string;
+  /// Unix ms the report was generated
+  GENERATED_AT: uint64;
+  /// `$PLG.PLUGIN_ID` of the generator module
+  GENERATOR_MODULE_ID: string;
+  /// Version of the generator module
+  GENERATOR_MODULE_VERSION: string;
+  /// IPFS CID of the `$EPM` that generated the report
+  CREATOR_EPM_CID: string;
+  /// Ed25519 signature by the creator `$EPM` over the report descriptor
+  SIGNATURE: [ubyte];
+}
+
+root_type RPT;
+file_identifier "$RPT";

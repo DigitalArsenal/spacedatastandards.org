@@ -1,0 +1,47 @@
+// Hash: 3981b58db6b3684d87ec78b5ffd0688b4cd6a87cc62e1b0cb36abb66cab0eec6
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Random Data (RND)
+/// Description
+/// A block of random bytes and how it was made: a nonce, a seed, a key
+/// derivation salt, a challenge, a sample for a randomness beacon, or a test
+/// input. The same record asks for random data and delivers it: a request
+/// states LENGTH (and, optionally, the quality it needs) with no BYTES; the
+/// answer carries LENGTH bytes in BYTES with the source that produced them.
+///
+/// RND says nothing about how the bytes will be used. Key material that has
+/// been assigned a purpose and an algorithm belongs in $KMF.
+/// What produced the bytes. Append new values only; never reorder or reuse
+/// existing values.
+enum rndSource : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// The host operating system's cryptographically secure generator.
+  SystemCsprng,
+  /// A hardware random number generator.
+  Hardware,
+  /// A deterministic generator from a stated seed (reproducible; not for
+  /// secrets).
+  Deterministic,
+  /// A public randomness beacon (verifiable, not secret).
+  Beacon
+}
+/// Random Data - a request for random bytes, or the bytes.
+table RND {
+  /// Number of bytes requested or delivered.
+  LENGTH: uint32;
+  /// The random bytes; empty in a request.
+  BYTES: [ubyte];
+  SOURCE: rndSource = Unspecified;
+  /// Unix milliseconds when the bytes were generated; 0 in a request.
+  GENERATED_AT_MS: int64;
+  /// Identifier of the generator or beacon (a device serial, a beacon URL).
+  GENERATOR_ID: string;
+  /// Position of this block in the generator's output, for beacons and
+  /// deterministic generators; 0 = not sequenced.
+  SEQUENCE: uint64;
+  /// Seed of a Deterministic generator, so the block can be reproduced.
+  SEED: [ubyte];
+}
+root_type RND;
+file_identifier "$RND";

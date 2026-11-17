@@ -1,0 +1,234 @@
+// Hash: fa950963b140aa61e8acdd72a2ef63e03bff5d58359b8d2fecbf5693768f71ce
+// Version: 1.232.0
+// -----------------------------------END_HEADER
+include "../TRK/main.fbs";
+
+// Encoded Track Segment (ETS)
+// Description
+// One bounded time window of one air or surface track, stored at rest as a
+// codec bitstream. The bitstream (PAYLOAD) is opaque to this standard: it
+// carries the knots, quantization and reference point, and only the codec
+// named by CODEC can decode it. Everything a consumer needs to FIND, FILTER,
+// JOIN and LICENSE a segment without decoding it rides in the plain fields
+// beside it. The record is lossy history, not live model state: `$TMS` is the
+// propagatable state of a live track at one epoch; `$TRK` is a fused contact
+// report. They join to this record on track identity and never substitute.
+//
+// THE BOUND IS AT OBSERVATIONS ONLY. TOLERANCE_* and ACHIEVED_MAX_ERROR_* hold
+// at the instants the source reported a position, measured in the local
+// WGS 84 east-north-up frame after a full serialize/decode round trip. Between
+// reports the decoded path is the codec's own interpolation and carries no
+// bound; a turn or a hold between two reports is invisible to the bound.
+//
+// IDENTIFIERS ARE SCHEME-TAGGED, as in `$TMS`. No identity system is a field
+// name and none is named by this standard. TRACK_ID names the publisher's own
+// continuous track; an identifier names the object that moved.
+//
+// SEGMENTS. A live track is cut into windows, one record per window, all with
+// the same TRACK_ID and SEGMENT_SEQ 0, 1, 2, ... Windows are self-contained:
+// each has its own reference point and decodes alone. When the first
+// observation of window N+1 is the last observation of window N
+// (EPOCH == the previous END_EPOCH) the boundary is shared and the path is
+// continuous across it. When EPOCH is later there is a gap: the interval
+// between is unobserved, and a consumer MUST NOT interpolate across it
+// unless it chooses to, outside any bound. A missing SEGMENT_SEQ is a missing
+// window. A later record with the same TRACK_ID and SEGMENT_SEQ supersedes
+// the earlier by store arrival order; no field in this record decides it.
+//
+// DELIVERY IS NOT IN THE RECORD. Arrival order, batch, delivery time, the
+// producing node and the content identifier are the store's index metadata;
+// this record never repeats them.
+//
+// ABSENT IS NOT ZERO. A numeric field whose value is unknown reads NaN (its
+// declared default). A bound of 0 m, a latitude of 0 and an altitude of 0 are
+// all real claims.
+
+/// Codec that produced PAYLOAD. Member names are the codec's own 4-byte
+/// bitstream magic: PAYLOAD[0..3] MUST equal the ASCII of the member name,
+/// so the field and the bytes cannot disagree unnoticed. `TRK2` is a codec
+/// name and has no relation to the `$TRK` standard. UNSPECIFIED holds ordinal
+/// 0 so an unset CODEC can never read as a real codec. Ordinals are wire
+/// values: append only, never reorder or reuse. A reader that meets an
+/// ordinal it does not know MUST still index the record by its plain fields
+/// and MUST NOT attempt to decode PAYLOAD.
+enum etsCodec : ubyte {
+  /// Unset. A record carrying this is not decodable.
+  UNSPECIFIED = 0,
+  /// Bounded-error predictive knot track: time-domain simplification, adaptive
+  /// position and time quanta, velocity-predicted residuals, local WGS 84
+  /// east-north-up frame anchored at the first observation.
+  TRK2 = 1
+}
+
+/// Vertical datum of the altitude channel, and whether the channel exists.
+/// This is the track's dimensionality: NONE is a 2-D (latitude, longitude)
+/// track; every other stated member is 3-D. The unset member is invalid on a
+/// written record. A consumer MUST NOT treat a barometric altitude as a
+/// WGS 84 ellipsoidal height or build ECEF from it.
+enum etsAltitudeDatum : ubyte {
+  /// Unset. A writer MUST state one of the members below.
+  UNSPECIFIED = 0,
+  /// No altitude channel: a 2-D track. ALTITUDE_MIN_M, ALTITUDE_MAX_M and
+  /// TOLERANCE_V_M / ACHIEVED_MAX_ERROR_V_M are NaN.
+  NONE = 1,
+  /// Height above the WGS 84 ellipsoid, metres.
+  GEOMETRIC_WGS84 = 2,
+  /// Pressure altitude on the standard atmosphere at the standard sea-level
+  /// pressure setting (no local pressure correction), metres.
+  BAROMETRIC_STANDARD = 3,
+  /// Altitude is present but its source does not state the datum. The value
+  /// is carried and the datum is never guessed.
+  UNSTATED_3D = 4
+}
+
+/// One identity the tracked object is known by in a named identity scheme.
+/// Same shape and meaning as `TMSIdentifier`.
+table ETSIdentifier {
+  /// Identity scheme token, verbatim (the identity system's own name).
+  /// Never a field name and never normalized by the publisher.
+  SCHEME:string (required);
+  /// The identifier within that scheme, verbatim.
+  VALUE:string (required);
+}
+
+/// Dataset lineage and redistribution terms for one encoded segment.
+///
+/// In a store that keeps one table per source, the table carries provenance
+/// and its records omit SOURCE. A writer fills SOURCE when a record leaves
+/// the store (export, or sharing by content identifier, where the record
+/// travels without its table); the required fields below then apply. A
+/// redistributed track whose feed, epoch and licence are unstated is not
+/// publishable. Same fields, same meaning as `TMSProvenance`. The standard
+/// names no feed, provider or site.
+table ETSProvenance {
+  /// Publisher-stable, lowercase identifier for the feed or dataset the
+  /// observations came from, unique within the publisher's own dataset
+  /// registry. Never a display name and never a URL.
+  DATASET_ID:string (required);
+  /// The feed or dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the feed or dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition or feed
+  /// session the observations came from.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when one exists.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter or subscription used.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp of the last
+  /// observation in this segment.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Unknown terms are never public domain
+  /// and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as the source publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source's own identifier for the track or observation stream the
+  /// segment was built from, verbatim.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC instant the source last modified or emitted the underlying
+  /// observations, as the source states it.
+  NATIVE_MODIFIED:string;
+}
+
+/// Encoded Track Segment
+table ETS {
+  // ---- Identity ----
+  /// Publisher-stable identifier of the continuous track this segment belongs
+  /// to, held constant across every segment of the same track. Joins to
+  /// `TMS.TRACK_ID`. Not an object identifier: one object has many tracks.
+  TRACK_ID:string (required);
+  /// Zero-based position of this window within its track. Consecutive
+  /// segments of a track differ by 1; a jump is a missing window.
+  SEGMENT_SEQ:uint32 = 0;
+  /// True only when the publisher knows no later segment of this track will
+  /// exist (a complete historical track, or a live track it has ended). False
+  /// means more may follow or the publisher does not know.
+  TRACK_CLOSED:bool = false;
+  /// Every identity the tracked object is known by, scheme-tagged.
+  IDENTIFIERS:[ETSIdentifier];
+  /// Domain the object moves in. The `$TRK` enum reused verbatim; ordinal 0 is
+  /// SPACE, so it is defaulted to UNKNOWN explicitly. SPACE is invalid here:
+  /// the codec's frame is geodetic WGS 84, and orbital state belongs to the
+  /// orbit standards.
+  ENVIRONMENT:trackEnvironment = UNKNOWN;
+
+  // ---- Coverage ----
+  /// RFC 3339 UTC fixed-millisecond instant of the FIRST observation in this
+  /// segment: the segment's start and its store epoch. Equals the instant in
+  /// the PAYLOAD header. Fixed-millisecond UTC strings sort chronologically
+  /// as text.
+  EPOCH:string (required);
+  /// RFC 3339 UTC fixed-millisecond instant of the LAST knot in this segment
+  /// (the last observation is always a knot). EPOCH <= END_EPOCH. The
+  /// segment is covered over the closed interval [EPOCH, END_EPOCH]; the
+  /// codec rejects times outside it.
+  END_EPOCH:string (required);
+  /// Observations the writer encoded, before simplification.
+  OBSERVATION_COUNT:uint32 = 0;
+  /// Knots retained in PAYLOAD. At least 2 for a decodable segment.
+  KNOT_COUNT:uint32 = 0;
+
+  // ---- Spatial summary (readable without the codec) ----
+  /// Bounding box of the DECODED path: it contains the decoded position at
+  /// every knot and at the midpoint between every pair of knots, as the
+  /// writer evaluated the decoder. It is a prefilter, not an error bound: a
+  /// source observation may lie outside by up to ACHIEVED_MAX_ERROR_H_M.
+  /// Degrees on WGS 84. WEST_DEG > EAST_DEG means the box crosses the
+  /// antimeridian (longitudes in [-180, 180]).
+  SOUTH_DEG:double = nan;
+  NORTH_DEG:double = nan;
+  WEST_DEG:double = nan;
+  EAST_DEG:double = nan;
+  /// Vertical datum of the altitude channel; NONE for a 2-D track.
+  ALTITUDE_REFERENCE:etsAltitudeDatum = UNSPECIFIED;
+  /// Lowest and highest decoded altitude of the same evaluation, metres in
+  /// ALTITUDE_REFERENCE. NaN for a 2-D track.
+  ALTITUDE_MIN_M:double = nan;
+  ALTITUDE_MAX_M:double = nan;
+
+  // ---- Accuracy, at observation instants only ----
+  /// Horizontal tolerance the writer was asked to meet, metres. The bound is
+  /// the Euclidean east-north distance in the local WGS 84 east-north-up
+  /// frame between the decoded and the source position, at each source
+  /// observation instant.
+  TOLERANCE_H_M:float = nan;
+  /// Vertical tolerance the writer was asked to meet, metres: the absolute
+  /// altitude difference at each observation instant. NaN for a 2-D track.
+  TOLERANCE_V_M:float = nan;
+  /// Largest horizontal error the writer MEASURED by decoding PAYLOAD and
+  /// comparing with every source observation. Never above TOLERANCE_H_M.
+  ACHIEVED_MAX_ERROR_H_M:float = nan;
+  /// Largest vertical error measured the same way. NaN for a 2-D track.
+  ACHIEVED_MAX_ERROR_V_M:float = nan;
+
+  // ---- Codec and payload ----
+  /// Codec that produced PAYLOAD.
+  CODEC:etsCodec = UNSPECIFIED;
+  /// Revision of the codec's DECODING SEMANTICS within the codec named by
+  /// CODEC. Starts at 1. It increases whenever the same payload bytes would
+  /// decode to different positions; a layout change is a new codec member,
+  /// never a new revision. A reader MUST refuse to decode a revision newer
+  /// than its decoder supports.
+  CODEC_VERSION:uint16 = 0;
+  /// The codec bitstream, verbatim and opaque. Little-endian; begins with the
+  /// codec's magic (see etsCodec). Decodable only by the codec's decoder.
+  PAYLOAD:[ubyte] (required);
+
+  /// Feed lineage and licence. Absent in a per-source store table, which
+  /// carries it; filled when the record leaves the store (export or sharing
+  /// by content identifier). See ETSProvenance.
+  SOURCE:ETSProvenance;
+}
+
+root_type ETS;
+file_identifier "$ETS";

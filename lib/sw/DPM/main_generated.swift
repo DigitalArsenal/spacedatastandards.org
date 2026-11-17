@@ -185,6 +185,9 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let SCHEMA_HASH: VOffset = 26
     static let CONTENT_KEY_ID: VOffset = 28
     static let THROUGH_SEQ: VOffset = 30
+    static let RECORD_PROVENANCE: VOffset = 32
+    static let DERIVED_BUILD: VOffset = 34
+    static let COV_REALISM_MODELS: VOffset = 36
   }
 
   ///  Asset role.
@@ -245,7 +248,23 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
   ///  assets of a FlatSQL feed; 0 when not applicable.
   public var THROUGH_SEQ: UInt64 { let o = _accessor.offset(VT.THROUGH_SEQ); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  ///  The provenance of every record of this asset that carries none of its own
+  ///  ($MOR records never do): stated once for the asset instead of in each
+  ///  record. A record's own PROVENANCE, where its standard has one, governs that
+  ///  record. Absent: the records state their own or have none.
+  public var RECORD_PROVENANCE: PVN? { let o = _accessor.offset(VT.RECORD_PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The builder of the derived polynomial rows the asset's records carry
+  ///  ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  ///  carry no derived rows, or a reader must ignore them. It holds for this
+  ///  asset only: a reader sets it aside before reading another asset, and
+  ///  judges compatibility by every field, never by a version string alone.
+  public var DERIVED_BUILD: DPMDerivedBuild? { let o = _accessor.offset(VT.DERIVED_BUILD); return o == 0 ? nil : DPMDerivedBuild(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The covariance realism models the asset's records name by ID ($MOR
+  ///  COV_REALISM_ID), each stated once with its population figures. IDs are
+  ///  1 or more and unique within the asset; a reader refuses a list that
+  ///  repeats one.
+  public var COV_REALISM_MODELS: FlatbufferVector<DPMRealismModel> { return _accessor.vector(at: VT.COV_REALISM_MODELS, byteSize: 4) }
+  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(ASSET_KIND: publicationAssetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ASSET_KIND.rawValue, def: 3, at: VT.ASSET_KIND) }
   public static func add(TRANSPORT_KIND: dpmTransportKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT_KIND.rawValue, def: 0, at: VT.TRANSPORT_KIND) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
@@ -260,6 +279,9 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func add(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
   public static func add(CONTENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_KEY_ID, at: VT.CONTENT_KEY_ID) }
   public static func add(THROUGH_SEQ: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THROUGH_SEQ, def: 0, at: VT.THROUGH_SEQ) }
+  public static func add(RECORD_PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_PROVENANCE, at: VT.RECORD_PROVENANCE) }
+  public static func add(DERIVED_BUILD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_BUILD, at: VT.DERIVED_BUILD) }
+  public static func addVectorOf(COV_REALISM_MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM_MODELS, at: VT.COV_REALISM_MODELS) }
   public static func endDPMAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDPMAsset(
     _ fbb: inout FlatBufferBuilder,
@@ -276,7 +298,10 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
     SCHEMA_HASHOffset SCHEMA_HASH: Offset = Offset(),
     CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset(),
-    THROUGH_SEQ: UInt64 = 0
+    THROUGH_SEQ: UInt64 = 0,
+    RECORD_PROVENANCEOffset RECORD_PROVENANCE: Offset = Offset(),
+    DERIVED_BUILDOffset DERIVED_BUILD: Offset = Offset(),
+    COV_REALISM_MODELSVectorOffset COV_REALISM_MODELS: Offset = Offset()
   ) -> Offset {
     let __start = DPMAsset.startDPMAsset(&fbb)
     DPMAsset.add(ASSET_KIND: ASSET_KIND, &fbb)
@@ -293,6 +318,9 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     DPMAsset.add(SCHEMA_HASH: SCHEMA_HASH, &fbb)
     DPMAsset.add(CONTENT_KEY_ID: CONTENT_KEY_ID, &fbb)
     DPMAsset.add(THROUGH_SEQ: THROUGH_SEQ, &fbb)
+    DPMAsset.add(RECORD_PROVENANCE: RECORD_PROVENANCE, &fbb)
+    DPMAsset.add(DERIVED_BUILD: DERIVED_BUILD, &fbb)
+    DPMAsset.addVectorOf(COV_REALISM_MODELS: COV_REALISM_MODELS, &fbb)
     return DPMAsset.endDPMAsset(&fbb, start: __start)
   }
 
@@ -312,6 +340,138 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CONTENT_KEY_ID, fieldName: "CONTENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.THROUGH_SEQ, fieldName: "THROUGH_SEQ", required: false, type: UInt64.self)
+    try _v.visit(field: VT.RECORD_PROVENANCE, fieldName: "RECORD_PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.DERIVED_BUILD, fieldName: "DERIVED_BUILD", required: false, type: ForwardOffset<DPMDerivedBuild>.self)
+    try _v.visit(field: VT.COV_REALISM_MODELS, fieldName: "COV_REALISM_MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<DPMRealismModel>, DPMRealismModel>>.self)
+    _v.finish()
+  }
+}
+
+///  One covariance realism model of an asset: the realism entry its records
+///  would otherwise each repeat.
+public struct DPMRealismModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$DPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMRealismModel.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ID: VOffset = 4
+    static let REALISM: VOffset = 6
+  }
+
+  ///  The model's number within the asset, 1 or more; a record names it.
+  public var ID: UInt16 { let o = _accessor.offset(VT.ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  ///  entry of each record that names this ID.
+  public var REALISM: CVR? { let o = _accessor.offset(VT.REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startDPMRealismModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ID, def: 0, at: VT.ID) }
+  public static func add(REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REALISM, at: VT.REALISM) }
+  public static func endDPMRealismModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDPMRealismModel(
+    _ fbb: inout FlatBufferBuilder,
+    ID: UInt16 = 0,
+    REALISMOffset REALISM: Offset = Offset()
+  ) -> Offset {
+    let __start = DPMRealismModel.startDPMRealismModel(&fbb)
+    DPMRealismModel.add(ID: ID, &fbb)
+    DPMRealismModel.add(REALISM: REALISM, &fbb)
+    return DPMRealismModel.endDPMRealismModel(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.REALISM, fieldName: "REALISM", required: false, type: ForwardOffset<CVR>.self)
+    _v.finish()
+  }
+}
+
+///  Who built the derived polynomial rows of an asset's records, and under what:
+///  the per-asset part of $PPE PPEBuild, same names and meanings. The per-record
+///  RECORD_DIGEST is not stated: rows carried inside the record they derive from
+///  are bound to it by the record itself. A reader that cannot reproduce
+///  BUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.
+public struct DPMDerivedBuild: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$DPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMDerivedBuild.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let BUILDER_NAME: VOffset = 4
+    static let BUILDER_VERSION: VOffset = 6
+    static let BUILDER_DIGEST: VOffset = 8
+    static let ENVIRONMENT_DIGEST: VOffset = 10
+    static let TOL_POSITION: VOffset = 12
+    static let TOL_VELOCITY: VOffset = 14
+  }
+
+  ///  Name of the builder, e.g. sdn-ap.
+  public var BUILDER_NAME: String? { let o = _accessor.offset(VT.BUILDER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUILDER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUILDER_NAME) }
+  ///  Version of the builder.
+  public var BUILDER_VERSION: String? { let o = _accessor.offset(VT.BUILDER_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BUILDER_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUILDER_VERSION) }
+  ///  SHA-256 of the builder's executable artifact (32 bytes).
+  public var BUILDER_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BUILDER_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToBuilderDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BUILDER_DIGEST, body: body) }
+  ///  SHA-256 over the configuration and environment inputs the builder used that
+  ///  are not in the source record, by the builder's published rule (32 bytes);
+  ///  empty when the builder uses none.
+  public var ENVIRONMENT_DIGEST: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.ENVIRONMENT_DIGEST, byteSize: 1) }
+  public func withUnsafePointerToEnvironmentDigest<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ENVIRONMENT_DIGEST, body: body) }
+  ///  Build tolerance per position axis in km. NaN when not stated.
+  public var TOL_POSITION: Double { let o = _accessor.offset(VT.TOL_POSITION); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Build tolerance per velocity axis in km/s. NaN when not stated or without
+  ///  velocity.
+  public var TOL_VELOCITY: Double { let o = _accessor.offset(VT.TOL_VELOCITY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startDPMDerivedBuild(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(BUILDER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_NAME, at: VT.BUILDER_NAME) }
+  public static func add(BUILDER_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_VERSION, at: VT.BUILDER_VERSION) }
+  public static func addVectorOf(BUILDER_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BUILDER_DIGEST, at: VT.BUILDER_DIGEST) }
+  public static func addVectorOf(ENVIRONMENT_DIGEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT_DIGEST, at: VT.ENVIRONMENT_DIGEST) }
+  public static func add(TOL_POSITION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOL_POSITION, def: .nan, at: VT.TOL_POSITION) }
+  public static func add(TOL_VELOCITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOL_VELOCITY, def: .nan, at: VT.TOL_VELOCITY) }
+  public static func endDPMDerivedBuild(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDPMDerivedBuild(
+    _ fbb: inout FlatBufferBuilder,
+    BUILDER_NAMEOffset BUILDER_NAME: Offset = Offset(),
+    BUILDER_VERSIONOffset BUILDER_VERSION: Offset = Offset(),
+    BUILDER_DIGESTVectorOffset BUILDER_DIGEST: Offset = Offset(),
+    ENVIRONMENT_DIGESTVectorOffset ENVIRONMENT_DIGEST: Offset = Offset(),
+    TOL_POSITION: Double = .nan,
+    TOL_VELOCITY: Double = .nan
+  ) -> Offset {
+    let __start = DPMDerivedBuild.startDPMDerivedBuild(&fbb)
+    DPMDerivedBuild.add(BUILDER_NAME: BUILDER_NAME, &fbb)
+    DPMDerivedBuild.add(BUILDER_VERSION: BUILDER_VERSION, &fbb)
+    DPMDerivedBuild.addVectorOf(BUILDER_DIGEST: BUILDER_DIGEST, &fbb)
+    DPMDerivedBuild.addVectorOf(ENVIRONMENT_DIGEST: ENVIRONMENT_DIGEST, &fbb)
+    DPMDerivedBuild.add(TOL_POSITION: TOL_POSITION, &fbb)
+    DPMDerivedBuild.add(TOL_VELOCITY: TOL_VELOCITY, &fbb)
+    return DPMDerivedBuild.endDPMDerivedBuild(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.BUILDER_NAME, fieldName: "BUILDER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUILDER_VERSION, fieldName: "BUILDER_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BUILDER_DIGEST, fieldName: "BUILDER_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ENVIRONMENT_DIGEST, fieldName: "ENVIRONMENT_DIGEST", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.TOL_POSITION, fieldName: "TOL_POSITION", required: false, type: Double.self)
+    try _v.visit(field: VT.TOL_VELOCITY, fieldName: "TOL_VELOCITY", required: false, type: Double.self)
     _v.finish()
   }
 }

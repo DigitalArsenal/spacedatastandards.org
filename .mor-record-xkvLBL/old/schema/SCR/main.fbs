@@ -1,0 +1,244 @@
+// Hash: 1107d5e4dd868d8fe9a019676ac42118eab08902fe47ca810ef7464cbe9bbe3f
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Conjunction Screening (SCR)
+/// Description
+/// The intermediate work products of screening a catalog for close
+/// approaches, and the possibility-of-collision assessment of one encounter.
+/// A screen over a time window is cut into coarse steps; a block names a run
+/// of steps; a grid holds every object's position, velocity and deviation
+/// bound at each step of a block (so pairs that cannot come within the
+/// threshold are discarded cheaply, on a CPU or a GPU); roles say which
+/// objects are primaries, secondaries or skipped; candidates are the
+/// (pair, step) cells that survive the coarse filter and go on to precise
+/// refinement; exclusions are objects whose propagation failed. Each frame
+/// is self-describing so the stages can run in separate processes or nodes
+/// and a partitioned screen can be merged.
+///
+/// The refined conjunctions of a screen are $CQR events and $CDM messages
+/// (time of closest approach, miss distance, relative state, covariances and
+/// the collision probability with its method); $CSM is the one-line summary.
+/// SCR does not repeat them. The possibility-of-collision result here is not
+/// a probability: it is the possibility and necessity of collision under
+/// possibilistic (fuzzy) uncertainty of the two orbits, with the miss
+/// distance and closest-approach time ranges of each alpha-cut, so it has no
+/// home in $CDM's COLLISION_PROBABILITY.
+///
+/// One SCR carries one arm. Units: km and km/s for grid states; SI (m, m/s,
+/// s) for the possibility assessment.
+
+/// Role of an object in a screen. Append new values only; never reorder or
+/// reuse existing values.
+enum scrScreeningRole : ubyte {
+  /// Screened only against primaries.
+  Secondary,
+  /// Screened against every non-skipped object.
+  Primary,
+  /// Left out of the screen.
+  Skip
+}
+
+/// How the two objects' uncertainty is given in a possibility assessment.
+/// Append new values only; never reorder or reuse existing values.
+enum scrPossibilityModel : ubyte {
+  /// Finite supports: sampled states each with a possibility degree.
+  FiniteSupport,
+  /// Ellipsoidal kernels: a centre state and a shape matrix, possibility
+  /// exp(-d**2/2) with d the distance in the shape metric.
+  EllipsoidalKernel
+}
+
+/// A run of coarse steps of the screening window.
+table SCRBlock {
+  /// Absolute index of the first coarse step; step k is at the window start
+  /// plus k coarse steps.
+  FIRST_STEP: uint32;
+  /// Number of steps.
+  STEP_COUNT: uint32;
+}
+
+/// One object's state at one coarse step, in the screen's evaluation frame.
+struct SCRGridState {
+  /// Position, km.
+  X_KM: float;
+  Y_KM: float;
+  Z_KM: float;
+  /// Deviation bound, km: how far the object's true path can stray from the
+  /// straight line r + v t over half a coarse step either side.
+  DEVIATION_KM: float;
+  /// Velocity, km/s.
+  VX_KM_S: float;
+  VY_KM_S: float;
+  VZ_KM_S: float;
+  /// Zero (keeps the row 32 bytes).
+  RESERVED: float;
+}
+
+/// Bounds of an object's geocentric radius over a block, km.
+struct SCRRadiusBand {
+  LOW_KM: float;
+  HIGH_KM: float;
+}
+
+/// The coarse grid of one block.
+table SCRGrid {
+  FIRST_STEP: uint32;
+  STEP_COUNT: uint32;
+  /// Objects (rows per step), in the screen's index order.
+  OBJECTS: uint32;
+  /// Evaluation frame, e.g. "TEME", "GCRF", "EME2000".
+  FRAME: string;
+  /// Coarse step, s; 0 = not stated.
+  STEP_S: double;
+  /// States, step-major: STEP_COUNT * OBJECTS rows, row (s, n) at
+  /// s * OBJECTS + n. An excluded object's rows are NaN.
+  STATES: [SCRGridState];
+  /// Radius band of each object over the block (widened by the deviation
+  /// bound); NaN for an excluded object. Pairs whose bands are further apart
+  /// than the threshold cannot close.
+  BANDS: [SCRRadiusBand];
+}
+
+/// Roles of the objects of a screen.
+table SCRRoles {
+  /// One role per object, in the screen's index order. Absent roles mean
+  /// every object is a primary (all against all).
+  ROLES: [scrScreeningRole];
+}
+
+/// A pair and coarse step that survived the coarse filter.
+struct SCRCandidatePair {
+  /// Index of the first object (lower index).
+  OBJECT1: uint32;
+  /// Index of the second object.
+  OBJECT2: uint32;
+  /// Absolute coarse step.
+  STEP: uint32;
+}
+
+/// Candidates of a block or a screen, ordered by step then pair.
+table SCRCandidates {
+  PAIRS: [SCRCandidatePair];
+}
+
+/// An object left out of the screen because it could not be propagated.
+table SCRExclusion {
+  /// Index of the object in the screen's index order.
+  INDEX: uint32;
+  /// First time the propagation failed, Julian date (UTC).
+  FIRST_FAILURE_JD: double;
+  /// The propagator's or source's failure text.
+  REASON: string;
+}
+
+/// Objects left out of a screen.
+table SCRExclusions {
+  EXCLUSIONS: [SCRExclusion];
+}
+
+/// What one coarse-filter stage did.
+table SCRSearchReport {
+  FIRST_STEP: uint32;
+  STEP_COUNT: uint32;
+  /// Last coarse step of the window, inclusive.
+  LAST_STEP: int32;
+  /// Objects in the grid.
+  OBJECTS: uint32;
+  /// Objects that could not be propagated in this block.
+  EXCLUDED: [SCRExclusion];
+  /// Objects by role (all primaries when no roles were given).
+  PRIMARIES: uint32;
+  SECONDARIES: uint32;
+  SKIPPED: uint32;
+  /// Candidate cells found.
+  CANDIDATE_COUNT: uint32;
+}
+
+/// One sampled state of an object with its possibility degree.
+struct SCRPossibilityPoint {
+  /// Position, m, in one inertial frame shared by both objects.
+  X_M: double;
+  Y_M: double;
+  Z_M: double;
+  /// Velocity, m/s.
+  VX_M_S: double;
+  VY_M_S: double;
+  VZ_M_S: double;
+  /// Possibility degree, (0, 1].
+  POSSIBILITY: double;
+}
+
+/// An ellipsoidal possibility kernel.
+table SCRPossibilityKernel {
+  /// Centre state x, y, z (m), vx, vy, vz (m/s): 6 values.
+  CENTRE: [double];
+  /// Shape matrix, 6x6 row-major (36 values), positive definite, used like a
+  /// covariance in SI units.
+  SHAPE: [double];
+}
+
+/// A possibility-of-collision assessment of one encounter.
+table SCRPossibilityRequest {
+  /// Combined hard-body radius, m (> 0).
+  COMBINED_RADIUS_M: double;
+  /// Closest approach is searched over [-T, T] s about the common epoch of
+  /// the states.
+  HALF_WINDOW_S: double;
+  MODEL: scrPossibilityModel = FiniteSupport;
+  /// Object A's and B's sampled states (FiniteSupport), 1 to 200000 each.
+  A_POINTS: [SCRPossibilityPoint];
+  B_POINTS: [SCRPossibilityPoint];
+  /// Object A's and B's kernels (EllipsoidalKernel).
+  A_KERNEL: SCRPossibilityKernel;
+  B_KERNEL: SCRPossibilityKernel;
+  /// Alpha levels to report, each in (0, 1], at most 64.
+  ALPHA_LEVELS: [double];
+}
+
+/// Miss distance and closest-approach time ranges at one alpha level.
+table SCRAlphaCut {
+  ALPHA: double;
+  /// Smallest and largest miss distance of the cut, m.
+  MIN_MISS_M: double;
+  MAX_MISS_M: double;
+  /// Earliest and latest closest approach, s from the common epoch.
+  TCA_MIN_S: double;
+  TCA_MAX_S: double;
+}
+
+/// Result of a possibility-of-collision assessment.
+table SCRPossibilityResult {
+  /// Possibility of collision, 0 to 1.
+  POSSIBILITY_COLLISION: double;
+  /// Necessity of collision, 1 - possibility of no collision.
+  NECESSITY_COLLISION: double;
+  /// Necessity of no collision, 1 - POSSIBILITY_COLLISION.
+  NECESSITY_NO_COLLISION: double;
+  /// Smallest and largest miss distance over all pairs, m.
+  MIN_MISS_M: double;
+  MAX_MISS_M: double;
+  /// Earliest and latest closest approach, s from the common epoch (clamped
+  /// to the half window).
+  TCA_MIN_S: double;
+  TCA_MAX_S: double;
+  /// State pairs evaluated, and those with miss <= the combined radius.
+  PAIRS: uint64;
+  COLLIDING_PAIRS: uint64;
+  /// One per requested alpha level, in order.
+  ALPHA_CUTS: [SCRAlphaCut];
+}
+
+/// Conjunction Screening - exactly one arm is set.
+table SCR {
+  BLOCK: SCRBlock;
+  GRID: SCRGrid;
+  ROLES: SCRRoles;
+  CANDIDATES: SCRCandidates;
+  EXCLUSIONS: SCRExclusions;
+  SEARCH_REPORT: SCRSearchReport;
+  POSSIBILITY_REQUEST: SCRPossibilityRequest;
+  POSSIBILITY_RESULT: SCRPossibilityResult;
+}
+
+root_type SCR;
+file_identifier "$SCR";

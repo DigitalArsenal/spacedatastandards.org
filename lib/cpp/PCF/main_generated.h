@@ -180,6 +180,49 @@ inline const char *EnumNamepcfBlendShape(pcfBlendShape e) {
   return EnumNamespcfBlendShape()[index];
 }
 
+/// What answers a request time outside an element-set propagator's window
+/// (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+/// only.
+enum pcfFallbackPropagator : uint8_t {
+  /// Nothing: the state is NaN with a status that says outside the window.
+  pcfFallbackPropagator_NONE = 0,
+  /// SGP4 on the object's own SGP4 set.
+  pcfFallbackPropagator_SGP4 = 1,
+  /// SGP4-XP on the object's own SGP4-XP set.
+  pcfFallbackPropagator_SGP4XP = 2,
+  /// The host routes the request elsewhere: no state, a status that asks for it.
+  pcfFallbackPropagator_HOST = 3,
+  pcfFallbackPropagator_MIN = pcfFallbackPropagator_NONE,
+  pcfFallbackPropagator_MAX = pcfFallbackPropagator_HOST
+};
+
+inline const pcfFallbackPropagator (&EnumValuespcfFallbackPropagator())[4] {
+  static const pcfFallbackPropagator values[] = {
+    pcfFallbackPropagator_NONE,
+    pcfFallbackPropagator_SGP4,
+    pcfFallbackPropagator_SGP4XP,
+    pcfFallbackPropagator_HOST
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfFallbackPropagator() {
+  static const char * const names[5] = {
+    "NONE",
+    "SGP4",
+    "SGP4XP",
+    "HOST",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfFallbackPropagator(pcfFallbackPropagator e) {
+  if (::flatbuffers::IsOutRange(e, pcfFallbackPropagator_NONE, pcfFallbackPropagator_HOST)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfFallbackPropagator()[index];
+}
+
 enum pcfWeatherExtension : uint8_t {
   /// The provider's own rule (the numerical propagator refuses, the advanced
   /// mean-element propagator chains forecasts).
@@ -3075,7 +3118,12 @@ struct PCFEpochStore FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SELECTION = 8,
     VT_BLEND_WINDOW_SECONDS = 10,
     VT_BLEND_SHAPE = 12,
-    VT_THEORIES = 14
+    VT_THEORIES = 14,
+    VT_WINDOW_BEFORE_DAYS = 16,
+    VT_WINDOW_AFTER_DAYS = 18,
+    VT_FALLBACK_PROPAGATOR = 20,
+    VT_FALLBACK_ON_REFUSAL = 22,
+    VT_FALLBACK_WHILE_PENDING = 24
   };
   /// Days of element sets kept, counted back from now by epoch. Default 7.
   double CACHE_DAYS() const {
@@ -3103,6 +3151,36 @@ struct PCFEpochStore FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *THEORIES() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_THEORIES);
   }
+  /// Window before each selected set's epoch inside which the set's own
+  /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+  /// not set. Setting any of the window and fallback fields below to a value
+  /// other than its default enables the window; a side left at -1 is then 7.
+  double WINDOW_BEFORE_DAYS() const {
+    return GetField<double>(VT_WINDOW_BEFORE_DAYS, -1.0);
+  }
+  /// Window after each selected set's epoch, days of 86400 seconds, boundary
+  /// included. Default -1: not set. Every set that contributes to a blend must
+  /// contain the requested time.
+  double WINDOW_AFTER_DAYS() const {
+    return GetField<double>(VT_WINDOW_AFTER_DAYS, -1.0);
+  }
+  /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  /// object's own set of that theory, matched by catalog number and
+  /// international designator; a missing or ambiguous set yields no state.
+  pcfFallbackPropagator FALLBACK_PROPAGATOR() const {
+    return static_cast<pcfFallbackPropagator>(GetField<uint8_t>(VT_FALLBACK_PROPAGATOR, 0));
+  }
+  /// The fallback also answers inside the window when the propagator excludes
+  /// or refuses the object or the time. Default false. A missing row, an
+  /// allocation failure or a pool failure is not a refusal.
+  bool FALLBACK_ON_REFUSAL() const {
+    return GetField<uint8_t>(VT_FALLBACK_ON_REFUSAL, 0) != 0;
+  }
+  /// The fallback also answers inside the window while the propagator's own row
+  /// for the requested time is not built yet. Default false.
+  bool FALLBACK_WHILE_PENDING() const {
+    return GetField<uint8_t>(VT_FALLBACK_WHILE_PENDING, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3113,6 +3191,11 @@ struct PCFEpochStore FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_BLEND_SHAPE, 1) &&
            VerifyOffset(verifier, VT_THEORIES) &&
            verifier.VerifyVector(THEORIES()) &&
+           VerifyField<double>(verifier, VT_WINDOW_BEFORE_DAYS, 8) &&
+           VerifyField<double>(verifier, VT_WINDOW_AFTER_DAYS, 8) &&
+           VerifyField<uint8_t>(verifier, VT_FALLBACK_PROPAGATOR, 1) &&
+           VerifyField<uint8_t>(verifier, VT_FALLBACK_ON_REFUSAL, 1) &&
+           VerifyField<uint8_t>(verifier, VT_FALLBACK_WHILE_PENDING, 1) &&
            verifier.EndTable();
   }
 };
@@ -3139,6 +3222,21 @@ struct PCFEpochStoreBuilder {
   void add_THEORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> THEORIES) {
     fbb_.AddOffset(PCFEpochStore::VT_THEORIES, THEORIES);
   }
+  void add_WINDOW_BEFORE_DAYS(double WINDOW_BEFORE_DAYS) {
+    fbb_.AddElement<double>(PCFEpochStore::VT_WINDOW_BEFORE_DAYS, WINDOW_BEFORE_DAYS, -1.0);
+  }
+  void add_WINDOW_AFTER_DAYS(double WINDOW_AFTER_DAYS) {
+    fbb_.AddElement<double>(PCFEpochStore::VT_WINDOW_AFTER_DAYS, WINDOW_AFTER_DAYS, -1.0);
+  }
+  void add_FALLBACK_PROPAGATOR(pcfFallbackPropagator FALLBACK_PROPAGATOR) {
+    fbb_.AddElement<uint8_t>(PCFEpochStore::VT_FALLBACK_PROPAGATOR, static_cast<uint8_t>(FALLBACK_PROPAGATOR), 0);
+  }
+  void add_FALLBACK_ON_REFUSAL(bool FALLBACK_ON_REFUSAL) {
+    fbb_.AddElement<uint8_t>(PCFEpochStore::VT_FALLBACK_ON_REFUSAL, static_cast<uint8_t>(FALLBACK_ON_REFUSAL), 0);
+  }
+  void add_FALLBACK_WHILE_PENDING(bool FALLBACK_WHILE_PENDING) {
+    fbb_.AddElement<uint8_t>(PCFEpochStore::VT_FALLBACK_WHILE_PENDING, static_cast<uint8_t>(FALLBACK_WHILE_PENDING), 0);
+  }
   explicit PCFEpochStoreBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3157,12 +3255,22 @@ inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStore(
     pcfEpochSelection SELECTION = pcfEpochSelection_NEAREST,
     double BLEND_WINDOW_SECONDS = 3600.0,
     pcfBlendShape BLEND_SHAPE = pcfBlendShape_SMOOTHSTEP,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> THEORIES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> THEORIES = 0,
+    double WINDOW_BEFORE_DAYS = -1.0,
+    double WINDOW_AFTER_DAYS = -1.0,
+    pcfFallbackPropagator FALLBACK_PROPAGATOR = pcfFallbackPropagator_NONE,
+    bool FALLBACK_ON_REFUSAL = false,
+    bool FALLBACK_WHILE_PENDING = false) {
   PCFEpochStoreBuilder builder_(_fbb);
+  builder_.add_WINDOW_AFTER_DAYS(WINDOW_AFTER_DAYS);
+  builder_.add_WINDOW_BEFORE_DAYS(WINDOW_BEFORE_DAYS);
   builder_.add_BLEND_WINDOW_SECONDS(BLEND_WINDOW_SECONDS);
   builder_.add_CACHE_DAYS(CACHE_DAYS);
   builder_.add_THEORIES(THEORIES);
   builder_.add_MAX_SETS_PER_OBJECT(MAX_SETS_PER_OBJECT);
+  builder_.add_FALLBACK_WHILE_PENDING(FALLBACK_WHILE_PENDING);
+  builder_.add_FALLBACK_ON_REFUSAL(FALLBACK_ON_REFUSAL);
+  builder_.add_FALLBACK_PROPAGATOR(FALLBACK_PROPAGATOR);
   builder_.add_BLEND_SHAPE(BLEND_SHAPE);
   builder_.add_SELECTION(SELECTION);
   return builder_.Finish();
@@ -3175,7 +3283,12 @@ inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStoreDirect(
     pcfEpochSelection SELECTION = pcfEpochSelection_NEAREST,
     double BLEND_WINDOW_SECONDS = 3600.0,
     pcfBlendShape BLEND_SHAPE = pcfBlendShape_SMOOTHSTEP,
-    const std::vector<uint8_t> *THEORIES = nullptr) {
+    const std::vector<uint8_t> *THEORIES = nullptr,
+    double WINDOW_BEFORE_DAYS = -1.0,
+    double WINDOW_AFTER_DAYS = -1.0,
+    pcfFallbackPropagator FALLBACK_PROPAGATOR = pcfFallbackPropagator_NONE,
+    bool FALLBACK_ON_REFUSAL = false,
+    bool FALLBACK_WHILE_PENDING = false) {
   auto THEORIES__ = THEORIES ? _fbb.CreateVector<uint8_t>(*THEORIES) : 0;
   return CreatePCFEpochStore(
       _fbb,
@@ -3184,7 +3297,12 @@ inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStoreDirect(
       SELECTION,
       BLEND_WINDOW_SECONDS,
       BLEND_SHAPE,
-      THEORIES__);
+      THEORIES__,
+      WINDOW_BEFORE_DAYS,
+      WINDOW_AFTER_DAYS,
+      FALLBACK_PROPAGATOR,
+      FALLBACK_ON_REFUSAL,
+      FALLBACK_WHILE_PENDING);
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures

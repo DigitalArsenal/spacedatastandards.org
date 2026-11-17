@@ -1,5 +1,5 @@
-// Hash: 5c8076966a3c6f63e900e431f05c9050c747eacf2560c6b03fce03ade73c9beb
-// Version: 1.44.89
+// Hash: 11a21ef8ba1b48adf5ae381f5e53b7099f8d3fb4fd8b88f49d47790435ee0130
+// Version: 1.44.90
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -62,6 +62,7 @@ include "../DFH/main.fbs";
 include "../DMG/main.fbs";
 include "../DOA/main.fbs";
 include "../DPM/main.fbs";
+include "../DRB/main.fbs";
 include "../DSS/main.fbs";
 include "../DTT/main.fbs";
 include "../EGP/main.fbs";
@@ -141,6 +142,7 @@ include "../MET/main.fbs";
 include "../MFE/main.fbs";
 include "../MNF/main.fbs";
 include "../MNV/main.fbs";
+include "../MOR/main.fbs";
 include "../MPE/main.fbs";
 include "../MPL/main.fbs";
 include "../MSL/main.fbs";
@@ -426,7 +428,9 @@ enum RecordTypeExtended : ushort {
   CME = 292,
   SWA = 293,
   SWS = 294,
-  SSY = 295
+  SSY = 295,
+  MOR = 296,
+  DRB = 297
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

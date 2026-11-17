@@ -311,8 +311,99 @@ func (rcv *DPMAsset) MutateThroughSeq(n uint64) bool {
 	return rcv.MutateTHROUGH_SEQ(n)
 }
 
+/// The provenance of every record of this asset that carries none of its own
+/// ($MOR records never do): stated once for the asset instead of in each
+/// record. A record's own PROVENANCE, where its standard has one, governs that
+/// record. Absent: the records state their own or have none.
+func (rcv *DPMAsset) RECORD_PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) RecordProvenance(obj *PVN) *PVN {
+	return rcv.RECORD_PROVENANCE(obj)
+}
+
+/// The provenance of every record of this asset that carries none of its own
+/// ($MOR records never do): stated once for the asset instead of in each
+/// record. A record's own PROVENANCE, where its standard has one, governs that
+/// record. Absent: the records state their own or have none.
+/// The builder of the derived polynomial rows the asset's records carry
+/// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+/// carry no derived rows, or a reader must ignore them. It holds for this
+/// asset only: a reader sets it aside before reading another asset, and
+/// judges compatibility by every field, never by a version string alone.
+func (rcv *DPMAsset) DERIVED_BUILD(obj *DPMDerivedBuild) *DPMDerivedBuild {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(DPMDerivedBuild)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) DerivedBuild(obj *DPMDerivedBuild) *DPMDerivedBuild {
+	return rcv.DERIVED_BUILD(obj)
+}
+
+/// The builder of the derived polynomial rows the asset's records carry
+/// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+/// carry no derived rows, or a reader must ignore them. It holds for this
+/// asset only: a reader sets it aside before reading another asset, and
+/// judges compatibility by every field, never by a version string alone.
+/// The covariance realism models the asset's records name by ID ($MOR
+/// COV_REALISM_ID), each stated once with its population figures. IDs are
+/// 1 or more and unique within the asset; a reader refuses a list that
+/// repeats one.
+func (rcv *DPMAsset) COV_REALISM_MODELS(obj *DPMRealismModel, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(DPMRealismModel)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *DPMAsset) CovRealismModels(obj *DPMRealismModel, j int) bool {
+	return rcv.COV_REALISM_MODELS(obj, j)
+}
+
+func (rcv *DPMAsset) COV_REALISM_MODELSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *DPMAsset) CovRealismModelsLength() int {
+	return rcv.COV_REALISM_MODELSLength()
+}
+
+/// The covariance realism models the asset's records name by ID ($MOR
+/// COV_REALISM_ID), each stated once with its population figures. IDs are
+/// 1 or more and unique within the asset; a reader refuses a list that
+/// repeats one.
 func DPMAssetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(17)
 }
 func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	builder.PrependInt8Slot(0, int8(ASSET_KIND), 3)
@@ -397,6 +488,30 @@ func DPMAssetAddTHROUGH_SEQ(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
 }
 func DPMAssetAddThroughSeq(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
 	DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
+}
+func DPMAssetAddRECORD_PROVENANCE(builder *flatbuffers.Builder, RECORD_PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(RECORD_PROVENANCE), 0)
+}
+func DPMAssetAddRecordProvenance(builder *flatbuffers.Builder, RECORD_PROVENANCE flatbuffers.UOffsetT) {
+	DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+}
+func DPMAssetAddDERIVED_BUILD(builder *flatbuffers.Builder, DERIVED_BUILD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(DERIVED_BUILD), 0)
+}
+func DPMAssetAddDerivedBuild(builder *flatbuffers.Builder, DERIVED_BUILD flatbuffers.UOffsetT) {
+	DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
+}
+func DPMAssetAddCOV_REALISM_MODELS(builder *flatbuffers.Builder, COV_REALISM_MODELS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(COV_REALISM_MODELS), 0)
+}
+func DPMAssetAddCovRealismModels(builder *flatbuffers.Builder, COV_REALISM_MODELS flatbuffers.UOffsetT) {
+	DPMAssetAddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS)
+}
+func DPMAssetStartCOV_REALISM_MODELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func DPMAssetStartCovRealismModelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DPMAssetStartCOV_REALISM_MODELSVector(builder, numElems)
 }
 func DPMAssetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

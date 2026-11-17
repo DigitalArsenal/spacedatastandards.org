@@ -1,0 +1,76 @@
+// Hash: 5faa8abed39edf15ca7549de1cf55542890bf5e018518803427124b7d44ac801
+// Version: 1.207.0
+// -----------------------------------END_HEADER
+include "../PRR/main.fbs";
+
+/// Account Record (ACT)
+/// Description
+/// A node-local operator account, a signed-in session, a sign-in challenge or
+/// an external wallet link, keyed by the extended public key the operator
+/// proves control of. Sign-in is a challenge the node issues and a signature
+/// the operator returns over it; a session is the node's record of a verified
+/// signature until EXPIRES_AT. Key slots list the derivation paths the node
+/// uses for each purpose key so an operator can see and rotate them. A record
+/// never carries private key material.
+
+/// Role of the record. Append new values only; never reorder or reuse
+/// existing values.
+enum actKind : byte {
+  Operator,
+  Session,
+  Challenge,
+  ExternalLink
+}
+
+/// One purpose-key slot of an operator.
+table ACTKeySlot {
+  /// Slot name, e.g. "signing", "encryption", "publication".
+  SLOT: string;
+  /// Derivation path currently in use.
+  KEY_PATH: string;
+  /// Derivation path the next rotation will use.
+  NEXT_PATH: string;
+  ROTATABLE: bool;
+  /// Key algorithm, e.g. "secp256k1", "ed25519", "x25519".
+  ALGORITHM: string;
+}
+
+/// Account Record - operator, session, challenge or external link.
+table ACT {
+  ACCOUNT_ID: string;
+  KIND: actKind = Operator;
+  /// Extended public key the operator proves control of.
+  XPUB: string;
+  /// Fingerprint of XPUB.
+  XPUB_FINGERPRINT: string;
+  NAME: string;
+  TRUST_LEVEL: peerRegistryTrustCategory;
+  SIGNING_PUBLIC_KEY: string;
+  /// Content identifier of the operator's identity record.
+  EPM_CID: string;
+  /// Peer identifier the account is bound to.
+  PEER_ID: string;
+  /// Unix milliseconds.
+  CREATED_AT: int64;
+  /// Unix milliseconds; 0 = never.
+  LAST_SEEN: int64;
+  /// Unix milliseconds a session or challenge expires; 0 = none.
+  EXPIRES_AT: int64;
+  CHALLENGE_ID: string;
+  /// Challenge text the operator signs.
+  CHALLENGE: string;
+  /// Signature over CHALLENGE.
+  SIGNATURE: [ubyte];
+  /// Signature scheme identifier.
+  SIGNATURE_TYPE: string;
+  /// External chain identifier of a linked wallet (CAIP-2 form).
+  EXTERNAL_CHAIN: string;
+  /// External address of a linked wallet.
+  EXTERNAL_ADDRESS: string;
+  /// True when the external link has been verified.
+  LINKED: bool;
+  KEY_SLOTS: [ACTKeySlot];
+}
+
+root_type ACT;
+file_identifier "$ACT";

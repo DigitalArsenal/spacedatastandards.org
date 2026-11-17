@@ -1,0 +1,76 @@
+// Hash: c6711a218551134dc12b4ca17022a9f234e66e010cfeae65529f4d1ff9824ebe
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// File (FIL)
+/// Description
+/// A file or directory entry with, optionally, its content: a document read
+/// from or written to a file system, an attachment, an uploaded artifact or a
+/// downloaded product. The record names the file, describes it (size, media
+/// type, times, digest) and carries its bytes verbatim when it is being moved.
+///
+/// The same record serves the steps of moving a file. A request to read names
+/// PATH only; the answer adds the content and description. A request to write
+/// carries PATH and CONTENT; the answer states what was written (SIZE, DIGEST,
+/// WRITTEN_AT_MS) without repeating the content. A directory listing is one
+/// FIL with ENTRIES.
+/// Kind of file system entry. Append new values only; never reorder or reuse
+/// existing values.
+enum filEntryKind : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// A regular file.
+  File,
+  /// A directory.
+  Directory,
+  /// A symbolic link.
+  Link
+}
+/// Algorithm of DIGEST. Append new values only; never reorder or reuse
+/// existing values.
+enum filDigestAlgorithm : ubyte {
+  None,
+  SHA256,
+  SHA512,
+  BLAKE3
+}
+/// One entry of a directory listing.
+table FILEntry {
+  /// Entry name within the directory.
+  NAME: string;
+  KIND: filEntryKind = Unspecified;
+  /// Size in bytes; 0 for a directory.
+  SIZE: uint64;
+  /// Unix milliseconds of the last modification; 0 = unknown.
+  MODIFIED_AT_MS: int64;
+}
+/// File - a file, its description and, when being moved, its content.
+table FIL {
+  /// Path of the file as the system holding it names it (relative paths are
+  /// relative to that system's root for the caller).
+  PATH: string;
+  /// File name (the last element of PATH), for display.
+  NAME: string;
+  KIND: filEntryKind = Unspecified;
+  /// Media type, e.g. "text/csv", "application/octet-stream".
+  MEDIA_TYPE: string;
+  /// Size of the file in bytes.
+  SIZE: uint64;
+  /// Unix milliseconds of creation; 0 = unknown.
+  CREATED_AT_MS: int64;
+  /// Unix milliseconds of the last modification; 0 = unknown.
+  MODIFIED_AT_MS: int64;
+  /// Digest of the content.
+  DIGEST_ALGORITHM: filDigestAlgorithm = None;
+  DIGEST: [ubyte];
+  /// The content verbatim; empty when only the description travels.
+  CONTENT: [ubyte];
+  /// Content was appended to the existing file rather than replacing it.
+  APPEND: bool;
+  /// Unix milliseconds when the content was written; set in the answer to a
+  /// write.
+  WRITTEN_AT_MS: int64;
+  /// Entries of a directory listing, sorted by NAME.
+  ENTRIES: [FILEntry];
+}
+root_type FIL;
+file_identifier "$FIL";

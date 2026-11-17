@@ -1,0 +1,75 @@
+// Hash: 02d0887fbf772707d3f1b6fb62f5692784f12bfa9afd514f90888d53c5615d40
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum IntegrationMethod : byte {
+  EULER,
+  EULER_IMPROVED,
+  RK2,                    // Runge-Kutta 2nd order,
+  RK4,                    // Runge-Kutta 4th order,
+  RK45,                   // Adaptive RK4/5,
+  RK78,                   // Dormand-Prince 7(8),
+  VERLET,
+  LEAPFROG,
+  ADAMS_BASHFORTH,
+  GAUSS_JACKSON
+}
+
+enum CollisionShape : byte {
+  SPHERE,
+  BOX,
+  CYLINDER,
+  CAPSULE,
+  CONE,
+  CONVEX_HULL,
+  MESH,
+  COMPOUND
+}
+
+enum MaterialType : byte {
+  STEEL,
+  ALUMINUM,
+  TITANIUM,
+  CERAMIC,
+  COMPOSITE,
+  CONCRETE,
+  WOOD,
+  RUBBER,
+  WATER,
+  AIR,
+  CUSTOM
+}
+
+enum ForceType : byte {
+  GRAVITY,
+  THRUST,
+  DRAG,
+  LIFT,
+  FRICTION,
+  SPRING,
+  DAMPER,
+  CONTACT,
+  MAGNETIC,
+  ELECTRIC,
+  CUSTOM
+}
+
+/// Physics and Rigid Body Dynamics
+table PHY {
+  COMMAND:string;
+  SIMULATION_STEP:string;
+  RIGID_BODY:string;
+  INTEGRATION_CONFIG:string;
+  COLLISION_QUERY_A:string;
+  COLLISION_QUERY_B:string;
+  TRANSFORM_A:string;
+  TRANSFORM_B:string;
+  POSITION_A:string;
+  POSITION_B:string;
+  FLUID:string;
+  AERO_QUERY:string;
+  DRAG_MODEL:string;
+  THERMAL_STATE:string;
+}
+
+root_type PHY;
+file_identifier "$PHY";

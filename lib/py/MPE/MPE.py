@@ -122,8 +122,25 @@ class MPE(object):
             return obj
         return None
 
+    # BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+    # SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+    # MPE
+    def BTERM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+    # MPE
+    def AGOM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def MPEStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(13)
 
 def Start(builder):
     MPEStart(builder)
@@ -194,6 +211,18 @@ def MPEAddTARGETER(builder, TARGETER):
 def AddTARGETER(builder, TARGETER):
     MPEAddTARGETER(builder, TARGETER)
 
+def MPEAddBTERM(builder, BTERM):
+    builder.PrependFloat64Slot(11, BTERM, 0.0)
+
+def AddBTERM(builder, BTERM):
+    MPEAddBTERM(builder, BTERM)
+
+def MPEAddAGOM(builder, AGOM):
+    builder.PrependFloat64Slot(12, AGOM, 0.0)
+
+def AddAGOM(builder, AGOM):
+    MPEAddAGOM(builder, AGOM)
+
 def MPEEnd(builder):
     return builder.EndObject()
 
@@ -222,6 +251,8 @@ class MPET(object):
         BSTAR = 0.0,
         MEAN_ELEMENT_THEORY = 0,
         TARGETER = None,
+        BTERM = 0.0,
+        AGOM = 0.0,
     ):
         self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
         self.EPOCH = EPOCH  # type: float
@@ -234,6 +265,8 @@ class MPET(object):
         self.BSTAR = BSTAR  # type: float
         self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
         self.TARGETER = TARGETER  # type: Optional[MPETargeterSolution.MPETargeterSolutionT]
+        self.BTERM = BTERM  # type: float
+        self.AGOM = AGOM  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -268,6 +301,8 @@ class MPET(object):
         self.MEAN_ELEMENT_THEORY = MPE.MEAN_ELEMENT_THEORY()
         if MPE.TARGETER() is not None:
             self.TARGETER = MPETargeterSolution.MPETargeterSolutionT.InitFromObj(MPE.TARGETER())
+        self.BTERM = MPE.BTERM()
+        self.AGOM = MPE.AGOM()
 
     # MPET
     def Pack(self, builder):
@@ -289,5 +324,7 @@ class MPET(object):
         MPEAddMEAN_ELEMENT_THEORY(builder, self.MEAN_ELEMENT_THEORY)
         if self.TARGETER is not None:
             MPEAddTARGETER(builder, TARGETER)
+        MPEAddBTERM(builder, self.BTERM)
+        MPEAddAGOM(builder, self.AGOM)
         MPE = MPEEnd(builder)
         return MPE

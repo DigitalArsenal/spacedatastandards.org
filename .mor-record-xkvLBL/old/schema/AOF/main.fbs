@@ -1,0 +1,31 @@
+// Hash: a8512f572fdef60989150f54fdd85da6bd8bd11e1edef0070b10ed13aaba2a27
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// AOS Transfer Frame (CCSDS 732.0-B-3)
+table AOF {
+  /// Transfer frame version
+  VERSION:ubyte;
+  /// Spacecraft identifier
+  SPACECRAFT_ID:ushort;
+  /// Virtual channel identifier
+  VIRTUAL_CHANNEL_ID:ubyte;
+  /// Virtual channel frame count
+  VIRTUAL_FRAME_COUNT:uint;
+  /// Replay flag
+  REPLAY_FLAG:bool;
+  /// VC frame count usage flag
+  VC_FRAME_COUNT_USAGE:bool;
+  /// VC frame count cycle
+  VC_FRAME_COUNT_CYCLE:ubyte;
+  /// Insert zone
+  INSERT_ZONE:[ubyte];
+  /// Data field
+  DATA:[ubyte];
+  /// Operational control field
+  OCF:[ubyte];
+  /// Frame error control field
+  FECF:ushort;
+}
+
+root_type AOF;
+file_identifier "$AOF";

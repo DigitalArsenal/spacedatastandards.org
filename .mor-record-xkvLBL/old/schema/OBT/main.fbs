@@ -1,0 +1,98 @@
+// Hash: 49405f31544ed8a2ec5f922d98d740b80a5fb0edf17178e0a409afc95984370d
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum orbitObjectType : byte {
+  PAYLOAD,
+  ROCKET_BODY,
+  DEBRIS,
+  TBA,
+  UNKNOWN
+}
+
+enum aouCategory : byte {
+  CIRCULAR,
+  ELLIPTICAL,
+  RECTANGULAR,
+  NONE
+}
+
+/// Orbit Track
+table OBT {
+  /// Unique identifier
+  ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// On-orbit reference
+  ON_ORBIT:string;
+  /// Track point timestamp (ISO 8601)
+  TS:string;
+  /// Latitude (degrees)
+  LAT:double;
+  /// Longitude (degrees)
+  LON:double;
+  /// Altitude (km)
+  ALT:double;
+  /// Speed (km/s)
+  SPD:double;
+  /// Elevation angle from observer (degrees)
+  ANG_ELEV:double;
+  /// Radar data fusion RF value
+  RDF_RF:double;
+  /// Call sign
+  CALL_SIGN:string;
+  /// Report number
+  RPT_NUM:string;
+  /// Track identifier
+  TRK_ID:string;
+  /// Object identity assessment
+  OBJ_IDENT:string;
+  /// Identity amplification
+  IDENT_AMP:string;
+  /// Satellite operational status
+  SAT_STATUS:string;
+  /// Object type
+  OBJ_TYPE:orbitObjectType;
+  /// Country code (ISO 3166)
+  COUNTRY_CODE:string;
+  /// Orbit decay rate (km/day)
+  DECAY:double;
+  /// Charlie line data (amplification text)
+  CHARLIE_LINE:string;
+  /// Area of uncertainty type
+  AOU_TYPE:aouCategory;
+  /// Area of uncertainty data
+  AOU_DATA:[double];
+  /// Containment probability (0-1)
+  CNTNMNT:double;
+  /// Cross-reference identifier
+  XREF:string;
+  /// Charlie cross-reference
+  CH_XREF:string;
+  /// Additional amplification text
+  AMPLIFICATION:string;
+  /// IFF mode/code
+  IFF:string;
+  /// Vehicle type
+  VEH_TYPE:string;
+  /// True if reinforced unit
+  REINFORCED:bool;
+  /// True if reduced unit
+  REDUCED:bool;
+  /// True if headquarters element
+  HQ:bool;
+  /// True if dummy/exercise track
+  DUMMY:bool;
+  /// True if task force
+  TASK_FORCE:bool;
+  /// True if feint
+  FEINT:bool;
+  /// True if installation (not mobile)
+  INSTALLATION:bool;
+  /// Contributing track sensors
+  TRACK_SENSORS:[string];
+}
+
+root_type OBT;
+file_identifier "$OBT";

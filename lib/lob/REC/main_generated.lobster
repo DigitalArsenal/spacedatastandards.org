@@ -61,6 +61,7 @@ import DFH.main_generated
 import DMG.main_generated
 import DOA.main_generated
 import DPM.main_generated
+import DRB.main_generated
 import DSS.main_generated
 import DTT.main_generated
 import EGP.main_generated
@@ -140,6 +141,7 @@ import MET.main_generated
 import MFE.main_generated
 import MNF.main_generated
 import MNV.main_generated
+import MOR.main_generated
 import MPE.main_generated
 import MPL.main_generated
 import MSL.main_generated
@@ -996,6 +998,8 @@ enum RecordTypeExtended:
     RecordTypeExtended_SWA = 293
     RecordTypeExtended_SWS = 294
     RecordTypeExtended_SSY = 295
+    RecordTypeExtended_MOR = 296
+    RecordTypeExtended_DRB = 297
 
 class Record
 

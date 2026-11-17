@@ -1,0 +1,568 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "meanElementSource" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM", "AP", "UNSPECIFIED"]
+    },
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
+    "covarianceRule" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel", "EmpiricalHistoryShrunk"]
+    },
+    "morMessageStatus" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "REAL", "TEST"]
+    },
+    "morCovarianceFloor" : {
+      "type" : "string",
+      "enum": ["UNSTATED", "WRITER_THEORY_STATE", "MEAN_ELEMENTS_TWO_BODY"]
+    },
+    "morRecordKind" : {
+      "type" : "string",
+      "enum": ["FULL", "ROWS_ONLY"]
+    },
+    "morGravityField" : {
+      "type" : "string",
+      "enum": ["THEORY", "EGM2008", "EGM2008_SLOW_TESSERAL_70"]
+    },
+    "morSolidTideModel" : {
+      "type" : "string",
+      "enum": ["NONE", "IERS_2010"]
+    },
+    "morRadiationModel" : {
+      "type" : "string",
+      "enum": ["UNSTATED", "SPHERE_ECOM2_Y0", "SPHERE_OUTPUT_MAP", "SPHERE_OUTPUT_MAP_ECOM2_Y0"]
+    },
+    "morWindowStatus" : {
+      "type" : "string",
+      "enum": ["SERVED", "THEORY_REFUSED", "TOLERANCE_NOT_HELD"]
+    },
+    "MET" : {
+      "type" : "object",
+      "description" : "Mean Element Theory",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CVR" : {
+      "type" : "object",
+      "description" : "Covariance Realism",
+      "properties" : {
+        "RULE" : {
+                "$ref" : "#/definitions/covarianceRule",
+                "description" : "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration."
+              },
+        "REGIME" : {
+                "type" : "string",
+                "description" : "Orbit regime of the cell, as the model names it."
+              },
+        "AGE_DAYS" : {
+                "type" : "number",
+                "description" : "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+              },
+        "HORIZON_DAYS" : {
+                "type" : "number",
+                "description" : "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+              },
+        "MEASURED_LINEAGE" : {
+                "type" : "string",
+                "description" : "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+              },
+        "TEST_WINDOW" : {
+                "type" : "string",
+                "description" : "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+              },
+        "MEAN_D2_OVER_3" : {
+                "type" : "number",
+                "description" : "Mean of d2/3 over the held-out samples. NaN when not measured."
+              },
+        "COVERAGE_95" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+              },
+        "SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of held-out samples the test used."
+              },
+        "OBJECTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct objects the samples came from."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+              },
+        "CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+              },
+        "EVIDENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the report or record that holds the test."
+              },
+        "HISTORY_SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES."
+              },
+        "HISTORY_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS."
+              },
+        "HISTORY_WINDOW" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS."
+              },
+        "SHRINKAGE_WEIGHT" : {
+                "type" : "number",
+                "description" : "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+              },
+        "TRUTH_EPOCHS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated."
+              },
+        "COVERAGE_1_SIGMA_AXIS1" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured."
+              },
+        "COVERAGE_1_SIGMA_AXIS2" : {
+                "type" : "number"
+              },
+        "COVERAGE_1_SIGMA_AXIS3" : {
+                "type" : "number"
+              },
+        "COVERAGE_3_SIGMA_AXIS1" : {
+                "type" : "number",
+                "description" : "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973."
+              },
+        "COVERAGE_3_SIGMA_AXIS2" : {
+                "type" : "number"
+              },
+        "COVERAGE_3_SIGMA_AXIS3" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPETargeterConstraint" : {
+      "type" : "object",
+      "description" : "One constraint in a maneuver-targeting problem and how well the converged\nsolution satisfies it.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Constraint identifier, e.g. \"SMA\", \"INC\", \"RIC_R\""
+              },
+        "FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame the constraint is expressed in"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT"
+              },
+        "EVENT" : {
+                "type" : "string",
+                "description" : "Event the constraint anchors to when EPOCH is 0, e.g. \"APOAPSIS\""
+              },
+        "TARGET_VALUE" : {
+                "type" : "number",
+                "description" : "Target value of the constrained quantity"
+              },
+        "ACHIEVED_VALUE" : {
+                "type" : "number",
+                "description" : "Value achieved by the converged solution"
+              },
+        "TOLERANCE" : {
+                "type" : "number",
+                "description" : "Acceptable tolerance on the constrained quantity"
+              },
+        "WEIGHT" : {
+                "type" : "number",
+                "description" : "Relative weight of this constraint in the corrector"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPETargeterSolution" : {
+      "type" : "object",
+      "description" : "Maneuver-targeter solution and convergence metadata carried with an\nextended MPE: the solver that produced the targeted element set, its\niteration/residual history, and the constraint set it satisfied.",
+      "properties" : {
+        "SOLVER" : {
+                "type" : "string",
+                "description" : "Solver used, e.g. \"differential-corrector\""
+              },
+        "DYNAMICS" : {
+                "type" : "string",
+                "description" : "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP"
+              },
+        "CONVERGED" : {
+                "type" : "boolean",
+                "description" : "Whether the corrector converged within tolerance"
+              },
+        "ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of corrector iterations executed"
+              },
+        "RESIDUAL_RMS" : {
+                "type" : "number",
+                "description" : "RMS of the final-iteration constraint residuals"
+              },
+        "RESIDUALS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Final-iteration residual per constraint, aligned with CONSTRAINTS"
+              },
+        "CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MPETargeterConstraint"},
+                "description" : "The constraint set the solution was targeted against"
+              },
+        "TOTAL_DELTA_V" : {
+                "type" : "number",
+                "description" : "Total delta-v of the solved maneuver sequence in m/s"
+              },
+        "SOLVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms the solution was produced"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPE" : {
+      "type" : "object",
+      "description" : "Minimum Propagatable Element Set",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "string",
+                "description" : "Unique ID as a String [no units]"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity (unitless)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly in degrees"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource",
+                "description" : "Description of the Mean Element Theory (SGP4, DSST, USM)"
+              },
+        "TARGETER" : {
+                "$ref" : "#/definitions/MPETargeterSolution",
+                "description" : "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+              },
+        "BTERM" : {
+                "type" : "number",
+                "description" : "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4."
+              },
+        "AGOM" : {
+                "type" : "number",
+                "description" : "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MORCovariancePropagation" : {
+      "type" : "object",
+      "description" : "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
+      "properties" : {
+        "FLOOR_UU_KM2" : {
+                "type" : "number"
+              },
+        "FLOOR_VU_KM2" : {
+                "type" : "number"
+              },
+        "FLOOR_VV_KM2" : {
+                "type" : "number"
+              },
+        "FLOOR_WU_KM2" : {
+                "type" : "number"
+              },
+        "FLOOR_WV_KM2" : {
+                "type" : "number"
+              },
+        "FLOOR_WW_KM2" : {
+                "type" : "number"
+              },
+        "NOISE_ECCENTRICITY_PER_DAY" : {
+                "type" : "number"
+              },
+        "NOISE_INCLINATION_PER_DAY" : {
+                "type" : "number"
+              },
+        "NOISE_MEAN_MOTION_RELATIVE" : {
+                "type" : "number"
+              },
+        "NOISE_NON_GRAVITATIONAL_RAD_DAY2" : {
+                "type" : "number"
+              },
+        "NOISE_START_MINUTES" : {
+                "type" : "number"
+              },
+        "NON_GRAVITATIONAL_SHARE" : {
+                "type" : "number"
+              },
+        "NON_GRAVITATIONAL_RATE_PER_DAY" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MORWindow" : {
+      "type" : "object",
+      "description" : "One window of the polynomial rows derived from this record's elements: Chebyshev series of the first\nkind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and\nvelocity in km/s, TEME of date, about the Earth.",
+      "properties" : {
+        "EPOCH_MID_SECONDS" : {
+                "type" : "number",
+                "description" : "Middle of the window, seconds after EPOCH_UNIX_US."
+              },
+        "EPOCH_HALF_SPAN" : {
+                "type" : "number",
+                "description" : "Half the window, seconds; above 0."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/morWindowStatus",
+                "description" : "SERVED, or why no record serves the window."
+              },
+        "POS_COEFF_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes."
+              },
+        "POS_COEFF_HEAD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Leading position coefficients per axis held as binary64; the rest are binary32. At most\nPOS_COEFF_COUNT."
+              },
+        "VEL_COEFF_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all\nthree axes."
+              },
+        "VEL_COEFF_HEAD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MOR" : {
+      "type" : "object",
+      "description" : "Minimum Orbit Record.",
+      "properties" : {
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none."
+              },
+        "INTERNATIONAL_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "The object's COSPAR international designator."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR."
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource",
+                "description" : "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
+              },
+        "EPOCH_UNIX_US" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
+              },
+        "RECORD_KIND" : {
+                "$ref" : "#/definitions/morRecordKind",
+                "description" : "What this record is (see \"Record kinds\" and \"Rows only\" above). An unknown kind: ignore the record."
+              },
+        "WINDOWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MORWindow"},
+                "description" : "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
+              },
+        "WINDOW_COEFF_HEADS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
+              },
+        "WINDOW_COEFF_TAILS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+              },
+        "WINDOW_RECORD_CHECK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity."
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination, deg."
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of the ascending node, deg."
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter, deg."
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly, deg."
+              },
+        "BTERM" : {
+                "type" : "number",
+                "description" : "Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+              },
+        "AGOM" : {
+                "type" : "number",
+                "description" : "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+              },
+        "GRAVITY_FIELD" : {
+                "$ref" : "#/definitions/morGravityField",
+                "description" : "The gravity field the set flies on."
+              },
+        "MAXIMUM_TESSERAL_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP."
+              },
+        "MAXIMUM_ZONAL_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP."
+              },
+        "OD_PARAMETERS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:\nDRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0\n(bit 6, value ECOM2_Y0). Any other bit has no value here and is refused."
+              },
+        "OD_SOLVED_FOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held)."
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number",
+                "description" : "The span of the observations the orbit determination used, days; NaN when not stated."
+              },
+        "OD_OBSERVATIONS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Observations the orbit determination used; -1 when not stated ($OCM 0)."
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
+              },
+        "OD_EPOCH_UNIX_US" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal."
+              },
+        "OD_TRACKS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
+              },
+        "DAYS_SINCE_LAST_OBS" : {
+                "type" : "number",
+                "description" : "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated."
+              },
+        "COVARIANCE_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved\nDRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);\nposition and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in\nascending ordinal. Absent: no covariance."
+              },
+        "COV_PROPAGATION" : {
+                "$ref" : "#/definitions/MORCovariancePropagation",
+                "description" : "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
+              },
+        "COV_FLOOR" : {
+                "$ref" : "#/definitions/morCovarianceFloor",
+                "description" : "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM."
+              },
+        "COV_REALISM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so."
+              },
+        "COV_CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "Whether COVARIANCE_DATA's coverage was measured against independent reference states."
+              },
+        "FALLBACK" : {
+                "$ref" : "#/definitions/MPE",
+                "description" : "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER."
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "BSTAR, 1/Earth radii. SGP4 only."
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
+              },
+        "SOLID_TIDES_MODEL" : {
+                "$ref" : "#/definitions/morSolidTideModel",
+                "description" : "The solid Earth tide the set flies with."
+              },
+        "SOLAR_RAD_PRESSURE" : {
+                "$ref" : "#/definitions/morRadiationModel",
+                "description" : "The radiation pressure model the set states."
+              },
+        "ECOM2_Y0" : {
+                "type" : "number",
+                "description" : "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
+              },
+        "MESSAGE_STATUS" : {
+                "$ref" : "#/definitions/morMessageStatus",
+                "description" : "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "The object's name; absent unless a reader copies it into what it writes."
+              },
+        "COV_REALISM" : {
+                "$ref" : "#/definitions/CVR",
+                "description" : "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
+              },
+        "COV_CALIBRATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Identifier of that calibration evidence (a report or record)."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MOR"
+}

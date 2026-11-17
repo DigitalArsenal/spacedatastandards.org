@@ -1,0 +1,81 @@
+// Hash: b20e92222b1060e9418aa8753121bfabdd1970871ac00cc0e2166071394a2101
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Dataset Availability (DAV)
+/// Description
+/// Whether a node can serve the latest published dataset of a lane (a
+/// standard, provider and source), and if so which one: the batch, how big it
+/// is, when it was published, the notice that announced it and whether that
+/// notice verified, and whether the node's copy is current, held locally and
+/// kept (pinned). A client asks before fetching, or reads it beside the
+/// dataset, so it can tell a current dataset from a stale one and a verified
+/// one from an unverified one.
+///
+/// DAV describes a dataset; it does not carry it. The dataset's records travel
+/// beside it in their own standard (or as a $REC collection when one answer
+/// mixes standards).
+/// Why a dataset is not available. Append new values only; never reorder or
+/// reuse existing values.
+enum davUnavailableReason : ubyte {
+  /// The dataset is available.
+  None,
+  /// No publication of the lane is known.
+  NotPublished,
+  /// A publication is known but its content is not held.
+  NotHeld,
+  /// The content is held but older than the latest known publication.
+  Stale,
+  /// The notice did not verify.
+  Unverified,
+  /// The caller may not read it.
+  NotEntitled
+}
+/// Dataset Availability - the latest dataset of a lane, as one node holds it.
+table DAV {
+  /// Standard of the dataset, as its code, e.g. "OMM".
+  STANDARD: string;
+  /// Schema file name of its records, e.g. "OMM.fbs".
+  SCHEMA_NAME: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  /// True when the node knows of a publication of this lane.
+  KNOWN: bool;
+  /// True when the node can serve the dataset now.
+  AVAILABLE: bool;
+  UNAVAILABLE_REASON: davUnavailableReason = None;
+  /// True when the node published the dataset itself.
+  SELF_PUBLISHED: bool;
+  /// True when the node keeps the content (it is not evicted).
+  PINNED: bool;
+  /// True when the node's copy is the latest known publication.
+  FRESH: bool;
+  /// Batch identifier of the dataset.
+  BATCH_ID: string;
+  /// Records in the dataset.
+  RECORD_COUNT: uint64;
+  /// Bytes of the dataset's record stream.
+  BYTE_COUNT: uint64;
+  /// Parts the dataset is split into for transfer; 0 or 1 = one part.
+  PARTS: uint32;
+  /// Unix milliseconds the dataset was published.
+  PUBLISHED_AT_MS: int64;
+  /// Content identifier of the $PNM that announced it.
+  PNM_CID: string;
+  /// The notice's FILE_ID.
+  PNM_FILE_ID: string;
+  /// Unix milliseconds of the notice.
+  PNM_PUBLISHED_AT_MS: int64;
+  /// True when the notice's signature verified.
+  PNM_SIGNATURE_VERIFIED: bool;
+  /// Peer that published the notice.
+  PUBLISHER_PEER_ID: string;
+  /// Entity tag of the dataset, for conditional requests.
+  ETAG: string;
+  /// When the dataset's records are not inline but held by the serving node
+  /// for delivery out of band: the reference token the node resolves (single
+  /// use), and the byte size of what it refers to. 0 = inline.
+  BODY_REF_TOKEN: uint64;
+  BODY_REF_SIZE: uint64;
+}
+root_type DAV;
+file_identifier "$DAV";

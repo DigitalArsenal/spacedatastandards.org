@@ -1,0 +1,13 @@
+// Hash: 873046dbd588898d75ea039c147761282ae2294a23404b2c34e06b8c44fbf7bd
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Object List
+table OOL {
+  ID:string;
+  NAME:string;
+  DESCRIPTION:string;
+  ONORBITS:[string];
+}
+
+root_type OOL;
+file_identifier "$OOL";

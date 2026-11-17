@@ -57,6 +57,15 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
      * product of maneuver targeting (absent for ordinary element sets)
      */
     TARGETER(obj?: MPETargeterSolution): MPETargeterSolution | null;
+    /**
+     * BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+     * SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+     */
+    BTERM(): number;
+    /**
+     * AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+     */
+    AGOM(): number;
     static startMPE(builder: flatbuffers.Builder): void;
     static addEntityId(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCH: number): void;
@@ -69,6 +78,8 @@ export declare class MPE implements flatbuffers.IUnpackableObject<MPET> {
     static addBstar(builder: flatbuffers.Builder, BSTAR: number): void;
     static addMeanElementTheory(builder: flatbuffers.Builder, MEAN_ELEMENT_THEORY: meanElementSource): void;
     static addTargeter(builder: flatbuffers.Builder, TARGETEROffset: flatbuffers.Offset): void;
+    static addBterm(builder: flatbuffers.Builder, BTERM: number): void;
+    static addAgom(builder: flatbuffers.Builder, AGOM: number): void;
     static endMPE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedMPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -87,7 +98,9 @@ export declare class MPET implements flatbuffers.IGeneratedObject {
     BSTAR: number;
     MEAN_ELEMENT_THEORY: meanElementSource;
     TARGETER: MPETargeterSolutionT | null;
-    constructor(ENTITY_ID?: string | Uint8Array | null, EPOCH?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BSTAR?: number, MEAN_ELEMENT_THEORY?: meanElementSource, TARGETER?: MPETargeterSolutionT | null);
+    BTERM: number;
+    AGOM: number;
+    constructor(ENTITY_ID?: string | Uint8Array | null, EPOCH?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BSTAR?: number, MEAN_ELEMENT_THEORY?: meanElementSource, TARGETER?: MPETargeterSolutionT | null, BTERM?: number, AGOM?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=MPE.d.ts.map

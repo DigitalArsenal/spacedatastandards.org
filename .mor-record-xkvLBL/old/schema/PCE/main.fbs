@@ -1,0 +1,885 @@
+// Hash: 67ea268a72b1557a42c6682fd86f0e0e04e661cc333130a37b9ae6d5d934ca51
+// Version: 1.200.0
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../FRM/main.fbs";
+
+/// Which kind of object owns a parameter. A parameter is meaningless without
+/// its owner: the same symbol evaluated on a space object and on a thruster
+/// are different quantities. Append new values only; never reorder or reuse
+/// existing values.
+enum pceOwnerClass : ubyte {
+  UNSPECIFIED = 0,
+  /// A tracked object with an orbital state.
+  SPACE_OBJECT = 1,
+  /// A point with an ephemeris but no vehicle properties: a celestial body,
+  /// a barycentre, or a libration point.
+  SPACE_POINT = 2,
+  /// A fixed site on a body surface.
+  GROUND_SITE = 3,
+  /// A thrust-producing device carried by a space object.
+  THRUSTER = 4,
+  /// A propellant reservoir carried by a space object.
+  FUEL_TANK = 5,
+  /// An instantaneous velocity change.
+  IMPULSIVE_BURN = 6,
+  /// A thrust arc of finite duration.
+  FINITE_BURN = 7,
+  /// An electrical power source and its bus.
+  POWER_SYSTEM = 8,
+  /// The orientation state of a space object.
+  ATTITUDE_SYSTEM = 9,
+  /// A differential-corrector or optimizer instance.
+  SOLVER = 10,
+  /// A set of space objects propagated together.
+  OBJECT_GROUP = 11
+}
+
+/// The shape of a parameter's value. Append new values only.
+enum pceDataType : ubyte {
+  UNSPECIFIED = 0,
+  /// One real number, carried in PCEParameterValue.VALUE.
+  REAL_SCALAR = 1,
+  /// An ordered run of real numbers, carried in PCEParameterValue.VALUES.
+  REAL_VECTOR = 2,
+  /// A real matrix, carried row-major in PCEParameterValue.VALUES with
+  /// ROW_COUNT and COLUMN_COUNT set.
+  REAL_MATRIX = 3,
+  /// One integer, carried in PCEParameterValue.VALUE with no fractional part.
+  INTEGER_SCALAR = 4,
+  /// Text, carried in PCEParameterValue.STRING_VALUE.
+  STRING = 5,
+  /// An instant, carried in PCEParameterValue.STRING_VALUE as ISO 8601 or as
+  /// the numeric day count in VALUE, per the parameter's own definition.
+  EPOCH = 6,
+  /// A truth value, carried in PCEParameterValue.VALUE as 0 or 1.
+  BOOLEAN = 7
+}
+
+/// SI unit of a parameter value. The catalog is SI: metres, radians, seconds,
+/// kilograms. A provider MUST NOT publish degrees or kilometres under these
+/// members. PROVIDER_DEFINED holds a reserved high value so new SI units
+/// append contiguously without disturbing it. Append new values only.
+enum pceUnit : ubyte {
+  UNSPECIFIED = 0,
+  /// A pure number.
+  DIMENSIONLESS = 1,
+  METRE = 2,
+  METRE_PER_SECOND = 3,
+  METRE_PER_SECOND_SQUARED = 4,
+  METRE_SQUARED = 5,
+  /// Specific angular momentum.
+  METRE_SQUARED_PER_SECOND = 6,
+  /// Specific energy, including characteristic energy.
+  METRE_SQUARED_PER_SECOND_SQUARED = 7,
+  METRE_CUBED = 8,
+  RADIAN = 9,
+  RADIAN_PER_SECOND = 10,
+  SECOND = 11,
+  /// Day of 86400 SI seconds; the unit of a modified Julian day count.
+  DAY = 12,
+  KILOGRAM = 13,
+  KILOGRAM_PER_SECOND = 14,
+  KILOGRAM_PER_METRE_CUBED = 15,
+  /// Moment of inertia.
+  KILOGRAM_METRE_SQUARED = 16,
+  NEWTON = 17,
+  NEWTON_METRE = 18,
+  WATT = 19,
+  PASCAL = 20,
+  KELVIN = 21,
+  /// Area-to-mass ratio and ballistic coefficient reciprocal.
+  METRE_SQUARED_PER_KILOGRAM = 22,
+  /// The unit is outside this vocabulary and is named in
+  /// PCEParameterDescriptor.PROVIDER_DEFINED_UNIT_SYMBOL, which is then
+  /// REQUIRED. A consumer that cannot resolve the symbol MUST refuse the
+  /// value rather than assume DIMENSIONLESS.
+  PROVIDER_DEFINED = 100
+}
+
+/// What geometric context a parameter needs before it has a value. This states
+/// the REQUIREMENT; the specific axis set and origin, when the parameter is
+/// only defined for one, are named by REQUIRED_AXIS_TYPE and
+/// REQUIRED_ORIGIN_KIND on the descriptor. Append new values only.
+enum pceFrameDependency : ubyte {
+  UNSPECIFIED = 0,
+  /// The value is the same in every coordinate system: mass, duration,
+  /// a tank pressure.
+  FRAME_INDEPENDENT = 1,
+  /// The value depends on the full coordinate system, axes and origin.
+  COORDINATE_SYSTEM_DEPENDENT = 2,
+  /// The value depends on the central body alone and not on the axes: the
+  /// classical element set of a two-body orbit about a named body.
+  CENTRAL_BODY_DEPENDENT = 3,
+  /// The value depends on a surface site as well as a body.
+  SURFACE_SITE_DEPENDENT = 4,
+  /// The value depends on a second object as well as the owner.
+  SECOND_OBJECT_DEPENDENT = 5
+}
+
+/// Whether a named parameter can actually be evaluated by the publisher of
+/// this catalog. A name is DECLARED so that a consumer can resolve, report and
+/// refuse it deterministically; declaring it is not a claim that it computes.
+/// Append new values only.
+enum pceAvailability : ubyte {
+  UNSPECIFIED = 0,
+  /// The publisher evaluates this parameter.
+  IMPLEMENTED = 1,
+  /// The name is ratified and reserved, and the publisher REFUSES it with
+  /// NOT_IMPLEMENTED. UNAVAILABLE_REASON states what is missing. A publisher
+  /// MUST NOT substitute a neighbouring quantity.
+  DECLARED_UNAVAILABLE = 2,
+  /// Evaluated, but superseded; a consumer SHOULD migrate to the parameter
+  /// named in SUPERSEDED_BY.
+  DEPRECATED = 3
+}
+
+/// Outcome of one parameter evaluation or one propagate-to-condition run.
+/// 0 is UNSPECIFIED so an unset byte never decodes as success. Append new
+/// values only.
+enum pceResultStatus : ubyte {
+  UNSPECIFIED = 0,
+  OK = 1,
+  INVALID_INPUT = 2,
+  /// The name does not resolve in the publisher's catalog.
+  UNKNOWN_PARAMETER = 3,
+  /// The name resolves and is DECLARED_UNAVAILABLE.
+  NOT_IMPLEMENTED = 4,
+  /// A coordinate system, central body, site or second object the parameter
+  /// requires was not supplied.
+  MISSING_DEPENDENCY = 5,
+  /// The owning object or hardware item named on the request is not present.
+  MISSING_OWNER_OBJECT = 6,
+  /// The evaluation needs Earth-orientation data that was not supplied or
+  /// does not span the epoch. The provider MUST fail here rather than
+  /// silently extrapolate.
+  MISSING_EOP_DATA = 7,
+  /// The parameter is undefined at this state: a node angle at zero
+  /// inclination, an argument of periapsis at zero eccentricity.
+  SINGULAR_AT_STATE = 8,
+  /// The parameter is defined only on a regime this state is not in: a launch
+  /// asymptote on a bound orbit.
+  OUT_OF_DOMAIN = 9,
+  /// A stopping condition was never attained inside the requested interval.
+  GOAL_NOT_ATTAINED = 10,
+  /// The bracketing succeeded but the root refinement did not converge to the
+  /// requested epoch tolerance.
+  ROOT_REFINEMENT_FAILED = 11,
+  /// The run hit its step or evaluation budget before answering.
+  BUDGET_EXCEEDED = 12
+}
+
+/// Which crossing of the goal value satisfies a condition. Append new values
+/// only.
+enum pceConditionDirection : ubyte {
+  UNSPECIFIED = 0,
+  /// Any crossing of GOAL_VALUE, in either direction.
+  ANY_CROSSING = 1,
+  /// Only a crossing with the parameter increasing through GOAL_VALUE.
+  INCREASING = 2,
+  /// Only a crossing with the parameter decreasing through GOAL_VALUE.
+  DECREASING = 3
+}
+
+/// Direction of time for a propagate-to-condition run. Append new values only.
+enum pcePropagationDirection : ubyte {
+  UNSPECIFIED = 0,
+  FORWARD = 1,
+  BACKWARD = 2
+}
+
+/// The ratified roster of named calculation parameters.
+///
+/// A member's NAME is the machine key; there is deliberately no second text
+/// spelling of it on the wire, so a catalog and a request can never disagree
+/// about what was asked for. Values are allocated in family blocks and a new
+/// member is added at the END of its family's reserved range: an existing
+/// member's value is NEVER changed, because it is written into every stored
+/// catalog, request, report and event sample. A parameter outside this roster
+/// is carried as PROVIDER_DEFINED with PROVIDER_DEFINED_NAME set.
+///
+/// Angles are radians, lengths metres, durations seconds, masses kilograms.
+/// Declaring a member here is not a claim that any provider computes it;
+/// PCEParameterDescriptor.AVAILABILITY carries that fact per publisher.
+enum pceParameter : ushort {
+  UNSPECIFIED = 0,
+
+  // --- 1..29 Cartesian state and its direct magnitudes --------------------
+  POSITION_X = 1,
+  POSITION_Y = 2,
+  POSITION_Z = 3,
+  VELOCITY_X = 4,
+  VELOCITY_Y = 5,
+  VELOCITY_Z = 6,
+  POSITION_MAGNITUDE = 7,
+  VELOCITY_MAGNITUDE = 8,
+  /// Right ascension of the position vector.
+  RIGHT_ASCENSION = 9,
+  /// Declination of the position vector.
+  DECLINATION = 10,
+  /// Right ascension of the velocity vector.
+  VELOCITY_RIGHT_ASCENSION = 11,
+  /// Declination of the velocity vector.
+  VELOCITY_DECLINATION = 12,
+  /// Angle between the velocity vector and the local horizontal plane.
+  FLIGHT_PATH_ANGLE = 13,
+  /// Azimuth of the velocity vector, measured from local north.
+  AZIMUTH_ANGLE = 14,
+  /// Flight path angle measured from the local horizontal.
+  HORIZONTAL_FLIGHT_PATH_ANGLE = 15,
+  /// Component of velocity along the position unit vector. Its zero crossing
+  /// IS the apsis condition; a stop at apoapsis is this parameter with goal
+  /// 0 and direction DECREASING.
+  RADIAL_VELOCITY = 16,
+  ANGULAR_MOMENTUM_MAGNITUDE = 17,
+  ANGULAR_MOMENTUM_X = 18,
+  ANGULAR_MOMENTUM_Y = 19,
+  ANGULAR_MOMENTUM_Z = 20,
+
+  // --- 30..69 Keplerian elements and derived orbit scalars ----------------
+  SEMI_MAJOR_AXIS = 30,
+  ECCENTRICITY = 31,
+  INCLINATION = 32,
+  RIGHT_ASCENSION_OF_ASCENDING_NODE = 33,
+  ARGUMENT_OF_PERIAPSIS = 34,
+  TRUE_ANOMALY = 35,
+  MEAN_ANOMALY = 36,
+  ECCENTRIC_ANOMALY = 37,
+  HYPERBOLIC_ANOMALY = 38,
+  RADIUS_OF_PERIAPSIS = 39,
+  RADIUS_OF_APOAPSIS = 40,
+  ALTITUDE_OF_PERIAPSIS = 41,
+  ALTITUDE_OF_APOAPSIS = 42,
+  SEMILATUS_RECTUM = 43,
+  ORBIT_PERIOD = 44,
+  MEAN_MOTION = 45,
+  /// Specific orbital energy.
+  SPECIFIC_ORBITAL_ENERGY = 46,
+  /// Twice the specific orbital energy; the square of the hyperbolic excess
+  /// speed on an escape trajectory.
+  CHARACTERISTIC_ENERGY = 47,
+  VELOCITY_AT_PERIAPSIS = 48,
+  VELOCITY_AT_APOAPSIS = 49,
+  /// Argument of periapsis plus true anomaly.
+  ARGUMENT_OF_LATITUDE = 50,
+  TRUE_LONGITUDE = 51,
+  MEAN_LONGITUDE = 52,
+  /// Angle between the orbit plane and the direction to the illuminating body.
+  BETA_ANGLE = 53,
+  ECCENTRICITY_VECTOR_X = 54,
+  ECCENTRICITY_VECTOR_Y = 55,
+  ECCENTRICITY_VECTOR_Z = 56,
+  SEMI_MINOR_AXIS = 57,
+
+  // --- 70..89 equinoctial families ----------------------------------------
+  EQUINOCTIAL_H = 70,
+  EQUINOCTIAL_K = 71,
+  EQUINOCTIAL_P = 72,
+  EQUINOCTIAL_Q = 73,
+  EQUINOCTIAL_MEAN_LONGITUDE = 74,
+  MODIFIED_EQUINOCTIAL_F = 75,
+  MODIFIED_EQUINOCTIAL_G = 76,
+  MODIFIED_EQUINOCTIAL_H = 77,
+  MODIFIED_EQUINOCTIAL_K = 78,
+  MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE = 79,
+  MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM = 80,
+  ALTERNATE_EQUINOCTIAL_P = 81,
+  ALTERNATE_EQUINOCTIAL_Q = 82,
+  ALTERNATE_EQUINOCTIAL_MEAN_MOTION = 83,
+
+  // --- 90..99 Delaunay canonical variables --------------------------------
+  DELAUNAY_MEAN_ANOMALY = 90,
+  DELAUNAY_ARGUMENT_OF_PERIAPSIS = 91,
+  DELAUNAY_ASCENDING_NODE = 92,
+  DELAUNAY_ACTION_TOTAL = 93,
+  DELAUNAY_ACTION_ANGULAR_MOMENTUM = 94,
+  DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM = 95,
+
+  // --- 100..119 planetodetic and body-fixed -------------------------------
+  GEODETIC_LATITUDE = 100,
+  GEODETIC_LONGITUDE = 101,
+  GEODETIC_ALTITUDE = 102,
+  GEOCENTRIC_LATITUDE = 103,
+  PLANETODETIC_RADIUS_MAGNITUDE = 104,
+  PLANETODETIC_VELOCITY_MAGNITUDE = 105,
+  PLANETODETIC_AZIMUTH = 106,
+  PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE = 107,
+  /// Local sidereal time at the sub-object meridian.
+  LOCAL_SIDEREAL_TIME = 108,
+  /// Hour angle of the body prime meridian.
+  PRIME_MERIDIAN_HOUR_ANGLE = 109,
+
+  // --- 120..139 B-plane and asymptote sets --------------------------------
+  B_DOT_T = 120,
+  B_DOT_R = 121,
+  B_VECTOR_MAGNITUDE = 122,
+  B_VECTOR_ANGLE = 123,
+  /// Declination of the departure asymptote.
+  DECLINATION_OF_DEPARTURE_ASYMPTOTE = 124,
+  /// Right ascension of the departure asymptote.
+  RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE = 125,
+  INCOMING_RADIUS_OF_PERIAPSIS = 126,
+  INCOMING_CHARACTERISTIC_ENERGY = 127,
+  INCOMING_ASYMPTOTE_RIGHT_ASCENSION = 128,
+  INCOMING_ASYMPTOTE_DECLINATION = 129,
+  INCOMING_B_VECTOR_AZIMUTH = 130,
+  OUTGOING_RADIUS_OF_PERIAPSIS = 131,
+  OUTGOING_CHARACTERISTIC_ENERGY = 132,
+  OUTGOING_ASYMPTOTE_RIGHT_ASCENSION = 133,
+  OUTGOING_ASYMPTOTE_DECLINATION = 134,
+  OUTGOING_B_VECTOR_AZIMUTH = 135,
+  HYPERBOLIC_EXCESS_VELOCITY = 136,
+
+  // --- 140..159 Brouwer-Lyddane mean elements -----------------------------
+  BROUWER_SHORT_SEMI_MAJOR_AXIS = 140,
+  BROUWER_SHORT_ECCENTRICITY = 141,
+  BROUWER_SHORT_INCLINATION = 142,
+  BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE = 143,
+  BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS = 144,
+  BROUWER_SHORT_MEAN_ANOMALY = 145,
+  BROUWER_LONG_SEMI_MAJOR_AXIS = 146,
+  BROUWER_LONG_ECCENTRICITY = 147,
+  BROUWER_LONG_INCLINATION = 148,
+  BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE = 149,
+  BROUWER_LONG_ARGUMENT_OF_PERIAPSIS = 150,
+  BROUWER_LONG_MEAN_ANOMALY = 151,
+
+  // --- 160..179 state transition and covariance matrices ------------------
+  /// Six by six orbit state transition matrix, row-major.
+  ORBIT_STATE_TRANSITION_MATRIX = 160,
+  /// Position-to-position three by three block.
+  ORBIT_STATE_TRANSITION_MATRIX_A = 161,
+  /// Velocity-to-position three by three block.
+  ORBIT_STATE_TRANSITION_MATRIX_B = 162,
+  /// Position-to-velocity three by three block.
+  ORBIT_STATE_TRANSITION_MATRIX_C = 163,
+  /// Velocity-to-velocity three by three block.
+  ORBIT_STATE_TRANSITION_MATRIX_D = 164,
+  /// Six by six orbit error covariance, row-major, in the request's
+  /// coordinate system.
+  ORBIT_ERROR_COVARIANCE_MATRIX = 165,
+
+  // --- 180..219 time ------------------------------------------------------
+  /// Each EPOCH_ member is the owner epoch expressed in one time system.
+  /// GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day
+  /// count. The time system is named by the $TIM timingStandard member.
+  EPOCH_A1_GREGORIAN = 180,
+  EPOCH_A1_MODIFIED_JULIAN = 181,
+  EPOCH_TAI_GREGORIAN = 182,
+  EPOCH_TAI_MODIFIED_JULIAN = 183,
+  EPOCH_TT_GREGORIAN = 184,
+  EPOCH_TT_MODIFIED_JULIAN = 185,
+  EPOCH_TDB_GREGORIAN = 186,
+  EPOCH_TDB_MODIFIED_JULIAN = 187,
+  EPOCH_UTC_GREGORIAN = 188,
+  EPOCH_UTC_MODIFIED_JULIAN = 189,
+  EPOCH_UT1_GREGORIAN = 190,
+  EPOCH_UT1_MODIFIED_JULIAN = 191,
+  EPOCH_GPS_GREGORIAN = 192,
+  EPOCH_GPS_MODIFIED_JULIAN = 193,
+  /// Days since PCEEvaluationContext.REFERENCE_EPOCH.
+  ELAPSED_DAYS = 194,
+  /// Seconds since PCEEvaluationContext.REFERENCE_EPOCH.
+  ELAPSED_SECONDS = 195,
+
+  // --- 220..249 mass, ballistic and physical properties -------------------
+  DRY_MASS = 220,
+  TOTAL_MASS = 221,
+  DRAG_COEFFICIENT = 222,
+  DRAG_AREA = 223,
+  REFLECTIVITY_COEFFICIENT = 224,
+  SOLAR_RADIATION_PRESSURE_AREA = 225,
+  ATMOSPHERIC_DENSITY_SCALE_FACTOR = 226,
+  DRAG_SCALE_FACTOR = 227,
+  SOLAR_RADIATION_PRESSURE_SCALE_FACTOR = 228,
+  BALLISTIC_COEFFICIENT = 229,
+  AREA_TO_MASS_RATIO = 230,
+  CENTER_OF_MASS_X = 231,
+  CENTER_OF_MASS_Y = 232,
+  CENTER_OF_MASS_Z = 233,
+  /// Three by three inertia tensor, row-major, in body axes.
+  MOMENT_OF_INERTIA_MATRIX = 234,
+
+  // --- 250..289 attitude --------------------------------------------------
+  ATTITUDE_QUATERNION_1 = 250,
+  ATTITUDE_QUATERNION_2 = 251,
+  ATTITUDE_QUATERNION_3 = 252,
+  /// Scalar component of the attitude quaternion.
+  ATTITUDE_QUATERNION_4 = 253,
+  /// Three by three direction cosine matrix, row-major.
+  ATTITUDE_DIRECTION_COSINE_MATRIX = 254,
+  EULER_ANGLE_1 = 255,
+  EULER_ANGLE_2 = 256,
+  EULER_ANGLE_3 = 257,
+  EULER_ANGLE_RATE_1 = 258,
+  EULER_ANGLE_RATE_2 = 259,
+  EULER_ANGLE_RATE_3 = 260,
+  MODIFIED_RODRIGUES_PARAMETER_1 = 261,
+  MODIFIED_RODRIGUES_PARAMETER_2 = 262,
+  MODIFIED_RODRIGUES_PARAMETER_3 = 263,
+  ANGULAR_VELOCITY_X = 264,
+  ANGULAR_VELOCITY_Y = 265,
+  ANGULAR_VELOCITY_Z = 266,
+  EULER_AXIS_X = 267,
+  EULER_AXIS_Y = 268,
+  EULER_AXIS_Z = 269,
+  PRINCIPAL_ROTATION_ANGLE = 270,
+
+  // --- 300..319 propellant reservoir --------------------------------------
+  TANK_FUEL_MASS = 300,
+  TANK_PRESSURE = 301,
+  TANK_TEMPERATURE = 302,
+  TANK_REFERENCE_TEMPERATURE = 303,
+  TANK_VOLUME = 304,
+  TANK_FUEL_DENSITY = 305,
+
+  // --- 320..369 thrust-producing device -----------------------------------
+  THRUSTER_DUTY_CYCLE = 320,
+  THRUSTER_THRUST_SCALE_FACTOR = 321,
+  THRUSTER_GRAVITATIONAL_ACCELERATION = 322,
+  THRUSTER_MIXTURE_RATIO = 323,
+  THRUSTER_SPECIFIC_IMPULSE = 324,
+  THRUSTER_THRUST_MAGNITUDE = 325,
+  THRUSTER_MASS_FLOW_RATE = 326,
+  THRUSTER_DIRECTION_X = 327,
+  THRUSTER_DIRECTION_Y = 328,
+  THRUSTER_DIRECTION_Z = 329,
+  /// Coefficient vector of the thrust polynomial; address one coefficient
+  /// with PCEParameterRef.ELEMENT_INDEX.
+  THRUSTER_THRUST_COEFFICIENTS = 330,
+  /// Coefficient vector of the specific-impulse polynomial; address one
+  /// coefficient with PCEParameterRef.ELEMENT_INDEX.
+  THRUSTER_IMPULSE_COEFFICIENTS = 331,
+
+  // --- 370..389 impulsive velocity change ---------------------------------
+  /// First component of the velocity change in the burn coordinate system.
+  IMPULSIVE_BURN_ELEMENT_1 = 370,
+  IMPULSIVE_BURN_ELEMENT_2 = 371,
+  IMPULSIVE_BURN_ELEMENT_3 = 372,
+  IMPULSIVE_BURN_DELTA_V_MAGNITUDE = 373,
+  IMPULSIVE_BURN_MASS_CONSUMED = 374,
+
+  // --- 390..409 finite thrust arc -----------------------------------------
+  FINITE_BURN_THRUST_MAGNITUDE = 390,
+  FINITE_BURN_MASS_FLOW_RATE = 391,
+  FINITE_BURN_THRUST_X = 392,
+  FINITE_BURN_THRUST_Y = 393,
+  FINITE_BURN_THRUST_Z = 394,
+  FINITE_BURN_ACCELERATION_MAGNITUDE = 395,
+  FINITE_BURN_MASS_CONSUMED = 396,
+
+  // --- 410..429 electrical power ------------------------------------------
+  TOTAL_POWER_AVAILABLE = 410,
+  REQUIRED_BUS_POWER = 411,
+  THRUST_POWER_AVAILABLE = 412,
+  GENERATED_POWER = 413,
+
+  // --- 430..449 torque ----------------------------------------------------
+  TOTAL_TORQUE_X = 430,
+  TOTAL_TORQUE_Y = 431,
+  TOTAL_TORQUE_Z = 432,
+  TOTAL_TORQUE_MAGNITUDE = 433,
+
+  // --- 450..469 solver ----------------------------------------------------
+  /// Run state of the solver, as an integer code the solver family defines.
+  SOLVER_STATUS = 450,
+  SOLVER_ITERATION_COUNT = 451,
+  SOLVER_OBJECTIVE_VALUE = 452,
+  SOLVER_MAXIMUM_CONSTRAINT_VIOLATION = 453,
+
+  // --- 470..499 relative geometry and observation -------------------------
+  /// Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID.
+  RELATIVE_RANGE = 470,
+  RELATIVE_RANGE_RATE = 471,
+  RELATIVE_POSITION_X = 472,
+  RELATIVE_POSITION_Y = 473,
+  RELATIVE_POSITION_Z = 474,
+  RELATIVE_VELOCITY_X = 475,
+  RELATIVE_VELOCITY_Y = 476,
+  RELATIVE_VELOCITY_Z = 477,
+  /// Azimuth of the owner as seen from the site named on the request.
+  TOPOCENTRIC_AZIMUTH = 478,
+  /// Elevation of the owner as seen from the site named on the request.
+  TOPOCENTRIC_ELEVATION = 479,
+  /// Angle subtended at the owner between two named directions.
+  ANGULAR_SEPARATION = 480,
+  /// Angle at the owner between the illuminating body and the observer.
+  SOLAR_PHASE_ANGLE = 481,
+  /// Elevation of the illuminating body at the site named on the request.
+  LOCAL_SOLAR_ELEVATION_ANGLE = 482,
+  /// Fraction of the illuminating body disc visible from the owner: 1 in full
+  /// sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the
+  /// eclipse entry and exit conditions.
+  ILLUMINATION_FRACTION = 483,
+  /// One-way signal propagation time between the owner and the observer.
+  LIGHT_TIME_DELAY = 484,
+
+  /// The parameter is outside this roster and is named in
+  /// PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST
+  /// refuse the entry; it never guesses a neighbouring member.
+  PROVIDER_DEFINED = 65535
+}
+
+/// A reference to one parameter, with the dependencies that make it evaluable.
+/// This is what a request, a stopping condition and a report column all name.
+table PCEParameterRef {
+  /// Roster member, or PROVIDER_DEFINED.
+  PARAMETER: pceParameter = UNSPECIFIED;
+
+  /// REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
+  PROVIDER_DEFINED_NAME: string;
+
+  /// Component of a vector or matrix parameter, zero-based and row-major.
+  /// Negative selects the whole value.
+  ELEMENT_INDEX: int = -1;
+
+  /// Coordinate system this evaluation is expressed in; resolves against
+  /// RFMCoordinateSystem.NAME in PCEEvaluationContext.COORDINATE_SYSTEMS.
+  /// Absent means the context default.
+  COORDINATE_SYSTEM_NAME: string;
+
+  /// Ephemeris body code of the central body, when the parameter is
+  /// CENTRAL_BODY_DEPENDENT and the context default is not wanted.
+  CENTRAL_BODY_ID: int;
+
+  /// Site the parameter is evaluated from, when it is SURFACE_SITE_DEPENDENT.
+  SITE_ID: string;
+
+  /// Second object, when the parameter is SECOND_OBJECT_DEPENDENT.
+  SECOND_OBJECT_ID: string;
+
+  /// Owning object, when the request evaluates more than one.
+  OWNER_OBJECT_ID: string;
+
+  /// Owning hardware item, when the owner class is THRUSTER, FUEL_TANK or a
+  /// burn.
+  OWNER_HARDWARE_NAME: string;
+
+  /// Time system for an EPOCH-typed parameter, named by the $TIM
+  /// timingStandard member name. Absent means the context default.
+  TIME_SYSTEM: string;
+}
+
+/// One roster entry as a named publisher implements it. The catalog is the
+/// authority a consumer resolves a name through BEFORE it asks for a value.
+table PCEParameterDescriptor {
+  PARAMETER: pceParameter = UNSPECIFIED;
+
+  /// REQUIRED when PARAMETER is PROVIDER_DEFINED, absent otherwise.
+  PROVIDER_DEFINED_NAME: string;
+
+  OWNER_CLASS: pceOwnerClass = UNSPECIFIED;
+  DATA_TYPE: pceDataType = UNSPECIFIED;
+  UNIT: pceUnit = UNSPECIFIED;
+
+  /// REQUIRED when UNIT is PROVIDER_DEFINED, absent otherwise.
+  PROVIDER_DEFINED_UNIT_SYMBOL: string;
+
+  /// Number of values for REAL_VECTOR, and rows times columns for
+  /// REAL_MATRIX. Absent or 1 for a scalar.
+  ELEMENT_COUNT: int;
+
+  /// Matrix shape, REQUIRED when DATA_TYPE is REAL_MATRIX.
+  ROW_COUNT: int;
+  COLUMN_COUNT: int;
+
+  FRAME_DEPENDENCY: pceFrameDependency = UNSPECIFIED;
+
+  /// The one axis set this parameter is defined for, when it is defined for
+  /// only one: planetodetic quantities require BODY_FIXED. UNSPECIFIED means
+  /// any axis set the request names.
+  REQUIRED_AXIS_TYPE: rfmAxisType = UNSPECIFIED;
+
+  /// The one origin kind this parameter is defined for, when it is defined
+  /// for only one. UNSPECIFIED means any origin the request names.
+  REQUIRED_ORIGIN_KIND: rfmOriginKind = UNSPECIFIED;
+
+  /// The value changes with the time system it is asked for, independently of
+  /// the frame.
+  TIME_SYSTEM_DEPENDENT: bool = false;
+
+  /// The element set this parameter is a member of, when it is a member of
+  /// one; UNSPECIFIED for a derived scalar that belongs to no set.
+  STATE_REPRESENTATION: frmStateRepresentation = UNSPECIFIED;
+
+  AVAILABILITY: pceAvailability = UNSPECIFIED;
+
+  /// REQUIRED when AVAILABILITY is DECLARED_UNAVAILABLE: what is missing,
+  /// stated as a capability, so a consumer can report the refusal.
+  UNAVAILABLE_REASON: string;
+
+  /// REQUIRED when AVAILABILITY is DEPRECATED: the parameter to migrate to.
+  SUPERSEDED_BY: pceParameter = UNSPECIFIED;
+
+  /// The publisher can bracket and refine a root of this parameter, so it may
+  /// be used as a stopping condition or a generic event function. A parameter
+  /// that is not continuous in time MUST declare false.
+  SUPPORTS_STOPPING_CONDITION: bool = false;
+
+  /// The parameter can be written as well as read, so it may be a targeting
+  /// variable.
+  IS_SETTABLE: bool = false;
+
+  /// The value wraps: a goal crossing must be tested modulo the cycle.
+  IS_CYCLIC: bool = false;
+
+  /// Inclusive lower and exclusive upper bound of the cycle, REQUIRED when
+  /// IS_CYCLIC is true.
+  CYCLE_LOWER_BOUND: double;
+  CYCLE_UPPER_BOUND: double;
+
+  /// One sentence, capability language, no product or organization names.
+  DESCRIPTION: string;
+}
+
+/// The roster a named publisher offers, resolved as a whole. A consumer
+/// caches this and resolves every later name against it.
+table PCEParameterCatalog {
+  /// Identifier of the catalog itself.
+  CATALOG_ID: string;
+
+  /// Identifier of the publisher that evaluates these parameters.
+  PROVIDER_ID: string;
+
+  /// ISO 8601 instant this catalog was published.
+  PUBLISHED_AT: string;
+
+  ENTRIES: [PCEParameterDescriptor];
+}
+
+/// Everything an evaluation needs besides the state itself.
+table PCEEvaluationContext {
+  OWNER_CLASS: pceOwnerClass = UNSPECIFIED;
+
+  /// Identifier of the object the parameters are evaluated on.
+  OBJECT_ID: string;
+
+  /// Hardware item, when the owner class names one.
+  HARDWARE_NAME: string;
+
+  /// Ephemeris body code of the default central body.
+  CENTRAL_BODY_ID: int;
+
+  /// Gravitational parameter of the central body, m^3/s^2. Absent means the
+  /// provider's own value for CENTRAL_BODY_ID.
+  GRAVITATIONAL_PARAMETER: double;
+
+  /// Shape of the central body, REQUIRED for planetodetic parameters.
+  EQUATORIAL_RADIUS_M: double;
+  FLATTENING: double;
+
+  /// Fully specified coordinate systems, each named through
+  /// RFMCoordinateSystem.NAME.
+  COORDINATE_SYSTEMS: [RFMCoordinateSystem];
+
+  /// Which of COORDINATE_SYSTEMS a parameter reference falls back to.
+  DEFAULT_COORDINATE_SYSTEM_NAME: string;
+
+  /// Time system a parameter reference falls back to, named by the $TIM
+  /// timingStandard member name.
+  DEFAULT_TIME_SYSTEM: string;
+
+  /// Zero of ELAPSED_DAYS and ELAPSED_SECONDS, ISO 8601.
+  REFERENCE_EPOCH: string;
+
+  /// Content identifier of the Earth-orientation data set the caller requires.
+  /// A provider that cannot honour it returns MISSING_EOP_DATA rather than
+  /// substituting another table.
+  EOP_DATA_SET_CID: string;
+
+  /// Ephemeris body code of the illuminating body for lighting parameters.
+  ILLUMINATING_BODY_ID: int;
+}
+
+/// Evaluate these parameters on these states. One state is a point query; a
+/// run of states is a report or a plot series, and carries the same shape.
+table PCEEvaluationRequest {
+  CONTEXT: PCEEvaluationContext;
+  PARAMETERS: [PCEParameterRef];
+
+  /// States to evaluate at, in chronological order. Each carries its own
+  /// epoch and coordinate system name.
+  STATES: [FRMStateVector];
+
+  TRACE_ID: string;
+}
+
+/// One parameter's value at one state. STATUS is per value: a request never
+/// fails as a whole because one name is unavailable.
+table PCEParameterValue {
+  PARAMETER: pceParameter = UNSPECIFIED;
+
+  /// REQUIRED when PARAMETER is PROVIDER_DEFINED.
+  PROVIDER_DEFINED_NAME: string;
+
+  STATUS: pceResultStatus = UNSPECIFIED;
+
+  /// Scalar, integer or boolean value. Absent for vector and matrix types.
+  VALUE: double;
+
+  /// Vector or matrix values, row-major. Absent for scalar types; a scalar is
+  /// NEVER also written here.
+  VALUES: [double];
+
+  /// Matrix shape, REQUIRED when the descriptor's DATA_TYPE is REAL_MATRIX.
+  ROW_COUNT: int;
+  COLUMN_COUNT: int;
+
+  /// Text or ISO 8601 epoch value.
+  STRING_VALUE: string;
+
+  /// Unit the value is expressed in, restating the descriptor so a value is
+  /// self-describing when it travels without its catalog.
+  UNIT: pceUnit = UNSPECIFIED;
+
+  /// Why STATUS is not OK, in capability language.
+  MESSAGE: string;
+}
+
+/// The evaluated parameters at ONE epoch.
+table PCEParameterSample {
+  /// Epoch of this sample, ISO 8601.
+  EPOCH: string;
+
+  /// Time system of EPOCH, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  PARAMETER_VALUES: [PCEParameterValue];
+}
+
+table PCEEvaluationResult {
+  STATUS: pceResultStatus = UNSPECIFIED;
+  ERROR_MESSAGE: string;
+
+  /// One sample per requested state, in the requested order.
+  SAMPLES: [PCEParameterSample];
+
+  /// Content identifier of the Earth-orientation data set actually used.
+  EOP_DATA_SET_CID: string;
+
+  TRACE_ID: string;
+}
+
+/// A predicate on a named parameter: the parameter attains GOAL_VALUE, in
+/// DIRECTION, for the OCCURRENCE-th time. This is the ONE spelling of a
+/// stopping condition and of a generic event function; $EVL references it
+/// rather than minting a second one.
+table PCEParameterCondition {
+  PARAMETER: PCEParameterRef;
+
+  /// Value the parameter must attain, in the parameter's own SI unit.
+  GOAL_VALUE: double;
+
+  DIRECTION: pceConditionDirection = UNSPECIFIED;
+
+  /// Convergence bar on the parameter value at the reported epoch, in the
+  /// parameter's own unit. A provider that cannot meet it returns
+  /// ROOT_REFINEMENT_FAILED rather than reporting an unconverged root.
+  GOAL_TOLERANCE: double;
+
+  /// Which attainment satisfies the condition, one-based. 0 and 1 both mean
+  /// the first.
+  OCCURRENCE: uint = 1;
+}
+
+/// Propagate until a condition is attained. The propagator itself is NOT named
+/// here: it is a port the caller supplies, per the pluggable-propagation law.
+/// This record carries only the condition, the interval and the tolerances.
+table PCEStopRequest {
+  CONTEXT: PCEEvaluationContext;
+
+  /// State the propagation starts from.
+  INITIAL_STATE: FRMStateVector;
+
+  /// Conditions evaluated together; the run stops at whichever is attained
+  /// first in time.
+  CONDITIONS: [PCEParameterCondition];
+
+  DIRECTION: pcePropagationDirection = FORWARD;
+
+  /// Upper bound on the propagated interval. Reaching it without attaining a
+  /// condition is GOAL_NOT_ATTAINED, never a silent stop.
+  MAXIMUM_ELAPSED_SECONDS: double;
+
+  /// Convergence bar on the stop epoch. The same scenario run at different
+  /// step sizes MUST land inside this bar.
+  EPOCH_TOLERANCE_SECONDS: double;
+
+  /// Objects propagated in step with the owner and reported at the same stop
+  /// epoch.
+  SYNCHRONIZED_OBJECT_IDS: [string];
+
+  /// Parameters to evaluate at the stop epoch, beyond the condition itself.
+  REPORT_PARAMETERS: [PCEParameterRef];
+
+  TRACE_ID: string;
+}
+
+/// Where a propagate-to-condition run actually landed.
+table PCEStopReport {
+  STATUS: pceResultStatus = UNSPECIFIED;
+  ERROR_MESSAGE: string;
+
+  /// Index into PCEStopRequest.CONDITIONS of the condition that stopped the
+  /// run; negative when none did.
+  ATTAINED_CONDITION_INDEX: int = -1;
+
+  /// Which attainment this was, one-based.
+  ATTAINED_OCCURRENCE: uint;
+
+  /// Epoch the run stopped at, ISO 8601.
+  EPOCH: string;
+
+  /// Time system of EPOCH, named by the $TIM timingStandard member name.
+  EPOCH_TIME_SYSTEM: string;
+
+  /// Seconds of propagated time from the initial state to EPOCH; negative for
+  /// a BACKWARD run.
+  ELAPSED_SECONDS: double;
+
+  /// State at EPOCH.
+  STATE: FRMStateVector;
+
+  /// Value the condition parameter actually had at EPOCH.
+  ACHIEVED_VALUE: double;
+
+  /// ACHIEVED_VALUE minus GOAL_VALUE, in the parameter's own unit. This is
+  /// the residual a consumer gates on; it is NOT assumed to be zero.
+  GOAL_RESIDUAL: double;
+
+  /// States of SYNCHRONIZED_OBJECT_IDS at the same epoch, in that order.
+  SYNCHRONIZED_STATES: [FRMStateVector];
+
+  /// Parameters evaluated at the stop epoch.
+  SAMPLE: PCEParameterSample;
+
+  /// Root-refinement work actually done, for the step-independence evidence.
+  FUNCTION_EVALUATION_COUNT: uint;
+
+  TRACE_ID: string;
+}
+
+/// Parameter Catalog and Evaluation
+///
+/// The named calculation parameters an analysis resolves through: their owner
+/// class, unit, data type, frame dependency and per-publisher availability
+/// (CATALOG), a request and result for evaluating named parameters on states
+/// at epochs in a stated coordinate system (EVALUATION_REQUEST /
+/// EVALUATION_RESULT), and propagate-to-condition, which is a predicate on one
+/// of those same names rather than a vocabulary of its own (STOP_REQUEST /
+/// STOP_REPORT). Stopping conditions, targeting goals, report columns and plot
+/// series all resolve names here, so a name means one thing everywhere.
+///
+/// Angles are radians, lengths metres, durations seconds, masses kilograms.
+/// A buffer carries the members its exchange needs; a catalog publication and
+/// an evaluation exchange are both complete $PCE records.
+table PCE {
+  CATALOG: PCEParameterCatalog;
+  EVALUATION_REQUEST: PCEEvaluationRequest;
+  EVALUATION_RESULT: PCEEvaluationResult;
+  STOP_REQUEST: PCEStopRequest;
+  STOP_REPORT: PCEStopReport;
+}
+
+root_type PCE;
+file_identifier "$PCE";

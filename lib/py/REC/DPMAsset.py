@@ -162,8 +162,68 @@ class DPMAsset(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # The provenance of every record of this asset that carries none of its own
+    # ($MOR records never do): stated once for the asset instead of in each
+    # record. A record's own PROVENANCE, where its standard has one, governs that
+    # record. Absent: the records state their own or have none.
+    # DPMAsset
+    def RECORD_PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The builder of the derived polynomial rows the asset's records carry
+    # ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+    # carry no derived rows, or a reader must ignore them. It holds for this
+    # asset only: a reader sets it aside before reading another asset, and
+    # judges compatibility by every field, never by a version string alone.
+    # DPMAsset
+    def DERIVED_BUILD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DPMDerivedBuild import DPMDerivedBuild
+            obj = DPMDerivedBuild()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The covariance realism models the asset's records name by ID ($MOR
+    # COV_REALISM_ID), each stated once with its population figures. IDs are
+    # 1 or more and unique within the asset; a reader refuses a list that
+    # repeats one.
+    # DPMAsset
+    def COV_REALISM_MODELS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from DPMRealismModel import DPMRealismModel
+            obj = DPMRealismModel()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # DPMAsset
+    def COV_REALISM_MODELSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DPMAsset
+    def COV_REALISM_MODELSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
 def DPMAssetStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(17)
 
 def Start(builder):
     DPMAssetStart(builder)
@@ -252,12 +312,49 @@ def DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ):
 def AddTHROUGH_SEQ(builder, THROUGH_SEQ):
     DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
 
+def DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RECORD_PROVENANCE), 0)
+
+def AddRECORD_PROVENANCE(builder, RECORD_PROVENANCE):
+    DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+
+def DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_BUILD), 0)
+
+def AddDERIVED_BUILD(builder, DERIVED_BUILD):
+    DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
+
+def DPMAssetAddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM_MODELS), 0)
+
+def AddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS):
+    DPMAssetAddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS)
+
+def DPMAssetStartCOV_REALISM_MODELSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_REALISM_MODELSVector(builder, numElems):
+    return DPMAssetStartCOV_REALISM_MODELSVector(builder, numElems)
+
+def DPMAssetCreateCOV_REALISM_MODELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_REALISM_MODELSVector(builder, data):
+    return DPMAssetCreateCOV_REALISM_MODELSVector(builder, data)
+
 def DPMAssetEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return DPMAssetEnd(builder)
 
+import DPMDerivedBuild
+import DPMRealismModel
+import PVN
+try:
+    from typing import List, Optional
+except:
+    pass
 
 class DPMAssetT(object):
 
@@ -278,6 +375,9 @@ class DPMAssetT(object):
         SCHEMA_HASH = None,
         CONTENT_KEY_ID = None,
         THROUGH_SEQ = 0,
+        RECORD_PROVENANCE = None,
+        DERIVED_BUILD = None,
+        COV_REALISM_MODELS = None,
     ):
         self.ASSET_KIND = ASSET_KIND  # type: int
         self.TRANSPORT_KIND = TRANSPORT_KIND  # type: int
@@ -293,6 +393,9 @@ class DPMAssetT(object):
         self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[str]
         self.CONTENT_KEY_ID = CONTENT_KEY_ID  # type: Optional[str]
         self.THROUGH_SEQ = THROUGH_SEQ  # type: int
+        self.RECORD_PROVENANCE = RECORD_PROVENANCE  # type: Optional[PVN.PVNT]
+        self.DERIVED_BUILD = DERIVED_BUILD  # type: Optional[DPMDerivedBuild.DPMDerivedBuildT]
+        self.COV_REALISM_MODELS = COV_REALISM_MODELS  # type: Optional[List[DPMRealismModel.DPMRealismModelT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -329,6 +432,18 @@ class DPMAssetT(object):
         self.SCHEMA_HASH = DPMAsset.SCHEMA_HASH()
         self.CONTENT_KEY_ID = DPMAsset.CONTENT_KEY_ID()
         self.THROUGH_SEQ = DPMAsset.THROUGH_SEQ()
+        if DPMAsset.RECORD_PROVENANCE() is not None:
+            self.RECORD_PROVENANCE = PVN.PVNT.InitFromObj(DPMAsset.RECORD_PROVENANCE())
+        if DPMAsset.DERIVED_BUILD() is not None:
+            self.DERIVED_BUILD = DPMDerivedBuild.DPMDerivedBuildT.InitFromObj(DPMAsset.DERIVED_BUILD())
+        if not DPMAsset.COV_REALISM_MODELSIsNone():
+            self.COV_REALISM_MODELS = []
+            for i in range(DPMAsset.COV_REALISM_MODELSLength()):
+                if DPMAsset.COV_REALISM_MODELS(i) is None:
+                    self.COV_REALISM_MODELS.append(None)
+                else:
+                    dPMRealismModel_ = DPMRealismModel.DPMRealismModelT.InitFromObj(DPMAsset.COV_REALISM_MODELS(i))
+                    self.COV_REALISM_MODELS.append(dPMRealismModel_)
 
     # DPMAssetT
     def Pack(self, builder):
@@ -352,6 +467,18 @@ class DPMAssetT(object):
             SCHEMA_HASH = builder.CreateString(self.SCHEMA_HASH)
         if self.CONTENT_KEY_ID is not None:
             CONTENT_KEY_ID = builder.CreateString(self.CONTENT_KEY_ID)
+        if self.RECORD_PROVENANCE is not None:
+            RECORD_PROVENANCE = self.RECORD_PROVENANCE.Pack(builder)
+        if self.DERIVED_BUILD is not None:
+            DERIVED_BUILD = self.DERIVED_BUILD.Pack(builder)
+        if self.COV_REALISM_MODELS is not None:
+            COV_REALISM_MODELSlist = []
+            for i in range(len(self.COV_REALISM_MODELS)):
+                COV_REALISM_MODELSlist.append(self.COV_REALISM_MODELS[i].Pack(builder))
+            DPMAssetStartCOV_REALISM_MODELSVector(builder, len(self.COV_REALISM_MODELS))
+            for i in reversed(range(len(self.COV_REALISM_MODELS))):
+                builder.PrependUOffsetTRelative(COV_REALISM_MODELSlist[i])
+            COV_REALISM_MODELS = builder.EndVector()
         DPMAssetStart(builder)
         DPMAssetAddASSET_KIND(builder, self.ASSET_KIND)
         DPMAssetAddTRANSPORT_KIND(builder, self.TRANSPORT_KIND)
@@ -377,5 +504,11 @@ class DPMAssetT(object):
         if self.CONTENT_KEY_ID is not None:
             DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)
         DPMAssetAddTHROUGH_SEQ(builder, self.THROUGH_SEQ)
+        if self.RECORD_PROVENANCE is not None:
+            DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+        if self.DERIVED_BUILD is not None:
+            DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
+        if self.COV_REALISM_MODELS is not None:
+            DPMAssetAddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS)
         DPMAsset = DPMAssetEnd(builder)
         return DPMAsset

@@ -373,10 +373,15 @@ class MPE {
   ///  Targeter solution + convergence metadata when this element set is the
   ///  product of maneuver targeting (absent for ordinary element sets)
   MPETargeterSolution? get TARGETER => MPETargeterSolution.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+  ///  SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+  double get BTERM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+  double get AGOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
 
   @override
   String toString() {
-    return 'MPE{entityId: ${entityId}, EPOCH: ${EPOCH}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BSTAR: ${BSTAR}, meanElementTheory: ${meanElementTheory}, TARGETER: ${TARGETER}}';
+    return 'MPE{entityId: ${entityId}, EPOCH: ${EPOCH}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BSTAR: ${BSTAR}, meanElementTheory: ${meanElementTheory}, TARGETER: ${TARGETER}, BTERM: ${BTERM}, AGOM: ${AGOM}}';
   }
 }
 
@@ -394,7 +399,7 @@ class MPEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
   }
 
   int addEntityIdOffset(int? offset) {
@@ -441,6 +446,14 @@ class MPEBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
+  int addBterm(double? BTERM) {
+    fbBuilder.addFloat64(11, BTERM);
+    return fbBuilder.offset;
+  }
+  int addAgom(double? AGOM) {
+    fbBuilder.addFloat64(12, AGOM);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -459,6 +472,8 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
   final double? _BSTAR;
   final meanElementSource? _MEAN_ELEMENT_THEORY;
   final MPETargeterSolutionObjectBuilder? _TARGETER;
+  final double? _BTERM;
+  final double? _AGOM;
 
   MPEObjectBuilder({
     String? ENTITY_ID,
@@ -478,6 +493,8 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     meanElementSource? MEAN_ELEMENT_THEORY,
     meanElementSource? meanElementTheory,
     MPETargeterSolutionObjectBuilder? TARGETER,
+    double? BTERM,
+    double? AGOM,
   })
       : _ENTITY_ID = entityId ?? ENTITY_ID,
         _EPOCH = EPOCH,
@@ -489,7 +506,9 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
         _MEAN_ANOMALY = meanAnomaly ?? MEAN_ANOMALY,
         _BSTAR = BSTAR,
         _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
-        _TARGETER = TARGETER;
+        _TARGETER = TARGETER,
+        _BTERM = BTERM,
+        _AGOM = AGOM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -497,7 +516,7 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
         : fbBuilder.writeString(_ENTITY_ID!);
     final int? TARGETEROffset = _TARGETER?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, ENTITY_IDOffset);
     fbBuilder.addFloat64(1, _EPOCH);
     fbBuilder.addFloat64(2, _MEAN_MOTION);
@@ -509,6 +528,8 @@ class MPEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(8, _BSTAR);
     fbBuilder.addInt8(9, _MEAN_ELEMENT_THEORY?.value);
     fbBuilder.addOffset(10, TARGETEROffset);
+    fbBuilder.addFloat64(11, _BTERM);
+    fbBuilder.addFloat64(12, _AGOM);
     return fbBuilder.endTable();
   }
 

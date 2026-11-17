@@ -1,0 +1,52 @@
+// Hash: 70847b4cadae30109f0716de75bd5d0c1d85da5c507c09de8bf27d65d58187a7
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum TerrainDataSource : byte {
+  SRTM,                   // Shuttle Radar Topography Mission,
+  ASTER,                  // Advanced Spaceborne Thermal Emission,
+  DTED_0,                 // Digital Terrain Elevation Data Level 0,
+  DTED_1,                 // Level 1 (~90m),
+  DTED_2,                 // Level 2 (~30m),
+  NED,                    // National Elevation Dataset,
+  LIDAR,                  // LiDAR point cloud,
+  CUSTOM
+}
+
+enum LandCoverType : byte {
+  WATER,
+  URBAN,
+  SUBURBAN,
+  FOREST_DECIDUOUS,
+  FOREST_CONIFEROUS,
+  FOREST_MIXED,
+  GRASSLAND,
+  SHRUBLAND,
+  CROPLAND,
+  BARREN,
+  WETLAND,
+  SNOW_ICE,
+  DESERT,
+  ROCK,
+  ROAD,
+  RUNWAY,
+  BUILDING
+}
+
+enum TerrainInterpolation : byte {
+  NEAREST,
+  BILINEAR,
+  BICUBIC,
+  KRIGING
+}
+
+/// Terrain Models
+table TRN {
+  SOURCES:[TerrainDataSource];
+  INTERPOLATION:TerrainInterpolation = BILINEAR;
+  CACHE_ENABLED:bool = true;
+  MAX_CACHE_TILES:uint16 = 100;
+  VERTICAL_EXAGGERATION:double = 1.0;
+}
+
+root_type TRN;
+file_identifier "$TRN";

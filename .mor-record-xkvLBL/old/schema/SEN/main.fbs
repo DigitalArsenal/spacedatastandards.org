@@ -1,0 +1,109 @@
+// Hash: 7b54b4fce9b7f14c75c3c4d80929b8e5ec3bc09c3e0a542c2f562426cf6a08da
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum sensorStatus : byte {
+  OPERATIONAL,
+  DEGRADED,
+  MAINTENANCE,
+  OFFLINE,
+  CALIBRATING,
+  TESTING,
+  DECOMMISSIONED
+}
+
+enum maintenanceType : byte {
+  SCHEDULED,
+  UNSCHEDULED,
+  CORRECTIVE,
+  PREVENTIVE,
+  CALIBRATION,
+  UPGRADE,
+  INSPECTION
+}
+
+/// Sensor Maintenance Event
+table sensorMaintenanceEvent {
+  /// Maintenance start time (ISO 8601)
+  START_TIME:string;
+  /// Maintenance end time (ISO 8601)
+  END_TIME:string;
+  /// Type of maintenance
+  TYPE:maintenanceType;
+  /// Description of maintenance performed
+  DESCRIPTION:string;
+  /// Components affected
+  COMPONENTS:[string];
+}
+
+/// Sensor Tasking Plan
+table sensorPlan {
+  /// Plan start time (ISO 8601)
+  START_TIME:string;
+  /// Plan end time (ISO 8601)
+  END_TIME:string;
+  /// Target satellite number or designator
+  TARGET_ID:string;
+  /// Priority level (1=highest)
+  PRIORITY:uint8;
+  /// Requested observation mode
+  MODE:string;
+  /// Minimum elevation in degrees
+  MIN_ELEVATION:double;
+  /// Maximum range in km
+  MAX_RANGE:double;
+}
+
+/// Sensor Operational Statistics
+table sensorStats {
+  /// Statistics period start (ISO 8601)
+  PERIOD_START:string;
+  /// Statistics period end (ISO 8601)
+  PERIOD_END:string;
+  /// Total observation attempts
+  OBS_ATTEMPTED:uint;
+  /// Successful observations
+  OBS_SUCCESSFUL:uint;
+  /// Failed observations
+  OBS_FAILED:uint;
+  /// Uptime fraction (0.0-1.0)
+  UPTIME:double;
+  /// Average tracking accuracy in arcseconds
+  AVG_ACCURACY:double;
+  /// Detected objects count
+  DETECTIONS:uint;
+  /// Uncorrelated tracks count
+  UCT_COUNT:uint;
+}
+
+/// Sensor Management
+table SEN {
+  /// Unique sensor identifier
+  ID:string;
+  /// Sensor name
+  NAME:string;
+  /// Sensor type
+  TYPE:string;
+  /// Current operational status
+  STATUS:sensorStatus;
+  /// Site identifier
+  SITE_ID:string;
+  /// Geodetic latitude in degrees
+  LATITUDE:double;
+  /// Geodetic longitude in degrees
+  LONGITUDE:double;
+  /// Altitude in meters above WGS-84
+  ALTITUDE:double;
+  /// Last status update (ISO 8601)
+  STATUS_TIME:string;
+  /// Maintenance history
+  MAINTENANCE:[sensorMaintenanceEvent];
+  /// Observation plans/taskings
+  PLANS:[sensorPlan];
+  /// Operational statistics
+  STATISTICS:[sensorStats];
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type SEN;
+file_identifier "$SEN";

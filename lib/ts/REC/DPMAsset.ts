@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { DPMDerivedBuild, DPMDerivedBuildT } from './DPMDerivedBuild.js';
+import { DPMRealismModel, DPMRealismModelT } from './DPMRealismModel.js';
+import { PVN, PVNT } from './PVN.js';
 import { dpmTransportKind } from './dpmTransportKind.js';
 import { publicationAssetKind } from './publicationAssetKind.js';
 
@@ -182,8 +185,47 @@ THROUGH_SEQ():bigint {
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * The provenance of every record of this asset that carries none of its own
+ * ($MOR records never do): stated once for the asset instead of in each
+ * record. A record's own PROVENANCE, where its standard has one, governs that
+ * record. Absent: the records state their own or have none.
+ */
+RECORD_PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * The builder of the derived polynomial rows the asset's records carry
+ * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+ * carry no derived rows, or a reader must ignore them. It holds for this
+ * asset only: a reader sets it aside before reading another asset, and
+ * judges compatibility by every field, never by a version string alone.
+ */
+DERIVED_BUILD(obj?:DPMDerivedBuild):DPMDerivedBuild|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new DPMDerivedBuild()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * The covariance realism models the asset's records name by ID ($MOR
+ * COV_REALISM_ID), each stated once with its population figures. IDs are
+ * 1 or more and unique within the asset; a reader refuses a list that
+ * repeats one.
+ */
+COV_REALISM_MODELS(index: number, obj?:DPMRealismModel):DPMRealismModel|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new DPMRealismModel()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covRealismModelsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startDPMAsset(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(17);
 }
 
 static addAssetKind(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind) {
@@ -242,29 +284,35 @@ static addThroughSeq(builder:flatbuffers.Builder, THROUGH_SEQ:bigint) {
   builder.addFieldInt64(13, THROUGH_SEQ, BigInt('0'));
 }
 
+static addRecordProvenance(builder:flatbuffers.Builder, RECORD_PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, RECORD_PROVENANCEOffset, 0);
+}
+
+static addDerivedBuild(builder:flatbuffers.Builder, DERIVED_BUILDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, DERIVED_BUILDOffset, 0);
+}
+
+static addCovRealismModels(builder:flatbuffers.Builder, COV_REALISM_MODELSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, COV_REALISM_MODELSOffset, 0);
+}
+
+static createCovRealismModelsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovRealismModelsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endDPMAsset(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind, TRANSPORT_KIND:dpmTransportKind, CIDOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, FILE_NAMEOffset:flatbuffers.Offset, FILE_IDOffset:flatbuffers.Offset, TRANSPORT_PROTOCOLOffset:flatbuffers.Offset, BYTE_LENGTH:bigint, BYTE_SHA256Offset:flatbuffers.Offset, DATA_ROOTOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, CONTENT_KEY_IDOffset:flatbuffers.Offset, THROUGH_SEQ:bigint):flatbuffers.Offset {
-  DPMAsset.startDPMAsset(builder);
-  DPMAsset.addAssetKind(builder, ASSET_KIND);
-  DPMAsset.addTransportKind(builder, TRANSPORT_KIND);
-  DPMAsset.addCid(builder, CIDOffset);
-  DPMAsset.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
-  DPMAsset.addFileName(builder, FILE_NAMEOffset);
-  DPMAsset.addFileId(builder, FILE_IDOffset);
-  DPMAsset.addTransportProtocol(builder, TRANSPORT_PROTOCOLOffset);
-  DPMAsset.addByteLength(builder, BYTE_LENGTH);
-  DPMAsset.addByteSha256(builder, BYTE_SHA256Offset);
-  DPMAsset.addDataRoot(builder, DATA_ROOTOffset);
-  DPMAsset.addSchemaName(builder, SCHEMA_NAMEOffset);
-  DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
-  DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
-  DPMAsset.addThroughSeq(builder, THROUGH_SEQ);
-  return DPMAsset.endDPMAsset(builder);
-}
 
 unpack(): DPMAssetT {
   return new DPMAssetT(
@@ -281,7 +329,10 @@ unpack(): DPMAssetT {
     this.SCHEMA_NAME(),
     this.SCHEMA_HASH(),
     this.CONTENT_KEY_ID(),
-    this.THROUGH_SEQ()
+    this.THROUGH_SEQ(),
+    (this.RECORD_PROVENANCE() !== null ? this.RECORD_PROVENANCE()!.unpack() : null),
+    (this.DERIVED_BUILD() !== null ? this.DERIVED_BUILD()!.unpack() : null),
+    this.bb!.createObjList<DPMRealismModel, DPMRealismModelT>(this.COV_REALISM_MODELS.bind(this), this.covRealismModelsLength())
   );
 }
 
@@ -301,6 +352,9 @@ unpackTo(_o: DPMAssetT): void {
   _o.SCHEMA_HASH = this.SCHEMA_HASH();
   _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID();
   _o.THROUGH_SEQ = this.THROUGH_SEQ();
+  _o.RECORD_PROVENANCE = (this.RECORD_PROVENANCE() !== null ? this.RECORD_PROVENANCE()!.unpack() : null);
+  _o.DERIVED_BUILD = (this.DERIVED_BUILD() !== null ? this.DERIVED_BUILD()!.unpack() : null);
+  _o.COV_REALISM_MODELS = this.bb!.createObjList<DPMRealismModel, DPMRealismModelT>(this.COV_REALISM_MODELS.bind(this), this.covRealismModelsLength());
 }
 }
 
@@ -319,7 +373,10 @@ constructor(
   public SCHEMA_NAME: string|Uint8Array|null = null,
   public SCHEMA_HASH: string|Uint8Array|null = null,
   public CONTENT_KEY_ID: string|Uint8Array|null = null,
-  public THROUGH_SEQ: bigint = BigInt('0')
+  public THROUGH_SEQ: bigint = BigInt('0'),
+  public RECORD_PROVENANCE: PVNT|null = null,
+  public DERIVED_BUILD: DPMDerivedBuildT|null = null,
+  public COV_REALISM_MODELS: (DPMRealismModelT)[] = []
 ){}
 
 
@@ -334,22 +391,29 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SCHEMA_NAME = (this.SCHEMA_NAME !== null ? builder.createString(this.SCHEMA_NAME!) : 0);
   const SCHEMA_HASH = (this.SCHEMA_HASH !== null ? builder.createString(this.SCHEMA_HASH!) : 0);
   const CONTENT_KEY_ID = (this.CONTENT_KEY_ID !== null ? builder.createString(this.CONTENT_KEY_ID!) : 0);
+  const RECORD_PROVENANCE = (this.RECORD_PROVENANCE !== null ? this.RECORD_PROVENANCE!.pack(builder) : 0);
+  const DERIVED_BUILD = (this.DERIVED_BUILD !== null ? this.DERIVED_BUILD!.pack(builder) : 0);
+  const COV_REALISM_MODELS = DPMAsset.createCovRealismModelsVector(builder, builder.createObjectOffsetList(this.COV_REALISM_MODELS));
 
-  return DPMAsset.createDPMAsset(builder,
-    this.ASSET_KIND,
-    this.TRANSPORT_KIND,
-    CID,
-    MULTIFORMAT_ADDRESS,
-    FILE_NAME,
-    FILE_ID,
-    TRANSPORT_PROTOCOL,
-    this.BYTE_LENGTH,
-    BYTE_SHA256,
-    DATA_ROOT,
-    SCHEMA_NAME,
-    SCHEMA_HASH,
-    CONTENT_KEY_ID,
-    this.THROUGH_SEQ
-  );
+  DPMAsset.startDPMAsset(builder);
+  DPMAsset.addAssetKind(builder, this.ASSET_KIND);
+  DPMAsset.addTransportKind(builder, this.TRANSPORT_KIND);
+  DPMAsset.addCid(builder, CID);
+  DPMAsset.addMultiformatAddress(builder, MULTIFORMAT_ADDRESS);
+  DPMAsset.addFileName(builder, FILE_NAME);
+  DPMAsset.addFileId(builder, FILE_ID);
+  DPMAsset.addTransportProtocol(builder, TRANSPORT_PROTOCOL);
+  DPMAsset.addByteLength(builder, this.BYTE_LENGTH);
+  DPMAsset.addByteSha256(builder, BYTE_SHA256);
+  DPMAsset.addDataRoot(builder, DATA_ROOT);
+  DPMAsset.addSchemaName(builder, SCHEMA_NAME);
+  DPMAsset.addSchemaHash(builder, SCHEMA_HASH);
+  DPMAsset.addContentKeyId(builder, CONTENT_KEY_ID);
+  DPMAsset.addThroughSeq(builder, this.THROUGH_SEQ);
+  DPMAsset.addRecordProvenance(builder, RECORD_PROVENANCE);
+  DPMAsset.addDerivedBuild(builder, DERIVED_BUILD);
+  DPMAsset.addCovRealismModels(builder, COV_REALISM_MODELS);
+
+  return DPMAsset.endDPMAsset(builder);
 }
 }

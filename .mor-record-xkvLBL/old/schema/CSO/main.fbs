@@ -1,0 +1,219 @@
+// Hash: 9ff294e61d128023e0208860f55211c699c0ff5a0559ab14abf44ec42bf6a5ed
+// Version: 1.224.0
+// -----------------------------------END_HEADER
+include "../PHB/main.fbs";
+
+// Celestial Source (CSO)
+// Description
+// One astrophysical source that is not a catalogued star: a compact X-ray,
+// gamma-ray or radio source, an active galactic nucleus, a pulsar, a
+// supernova remnant, a galaxy, or a transient such as a gamma-ray burst, a
+// nova, a tidal disruption event or a neutrino or gravitational-wave alert.
+// Stars are `$STR`. A `$CSO` carries the same `PHBMeasurement` vector as a
+// star, so a renderer and an analysis module treat both alike: one position,
+// one brightness per band.
+//
+// POSITION. RA and DEC are ICRS degrees at POSITION_EPOCH. The localisation
+// is an error ellipse (POS_ERR_*) at the confidence POS_ERR_CONFIDENCE. A
+// source localised to a region too large or irregular for an ellipse (a
+// gravitational-wave or neutrino alert) carries its probability map as `$SKT`
+// tiles named by LOCALIZATION_LAYER_ID; RA and DEC are then the most probable
+// position.
+//
+// TIME. Transient times are ISO 8601 UTC strings. EVENT_TIME is the trigger
+// or peak; START_TIME and END_TIME bound the activity when known. A source
+// whose record changes as an alert evolves publishes each revision as a new
+// record with the same ID and a later ALERT_REVISION; a retraction is a
+// revision with ALERT_STATE RETRACTED, never a deletion.
+//
+// ABSENT IS NOT ZERO. Every scalar that can be unknown defaults to NaN.
+
+/// Physical class of a non-stellar source.
+/// Append new values only; never reorder or reuse existing values.
+enum csoSourceClass : ubyte {
+  UNSPECIFIED = 0,
+  /// Not identified with a counterpart of known class.
+  UNIDENTIFIED = 1,
+  /// Accreting compact object with a stellar companion.
+  X_RAY_BINARY = 2,
+  /// Accreting white dwarf.
+  CATACLYSMIC_VARIABLE = 3,
+  /// Rotation-powered or accretion-powered neutron star.
+  PULSAR = 4,
+  /// Neutron star powered by magnetic-field decay.
+  MAGNETAR = 5,
+  /// Expanding remnant of a stellar explosion.
+  SUPERNOVA_REMNANT = 6,
+  /// Nebula powered by a pulsar wind.
+  PULSAR_WIND_NEBULA = 7,
+  /// Accreting supermassive black hole, not otherwise classed.
+  ACTIVE_GALACTIC_NUCLEUS = 8,
+  /// Active nucleus with its jet close to the line of sight.
+  BLAZAR = 9,
+  /// Luminous, distant active nucleus.
+  QUASAR = 10,
+  /// Galaxy whose emission is not dominated by its nucleus.
+  GALAXY = 11,
+  /// Bound cluster of galaxies.
+  GALAXY_CLUSTER = 12,
+  /// Globular star cluster.
+  GLOBULAR_CLUSTER = 13,
+  /// Open star cluster.
+  OPEN_CLUSTER = 14,
+  /// Ionised hydrogen region or star-forming region.
+  EMISSION_NEBULA = 15,
+  /// Planetary nebula.
+  PLANETARY_NEBULA = 16,
+  /// Molecular cloud or dark nebula.
+  MOLECULAR_CLOUD = 17,
+  /// Gamma-ray burst.
+  GAMMA_RAY_BURST = 18,
+  /// Supernova.
+  SUPERNOVA = 19,
+  /// Classical or recurrent nova.
+  NOVA = 20,
+  /// Kilonova from a compact-binary merger.
+  KILONOVA = 21,
+  /// Star disrupted by a massive black hole.
+  TIDAL_DISRUPTION_EVENT = 22,
+  /// Millisecond radio burst.
+  FAST_RADIO_BURST = 23,
+  /// Astrophysical neutrino candidate.
+  NEUTRINO_EVENT = 24,
+  /// Gravitational-wave candidate.
+  GRAVITATIONAL_WAVE_EVENT = 25,
+  /// X-ray or gamma-ray flare of a known source.
+  HIGH_ENERGY_FLARE = 26,
+  /// Optical transient not yet classified.
+  OPTICAL_TRANSIENT = 27,
+  /// Class stated in CLASS_NAME.
+  OTHER = 28
+}
+
+/// Carrier the source was detected in.
+/// Append new values only; never reorder or reuse existing values.
+enum csoMessenger : ubyte {
+  UNSPECIFIED = 0,
+  /// Photons, any band.
+  ELECTROMAGNETIC = 1,
+  /// Neutrinos.
+  NEUTRINO = 2,
+  /// Gravitational waves.
+  GRAVITATIONAL_WAVE = 3,
+  /// Charged cosmic rays.
+  COSMIC_RAY = 4
+}
+
+/// Stage of an alert record.
+/// Append new values only; never reorder or reuse existing values.
+enum csoAlertStage : ubyte {
+  /// Not an alert: a catalogue entry.
+  NONE = 0,
+  /// Automated first notice.
+  PRELIMINARY = 1,
+  /// Human-vetted initial notice.
+  INITIAL = 2,
+  /// Revised localisation, classification or brightness.
+  UPDATE = 3,
+  /// Withdrawn: the source is not astrophysical.
+  RETRACTED = 4
+}
+
+/// Celestial Source: a non-stellar source or transient, with position and multi-band brightness.
+table CSO {
+  /// Stable identifier, equal across every revision of one source.
+  ID: string (required);
+  /// Preferred name.
+  NAME: string;
+  /// Other designations, each in the form its catalogue uses.
+  DESIGNATIONS: [string];
+  /// Physical class.
+  SOURCE_CLASS: csoSourceClass = UNSPECIFIED;
+  /// Producer's class name when SOURCE_CLASS is OTHER, or a finer subclass.
+  CLASS_NAME: string;
+  /// Probability that SOURCE_CLASS is right, [0, 1].
+  CLASS_PROBABILITY: float = nan;
+  /// Carrier the source was detected in.
+  MESSENGER: csoMessenger = ELECTROMAGNETIC;
+
+  /// Right ascension, degrees, ICRS.
+  RA: double = nan;
+  /// Declination, degrees, ICRS.
+  DEC: double = nan;
+  /// Epoch of RA and DEC, Julian years (TT).
+  POSITION_EPOCH: double = nan;
+  /// Semi-major axis of the localisation ellipse, arcseconds.
+  POS_ERR_MAJOR_ARCSEC: double = nan;
+  /// Semi-minor axis of the localisation ellipse, arcseconds.
+  POS_ERR_MINOR_ARCSEC: double = nan;
+  /// Position angle of the major axis, degrees east of north.
+  POS_ERR_PA_DEG: double = nan;
+  /// Probability contained in the ellipse, (0, 1), e.g. 0.9.
+  POS_ERR_CONFIDENCE: float = nan;
+  /// LAYER_ID of the `$SKT` probability-map tiles that localise the source,
+  /// when an ellipse cannot.
+  LOCALIZATION_LAYER_ID: string;
+  /// Parallax, milliarcseconds.
+  PARALLAX: double = nan;
+  /// Proper motion in RA times cos(DEC), milliarcseconds per year.
+  PMRA: double = nan;
+  /// Proper motion in DEC, milliarcseconds per year.
+  PMDEC: double = nan;
+  /// Redshift.
+  REDSHIFT: double = nan;
+  /// One-sigma redshift uncertainty.
+  REDSHIFT_UNC: double = nan;
+  /// Luminosity distance, megaparsecs, when stated directly (as for a
+  /// gravitational-wave candidate).
+  DISTANCE_MPC: double = nan;
+  /// One-sigma distance uncertainty, megaparsecs.
+  DISTANCE_UNC_MPC: double = nan;
+
+  /// Angular size of an extended source: major axis, arcseconds. Absent for
+  /// a point source.
+  SIZE_MAJOR_ARCSEC: double = nan;
+  /// Minor axis, arcseconds.
+  SIZE_MINOR_ARCSEC: double = nan;
+  /// Position angle of the major axis, degrees east of north.
+  SIZE_PA_DEG: double = nan;
+
+  /// Brightness per band.
+  PHOTOMETRY: [PHBMeasurement];
+
+  /// True when the source is a transient or flaring episode rather than a
+  /// persistent source.
+  IS_TRANSIENT: bool;
+  /// Trigger or peak time, ISO 8601 UTC.
+  EVENT_TIME: string;
+  /// Start of the activity, ISO 8601 UTC.
+  START_TIME: string;
+  /// End of the activity, ISO 8601 UTC.
+  END_TIME: string;
+  /// Duration containing 90% of the fluence, seconds.
+  DURATION_T90_S: double = nan;
+  /// Period of a periodic source (rotation, orbit, pulsation), seconds.
+  PERIOD_S: double = nan;
+  /// First time derivative of PERIOD_S, seconds per second.
+  PERIOD_DERIVATIVE: double = nan;
+  /// Detection significance, standard deviations.
+  SIGNIFICANCE_SIGMA: double = nan;
+  /// False-alarm rate of the detection, per year.
+  FALSE_ALARM_RATE_PER_YR: double = nan;
+
+  /// Stage of an alert record.
+  ALERT_STATE: csoAlertStage = NONE;
+  /// Revision number of this record for its ID, from 0.
+  ALERT_REVISION: uint32;
+  /// Time this revision was issued, ISO 8601 UTC.
+  ISSUED_TIME: string;
+
+  /// Verbatim name of the catalogue or alert stream the record came from.
+  SOURCE_CATALOG: string;
+  /// URL of the upstream record.
+  SOURCE_URL: string;
+  /// Citation the upstream publisher asks for.
+  CITATION: string;
+}
+
+root_type CSO;
+file_identifier "$CSO";

@@ -1,0 +1,76 @@
+// Hash: bfb4c31232cf563007695ecfc6fa008201f7819244bba81c7082468f0870d2a3
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Node Event (NEV)
+/// Description
+/// Things that happened on a node, as an event log an operator or another
+/// service can follow: peers connecting and leaving, records published and
+/// stored, grants issued, services starting and stopping, warnings and
+/// failures. Each event says when it happened, what kind it is, which peer or
+/// subject it concerns and a short detail; a set carries the events of one
+/// read, newest first, with the total the node holds.
+///
+/// NEV is an operational log, not an alerting or conjunction product: it
+/// records what the node did and saw, so an operator can answer "what happened
+/// on this node, and when?".
+/// Kind of event. Append new values only; never reorder or reuse existing
+/// values.
+enum nevEventKind : ubyte {
+  /// Not classified; DETAIL says what it was.
+  Other,
+  /// A peer connected.
+  PeerConnected,
+  /// A peer disconnected.
+  PeerDisconnected,
+  /// The node published a notice of new data (a $PNM).
+  PublicationSent,
+  /// The node received a notice of new data from a peer.
+  PublicationReceived,
+  /// Records were stored.
+  RecordsStored,
+  /// Records were deleted (retention, expiry or an operator).
+  RecordsDeleted,
+  /// An access or capability grant was issued.
+  GrantIssued,
+  /// An access or capability grant was revoked or expired.
+  GrantRevoked,
+  /// A service or module started.
+  ServiceStarted,
+  /// A service or module stopped.
+  ServiceStopped,
+  /// A condition worth an operator's attention.
+  Warning,
+  /// An operation failed.
+  Failure
+}
+/// One event.
+table NEVEvent {
+  /// Unix milliseconds when the event happened.
+  TIME_MS: int64;
+  KIND: nevEventKind = Other;
+  /// Peer the event concerns, when it concerns one.
+  PEER_ID: string;
+  /// Subject the event concerns, when it is not a peer: a standard code, a
+  /// module identifier, a grant identifier or a content identifier.
+  SUBJECT: string;
+  /// How many items the event covers (records stored, records deleted); 0 =
+  /// not a count.
+  COUNT: uint64;
+  /// Short human-readable detail.
+  DETAIL: string;
+}
+/// Node Event - one read of a node's event log.
+table NEV {
+  /// Identifier of the node whose log this is.
+  NODE_ID: string;
+  /// Unix milliseconds when this set was read.
+  GENERATED_AT_MS: int64;
+  /// Events in this set, newest first.
+  EVENTS: [NEVEvent];
+  /// Events the node holds in its log; 0 = unknown.
+  TOTAL_EVENTS: uint64;
+  /// Unix milliseconds of the oldest event the node still holds; 0 = unknown.
+  OLDEST_TIME_MS: int64;
+}
+root_type NEV;
+file_identifier "$NEV";

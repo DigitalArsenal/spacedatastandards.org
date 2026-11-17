@@ -1,0 +1,106 @@
+// Hash: 373d1f199e4c3a1fe20c7a494d85d4c58896aa2ba47ef2f3819a5aea8cbe1bab
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// How a panel is oriented over time. Append new values only; never reorder or
+/// reuse existing values.
+enum pnlTrackingMode : ubyte {
+  UNSPECIFIED = 0,
+  /// Panel normal is fixed in the body frame.
+  BODY_FIXED = 1,
+  /// Panel normal tracks the Sun (typical solar array).
+  SUN_TRACKING = 2,
+  /// Panel normal tracks the central body (typical nadir-pointing radiator or
+  /// antenna face).
+  BODY_TRACKING = 3,
+  /// Panel normal tracks the velocity direction.
+  VELOCITY_TRACKING = 4,
+  OTHER = 5
+}
+
+/// One flat panel of a macro model.
+///
+/// The reflection coefficients describe how incident radiation is disposed of:
+/// SPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to
+/// 1 for a physically consistent panel. Producers SHOULD state the source of
+/// the optical properties in the parent record's SOURCE field; a panel model
+/// whose coefficients have no provenance is worse than none.
+table PNLPanel {
+  /// Stable panel identifier within the model.
+  PANEL_ID: string;
+
+  /// Panel area, square metres.
+  AREA_M2: double;
+
+  /// Outward panel normal in the body frame, unit vector.
+  NORMAL_X: double;
+  NORMAL_Y: double;
+  NORMAL_Z: double;
+
+  /// Orientation behaviour of the panel.
+  TRACKING_MODE: pnlTrackingMode = BODY_FIXED;
+
+  /// Fraction of incident radiation reflected specularly.
+  SPECULAR_REFLECTIVITY: double;
+
+  /// Fraction reflected diffusely.
+  DIFFUSE_REFLECTIVITY: double;
+
+  /// Fraction absorbed.
+  ABSORPTIVITY: double;
+
+  /// Infrared emissivity of the panel surface.
+  EMISSIVITY: double;
+
+  /// True when absorbed energy is re-radiated instantaneously (no thermal
+  /// lag). False means the consumer must model thermal inertia.
+  INSTANTANEOUS_RERADIATION: bool = true;
+
+  /// Panel drag coefficient, when the model is used for aerodynamic forces.
+  DRAG_COEFFICIENT: double;
+
+  /// Material name, for traceability back to a materials table.
+  MATERIAL_NAME: string;
+}
+
+/// Panelled (box-wing) Spacecraft Macro Model — the surface geometry and
+/// optical properties needed to compute non-conservative forces (solar
+/// radiation pressure, atmospheric drag, thermal re-radiation) on one object.
+///
+/// This is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for
+/// rendering and a render mesh is not a force model; $BUS/$OOD are descriptive
+/// inventory; $PHY is simulation configuration (integration method, force-type
+/// toggles). None of them carries per-panel area, normal, and optical
+/// coefficients.
+table PNL {
+  /// Object this macro model describes.
+  OBJECT_ID: string (required);
+
+  /// Advisory object name.
+  OBJECT_NAME: string;
+
+  /// Satellite catalog number, when the object is catalogued.
+  NORAD_CAT_ID: uint32;
+
+  /// Body-fixed frame the panel normals are expressed in, e.g. "SC_BODY".
+  BODY_FRAME: string;
+
+  /// Total spacecraft mass the model corresponds to, kilograms.
+  TOTAL_MASS_KG: double;
+
+  /// Epoch the model is valid at, ISO 8601. Mass and panel configuration
+  /// change over a mission; a macro model without an epoch is ambiguous.
+  EPOCH: string;
+
+  /// The panels.
+  PANELS: [PNLPanel];
+
+  /// Reference cross-sectional area used by a consumer that falls back to a
+  /// cannonball model, square metres.
+  REFERENCE_AREA_M2: double;
+
+  /// Provenance of the geometry and the optical coefficients.
+  SOURCE: string;
+}
+
+root_type PNL;
+file_identifier "$PNL";

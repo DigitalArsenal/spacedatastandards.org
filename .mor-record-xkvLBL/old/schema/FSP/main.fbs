@@ -1,0 +1,73 @@
+// Hash: cfcac88bd77701fe01fcd3c806e7ed1e943517d7ca4ee1f60cc66e708ce4c71d
+// Version: 1.132.0
+// -----------------------------------END_HEADER
+/// Field Stream Policy for marketplace-protected live streams
+
+enum fieldStreamAudienceCategory : byte {
+  Customer,
+  Group,
+  Enclave,
+  Coalition,
+  Public
+}
+
+enum fieldStreamOperationCategory : byte {
+  Subscribe,
+  Decrypt,
+  Query,
+  InvokeModule
+}
+
+enum fieldStreamDecisionCategory : byte {
+  AllowPublic,
+  AllowEncrypted,
+  Redact,
+  Deny
+}
+
+enum fieldStreamRevocationCategory : byte {
+  Active,
+  Revoked,
+  Superseded,
+  Expired
+}
+
+table FieldStreamAudience {
+  AUDIENCE_TYPE: fieldStreamAudienceCategory = Customer;
+  SUBJECT_ID: string;
+  SUBJECT_EPM_CID: string;
+  SUBJECT_KEY_ID: string;
+}
+
+table FieldStreamRule {
+  FIELD_PATH: string (required);
+  FIELD_ID_PATH: [uint32];
+  DECISION: fieldStreamDecisionCategory = AllowEncrypted;
+  TAGS: [string];
+  REQUIRED_ATTRIBUTES: [string];
+  KEY_ID: string;
+}
+
+table FSP {
+  POLICY_ID: string (required);
+  POLICY_VERSION: uint32 = 1;
+  PROVIDER_PEER_ID: string (required);
+  LISTING_ID: string (required);
+  STREAM_ID: string (required);
+  SCHEMA_CODE: string (required);
+  SCHEMA_HASH: [ubyte];
+  AUDIENCES: [FieldStreamAudience];
+  RULES: [FieldStreamRule];
+  ALLOWED_OPERATIONS: [fieldStreamOperationCategory];
+  KEY_SCOPE: string;
+  KEY_EPOCH: string;
+  VALID_FROM: uint64;
+  EXPIRES_AT: uint64;
+  REVOCATION_STATUS: fieldStreamRevocationCategory = Active;
+  REVOKED_AT: uint64;
+  REVOCATION_REASON: string;
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type FSP;
+file_identifier "$FSP";

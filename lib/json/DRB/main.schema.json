@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "drbRecordOutcome" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "EXCLUDED", "SOURCE_REFUSED", "UNSUPPORTED", "NOT_REQUESTED"]
+    },
+    "DRBOutcome" : {
+      "type" : "object",
+      "description" : "The outcome of one input record that carries no rows.",
+      "properties" : {
+        "RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Position of the record in the input stream, from 0."
+              },
+        "OUTCOME" : {
+                "$ref" : "#/definitions/drbRecordOutcome",
+                "description" : "Why it carries no rows."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DRB" : {
+      "type" : "object",
+      "description" : "Derived Row Build.",
+      "properties" : {
+        "RECEIVER_ARTIFACT_SHA256" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the\nbuilder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use\nthe rows."
+              },
+        "START_UNIX_US" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR\nEPOCH_UNIX_US)."
+              },
+        "WINDOW_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2."
+              },
+        "POSITION_ONLY" : {
+                "type" : "boolean",
+                "description" : "Position series only, no velocity series (flags bit 0)."
+              },
+        "WIDE_RECORDS" : {
+                "type" : "boolean",
+                "description" : "Rows also for the receiver's wide records (flags bit 1)."
+              },
+        "OUTCOMES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DRBOutcome"},
+                "description" : "In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in\nthe request a builder receives."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DRB"
+}

@@ -356,7 +356,9 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MEAN_ANOMALY = 18,
     VT_BSTAR = 20,
     VT_MEAN_ELEMENT_THEORY = 22,
-    VT_TARGETER = 24
+    VT_TARGETER = 24,
+    VT_BTERM = 26,
+    VT_AGOM = 28
   };
   /// Unique ID as a String [no units]
   const ::flatbuffers::String *ENTITY_ID() const {
@@ -403,6 +405,15 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const MPETargeterSolution *TARGETER() const {
     return GetPointer<const MPETargeterSolution *>(VT_TARGETER);
   }
+  /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+  /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+  double BTERM() const {
+    return GetField<double>(VT_BTERM, 0.0);
+  }
+  /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+  double AGOM() const {
+    return GetField<double>(VT_AGOM, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -419,6 +430,8 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
            VerifyOffset(verifier, VT_TARGETER) &&
            verifier.VerifyTable(TARGETER()) &&
+           VerifyField<double>(verifier, VT_BTERM, 8) &&
+           VerifyField<double>(verifier, VT_AGOM, 8) &&
            verifier.EndTable();
   }
 };
@@ -460,6 +473,12 @@ struct MPEBuilder {
   void add_TARGETER(::flatbuffers::Offset<MPETargeterSolution> TARGETER) {
     fbb_.AddOffset(MPE::VT_TARGETER, TARGETER);
   }
+  void add_BTERM(double BTERM) {
+    fbb_.AddElement<double>(MPE::VT_BTERM, BTERM, 0.0);
+  }
+  void add_AGOM(double AGOM) {
+    fbb_.AddElement<double>(MPE::VT_AGOM, AGOM, 0.0);
+  }
   explicit MPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -483,8 +502,12 @@ inline ::flatbuffers::Offset<MPE> CreateMPE(
     double MEAN_ANOMALY = 0.0,
     double BSTAR = 0.0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4,
-    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0) {
+    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0,
+    double BTERM = 0.0,
+    double AGOM = 0.0) {
   MPEBuilder builder_(_fbb);
+  builder_.add_AGOM(AGOM);
+  builder_.add_BTERM(BTERM);
   builder_.add_BSTAR(BSTAR);
   builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
   builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
@@ -511,7 +534,9 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
     double MEAN_ANOMALY = 0.0,
     double BSTAR = 0.0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4,
-    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0) {
+    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0,
+    double BTERM = 0.0,
+    double AGOM = 0.0) {
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
   return CreateMPE(
       _fbb,
@@ -525,7 +550,9 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
       MEAN_ANOMALY,
       BSTAR,
       MEAN_ELEMENT_THEORY,
-      TARGETER);
+      TARGETER,
+      BTERM,
+      AGOM);
 }
 
 inline const MPE *GetMPE(const void *buf) {

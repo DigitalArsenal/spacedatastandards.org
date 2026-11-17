@@ -1,6 +1,9 @@
-// Hash: 231f0ff5c6cbd375903ddba46e10a17b76c44639b82d8e3b4a0fbd24c8efe112
-// Version: 1.0.10
+// Hash: e2222c0c37ba00ea4192a2ecedad7f9f16b21030680693f462a70591d7937beb
+// Version: 1.0.11
 // -----------------------------------END_HEADER
+include "../CVR/main.fbs";
+include "../PVN/main.fbs";
+
 /// Dataset Publication Manifest.
 ///
 /// A DPM is the immutable, signed manifest for one dataset publication. A
@@ -132,6 +135,55 @@ table DPMAsset {
   /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
   /// assets of a FlatSQL feed; 0 when not applicable.
   THROUGH_SEQ: ulong;
+  /// The provenance of every record of this asset that carries none of its own
+  /// ($MOR records never do): stated once for the asset instead of in each
+  /// record. A record's own PROVENANCE, where its standard has one, governs that
+  /// record. Absent: the records state their own or have none.
+  RECORD_PROVENANCE: PVN;
+  /// The builder of the derived polynomial rows the asset's records carry
+  /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  /// carry no derived rows, or a reader must ignore them. It holds for this
+  /// asset only: a reader sets it aside before reading another asset, and
+  /// judges compatibility by every field, never by a version string alone.
+  DERIVED_BUILD: DPMDerivedBuild;
+  /// The covariance realism models the asset's records name by ID ($MOR
+  /// COV_REALISM_ID), each stated once with its population figures. IDs are
+  /// 1 or more and unique within the asset; a reader refuses a list that
+  /// repeats one.
+  COV_REALISM_MODELS: [DPMRealismModel];
+}
+
+/// One covariance realism model of an asset: the realism entry its records
+/// would otherwise each repeat.
+table DPMRealismModel {
+  /// The model's number within the asset, 1 or more; a record names it.
+  ID: uint16;
+  /// The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  /// entry of each record that names this ID.
+  REALISM: CVR;
+}
+
+/// Who built the derived polynomial rows of an asset's records, and under what:
+/// the per-asset part of $PPE PPEBuild, same names and meanings. The per-record
+/// RECORD_DIGEST is not stated: rows carried inside the record they derive from
+/// are bound to it by the record itself. A reader that cannot reproduce
+/// BUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.
+table DPMDerivedBuild {
+  /// Name of the builder, e.g. sdn-ap.
+  BUILDER_NAME: string;
+  /// Version of the builder.
+  BUILDER_VERSION: string;
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  BUILDER_DIGEST: [ubyte];
+  /// SHA-256 over the configuration and environment inputs the builder used that
+  /// are not in the source record, by the builder's published rule (32 bytes);
+  /// empty when the builder uses none.
+  ENVIRONMENT_DIGEST: [ubyte];
+  /// Build tolerance per position axis in km. NaN when not stated.
+  TOL_POSITION: double = nan;
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without
+  /// velocity.
+  TOL_VELOCITY: double = nan;
 }
 
 /// Source batch metadata bound into the dataset publication.

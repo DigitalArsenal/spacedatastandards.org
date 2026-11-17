@@ -1,0 +1,54 @@
+// Hash: a27474e24baf6d1db31074addafefc438a68380e9dd99e1ec486f1ad3248d121
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Workspace (WKS)
+// Description
+// A named, shareable analysis workspace: a `$CZM` scene snapshot plus the
+// FlatSQL query state that produced it, owned by an `$EPM` identity and shared
+// via `$ACL` grants. Saving a workspace captures the exact visual + query state
+// of an app session; opening it reproduces that state byte-identically on any
+// node or browser; sharing issues an `$ACL` grant to another `$EPM`.
+
+include "../CZM/main.fbs";
+include "../ACL/main.fbs";
+
+/// One saved FlatSQL query belonging to a workspace.
+table WKSQuery {
+  /// Stable query identifier within the workspace
+  QUERY_ID: string;
+  /// Display name
+  NAME: string;
+  /// FlatSQL query text
+  SQL: string;
+  /// Whether this query is active (applied) when the workspace opens
+  ACTIVE: bool;
+}
+
+/// Workspace — named scene snapshot + FlatSQL query state + share grants
+table WKS {
+  /// Stable workspace identifier
+  WORKSPACE_ID: string (required);
+  /// Display name
+  NAME: string;
+  /// Display description
+  DESCRIPTION: string;
+  /// IPFS CID of the owning `$EPM`
+  OWNER_EPM_CID: string;
+  /// `$APP.ID` of the application this workspace belongs to
+  APP_ID: string;
+  /// The named `$CZM` scene snapshot
+  SCENE: CZM;
+  /// FlatSQL query state captured with the scene
+  QUERIES: [WKSQuery];
+  /// Share grants to other `$EPM` identities
+  SHARE_GRANTS: [ACL];
+  /// Unix ms the workspace was created
+  CREATED_AT: uint64;
+  /// Unix ms the workspace was last updated
+  UPDATED_AT: uint64;
+  /// Ed25519 signature by the owner `$EPM`
+  SIGNATURE: [ubyte];
+}
+
+root_type WKS;
+file_identifier "$WKS";

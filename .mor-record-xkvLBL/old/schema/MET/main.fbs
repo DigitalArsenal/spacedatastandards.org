@@ -1,0 +1,28 @@
+// Hash: 49eb7321b0feffc01a882b2aa9d647f461dd52bedf9597695c892a8b648b4531
+// Version: 1.0.7
+// -----------------------------------END_HEADER
+enum meanElementSource : byte {
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
+  SGP4XP,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM,
+  /// SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics
+  /// (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on
+  /// AP. 4 is left unused: it was a cut value of an earlier theory.
+  AP = 5,
+  /// Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a
+  /// set is always written.
+  UNSPECIFIED = 6
+}
+
+/// Mean Element Theory
+table MET {
+  MEAN_ELEMENT_THEORY:meanElementSource;
+}
+root_type MET;
+file_identifier "$MET";

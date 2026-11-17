@@ -1,0 +1,65 @@
+// Hash: 961143521874341935ffb6a5bf9d2482b588cf96d7d4b8fcd3c06e1bb73843da
+// Version: 1.168.0
+// -----------------------------------END_HEADER
+include "../CES/main.fbs";
+
+/// One pruned-vocabulary token's static embedding row.
+table QEMTokenVector {
+  /// WordPiece token text, verbatim including any ## continuation marker.
+  TOKEN: string;
+  /// Vocabulary row index. Row order in TOKENS is not guaranteed stable
+  /// across MODEL_VERSION; look up by TOKEN_ID, not array position.
+  TOKEN_ID: uint32;
+  /// Row values when the parent QEM.ENCODING is INT8. Length equals
+  /// QEM.DIMENSIONS.
+  VECTOR_INT8: [int8];
+  /// Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.
+  /// Unused when ENCODING is FLOAT32.
+  SCALE: float32;
+  /// Row values when the parent QEM.ENCODING is FLOAT32. Length equals
+  /// QEM.DIMENSIONS.
+  VECTOR_FLOAT32: [float32];
+  /// Inverse document frequency weight for this token.
+  IDF: float32;
+}
+
+/// Query Encoder Model.
+///
+/// One QEM publishes the pruned static token-embedding table a lightweight
+/// client (e.g. a browser) loads to encode a search query into the same
+/// vector space a paired $CES shard's rows live in, without shipping a full
+/// transformer. A consumer pools the rows of the query's tokens (per
+/// POOLING_METHOD) into a query vector, then dot-products it against
+/// CES.ROWS.
+///
+/// A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION,
+/// MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a
+/// mismatch on any one means the two vector spaces are not comparable.
+table QEM {
+  /// Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.
+  MODEL_ID: string;
+  /// Encoder model version. Compared verbatim against CES.MODEL_VERSION.
+  MODEL_VERSION: string;
+  /// SHA-256 of the encoder weights, lowercase hex. Same convention as
+  /// DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.
+  MODEL_WEIGHTS_SHA256: string;
+  /// Sentence/document pooling method the encoder uses. Compared verbatim
+  /// against CES.POOLING_METHOD.
+  POOLING_METHOD: cesPoolingKind = MEAN;
+  /// Version of the text template documents were rendered from before
+  /// encoding. Compared verbatim against CES.TEMPLATE_VERSION.
+  TEMPLATE_VERSION: string;
+  /// Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.
+  DIMENSIONS: uint32;
+  /// Row element encoding used across TOKENS.
+  ENCODING: cesVectorEncoding = INT8;
+  /// Row-vector normalization applied before quantization.
+  NORMALIZATION: cesNormalizationKind = L2;
+  /// Number of tokens in the pruned vocabulary.
+  VOCAB_SIZE: uint32;
+  /// One row per pruned vocabulary token.
+  TOKENS: [QEMTokenVector];
+}
+
+root_type QEM;
+file_identifier "$QEM";

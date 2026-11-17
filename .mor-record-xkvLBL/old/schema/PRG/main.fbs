@@ -1,0 +1,29 @@
+// Hash: 3a34a38f5acc86d5e54658a8b51db91ceb5b5a0f3a5fe1d8ea28d3358dd43466
+// Version: 1.0.1
+// -----------------------------------END_HEADER
+/// Program Description Message
+table PRG {
+  /// The name of the program
+  NAME: string;
+
+  /// Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
+  HD_KEY_PATH: string;
+
+  /// Vector of standard message types used by the program
+  MESSAGE_TYPES: [string];
+
+  /// Vector of users associated with the program, each user can have assigned message types
+  USERS: [USR];
+}
+
+// User information, including assigned message types
+table USR {
+  ID: string;
+
+  // Vector of message types assigned to the user, indicating which messages the user can access or use
+  // Location: Specified by user
+  MESSAGE_TYPES: [string];
+}
+
+root_type PRG;
+file_identifier "$PRG";

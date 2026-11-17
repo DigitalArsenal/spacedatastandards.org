@@ -1,0 +1,111 @@
+// Hash: f5030fa426c48c2b77c2002390a9ed78fb150d6f2295e21d9fc580fe1a4b2dfd
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Disk Image (SDI)
+//
+// One full-disk solar image and the FITS World Coordinate System that places
+// its pixels on the Sun. The pixels themselves are referenced by CID, never
+// embedded. WCS keywords are copied verbatim from the source header; an
+// absent double is NaN. A viewer's display scale that is not WCS is never
+// stored as CDELT.
+
+/// Solar Disk Image
+table SDI {
+  /// Observatory or mission, verbatim (FITS TELESCOP).
+  OBSERVATORY: string;
+  /// Instrument, verbatim (FITS INSTRUME).
+  INSTRUMENT: string;
+  /// Measurement, verbatim (FITS WAVELNTH token or continuum label).
+  MEASUREMENT: string;
+  /// Wavelength in nm.
+  WAVELENGTH_NM: double = nan;
+  /// The source's image identity, verbatim.
+  IMAGE_ID: string;
+  /// When this image was requested from the source, RFC 3339 UTC.
+  REQUESTED_AT: string;
+  /// Observation time normalized to RFC 3339 UTC.
+  OBSERVED_AT: string (required);
+  /// FITS DATE-OBS, verbatim.
+  DATE_OBS: string;
+  /// FITS TIMESYS, verbatim.
+  TIME_SCALE: string;
+  /// Source cadence in seconds.
+  CADENCE_S: double = nan;
+  /// Exposure time in seconds (FITS EXPTIME).
+  EXPOSURE_S: double = nan;
+  /// CID of the image bytes.
+  IMAGE_CID: string;
+  /// Media type of the image bytes (e.g. image/jp2, application/fits).
+  IMAGE_MEDIA_TYPE: string;
+  /// SHA-256 of the image bytes, lowercase hex.
+  IMAGE_DIGEST: string;
+  /// Size of the image bytes.
+  IMAGE_SIZE_BYTES: uint64;
+  /// CID of the verbatim FITS header.
+  HEADER_CID: string;
+  /// Image width in pixels (FITS NAXIS1).
+  WIDTH: uint32;
+  /// Image height in pixels (FITS NAXIS2).
+  HEIGHT: uint32;
+  /// FITS CTYPE1, verbatim (e.g. HPLN-TAN).
+  CTYPE1: string;
+  /// FITS CTYPE2, verbatim (e.g. HPLT-TAN).
+  CTYPE2: string;
+  /// FITS CUNIT1, verbatim.
+  CUNIT1: string;
+  /// FITS CUNIT2, verbatim.
+  CUNIT2: string;
+  /// FITS CRPIX1, one-based.
+  CRPIX1: double = nan;
+  /// FITS CRPIX2, one-based.
+  CRPIX2: double = nan;
+  /// FITS CRVAL1 in CUNIT1.
+  CRVAL1: double = nan;
+  /// FITS CRVAL2 in CUNIT2.
+  CRVAL2: double = nan;
+  /// FITS CDELT1 in CUNIT1 per pixel.
+  CDELT1: double = nan;
+  /// FITS CDELT2 in CUNIT2 per pixel.
+  CDELT2: double = nan;
+  /// FITS CROTA2 in degrees.
+  CROTA2: double = nan;
+  /// FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),
+  /// present only when the source supplies them.
+  PC: [double];
+  /// Observed solar radius in arcseconds (FITS RSUN_OBS).
+  RSUN_OBS_ARCSEC: double = nan;
+  /// Reference solar radius in meters (FITS RSUN_REF).
+  RSUN_REF_M: double = nan;
+  /// Observer distance from Sun center in meters (FITS DSUN_OBS).
+  DSUN_OBS_M: double = nan;
+  /// Observer Carrington longitude in degrees (FITS CRLN_OBS).
+  CRLN_OBS_DEG: double = nan;
+  /// Observer Carrington latitude in degrees (FITS CRLT_OBS).
+  CRLT_OBS_DEG: double = nan;
+  /// Observer Stonyhurst longitude in degrees (FITS HGLN_OBS).
+  HGLN_OBS_DEG: double = nan;
+  /// Observer Stonyhurst latitude in degrees (FITS HGLT_OBS).
+  HGLT_OBS_DEG: double = nan;
+  /// FITS QUALITY bitmask; meaningful only when HAS_QUALITY.
+  QUALITY: int64;
+  /// True when the source states QUALITY.
+  HAS_QUALITY: bool = false;
+  /// Processing description, verbatim.
+  PROCESSING: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SDICOLLECTION {
+  RECORDS: [SDI];
+}
+
+root_type SDI;
+file_identifier "$SDI";
