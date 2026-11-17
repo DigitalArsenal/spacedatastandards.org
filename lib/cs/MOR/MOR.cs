@@ -131,16 +131,16 @@ public struct MOR : IFlatbufferObject
   public ArraySegment<byte>? GetCOVARIANCE_DATABytes() { return __p.__vector_as_arraysegment(62); }
 #endif
   public double[] GetCOVARIANCE_DATAArray() { return __p.__vector_as_array<double>(62); }
-  /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  /// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
   public MORCovariancePropagation? COV_PROPAGATION { get { int o = __p.__offset(64); return o != 0 ? (MORCovariancePropagation?)(new MORCovariancePropagation()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
   /// any producer text: a record read alone flies the same covariance as its $OCM.
   public morCovarianceFloor COV_FLOOR { get { int o = __p.__offset(66); return o != 0 ? (morCovarianceFloor)__p.bb.Get(o + __p.bb_pos) : morCovarianceFloor.UNSTATED; } }
-  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  /// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   /// ID the asset does not list leaves the figures unresolved, and a reader says so.
   public ushort COV_REALISM_ID { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  /// Whether the covariance's coverage was measured against independent reference states.
   public covarianceCalibration COV_CALIBRATION { get { int o = __p.__offset(70); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
@@ -169,7 +169,7 @@ public struct MOR : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
   public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(88); }
-  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// The realism of the covariance when it is the record's own (it differs from record to record), the
   /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   public CVR? COV_REALISM { get { int o = __p.__offset(90); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Identifier of that calibration evidence (a report or record).
@@ -180,6 +180,21 @@ public struct MOR : IFlatbufferObject
   public ArraySegment<byte>? GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(92); }
 #endif
   public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(92); }
+  /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+  /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+  /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+  /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+  public byte COV_FACTOR(int j) { int o = __p.__offset(94); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int COV_FACTORLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_FACTORBytes() { return __p.__vector_as_span<byte>(94, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_FACTORBytes() { return __p.__vector_as_arraysegment(94); }
+#endif
+  public byte[] GetCOV_FACTORArray() { return __p.__vector_as_array<byte>(94); }
+  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+  /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+  public morCovFactorFormat COV_FACTOR_ENCODING { get { int o = __p.__offset(96); return o != 0 ? (morCovFactorFormat)__p.bb.Get(o + __p.bb_pos) : morCovFactorFormat.NONE; } }
 
   public static Offset<MOR> CreateMOR(FlatBufferBuilder builder,
       uint NORAD_CAT_ID = 0,
@@ -226,8 +241,10 @@ public struct MOR : IFlatbufferObject
       morMessageStatus MESSAGE_STATUS = morMessageStatus.UNSPECIFIED,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       Offset<CVR> COV_REALISMOffset = default(Offset<CVR>),
-      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset)) {
-    builder.StartTable(45);
+      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset),
+      VectorOffset COV_FACTOROffset = default(VectorOffset),
+      morCovFactorFormat COV_FACTOR_ENCODING = morCovFactorFormat.NONE) {
+    builder.StartTable(47);
     MOR.AddECOM2_Y0(builder, ECOM2_Y0);
     MOR.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
     MOR.AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT);
@@ -246,6 +263,7 @@ public struct MOR : IFlatbufferObject
     MOR.AddMEAN_MOTION(builder, MEAN_MOTION);
     MOR.AddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK);
     MOR.AddEPOCH_UNIX_US(builder, EPOCH_UNIX_US);
+    MOR.AddCOV_FACTOR(builder, COV_FACTOROffset);
     MOR.AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCEOffset);
     MOR.AddCOV_REALISM(builder, COV_REALISMOffset);
     MOR.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
@@ -263,6 +281,7 @@ public struct MOR : IFlatbufferObject
     MOR.AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOROffset);
     MOR.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     MOR.AddCOV_REALISM_ID(builder, COV_REALISM_ID);
+    MOR.AddCOV_FACTOR_ENCODING(builder, COV_FACTOR_ENCODING);
     MOR.AddMESSAGE_STATUS(builder, MESSAGE_STATUS);
     MOR.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE);
     MOR.AddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL);
@@ -276,7 +295,7 @@ public struct MOR : IFlatbufferObject
     return MOR.EndMOR(builder);
   }
 
-  public static void StartMOR(FlatBufferBuilder builder) { builder.StartTable(45); }
+  public static void StartMOR(FlatBufferBuilder builder) { builder.StartTable(47); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(0, NORAD_CAT_ID, 0); }
   public static void AddINTERNATIONAL_DESIGNATOR(FlatBufferBuilder builder, StringOffset INTERNATIONAL_DESIGNATOROffset) { builder.AddOffset(1, INTERNATIONAL_DESIGNATOROffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -338,6 +357,13 @@ public struct MOR : IFlatbufferObject
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(42, OBJECT_NAMEOffset.Value, 0); }
   public static void AddCOV_REALISM(FlatBufferBuilder builder, Offset<CVR> COV_REALISMOffset) { builder.AddOffset(43, COV_REALISMOffset.Value, 0); }
   public static void AddCOV_CALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset COV_CALIBRATION_REFERENCEOffset) { builder.AddOffset(44, COV_CALIBRATION_REFERENCEOffset.Value, 0); }
+  public static void AddCOV_FACTOR(FlatBufferBuilder builder, VectorOffset COV_FACTOROffset) { builder.AddOffset(45, COV_FACTOROffset.Value, 0); }
+  public static VectorOffset CreateCOV_FACTORVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_FACTORVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_FACTORVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_FACTORVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_FACTORVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddCOV_FACTOR_ENCODING(FlatBufferBuilder builder, morCovFactorFormat COV_FACTOR_ENCODING) { builder.AddByte(46, (byte)COV_FACTOR_ENCODING, 0); }
   public static Offset<MOR> EndMOR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MOR>(o);
@@ -399,6 +425,9 @@ public struct MOR : IFlatbufferObject
     _o.OBJECT_NAME = this.OBJECT_NAME;
     _o.COV_REALISM = this.COV_REALISM.HasValue ? this.COV_REALISM.Value.UnPack() : null;
     _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
+    _o.COV_FACTOR = new List<byte>();
+    for (var _j = 0; _j < this.COV_FACTORLength; ++_j) {_o.COV_FACTOR.Add(this.COV_FACTOR(_j));}
+    _o.COV_FACTOR_ENCODING = this.COV_FACTOR_ENCODING;
   }
   public static Offset<MOR> Pack(FlatBufferBuilder builder, MORT _o) {
     if (_o == null) return default(Offset<MOR>);
@@ -429,6 +458,11 @@ public struct MOR : IFlatbufferObject
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _COV_REALISM = _o.COV_REALISM == null ? default(Offset<CVR>) : CVR.Pack(builder, _o.COV_REALISM);
     var _COV_CALIBRATION_REFERENCE = _o.COV_CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.COV_CALIBRATION_REFERENCE);
+    var _COV_FACTOR = default(VectorOffset);
+    if (_o.COV_FACTOR != null) {
+      var __COV_FACTOR = _o.COV_FACTOR.ToArray();
+      _COV_FACTOR = CreateCOV_FACTORVector(builder, __COV_FACTOR);
+    }
     return CreateMOR(
       builder,
       _o.NORAD_CAT_ID,
@@ -475,7 +509,9 @@ public struct MOR : IFlatbufferObject
       _o.MESSAGE_STATUS,
       _OBJECT_NAME,
       _COV_REALISM,
-      _COV_CALIBRATION_REFERENCE);
+      _COV_CALIBRATION_REFERENCE,
+      _COV_FACTOR,
+      _o.COV_FACTOR_ENCODING);
   }
 }
 
@@ -526,6 +562,8 @@ public class MORT
   public string OBJECT_NAME { get; set; }
   public CVRT COV_REALISM { get; set; }
   public string COV_CALIBRATION_REFERENCE { get; set; }
+  public List<byte> COV_FACTOR { get; set; }
+  public morCovFactorFormat COV_FACTOR_ENCODING { get; set; }
 
   public MORT() {
     this.NORAD_CAT_ID = 0;
@@ -573,6 +611,8 @@ public class MORT
     this.OBJECT_NAME = null;
     this.COV_REALISM = null;
     this.COV_CALIBRATION_REFERENCE = null;
+    this.COV_FACTOR = null;
+    this.COV_FACTOR_ENCODING = morCovFactorFormat.NONE;
   }
   public static MORT DeserializeFromBinary(byte[] fbBuffer) {
     return MOR.GetRootAsMOR(new ByteBuffer(fbBuffer)).UnPack();
@@ -635,6 +675,8 @@ static public class MORVerify
       && verifier.VerifyString(tablePos, 88 /*OBJECT_NAME*/, false)
       && verifier.VerifyTable(tablePos, 90 /*COV_REALISM*/, CVRVerify.Verify, false)
       && verifier.VerifyString(tablePos, 92 /*COV_CALIBRATION_REFERENCE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 94 /*COV_FACTOR*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 96 /*COV_FACTOR_ENCODING*/, 1 /*morCovFactorFormat*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

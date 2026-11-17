@@ -64,7 +64,7 @@ inline const char *EnumNamemorMessageStatus(morMessageStatus e) {
 
 /// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 /// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-/// COVARIANCE_DATA only. Append new values only.
+/// COVARIANCE_DATA or COV_FACTOR. Append new values only.
 enum morCovarianceFloor : uint8_t {
   /// No covariance.
   morCovarianceFloor_UNSTATED = 0,
@@ -288,7 +288,45 @@ inline const char *EnumNamemorWindowStatus(morWindowStatus e) {
   return EnumNamesmorWindowStatus()[index];
 }
 
-/// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+/// Identifier and version of the fitted-covariance factor encoding in COV_FACTOR. When COVARIANCE_DATA is
+/// present, COVARIANCE_DATA is authoritative and COV_FACTOR is ignored. A reader that meets an ordinal it
+/// does not know ignores COV_FACTOR and treats the record as having no covariance from it. Append new
+/// values only.
+enum morCovFactorFormat : uint8_t {
+  /// No covariance factor.
+  morCovFactorFormat_NONE = 0,
+  /// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
+  /// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
+  /// (P = F + G G^T); directions masked under F over 7 days may be omitted.
+  morCovFactorFormat_ROE_HYPERSPHERICAL_V1 = 1,
+  morCovFactorFormat_MIN = morCovFactorFormat_NONE,
+  morCovFactorFormat_MAX = morCovFactorFormat_ROE_HYPERSPHERICAL_V1
+};
+
+inline const morCovFactorFormat (&EnumValuesmorCovFactorFormat())[2] {
+  static const morCovFactorFormat values[] = {
+    morCovFactorFormat_NONE,
+    morCovFactorFormat_ROE_HYPERSPHERICAL_V1
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmorCovFactorFormat() {
+  static const char * const names[3] = {
+    "NONE",
+    "ROE_HYPERSPHERICAL_V1",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemorCovFactorFormat(morCovFactorFormat e) {
+  if (::flatbuffers::IsOutRange(e, morCovFactorFormat_NONE, morCovFactorFormat_ROE_HYPERSPHERICAL_V1)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmorCovFactorFormat()[index];
+}
+
+/// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 /// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 /// appended field of MOR, never as a change to this struct.
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) MORCovariancePropagation FLATBUFFERS_FINAL_CLASS {
@@ -502,7 +540,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MESSAGE_STATUS = 86,
     VT_OBJECT_NAME = 88,
     VT_COV_REALISM = 90,
-    VT_COV_CALIBRATION_REFERENCE = 92
+    VT_COV_CALIBRATION_REFERENCE = 92,
+    VT_COV_FACTOR = 94,
+    VT_COV_FACTOR_ENCODING = 96
   };
   /// The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
   uint32_t NORAD_CAT_ID() const {
@@ -642,22 +682,22 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *COVARIANCE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE_DATA);
   }
-  /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  /// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
   const MORCovariancePropagation *COV_PROPAGATION() const {
     return GetStruct<const MORCovariancePropagation *>(VT_COV_PROPAGATION);
   }
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
   /// any producer text: a record read alone flies the same covariance as its $OCM.
   morCovarianceFloor COV_FLOOR() const {
     return static_cast<morCovarianceFloor>(GetField<uint8_t>(VT_COV_FLOOR, 0));
   }
-  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  /// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   /// ID the asset does not list leaves the figures unresolved, and a reader says so.
   uint16_t COV_REALISM_ID() const {
     return GetField<uint16_t>(VT_COV_REALISM_ID, 0);
   }
-  /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  /// Whether the covariance's coverage was measured against independent reference states.
   covarianceCalibration COV_CALIBRATION() const {
     return static_cast<covarianceCalibration>(GetField<int8_t>(VT_COV_CALIBRATION, 0));
   }
@@ -700,7 +740,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
   }
-  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// The realism of the covariance when it is the record's own (it differs from record to record), the
   /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   const CVR *COV_REALISM() const {
     return GetPointer<const CVR *>(VT_COV_REALISM);
@@ -708,6 +748,18 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Identifier of that calibration evidence (a report or record).
   const ::flatbuffers::String *COV_CALIBRATION_REFERENCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
+  }
+  /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+  /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+  /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+  /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+  const ::flatbuffers::Vector<uint8_t> *COV_FACTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_COV_FACTOR);
+  }
+  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+  /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+  morCovFactorFormat COV_FACTOR_ENCODING() const {
+    return static_cast<morCovFactorFormat>(GetField<uint8_t>(VT_COV_FACTOR_ENCODING, 0));
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -767,6 +819,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(COV_REALISM()) &&
            VerifyOffset(verifier, VT_COV_CALIBRATION_REFERENCE) &&
            verifier.VerifyString(COV_CALIBRATION_REFERENCE()) &&
+           VerifyOffset(verifier, VT_COV_FACTOR) &&
+           verifier.VerifyVector(COV_FACTOR()) &&
+           VerifyField<uint8_t>(verifier, VT_COV_FACTOR_ENCODING, 1) &&
            verifier.EndTable();
   }
 };
@@ -910,6 +965,12 @@ struct MORBuilder {
   void add_COV_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE) {
     fbb_.AddOffset(MOR::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
   }
+  void add_COV_FACTOR(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COV_FACTOR) {
+    fbb_.AddOffset(MOR::VT_COV_FACTOR, COV_FACTOR);
+  }
+  void add_COV_FACTOR_ENCODING(morCovFactorFormat COV_FACTOR_ENCODING) {
+    fbb_.AddElement<uint8_t>(MOR::VT_COV_FACTOR_ENCODING, static_cast<uint8_t>(COV_FACTOR_ENCODING), 0);
+  }
   explicit MORBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -967,7 +1028,9 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
     ::flatbuffers::Offset<CVR> COV_REALISM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COV_FACTOR = 0,
+    morCovFactorFormat COV_FACTOR_ENCODING = morCovFactorFormat_NONE) {
   MORBuilder builder_(_fbb);
   builder_.add_ECOM2_Y0(ECOM2_Y0);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
@@ -987,6 +1050,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_MEAN_MOTION(MEAN_MOTION);
   builder_.add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK);
   builder_.add_EPOCH_UNIX_US(EPOCH_UNIX_US);
+  builder_.add_COV_FACTOR(COV_FACTOR);
   builder_.add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE);
   builder_.add_COV_REALISM(COV_REALISM);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
@@ -1004,6 +1068,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_INTERNATIONAL_DESIGNATOR(INTERNATIONAL_DESIGNATOR);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_COV_REALISM_ID(COV_REALISM_ID);
+  builder_.add_COV_FACTOR_ENCODING(COV_FACTOR_ENCODING);
   builder_.add_MESSAGE_STATUS(MESSAGE_STATUS);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
   builder_.add_SOLID_TIDES_MODEL(SOLID_TIDES_MODEL);
@@ -1063,7 +1128,9 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
     const char *OBJECT_NAME = nullptr,
     ::flatbuffers::Offset<CVR> COV_REALISM = 0,
-    const char *COV_CALIBRATION_REFERENCE = nullptr) {
+    const char *COV_CALIBRATION_REFERENCE = nullptr,
+    const std::vector<uint8_t> *COV_FACTOR = nullptr,
+    morCovFactorFormat COV_FACTOR_ENCODING = morCovFactorFormat_NONE) {
   auto INTERNATIONAL_DESIGNATOR__ = INTERNATIONAL_DESIGNATOR ? _fbb.CreateString(INTERNATIONAL_DESIGNATOR) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto WINDOWS__ = WINDOWS ? _fbb.CreateVectorOfStructs<MORWindow>(*WINDOWS) : 0;
@@ -1072,6 +1139,7 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
   auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
+  auto COV_FACTOR__ = COV_FACTOR ? _fbb.CreateVector<uint8_t>(*COV_FACTOR) : 0;
   return CreateMOR(
       _fbb,
       NORAD_CAT_ID,
@@ -1118,7 +1186,9 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
       MESSAGE_STATUS,
       OBJECT_NAME__,
       COV_REALISM,
-      COV_CALIBRATION_REFERENCE__);
+      COV_CALIBRATION_REFERENCE__,
+      COV_FACTOR__,
+      COV_FACTOR_ENCODING);
 }
 
 inline const MOR *GetMOR(const void *buf) {

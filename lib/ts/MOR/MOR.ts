@@ -10,6 +10,7 @@ import { MORWindow, MORWindowT } from './MORWindow.js';
 import { MPE, MPET } from './MPE.js';
 import { covarianceCalibration } from './covarianceCalibration.js';
 import { meanElementSource } from './meanElementSource.js';
+import { morCovFactorFormat } from './morCovFactorFormat.js';
 import { morCovarianceFloor } from './morCovarianceFloor.js';
 import { morGravityField } from './morGravityField.js';
 import { morMessageStatus } from './morMessageStatus.js';
@@ -341,7 +342,7 @@ covarianceDataArray():Float64Array|null {
 }
 
 /**
- * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+ * What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
  */
 COV_PROPAGATION(obj?:MORCovariancePropagation):MORCovariancePropagation|null {
   const offset = this.bb!.__offset(this.bb_pos, 64);
@@ -349,7 +350,7 @@ COV_PROPAGATION(obj?:MORCovariancePropagation):MORCovariancePropagation|null {
 }
 
 /**
- * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+ * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
  * any producer text: a record read alone flies the same covariance as its $OCM.
  */
 COV_FLOOR():morCovarianceFloor {
@@ -358,7 +359,7 @@ COV_FLOOR():morCovarianceFloor {
 }
 
 /**
- * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+ * The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
  * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
  * ID the asset does not list leaves the figures unresolved, and a reader says so.
  */
@@ -368,7 +369,7 @@ COV_REALISM_ID():number {
 }
 
 /**
- * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+ * Whether the covariance's coverage was measured against independent reference states.
  */
 COV_CALIBRATION():covarianceCalibration {
   const offset = this.bb!.__offset(this.bb_pos, 70);
@@ -453,7 +454,7 @@ OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+ * The realism of the covariance when it is the record's own (it differs from record to record), the
  * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
  */
 COV_REALISM(obj?:CVR):CVR|null {
@@ -471,8 +472,38 @@ COV_CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+ * COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+ * authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+ * directions or horizons beyond 7 days require COVARIANCE_DATA.
+ */
+COV_FACTOR(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+covFactorLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+covFactorArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+ * record without covariance from COV_FACTOR while its elements and rows remain valid.
+ */
+COV_FACTOR_ENCODING():morCovFactorFormat {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morCovFactorFormat.NONE;
+}
+
 static startMOR(builder:flatbuffers.Builder) {
-  builder.startObject(45);
+  builder.startObject(47);
 }
 
 static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
@@ -710,6 +741,26 @@ static addCovCalibrationReference(builder:flatbuffers.Builder, COV_CALIBRATION_R
   builder.addFieldOffset(44, COV_CALIBRATION_REFERENCEOffset, 0);
 }
 
+static addCovFactor(builder:flatbuffers.Builder, COV_FACTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, COV_FACTOROffset, 0);
+}
+
+static createCovFactorVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovFactorVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
+static addCovFactorEncoding(builder:flatbuffers.Builder, COV_FACTOR_ENCODING:morCovFactorFormat) {
+  builder.addFieldInt8(46, COV_FACTOR_ENCODING, morCovFactorFormat.NONE);
+}
+
 static endMOR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -770,7 +821,9 @@ unpack(): MORT {
     this.MESSAGE_STATUS(),
     this.OBJECT_NAME(),
     (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null),
-    this.COV_CALIBRATION_REFERENCE()
+    this.COV_CALIBRATION_REFERENCE(),
+    this.bb!.createScalarList<number>(this.COV_FACTOR.bind(this), this.covFactorLength()),
+    this.COV_FACTOR_ENCODING()
   );
 }
 
@@ -821,6 +874,8 @@ unpackTo(_o: MORT): void {
   _o.OBJECT_NAME = this.OBJECT_NAME();
   _o.COV_REALISM = (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null);
   _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
+  _o.COV_FACTOR = this.bb!.createScalarList<number>(this.COV_FACTOR.bind(this), this.covFactorLength());
+  _o.COV_FACTOR_ENCODING = this.COV_FACTOR_ENCODING();
 }
 }
 
@@ -870,7 +925,9 @@ constructor(
   public MESSAGE_STATUS: morMessageStatus = morMessageStatus.UNSPECIFIED,
   public OBJECT_NAME: string|Uint8Array|null = null,
   public COV_REALISM: CVRT|null = null,
-  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null
+  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null,
+  public COV_FACTOR: (number)[] = [],
+  public COV_FACTOR_ENCODING: morCovFactorFormat = morCovFactorFormat.NONE
 ){}
 
 
@@ -885,6 +942,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const COV_REALISM = (this.COV_REALISM !== null ? this.COV_REALISM!.pack(builder) : 0);
   const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
+  const COV_FACTOR = MOR.createCovFactorVector(builder, this.COV_FACTOR);
 
   MOR.startMOR(builder);
   MOR.addNoradCatId(builder, this.NORAD_CAT_ID);
@@ -932,6 +990,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   MOR.addObjectName(builder, OBJECT_NAME);
   MOR.addCovRealism(builder, COV_REALISM);
   MOR.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
+  MOR.addCovFactor(builder, COV_FACTOR);
+  MOR.addCovFactorEncoding(builder, this.COV_FACTOR_ENCODING);
 
   return MOR.endMOR(builder);
 }

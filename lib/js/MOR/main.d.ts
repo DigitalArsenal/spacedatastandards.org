@@ -6,6 +6,7 @@ export * from './MET.js';
 export * from './MOR.js';
 export * from './morCovarianceFloor.js';
 export * from './MORCovariancePropagation.js';
+export * from './morCovFactorFormat.js';
 export * from './morGravityField.js';
 export * from './morMessageStatus.js';
 export * from './morRadiationModel.js';

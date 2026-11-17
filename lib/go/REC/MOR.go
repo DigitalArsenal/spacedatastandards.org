@@ -799,7 +799,7 @@ func (rcv *MOR) MutateCovarianceData(j int, n float64) bool {
 	return rcv.MutateCOVARIANCE_DATA(j, n)
 }
 
-/// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+/// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
 func (rcv *MOR) COV_PROPAGATION(obj *MORCovariancePropagation) *MORCovariancePropagation {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -817,8 +817,8 @@ func (rcv *MOR) CovPropagation(obj *MORCovariancePropagation) *MORCovarianceProp
 	return rcv.COV_PROPAGATION(obj)
 }
 
-/// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+/// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
+/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
 /// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) COV_FLOOR() morCovarianceFloor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
@@ -832,7 +832,7 @@ func (rcv *MOR) CovFloor() morCovarianceFloor {
 	return rcv.COV_FLOOR()
 }
 
-/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
 /// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) MutateCOV_FLOOR(n morCovarianceFloor) bool {
 	return rcv._tab.MutateByteSlot(66, byte(n))
@@ -842,7 +842,7 @@ func (rcv *MOR) MutateCovFloor(n morCovarianceFloor) bool {
 	return rcv.MutateCOV_FLOOR(n)
 }
 
-/// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+/// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
 /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
 /// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) COV_REALISM_ID() uint16 {
@@ -857,7 +857,7 @@ func (rcv *MOR) CovRealismId() uint16 {
 	return rcv.COV_REALISM_ID()
 }
 
-/// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+/// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
 /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
 /// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) MutateCOV_REALISM_ID(n uint16) bool {
@@ -868,7 +868,7 @@ func (rcv *MOR) MutateCovRealismId(n uint16) bool {
 	return rcv.MutateCOV_REALISM_ID(n)
 }
 
-/// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+/// Whether the covariance's coverage was measured against independent reference states.
 func (rcv *MOR) COV_CALIBRATION() covarianceCalibration {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -881,7 +881,7 @@ func (rcv *MOR) CovCalibration() covarianceCalibration {
 	return rcv.COV_CALIBRATION()
 }
 
-/// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+/// Whether the covariance's coverage was measured against independent reference states.
 func (rcv *MOR) MutateCOV_CALIBRATION(n covarianceCalibration) bool {
 	return rcv._tab.MutateInt8Slot(70, int8(n))
 }
@@ -1083,7 +1083,7 @@ func (rcv *MOR) ObjectName() []byte {
 }
 
 /// The object's name; absent unless a reader copies it into what it writes.
-/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+/// The realism of the covariance when it is the record's own (it differs from record to record), the
 /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
 func (rcv *MOR) COV_REALISM(obj *CVR) *CVR {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
@@ -1102,7 +1102,7 @@ func (rcv *MOR) CovRealism(obj *CVR) *CVR {
 	return rcv.COV_REALISM(obj)
 }
 
-/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+/// The realism of the covariance when it is the record's own (it differs from record to record), the
 /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
 /// Identifier of that calibration evidence (a report or record).
 func (rcv *MOR) COV_CALIBRATION_REFERENCE() []byte {
@@ -1118,8 +1118,90 @@ func (rcv *MOR) CovCalibrationReference() []byte {
 }
 
 /// Identifier of that calibration evidence (a report or record).
+/// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+/// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+/// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+/// directions or horizons beyond 7 days require COVARIANCE_DATA.
+func (rcv *MOR) COV_FACTOR(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *MOR) CovFactor(j int) byte {
+	return rcv.COV_FACTOR(j)
+}
+
+func (rcv *MOR) COV_FACTORLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *MOR) CovFactorLength() int {
+	return rcv.COV_FACTORLength()
+}
+
+func (rcv *MOR) COV_FACTORBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *MOR) CovFactorBytes() []byte {
+	return rcv.COV_FACTORBytes()
+}
+
+/// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+/// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+/// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+/// directions or horizons beyond 7 days require COVARIANCE_DATA.
+func (rcv *MOR) MutateCOV_FACTOR(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *MOR) MutateCovFactor(j int, n byte) bool {
+	return rcv.MutateCOV_FACTOR(j, n)
+}
+
+/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+/// record without covariance from COV_FACTOR while its elements and rows remain valid.
+func (rcv *MOR) COV_FACTOR_ENCODING() morCovFactorFormat {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return morCovFactorFormat(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MOR) CovFactorEncoding() morCovFactorFormat {
+	return rcv.COV_FACTOR_ENCODING()
+}
+
+/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+/// record without covariance from COV_FACTOR while its elements and rows remain valid.
+func (rcv *MOR) MutateCOV_FACTOR_ENCODING(n morCovFactorFormat) bool {
+	return rcv._tab.MutateByteSlot(96, byte(n))
+}
+
+func (rcv *MOR) MutateCovFactorEncoding(n morCovFactorFormat) bool {
+	return rcv.MutateCOV_FACTOR_ENCODING(n)
+}
+
 func MORStart(builder *flatbuffers.Builder) {
-	builder.StartObject(45)
+	builder.StartObject(47)
 }
 func MORAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	builder.PrependUint32Slot(0, NORAD_CAT_ID, 0)
@@ -1414,6 +1496,24 @@ func MORAddCOV_CALIBRATION_REFERENCE(builder *flatbuffers.Builder, COV_CALIBRATI
 }
 func MORAddCovCalibrationReference(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
 	MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
+}
+func MORAddCOV_FACTOR(builder *flatbuffers.Builder, COV_FACTOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(COV_FACTOR), 0)
+}
+func MORAddCovFactor(builder *flatbuffers.Builder, COV_FACTOR flatbuffers.UOffsetT) {
+	MORAddCOV_FACTOR(builder, COV_FACTOR)
+}
+func MORStartCOV_FACTORVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func MORStartCovFactorVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MORStartCOV_FACTORVector(builder, numElems)
+}
+func MORAddCOV_FACTOR_ENCODING(builder *flatbuffers.Builder, COV_FACTOR_ENCODING morCovFactorFormat) {
+	builder.PrependByteSlot(46, byte(COV_FACTOR_ENCODING), 0)
+}
+func MORAddCovFactorEncoding(builder *flatbuffers.Builder, COV_FACTOR_ENCODING morCovFactorFormat) {
+	MORAddCOV_FACTOR_ENCODING(builder, COV_FACTOR_ENCODING)
 }
 func MOREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

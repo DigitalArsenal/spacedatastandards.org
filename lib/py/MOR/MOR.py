@@ -364,7 +364,7 @@ class MOR(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         return o == 0
 
-    # What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+    # What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
     # MOR
     def COV_PROPAGATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -376,7 +376,7 @@ class MOR(object):
             return obj
         return None
 
-    # Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    # Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
     # any producer text: a record read alone flies the same covariance as its $OCM.
     # MOR
     def COV_FLOOR(self):
@@ -385,7 +385,7 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    # The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
     # the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
     # ID the asset does not list leaves the figures unresolved, and a reader says so.
     # MOR
@@ -395,7 +395,7 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
-    # Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+    # Whether the covariance's coverage was measured against independent reference states.
     # MOR
     def COV_CALIBRATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -482,7 +482,7 @@ class MOR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    # The realism of the covariance when it is the record's own (it differs from record to record), the
     # single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     # MOR
     def COV_REALISM(self):
@@ -503,8 +503,48 @@ class MOR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+    # COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+    # authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+    # directions or horizons beyond 7 days require COVARIANCE_DATA.
+    # MOR
+    def COV_FACTOR(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # MOR
+    def COV_FACTORAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # MOR
+    def COV_FACTORLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MOR
+    def COV_FACTORIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        return o == 0
+
+    # Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+    # record without covariance from COV_FACTOR while its elements and rows remain valid.
+    # MOR
+    def COV_FACTOR_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def MORStart(builder):
-    builder.StartObject(45)
+    builder.StartObject(47)
 
 def Start(builder):
     MORStart(builder)
@@ -843,6 +883,34 @@ def MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
 def AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
     MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
 
+def MORAddCOV_FACTOR(builder, COV_FACTOR):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(COV_FACTOR), 0)
+
+def AddCOV_FACTOR(builder, COV_FACTOR):
+    MORAddCOV_FACTOR(builder, COV_FACTOR)
+
+def MORStartCOV_FACTORVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartCOV_FACTORVector(builder, numElems):
+    return MORStartCOV_FACTORVector(builder, numElems)
+
+def MORCreateCOV_FACTORVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateCOV_FACTORVector(builder, data):
+    return MORCreateCOV_FACTORVector(builder, data)
+
+def MORAddCOV_FACTOR_ENCODING(builder, COV_FACTOR_ENCODING):
+    builder.PrependUint8Slot(46, COV_FACTOR_ENCODING, 0)
+
+def AddCOV_FACTOR_ENCODING(builder, COV_FACTOR_ENCODING):
+    MORAddCOV_FACTOR_ENCODING(builder, COV_FACTOR_ENCODING)
+
 def MOREnd(builder):
     return builder.EndObject()
 
@@ -908,6 +976,8 @@ class MORT(object):
         OBJECT_NAME = None,
         COV_REALISM = None,
         COV_CALIBRATION_REFERENCE = None,
+        COV_FACTOR = None,
+        COV_FACTOR_ENCODING = 0,
     ):
         self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
         self.INTERNATIONAL_DESIGNATOR = INTERNATIONAL_DESIGNATOR  # type: Optional[str]
@@ -954,6 +1024,8 @@ class MORT(object):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.COV_REALISM = COV_REALISM  # type: Optional[CVR.CVRT]
         self.COV_CALIBRATION_REFERENCE = COV_CALIBRATION_REFERENCE  # type: Optional[str]
+        self.COV_FACTOR = COV_FACTOR  # type: Optional[List[int]]
+        self.COV_FACTOR_ENCODING = COV_FACTOR_ENCODING  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1049,6 +1121,14 @@ class MORT(object):
         if MOR.COV_REALISM() is not None:
             self.COV_REALISM = CVR.CVRT.InitFromObj(MOR.COV_REALISM())
         self.COV_CALIBRATION_REFERENCE = MOR.COV_CALIBRATION_REFERENCE()
+        if not MOR.COV_FACTORIsNone():
+            if np is None:
+                self.COV_FACTOR = []
+                for i in range(MOR.COV_FACTORLength()):
+                    self.COV_FACTOR.append(MOR.COV_FACTOR(i))
+            else:
+                self.COV_FACTOR = MOR.COV_FACTORAsNumpy()
+        self.COV_FACTOR_ENCODING = MOR.COV_FACTOR_ENCODING()
 
     # MORT
     def Pack(self, builder):
@@ -1093,6 +1173,14 @@ class MORT(object):
             COV_REALISM = self.COV_REALISM.Pack(builder)
         if self.COV_CALIBRATION_REFERENCE is not None:
             COV_CALIBRATION_REFERENCE = builder.CreateString(self.COV_CALIBRATION_REFERENCE)
+        if self.COV_FACTOR is not None:
+            if np is not None and type(self.COV_FACTOR) is np.ndarray:
+                COV_FACTOR = builder.CreateNumpyVector(self.COV_FACTOR)
+            else:
+                MORStartCOV_FACTORVector(builder, len(self.COV_FACTOR))
+                for i in reversed(range(len(self.COV_FACTOR))):
+                    builder.PrependUint8(self.COV_FACTOR[i])
+                COV_FACTOR = builder.EndVector()
         MORStart(builder)
         MORAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
         if self.INTERNATIONAL_DESIGNATOR is not None:
@@ -1151,5 +1239,8 @@ class MORT(object):
             MORAddCOV_REALISM(builder, COV_REALISM)
         if self.COV_CALIBRATION_REFERENCE is not None:
             MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
+        if self.COV_FACTOR is not None:
+            MORAddCOV_FACTOR(builder, COV_FACTOR)
+        MORAddCOV_FACTOR_ENCODING(builder, self.COV_FACTOR_ENCODING)
         MOR = MOREnd(builder)
         return MOR

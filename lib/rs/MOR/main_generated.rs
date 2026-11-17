@@ -125,7 +125,7 @@ pub const ENUM_VALUES_MOR_COVARIANCE_FLOOR: [morCovarianceFloor; 3] = [
 
 /// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 /// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-/// COVARIANCE_DATA only. Append new values only.
+/// COVARIANCE_DATA or COV_FACTOR. Append new values only.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct morCovarianceFloor(pub u8);
@@ -730,7 +730,110 @@ impl<'a> ::flatbuffers::Verifiable for morWindowStatus {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for morWindowStatus {}
 
-/// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MOR_COV_FACTOR_FORMAT: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MOR_COV_FACTOR_FORMAT: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MOR_COV_FACTOR_FORMAT: [morCovFactorFormat; 2] = [
+    morCovFactorFormat::NONE,
+    morCovFactorFormat::ROE_HYPERSPHERICAL_V1,
+];
+
+/// Identifier and version of the fitted-covariance factor encoding in COV_FACTOR. When COVARIANCE_DATA is
+/// present, COVARIANCE_DATA is authoritative and COV_FACTOR is ignored. A reader that meets an ordinal it
+/// does not know ignores COV_FACTOR and treats the record as having no covariance from it. Append new
+/// values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct morCovFactorFormat(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl morCovFactorFormat {
+    /// No covariance factor.
+    pub const NONE: Self = Self(0);
+    /// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
+    /// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
+    /// (P = F + G G^T); directions masked under F over 7 days may be omitted.
+    pub const ROE_HYPERSPHERICAL_V1: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NONE,
+        Self::ROE_HYPERSPHERICAL_V1,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NONE => Some("NONE"),
+            Self::ROE_HYPERSPHERICAL_V1 => Some("ROE_HYPERSPHERICAL_V1"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for morCovFactorFormat {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for morCovFactorFormat {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for morCovFactorFormat {
+    type Output = morCovFactorFormat;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for morCovFactorFormat {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for morCovFactorFormat {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for morCovFactorFormat {}
+
+/// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 /// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 /// appended field of MOR, never as a change to this struct.
 // struct MORCovariancePropagation, aligned to 8
@@ -1714,6 +1817,8 @@ impl<'a> MOR<'a> {
     pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 88;
     pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 90;
     pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 92;
+    pub const VT_COV_FACTOR: ::flatbuffers::VOffsetT = 94;
+    pub const VT_COV_FACTOR_ENCODING: ::flatbuffers::VOffsetT = 96;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1744,6 +1849,7 @@ impl<'a> MOR<'a> {
         builder.add_MEAN_MOTION(args.MEAN_MOTION);
         builder.add_WINDOW_RECORD_CHECK(args.WINDOW_RECORD_CHECK);
         builder.add_EPOCH_UNIX_US(args.EPOCH_UNIX_US);
+        if let Some(x) = args.COV_FACTOR { builder.add_COV_FACTOR(x); }
         if let Some(x) = args.COV_CALIBRATION_REFERENCE { builder.add_COV_CALIBRATION_REFERENCE(x); }
         if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
         if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
@@ -1761,6 +1867,7 @@ impl<'a> MOR<'a> {
         if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         builder.add_COV_REALISM_ID(args.COV_REALISM_ID);
+        builder.add_COV_FACTOR_ENCODING(args.COV_FACTOR_ENCODING);
         builder.add_MESSAGE_STATUS(args.MESSAGE_STATUS);
         builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
         builder.add_SOLID_TIDES_MODEL(args.SOLID_TIDES_MODEL);
@@ -1842,6 +1949,10 @@ impl<'a> MOR<'a> {
         let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let COV_FACTOR = self.COV_FACTOR().map(|x| {
+            x.into_iter().collect()
+        });
+        let COV_FACTOR_ENCODING = self.COV_FACTOR_ENCODING();
         MORT {
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
@@ -1888,6 +1999,8 @@ impl<'a> MOR<'a> {
             OBJECT_NAME,
             COV_REALISM,
             COV_CALIBRATION_REFERENCE,
+            COV_FACTOR,
+            COV_FACTOR_ENCODING,
         }
     }
 
@@ -2179,7 +2292,7 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(MOR::VT_COVARIANCE_DATA, None)}
     }
 
-    /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+    /// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
     #[inline]
     pub fn COV_PROPAGATION(&self) -> Option<&'a MORCovariancePropagation> {
         // Safety:
@@ -2188,7 +2301,7 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<MORCovariancePropagation>(MOR::VT_COV_PROPAGATION, None)}
     }
 
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
     /// any producer text: a record read alone flies the same covariance as its $OCM.
     #[inline]
     pub fn COV_FLOOR(&self) -> morCovarianceFloor {
@@ -2198,7 +2311,7 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<morCovarianceFloor>(MOR::VT_COV_FLOOR, Some(morCovarianceFloor::UNSTATED)).unwrap()}
     }
 
-    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
     /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
     /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     #[inline]
@@ -2209,7 +2322,7 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<u16>(MOR::VT_COV_REALISM_ID, Some(0)).unwrap()}
     }
 
-    /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+    /// Whether the covariance's coverage was measured against independent reference states.
     #[inline]
     pub fn COV_CALIBRATION(&self) -> covarianceCalibration {
         // Safety:
@@ -2302,7 +2415,7 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_OBJECT_NAME, None)}
     }
 
-    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// The realism of the covariance when it is the record's own (it differs from record to record), the
     /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     #[inline]
     pub fn COV_REALISM(&self) -> Option<CVR<'a>> {
@@ -2319,6 +2432,28 @@ impl<'a> MOR<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_COV_CALIBRATION_REFERENCE, None)}
+    }
+
+    /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+    /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+    /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+    /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+    #[inline]
+    pub fn COV_FACTOR(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(MOR::VT_COV_FACTOR, None)}
+    }
+
+    /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+    /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+    #[inline]
+    pub fn COV_FACTOR_ENCODING(&self) -> morCovFactorFormat {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<morCovFactorFormat>(MOR::VT_COV_FACTOR_ENCODING, Some(morCovFactorFormat::NONE)).unwrap()}
     }
 }
 
@@ -2373,6 +2508,8 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("COV_FACTOR", Self::VT_COV_FACTOR, false)?
+            .visit_field::<morCovFactorFormat>("COV_FACTOR_ENCODING", Self::VT_COV_FACTOR_ENCODING, false)?
             .finish();
         Ok(())
     }
@@ -2424,6 +2561,8 @@ pub struct MORArgs<'a> {
     pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
     pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_FACTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub COV_FACTOR_ENCODING: morCovFactorFormat,
 }
 
 impl<'a> Default for MORArgs<'a> {
@@ -2475,6 +2614,8 @@ impl<'a> Default for MORArgs<'a> {
             OBJECT_NAME: None,
             COV_REALISM: None,
             COV_CALIBRATION_REFERENCE: None,
+            COV_FACTOR: None,
+            COV_FACTOR_ENCODING: morCovFactorFormat::NONE,
         }
     }
 }
@@ -2711,6 +2852,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_COV_FACTOR(&mut self, COV_FACTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_COV_FACTOR, COV_FACTOR);
+    }
+
+    #[inline]
+    pub fn add_COV_FACTOR_ENCODING(&mut self, COV_FACTOR_ENCODING: morCovFactorFormat) {
+        self.fbb_.push_slot::<morCovFactorFormat>(MOR::VT_COV_FACTOR_ENCODING, COV_FACTOR_ENCODING, morCovFactorFormat::NONE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MORBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         MORBuilder {
@@ -2774,6 +2925,8 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("OBJECT_NAME", &self.OBJECT_NAME());
         ds.field("COV_REALISM", &self.COV_REALISM());
         ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
+        ds.field("COV_FACTOR", &self.COV_FACTOR());
+        ds.field("COV_FACTOR_ENCODING", &self.COV_FACTOR_ENCODING());
         ds.finish()
     }
 }
@@ -2826,6 +2979,8 @@ pub struct MORT {
     pub OBJECT_NAME: Option<alloc::string::String>,
     pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
     pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
+    pub COV_FACTOR: Option<alloc::vec::Vec<u8>>,
+    pub COV_FACTOR_ENCODING: morCovFactorFormat,
 }
 
 impl Default for MORT {
@@ -2876,6 +3031,8 @@ impl Default for MORT {
             OBJECT_NAME: None,
             COV_REALISM: None,
             COV_CALIBRATION_REFERENCE: None,
+            COV_FACTOR: None,
+            COV_FACTOR_ENCODING: morCovFactorFormat::NONE,
         }
     }
 }
@@ -2951,6 +3108,10 @@ impl MORT {
         let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let COV_FACTOR = self.COV_FACTOR.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let COV_FACTOR_ENCODING = self.COV_FACTOR_ENCODING;
         MOR::create(_fbb, &MORArgs{
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
@@ -2997,6 +3158,8 @@ impl MORT {
             OBJECT_NAME,
             COV_REALISM,
             COV_CALIBRATION_REFERENCE,
+            COV_FACTOR,
+            COV_FACTOR_ENCODING,
         })
     }
 }

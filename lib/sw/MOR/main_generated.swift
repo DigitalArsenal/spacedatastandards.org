@@ -28,7 +28,7 @@ public enum morMessageStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 ///  covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-///  COVARIANCE_DATA only. Append new values only.
+///  COVARIANCE_DATA or COV_FACTOR. Append new values only.
 public enum morCovarianceFloor: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
@@ -134,7 +134,27 @@ public enum morWindowStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 }
 
 
-///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+///  Identifier and version of the fitted-covariance factor encoding in COV_FACTOR. When COVARIANCE_DATA is
+///  present, COVARIANCE_DATA is authoritative and COV_FACTOR is ignored. A reader that meets an ordinal it
+///  does not know ignores COV_FACTOR and treats the record as having no covariance from it. Append new
+///  values only.
+public enum morCovFactorFormat: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  No covariance factor.
+  case none_ = 0
+  ///  Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
+  ///  covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
+  ///  (P = F + G G^T); directions masked under F over 7 days may be omitted.
+  case roeHypersphericalV1 = 1
+
+  public static var max: morCovFactorFormat { return .roeHypersphericalV1 }
+  public static var min: morCovFactorFormat { return .none_ }
+}
+
+
+///  What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 ///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 ///  appended field of MOR, never as a change to this struct.
 public struct MORCovariancePropagation: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
@@ -210,7 +230,7 @@ public struct MORCovariancePropagation: NativeStruct, FlatbuffersVectorInitializ
   }
 }
 
-///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+///  What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 ///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 ///  appended field of MOR, never as a change to this struct.
 public struct MORCovariancePropagation_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
@@ -386,6 +406,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let OBJECT_NAME: VOffset = 88
     static let COV_REALISM: VOffset = 90
     static let COV_CALIBRATION_REFERENCE: VOffset = 92
+    static let COV_FACTOR: VOffset = 94
+    static let COV_FACTOR_ENCODING: VOffset = 96
   }
 
   ///  The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
@@ -473,17 +495,17 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  ascending ordinal. Absent: no covariance.
   public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
   public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
-  ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  ///  What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
   public var COV_PROPAGATION: MORCovariancePropagation? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : _accessor.readBuffer(of: MORCovariancePropagation.self, at: o) }
   public var mutableCovPropagation: MORCovariancePropagation_Mutable? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : MORCovariancePropagation_Mutable(_accessor.bb, o: o + _accessor.position) }
-  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
   ///  any producer text: a record read alone flies the same covariance as its $OCM.
   public var COV_FLOOR: morCovarianceFloor { let o = _accessor.offset(VT.COV_FLOOR); return o == 0 ? .unstated : morCovarianceFloor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
-  ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  ///  The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
   public var COV_REALISM_ID: UInt16 { let o = _accessor.offset(VT.COV_REALISM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  ///  Whether the covariance's coverage was measured against independent reference states.
   public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
@@ -507,13 +529,22 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  The object's name; absent unless a reader copies it into what it writes.
   public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
-  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  ///  The realism of the covariance when it is the record's own (it differs from record to record), the
   ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Identifier of that calibration evidence (a report or record).
   public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
-  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
+  ///  Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+  ///  COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+  ///  authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+  ///  directions or horizons beyond 7 days require COVARIANCE_DATA.
+  public var COV_FACTOR: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.COV_FACTOR, byteSize: 1) }
+  public func withUnsafePointerToCovFactor<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COV_FACTOR, body: body) }
+  ///  Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+  ///  record without covariance from COV_FACTOR while its elements and rows remain valid.
+  public var COV_FACTOR_ENCODING: morCovFactorFormat { let o = _accessor.offset(VT.COV_FACTOR_ENCODING); return o == 0 ? .none_ : morCovFactorFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VT.INTERNATIONAL_DESIGNATOR) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -562,6 +593,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
   public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
   public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
+  public static func addVectorOf(COV_FACTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_FACTOR, at: VT.COV_FACTOR) }
+  public static func add(COV_FACTOR_ENCODING: morCovFactorFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_FACTOR_ENCODING.rawValue, def: 0, at: VT.COV_FACTOR_ENCODING) }
   public static func endMOR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMOR(
     _ fbb: inout FlatBufferBuilder,
@@ -609,7 +642,9 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MESSAGE_STATUS: morMessageStatus = .unspecified,
     OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
     COV_REALISMOffset COV_REALISM: Offset = Offset(),
-    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset()
+    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
+    COV_FACTORVectorOffset COV_FACTOR: Offset = Offset(),
+    COV_FACTOR_ENCODING: morCovFactorFormat = .none_
   ) -> Offset {
     let __start = MOR.startMOR(&fbb)
     MOR.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
@@ -657,6 +692,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MOR.add(OBJECT_NAME: OBJECT_NAME, &fbb)
     MOR.add(COV_REALISM: COV_REALISM, &fbb)
     MOR.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
+    MOR.addVectorOf(COV_FACTOR: COV_FACTOR, &fbb)
+    MOR.add(COV_FACTOR_ENCODING: COV_FACTOR_ENCODING, &fbb)
     return MOR.endMOR(&fbb, start: __start)
   }
 
@@ -707,6 +744,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
     try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_FACTOR, fieldName: "COV_FACTOR", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.COV_FACTOR_ENCODING, fieldName: "COV_FACTOR_ENCODING", required: false, type: morCovFactorFormat.self)
     _v.finish()
   }
 }

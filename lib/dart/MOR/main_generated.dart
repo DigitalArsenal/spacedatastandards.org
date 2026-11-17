@@ -49,7 +49,7 @@ class _morMessageStatusReader extends fb.Reader<morMessageStatus> {
 
 ///  Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 ///  covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-///  COVARIANCE_DATA only. Append new values only.
+///  COVARIANCE_DATA or COV_FACTOR. Append new values only.
 enum morCovarianceFloor {
   UNSTATED(0),
   WRITER_THEORY_STATE(1),
@@ -273,7 +273,45 @@ class _morWindowStatusReader extends fb.Reader<morWindowStatus> {
       morWindowStatus.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+///  Identifier and version of the fitted-covariance factor encoding in COV_FACTOR. When COVARIANCE_DATA is
+///  present, COVARIANCE_DATA is authoritative and COV_FACTOR is ignored. A reader that meets an ordinal it
+///  does not know ignores COV_FACTOR and treats the record as having no covariance from it. Append new
+///  values only.
+enum morCovFactorFormat {
+  NONE(0),
+  ROE_HYPERSPHERICAL_V1(1);
+
+  final int value;
+  const morCovFactorFormat(this.value);
+
+  factory morCovFactorFormat.fromValue(int value) {
+    switch (value) {
+      case 0: return morCovFactorFormat.NONE;
+      case 1: return morCovFactorFormat.ROE_HYPERSPHERICAL_V1;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static morCovFactorFormat? _createOrNull(int? value) =>
+      value == null ? null : morCovFactorFormat.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<morCovFactorFormat> reader = _morCovFactorFormatReader();
+}
+
+class _morCovFactorFormatReader extends fb.Reader<morCovFactorFormat> {
+  const _morCovFactorFormatReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  morCovFactorFormat read(fb.BufferContext bc, int offset) =>
+      morCovFactorFormat.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 ///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 ///  appended field of MOR, never as a change to this struct.
 class MORCovariancePropagation {
@@ -656,19 +694,19 @@ class MOR {
   ///  ascending ordinal. Absent: no covariance.
   List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 62);
   List<double>? get covarianceData => COVARIANCE_DATA;
-  ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  ///  What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
   MORCovariancePropagation? get COV_PROPAGATION => MORCovariancePropagation.reader.vTableGetNullable(_bc, _bcOffset, 64);
   MORCovariancePropagation? get covPropagation => COV_PROPAGATION;
-  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
   ///  any producer text: a record read alone flies the same covariance as its $OCM.
   morCovarianceFloor get COV_FLOOR => morCovarianceFloor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0));
   morCovarianceFloor get covFloor => COV_FLOOR;
-  ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  ///  The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
   int get COV_REALISM_ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 68, 0);
   int get covRealismId => COV_REALISM_ID;
-  ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  ///  Whether the covariance's coverage was measured against independent reference states.
   covarianceCalibration get COV_CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 0));
   covarianceCalibration get covCalibration => COV_CALIBRATION;
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
@@ -699,17 +737,27 @@ class MOR {
   ///  The object's name; absent unless a reader copies it into what it writes.
   String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
   String? get objectName => OBJECT_NAME;
-  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  ///  The realism of the covariance when it is the record's own (it differs from record to record), the
   ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   CVR? get COV_REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 90);
   CVR? get covRealism => COV_REALISM;
   ///  Identifier of that calibration evidence (a report or record).
   String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
   String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
+  ///  Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+  ///  COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
+  ///  authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
+  ///  directions or horizons beyond 7 days require COVARIANCE_DATA.
+  List<int>? get COV_FACTOR => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 94);
+  List<int>? get covFactor => COV_FACTOR;
+  ///  Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
+  ///  record without covariance from COV_FACTOR while its elements and rows remain valid.
+  morCovFactorFormat get COV_FACTOR_ENCODING => morCovFactorFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 96, 0));
+  morCovFactorFormat get covFactorEncoding => COV_FACTOR_ENCODING;
 
   @override
   String toString() {
-    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, meanElementTheory: ${meanElementTheory}, epochUnixUs: ${epochUnixUs}, recordKind: ${recordKind}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, odTracksUsed: ${odTracksUsed}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covCalibration: ${covCalibration}, FALLBACK: ${FALLBACK}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, ecom2Y0: ${ecom2Y0}, messageStatus: ${messageStatus}, objectName: ${objectName}, covRealism: ${covRealism}, covCalibrationReference: ${covCalibrationReference}}';
+    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, meanElementTheory: ${meanElementTheory}, epochUnixUs: ${epochUnixUs}, recordKind: ${recordKind}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, odTracksUsed: ${odTracksUsed}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covCalibration: ${covCalibration}, FALLBACK: ${FALLBACK}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, ecom2Y0: ${ecom2Y0}, messageStatus: ${messageStatus}, objectName: ${objectName}, covRealism: ${covRealism}, covCalibrationReference: ${covCalibrationReference}, covFactor: ${covFactor}, covFactorEncoding: ${covFactorEncoding}}';
   }
 }
 
@@ -727,7 +775,7 @@ class MORBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(45);
+    fbBuilder.startTable(47);
   }
 
   int addNoradCatId(int? NORAD_CAT_ID) {
@@ -910,6 +958,14 @@ class MORBuilder {
     fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
+  int addCovFactorOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addCovFactorEncoding(morCovFactorFormat? COV_FACTOR_ENCODING) {
+    fbBuilder.addUint8(46, COV_FACTOR_ENCODING?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -962,6 +1018,8 @@ class MORObjectBuilder extends fb.ObjectBuilder {
   final String? _OBJECT_NAME;
   final CVRObjectBuilder? _COV_REALISM;
   final String? _COV_CALIBRATION_REFERENCE;
+  final List<int>? _COV_FACTOR;
+  final morCovFactorFormat? _COV_FACTOR_ENCODING;
 
   MORObjectBuilder({
     int? NORAD_CAT_ID,
@@ -1046,6 +1104,10 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     CVRObjectBuilder? covRealism,
     String? COV_CALIBRATION_REFERENCE,
     String? covCalibrationReference,
+    List<int>? COV_FACTOR,
+    List<int>? covFactor,
+    morCovFactorFormat? COV_FACTOR_ENCODING,
+    morCovFactorFormat? covFactorEncoding,
   })
       : _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
         _INTERNATIONAL_DESIGNATOR = internationalDesignator ?? INTERNATIONAL_DESIGNATOR,
@@ -1091,7 +1153,9 @@ class MORObjectBuilder extends fb.ObjectBuilder {
         _MESSAGE_STATUS = messageStatus ?? MESSAGE_STATUS,
         _OBJECT_NAME = objectName ?? OBJECT_NAME,
         _COV_REALISM = covRealism ?? COV_REALISM,
-        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE;
+        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE,
+        _COV_FACTOR = covFactor ?? COV_FACTOR,
+        _COV_FACTOR_ENCODING = covFactorEncoding ?? COV_FACTOR_ENCODING;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1114,7 +1178,9 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     final int? COV_REALISMOffset = _COV_REALISM?.getOrCreateOffset(fbBuilder);
     final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
         : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
-    fbBuilder.startTable(45);
+    final int? COV_FACTOROffset = _COV_FACTOR == null ? null
+        : fbBuilder.writeListUint8(_COV_FACTOR!);
+    fbBuilder.startTable(47);
     fbBuilder.addUint32(0, _NORAD_CAT_ID);
     fbBuilder.addOffset(1, INTERNATIONAL_DESIGNATOROffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -1162,6 +1228,8 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(42, OBJECT_NAMEOffset);
     fbBuilder.addOffset(43, COV_REALISMOffset);
     fbBuilder.addOffset(44, COV_CALIBRATION_REFERENCEOffset);
+    fbBuilder.addOffset(45, COV_FACTOROffset);
+    fbBuilder.addUint8(46, _COV_FACTOR_ENCODING?.value);
     return fbBuilder.endTable();
   }
 

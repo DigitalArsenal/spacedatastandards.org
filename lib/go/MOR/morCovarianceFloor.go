@@ -6,7 +6,7 @@ import "strconv"
 
 /// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 /// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-/// COVARIANCE_DATA only. Append new values only.
+/// COVARIANCE_DATA or COV_FACTOR. Append new values only.
 type morCovarianceFloor byte
 
 const (
