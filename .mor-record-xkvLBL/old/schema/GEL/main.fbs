@@ -1,0 +1,101 @@
+// Hash: 4e51c7a79e2f40c6ab64a6be643e0413fcd3d945f73f072959d0bc4705816376
+// Version: 1.193.2
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Emitter Geolocation Solution (GEL)
+// `$DOA` remains the observation. This record is the signed fused solution and
+// its traceable observation-residual chain.
+
+/// Measurement technique used by the solution.
+enum gelTechniqueClass : byte {
+  UNSPECIFIED = 0,
+  TDOA,
+  FDOA,
+  TDOA_FDOA,
+  ANGLE_OF_ARRIVAL,
+  HYBRID,
+  MULTI_EPOCH_FUSION
+}
+
+/// How one observation participated in the final solution.
+enum gelObservationDisposition : byte {
+  UNSPECIFIED = 0,
+  ACCEPTED,
+  DOWNWEIGHTED,
+  REJECTED
+}
+
+/// Trace from a solution row back to one `$DOA` observation or `$IQC` capture.
+table GELObservationRef {
+  OBSERVATION_INDEX: uint32;
+  /// At least one of DOA_ID or IQC_ID is required. When both are present, the
+  /// `$DOA` observation must have been derived from the named `$IQC` capture.
+  DOA_ID: string;
+  IQC_ID: string;
+  COLLECTOR_ID: string;
+  EPOCH: double;
+  TIME_DIFFERENCE_RESIDUAL_S: double;
+  FREQUENCY_DIFFERENCE_RESIDUAL_HZ: double;
+  ANGULAR_RESIDUAL_DEG: double;
+  WEIGHT: double;
+  DISPOSITION: gelObservationDisposition = UNSPECIFIED;
+  REJECTION_REASON: string;
+}
+
+/// Numerical convergence diagnostics for the fused estimator.
+table GELConvergenceDiagnostics {
+  CONVERGED: bool;
+  ITERATION_COUNT: uint32;
+  OBJECTIVE_VALUE: double;
+  OBJECTIVE_CHANGE: double;
+  STEP_NORM_M: double;
+  GRADIENT_NORM: double;
+  NORMAL_MATRIX_CONDITION_NUMBER: double;
+  DEGREES_OF_FREEDOM: uint32;
+  TERMINATION_REASON: string;
+}
+
+/// Emitter Geolocation Solution
+table GEL {
+  GEL_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  EMITTER_ID: string;
+  TECHNIQUE: gelTechniqueClass = UNSPECIFIED;
+  SOLUTION_EPOCH: double;
+
+  LATITUDE_DEG: double;
+  LONGITUDE_DEG: double;
+  ALTITUDE_M: double;
+  /// 3x3 east-north-up covariance, row-major, square metres.
+  ENU_COVARIANCE_M2: [double] (required);
+  ERROR_ELLIPSE_SEMI_MAJOR_M: double;
+  ERROR_ELLIPSE_SEMI_MINOR_M: double;
+  ERROR_ELLIPSE_ORIENTATION_DEG: double;
+  CEP50_M: double;
+  CEP95_M: double;
+  GDOP: double;
+
+  VELOCITY_EAST_M_S: double;
+  VELOCITY_NORTH_M_S: double;
+  VELOCITY_UP_M_S: double;
+  VELOCITY_COVARIANCE_M2_S2: [double];
+
+  OBSERVATION_REFS: [GELObservationRef] (required);
+  CONVERGENCE_DIAGNOSTICS: GELConvergenceDiagnostics (required);
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type GEL;
+file_identifier "$GEL";

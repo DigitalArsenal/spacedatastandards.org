@@ -56,9 +56,9 @@ public final class MOR extends com.google.flatbuffers.Table {
    */
   public long EPOCH_UNIX_US() { int o = __offset(12); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
-   * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+   * What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
    */
-  public boolean ROWS_ONLY() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public int RECORD_KIND() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
    * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
    * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
@@ -164,9 +164,11 @@ public final class MOR extends com.google.flatbuffers.Table {
    */
   public double WEIGHTED_RMS() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
-   * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+   * Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+   * meaning not stated: the least int64 plus one, because some generated languages read the least int64
+   * itself as a floating-point literal.
    */
-  public long OD_EPOCH_UNIX_US() { int o = __offset(56); return o != 0 ? bb.getLong(o + bb_pos) : -9223372036854775808L; }
+  public long OD_EPOCH_UNIX_US() { int o = __offset(56); return o != 0 ? bb.getLong(o + bb_pos) : -9223372036854775807L; }
   /**
    * Tracks the orbit determination used; -1 when not stated ($OCM 0).
    */
@@ -239,7 +241,8 @@ public final class MOR extends com.google.flatbuffers.Table {
    */
   public double ECOM2_Y0() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Whether the set is real or test data.
+   * Whether the set is real or test data. A record that does not state it is an operational record of
+   * unstated status; a publisher states it only when it is TEST.
    */
   public int MESSAGE_STATUS() { int o = __offset(86); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
@@ -267,7 +270,7 @@ public final class MOR extends com.google.flatbuffers.Table {
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
   public static void addMeanElementTheory(FlatBufferBuilder builder, byte MEAN_ELEMENT_THEORY) { builder.addByte(3, MEAN_ELEMENT_THEORY, 6); }
   public static void addEpochUnixUs(FlatBufferBuilder builder, long EPOCH_UNIX_US) { builder.addLong(4, EPOCH_UNIX_US, 0L); }
-  public static void addRowsOnly(FlatBufferBuilder builder, boolean ROWS_ONLY) { builder.addBoolean(5, ROWS_ONLY, false); }
+  public static void addRecordKind(FlatBufferBuilder builder, int RECORD_KIND) { builder.addByte(5, (byte) RECORD_KIND, (byte) 0); }
   public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(6, WINDOWSOffset, 0); }
   public static void startWindowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(24, numElems, 8); }
   public static void addWindowCoeffHeads(FlatBufferBuilder builder, int WINDOW_COEFF_HEADSOffset) { builder.addOffset(7, WINDOW_COEFF_HEADSOffset, 0); }
@@ -293,7 +296,7 @@ public final class MOR extends com.google.flatbuffers.Table {
   public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(23, ACTUAL_OD_SPAN, Double.NaN); }
   public static void addOdObservationsUsed(FlatBufferBuilder builder, int OD_OBSERVATIONS_USED) { builder.addInt(24, OD_OBSERVATIONS_USED, -1); }
   public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(25, WEIGHTED_RMS, Double.NaN); }
-  public static void addOdEpochUnixUs(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.addLong(26, OD_EPOCH_UNIX_US, -9223372036854775808L); }
+  public static void addOdEpochUnixUs(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.addLong(26, OD_EPOCH_UNIX_US, -9223372036854775807L); }
   public static void addOdTracksUsed(FlatBufferBuilder builder, int OD_TRACKS_USED) { builder.addInt(27, OD_TRACKS_USED, -1); }
   public static void addDaysSinceLastObs(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.addDouble(28, DAYS_SINCE_LAST_OBS, Double.NaN); }
   public static void addCovarianceData(FlatBufferBuilder builder, int COVARIANCE_DATAOffset) { builder.addOffset(29, COVARIANCE_DATAOffset, 0); }

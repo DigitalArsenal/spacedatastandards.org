@@ -1,0 +1,85 @@
+// Hash: 4ebddb14b29484c938cfcdfd7c91465b4a03b6ef1cab74dea6bacd8433c7f044
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum VesselType : byte {
+  CARRIER = 0,
+  BATTLESHIP = 1,
+  CRUISER = 2,
+  DESTROYER = 3,
+  FRIGATE = 4,
+  CORVETTE = 5,
+  PATROL = 6,
+  SUBMARINE_SSN = 7,      // Nuclear attack sub
+  SUBMARINE_SSBN = 8,     // Nuclear ballistic sub
+  SUBMARINE_SSK = 9,      // Diesel-electric sub
+  AMPHIBIOUS = 10,
+  CARGO = 11,
+  TANKER = 12,
+  AUXILIARY = 13,
+  FAST_ATTACK = 14,
+  TORPEDO_BOAT = 15,
+}
+
+enum PropulsionType : byte {
+  STEAM = 0,
+  GAS_TURBINE = 1,
+  DIESEL = 2,
+  DIESEL_ELECTRIC = 3,
+  NUCLEAR = 4,
+  CODAG = 5,              // Combined Diesel and Gas
+  COGAG = 6,              // Combined Gas and Gas
+  CODLAG = 7,             // Combined Diesel-Electric and Gas
+  AIP = 8,                // Air-Independent Propulsion
+}
+
+enum DCState : byte {
+  NORMAL = 0,
+  MINOR_DAMAGE = 1,
+  MODERATE_DAMAGE = 2,
+  SEVERE_DAMAGE = 3,
+  CRITICAL = 4,
+  SINKING = 5,
+  ABANDONED = 6,
+}
+
+/// Naval Vessels
+table NAV {
+  POSITION_X:double;
+  POSITION_Y:double;
+  POSITION_Z:double;
+  VELOCITY_X:double;
+  VELOCITY_Y:double;
+  VELOCITY_Z:double;
+  ATTITUDE_X:double;
+  ATTITUDE_Y:double;
+  ATTITUDE_Z:double;
+  ATTITUDE_W:double;
+  OMEGA_X:double;
+  OMEGA_Y:double;
+  OMEGA_Z:double;
+  SPEED_KNOTS:float;
+  HEADING:float;
+  COURSE:float;
+  RUDDER_ANGLE:float;
+  HULL:string;
+  PROPULSION:string;
+  DC_STATE:ubyte;
+  FIRES_ACTIVE:ubyte;
+  FLOODING_ACTIVE:ubyte;
+  CREW_CASUALTIES:ubyte;
+  HULL_INTEGRITY:float;
+  POWER_AVAILABLE:float;
+  WEAPONS_ONLINE:ubyte;
+  SENSORS_ONLINE:ubyte;
+  RESERVED1:ushort;
+  FUEL_REMAINING:float;
+  AMMO_MAIN:ushort;
+  MISSILES_REMAINING:ubyte;
+  TORPEDOES_REMAINING:ubyte;
+  VESSEL_TYPE:ubyte;
+  PROPULSION_TYPE:ubyte;
+  RESERVED:[uint8];
+}
+
+root_type NAV;
+file_identifier "$NAV";

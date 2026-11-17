@@ -14,6 +14,7 @@ import { morCovarianceFloor } from './morCovarianceFloor.js';
 import { morGravityField } from './morGravityField.js';
 import { morMessageStatus } from './morMessageStatus.js';
 import { morRadiationModel } from './morRadiationModel.js';
+import { morRecordKind } from './morRecordKind.js';
 import { morSolidTideModel } from './morSolidTideModel.js';
 
 
@@ -90,11 +91,11 @@ EPOCH_UNIX_US():bigint {
 }
 
 /**
- * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+ * What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
  */
-ROWS_ONLY():boolean {
+RECORD_KIND():morRecordKind {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morRecordKind.FULL;
 }
 
 /**
@@ -293,11 +294,13 @@ WEIGHTED_RMS():number {
 }
 
 /**
- * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+ * Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+ * meaning not stated: the least int64 plus one, because some generated languages read the least int64
+ * itself as a floating-point literal.
  */
 OD_EPOCH_UNIX_US():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 56);
-  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('-9223372036854775808');
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('-9223372036854775807');
 }
 
 /**
@@ -431,7 +434,8 @@ ECOM2_Y0():number {
 }
 
 /**
- * Whether the set is real or test data.
+ * Whether the set is real or test data. A record that does not state it is an operational record of
+ * unstated status; a publisher states it only when it is TEST.
  */
 MESSAGE_STATUS():morMessageStatus {
   const offset = this.bb!.__offset(this.bb_pos, 86);
@@ -491,8 +495,8 @@ static addEpochUnixUs(builder:flatbuffers.Builder, EPOCH_UNIX_US:bigint) {
   builder.addFieldInt64(4, EPOCH_UNIX_US, BigInt('0'));
 }
 
-static addRowsOnly(builder:flatbuffers.Builder, ROWS_ONLY:boolean) {
-  builder.addFieldInt8(5, +ROWS_ONLY, +false);
+static addRecordKind(builder:flatbuffers.Builder, RECORD_KIND:morRecordKind) {
+  builder.addFieldInt8(5, RECORD_KIND, morRecordKind.FULL);
 }
 
 static addWindows(builder:flatbuffers.Builder, WINDOWSOffset:flatbuffers.Offset) {
@@ -614,7 +618,7 @@ static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
 }
 
 static addOdEpochUnixUs(builder:flatbuffers.Builder, OD_EPOCH_UNIX_US:bigint) {
-  builder.addFieldInt64(26, OD_EPOCH_UNIX_US, BigInt('-9223372036854775808'));
+  builder.addFieldInt64(26, OD_EPOCH_UNIX_US, BigInt('-9223372036854775807'));
 }
 
 static addOdTracksUsed(builder:flatbuffers.Builder, OD_TRACKS_USED:number) {
@@ -727,7 +731,7 @@ unpack(): MORT {
     this.ORIGINATOR(),
     this.MEAN_ELEMENT_THEORY(),
     this.EPOCH_UNIX_US(),
-    this.ROWS_ONLY(),
+    this.RECORD_KIND(),
     this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength()),
     this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength()),
     this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength()),
@@ -777,7 +781,7 @@ unpackTo(_o: MORT): void {
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY();
   _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US();
-  _o.ROWS_ONLY = this.ROWS_ONLY();
+  _o.RECORD_KIND = this.RECORD_KIND();
   _o.WINDOWS = this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength());
   _o.WINDOW_COEFF_HEADS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength());
   _o.WINDOW_COEFF_TAILS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength());
@@ -827,7 +831,7 @@ constructor(
   public ORIGINATOR: string|Uint8Array|null = null,
   public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.UNSPECIFIED,
   public EPOCH_UNIX_US: bigint = BigInt('0'),
-  public ROWS_ONLY: boolean = false,
+  public RECORD_KIND: morRecordKind = morRecordKind.FULL,
   public WINDOWS: (MORWindowT)[] = [],
   public WINDOW_COEFF_HEADS: (number)[] = [],
   public WINDOW_COEFF_TAILS: (number)[] = [],
@@ -848,7 +852,7 @@ constructor(
   public ACTUAL_OD_SPAN: number = NaN,
   public OD_OBSERVATIONS_USED: number = -1,
   public WEIGHTED_RMS: number = NaN,
-  public OD_EPOCH_UNIX_US: bigint = BigInt('-9223372036854775808'),
+  public OD_EPOCH_UNIX_US: bigint = BigInt('-9223372036854775807'),
   public OD_TRACKS_USED: number = -1,
   public DAYS_SINCE_LAST_OBS: number = NaN,
   public COVARIANCE_DATA: (number)[] = [],
@@ -888,7 +892,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   MOR.addOriginator(builder, ORIGINATOR);
   MOR.addMeanElementTheory(builder, this.MEAN_ELEMENT_THEORY);
   MOR.addEpochUnixUs(builder, this.EPOCH_UNIX_US);
-  MOR.addRowsOnly(builder, this.ROWS_ONLY);
+  MOR.addRecordKind(builder, this.RECORD_KIND);
   MOR.addWindows(builder, WINDOWS);
   MOR.addWindowCoeffHeads(builder, WINDOW_COEFF_HEADS);
   MOR.addWindowCoeffTails(builder, WINDOW_COEFF_TAILS);

@@ -1,0 +1,41 @@
+// Hash: 5f8ed4cd75a5cb937971911e37caba037de48bd0223e374aa8561e4557642fe8
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Solar Array
+table OOS {
+  /// Unique identifier
+  ID:string;
+  /// Reference to parent on-orbit object
+  ID_ON_ORBIT:string;
+  /// Reference to solar array specification
+  ID_SOLAR_ARRAY:string;
+  /// Solar array name or designation
+  NAME:string;
+  /// Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)
+  CELL_TYPE:string;
+  /// Number of solar arrays of this type
+  QUANTITY:uint;
+  /// Total array area in square meters
+  AREA:double;
+  /// Beginning of life power output in Watts
+  POWER_BOL:double;
+  /// End of life power output in Watts
+  POWER_EOL:double;
+  /// Conversion efficiency as fraction (0.0-1.0)
+  EFFICIENCY:double;
+  /// Degradation rate per year as fraction
+  DEGRADATION_RATE:double;
+  /// Number of panels per array
+  NUM_PANELS:uint;
+  /// Whether the array is deployable
+  DEPLOYABLE:bool;
+  /// Whether the array is articulable/tracking
+  TRACKING:bool;
+  /// Array mass in kg
+  MASS:double;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type OOS;
+file_identifier "$OOS";

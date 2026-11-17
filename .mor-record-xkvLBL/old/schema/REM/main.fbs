@@ -1,0 +1,159 @@
+// Hash: 1753d02e64c7933522847d727153df76eb1842c344bb04bc67174b9caf07a0f2
+// Version: 1.100.0
+// -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+include "../HFC/main.fbs";
+include "../OCM/main.fbs";
+include "../OEM/main.fbs";
+include "../RDM/main.fbs";
+
+/// Reentry evaluation outcome.
+enum remEvaluationOutcome : byte {
+  UNKNOWN,
+  PROPAGATED,
+  IMPACT_CONFIRMED,
+  DEMISE_EXPECTED,
+  SURVIVAL_EXPECTED,
+  BLOCKED
+}
+
+/// Dominant breakup or demise mechanism.
+enum remBreakupMode : byte {
+  UNKNOWN,
+  AEROTHERMAL,
+  STRUCTURAL,
+  AERODYNAMIC_LOAD,
+  COMMAND_DESTRUCT,
+  NONE
+}
+
+/// Reentry fragment evaluation.
+table remFragmentEvaluation {
+  /// Fragment identifier.
+  FRAGMENT_ID:string;
+  /// Parent object or component identifier.
+  PARENT_ID:string;
+  /// Material name or class.
+  MATERIAL:string;
+  /// Fragment mass in kilograms.
+  MASS_KG:double;
+  /// Reference area in square meters.
+  REFERENCE_AREA_M2:double;
+  /// Ballistic coefficient in kilograms per square meter.
+  BALLISTIC_COEFFICIENT_KG_PER_M2:double;
+  /// Demise probability from zero to one.
+  DEMISE_PROBABILITY:double;
+  /// Survival probability from zero to one.
+  SURVIVAL_PROBABILITY:double;
+  /// Predicted impact epoch in ISO 8601 UTC format.
+  IMPACT_EPOCH:string;
+  /// Predicted impact latitude in degrees.
+  IMPACT_LATITUDE_DEG:double;
+  /// Predicted impact longitude in degrees.
+  IMPACT_LONGITUDE_DEG:double;
+  /// Impact kinetic energy in joules.
+  IMPACT_ENERGY_J:double;
+  /// Casualty area in square meters.
+  CASUALTY_AREA_M2:double;
+}
+
+/// Reentry Evaluation Message
+table REM {
+  /// Producer-defined message identifier.
+  MESSAGE_ID:string;
+  /// Message creation date in ISO 8601 UTC format.
+  CREATION_DATE:string;
+  /// Creating agency, application, or service.
+  ORIGINATOR:string;
+  /// Object name.
+  OBJECT_NAME:string;
+  /// International designator or producer object identifier.
+  OBJECT_ID:string;
+  /// Satellite catalog number.
+  NORAD_CAT_ID:uint;
+  /// Time system used by all epochs.
+  TIME_SYSTEM:string;
+  /// Reference frame for trajectory data.
+  REF_FRAME:string;
+  /// Evaluation start epoch in ISO 8601 UTC format.
+  START_TIME:string;
+  /// Evaluation stop epoch in ISO 8601 UTC format.
+  STOP_TIME:string;
+  /// Uniform propagation step size in seconds.
+  STEP_SIZE:double;
+  /// Source reentry data message.
+  REENTRY_DATA:RDM;
+  /// Source or produced ephemeris.
+  TRAJECTORY_OEM:OEM;
+  /// Source or produced comprehensive trajectory.
+  TRAJECTORY_OCM:OCM;
+  /// Atmosphere model request used by the reentry analysis.
+  ATMOSPHERE:ATM;
+  /// Hypersonic conditions computed along the reentry trajectory.
+  HYPERSONIC_CONDITIONS:HFC;
+  /// Propagator module, engine, or adapter name.
+  PROPAGATOR_NAME:string;
+  /// Propagator module, engine, or adapter version.
+  PROPAGATOR_VERSION:string;
+  /// Aerothermal model name.
+  AEROTHERMAL_MODEL:string;
+  /// Breakup model name.
+  BREAKUP_MODEL:string;
+  /// Evaluation outcome.
+  OUTCOME:remEvaluationOutcome;
+  /// Dominant breakup or demise mode.
+  BREAKUP_MODE:remBreakupMode;
+  /// Predicted atmospheric interface epoch in ISO 8601 UTC format.
+  ENTRY_INTERFACE_EPOCH:string;
+  /// Entry interface altitude in meters.
+  ENTRY_INTERFACE_ALTITUDE_M:double;
+  /// Predicted peak heating epoch in ISO 8601 UTC format.
+  PEAK_HEATING_EPOCH:string;
+  /// Peak heat flux in watts per square meter.
+  PEAK_HEAT_FLUX_W_PER_M2:double;
+  /// Predicted peak dynamic pressure epoch in ISO 8601 UTC format.
+  PEAK_DYNAMIC_PRESSURE_EPOCH:string;
+  /// Peak dynamic pressure in pascals.
+  PEAK_DYNAMIC_PRESSURE_PA:double;
+  /// Predicted peak deceleration epoch in ISO 8601 UTC format.
+  PEAK_DECELERATION_EPOCH:string;
+  /// Peak deceleration in g.
+  PEAK_DECELERATION_G:double;
+  /// Predicted breakup epoch in ISO 8601 UTC format.
+  BREAKUP_EPOCH:string;
+  /// Predicted breakup altitude in meters.
+  BREAKUP_ALTITUDE_M:double;
+  /// Predicted impact epoch in ISO 8601 UTC format.
+  IMPACT_EPOCH:string;
+  /// Predicted impact latitude in degrees.
+  IMPACT_LATITUDE_DEG:double;
+  /// Predicted impact longitude in degrees.
+  IMPACT_LONGITUDE_DEG:double;
+  /// Along-track one-sigma impact uncertainty in meters.
+  ALONG_TRACK_UNCERTAINTY_M:double;
+  /// Cross-track one-sigma impact uncertainty in meters.
+  CROSS_TRACK_UNCERTAINTY_M:double;
+  /// Total surviving mass in kilograms.
+  SURVIVING_MASS_KG:double;
+  /// Number of predicted surviving fragments.
+  SURVIVING_FRAGMENT_COUNT:uint;
+  /// Aggregate survival probability from zero to one.
+  SURVIVAL_PROBABILITY:double;
+  /// Expected casualty value.
+  CASUALTY_EXPECTATION:double;
+  /// Ground risk probability from zero to one.
+  GROUND_RISK_PROBABILITY:double;
+  /// Minimum thermal margin over the evaluated trajectory.
+  MIN_THERMAL_MARGIN:double;
+  /// Minimum structural margin over the evaluated trajectory.
+  MIN_STRUCTURAL_MARGIN:double;
+  /// Fragment-level evaluation outputs.
+  FRAGMENTS:[remFragmentEvaluation];
+  /// Free-form model assumptions or limitations.
+  ASSUMPTIONS:[string];
+  /// Additional comments.
+  COMMENT:string;
+}
+
+root_type REM;
+file_identifier "$REM";

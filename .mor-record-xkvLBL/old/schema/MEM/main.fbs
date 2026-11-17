@@ -1,0 +1,118 @@
+// Hash: 83a57e55c3a302f1bc901f7df0ed9051f7844ad0784fb12a1e0a6aa343dc4a51
+// Version: 1.202.0
+// -----------------------------------END_HEADER
+/// Measurement classes supported by a tracking error model. Values are
+/// capability classes; append new members only and never reuse a value.
+enum memMeasurementType : ushort {
+  UNSPECIFIED = 0,
+  RANGE = 1,
+  RANGE_RATE = 2,
+  DOPPLER = 3,
+  AZIMUTH_ELEVATION = 4,
+  X_EAST_Y_NORTH = 5,
+  X_SOUTH_Y_EAST = 6,
+  RIGHT_ASCENSION_DECLINATION = 7,
+  POSITION_VECTOR = 8,
+  SEQUENTIAL_RANGE = 9,
+  PSEUDONOISE_RANGE = 10,
+  TIME_CORRELATED_PHASE = 11,
+  RELAY_RANGE = 12,
+  RELAY_DOPPLER = 13,
+  RELAY_DIFFERENCED_DOPPLER = 14,
+  BISTATIC_RANGE = 15,
+  SKIN_RANGE = 16,
+  CROSSLINK_RANGE = 17,
+  CROSSLINK_RANGE_RATE = 18,
+  LASER_RANGE = 19,
+  TIME_DIFFERENCE_OF_ARRIVAL = 20,
+  FREQUENCY_DIFFERENCE_OF_ARRIVAL = 21
+}
+
+enum memEditingAction : ubyte {
+  UNSPECIFIED = 0,
+  ACCEPT = 1,
+  REJECT = 2
+}
+
+enum memEditingReason : ubyte {
+  UNSPECIFIED = 0,
+  ACCEPTED = 1,
+  OUTSIDE_EPOCH_WINDOW = 2,
+  OUTSIDE_VALUE_WINDOW = 3,
+  SIGMA_THRESHOLD = 4,
+  INVALID_GEOMETRY = 5,
+  MISSING_MEDIA_INPUT = 6,
+  HARDWARE_UNAVAILABLE = 7,
+  DUPLICATE = 8,
+  PROVIDER_FLAGGED = 9
+}
+
+enum memTroposphereModel : ubyte {
+  UNSPECIFIED = 0,
+  NONE = 1,
+  HOPFIELD_SAASTAMOINEN = 2,
+  MARINI = 3
+}
+
+enum memIonosphereModel : ubyte {
+  UNSPECIFIED = 0,
+  NONE = 1,
+  TOTAL_ELECTRON_CONTENT = 2,
+  REFERENCE_PROFILE = 3
+}
+
+/// Noise, bias and editing rules for one observable. Standard deviations and
+/// biases use the observable's SI unit. ANGLE observables use radians.
+table MEMErrorModel {
+  MODEL_ID: string (required);
+  MEASUREMENT_TYPE: memMeasurementType = UNSPECIFIED;
+  NOISE_SIGMA: double;
+  BIAS: double;
+  BIAS_SIGMA: double;
+  CORRELATION_TIME_SECONDS: double;
+  MINIMUM_ACCEPTED_VALUE: double;
+  MAXIMUM_ACCEPTED_VALUE: double;
+  SIGMA_EDIT_THRESHOLD: double;
+  ACCEPT_START_EPOCH: string;
+  ACCEPT_STOP_EPOCH: string;
+  TROPOSPHERE_MODEL: memTroposphereModel = UNSPECIFIED;
+  IONOSPHERE_MODEL: memIonosphereModel = UNSPECIFIED;
+  APPLY_LIGHT_TIME: bool = true;
+  APPLY_BODY_ROTATION: bool = true;
+}
+
+/// One deterministic editing decision. The observation identity is carried
+/// from the tracking-data input so rejected sets can be compared exactly.
+table MEMEditingDecision {
+  OBSERVATION_ID: string (required);
+  ACTION: memEditingAction = UNSPECIFIED;
+  REASON: memEditingReason = UNSPECIFIED;
+  PREFIT_RESIDUAL: double;
+  NORMALIZED_RESIDUAL: double;
+  ITERATION: uint;
+}
+
+/// Dual-form signature. Presence means both signatures are required and both
+/// MUST verify independently; an invalid member rejects the record rather
+/// than downgrading it to unsigned.
+table MEMAttestation {
+  SIGNING_PUBLIC_KEY: string (required);
+  SIGNED_AT: string;
+  SIGNATURE: [ubyte] (required);
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+/// Measurement Error Model. JSON projections preserve these IDL-capitalized
+/// field names exactly. The FlatBuffer signature covers the size-prefixed
+/// buffer with both signature vectors zeroed; the canonical-JSON signature
+/// covers RFC 8785 canonical JSON with both signature fields omitted.
+table MEM {
+  ERROR_MODELS: [MEMErrorModel];
+  EDITING_LEDGER: [MEMEditingDecision];
+  RANDOM_SEED: ulong;
+  TRACE_ID: string;
+  ATTESTATION: MEMAttestation;
+}
+
+root_type MEM;
+file_identifier "$MEM";

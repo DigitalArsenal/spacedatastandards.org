@@ -1,0 +1,107 @@
+// Hash: 8b945cee612de621000076f040c74695517eee3b78ac9b1f069256090711dfb4
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum ionoLayer : byte {
+  D,
+  E,
+  ES,
+  F,
+  F1,
+  F2,
+  TOPSIDE
+}
+
+enum ionoSource : byte {
+  IONOSONDE,
+  GPS_TEC,
+  BEACON,
+  ISR,
+  ALTIMETER,
+  RADIO_OCCULTATION,
+  MODEL
+}
+
+/// Ionospheric Observation Data Point
+table ionoDataPoint {
+  /// Observation epoch (ISO 8601)
+  EPOCH:string;
+  /// Ionospheric layer
+  LAYER:ionoLayer;
+  /// Critical frequency in MHz
+  CRITICAL_FREQ:double;
+  /// Virtual height in km
+  VIRTUAL_HEIGHT:double;
+  /// True height in km
+  TRUE_HEIGHT:double;
+  /// Peak electron density in electrons/m^3
+  PEAK_DENSITY:double;
+  /// Total electron content in TECU
+  TEC:double;
+  /// TEC uncertainty in TECU
+  TEC_UNCERTAINTY:double;
+}
+
+/// Ionospheric Electron Density Profile
+table ionoDensityProfile {
+  /// Observation epoch (ISO 8601)
+  EPOCH:string;
+  /// Altitudes in km
+  ALTITUDES:[double];
+  /// Electron densities at each altitude in electrons/m^3
+  DENSITIES:[double];
+}
+
+/// Ionospheric Observation
+table ION {
+  /// Unique identifier
+  ID:string;
+  /// Data source type
+  SOURCE:ionoSource;
+  /// Station or sensor identifier
+  STATION_ID:string;
+  /// Station name
+  STATION_NAME:string;
+  /// Station geodetic latitude in degrees
+  LATITUDE:double;
+  /// Station geodetic longitude in degrees
+  LONGITUDE:double;
+  /// Station altitude in meters
+  ALTITUDE:double;
+  /// Observation start time (ISO 8601)
+  START_TIME:string;
+  /// Observation stop time (ISO 8601)
+  STOP_TIME:string;
+  /// foF2 critical frequency in MHz
+  FOF2:double;
+  /// foF1 critical frequency in MHz
+  FOF1:double;
+  /// foE critical frequency in MHz
+  FOE:double;
+  /// foEs sporadic E critical frequency in MHz
+  FOES:double;
+  /// hmF2 peak height of F2 layer in km
+  HMF2:double;
+  /// hmF1 peak height of F1 layer in km
+  HMF1:double;
+  /// hmE peak height of E layer in km
+  HME:double;
+  /// NmF2 peak density of F2 layer in electrons/m^3
+  NMF2:double;
+  /// Vertical TEC in TECU
+  VTEC:double;
+  /// Slant TEC in TECU
+  STEC:double;
+  /// Scintillation index S4
+  S4:double;
+  /// Observation data points
+  DATA_POINTS:[ionoDataPoint];
+  /// Electron density profiles
+  DENSITY_PROFILES:[ionoDensityProfile];
+  /// Data quality indicator (0-9, 9=best)
+  QUALITY:uint8;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type ION;
+file_identifier "$ION";

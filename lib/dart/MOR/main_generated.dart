@@ -86,6 +86,42 @@ class _morCovarianceFloorReader extends fb.Reader<morCovarianceFloor> {
       morCovarianceFloor.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+///  it holds. Append new values only.
+enum morRecordKind {
+  FULL(0),
+  ROWS_ONLY(1);
+
+  final int value;
+  const morRecordKind(this.value);
+
+  factory morRecordKind.fromValue(int value) {
+    switch (value) {
+      case 0: return morRecordKind.FULL;
+      case 1: return morRecordKind.ROWS_ONLY;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static morRecordKind? _createOrNull(int? value) =>
+      value == null ? null : morRecordKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<morRecordKind> reader = _morRecordKindReader();
+}
+
+class _morRecordKindReader extends fb.Reader<morRecordKind> {
+  const _morRecordKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  morRecordKind read(fb.BufferContext bc, int offset) =>
+      morRecordKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 ///  The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 enum morGravityField {
   THEORY(0),
@@ -535,9 +571,9 @@ class MOR {
   ///  ways without loss; an instant inside a leap second has no value here.
   int get EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get epochUnixUs => EPOCH_UNIX_US;
-  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  bool get ROWS_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
-  bool get rowsOnly => ROWS_ONLY;
+  ///  What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+  morRecordKind get RECORD_KIND => morRecordKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  morRecordKind get recordKind => RECORD_KIND;
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -603,8 +639,10 @@ class MOR {
   ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
   double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, double.nan);
   double get weightedRms => WEIGHTED_RMS;
-  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  int get OD_EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 56, -9223372036854775808);
+  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+  ///  meaning not stated: the least int64 plus one, because some generated languages read the least int64
+  ///  itself as a floating-point literal.
+  int get OD_EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 56, -9223372036854775807);
   int get odEpochUnixUs => OD_EPOCH_UNIX_US;
   ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
   int get OD_TRACKS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, -1);
@@ -654,7 +692,8 @@ class MOR {
   ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
   double get ECOM2_Y0 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
   double get ecom2Y0 => ECOM2_Y0;
-  ///  Whether the set is real or test data.
+  ///  Whether the set is real or test data. A record that does not state it is an operational record of
+  ///  unstated status; a publisher states it only when it is TEST.
   morMessageStatus get MESSAGE_STATUS => morMessageStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 86, 0));
   morMessageStatus get messageStatus => MESSAGE_STATUS;
   ///  The object's name; absent unless a reader copies it into what it writes.
@@ -670,7 +709,7 @@ class MOR {
 
   @override
   String toString() {
-    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, meanElementTheory: ${meanElementTheory}, epochUnixUs: ${epochUnixUs}, rowsOnly: ${rowsOnly}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, odTracksUsed: ${odTracksUsed}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covCalibration: ${covCalibration}, FALLBACK: ${FALLBACK}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, ecom2Y0: ${ecom2Y0}, messageStatus: ${messageStatus}, objectName: ${objectName}, covRealism: ${covRealism}, covCalibrationReference: ${covCalibrationReference}}';
+    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, meanElementTheory: ${meanElementTheory}, epochUnixUs: ${epochUnixUs}, recordKind: ${recordKind}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, odTracksUsed: ${odTracksUsed}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covCalibration: ${covCalibration}, FALLBACK: ${FALLBACK}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, ecom2Y0: ${ecom2Y0}, messageStatus: ${messageStatus}, objectName: ${objectName}, covRealism: ${covRealism}, covCalibrationReference: ${covCalibrationReference}}';
   }
 }
 
@@ -711,8 +750,8 @@ class MORBuilder {
     fbBuilder.addInt64(4, EPOCH_UNIX_US);
     return fbBuilder.offset;
   }
-  int addRowsOnly(bool? ROWS_ONLY) {
-    fbBuilder.addBool(5, ROWS_ONLY);
+  int addRecordKind(morRecordKind? RECORD_KIND) {
+    fbBuilder.addUint8(5, RECORD_KIND?.value);
     return fbBuilder.offset;
   }
   int addWindowsOffset(int? offset) {
@@ -883,7 +922,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
   final String? _ORIGINATOR;
   final meanElementSource? _MEAN_ELEMENT_THEORY;
   final int? _EPOCH_UNIX_US;
-  final bool? _ROWS_ONLY;
+  final morRecordKind? _RECORD_KIND;
   final List<MORWindowObjectBuilder>? _WINDOWS;
   final List<double>? _WINDOW_COEFF_HEADS;
   final List<double>? _WINDOW_COEFF_TAILS;
@@ -934,8 +973,8 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     meanElementSource? meanElementTheory,
     int? EPOCH_UNIX_US,
     int? epochUnixUs,
-    bool? ROWS_ONLY,
-    bool? rowsOnly,
+    morRecordKind? RECORD_KIND,
+    morRecordKind? recordKind,
     List<MORWindowObjectBuilder>? WINDOWS,
     List<double>? WINDOW_COEFF_HEADS,
     List<double>? windowCoeffHeads,
@@ -1013,7 +1052,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
         _ORIGINATOR = ORIGINATOR,
         _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
         _EPOCH_UNIX_US = epochUnixUs ?? EPOCH_UNIX_US,
-        _ROWS_ONLY = rowsOnly ?? ROWS_ONLY,
+        _RECORD_KIND = recordKind ?? RECORD_KIND,
         _WINDOWS = WINDOWS,
         _WINDOW_COEFF_HEADS = windowCoeffHeads ?? WINDOW_COEFF_HEADS,
         _WINDOW_COEFF_TAILS = windowCoeffTails ?? WINDOW_COEFF_TAILS,
@@ -1081,7 +1120,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(2, ORIGINATOROffset);
     fbBuilder.addInt8(3, _MEAN_ELEMENT_THEORY?.value);
     fbBuilder.addInt64(4, _EPOCH_UNIX_US);
-    fbBuilder.addBool(5, _ROWS_ONLY);
+    fbBuilder.addUint8(5, _RECORD_KIND?.value);
     fbBuilder.addOffset(6, WINDOWSOffset);
     fbBuilder.addOffset(7, WINDOW_COEFF_HEADSOffset);
     fbBuilder.addOffset(8, WINDOW_COEFF_TAILSOffset);

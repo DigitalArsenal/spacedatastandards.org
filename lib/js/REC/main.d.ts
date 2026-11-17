@@ -1074,6 +1074,7 @@ export * from './MORCovariancePropagation.js';
 export * from './morGravityField.js';
 export * from './morMessageStatus.js';
 export * from './morRadiationModel.js';
+export * from './morRecordKind.js';
 export * from './morSolidTideModel.js';
 export * from './MORWindow.js';
 export * from './morWindowStatus.js';

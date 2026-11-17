@@ -6,7 +6,7 @@
 //      with the generated bindings and read back equal; each expands to one $OCM (written, read back) that reduces
 //      to the same record; every fixed text of the expansion is the one schema/MOR/main.fbs states; read without
 //      its asset a record keeps its covariance and the floor COV_FLOOR names, and no rows; rows whose
-//      WINDOW_RECORD_CHECK does not match the elements are void; a ROWS_ONLY record reads back and has no expansion;
+//      WINDOW_RECORD_CHECK does not match the elements are void; a ROWS_ONLY record reads back and has no expansion; a record of an unknown kind is ignored;
 //      COV_FLOOR wins over a contradicting producer; the validity rules are enforced;
 //   b. an $OCM carrying a field the record cannot say is not reducible, by name, for every class the schema lists;
 //      the descriptive fields the schema lists are dropped and reported;
@@ -185,7 +185,20 @@ try {
   assert.deepEqual(C.invalid(updateBack), [], 'a: a rows-only record is valid');
   assert.ok(C.expand(updateBack, asset, O).refused.includes('ROWS_ONLY has no expansion'), 'a: a rows-only record has no expansion');
   assert.ok(C.invalid(Object.assign(updateBack, { MEAN_MOTION: 15 })).includes('ROWS_ONLY states MEAN_MOTION'), 'a: a rows-only record carries no elements');
-  console.log(`PASS a: rows-only update ${updateBytes.length} bytes, written, read back, refused by the expansion; validity and floor precedence enforced`);
+  // a kind this reader does not know, written by hand with the generated builder: ignored, nothing changes
+  const hb = new fb.Builder(256);
+  M.MOR.startMOR(hb);
+  M.MOR.addEpochUnixUs(hb, EPOCH);
+  M.MOR.addMeanMotion(hb, 15.5);
+  M.MOR.addNoradCatId(hb, 90009);
+  M.MOR.addRecordKind(hb, 7);
+  M.MOR.addMeanElementTheory(hb, M.meanElementSource.AP);
+  M.MOR.finishSizePrefixedMORBuffer(hb, M.MOR.endMOR(hb));
+  const unknown = M.MOR.getSizePrefixedRootAsMOR(new fb.ByteBuffer(hb.asUint8Array()));
+  assert.equal(unknown.RECORD_KIND(), 7, 'a: the unknown kind reads as its number');
+  const ignored = C.expand(unknown.unpack(), asset, O);
+  assert.ok(ignored.ignored && ignored.ocm === null && ignored.fallback === null, 'a: a record of an unknown kind is ignored, never read as FULL');
+  console.log(`PASS a: rows-only update ${updateBytes.length} bytes, written, read back, refused by the expansion; a record of unknown kind ignored; validity and floor precedence enforced`);
   console.log('PASS a: four records written, read, expanded to $OCM and reduced back unchanged; fixed texts as stated');
 
   // ---- b: not reducible, by name; descriptive fields dropped ----------------------------------------------------

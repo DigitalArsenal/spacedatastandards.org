@@ -1,0 +1,75 @@
+// Hash: 7826576bb9c9c8ff2104c786e1c38a0443983d56247007425afc7762dfc1311f
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum linkCategory : byte {
+  UPLINK,
+  DOWNLINK,
+  CROSSLINK,
+  INTER_SATELLITE,
+  GROUND_TO_GROUND,
+  RELAY
+}
+
+enum linkCondition : byte {
+  ESTABLISHED,
+  DEGRADED,
+  INTERRUPTED,
+  PLANNED,
+  TERMINATED,
+  UNKNOWN
+}
+
+/// Link Status
+table LKS {
+  /// Unique identifier
+  ID:string;
+  /// First endpoint on-orbit identifier
+  ID_ON_ORBIT1:string;
+  /// First endpoint satellite catalog number
+  SAT_NO1:uint32;
+  /// Second endpoint on-orbit identifier
+  ID_ON_ORBIT2:string;
+  /// Second endpoint satellite catalog number
+  SAT_NO2:uint32;
+  /// Constellation name
+  CONSTELLATION:string;
+  /// Link name or identifier
+  LINK_NAME:string;
+  /// Link type
+  LINK_TYPE:linkCategory;
+  /// Link state
+  LINK_STATE:linkCondition;
+  /// RF band
+  BAND:string;
+  /// Link start time (ISO 8601)
+  LINK_START_TIME:string;
+  /// Link stop time (ISO 8601)
+  LINK_STOP_TIME:string;
+  /// First endpoint beam identifier
+  ID_BEAM1:string;
+  /// First endpoint name
+  END_POINT1_NAME:string;
+  /// First endpoint latitude (degrees)
+  END_POINT1_LAT:double;
+  /// First endpoint longitude (degrees)
+  END_POINT1_LON:double;
+  /// Second endpoint beam identifier
+  ID_BEAM2:string;
+  /// Second endpoint name
+  END_POINT2_NAME:string;
+  /// Second endpoint latitude (degrees)
+  END_POINT2_LAT:double;
+  /// Second endpoint longitude (degrees)
+  END_POINT2_LON:double;
+  /// Data rate from endpoint 1 to 2 (Mbps)
+  DATA_RATE1_TO2:double;
+  /// Data rate from endpoint 2 to 1 (Mbps)
+  DATA_RATE2_TO1:double;
+  /// System capability status
+  SYS_CAP:string;
+  /// Operational capability status
+  OPS_CAP:string;
+}
+
+root_type LKS;
+file_identifier "$LKS";

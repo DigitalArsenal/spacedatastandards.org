@@ -27,6 +27,14 @@ enum morCovarianceFloor:
     /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
     morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY = 2
 
+/// What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+/// it holds. Append new values only.
+enum morRecordKind:
+    /// A whole element set, with everything this record can carry.
+    morRecordKind_FULL = 0
+    /// New rows for a set the receiver already holds (see "Rows only").
+    morRecordKind_ROWS_ONLY = 1
+
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 enum morGravityField:
     /// The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.
@@ -180,9 +188,9 @@ class MOR : flatbuffers.handle
     /// ways without loss; an instant inside a leap second has no value here.
     def EPOCH_UNIX_US() -> int:
         return flatbuffers.field_int64(buf_, pos_, 12, 0)
-    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-    def ROWS_ONLY() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+    def RECORD_KIND() -> morRecordKind:
+        return morRecordKind(flatbuffers.field_uint8(buf_, pos_, 14, 0))
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
     /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
     /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -259,9 +267,11 @@ class MOR : flatbuffers.handle
     /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
     def WEIGHTED_RMS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 54, nan)
-    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; (-9223372036854775807 - 1) when not stated.
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+    /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+    /// itself as a floating-point literal.
     def OD_EPOCH_UNIX_US() -> int:
-        return flatbuffers.field_int64(buf_, pos_, 56, (-9223372036854775807 - 1))
+        return flatbuffers.field_int64(buf_, pos_, 56, -9223372036854775807)
     /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
     def OD_TRACKS_USED() -> int:
         return flatbuffers.field_int32(buf_, pos_, 58, -1)
@@ -316,7 +326,8 @@ class MOR : flatbuffers.handle
     /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
     def ECOM2_Y0() -> float:
         return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
-    /// Whether the set is real or test data.
+    /// Whether the set is real or test data. A record that does not state it is an operational record of
+    /// unstated status; a publisher states it only when it is TEST.
     def MESSAGE_STATUS() -> morMessageStatus:
         return morMessageStatus(flatbuffers.field_uint8(buf_, pos_, 86, 0))
     /// The object's name; absent unless a reader copies it into what it writes.
@@ -353,8 +364,8 @@ struct MORBuilder:
     def add_EPOCH_UNIX_US(EPOCH_UNIX_US:int):
         b_.PrependInt64Slot(4, EPOCH_UNIX_US, 0)
         return this
-    def add_ROWS_ONLY(ROWS_ONLY:bool):
-        b_.PrependBoolSlot(5, ROWS_ONLY, 0)
+    def add_RECORD_KIND(RECORD_KIND:morRecordKind):
+        b_.PrependUint8Slot(5, RECORD_KIND, 0)
         return this
     def add_WINDOWS(WINDOWS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, WINDOWS)
@@ -417,7 +428,7 @@ struct MORBuilder:
         b_.PrependFloat64Slot(25, WEIGHTED_RMS, nan)
         return this
     def add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US:int):
-        b_.PrependInt64Slot(26, OD_EPOCH_UNIX_US, (-9223372036854775807 - 1))
+        b_.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775807)
         return this
     def add_OD_TRACKS_USED(OD_TRACKS_USED:int):
         b_.PrependInt32Slot(27, OD_TRACKS_USED, -1)

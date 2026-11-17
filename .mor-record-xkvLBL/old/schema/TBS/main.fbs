@@ -1,0 +1,220 @@
+// Hash: d4e42a32f0daaf17b7e83b48f732eff68d1a5479d09a65ea9a80f0ec1f475bb1
+// Version: 1.183.0
+// -----------------------------------END_HEADER
+/// Radio access technology class of a terrestrial base-station site.
+///
+/// Members name generation-level access technologies only. A publisher encodes
+/// the class ITS SOURCE STATES and never re-derives one from frequency,
+/// identifier width, or operator. Ordinals are wire values: append only; never
+/// reorder or reuse.
+enum tbsRadioClass : byte {
+  /// Second-generation circuit-switched cellular access.
+  GSM,
+  /// Code-division multiple-access cellular access.
+  CDMA,
+  /// Third-generation wideband code-division cellular access.
+  UMTS,
+  /// Fourth-generation long-term-evolution cellular access.
+  LTE,
+  /// Fifth-generation new-radio cellular access.
+  NR,
+  /// An access technology the source names but this enum does not model. The
+  /// source's own term is retained in the provenance entry, never discarded.
+  OTHER,
+  /// The source publishes no access technology. RADIO defaults here so an
+  /// unset field can never be read as GSM, which holds ordinal 0.
+  UNKNOWN
+}
+
+/// How independent provider reports for one site were reduced to the one
+/// published position. Ordinals are wire values: append only; never reorder or
+/// reuse.
+enum tbsMergeMethod : byte {
+  /// Exactly one provider reported the site; nothing was reconciled.
+  SINGLE_SOURCE,
+  /// The report backed by the largest independent observation count won.
+  HIGHEST_SAMPLE_COUNT,
+  /// The report with the most recent observation window won.
+  MOST_RECENT,
+  /// A declared precedence ranking over publishing authorities selected the
+  /// winning report, regardless of sample count or recency.
+  AUTHORITY_PRECEDENCE,
+  /// The published position is computed from the agreeing reports and belongs
+  /// to no single provider.
+  CENTROID,
+  /// The publisher does not state how the reports were reduced. METHOD
+  /// defaults here so an unset field can never be read as SINGLE_SOURCE,
+  /// which holds ordinal 0.
+  UNSPECIFIED
+}
+
+/// Replayable provenance for ONE provider's report of ONE site.
+///
+/// Every provider consulted gets its own entry, including providers that
+/// returned nothing, so a consumer can tell "not looked for" from "looked for
+/// and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+/// carry verbatim what that provider states about itself. The standard names
+/// no provider, dataset, or site.
+table TBSProvenance {
+  /// Publisher-stable, lowercase identifier for the consulted provider,
+  /// unique within the publisher's own provider registry. Never a display
+  /// name and never a URL.
+  PROVIDER_ID:string (required);
+  /// The authority under which that provider publishes, verbatim as the
+  /// provider states it: a spectrum regulator, a network operator, a
+  /// crowd-sourced observation programme, or a research dataset. Never
+  /// inferred by the publisher.
+  AUTHORITY:string;
+  /// Replayable URL identifying the source material.
+  SOURCE_URL:string;
+  /// The exact query, filter, or request parameters used, so the same rows can
+  /// be recovered by repeating the fetch.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Required: there is no encoding for a
+  /// redistributed site whose terms are unstated. A provider that publishes no
+  /// terms is recorded as publishing no terms; unknown terms are never public
+  /// domain and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as that provider publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use. Rides PER SOURCE because one record
+  /// may merge an open-terms lane beside a non-commercial cross-check, and the
+  /// strictest consulted lane governs any derived product.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// This provider's own row, cell, or site identifier, verbatim.
+  NATIVE_ID:string;
+  /// Position this provider reported, in decimal degrees on WGS 84, before
+  /// reconciliation. Retained unrounded so the merge stays auditable. Absent
+  /// when the provider was consulted and reported no position.
+  REPORTED_LATITUDE:double;
+  REPORTED_LONGITUDE:double;
+  /// This provider's report materially contributed to the published CONSENSUS
+  /// position. False marks a provider that was consulted and either returned
+  /// nothing or was outvoted; its entry is published either way.
+  CONTRIBUTED:bool = false;
+}
+
+/// How one site's independent provider reports were reduced to the single
+/// published position, and how strongly those reports agreed.
+table TBSConsensus {
+  METHOD:tbsMergeMethod = UNSPECIFIED;
+  /// Providers queried for this site, including those that returned nothing.
+  /// Never fewer than the number of SOURCES entries.
+  PROVIDERS_CONSULTED:uint;
+  /// Providers whose reported position fell within the publisher's agreement
+  /// threshold. A value of 1 means the published position rests on a single
+  /// report and was never independently corroborated.
+  PROVIDERS_AGREEING:uint;
+  /// PROVIDER_ID of the report the merge selected, copied verbatim from the
+  /// matching SOURCES entry. Absent when METHOD is CENTROID: a computed
+  /// position belongs to no single provider.
+  WINNING_PROVIDER_ID:string;
+  /// Greatest surface distance in metres between any two agreeing reported
+  /// positions. Zero is meaningful only when PROVIDERS_AGREEING is 1.
+  POSITION_SPREAD_M:double;
+  /// The publisher's own confidence in the merged position, on [0,1]. Never a
+  /// provider's figure and never a probability from a model this standard does
+  /// not name.
+  CONFIDENCE:double;
+  /// RFC 3339 UTC fixed-millisecond instant at which the merge was performed.
+  MERGED_AT:string;
+}
+
+/// Terrestrial Base Station Site.
+///
+/// One record describes ONE terrestrial cellular base-station site as
+/// reconciled from every provider the publisher consulted. It is the wire
+/// record for terrestrial mobile-network infrastructure, and it is not an
+/// emitter model ($RFE), a band specification ($RFB), a geodetic tracking
+/// station ($GST), a satellite ground station ($SIT), or an observation.
+///
+/// A site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both
+/// required, so every published position carries the providers it came from and
+/// the rule that reconciled them; a consumer that strips attribution has to
+/// leave the standard to do it. Unknown values are ABSENT — never zero, never a
+/// placeholder, never carried across from a neighbouring site.
+///
+/// Identity is ID, the publisher's own. The network addressing fields are the
+/// mobile network's, are assigned by its operator, and are reused worldwide;
+/// none of them is a global key on its own.
+table TBS {
+  /// Publisher-stable identifier for this site, unique within its record set.
+  /// Recommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".
+  ID:string (required);
+  /// Winning provider's native site identifier, copied verbatim from the
+  /// SOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute
+  /// for ID and never stable across providers.
+  NATIVE_ID:string;
+  RADIO:tbsRadioClass = UNKNOWN;
+  /// Mobile country code from the international mobile-subscriber identity
+  /// numbering plan. Zero means the source published none.
+  MCC:uint;
+  /// Mobile network code within MCC. Carried as an integer, so decimal leading
+  /// zeros are NOT preserved: a two- versus three-digit network code is
+  /// distinguished by the numbering plan of MCC, and the source's own text is
+  /// retained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished.
+  MNC:uint;
+  /// Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means
+  /// unpublished. A site published with a location area code does not also
+  /// carry a tracking area code; publishing both asserts two access
+  /// generations for one cell.
+  LAC:uint;
+  /// Tracking area code, used by LTE- and NR-class access. Zero means
+  /// unpublished.
+  TAC:uint;
+  /// Cell identity verbatim from the source. A string because width, radix and
+  /// leading zeros are significant and differ by access class: a 16-bit cell
+  /// identity, a 28-bit evolved cell identity and a 36-bit new-radio cell
+  /// identity are not interchangeable integers, and this field never converts
+  /// between them.
+  CELL_ID:string;
+  /// Reconciled site position in decimal degrees on WGS 84, produced by the
+  /// merge described in CONSENSUS. Per-provider positions before
+  /// reconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and
+  /// are never overwritten by this value.
+  LATITUDE:double;
+  LONGITUDE:double;
+  /// Radius in metres of the area within which the site's observations were
+  /// collected — a positional-uncertainty envelope, not a transmission range,
+  /// not a coverage guarantee, and never converted from another unit. Zero
+  /// means unpublished.
+  RANGE_M:double;
+  /// Independent observations behind the winning report. Zero means the source
+  /// publishes no observation count, never that the site was never observed.
+  SAMPLES:uint;
+  /// Mean received signal strength in dBm across those observations, as the
+  /// source publishes it. Carried in dBm unconverted; a consumer needing watts
+  /// converts at the join, explicitly. Zero means unpublished.
+  AVERAGE_SIGNAL_DBM:double;
+  /// RFC 3339 UTC fixed-millisecond bounds of the observation window backing
+  /// the winning report.
+  FIRST_OBSERVED:string;
+  LAST_OBSERVED:string;
+  /// Network operator name verbatim as the cited source states it. A display
+  /// name, never an identifier: consumers must not treat it as a stable key.
+  OPERATOR:string;
+  /// Operating centre frequency in MHz, following the $RFB convention. A
+  /// consumer joining to $IQC, which carries hertz, converts at the join,
+  /// explicitly. Zero means unpublished.
+  FREQUENCY_MHZ:double;
+  /// Site or structure name verbatim when the source publishes one. Never
+  /// synthesized from coordinates, operator, or cell identity.
+  SITE_NAME:string;
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the source states it.
+  /// Derived from MCC only when the source itself derives it.
+  COUNTRY_CODE:string;
+  /// Every provider consulted for this site, including providers that returned
+  /// nothing. Required: a site with no named sources is not publishable.
+  SOURCES:[TBSProvenance] (required);
+  /// How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:
+  /// a published position always states the rule that produced it, including
+  /// SINGLE_SOURCE.
+  CONSENSUS:TBSConsensus (required);
+}
+
+root_type TBS;
+file_identifier "$TBS";

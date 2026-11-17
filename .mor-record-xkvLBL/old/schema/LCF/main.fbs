@@ -1,0 +1,51 @@
+// Hash: c78cace00317c61c64dbd94c42591b0bdb415eff099627660b211cf60d26de7b
+// Version: 1.82.0
+// -----------------------------------END_HEADER
+include "../KRF/main.fbs";
+
+enum licensingConfigMessageType : byte {
+  Configure,
+  Status
+}
+
+enum licensingConfigRole : byte {
+  Provider,
+  Requester
+}
+
+/// Licensing Configuration Frame
+table LCF {
+  /// Distinguishes configuration inputs from runtime status outputs.
+  MESSAGE_TYPE: licensingConfigMessageType = Configure;
+  /// Indicates whether the configuration/status applies to server/provider or requester/client behavior.
+  ROLE: licensingConfigRole = Provider;
+  /// Peer ID advertised by the licensing provider.
+  PROVIDER_PEER_ID: string;
+  /// Host-managed long-lived signing key used for grant signatures.
+  PROVIDER_SIGNING_KEY: KRF;
+  /// Host-managed wrapping key used to protect per-publication content keys for requesters.
+  PROVIDER_WRAPPING_KEY: KRF;
+  /// Optional requester signing key reference for requester-hosted flows.
+  REQUESTER_SIGNING_KEY: KRF;
+  /// Logical active publication/grant key version.
+  ACTIVE_KEY_VERSION: uint32;
+  /// Runtime expiry in unix milliseconds, or 0 if unbounded.
+  EXPIRES_AT: uint64;
+  /// Maximum accepted requester/provider clock skew in milliseconds.
+  MAX_CLOCK_SKEW_MS: uint64;
+  /// Challenge time-to-live in milliseconds.
+  CHALLENGE_TTL_MS: uint64;
+  /// Optional capability token bytes returned with successful grants.
+  CAPABILITY_TOKEN: [ubyte];
+  /// Whether the runtime has been initialized successfully.
+  INITIALIZED: bool = false;
+  /// Whether the runtime needs issuer key rotation or refreshed configuration.
+  NEEDS_ROTATION: bool = false;
+  /// Optional machine-readable status code for status/error responses.
+  STATUS_CODE: string;
+  /// Optional human-readable status or error message.
+  STATUS_MESSAGE: string;
+}
+
+root_type LCF;
+file_identifier "$LCF";

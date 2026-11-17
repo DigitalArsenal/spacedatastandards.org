@@ -1,0 +1,239 @@
+// Hash: 78db0467677875df16aacb460d4a002d5697788ee54e3158626fa8e0dd01a421
+// Version: 1.248.1
+// -----------------------------------END_HEADER
+include "../OMM/main.fbs";
+
+/// Labelled Feature Vectors (LFV)
+/// Description
+/// Numeric features computed from objects or their data, each row labelled
+/// with what it is, and the report of a test of whether the labelled classes
+/// can be told apart. A row says which object (or element set, or history)
+/// it was computed from, which group it belongs to (TARGET), its role (a real
+/// object or a decoy), which generator made it when it is synthetic, and an
+/// optional class; its values follow the set's FEATURE_NAMES in order. The
+/// report gives the test's statistic and significance, the decision threshold
+/// and the counts on each side of it (the confusion counts), the probability
+/// that a real row ranks first among its group, and per-feature separation.
+///
+/// Uses: screening whether decoy orbits hide a real one, testing whether a
+/// detector separates manoeuvring from quiet objects, any experiment that
+/// trains or scores a classifier on features of space objects. Features live
+/// here rather than in an $OMM's user-defined parameters so element sets stay
+/// clean: a row references its source by identifier and may nest the $OMM
+/// element sets it was computed from when a reader needs them alongside.
+
+/// Role of a row in a distinguishing experiment. Append new values only;
+/// never reorder or reuse existing values.
+enum lfvRole : ubyte {
+  /// Not labelled (a row to be scored).
+  Unlabelled,
+  /// Computed from a real object's data.
+  Real,
+  /// Computed from synthetic data made to resemble a real object.
+  Decoy
+}
+
+/// Which side of a threshold a decision region lies on. Append new values
+/// only; never reorder or reuse existing values.
+enum lfvRegionSide : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Scores strictly above THRESHOLD.
+  Above,
+  /// Scores at or below THRESHOLD.
+  AtOrBelow
+}
+
+/// One labelled feature vector.
+table LFVRow {
+  /// Identifier of what the row was computed from: an object (catalog number
+  /// or international designator), a history, or an element set (an $OMM
+  /// MESSAGE_ID or OBJECT_ID plus ELEMENT_SET_NO).
+  SOURCE_ID: string;
+  /// Group the row belongs to, e.g. the real object a decoy stands in for;
+  /// rows are split and ranked by group. Empty = SOURCE_ID.
+  TARGET: string;
+  ROLE: lfvRole = Unlabelled;
+  /// Generator that made a synthetic row, e.g. "rotated", "chained"; empty
+  /// for real rows.
+  GENERATOR: string;
+  /// Class label, e.g. an orbit regime or object type; empty = none.
+  CLASS_LABEL: string;
+  /// Feature values in FEATURE_NAMES order, in the units FEATURE_UNITS gives;
+  /// NaN = not computable for this row.
+  VALUES: [double];
+  /// Score a classifier gave the row (higher = more likely Real); NaN or
+  /// absent when not scored.
+  SCORE: double = nan;
+  /// Element sets the row was computed from, when carried alongside.
+  ELEMENT_SETS: [OMM];
+}
+
+/// Probability that the real row of a group scores highest among N
+/// candidates (one real, N - 1 decoys).
+table LFVRankProbability {
+  /// Candidates per group.
+  N: uint32;
+  /// Probability that the real row scores highest; ties count as a uniform
+  /// draw among the tied.
+  P_REAL_FIRST: double;
+  /// Effective number of candidates, 1 / P_REAL_FIRST (N when the classes
+  /// cannot be told apart, 1 when they always can); NaN when P_REAL_FIRST is
+  /// 0.
+  N_EFFECTIVE: double;
+  /// The value for indistinguishable classes, 1 / N; NaN = not reported.
+  IDEAL: double = nan;
+}
+
+/// One threshold test on the scores, decided on one part of the data and
+/// counted on another (held out).
+table LFVThresholdTest {
+  /// Score threshold of the decision region.
+  THRESHOLD: double;
+  SIDE: lfvRegionSide = Unspecified;
+  /// Role the region indicates: Real (real rows are more likely inside) or
+  /// Decoy (decoy rows are).
+  REGION_ROLE: lfvRole = Unlabelled;
+  /// Confusion counts on the held-out data: real rows inside the region and
+  /// in all, decoy rows inside the region and in all.
+  REAL_IN_REGION: uint32;
+  REAL_TOTAL: uint32;
+  DECOY_IN_REGION: uint32;
+  DECOY_TOTAL: uint32;
+  /// Lower confidence bound on the privacy loss epsilon = ln(P(region | one
+  /// role) / P(region | the other)), from one-sided Clopper-Pearson limits;
+  /// 0 = no evidence the roles differ.
+  EPSILON_LOWER_BOUND: double;
+  /// Confidence level of the bound, 0..1, e.g. 0.95.
+  CONFIDENCE: double;
+}
+
+/// How well one feature separates the roles on its own, and how much the
+/// classifier used it.
+table LFVFeatureSeparation {
+  /// Feature name, one of FEATURE_NAMES.
+  NAME: string;
+  /// Area under the ROC curve of the feature alone (real vs decoy), 0..1;
+  /// NaN = not computable.
+  AUC: double;
+  /// max(AUC, 1 - AUC), 0.5..1.
+  SEPARATION: double;
+  /// Share of the classifier's total split gain from this feature, 0..1.
+  GAIN_SHARE: double;
+}
+
+/// Results for the real rows of one class.
+table LFVClassResult {
+  CLASS_LABEL: string;
+  /// Real rows of this class.
+  REAL_COUNT: uint32;
+  /// AUC of this class's real rows against all decoy rows, 0..1.
+  AUC: double;
+  RANK_PROBABILITIES: [LFVRankProbability];
+}
+
+/// Rank of each real row within its own group, when groups have enough
+/// decoys.
+table LFVWithinGroup {
+  /// Groups (targets) ranked.
+  GROUP_COUNT: uint32;
+  /// Fewest decoys any ranked group has.
+  FEWEST_DECOYS: uint32;
+  /// Decoy rows pooled for standardized scores.
+  POOLED_DECOYS: uint32;
+  /// Histogram of the real row's normalized rank within its group, in equal
+  /// bins over 0..1 (uniform when indistinguishable).
+  RANK_HISTOGRAM: [uint32];
+  /// Kolmogorov-Smirnov distance of the normalized ranks from uniform, 0..1.
+  RANK_KS: double;
+  /// P(real first of N) from the empirical within-group ranks.
+  RANK_PROBABILITIES: [LFVRankProbability];
+  /// P(real first of N) from scores standardized per group and pooled.
+  STANDARDIZED_RANK_PROBABILITIES: [LFVRankProbability];
+}
+
+/// The classifier and how it was validated. In a request, the settings to
+/// use; 0 or empty = the method's default.
+table LFVClassifier {
+  /// Method, e.g. "gradient-boosted trees, logistic loss".
+  METHOD: string;
+  /// Tree depth, boosting rounds, learning rate, L2 regularization (lambda),
+  /// minimum child hessian and histogram bins, for tree ensembles.
+  DEPTH: uint32;
+  ROUNDS: uint32;
+  LEARNING_RATE: double;
+  L2_REGULARIZATION: double;
+  MIN_CHILD_HESSIAN: double;
+  BINS: uint32;
+  /// Cross-validation folds.
+  FOLDS: uint32;
+  /// How rows were split into folds, e.g. "by target".
+  SPLIT: string;
+  /// Seed of the split and any randomness; 0 = not stated.
+  SEED: uint64;
+}
+
+/// Report of a test that distinguishes the labelled classes.
+table LFVTestReport {
+  /// Name of the test, e.g. "cross-validated classifier",
+  /// "two-sample Kolmogorov-Smirnov".
+  TEST_NAME: string;
+  /// The test's statistic and its name, and its p-value; NaN = not computed.
+  STATISTIC_NAME: string;
+  STATISTIC: double = nan;
+  P_VALUE: double = nan;
+  /// Rows of each role tested.
+  REAL_COUNT: uint32;
+  DECOY_COUNT: uint32;
+  /// Features left out of the test.
+  EXCLUDED_FEATURES: [string];
+  /// True when each feature was taken relative to its group (minus the
+  /// group's median) before testing.
+  RELATIVE: bool;
+  CLASSIFIER: LFVClassifier;
+  /// Area under the ROC curve of the scores (real vs decoy), 0..1; 0.5 =
+  /// indistinguishable.
+  AUC: double;
+  /// Mean of the real and decoy recall at score 0, 0..1.
+  BALANCED_ACCURACY: double;
+  /// Threshold tests (decision region, confusion counts, epsilon bound).
+  THRESHOLDS: [LFVThresholdTest];
+  /// P(real first of N) for each N asked, over all classes.
+  RANK_PROBABILITIES: [LFVRankProbability];
+  CLASS_RESULTS: [LFVClassResult];
+  /// Per-feature separation, highest GAIN_SHARE first.
+  FEATURES: [LFVFeatureSeparation];
+  /// Absent when groups are too few or too small to rank within.
+  WITHIN_GROUP: LFVWithinGroup;
+}
+
+/// Labelled Feature Vectors - labelled rows and, optionally, the report of a
+/// test that distinguishes their classes.
+table LFV {
+  /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
+  /// (from propagated ephemeris).
+  VIEW: string;
+  /// Feature names, in the order of every row's VALUES.
+  FEATURE_NAMES: [string];
+  /// Unit of each feature, same order, e.g. "km", "deg", "km/day", "1";
+  /// empty = not stated.
+  FEATURE_UNITS: [string];
+  /// Window of data the features were computed over, Unix milliseconds
+  /// [start, end); 0 = not stated.
+  WINDOW_START_MS: int64;
+  WINDOW_END_MS: int64;
+  /// Fewest data points a source needed to get a row.
+  MIN_POINTS: uint32;
+  ROWS: [LFVRow];
+  /// Sources offered, reference objects compared against (the catalog),
+  /// and sources skipped for having too few points.
+  SOURCE_COUNT: uint32;
+  REFERENCE_COUNT: uint32;
+  SKIPPED_COUNT: uint32;
+  /// Unix milliseconds this record was generated; 0 = not stated.
+  GENERATED_AT_MS: int64;
+  REPORT: LFVTestReport;
+}
+
+root_type LFV;
+file_identifier "$LFV";

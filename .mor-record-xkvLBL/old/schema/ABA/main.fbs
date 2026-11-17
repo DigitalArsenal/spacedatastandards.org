@@ -1,0 +1,75 @@
+// Hash: 9d633afa99738792ffe6908aa6d8bce866f664c47c1e54e00cff64d65d4073aa
+// Version: 1.233.0
+// -----------------------------------END_HEADER
+/// Address Book Attestation (ABA)
+/// One signed statement by an SDN node that an exact EPM contact profile is
+/// an entry in its address book. A vCard must first be projected to an EPM.
+/// An EPM alone is not an address-book entry: the valid ABA must be retained
+/// and retrievable alongside the profile it attests.
+///
+/// Project the latest valid record by (NODE_PEER_ID, ENTRY_ID), using
+/// UPDATED_AT. Updates preserve CREATED_AT and strictly increase UPDATED_AT.
+/// Conflicting records at the same timestamp are not a resolved entry.
+/// DELETED records are signed tombstones and revoke the entry. Retain them
+/// so an older attestation cannot resurrect a revoked entry.
+///
+/// PUBLIC_KEY is the literal libp2p identity verification key. Its libp2p
+/// Peer ID must equal NODE_PEER_ID; derivation material is never carried.
+/// SIGNATURE covers the canonical record with SIGNATURE cleared, following
+/// the CLM signing convention. The precise canonical form is in docs/ABA.md.
+/// PROFILE_SHA256 is the 32-byte SHA-256 digest of PROFILE_BYTES, without
+/// decoding, normalizing or reserializing those bytes before hashing.
+
+/// Disclosure policy for one entry. Append values only; never reuse ordinals.
+enum abaDisclosure : byte {
+  /// Private to the node; never publicly served or synchronized.
+  PRIVATE = 0,
+  /// May be publicly served or synchronized with its signed attestation.
+  PUBLIC = 1
+}
+
+/// Address Book Attestation - one node's signed, byte-exact contact entry.
+table ABA {
+  /// Stable opaque entry identifier, unique within NODE_PEER_ID. Keep it
+  /// through profile updates and revocation; do not use the profile digest.
+  ENTRY_ID: string (required);
+  /// Issuing node's libp2p Peer ID, in base58btc multihash form.
+  NODE_PEER_ID: string (required);
+  /// Literal public key bytes verifying SIGNATURE. For secp256k1 this is
+  /// the 33-byte compressed SEC1 public key, without a protobuf wrapper.
+  PUBLIC_KEY: [ubyte] (required);
+  /// Signature algorithm identifier. "secp256k1" means libp2p signing:
+  /// SHA-256 of canonical bytes followed by low-S ECDSA, encoded as ASN.1
+  /// DER. Reject unsupported algorithms; never guess from the key bytes.
+  SIGNATURE_ALGORITHM: string (required);
+  /// The complete EPM FlatBuffer exactly as attested, including its $EPM
+  /// identifier and any size prefix. Preserve the bytes even in tombstones.
+  PROFILE_BYTES: [ubyte] (required);
+  /// Exactly 32 raw SHA-256 digest bytes of PROFILE_BYTES.
+  PROFILE_SHA256: [ubyte] (required);
+  /// Disclosure flag only. The node enforces PRIVATE by excluding the entry
+  /// and its attestation from everything it serves or synchronizes publicly.
+  VISIBILITY: abaDisclosure = PRIVATE;
+  /// Unix timestamp in milliseconds when this entry was first attested.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds of this signed revision; at least
+  /// CREATED_AT, and strictly greater than the preceding revision.
+  UPDATED_AT: uint64;
+  /// True revokes the stable entry. A tombstone must still pass signature,
+  /// node identity and profile-digest verification.
+  DELETED: bool;
+  /// Optional short operator note; part of the signed record.
+  NOTE: string;
+  /// Node identity signature over UTF-8 RFC 8785 canonical JSON with every
+  /// ABA field present under its exact IDL name. Byte vectors are arrays of
+  /// integers in [0,255]; SIGNATURE is []. CREATED_AT and UPDATED_AT are
+  /// unsigned decimal strings without leading zeroes (except "0").
+  /// VISIBILITY is its numeric ordinal; DELETED is a boolean; remaining
+  /// fields are strings, with absent NOTE represented as "". Include defaults,
+  /// no extra keys, no Unicode normalization, BOM or trailing newline.
+  /// Empty is allowed only while signing; consumers reject unsigned records.
+  SIGNATURE: [ubyte];
+}
+
+root_type ABA;
+file_identifier "$ABA";

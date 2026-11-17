@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.286.0+1794885336787",
+  version: "1.286.0+1794886112626",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -14599,7 +14599,7 @@ file_identifier "$SRG";`,
       ]
     },
     MOR: {
-      IDL: `// Hash: 481845b5912765667c99240519cd474716e29ba1889fca8bdb1f2da2666e0539
+      IDL: `// Hash: f2e20234ccf2862f9ccaeb7bb0bf5c5cea4d6581ea15825bff53358fc20d26e9
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -14617,7 +14617,10 @@ include "../MPE/main.fbs";
 // COV_REALISM_ID or COV_REALISM, never both; FALLBACK has no ENTITY_ID and no TARGETER. A reader refuses a
 // record that breaks these.
 //
-// Expansion: every MOR but a ROWS_ONLY one expands to exactly one $OCM.
+// Record kinds (RECORD_KIND): FULL, a whole set; ROWS_ONLY, new rows for a held set. A reader that meets a
+// kind it does not know ignores that record entirely and changes nothing it holds; it never reads it as FULL.
+//
+// Expansion: every FULL record expands to exactly one $OCM; no other kind has an expansion.
 //   HEADER: CCSDS_OCM_VERS "3.0"; ORIGINATOR and MESSAGE_STATUS as here (absent when absent).
 //   METADATA: OBJECT_NAME and INTERNATIONAL_DESIGNATOR as here; with NORAD_CAT_ID > 0 the NORAD_CAT_ID,
 //     CATALOG_NAME "NORAD" and OBJECT_DESIGNATOR its decimal digits; TIME_SYSTEM "UTC".
@@ -14666,7 +14669,7 @@ include "../MPE/main.fbs";
 //     INTERNATIONAL_DESIGNATOR when NORAD_CAT_ID is 0. An $MPE has no originator: the set joins its object by
 //     that identifier alone, with no originator, never by name.
 //
-// Rows only (ROWS_ONLY true): a new set of rows for a set a receiver already holds, delivered without
+// Rows only (RECORD_KIND ROWS_ONLY): a new set of rows for a set a receiver already holds, delivered without
 // republishing the set. Required: NORAD_CAT_ID, INTERNATIONAL_DESIGNATOR and ORIGINATOR exactly as the held
 // set states them (absent where it has none), MEAN_ELEMENT_THEORY, EPOCH_UNIX_US (the epoch of the set the rows
 // belong to), WINDOWS, their coefficient vectors and WINDOW_RECORD_CHECK. Every other field is at its default:
@@ -14715,6 +14718,15 @@ enum morCovarianceFloor : ubyte {
   /// At the two-body state of the set's own mean elements: PRODUCER exactly
   /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
   MEAN_ELEMENTS_TWO_BODY = 2
+}
+
+/// What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+/// it holds. Append new values only.
+enum morRecordKind : ubyte {
+  /// A whole element set, with everything this record can carry.
+  FULL = 0,
+  /// New rows for a set the receiver already holds (see "Rows only").
+  ROWS_ONLY = 1
 }
 
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
@@ -14816,8 +14828,8 @@ table MOR {
   /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   /// ways without loss; an instant inside a leap second has no value here.
   EPOCH_UNIX_US: int64;
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  ROWS_ONLY: bool = false;
+  /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+  RECORD_KIND: morRecordKind = FULL;
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -14868,8 +14880,10 @@ table MOR {
   OD_OBSERVATIONS_USED: int32 = -1;
   /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
   WEIGHTED_RMS: double = nan;
-  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  OD_EPOCH_UNIX_US: int64 = -9223372036854775808;
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+  /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+  /// itself as a floating-point literal.
+  OD_EPOCH_UNIX_US: int64 = -9223372036854775807;
   /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
   OD_TRACKS_USED: int32 = -1;
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
@@ -14906,7 +14920,8 @@ table MOR {
   SOLAR_RAD_PRESSURE: morRadiationModel = UNSTATED;
   /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
   ECOM2_Y0: double;
-  /// Whether the set is real or test data.
+  /// Whether the set is real or test data. A record that does not state it is an operational record of
+  /// unstated status; a publisher states it only when it is TEST.
   MESSAGE_STATUS: morMessageStatus = UNSPECIFIED;
   /// The object's name; absent unless a reader copies it into what it writes.
   OBJECT_NAME: string;
@@ -146443,6 +146458,13 @@ format class are named by $NCD's container format.`
             "MEAN_ELEMENTS_TWO_BODY"
           ]
         },
+        morRecordKind: {
+          type: "string",
+          enum: [
+            "FULL",
+            "ROWS_ONLY"
+          ]
+        },
         morGravityField: {
           type: "string",
           enum: [
@@ -146866,9 +146888,9 @@ format class are named by $NCD's container format.`
               maximum: 9223372036854776e3,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            RECORD_KIND: {
+              $ref: "#/definitions/morRecordKind",
+              description: 'What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.'
             },
             WINDOWS: {
               type: "array",
@@ -146975,7 +146997,7 @@ format class are named by $NCD's container format.`
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal."
             },
             OD_TRACKS_USED: {
               type: "integer",
@@ -147042,7 +147064,7 @@ format class are named by $NCD's container format.`
             },
             MESSAGE_STATUS: {
               $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data."
+              description: "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST."
             },
             OBJECT_NAME: {
               type: "string",
@@ -168173,6 +168195,13 @@ stated.`
             "UNSTATED",
             "WRITER_THEORY_STATE",
             "MEAN_ELEMENTS_TWO_BODY"
+          ]
+        },
+        morRecordKind: {
+          type: "string",
+          enum: [
+            "FULL",
+            "ROWS_ONLY"
           ]
         },
         morGravityField: {
@@ -218356,9 +218385,9 @@ provider's reviewed register). Never free text.`
               maximum: 9223372036854776e3,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            RECORD_KIND: {
+              $ref: "#/definitions/morRecordKind",
+              description: 'What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.'
             },
             WINDOWS: {
               type: "array",
@@ -218465,7 +218494,7 @@ provider's reviewed register). Never free text.`
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal."
             },
             OD_TRACKS_USED: {
               type: "integer",
@@ -218532,7 +218561,7 @@ provider's reviewed register). Never free text.`
             },
             MESSAGE_STATUS: {
               $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data."
+              description: "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST."
             },
             OBJECT_NAME: {
               type: "string",
@@ -643964,6 +643993,25 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        morRecordKind: {
+          type: "string",
+          enum: [
+            "FULL",
+            "ROWS_ONLY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            FULL: {
+              value: 0,
+              description: "A whole element set, with everything this record can carry."
+            },
+            ROWS_ONLY: {
+              value: 1,
+              description: 'New rows for a set the receiver already holds (see "Rows only").'
+            }
+          }
+        },
         morGravityField: {
           type: "string",
           enum: [
@@ -644649,11 +644697,22 @@ format class are named by $NCD's container format.`,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
               "x-flatbuffer-type": "int64"
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
+            RECORD_KIND: {
+              $ref: "#/definitions/morRecordKind",
+              description: 'What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.',
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                FULL: {
+                  value: 0,
+                  description: "A whole element set, with everything this record can carry."
+                },
+                ROWS_ONLY: {
+                  value: 1,
+                  description: 'New rows for a set the receiver already holds (see "Rows only").'
+                }
+              },
+              "x-flatbuffer-default": "FULL"
             },
             WINDOWS: {
               type: "array",
@@ -644799,9 +644858,9 @@ format class are named by $NCD's container format.`,
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
+              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal.",
               "x-flatbuffer-type": "int64",
-              "x-flatbuffer-default": "-9223372036854775808"
+              "x-flatbuffer-default": "-9223372036854775807"
             },
             OD_TRACKS_USED: {
               type: "integer",
@@ -644946,7 +645005,7 @@ format class are named by $NCD's container format.`,
             },
             MESSAGE_STATUS: {
               $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data.",
+              description: "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -700533,6 +700592,25 @@ stated.`,
             MEAN_ELEMENTS_TWO_BODY: {
               value: 2,
               description: `At the two-body state of the set's own mean elements: PRODUCER exactly "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.`
+            }
+          }
+        },
+        morRecordKind: {
+          type: "string",
+          enum: [
+            "FULL",
+            "ROWS_ONLY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            FULL: {
+              value: 0,
+              description: "A whole element set, with everything this record can carry."
+            },
+            ROWS_ONLY: {
+              value: 1,
+              description: 'New rows for a set the receiver already holds (see "Rows only").'
             }
           }
         },
@@ -789818,11 +789896,22 @@ provider's reviewed register). Never free text.`,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
               "x-flatbuffer-type": "int64"
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
+            RECORD_KIND: {
+              $ref: "#/definitions/morRecordKind",
+              description: 'What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.',
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                FULL: {
+                  value: 0,
+                  description: "A whole element set, with everything this record can carry."
+                },
+                ROWS_ONLY: {
+                  value: 1,
+                  description: 'New rows for a set the receiver already holds (see "Rows only").'
+                }
+              },
+              "x-flatbuffer-default": "FULL"
             },
             WINDOWS: {
               type: "array",
@@ -789968,9 +790057,9 @@ provider's reviewed register). Never free text.`,
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
+              description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal.",
               "x-flatbuffer-type": "int64",
-              "x-flatbuffer-default": "-9223372036854775808"
+              "x-flatbuffer-default": "-9223372036854775807"
             },
             OD_TRACKS_USED: {
               type: "integer",
@@ -790115,7 +790204,7 @@ provider's reviewed register). Never free text.`,
             },
             MESSAGE_STATUS: {
               $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data.",
+              description: "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {

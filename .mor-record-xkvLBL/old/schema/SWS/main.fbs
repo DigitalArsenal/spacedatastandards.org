@@ -1,0 +1,220 @@
+// Hash: fde38da59c7b363a4ae15d6c465113abc7eb2b53065cc9dd0b229784a986e807
+// Version: 1.272.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+include "../RFM/main.fbs";
+
+// Space Weather Series (SWS)
+//
+// One quantity over time from one source: an instrument on a spacecraft, a
+// ground index service, or a model run. Samples are index-aligned columns in
+// ascending EPOCHS_MS (UTC Unix milliseconds). Values are the source's own, in
+// the unit QUANTITY fixes and UNITS repeats; a missing sample is NaN, never
+// the source's fill value or zero. A vector component names its axes in
+// REFERENCE_FRAME; a scalar has none. A value is a forecast or a model output
+// only when STATUS or SAMPLE_STATUS says Predicted or Modeled.
+
+/// The quantity a series carries. Units are fixed per value. Append only.
+enum swsQuantity : ushort {
+  /// QUANTITY_NAME and UNITS carry the source's own quantity.
+  Unspecified,
+  /// Interplanetary magnetic field magnitude (Bt), nT.
+  ImfMagnitude,
+  /// IMF component along REFERENCE_FRAME's X, Y, Z axis, nT.
+  ImfX,
+  ImfY,
+  ImfZ,
+  /// IMF longitude (phi) in REFERENCE_FRAME, degrees, 0 to 360.
+  ImfLongitude,
+  /// IMF latitude (theta) in REFERENCE_FRAME, degrees, -90 to 90.
+  ImfLatitude,
+  /// Bulk proton speed, km/s.
+  ProtonSpeed,
+  /// Proton bulk velocity along REFERENCE_FRAME's X, Y, Z axis, km/s.
+  ProtonVelocityX,
+  ProtonVelocityY,
+  ProtonVelocityZ,
+  /// Proton number density, cm^-3.
+  ProtonDensity,
+  /// Proton temperature, K.
+  ProtonTemperature,
+  /// Alpha-particle speed (km/s), density (cm^-3), temperature (K).
+  AlphaSpeed,
+  AlphaDensity,
+  AlphaTemperature,
+  /// Flow pressure, nPa.
+  FlowPressure,
+  /// Solar wind electric field, mV/m.
+  ElectricField,
+  /// Plasma beta, dimensionless.
+  PlasmaBeta,
+  /// Alfven Mach number, dimensionless.
+  AlfvenMachNumber,
+  /// Planetary Kp in decimal thirds (8.333 is 8+), 0 to 9.
+  Kp,
+  /// Planetary ap for the sample's interval, ap units (2 nT).
+  Ap,
+  /// Hpo index (Hp30 or Hp60 by CADENCE_S), open-ended, in decimal thirds.
+  Hpo,
+  /// apo for the same interval, ap units.
+  Apo,
+  /// Disturbance storm time index, nT.
+  Dst,
+  /// SYM-H, SYM-D, ASY-H, ASY-D, nT.
+  SymH,
+  SymD,
+  AsyH,
+  AsyD,
+  /// Auroral electrojet indices AE, AL, AU, AO, nT.
+  Ae,
+  Al,
+  Au,
+  Ao,
+  /// Polar cap index, north and south, mV/m.
+  PcNorth,
+  PcSouth,
+  /// Soft X-ray irradiance in PASSBAND_MIN_NM..PASSBAND_MAX_NM, W/m^2.
+  XrayFlux,
+  /// The same before the source's electron correction, W/m^2.
+  XrayFluxUncorrected,
+  /// Integral proton flux above ENERGY_MIN_MEV, pfu (cm^-2 s^-1 sr^-1).
+  ProtonIntegralFlux,
+  /// Integral electron flux above ENERGY_MIN_MEV, pfu.
+  ElectronIntegralFlux,
+  /// Differential proton flux in ENERGY_MIN_MEV..ENERGY_MAX_MEV,
+  /// cm^-2 s^-1 sr^-1 MeV^-1.
+  ProtonDifferentialFlux,
+  /// 10.7 cm solar radio flux as observed (sfu) and adjusted to 1 AU (sfu).
+  F107Observed,
+  F107Adjusted,
+  /// Hemispheric auroral power, GW.
+  HemisphericPower
+}
+
+/// How final a value is. Append only.
+enum swsValueStatus : byte {
+  Unspecified,
+  /// Real-time, unedited (e.g. SWPC RTSW).
+  RealTime,
+  /// Estimated from a partial network (e.g. SWPC estimated Kp).
+  Estimated,
+  /// Quicklook (e.g. Kyoto real-time Dst).
+  Quicklook,
+  Nowcast,
+  Provisional,
+  Definitive,
+  /// Issued forecast; FORECAST_ISSUED_AT is its issue time.
+  Predicted,
+  /// Output of a model run named in MODEL_RUN_ID (e.g. WSA-ENLIL).
+  Modeled
+}
+
+/// Where the values apply. Append only.
+enum swsLocation : byte {
+  Unspecified,
+  /// At the measuring spacecraft (e.g. L1).
+  AtSpacecraft,
+  /// Time-shifted by the source to Earth's bow shock nose (e.g. OMNI).
+  BowShockNose,
+  /// Propagated by the source to Earth; PROPAGATED_EPOCHS_MS holds arrivals.
+  PropagatedToEarth,
+  /// Earth-orbiting monitor (e.g. GOES).
+  EarthOrbit,
+  /// Index derived from a ground magnetometer network.
+  GroundNetwork,
+  /// Model output at Earth.
+  ModelAtEarth
+}
+
+/// What instant an epoch names. Append only.
+enum swsSampleConvention : byte {
+  Unspecified,
+  Instant,
+  /// The value covers [EPOCH, EPOCH + CADENCE_S).
+  IntervalStart,
+  IntervalCenter,
+  IntervalEnd
+}
+
+/// NOAA space weather scale a level column reports. Append only.
+enum swsNoaaScale : byte {
+  None,
+  /// G: geomagnetic storms.
+  Geomagnetic,
+  /// S: solar radiation storms.
+  SolarRadiation,
+  /// R: radio blackouts.
+  RadioBlackout
+}
+
+/// Space Weather Series
+table SWS {
+  /// Publisher-stable identifier of the series.
+  SERIES_ID: string;
+  QUANTITY: swsQuantity = Unspecified;
+  /// The source's own quantity name, verbatim (e.g. bz_gsm, BZ_GSM).
+  QUANTITY_NAME: string;
+  /// Units, fixed by QUANTITY and repeated here (e.g. nT).
+  UNITS: string (required);
+  /// Axes of a vector component (GSE, GSM, ...); absent for a scalar.
+  REFERENCE_FRAME: RFM;
+  /// Status of every sample, unless SAMPLE_STATUS gives it per sample.
+  STATUS: swsValueStatus = Unspecified;
+  /// Per-sample status, index-aligned; empty = STATUS for all.
+  SAMPLE_STATUS: [swsValueStatus];
+  LOCATION: swsLocation = Unspecified;
+  /// Source platforms, verbatim (e.g. SOLAR1, ACE, GOES-18, Wind).
+  PLATFORMS: [string];
+  /// Per-sample index into PLATFORMS; empty = PLATFORMS[0] for all.
+  SAMPLE_PLATFORM: [ubyte];
+  /// Catalog numbers of PLATFORMS, index-aligned; 0 = none stated.
+  NORAD_CAT_IDS: [uint32];
+  /// Instrument, verbatim (e.g. MAG, SWEPAM, XRS, SEISS).
+  INSTRUMENT: string;
+  /// Nominal sample spacing in seconds.
+  CADENCE_S: double = nan;
+  SAMPLE_CONVENTION: swsSampleConvention = Unspecified;
+  /// Particle energy bounds, MeV; NaN maximum = integral above the minimum.
+  ENERGY_MIN_MEV: double = nan;
+  ENERGY_MAX_MEV: double = nan;
+  /// Irradiance passband, nm.
+  PASSBAND_MIN_NM: double = nan;
+  PASSBAND_MAX_NM: double = nan;
+  /// Sample epochs, UTC Unix milliseconds, ascending.
+  EPOCHS_MS: [int64] (required);
+  /// One value per epoch, in UNITS; NaN = missing.
+  VALUES: [double] (required);
+  /// One-sigma per epoch, in UNITS, when the source states it.
+  SIGMAS: [double];
+  /// Arrival times at LOCATION when the source propagates (UTC Unix ms).
+  PROPAGATED_EPOCHS_MS: [int64];
+  /// The source's per-sample overall quality code, verbatim.
+  QUALITY: [int32];
+  /// True where the sample's platform was the source's operational one.
+  ACTIVE: [bool];
+  /// Source samples (or stations, for an index) behind each value.
+  SAMPLE_COUNTS: [uint32];
+  /// Names of further per-sample source flags, verbatim.
+  FLAG_NAMES: [string];
+  /// Flag-major values: flag f, sample i at f * count + i; NaN = null.
+  FLAG_VALUES: [double];
+  /// The NOAA scale NOAA_SCALE_LEVELS reports, and its level per sample (0-5).
+  NOAA_SCALE_KIND: swsNoaaScale = None;
+  NOAA_SCALE_LEVELS: [ubyte];
+  /// Issue time of a Predicted series, RFC 3339 UTC.
+  FORECAST_ISSUED_AT: string;
+  /// Model run identity of a Modeled series, verbatim.
+  MODEL_RUN_ID: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  SOURCE_CID: string;
+  SOURCE_DIGEST: string;
+  RETRIEVED_AT: string;
+}
+
+table SWSCOLLECTION {
+  RECORDS: [SWS];
+}
+
+root_type SWS;
+file_identifier "$SWS";

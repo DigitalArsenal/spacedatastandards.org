@@ -1,0 +1,59 @@
+// Hash: 697db3b03a2ec6b0d0b9de2402649c3cec426ed77ed866bd2f36f04c0399db60
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Store Descriptor (STO)
+// Description
+// Identifies a module/data store (official or third-party) as a first-class,
+// discoverable entity distinct from a single listing. A store IS a module/flow:
+// this record binds the store's operator identity, the encrypted store module
+// that runs it, its default commission terms, the chains it settles on, and
+// the catalog root it serves. `$PLG` stays the per-module listing and `$STF`
+// the per-data listing; `$STO` is the storefront identity above them.
+
+include "../CMT/main.fbs";
+
+/// Reference to the store module that runs a store.
+table STOModuleRef {
+  /// `$PLG.PLUGIN_ID` of the store module
+  PLUGIN_ID: string;
+  /// Content hash of the (encrypted) store module artifact
+  CONTENT_HASH: string;
+  /// Module version
+  VERSION: string;
+}
+
+/// Store Descriptor — storefront identity
+table STO {
+  /// Stable store identity
+  STORE_ID: string (required);
+  /// Display name
+  NAME: string;
+  /// Display description
+  DESCRIPTION: string;
+  /// IPFS CID of the store operator's `$EPM`
+  OPERATOR_EPM_CID: string;
+  /// The (encrypted) store MODULE that runs this store
+  STORE_MODULE: STOModuleRef;
+  /// Optional `$APP.ID` when the store ships a UI app
+  APP_ID: string;
+  /// True only for the platform-signed official store, verifiable against the
+  /// platform's well-known signing key
+  IS_OFFICIAL: bool;
+  /// Store-default commission terms, embedded
+  COMMISSION_TERMS: CMT;
+  /// Alternative reference to store-default terms by `$CMT.TERMS_ID`
+  COMMISSION_TERMS_ID: string;
+  /// Chains/tokens this store accepts, each with its splitter settlement
+  ACCEPTED_CHAINS: [SCX];
+  /// IPFS CID of the store's catalog (a `$REC` of `$PLG`/`$STF` listings)
+  CATALOG_ROOT_CID: string;
+  /// libp2p advertise/discovery key for reachability
+  DISCOVERY_KEY: string;
+  /// libp2p protocol id the store answers on
+  PROTOCOL_ID: string;
+  /// Ed25519 signature by the operator `$EPM`
+  SIGNATURE: [ubyte];
+}
+
+root_type STO;
+file_identifier "$STO";

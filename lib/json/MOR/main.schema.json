@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["UNSTATED", "WRITER_THEORY_STATE", "MEAN_ELEMENTS_TWO_BODY"]
     },
+    "morRecordKind" : {
+      "type" : "string",
+      "enum": ["FULL", "ROWS_ONLY"]
+    },
     "morGravityField" : {
       "type" : "string",
       "enum": ["THEORY", "EGM2008", "EGM2008_SLOW_TESSERAL_70"]
@@ -396,9 +400,9 @@
                 "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
                 "description" : "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
               },
-        "ROWS_ONLY" : {
-                "type" : "boolean",
-                "description" : "This record carries only new rows for a set the receiver already holds (see \"Rows only\" above)."
+        "RECORD_KIND" : {
+                "$ref" : "#/definitions/morRecordKind",
+                "description" : "What this record is (see \"Record kinds\" and \"Rows only\" above). An unknown kind: ignore the record."
               },
         "WINDOWS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/MORWindow"},
@@ -482,7 +486,7 @@
               },
         "OD_EPOCH_UNIX_US" : {
                 "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
-                "description" : "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+                "description" : "Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel\nmeaning not stated: the least int64 plus one, because some generated languages read the least int64\nitself as a floating-point literal."
               },
         "OD_TRACKS_USED" : {
                 "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
@@ -542,7 +546,7 @@
               },
         "MESSAGE_STATUS" : {
                 "$ref" : "#/definitions/morMessageStatus",
-                "description" : "Whether the set is real or test data."
+                "description" : "Whether the set is real or test data. A record that does not state it is an operational record of\nunstated status; a publisher states it only when it is TEST."
               },
         "OBJECT_NAME" : {
                 "type" : "string",

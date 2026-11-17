@@ -47,6 +47,22 @@ public enum morCovarianceFloor: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 }
 
 
+///  What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+///  it holds. Append new values only.
+public enum morRecordKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  A whole element set, with everything this record can carry.
+  case full = 0
+  ///  New rows for a set the receiver already holds (see "Rows only").
+  case rowsOnly = 1
+
+  public static var max: morRecordKind { return .rowsOnly }
+  public static var min: morRecordKind { return .full }
+}
+
+
 ///  The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 public enum morGravityField: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
@@ -330,7 +346,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ORIGINATOR: VOffset = 8
     static let MEAN_ELEMENT_THEORY: VOffset = 10
     static let EPOCH_UNIX_US: VOffset = 12
-    static let ROWS_ONLY: VOffset = 14
+    static let RECORD_KIND: VOffset = 14
     static let WINDOWS: VOffset = 16
     static let WINDOW_COEFF_HEADS: VOffset = 18
     static let WINDOW_COEFF_TAILS: VOffset = 20
@@ -387,8 +403,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   ///  ways without loss; an instant inside a leap second has no value here.
   public var EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.EPOCH_UNIX_US); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  public var ROWS_ONLY: Bool { let o = _accessor.offset(VT.ROWS_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+  public var RECORD_KIND: morRecordKind { let o = _accessor.offset(VT.RECORD_KIND); return o == 0 ? .full : morRecordKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .full }
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -443,8 +459,10 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var OD_OBSERVATIONS_USED: Int32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
   public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775808 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+  ///  meaning not stated: the least int64 plus one, because some generated languages read the least int64
+  ///  itself as a floating-point literal.
+  public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775807 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
   public var OD_TRACKS_USED: Int32 { let o = _accessor.offset(VT.OD_TRACKS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
@@ -483,7 +501,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var SOLAR_RAD_PRESSURE: morRadiationModel { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? .unstated : morRadiationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
   ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
   public var ECOM2_Y0: Double { let o = _accessor.offset(VT.ECOM2_Y0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Whether the set is real or test data.
+  ///  Whether the set is real or test data. A record that does not state it is an operational record of
+  ///  unstated status; a publisher states it only when it is TEST.
   public var MESSAGE_STATUS: morMessageStatus { let o = _accessor.offset(VT.MESSAGE_STATUS); return o == 0 ? .unspecified : morMessageStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
   ///  The object's name; absent unless a reader copies it into what it writes.
   public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
@@ -500,8 +519,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 6, at: VT.MEAN_ELEMENT_THEORY) }
   public static func add(EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_UNIX_US, def: 0, at: VT.EPOCH_UNIX_US) }
-  public static func add(ROWS_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROWS_ONLY, def: false,
-   at: VT.ROWS_ONLY) }
+  public static func add(RECORD_KIND: morRecordKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_KIND.rawValue, def: 0, at: VT.RECORD_KIND) }
   public static func addVectorOf(WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOWS, at: VT.WINDOWS) }
   public static func startVectorOfWindows(_ size: Int, in builder: inout FlatBufferBuilder) {
     builder.startVector(size * MemoryLayout<MORWindow>.size, elementSize: MemoryLayout<MORWindow>.alignment)
@@ -525,7 +543,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: .nan, at: VT.ACTUAL_OD_SPAN) }
   public static func add(OD_OBSERVATIONS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_OBSERVATIONS_USED, def: -1, at: VT.OD_OBSERVATIONS_USED) }
   public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: .nan, at: VT.WEIGHTED_RMS) }
-  public static func add(OD_EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_UNIX_US, def: -9223372036854775808, at: VT.OD_EPOCH_UNIX_US) }
+  public static func add(OD_EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_UNIX_US, def: -9223372036854775807, at: VT.OD_EPOCH_UNIX_US) }
   public static func add(OD_TRACKS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_TRACKS_USED, def: -1, at: VT.OD_TRACKS_USED) }
   public static func add(DAYS_SINCE_LAST_OBS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DAYS_SINCE_LAST_OBS, def: .nan, at: VT.DAYS_SINCE_LAST_OBS) }
   public static func addVectorOf(COVARIANCE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_DATA, at: VT.COVARIANCE_DATA) }
@@ -552,7 +570,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ORIGINATOROffset ORIGINATOR: Offset = Offset(),
     MEAN_ELEMENT_THEORY: meanElementSource = .unspecified,
     EPOCH_UNIX_US: Int64 = 0,
-    ROWS_ONLY: Bool = false,
+    RECORD_KIND: morRecordKind = .full,
     WINDOWSVectorOffset WINDOWS: Offset = Offset(),
     WINDOW_COEFF_HEADSVectorOffset WINDOW_COEFF_HEADS: Offset = Offset(),
     WINDOW_COEFF_TAILSVectorOffset WINDOW_COEFF_TAILS: Offset = Offset(),
@@ -573,7 +591,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ACTUAL_OD_SPAN: Double = .nan,
     OD_OBSERVATIONS_USED: Int32 = -1,
     WEIGHTED_RMS: Double = .nan,
-    OD_EPOCH_UNIX_US: Int64 = -9223372036854775808,
+    OD_EPOCH_UNIX_US: Int64 = -9223372036854775807,
     OD_TRACKS_USED: Int32 = -1,
     DAYS_SINCE_LAST_OBS: Double = .nan,
     COVARIANCE_DATAVectorOffset COVARIANCE_DATA: Offset = Offset(),
@@ -599,7 +617,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MOR.add(ORIGINATOR: ORIGINATOR, &fbb)
     MOR.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
     MOR.add(EPOCH_UNIX_US: EPOCH_UNIX_US, &fbb)
-    MOR.add(ROWS_ONLY: ROWS_ONLY, &fbb)
+    MOR.add(RECORD_KIND: RECORD_KIND, &fbb)
     MOR.addVectorOf(WINDOWS: WINDOWS, &fbb)
     MOR.addVectorOf(WINDOW_COEFF_HEADS: WINDOW_COEFF_HEADS, &fbb)
     MOR.addVectorOf(WINDOW_COEFF_TAILS: WINDOW_COEFF_TAILS, &fbb)
@@ -649,7 +667,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
     try _v.visit(field: VT.EPOCH_UNIX_US, fieldName: "EPOCH_UNIX_US", required: false, type: Int64.self)
-    try _v.visit(field: VT.ROWS_ONLY, fieldName: "ROWS_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.RECORD_KIND, fieldName: "RECORD_KIND", required: false, type: morRecordKind.self)
     try _v.visit(field: VT.WINDOWS, fieldName: "WINDOWS", required: false, type: ForwardOffset<Vector<MORWindow, MORWindow>>.self)
     try _v.visit(field: VT.WINDOW_COEFF_HEADS, fieldName: "WINDOW_COEFF_HEADS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.WINDOW_COEFF_TAILS, fieldName: "WINDOW_COEFF_TAILS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)

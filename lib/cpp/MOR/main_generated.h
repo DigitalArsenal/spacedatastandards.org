@@ -103,6 +103,40 @@ inline const char *EnumNamemorCovarianceFloor(morCovarianceFloor e) {
   return EnumNamesmorCovarianceFloor()[index];
 }
 
+/// What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+/// it holds. Append new values only.
+enum morRecordKind : uint8_t {
+  /// A whole element set, with everything this record can carry.
+  morRecordKind_FULL = 0,
+  /// New rows for a set the receiver already holds (see "Rows only").
+  morRecordKind_ROWS_ONLY = 1,
+  morRecordKind_MIN = morRecordKind_FULL,
+  morRecordKind_MAX = morRecordKind_ROWS_ONLY
+};
+
+inline const morRecordKind (&EnumValuesmorRecordKind())[2] {
+  static const morRecordKind values[] = {
+    morRecordKind_FULL,
+    morRecordKind_ROWS_ONLY
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmorRecordKind() {
+  static const char * const names[3] = {
+    "FULL",
+    "ROWS_ONLY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemorRecordKind(morRecordKind e) {
+  if (::flatbuffers::IsOutRange(e, morRecordKind_FULL, morRecordKind_ROWS_ONLY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmorRecordKind()[index];
+}
+
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 enum morGravityField : uint8_t {
   /// The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.
@@ -429,7 +463,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORIGINATOR = 8,
     VT_MEAN_ELEMENT_THEORY = 10,
     VT_EPOCH_UNIX_US = 12,
-    VT_ROWS_ONLY = 14,
+    VT_RECORD_KIND = 14,
     VT_WINDOWS = 16,
     VT_WINDOW_COEFF_HEADS = 18,
     VT_WINDOW_COEFF_TAILS = 20,
@@ -493,9 +527,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t EPOCH_UNIX_US() const {
     return GetField<int64_t>(VT_EPOCH_UNIX_US, 0);
   }
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  bool ROWS_ONLY() const {
-    return GetField<uint8_t>(VT_ROWS_ONLY, 0) != 0;
+  /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+  morRecordKind RECORD_KIND() const {
+    return static_cast<morRecordKind>(GetField<uint8_t>(VT_RECORD_KIND, 0));
   }
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
@@ -587,9 +621,11 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double WEIGHTED_RMS() const {
     return GetField<double>(VT_WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
   }
-  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+  /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+  /// itself as a floating-point literal.
   int64_t OD_EPOCH_UNIX_US() const {
-    return GetField<int64_t>(VT_OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+    return GetField<int64_t>(VT_OD_EPOCH_UNIX_US, -9223372036854775807LL);
   }
   /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
   int32_t OD_TRACKS_USED() const {
@@ -655,7 +691,8 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ECOM2_Y0() const {
     return GetField<double>(VT_ECOM2_Y0, 0.0);
   }
-  /// Whether the set is real or test data.
+  /// Whether the set is real or test data. A record that does not state it is an operational record of
+  /// unstated status; a publisher states it only when it is TEST.
   morMessageStatus MESSAGE_STATUS() const {
     return static_cast<morMessageStatus>(GetField<uint8_t>(VT_MESSAGE_STATUS, 0));
   }
@@ -682,7 +719,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ORIGINATOR()) &&
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
            VerifyField<int64_t>(verifier, VT_EPOCH_UNIX_US, 8) &&
-           VerifyField<uint8_t>(verifier, VT_ROWS_ONLY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RECORD_KIND, 1) &&
            VerifyOffset(verifier, VT_WINDOWS) &&
            verifier.VerifyVector(WINDOWS()) &&
            VerifyOffset(verifier, VT_WINDOW_COEFF_HEADS) &&
@@ -753,8 +790,8 @@ struct MORBuilder {
   void add_EPOCH_UNIX_US(int64_t EPOCH_UNIX_US) {
     fbb_.AddElement<int64_t>(MOR::VT_EPOCH_UNIX_US, EPOCH_UNIX_US, 0);
   }
-  void add_ROWS_ONLY(bool ROWS_ONLY) {
-    fbb_.AddElement<uint8_t>(MOR::VT_ROWS_ONLY, static_cast<uint8_t>(ROWS_ONLY), 0);
+  void add_RECORD_KIND(morRecordKind RECORD_KIND) {
+    fbb_.AddElement<uint8_t>(MOR::VT_RECORD_KIND, static_cast<uint8_t>(RECORD_KIND), 0);
   }
   void add_WINDOWS(::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS) {
     fbb_.AddOffset(MOR::VT_WINDOWS, WINDOWS);
@@ -817,7 +854,7 @@ struct MORBuilder {
     fbb_.AddElement<double>(MOR::VT_WEIGHTED_RMS, WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
   }
   void add_OD_EPOCH_UNIX_US(int64_t OD_EPOCH_UNIX_US) {
-    fbb_.AddElement<int64_t>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+    fbb_.AddElement<int64_t>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, -9223372036854775807LL);
   }
   void add_OD_TRACKS_USED(int32_t OD_TRACKS_USED) {
     fbb_.AddElement<int32_t>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
@@ -891,7 +928,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_UNSPECIFIED,
     int64_t EPOCH_UNIX_US = 0,
-    bool ROWS_ONLY = false,
+    morRecordKind RECORD_KIND = morRecordKind_FULL,
     ::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS = 0,
@@ -912,7 +949,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
     int32_t OD_OBSERVATIONS_USED = -1,
     double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
-    int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    int64_t OD_EPOCH_UNIX_US = -9223372036854775807LL,
     int32_t OD_TRACKS_USED = -1,
     double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA = 0,
@@ -975,7 +1012,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_MAXIMUM_ZONAL_DEGREE(MAXIMUM_ZONAL_DEGREE);
   builder_.add_MAXIMUM_TESSERAL_DEGREE(MAXIMUM_TESSERAL_DEGREE);
   builder_.add_GRAVITY_FIELD(GRAVITY_FIELD);
-  builder_.add_ROWS_ONLY(ROWS_ONLY);
+  builder_.add_RECORD_KIND(RECORD_KIND);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();
 }
@@ -987,7 +1024,7 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     const char *ORIGINATOR = nullptr,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_UNSPECIFIED,
     int64_t EPOCH_UNIX_US = 0,
-    bool ROWS_ONLY = false,
+    morRecordKind RECORD_KIND = morRecordKind_FULL,
     const std::vector<MORWindow> *WINDOWS = nullptr,
     const std::vector<double> *WINDOW_COEFF_HEADS = nullptr,
     const std::vector<float> *WINDOW_COEFF_TAILS = nullptr,
@@ -1008,7 +1045,7 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
     int32_t OD_OBSERVATIONS_USED = -1,
     double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
-    int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    int64_t OD_EPOCH_UNIX_US = -9223372036854775807LL,
     int32_t OD_TRACKS_USED = -1,
     double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     const std::vector<double> *COVARIANCE_DATA = nullptr,
@@ -1042,7 +1079,7 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
       ORIGINATOR__,
       MEAN_ELEMENT_THEORY,
       EPOCH_UNIX_US,
-      ROWS_ONLY,
+      RECORD_KIND,
       WINDOWS__,
       WINDOW_COEFF_HEADS__,
       WINDOW_COEFF_TAILS__,

@@ -1,0 +1,722 @@
+// Hash: 1e79cc3c039f8930c16eeb28f837cccbbd9a9ff60df9ac7004fe5741849712b4
+// Version: 1.219.8
+// -----------------------------------END_HEADER
+include "../FRM/main.fbs";
+include "../TIM/main.fbs";
+include "../PCE/main.fbs";
+include "../PPE/main.fbs";
+include "../NCD/main.fbs";
+include "../EOP/main.fbs";
+include "../SPW/main.fbs";
+include "../PCF/main.fbs";
+
+/// Propagator Runtime Wire — arena-addressed init / batch request / batch
+/// response envelopes for orbital propagators that produce state vectors
+/// into a shared memory arena.
+///
+/// Data interchange for the underlying content (state vectors, covariance,
+/// maneuvers, force models, Keplerian / TLE inputs, polynomial ephemeris,
+/// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
+/// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
+/// across a JS ↔ WASM boundary, not a substitute for any of them.
+///
+/// The integrator settings and the force model a propagation runs under are
+/// `PCF`'s tables (PCFIntegratorSettings, PCFForceModel and their enums); PRW
+/// carries them and does not define them, so a configuration and a request
+/// share one definition of each.
+
+/// Runtime state-flag bitfield (sized to match a single uint).
+/// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
+/// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
+/// flags live here because they describe runtime propagation health, not
+/// a persisted record.
+enum propagatorStateFlags : uint (bit_flags) {
+  /// State vector data is valid.
+  VALID,
+  /// Satellite is in Earth's shadow at this epoch.
+  IN_ECLIPSE,
+  /// Orbit has decayed (re-entry imminent or complete).
+  DECAYED,
+  /// Propagation extrapolated beyond the input epoch.
+  EXTRAPOLATED,
+  /// Reserved.
+  RESERVED_4,
+  /// Reserved.
+  RESERVED_5,
+  /// Reserved.
+  RESERVED_6,
+  /// Reserved.
+  RESERVED_7
+}
+
+/// Error codes surfaced by runtime propagation calls.
+enum propagatorErrorCode : int {
+  /// No error.
+  OK,
+  /// Unknown / unspecified error.
+  UNKNOWN,
+  /// One or more entity handles not found.
+  UNKNOWN_ENTITY,
+  /// Invalid epoch (NaN, out of range, before earliest init epoch, etc.).
+  INVALID_EPOCH,
+  /// Output buffer too small for the requested count.
+  OUTPUT_BUFFER_OVERFLOW,
+  /// Propagator not initialized.
+  NOT_INITIALIZED
+}
+
+/// Propagator initialization request — assigns TLE / OMM / Keplerian /
+/// polynomial inputs to entity handles.
+///
+/// The actual per-entity source record is carried inline as raw bytes
+/// tagged with SOURCE_KIND and, where useful, a SDS file_identifier.
+/// Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
+/// bytes verbatim; the propagator uses SOURCE_KIND to decide how to
+/// consume them.
+table PRWInit {
+  /// Entity handles to assign results to (same order as SOURCES[]).
+  ENTITY_HANDLES:[uint];
+  /// Per-entity source records, encoded as SDS FlatBuffers.
+  SOURCES:[PRWInitSource];
+}
+
+enum prwSourceKind : ubyte {
+  /// Source is an OMM (CCSDS mean elements) FlatBuffer.
+  OMM,
+  /// Source is a raw TLE line pair (3LE supported via NAME).
+  TLE,
+  /// Source is an OCM FlatBuffer.
+  OCM,
+  /// Source is an OEM FlatBuffer.
+  OEM,
+  /// Source is a PPE (polynomial ephemeris) FlatBuffer.
+  PPE,
+  /// Source is a single classical Keplerian element set.
+  KEPLERIAN
+}
+
+table PRWKeplerianElements {
+  /// Gravitational parameter of the central body (km^3 / s^2).
+  MU:double;
+  /// Semi-major axis (km).
+  SEMI_MAJOR_AXIS:double;
+  /// Eccentricity (0 = circular, <1 = ellipse).
+  ECCENTRICITY:double;
+  /// Inclination (radians).
+  INCLINATION:double;
+  /// Right ascension of the ascending node (radians).
+  RAAN:double;
+  /// Argument of periapsis (radians).
+  ARG_PERIAPSIS:double;
+  /// True anomaly (radians).
+  TRUE_ANOMALY:double;
+  /// Epoch as Julian date.
+  EPOCH:double;
+}
+
+table PRWTleLines {
+  /// TLE line 1 (69 characters).
+  LINE1:string;
+  /// TLE line 2 (69 characters).
+  LINE2:string;
+  /// Satellite name (optional, line 0 of 3LE).
+  NAME:string;
+  /// NORAD catalog number parsed from the TLE.
+  NORAD_ID:uint;
+}
+
+table PRWInitSource {
+  /// Wire kind identifier for BYTES.
+  KIND:prwSourceKind;
+  /// Optional SDS file_identifier for BYTES (`$OMM`, `$OCM`, `$OEM`, `$PPE`).
+  FILE_IDENTIFIER:string;
+  /// Encoded source record as a FlatBuffer (consumed per KIND).
+  BYTES:[uint8];
+  /// Convenience inline form when KIND == KEPLERIAN.
+  KEPLERIAN:PRWKeplerianElements;
+  /// Convenience inline form when KIND == TLE.
+  TLE:PRWTleLines;
+}
+
+/// Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
+/// EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
+/// shared arena.
+table PRWBatchRequest {
+  /// Target epoch as a Julian date (TIME_SYSTEM is configured on the host).
+  EPOCH:double;
+  /// Entity handles to propagate (empty = all initialized entities).
+  ENTITY_HANDLES:[uint];
+  /// Output buffer offset in the arena where the StateVector stream begins.
+  OUTPUT_OFFSET:uint;
+  /// Maximum entities to process in this call (0 = unbounded).
+  MAX_COUNT:uint;
+  /// Target reference frame for the output state stream. Matches enum
+  /// values in SDS `RFM`. If zero, the propagator chooses its native frame.
+  TARGET_FRAME:string;
+}
+
+/// Batch propagation response header — describes the stream written to
+/// OUTPUT_OFFSET and reports errors. The stream itself is
+/// `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
+table PRWBatchResponse {
+  /// Number of state vectors written.
+  COUNT:uint;
+  /// Offset in the arena where the state-vector stream begins.
+  OUTPUT_OFFSET:uint;
+  /// Components per state vector (6 = PV, 9 = PVA). Mirrors OCM.STATE_VECTOR_SIZE.
+  STATE_VECTOR_SIZE:uint8;
+  /// Reference frame for the stream (SDS `RFM`-compatible string tag).
+  REFERENCE_FRAME:string;
+  /// Per-entity status flags (same cardinality as COUNT).
+  FLAGS:[propagatorStateFlags];
+  /// Error code (0 == OK).
+  ERROR_CODE:propagatorErrorCode;
+  /// Optional error message when ERROR_CODE != OK.
+  ERROR_MESSAGE:string;
+}
+
+enum prwDerivativeTechnique : ubyte {
+  UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2
+}
+enum prwDensityTreatment : ubyte {
+  UNSPECIFIED = 0, NEGLECTED = 1, FINITE_DIFFERENCE = 2
+}
+enum prwSteeringBasis : ubyte {
+  UNSPECIFIED = 0, INTEGRATION_FRAME = 1, RTN_AXES = 2, VNC_AXES = 3,
+  ALONG_VELOCITY = 4, OPPOSITE_VELOCITY = 5
+}
+enum prwThrustPrescription : ubyte {
+  UNSPECIFIED = 0, FORCE = 1, ACCELERATION = 2
+}
+enum prwQualityEvidence : ubyte {
+  UNMEASURED = 0, SAMPLED_RESIDUAL = 1, PROVEN_BOUND = 2
+}
+/// Process noise added to a propagated covariance. WHITE_ACCELERATION is
+/// zero-mean white acceleration noise (state noise compensation): over each
+/// discretization interval h it adds, per axis with spectral density q,
+/// q * [[h^3/3, h^2/2], [h^2/2, h]] to the position-velocity block, which the
+/// linearized dynamics then carry forward with the covariance.
+enum prwProcessNoiseModel : ubyte {
+  UNSPECIFIED = 0, NONE = 1, WHITE_ACCELERATION = 2
+}
+/// Axes of the process noise spectral densities.
+enum prwProcessNoiseAxes : ubyte {
+  UNSPECIFIED = 0, INERTIAL = 1, RADIAL_TRANSVERSE_NORMAL = 2
+}
+enum prwDensitySpecies : ubyte {
+  UNSPECIFIED = 0, HELIUM = 1, ATOMIC_OXYGEN = 2, MOLECULAR_NITROGEN = 3,
+  MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,
+  ANOMALOUS_OXYGEN = 8
+}
+/// Dynamical model parameters a covariance and STM may carry after the state
+/// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
+/// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
+/// INITIAL_MASS_KG); DRAG_AREA_OVER_MASS_RATE its rate (m2/kg/s,
+/// DRAG_AREA_OVER_MASS_RATE_M2_KG_S); SRP_AREA_OVER_MASS Cr*A/m (m2/kg,
+/// REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG);
+/// IN_TRACK_ACCELERATION m/s2 (IN_TRACK_ACCELERATION_M_S2);
+/// OUTGASSING_ACCELERATION km/s2, the unit its products state (the one
+/// parameter not in SI).
+enum prwDynamicParameter : ubyte {
+  UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,
+  SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,
+  /// ECOM2 coefficients (PCFEcom2), in their order there.
+  ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,
+  ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,
+  ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15,
+  /// Constant outgassing acceleration an orbit determination solves for, km/s2.
+  OUTGASSING_ACCELERATION = 16
+}
+
+/// Instance identity is host-provided, opaque, and not a physical quantity.
+table PRWInstance {
+  MODULE_ID:string (required);
+  INSTANCE_ID:string (required);
+  /// Incremented on reinitialization or configuration invalidation.
+  GENERATION:ulong;
+}
+
+/// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
+/// request's DYNAMIC_PARAMETERS in order, one row per parameter, each in the
+/// unit prwDynamicParameter defines for it (m**2/kg, m**2/kg/s, m**2/kg,
+/// m/s**2 and km/s**2 for DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
+/// SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION).
+/// Covariance entries have row*column units; STM entries row/column units;
+/// an STM's parameter rows are the identity (parameters are constant).
+table PRWStateMatrix {
+  DIMENSION:ubyte;
+  VALUES:[double] (required);
+}
+
+/// The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
+table PRWProcessNoise {
+  MODEL:prwProcessNoiseModel = UNSPECIFIED;
+  AXES:prwProcessNoiseAxes = UNSPECIFIED;
+  /// Acceleration power spectral density per axis (x, y, z or R, T, N), m^2/s^3.
+  SPECTRAL_DENSITY_M2_S3:[double];
+  /// Interval over which each noise increment enters, seconds.
+  DISCRETIZATION_SECONDS:double;
+}
+
+/// Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
+table PRWResidentState {
+  INSTANCE:PRWInstance;
+  ENTITY_HANDLE:uint;
+  CATALOG_NUMBER:uint;
+  OBJECT_ID:string;
+  STATE:FRMStateVector (required);
+  COORDINATE_SYSTEM:RFMCoordinateSystem (required);
+  COVARIANCE:PRWStateMatrix;
+  /// Optional initial dynamical mass in kg; distinct from a missing mass.
+  MASS_KG:double;
+  /// True when MASS_KG carries a value; false means absent.
+  HAS_MASS_KG:bool = false;
+  /// Explicit SI concepts Cd*A/m and Cr*A/m. Do not infer these from legacy
+  /// ignored/underspecified coefficients; require a caller-provided mapping.
+  DRAG_AREA_OVER_MASS_M2_KG:double;
+  /// True when DRAG_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_M2_KG:bool = false;
+  SRP_AREA_OVER_MASS_M2_KG:double;
+  /// True when SRP_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_SRP_AREA_OVER_MASS_M2_KG:bool = false;
+  VALID:bool = true;
+  /// Process noise for COVARIANCE: on input, what propagation adds; on
+  /// output, what the propagated COVARIANCE includes. Absent means none.
+  PROCESS_NOISE:PRWProcessNoise;
+  /// Rate of change of DRAG_AREA_OVER_MASS_M2_KG, m2/kg/s, from STATE's epoch
+  /// (the BDOT of a VCM).
+  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
+  /// Constant in-track acceleration, m/s2, as PCFForceModel's.
+  IN_TRACK_ACCELERATION_M_S2:double;
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
+}
+
+/// Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
+table PRWImpulse {
+  EPOCH:TIMInstant (required);
+  DELTA_V:FRMVector3 (required);
+  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;
+}
+
+/// Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
+table PRWThrottlePoint {
+  ELAPSED_SECONDS:double;
+  FRACTION:double;
+}
+
+/// Scheduled time gates an optional condition. At least one must be present.
+table PRWBurnBoundary {
+  ELAPSED_SECONDS:double;
+  /// True when ELAPSED_SECONDS carries a value; false means absent.
+  HAS_ELAPSED_SECONDS:bool = false;
+  /// SI PCE predicate; direction and goal tolerance explicitly populated.
+  CONDITION:PCEParameterCondition;
+}
+
+/// Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
+/// VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
+table PRWFiniteBurn {
+  START:PRWBurnBoundary (required);
+  STOP:PRWBurnBoundary (required);
+  THRUST_LAW:prwThrustPrescription = UNSPECIFIED;
+  FORCE_NEWTONS:double;
+  /// True when FORCE_NEWTONS carries a value; false means absent.
+  HAS_FORCE_NEWTONS:bool = false;
+  ACCELERATION_M_S2:double;
+  /// True when ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_ACCELERATION_M_S2:bool = false;
+  SPECIFIC_IMPULSE_SECONDS:double;
+  VECTOR_BASIS:prwSteeringBasis = UNSPECIFIED;
+  /// Dimensionless components; normalized after adding elapsed*time rate.
+  DIRECTION:FRMVector3;
+  /// Direction-component change per second, not radians/second.
+  DIRECTION_RATE:FRMVector3;
+  THROTTLE:[PRWThrottlePoint];
+}
+
+/// A located event.
+table PRWEventRecord {
+  /// Index into the request's EVENTS.
+  EVENT_INDEX:uint;
+  /// The event function that crossed zero.
+  KIND:pcfEventKind = UNSPECIFIED;
+  /// The way g crossed zero: INCREASING or DECREASING.
+  DIRECTION:pcfEventDirection = ANY;
+  /// Epoch of the crossing.
+  EPOCH:TIMInstant (required);
+  /// Seconds from the request's initial epoch, negative for a backward propagation.
+  ELAPSED_SECONDS:double;
+  /// The state at EPOCH in the request's axes.
+  STATE:PRWResidentState (required);
+  /// g at EPOCH.
+  RESIDUAL:double;
+  /// Refinement steps taken.
+  ITERATIONS:uint;
+}
+
+/// Fixed endpoint propagation. Provider selected by the host's connected port.
+table PRWExecutionRequest {
+  INITIAL:PRWResidentState (required);
+  TARGET_EPOCH:TIMInstant (required);
+  INTEGRATOR:PCFIntegratorSettings (required);
+  FORCES:PCFForceModel (required);
+  INCLUDE_STM:bool = false;
+  STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;
+  DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;
+  INITIAL_COVARIANCE:PRWStateMatrix;
+  INITIAL_MASS_COVARIANCE:PRWStateMatrix;
+  SAMPLE_EPOCHS:[TIMInstant];
+  IMPULSES:[PRWImpulse];
+  /// Explicitly selects 7-state integration even if FINITE_BURNS is empty.
+  INCLUDE_MASS_DYNAMICS:bool = false;
+  FINITE_BURNS:[PRWFiniteBurn];
+  /// Process noise added to the propagated covariance. Absent means none.
+  PROCESS_NOISE:PRWProcessNoise;
+  /// Model parameters appended, in this order and without repeats, to
+  /// INITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a
+  /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
+  /// 10x10). Each must be active in FORCES. Empty means the state alone.
+  DYNAMIC_PARAMETERS:[prwDynamicParameter];
+  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+  /// or burns) by an integrator with a continuous extension; any other request that
+  /// names events is refused. Default empty.
+  EVENTS:[PCFEventDefinition];
+}
+
+/// Burn times absent until reached; zero means an actual edge at initial epoch.
+table PRWBurnReport {
+  BURN_INDEX:uint;
+  STARTED:bool;
+  STOPPED:bool;
+  START_BY_EVENT:bool;
+  STOP_BY_EVENT:bool;
+  START_SECONDS:double;
+  /// True when START_SECONDS carries a value; false means absent.
+  HAS_START_SECONDS:bool = false;
+  STOP_SECONDS:double;
+  /// True when STOP_SECONDS carries a value; false means absent.
+  HAS_STOP_SECONDS:bool = false;
+  START_EPOCH:TIMInstant;
+  STOP_EPOCH:TIMInstant;
+  /// Integral of thrust acceleration magnitude, m/s; not vector net delta-v.
+  DELTA_V_M_S:double;
+  PROPELLANT_KG:double;
+}
+
+table PRWPropagationSample {
+  STATE:PRWResidentState (required);
+  /// Both STMs cumulative from request initial epoch; SI state units.
+  STM:PRWStateMatrix;
+  MASS_STM:PRWStateMatrix;
+  COVARIANCE:PRWStateMatrix;
+  MASS_COVARIANCE:PRWStateMatrix;
+  ACCEPTED_STEPS:ulong;
+  REJECTED_STEPS:ulong;
+  BURNS:[PRWBurnReport];
+  /// The process noise COVARIANCE includes. Absent means none.
+  PROCESS_NOISE:PRWProcessNoise;
+}
+
+table PRWExecutionResult {
+  FINAL_SAMPLE:PRWPropagationSample (required);
+  SAMPLES:[PRWPropagationSample];
+  ELAPSED_SECONDS:double;
+  EPHEMERIS_SOURCE:string (required);
+  STM_TECHNIQUE:prwDerivativeTechnique = UNSPECIFIED;
+  DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;
+  /// The parameters the samples' STM and COVARIANCE carry after the state.
+  DYNAMIC_PARAMETERS:[prwDynamicParameter];
+  /// The located events with ACTION RECORD or STOP, in time order of propagation.
+  EVENTS:[PRWEventRecord];
+  /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+  EVENT_OCCURRENCES:[uint];
+  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  STOPPED_BY_EVENT:int = -1;
+}
+
+/// Portable batch request: no output pointer; state records returned via TAB.
+table PRWResidentRequest {
+  INSTANCE:PRWInstance (required);
+  TARGET_EPOCH:TIMInstant (required);
+  ENTITY_HANDLES:[uint];
+  MAXIMUM_COUNT:uint;
+  TARGET_COORDINATE_SYSTEM:RFMCoordinateSystem (required);
+}
+
+/// All epochs explicit; duration seconds >=0; empty handles means all resident.
+table PRWPrepareRequest {
+  INSTANCE:PRWInstance (required);
+  CATALOG_HANDLE:uint;
+  SOURCE_HANDLES:[uint];
+  START_EPOCH:TIMInstant (required);
+  DURATION_SECONDS:double;
+  /// Provider-advertised profile name; unrecognized nonempty values fail.
+  PROFILE:string;
+}
+
+table PRWFitQuality {
+  EVIDENCE_KIND:prwQualityEvidence = UNMEASURED;
+  /// SI metres and metres/second; absent when UNMEASURED.
+  MAXIMUM_POSITION_ERROR_M:double;
+  /// True when MAXIMUM_POSITION_ERROR_M carries a value; false means absent.
+  HAS_MAXIMUM_POSITION_ERROR_M:bool = false;
+  MAXIMUM_VELOCITY_ERROR_M_S:double;
+  /// True when MAXIMUM_VELOCITY_ERROR_M_S carries a value; false means absent.
+  HAS_MAXIMUM_VELOCITY_ERROR_M_S:bool = false;
+  METHOD:string;
+  REFERENCE_CONTENT_ID:string;
+}
+
+table PRWPrepareResult {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  COVERAGE_COMPLETE:bool;
+  QUALITY:PRWFitQuality (required);
+}
+
+table PRWDescribeRequest {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  SOURCE_HANDLES:[uint];
+}
+
+/// Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
+table PRWTrajectorySource {
+  SOURCE_HANDLE:uint;
+  OBJECT_ID:string;
+  EPHEMERIS:PPE (required);
+  /// One quality record per PPE.POSITION_RECORDS entry, same order.
+  SEGMENT_QUALITY:[PRWFitQuality];
+}
+
+table PRWDescribeResult {
+  INSTANCE:PRWInstance (required);
+  SEGMENT_SET_HANDLE:uint;
+  SOURCES:[PRWTrajectorySource];
+  /// Chunking indexes SOURCES; no partial polynomial coefficient vector.
+  SOURCE_OFFSET:ulong;
+  FINAL_CHUNK:bool = true;
+}
+
+/// Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
+table PRWNativeInput {
+  DESCRIPTOR:NCD (required);
+  /// Exactly DESCRIPTOR.SOURCE_BYTE_LENGTH bytes; verify declared hash.
+  CONTENT:[ubyte] (required);
+}
+
+/// Earth orientation for a propagation: one instantaneous row, or daily rows
+/// of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
+/// strictly increasing MJD that cover the arc. A provider interpolates as
+/// published by the series and does not extrapolate.
+table PRWEarthOrientation {
+  ROWS:[EOP] (required);
+}
+
+/// Daily space weather for a propagation, as published (`SPW`), with strictly
+/// increasing DATE covering the arc plus what the atmosphere model reads
+/// before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
+/// its model inputs from these rows and reports which ones it reads.
+table PRWSpaceWeatherTable {
+  ROWS:[SPW] (required);
+}
+
+/// One UTC day of JB2008 drivers, as Space Environment Technologies publishes
+/// them (SOLFSMY.TXT and DTCFILE.TXT): solar indices in SFU with their
+/// 81-day centred averages, reported at 12 UT of DATE, and the hourly
+/// Dst-derived exospheric temperature change. A provider applies the model's
+/// own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
+/// rows, and states how it interpolates between them.
+table PRWJB2008Indices {
+  /// ISO 8601 calendar date (UTC) the row's values apply to.
+  DATE:string (required);
+  F10:double;
+  F10_CENTRED_81:double;
+  S10:double;
+  S10_CENTRED_81:double;
+  M10:double;
+  M10_CENTRED_81:double;
+  Y10:double;
+  Y10_CENTRED_81:double;
+  /// Exospheric temperature change from Dst (K), hours 00 through 23 UTC.
+  DTC_HOURLY_K:[double];
+  /// Source flags as published (SOLFSMY Ssrc), e.g. "4B".
+  SOURCE_FLAGS:string;
+}
+
+/// JB2008 drivers for a propagation: daily rows with strictly increasing
+/// DATE covering the arc plus the days the model's lags read before it.
+table PRWJB2008IndicesTable {
+  ROWS:[PRWJB2008Indices] (required);
+}
+
+/// Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
+table PRWEphemerisRequest {
+  EPOCH:TIMInstant (required);
+  TARGET_NAIF_ID:int;
+  CENTER_NAIF_ID:int = 399;
+}
+
+table PRWEphemerisResult {
+  TARGET_NAIF_ID:int;
+  CENTER_NAIF_ID:int;
+  /// Explicit ICRF axes and named NAIF origin; FRM state in SI m/m/s.
+  STATE:PRWResidentState (required);
+  EPHEMERIS_SOURCE:string (required);
+}
+
+/// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
+table PRWAtmosphereRequest {
+  ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;
+  EPOCH:TIMInstant (required);
+  ALTITUDE_M:double;
+  LATITUDE_RAD:double;
+  LONGITUDE_RAD:double;
+  /// Optional local solar time; hours [0,24); absent derives from UTC/longitude.
+  LOCAL_SOLAR_TIME_HOURS:double;
+  /// True when LOCAL_SOLAR_TIME_HOURS carries a value; false means absent.
+  HAS_LOCAL_SOLAR_TIME_HOURS:bool = false;
+  F107:double = 150;
+  F107_AVERAGE:double = 150;
+  AP_INDEX:double = 4;
+  INCLUDE_ANOMALOUS_OXYGEN:bool = false;
+}
+
+table PRWSpeciesDensity {
+  CONSTITUENT:prwDensitySpecies = UNSPECIFIED;
+  NUMBER_PER_M3:double;
+}
+
+table PRWAtmosphereResult {
+  ATMOSPHERE_MODEL:pcfAtmosphereFamily = UNSPECIFIED;
+  VARIANT:string;
+  ALTITUDE_M:double;
+  DENSITY_KG_M3:double;
+  TEMPERATURE_K:double;
+  /// True when TEMPERATURE_K carries a value; false means absent.
+  HAS_TEMPERATURE_K:bool = false;
+  EXOSPHERIC_TEMPERATURE_K:double;
+  /// True when EXOSPHERIC_TEMPERATURE_K carries a value; false means absent.
+  HAS_EXOSPHERIC_TEMPERATURE_K:bool = false;
+  SCALE_HEIGHT_M:double;
+  /// True when SCALE_HEIGHT_M carries a value; false means absent.
+  HAS_SCALE_HEIGHT_M:bool = false;
+  NUMBER_DENSITIES:[PRWSpeciesDensity];
+}
+
+/// Runtime diagnostic version; PLG remains the authoritative manifest identity.
+table PRWVersionResult {
+  VERSION:string (required);
+  MODULE_ID:string (required);
+}
+
+/// One propagation window: propagate one source (an element set, an
+/// initialized entity or a resident handle) from START to STOP, sampling at
+/// most STEP_SECONDS apart with the last sample exactly at STOP. The answer is
+/// one $OEM data block per query, in SEQUENCE order, covering [START, STOP];
+/// a provider that cannot answer returns an empty block whose COMMENT begins
+/// "REFUSED" and reports the reason in PRWWindowReport.
+table PRWWindowQuery {
+  /// Position of the query in the request, 0-based; answers keep this order.
+  SEQUENCE:uint;
+  /// 0-based index of the source record among the source records passed
+  /// with the request (e.g. the $OMM element sets, across all frames, in input
+  /// order). Ignored when ENTITY_HANDLE is used.
+  SET_INDEX:uint;
+  /// Entity handle of an initialized or resident source; 0 = use SET_INDEX.
+  ENTITY_HANDLE:uint;
+  /// Object key of the source as the requester names it (e.g. "NORAD:25544");
+  /// the answer block must be of this object.
+  OBJECT_KEY:string;
+  /// NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies
+  /// it).
+  NORAD_CAT_ID:uint;
+  /// International designator or provider object identifier; empty = none.
+  OBJECT_ID:string;
+  /// Epoch of the source record, for reference; absent = not stated.
+  SOURCE_EPOCH:TIMInstant;
+  /// First and last instants of the window (UTC unless TIME_SYSTEM says
+  /// otherwise).
+  START:TIMInstant (required);
+  STOP:TIMInstant (required);
+  /// Largest sample spacing, seconds (> 0).
+  STEP_SECONDS:double;
+}
+
+/// A batch of propagation windows. Existing BATCH_REQUEST propagates every
+/// entity to one EPOCH; a window request propagates each query's source over
+/// its own [START, STOP] at STEP_SECONDS.
+table PRWWindowRequest {
+  QUERIES:[PRWWindowQuery];
+  /// Port of the propagator expected to answer; empty = the host's default.
+  PROPAGATOR_PORT_ID:string;
+  /// Neighbouring source records each window spans on either side (context
+  /// for the requester's replay); 0 = not stated.
+  NEIGHBOUR_SETS:uint;
+  /// Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");
+  /// empty = the provider's native frame.
+  TARGET_FRAME:string;
+  /// How to answer, human-readable.
+  INSTRUCTIONS:string;
+}
+
+/// A window the provider refused.
+table PRWWindowRefusal {
+  /// The query's SEQUENCE.
+  SEQUENCE:uint;
+  /// The query's SET_INDEX.
+  SET_INDEX:uint;
+  /// Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",
+  /// "invalid-span", "span-too-long", "sgp4-propagate".
+  REASON:string;
+}
+
+/// Summary of the answers to a window request.
+table PRWWindowReport {
+  /// Queries received, answered and refused.
+  QUERIES:uint;
+  ANSWERED:uint;
+  REFUSED:uint;
+  /// Source records received.
+  SOURCE_RECORDS:uint;
+  REFUSALS:[PRWWindowRefusal];
+  /// The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,
+  /// opsmode i; TEME, UTC, km and km/s".
+  PROVIDER:string;
+}
+
+/// Exactly one arm per envelope. Existing three arms keep their ordinals.
+table PRW {
+  INIT:PRWInit;
+  BATCH_REQUEST:PRWBatchRequest;
+  BATCH_RESPONSE:PRWBatchResponse;
+  /// Appended portable arms; each method names its permitted arm.
+  EXECUTION_REQUEST:PRWExecutionRequest;
+  EXECUTION_RESULT:PRWExecutionResult;
+  RESIDENT_STATE:PRWResidentState;
+  RESIDENT_REQUEST:PRWResidentRequest;
+  PREPARE_REQUEST:PRWPrepareRequest;
+  PREPARE_RESULT:PRWPrepareResult;
+  DESCRIBE_REQUEST:PRWDescribeRequest;
+  DESCRIBE_RESULT:PRWDescribeResult;
+  NATIVE_INPUT:PRWNativeInput;
+  EPHEMERIS_REQUEST:PRWEphemerisRequest;
+  EPHEMERIS_RESULT:PRWEphemerisResult;
+  ATMOSPHERE_REQUEST:PRWAtmosphereRequest;
+  ATMOSPHERE_RESULT:PRWAtmosphereResult;
+  VERSION_QUERY:bool = false;
+  VERSION_RESULT:PRWVersionResult;
+  EARTH_ORIENTATION:PRWEarthOrientation;
+  SPACE_WEATHER:PRWSpaceWeatherTable;
+  JB2008_INDICES:PRWJB2008IndicesTable;
+  /// Propagation over windows: one $OEM block per query answers it.
+  WINDOW_REQUEST:PRWWindowRequest;
+  WINDOW_REPORT:PRWWindowReport;
+}
+
+root_type PRW;
+file_identifier "$PRW";

@@ -1,0 +1,108 @@
+// Hash: 59f066f4d0b9bab4ec1e56e68d0df1526c2b86cdd60e271ff79489b1d9c0ee4c
+// Version: 1.0.1
+// -----------------------------------END_HEADER
+/// Module Bundle Listing
+///
+/// SDS-owned record describing the logical contents and canonicalization rules
+/// for a single-file module delivery artifact carried inside a REC trailer.
+
+/// Logical role for one payload carried in the bundle.
+enum ModuleBundleEntryRole : ubyte {
+  MANIFEST = 0,
+  AUTHORIZATION = 1,
+  SIGNATURE = 2,
+  TRANSPORT = 3,
+  ATTESTATION = 4,
+  AUXILIARY = 5
+}
+
+/// Serialization format used by an entry payload.
+enum ModulePayloadEncoding : ubyte {
+  RAW_BYTES = 0,
+  FLATBUFFER = 1,
+  JSON_UTF8 = 2,
+  CBOR = 3
+}
+
+/// Canonicalization rule applied before hashing or signature verification.
+table CanonicalizationRule {
+  /// Schema version for the canonicalization contract.
+  version: uint16 = 1;
+
+  /// Strip any custom section whose name starts with this prefix before
+  /// hashing the module for signature verification.
+  stripped_custom_section_prefix: string;
+
+  /// Logical container name used for the module bundle record within the
+  /// delivery artifact.
+  bundle_section_name: string;
+
+  /// Hash function identifier, for example `sha256`.
+  hash_algorithm: string;
+}
+
+/// One payload carried inside the module bundle.
+table ModuleBundleEntry {
+  /// Stable bundle-local identifier.
+  entry_id: string (required, key);
+
+  /// High-level semantic role of the payload.
+  role: ModuleBundleEntryRole = AUXILIARY;
+
+  /// Optional logical section name within the bundle, for example
+  /// `sds.authorization`.
+  section_name: string;
+
+  /// SDS/shared-module schema identity when the payload is itself a
+  /// FlatBuffer. Stored as canonical JSON text for portability.
+  type_ref: string;
+
+  /// Encoding used for `payload`.
+  payload_encoding: ModulePayloadEncoding = RAW_BYTES;
+
+  /// Optional media type for transitional payloads such as JSON envelopes.
+  media_type: string;
+
+  /// Implementation-defined bit flags for signed/encrypted/compressed state.
+  flags: uint32 = 0;
+
+  /// SHA-256 of the payload bytes.
+  sha256: [ubyte];
+
+  /// Embedded payload bytes. For single-file deployment this should be
+  /// populated for every entry.
+  payload: [ubyte];
+
+  /// Human-readable description for tooling and diagnostics.
+  description: string;
+}
+
+/// Metadata stored in the REC trailer for one module delivery artifact.
+table MBL {
+  /// Bundle schema version.
+  bundle_version: uint16 = 1;
+
+  /// Human-readable package format label.
+  module_format: string;
+
+  /// Canonicalization rule used to compute module hashes.
+  canonicalization: CanonicalizationRule;
+
+  /// SHA-256 of the wasm module after stripping SDS-owned custom sections.
+  canonical_module_hash: [ubyte];
+
+  /// SHA-256 of the canonical plugin manifest bytes.
+  manifest_hash: [ubyte];
+
+  /// Legacy ABI export retained for backward compatibility.
+  manifest_export_symbol: string;
+
+  /// Legacy ABI export retained for backward compatibility.
+  manifest_size_symbol: string;
+
+  /// Payloads embedded in the bundle.
+  entries: [ModuleBundleEntry];
+}
+
+root_type MBL;
+file_identifier "$MBL";

@@ -1,0 +1,295 @@
+// Hash: 7992f226668a41d9cd1269e4fc3707803edfe01b1ca8cd97fe20441eaeb65afe
+// Version: 1.187.0
+// -----------------------------------END_HEADER
+// Terrain Raster Solve (TRS)
+// Description
+// The request/result envelope for an RF terrain raster solve: one call turns
+// a terrain and obstruction field plus one emitter into a link-margin raster.
+// This is an EPHEMERAL COMPUTE ENVELOPE in the `$ACW` class — the wire a
+// pluggable terrain-solver implementation is invoked over — never a durable
+// product. The durable RF records are `$RFL` (per-link, per-epoch budget
+// samples), `$ACI` (published access intervals), `$CVP` (coverage geometry)
+// and `$CVG` (gridded figures of merit); a solver's rasters become one of
+// those only when a producer publishes them with provenance.
+//
+// RASTER-IN / RASTER-OUT. ONE request carries every cell and ONE result
+// returns every layer. A per-cell request shape is deliberately impossible to
+// express here: a raster solve crossing a module boundary once per cell is
+// the failure mode this envelope exists to prevent.
+//
+// TWO FIELDS, TWO RESOLUTIONS. The OUTPUT raster (GRID_WIDTH x GRID_HEIGHT)
+// and the obstruction PROFILE field (PROFILE_WIDTH x PROFILE_HEIGHT) are
+// different grids over the same analysis-frame bounds, and the profile is
+// deliberately the finer one — the line-of-sight march samples the profile,
+// not the output raster.
+//
+// REFUSAL, NEVER FALLBACK. A solver that cannot honour the requested physics
+// (an unimplemented solver tier, propagation model or atmospheric term)
+// answers STATUS = REFUSED with ERROR_MESSAGE naming the gap and NO layers.
+// It never silently substitutes different physics, and a refusal never
+// carries a partial raster — a partially-defined layer is how a shadow gets
+// drawn as open ground.
+//
+// EVERY LAYER, EVERY CELL. On STATUS = OK every result layer is present with
+// exactly GRID_WIDTH * GRID_HEIGHT entries in row-major order. A solver may
+// not leave shadowed cells undefined and let the consumer guess.
+//
+// ABSENT IS NOT ZERO. A metric array that is not published is ABSENT — never
+// a zero-filled array. 0 dBW of EIRP, 0 dB of margin and 0 K of noise
+// temperature are all real, meaningful values that a consumer must be able to
+// distinguish from "not computed". The same rule governs the scalar numeric
+// fields of this record: NaN is a non-default value and survives
+// serialization, where an omitted field silently reads back as 0. Readers
+// MUST treat NaN as "not published" and 0 as a real value. On a REQUEST
+// scalar, NaN additionally means "caller left it unset" and the solver
+// applies its own documented default.
+//
+// This envelope has an aligned-binary twin for invoke-ABI use. Per the
+// dual-accept wire-format rule (`$PIV` / `$TAB`), every port advertising the
+// aligned layout MUST advertise this FlatBuffer schema beside it; the aligned
+// entry is an optimization, never a replacement for this canonical form.
+
+/// Fidelity tier of the solve. Ordinal 0 is UNSPECIFIED so an unset field can
+/// never decode as a claim that a specific tier was requested.
+///
+/// ORDINALS ARE WIRE VALUES. New tiers are APPENDED ONLY.
+enum trsSolverTier : byte {
+  UNSPECIFIED = 0,
+  /// Geometric line-of-sight occlusion only; propagation on visible cells.
+  LOS_OCCLUSION = 1,
+  /// Knife-edge diffraction assists shadowed cells (ITU-R P.526-15).
+  DIFFRACTION_ASSISTED = 2,
+  /// Adds a single specular ground-bounce contribution.
+  SPECULAR_SINGLE_BOUNCE = 3
+}
+
+/// Propagation model requested for the per-cell loss term, in the generic
+/// published-model vocabulary. Capability classes only: a model class is what
+/// the mathematics IS, never whose implementation runs it.
+///
+/// ORDINALS ARE WIRE VALUES and deliberately match the widely-deployed
+/// numbering of this vocabulary, including the gap before CUSTOM. New models
+/// are APPENDED ONLY (between 11 and 98, then past 99 — an ordinal is never
+/// reused, and 99 stays CUSTOM).
+enum trsPropagationModel : byte {
+  /// Free-space path loss. Holds ordinal 0 and is the default.
+  FREE_SPACE = 0,
+  /// Two-ray ground-reflection model.
+  TWO_RAY_GROUND = 1,
+  /// Okumura-Hata, urban.
+  HATA_URBAN = 2,
+  /// Okumura-Hata, suburban.
+  HATA_SUBURBAN = 3,
+  /// Okumura-Hata, rural/open.
+  HATA_RURAL = 4,
+  /// COST 231 extension of Hata.
+  COST231 = 5,
+  /// ITU-R P.1812-class terrain-aware path loss.
+  ITU_TERRAIN = 6,
+  /// Single knife-edge diffraction (ITU-R P.526).
+  KNIFE_EDGE = 7,
+  /// Multiple knife-edge diffraction (ITU-R P.526).
+  MULTI_KNIFE_EDGE = 8,
+  /// Bullington equivalent-edge diffraction (ITU-R P.526).
+  BULLINGTON = 9,
+  /// Longley-Rice / ITM irregular-terrain model.
+  LONGLEY_RICE = 10,
+  /// A model this enum cannot express; the solver names it out of band.
+  CUSTOM = 99
+}
+
+/// How the solve ended. Ordinals are wire values; REFUSED deliberately holds
+/// ordinal 2 so the aligned-binary twin's status byte pairs one-to-one.
+enum trsResultStatus : byte {
+  /// Solve completed; every layer is present for every cell.
+  OK = 0,
+  /// Request fields are missing, non-finite where a value is required, or
+  /// dimensionally inconsistent.
+  INVALID_INPUT = 1,
+  /// The solver does not implement the requested physics. ERROR_MESSAGE
+  /// names the gap; NO layers are carried. A refusal is never a fallback.
+  REFUSED = 2
+}
+
+/// How a cell's signal reached it, classified from the ITU-R P.526-15
+/// eq. (29) diffraction parameter v of the dominant terrain edge on its path:
+/// OPEN v <= -0.78 (first Fresnel zone effectively clear), GRAZING
+/// -0.78 < v <= 0 (geometrically clear but Fresnel-intruded), DIFFRACTED
+/// v > 0 (geometrically obstructed; signal arrived by diffraction).
+///
+/// ORDINALS ARE WIRE VALUES. New classes are APPENDED ONLY.
+enum trsPathClass : byte {
+  OPEN = 0,
+  GRAZING = 1,
+  DIFFRACTED = 2
+}
+
+/// One terrain raster solve request.
+///
+/// FRAMES. The analysis frame is a local East-North-Up (ENU) frame: local X
+/// is east, Y is north, Z is up. Both grids share the same analysis-frame
+/// bounds, anchored at (MIN_EAST_M, MIN_NORTH_M). Per-cell geodetic
+/// coordinates are carried explicitly in GRID_LONGITUDE_RAD /
+/// GRID_LATITUDE_RAD so a solver recomputes exact per-cell Earth-fixed
+/// geometry instead of interpolating it.
+table TRSRequest {
+  /// Output raster width, cells.
+  GRID_WIDTH: uint32;
+  /// Output raster height, cells.
+  GRID_HEIGHT: uint32;
+  /// Obstruction profile field width, cells. The profile is a FINER field
+  /// than the output raster; the line-of-sight march samples it.
+  PROFILE_WIDTH: uint32;
+  /// Obstruction profile field height, cells.
+  PROFILE_HEIGHT: uint32;
+
+  /// Fidelity tier requested. A solver that does not implement the tier
+  /// REFUSES; it never silently downgrades.
+  SOLVER_TIER: trsSolverTier = UNSPECIFIED;
+  /// Propagation model requested for the per-cell loss term. A solver that
+  /// does not implement the model REFUSES; it never silently substitutes.
+  PROPAGATION_MODEL: trsPropagationModel = FREE_SPACE;
+  /// Atmospheric attenuation terms requested, as a bitmask: 0 none,
+  /// bit 0 (1) gaseous absorption, bit 1 (2) rain attenuation, bit 2 (4)
+  /// cloud/fog attenuation. A solver that does not implement a requested
+  /// term REFUSES.
+  ATMOSPHERIC_MODEL_MASK: uint32;
+  /// Parallelism hint. 0 or 1 means sequential. A solver MUST produce
+  /// byte-identical layers at any value — cells are independent and a thread
+  /// writes only its own indices; determinism is part of this contract.
+  THREAD_COUNT_HINT: uint32;
+
+  /// Analysis-frame east coordinate of the shared grid origin, meters.
+  MIN_EAST_M: double;
+  /// Analysis-frame north coordinate of the shared grid origin, meters.
+  MIN_NORTH_M: double;
+  /// Profile cell width, meters.
+  PROFILE_CELL_WIDTH_M: double;
+  /// Profile cell height, meters.
+  PROFILE_CELL_HEIGHT_M: double;
+  /// Profile sample spacing, meters; sets the line-of-sight march stride.
+  PROFILE_SPACING_M: double;
+  /// Minimum march step, meters. NaN means caller left it unset and the
+  /// solver applies its own documented default.
+  MINIMUM_STEP_M: double;
+
+  /// Emitter position in the analysis ENU frame, meters (X east, Y north,
+  /// Z up).
+  TX_LOCAL_X_M: double;
+  TX_LOCAL_Y_M: double;
+  TX_LOCAL_Z_M: double;
+  /// Emitter Earth-centered Earth-fixed position, meters — carried so the
+  /// solver computes exact per-cell range rather than a small-angle
+  /// approximation.
+  TX_ECEF_X_M: double;
+  TX_ECEF_Y_M: double;
+  TX_ECEF_Z_M: double;
+  /// Emitter height above the reference ellipsoid, meters.
+  TX_ABSOLUTE_HEIGHT_M: double;
+  /// Terrain surface height under the emitter, meters above the ellipsoid.
+  /// Emitter height above ground = TX_ABSOLUTE_HEIGHT_M −
+  /// TX_SURFACE_HEIGHT_M.
+  TX_SURFACE_HEIGHT_M: double;
+  /// Column-major 4x4 inverse of the analysis ENU frame transform (the
+  /// matrix that takes Earth-fixed points INTO the analysis frame). Exactly
+  /// 16 entries.
+  INVERSE_ENU_TRANSFORM: [double];
+
+  /// Receiver height above ground at every cell, meters.
+  TARGET_HEIGHT_M: double;
+  /// Carrier frequency, hertz.
+  FREQUENCY_HZ: double;
+  /// Noise bandwidth, hertz. NaN means caller left it unset and the solver
+  /// applies its own documented default.
+  BANDWIDTH_HZ: double;
+  /// Transmit power, watts. NaN means unset; solver default applies.
+  TX_POWER_W: double;
+  /// Transmit antenna gain, dBi. NaN means unset; solver default applies.
+  TX_GAIN_DBI: double;
+  /// Transmit line loss, dB (positive). NaN means unset; solver default
+  /// applies.
+  TX_LINE_LOSS_DB: double;
+  /// Receive antenna gain, dBi. NaN means unset; solver default applies.
+  RX_GAIN_DBI: double;
+  /// Receive line loss, dB (positive). NaN means unset; solver default
+  /// applies.
+  RX_LINE_LOSS_DB: double;
+  /// Receiver noise figure, dB. NaN means unset; solver default applies.
+  RX_NOISE_FIGURE_DB: double;
+  /// Effective Earth radius factor (k-factor) for curvature correction.
+  /// NaN means no curvature term is applied — NOT a default of 4/3.
+  EFFECTIVE_EARTH_RADIUS_FACTOR: double;
+
+  /// Geodetic longitude of every output cell, radians, row-major,
+  /// GRID_WIDTH * GRID_HEIGHT entries.
+  GRID_LONGITUDE_RAD: [double];
+  /// Geodetic latitude of every output cell, radians, row-major,
+  /// GRID_WIDTH * GRID_HEIGHT entries.
+  GRID_LATITUDE_RAD: [double];
+  /// Terrain height at every output cell, meters above the ellipsoid,
+  /// row-major, GRID_WIDTH * GRID_HEIGHT entries.
+  GROUND_HEIGHTS_M: [float32];
+  /// COMPOSITE obstruction surface (terrain plus structures) at every
+  /// profile cell, meters above the ellipsoid, row-major,
+  /// PROFILE_WIDTH * PROFILE_HEIGHT entries.
+  PROFILE_HEIGHTS_M: [float32];
+  /// The same composite surface expressed as analysis-frame Z, meters —
+  /// the frame the line-of-sight test runs in. PROFILE_WIDTH *
+  /// PROFILE_HEIGHT entries.
+  PROFILE_SURFACE_Z_M: [float32];
+
+  /// Optional trace/correlation identifier.
+  TRACE_ID: string;
+}
+
+/// One terrain raster solve result. On STATUS = OK every layer below is
+/// present with exactly GRID_WIDTH * GRID_HEIGHT row-major entries. On any
+/// other STATUS the result carries NO layers — never a partial raster.
+table TRSResult {
+  STATUS: trsResultStatus = OK;
+  /// On REFUSED or INVALID_INPUT: names the exact gap or defect. Empty on
+  /// OK.
+  ERROR_MESSAGE: string;
+  /// Output raster dimensions the layers are stated for, echoed from the
+  /// request.
+  GRID_WIDTH: uint32;
+  GRID_HEIGHT: uint32;
+
+  /// 1 where the geometric ray from the emitter clears the obstruction
+  /// surface, else 0.
+  VISIBLE_MASK: [uint8];
+  /// Complement of VISIBLE_MASK.
+  OCCLUDED_MASK: [uint8];
+  /// 1 where LINK_MARGIN_DB > 0, else 0.
+  POSITIVE_LINK_MASK: [uint8];
+  /// Path classification of every cell from the dominant-edge diffraction
+  /// parameter — see trsPathClass.
+  PATH_CLASS: [trsPathClass];
+  /// Total path loss including every applied term, dB (positive).
+  PATH_LOSS_DB: [float32];
+  /// Loss above free space — what the terrain cost the cell, dB.
+  EXCESS_LOSS_DB: [float32];
+  /// Link budget margin, dB.
+  LINK_MARGIN_DB: [float32];
+  /// ITU-R P.526-15 eq. (29) diffraction parameter v of the dominant edge.
+  /// Exactly -10.0 where no finite v exists (an unobstructed, Fresnel-clear
+  /// path) — the layer's stated no-finite-v encoding, carried verbatim so
+  /// the FlatBuffer and aligned-binary forms stay byte-comparable.
+  DIFFRACTION_PARAMETER: [float32];
+  /// Specular ground-bounce contribution, dB. All zeros outside the
+  /// SPECULAR_SINGLE_BOUNCE tier.
+  REFLECTION_CONTRIBUTION_DB: [float32];
+
+  /// Caller trace/correlation identifier copied from the request when
+  /// present.
+  TRACE_ID: string;
+}
+
+/// Terrain raster solve envelope.
+table TRS {
+  REQUEST: TRSRequest;
+  RESULT: TRSResult;
+}
+
+root_type TRS;
+file_identifier "$TRS";

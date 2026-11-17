@@ -1,0 +1,59 @@
+// Hash: a91dc81b12c947ec453535e59e0ed161289fa1271b141c7181e6751faa344fa2
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Coverage Grid Figure-of-Merit (CVG)
+// Description
+// H3-indexed coverage-grid figures of merit over an epoch window: per-cell
+// revisit, response, gap, and access statistics for a sensor/asset set.
+// COMPACT FORMAT: cell metrics are parallel arrays aligned index-for-index
+// with CELL_INDEXES (the same columnar philosophy as the OCM v2 state layout)
+// so a global grid at high resolution stays cheap to store, query, and render.
+
+/// Coverage Grid Figure-of-Merit
+table CVG {
+  /// Stable identifier of this coverage computation
+  COVERAGE_ID: string (required);
+  /// Display name
+  NAME: string;
+  /// Grid scheme identifier; "H3" for the H3 hexagonal hierarchical grid
+  GRID_SCHEME: string;
+  /// Grid resolution (H3 resolution 0-15)
+  GRID_RESOLUTION: uint8;
+  /// Grid cell indexes (H3 cell ids); all metric arrays align to this order
+  CELL_INDEXES: [uint64];
+  /// Epoch window start (UNIX timestamp) [numeric seconds since
+  /// 1970-01-01T00:00:00 UTC]
+  WINDOW_START: double;
+  /// Epoch window stop (UNIX timestamp) [numeric seconds since
+  /// 1970-01-01T00:00:00 UTC]
+  WINDOW_STOP: double;
+  /// Sampling step in seconds used to compute access intervals
+  STEP_SIZE: double;
+  /// Sensor identifiers contributing to the coverage set
+  SENSOR_IDS: [string];
+  /// Asset (satellite) identifiers contributing to the coverage set
+  ASSET_IDS: [string];
+  /// Per-cell number of access intervals in the window
+  ACCESS_COUNTS: [uint32];
+  /// Per-cell total access duration in seconds
+  ACCESS_TOTAL_S: [double];
+  /// Per-cell mean revisit interval in seconds
+  REVISIT_MEAN_S: [double];
+  /// Per-cell maximum revisit interval in seconds
+  REVISIT_MAX_S: [double];
+  /// Per-cell mean response time in seconds
+  RESPONSE_MEAN_S: [double];
+  /// Per-cell maximum response time in seconds
+  RESPONSE_MAX_S: [double];
+  /// Per-cell maximum coverage gap in seconds
+  GAP_MAX_S: [double];
+  /// Per-cell fraction of the window with at least one access [0-1]
+  COVERAGE_FRACTION: [double];
+  /// Unix ms this coverage set was computed
+  COMPUTED_AT: uint64;
+  /// Ed25519 signature by the producing `$EPM`
+  SIGNATURE: [ubyte];
+}
+
+root_type CVG;
+file_identifier "$CVG";

@@ -72,13 +72,13 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-    # This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    # What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
     # MOR
-    def ROWS_ONLY(self):
+    def RECORD_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
 
     # Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
     # in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
@@ -307,13 +307,15 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    # Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+    # meaning not stated: the least int64 plus one, because some generated languages read the least int64
+    # itself as a floating-point literal.
     # MOR
     def OD_EPOCH_UNIX_US(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return -9223372036854775808
+        return -9223372036854775807
 
     # Tracks the orbit determination used; -1 when not stated ($OCM 0).
     # MOR
@@ -463,7 +465,8 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Whether the set is real or test data.
+    # Whether the set is real or test data. A record that does not state it is an operational record of
+    # unstated status; a publisher states it only when it is TEST.
     # MOR
     def MESSAGE_STATUS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
@@ -536,11 +539,11 @@ def MORAddEPOCH_UNIX_US(builder, EPOCH_UNIX_US):
 def AddEPOCH_UNIX_US(builder, EPOCH_UNIX_US):
     MORAddEPOCH_UNIX_US(builder, EPOCH_UNIX_US)
 
-def MORAddROWS_ONLY(builder, ROWS_ONLY):
-    builder.PrependBoolSlot(5, ROWS_ONLY, 0)
+def MORAddRECORD_KIND(builder, RECORD_KIND):
+    builder.PrependUint8Slot(5, RECORD_KIND, 0)
 
-def AddROWS_ONLY(builder, ROWS_ONLY):
-    MORAddROWS_ONLY(builder, ROWS_ONLY)
+def AddRECORD_KIND(builder, RECORD_KIND):
+    MORAddRECORD_KIND(builder, RECORD_KIND)
 
 def MORAddWINDOWS(builder, WINDOWS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOWS), 0)
@@ -711,7 +714,7 @@ def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
     MORAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 
 def MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US):
-    builder.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775808)
+    builder.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775807)
 
 def AddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US):
     MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US)
@@ -865,7 +868,7 @@ class MORT(object):
         ORIGINATOR = None,
         MEAN_ELEMENT_THEORY = 6,
         EPOCH_UNIX_US = 0,
-        ROWS_ONLY = False,
+        RECORD_KIND = 0,
         WINDOWS = None,
         WINDOW_COEFF_HEADS = None,
         WINDOW_COEFF_TAILS = None,
@@ -886,7 +889,7 @@ class MORT(object):
         ACTUAL_OD_SPAN = float('nan'),
         OD_OBSERVATIONS_USED = -1,
         WEIGHTED_RMS = float('nan'),
-        OD_EPOCH_UNIX_US = -9223372036854775808,
+        OD_EPOCH_UNIX_US = -9223372036854775807,
         OD_TRACKS_USED = -1,
         DAYS_SINCE_LAST_OBS = float('nan'),
         COVARIANCE_DATA = None,
@@ -911,7 +914,7 @@ class MORT(object):
         self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
         self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
         self.EPOCH_UNIX_US = EPOCH_UNIX_US  # type: int
-        self.ROWS_ONLY = ROWS_ONLY  # type: bool
+        self.RECORD_KIND = RECORD_KIND  # type: int
         self.WINDOWS = WINDOWS  # type: Optional[List[MORWindow.MORWindowT]]
         self.WINDOW_COEFF_HEADS = WINDOW_COEFF_HEADS  # type: Optional[List[float]]
         self.WINDOW_COEFF_TAILS = WINDOW_COEFF_TAILS  # type: Optional[List[float]]
@@ -978,7 +981,7 @@ class MORT(object):
         self.ORIGINATOR = MOR.ORIGINATOR()
         self.MEAN_ELEMENT_THEORY = MOR.MEAN_ELEMENT_THEORY()
         self.EPOCH_UNIX_US = MOR.EPOCH_UNIX_US()
-        self.ROWS_ONLY = MOR.ROWS_ONLY()
+        self.RECORD_KIND = MOR.RECORD_KIND()
         if not MOR.WINDOWSIsNone():
             self.WINDOWS = []
             for i in range(MOR.WINDOWSLength()):
@@ -1098,7 +1101,7 @@ class MORT(object):
             MORAddORIGINATOR(builder, ORIGINATOR)
         MORAddMEAN_ELEMENT_THEORY(builder, self.MEAN_ELEMENT_THEORY)
         MORAddEPOCH_UNIX_US(builder, self.EPOCH_UNIX_US)
-        MORAddROWS_ONLY(builder, self.ROWS_ONLY)
+        MORAddRECORD_KIND(builder, self.RECORD_KIND)
         if self.WINDOWS is not None:
             MORAddWINDOWS(builder, WINDOWS)
         if self.WINDOW_COEFF_HEADS is not None:

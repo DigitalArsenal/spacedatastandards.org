@@ -1,0 +1,174 @@
+// Hash: c8723fb428cc07a70840794a67247c33ae8cafd7974d910806cad300b8a9f486
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Object Identity Link (OIL)
+/// Description
+/// Candidate links between the identifiers two catalogs give the same space
+/// object: a provider's own number and a NORAD catalog number, an
+/// international designator, or another provider's number (for example a JSC
+/// Vimpel number and a NORAD number). A link is a declaration with its
+/// evidence, never an assertion: it says which source declared the pairing,
+/// in which edition and on which line, how often, with what first-detection
+/// dates, and whether the pairing is one-to-one or part of a group where one
+/// identifier is declared against several on the other side (an alias or a
+/// conflict). A consumer binds identities only after testing the link, for
+/// example by comparing trajectories ($XMT), and records the outcome in the
+/// link's STATUS.
+///
+/// An OIL set is one crosswalk: the links one source edition declares, its
+/// conflicts and its counters. Catalog composition ($CAT) and cross-matching
+/// ($XMT) read it; $CAT records stay untouched.
+
+/// Where a link stands. Append new values only; never reorder or reuse
+/// existing values.
+enum oilLinkStatus : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Declared by a source and not yet tested.
+  Candidate,
+  /// Proposed for testing (for example paired with trajectories to compare).
+  Proposed,
+  /// Repeats an earlier declaration of the same pair (DUPLICATE_OF names it).
+  Duplicate,
+  /// One side is declared against more than one identifier on the other.
+  Conflicting,
+  /// The declaration could not be read as a valid pairing (an impossible
+  /// date, a malformed identifier); kept with its text as evidence.
+  Invalid,
+  /// Tested and bound: the identities are joined.
+  Bound,
+  /// Tested and refused.
+  Rejected
+}
+
+/// Shape of a group of identifiers declared against each other that is not
+/// one-to-one. Append new values only; never reorder or reuse existing values.
+enum oilConflictShape : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// One left identifier is declared against several right identifiers.
+  OneLeftManyRight,
+  /// One right identifier is declared against several left identifiers.
+  ManyLeftOneRight,
+  /// Several on each side are declared against each other.
+  ManyLeftManyRight
+}
+
+/// One object identifier in one namespace.
+table OILIdentifier {
+  /// Namespace (catalog or provider) the identifier belongs to, e.g. "vimpel",
+  /// "NORAD", "COSPAR", "space-track", "esa-discos".
+  NAMESPACE: string;
+  /// The identifier in canonical form (leading zeros removed for a number),
+  /// e.g. "12" for Vimpel "00012".
+  ID: string;
+  /// The identifier exactly as the source printed it; empty when the same as
+  /// ID.
+  ID_AS_PRINTED: string;
+  /// NORAD catalog number when the namespace is NORAD or the identifier
+  /// resolves to one; 0 = none.
+  NORAD_CAT_ID: uint32;
+  /// International (COSPAR) designator when known, YYYY-NNNP; empty = none.
+  INTERNATIONAL_DESIGNATOR: string;
+  /// Date the source says the object was first detected under this
+  /// identifier, ISO 8601 calendar date (YYYY-MM-DD); empty when not stated
+  /// or not a valid date.
+  FIRST_DETECTED: string;
+  /// The first-detection date as printed, when it is not a valid date (e.g.
+  /// "20239591"); empty otherwise.
+  FIRST_DETECTED_AS_PRINTED: string;
+  /// Identifier of a trajectory or state product of this identity that a test
+  /// of the link compares (an $XMT trajectory ID); empty = none.
+  TRAJECTORY_ID: string;
+}
+
+/// Where a declaration comes from.
+table OILEvidence {
+  /// Kind of source of the declaration, e.g. "datefirst", "satcat",
+  /// "operator", "analyst".
+  SOURCE: string;
+  /// Immutable identifier of the source edition: a SHA-256 hex digest or CID
+  /// of the file or record.
+  RECORD_ID: string;
+  /// 1-based line of the declaration in the source edition; 0 = not stated.
+  LINE: uint32;
+  /// Number of times the edition declares this pair (1 = once).
+  DECLARATIONS: uint32 = 1;
+  /// True when repeated declarations of the pair give different dates.
+  DATES_DIFFER: bool;
+  /// The declaration's text as printed, when kept (for an Invalid link).
+  ORIGINAL: string;
+}
+
+/// One candidate link between two identifiers.
+table OILLink {
+  /// The identifier being linked (typically the provider-native one).
+  LEFT: OILIdentifier;
+  /// The identifier it is linked to (typically the reference catalog's).
+  RIGHT: OILIdentifier;
+  STATUS: oilLinkStatus = Unspecified;
+  /// True when either side belongs to a group that is not one-to-one; such a
+  /// link never binds without review.
+  AMBIGUOUS: bool;
+  EVIDENCE: OILEvidence;
+  /// For a Duplicate, the LINE of the declaration it repeats; 0 = none.
+  DUPLICATE_OF: uint32;
+  /// Why the link has its status (human-readable); empty when Candidate.
+  REASON: string;
+}
+
+/// A group of identifiers declared against each other that is not
+/// one-to-one.
+table OILConflict {
+  /// Left identifiers in the group, as "<namespace>:<id>".
+  LEFT_IDS: [string];
+  /// Right identifiers in the group, as "<namespace>:<id>".
+  RIGHT_IDS: [string];
+  SHAPE: oilConflictShape = Unspecified;
+  /// Human-readable description.
+  REASON: string;
+}
+
+/// Object Identity Link - one crosswalk of candidate links.
+table OIL {
+  /// Provider of the crosswalk, e.g. "vimpel".
+  PROVIDER: string;
+  /// Kind of crosswalk, e.g. "datefirst".
+  KIND: string;
+  /// Namespace of every LEFT identifier, when uniform.
+  LEFT_NAMESPACE: string;
+  /// Namespace of every RIGHT identifier, when uniform.
+  RIGHT_NAMESPACE: string;
+  /// Header line of the source file as printed, e.g.
+  /// "Nvym t_det_v Nnor t_det_n".
+  HEADER: string;
+  /// SHA-256 hex digest of the source edition (the RECORD_ID of its links).
+  SHA256: string;
+  /// Size of the source edition, bytes.
+  BYTES: uint64;
+  /// Data rows read (header excluded).
+  ROWS: uint32;
+  /// Rows that repeated an earlier pair.
+  DUPLICATE_LINES: uint32;
+  /// Distinct links (LINKS length).
+  LINK_COUNT: uint32;
+  /// Links in one-to-one groups.
+  CLEAN_COUNT: uint32;
+  /// Links in groups that are not one-to-one.
+  AMBIGUOUS_COUNT: uint32;
+  /// Distinct left identifiers.
+  LEFT_ID_COUNT: uint32;
+  /// Distinct right identifiers.
+  RIGHT_ID_COUNT: uint32;
+  /// Links whose repeated declarations give different dates.
+  DATES_DIFFER_COUNT: uint32;
+  /// Links with a first-detection date that is not a valid date.
+  UNREADABLE_DATE_COUNT: uint32;
+  LINKS: [OILLink];
+  CONFLICTS: [OILConflict];
+  /// Unix milliseconds when the crosswalk was generated; 0 = unknown.
+  GENERATED_AT_MS: int64;
+}
+
+root_type OIL;
+file_identifier "$OIL";

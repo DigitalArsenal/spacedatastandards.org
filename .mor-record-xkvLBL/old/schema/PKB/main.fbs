@@ -1,0 +1,76 @@
+// Hash: 5ece06c4e78ca2a6b39e759bccf2a2d4eca7f7cd9ad2fdd85032d77614e00c3b
+// Version: 1.161.0
+// -----------------------------------END_HEADER
+// Publisher Key-Broker Descriptor (PKB)
+// Description
+// Advertises, and lets a store liveness-gate, a publisher's own
+// protection-key-server: the broker that custodies content keys for the
+// publisher's protected (paid) modules and releases them to licensed buyers.
+// Decentralized custody: the store is discovery + payment + commission ONLY —
+// it never holds content keys. A paid listing cannot be registered unless its
+// publisher's broker is live, and a listing whose broker goes unreachable is
+// flagged unpurchasable. Carried in the catalog alongside the listing so the
+// buyer's node knows where to fetch the content key after paying.
+
+/// Custody model of the broker behind a listing. Default is full publisher
+/// custody; replica/escrow are explicit per-module opt-ins for availability.
+/// EscrowFallback re-centralizes custody for that module — the escrow holder
+/// can release that module's content key.
+enum brokerCustodyModel : byte {
+  /// The publisher's own node hosts the broker and holds the content keys
+  SelfHosted,
+  /// A publisher-run replica sharing the wrapping key (custody stays with the
+  /// publisher)
+  StandbyReplica,
+  /// A third-party (e.g. platform-run) fallback broker able to release the
+  /// content key for this module
+  EscrowFallback
+}
+
+/// Store-maintained liveness of a publisher key broker.
+enum brokerLiveness : byte {
+  /// No probe/heartbeat information yet
+  Unknown,
+  /// Broker answered the most recent probe/heartbeat window
+  Online,
+  /// Heartbeats are late or intermittently failing
+  Degraded,
+  /// Broker failed probing; paid listings behind it are unpurchasable
+  Unreachable
+}
+
+/// Publisher Key-Broker Descriptor
+table PKB {
+  /// Stable broker identity, referenced by `$PLG`/`$STO`/`$PUR`/`$LGR`
+  BROKER_ID: string (required);
+  /// IPFS CID of the publisher `$EPM` that operates this broker
+  PUBLISHER_EPM_CID: string;
+  /// libp2p peer id of the publisher node hosting the broker
+  PROVIDER_PEER_ID: string;
+  /// libp2p protocol the broker answers on
+  /// (e.g. "/space-data-network/module-delivery/1.0.0")
+  PROTOCOL_ID: string;
+  /// Dialable multiformat addresses for the broker
+  MULTIFORMAT_ADDRESSES: [string];
+  /// The broker's public key (from the key server's get_public_key) so the
+  /// buyer can pin it
+  BROKER_PUBLIC_KEY: [ubyte];
+  /// Custody model (default: full publisher custody)
+  BROKER_KIND: brokerCustodyModel;
+  /// Store-maintained liveness status
+  LIVENESS: brokerLiveness;
+  /// Unix ms of the last successful probe/heartbeat
+  LAST_HEARTBEAT_AT: uint64;
+  /// Expected heartbeat cadence in ms
+  HEARTBEAT_INTERVAL_MS: uint64;
+  /// Unix ms the store first saw this broker
+  FIRST_SEEN_AT: uint64;
+  /// Unix ms this descriptor was last updated
+  UPDATED_AT: uint64;
+  /// Ed25519 signature by the publisher `$EPM` over the self-attested endpoint
+  /// fields; re-verified by the store's live probe
+  SIGNATURE: [ubyte];
+}
+
+root_type PKB;
+file_identifier "$PKB";

@@ -1,0 +1,151 @@
+// Hash: 81ca0ec2abb05e0578a386c6e5f0d318a6266b1114b53be589974b1ca3f832f6
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Wallet Holdings Attestation (WHA)
+/// Description
+/// What one or more wallets or accounts held at a stated time, across chains,
+/// and what it was worth: each asset held (a chain's native coin or a token),
+/// its amount and its value in a stated currency, per-chain subtotals and
+/// whether each chain's lookup was complete, the errors met, the total, and
+/// who attested it. A node can publish one to show a security bond, a
+/// treasury or a collateral balance; a reader can check it against the chains
+/// itself, because every holding names its chain, address and asset.
+///
+/// The same record asks and answers. A request carries ACCOUNTS (the chain
+/// and address of each wallet to read) and nothing else; the answer repeats
+/// them and adds HOLDINGS, CHAINS, the totals and the attester. A lookup that
+/// fails contributes nothing, is marked incomplete and is named in ERRORS: an
+/// attestation never invents a balance, and a value that could not be priced
+/// is marked unvalued, never zero.
+///
+/// Wallets an operator has linked to a node account are $ACT records of kind
+/// ExternalLink (EXTERNAL_CHAIN, EXTERNAL_ADDRESS); each maps to one account
+/// here, with ACCOUNT_ID naming the $ACT. WHA itself reads public chain state
+/// only and never carries keys.
+
+/// What kind of asset a holding is. Append new values only; never reorder or
+/// reuse existing values.
+enum whaAssetKind : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// The chain's native coin (BTC, ETH, SOL, ...).
+  Native,
+  /// A fungible token issued by a contract or mint (ERC-20, SPL, ...).
+  FungibleToken,
+  /// A non-fungible token (an attestation of value normally leaves these out).
+  NonFungibleToken
+}
+
+/// One wallet or account to read.
+table WHAAccount {
+  /// Chain, as a CAIP-2 chain identifier, e.g. "eip155:1",
+  /// "bip122:000000000019d6689c085ae165831e93",
+  /// "solana:5eykt4UsFv8P8NJdTREpY1vzQKqZKvdp".
+  CHAIN_ID: string;
+  /// Short chain label for display, e.g. "BTC", "ETH", "SOL".
+  CHAIN_NAME: string;
+  /// Address on that chain, as the chain writes it.
+  ADDRESS: string;
+  /// Identifier of the account record that links this wallet (an $ACT
+  /// ACCOUNT_ID), when there is one.
+  ACCOUNT_ID: string;
+}
+
+/// One asset held at one address.
+table WHAHolding {
+  CHAIN_ID: string;
+  CHAIN_NAME: string;
+  ADDRESS: string;
+  ASSET_KIND: whaAssetKind = Unspecified;
+  /// Asset symbol as its issuer or quote source names it, e.g. "ETH",
+  /// "USDC"; a placeholder when it has none.
+  SYMBOL: string;
+  /// Contract address or mint of a token; empty for a native coin. This, not
+  /// SYMBOL, identifies the asset.
+  CONTRACT: string;
+  /// CAIP-19 asset identifier, when known, e.g.
+  /// "eip155:1/erc20:0xa0b8...".
+  ASSET_ID: string;
+  /// Amount held, in whole units of the asset (base units / 10^DECIMALS).
+  AMOUNT: double;
+  /// Amount held in base units, exact, as a decimal integer string; empty =
+  /// not reported.
+  AMOUNT_BASE_UNITS: string;
+  /// Decimal places between base units and whole units; 0 = not stated or
+  /// none.
+  DECIMALS: uint8;
+  /// True when the holding was priced; VALUE and PRICE are meaningful only
+  /// then.
+  VALUED: bool;
+  /// Value of AMOUNT in the attestation's CURRENCY.
+  VALUE: double;
+  /// Price of one whole unit in CURRENCY; 0 = not reported.
+  PRICE: double;
+  /// Where the price came from, e.g. "coinbase", "dexscreener", or the
+  /// balance service's own rate.
+  PRICE_SOURCE: string;
+  /// Where the balance came from, e.g. "mempool.space", a public RPC host.
+  BALANCE_SOURCE: string;
+}
+
+/// One account's lookup on one chain.
+table WHAChain {
+  CHAIN_ID: string;
+  CHAIN_NAME: string;
+  ADDRESS: string;
+  /// Assets with a positive amount at this address.
+  TOKEN_COUNT: uint32;
+  /// True when every balance at this address was read and every holding was
+  /// priced. When false, VALUE is a partial sum and the chain is named in
+  /// ERRORS.
+  COMPLETE: bool;
+  /// Sum of the priced holdings' values in CURRENCY (complete only when
+  /// COMPLETE).
+  VALUE: double;
+  /// Chain height the balances were read at; 0 = not reported.
+  BLOCK_HEIGHT: uint64;
+  /// Commitment level of the read, e.g. "finalized", "latest", "confirmed".
+  COMMITMENT: string;
+  /// Why the lookup is incomplete; empty when COMPLETE.
+  ERROR: string;
+}
+
+/// Wallet Holdings Attestation - holdings of wallets across chains and their
+/// value at one time.
+table WHA {
+  /// Identifier of this attestation; empty = not assigned.
+  ATTESTATION_ID: string;
+  /// Whose holdings these are: a peer identifier, an account or an
+  /// organization; empty = the attester's own.
+  SUBJECT_ID: string;
+  /// What the attestation is for, e.g. "security-bond", "treasury",
+  /// "collateral"; empty = general.
+  PURPOSE: string;
+  /// Wallets read (in a request, the wallets to read).
+  ACCOUNTS: [WHAAccount];
+  HOLDINGS: [WHAHolding];
+  CHAINS: [WHAChain];
+  /// Valuation currency, ISO 4217 code, e.g. "USD".
+  CURRENCY: string;
+  /// True when at least one chain was read, every chain is COMPLETE and
+  /// ERRORS is empty: TOTAL_VALUE is then the attested value.
+  ATTESTED: bool;
+  /// Sum of all priced holdings' values in CURRENCY. Meaningful as the
+  /// attested value only when ATTESTED; otherwise a partial sum.
+  TOTAL_VALUE: double;
+  /// Problems met, one per line, e.g. "ETH: lookup incomplete"; empty when
+  /// ATTESTED.
+  ERRORS: [string];
+  /// Unix milliseconds the holdings were read (the as-of time); 0 in a
+  /// request.
+  AS_OF_MS: int64;
+  /// Identifier of the attester (a peer identifier or module identifier).
+  ATTESTER_ID: string;
+  /// Attester's signature over the attestation, and its scheme (e.g.
+  /// "ed25519"); empty when unsigned.
+  SIGNATURE: [ubyte];
+  SIGNATURE_TYPE: string;
+}
+
+root_type WHA;
+file_identifier "$WHA";

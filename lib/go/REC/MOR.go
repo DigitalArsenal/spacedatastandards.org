@@ -155,26 +155,26 @@ func (rcv *MOR) MutateEpochUnixUs(n int64) bool {
 	return rcv.MutateEPOCH_UNIX_US(n)
 }
 
-/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-func (rcv *MOR) ROWS_ONLY() bool {
+/// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+func (rcv *MOR) RECORD_KIND() morRecordKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return morRecordKind(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return false
+	return 0
 }
 
-func (rcv *MOR) RowsOnly() bool {
-	return rcv.ROWS_ONLY()
+func (rcv *MOR) RecordKind() morRecordKind {
+	return rcv.RECORD_KIND()
 }
 
-/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-func (rcv *MOR) MutateROWS_ONLY(n bool) bool {
-	return rcv._tab.MutateBoolSlot(14, n)
+/// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+func (rcv *MOR) MutateRECORD_KIND(n morRecordKind) bool {
+	return rcv._tab.MutateByteSlot(14, byte(n))
 }
 
-func (rcv *MOR) MutateRowsOnly(n bool) bool {
-	return rcv.MutateROWS_ONLY(n)
+func (rcv *MOR) MutateRecordKind(n morRecordKind) bool {
+	return rcv.MutateRECORD_KIND(n)
 }
 
 /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
@@ -683,20 +683,24 @@ func (rcv *MOR) MutateWeightedRms(n float64) bool {
 	return rcv.MutateWEIGHTED_RMS(n)
 }
 
-/// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+/// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+/// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+/// itself as a floating-point literal.
 func (rcv *MOR) OD_EPOCH_UNIX_US() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetInt64(o + rcv._tab.Pos)
 	}
-	return -9223372036854775808
+	return -9223372036854775807
 }
 
 func (rcv *MOR) OdEpochUnixUs() int64 {
 	return rcv.OD_EPOCH_UNIX_US()
 }
 
-/// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+/// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+/// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+/// itself as a floating-point literal.
 func (rcv *MOR) MutateOD_EPOCH_UNIX_US(n int64) bool {
 	return rcv._tab.MutateInt64Slot(56, n)
 }
@@ -1041,7 +1045,8 @@ func (rcv *MOR) MutateEcom2Y0(n float64) bool {
 	return rcv.MutateECOM2_Y0(n)
 }
 
-/// Whether the set is real or test data.
+/// Whether the set is real or test data. A record that does not state it is an operational record of
+/// unstated status; a publisher states it only when it is TEST.
 func (rcv *MOR) MESSAGE_STATUS() morMessageStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
@@ -1054,7 +1059,8 @@ func (rcv *MOR) MessageStatus() morMessageStatus {
 	return rcv.MESSAGE_STATUS()
 }
 
-/// Whether the set is real or test data.
+/// Whether the set is real or test data. A record that does not state it is an operational record of
+/// unstated status; a publisher states it only when it is TEST.
 func (rcv *MOR) MutateMESSAGE_STATUS(n morMessageStatus) bool {
 	return rcv._tab.MutateByteSlot(86, byte(n))
 }
@@ -1145,11 +1151,11 @@ func MORAddEPOCH_UNIX_US(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
 func MORAddEpochUnixUs(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
 	MORAddEPOCH_UNIX_US(builder, EPOCH_UNIX_US)
 }
-func MORAddROWS_ONLY(builder *flatbuffers.Builder, ROWS_ONLY bool) {
-	builder.PrependBoolSlot(5, ROWS_ONLY, false)
+func MORAddRECORD_KIND(builder *flatbuffers.Builder, RECORD_KIND morRecordKind) {
+	builder.PrependByteSlot(5, byte(RECORD_KIND), 0)
 }
-func MORAddRowsOnly(builder *flatbuffers.Builder, ROWS_ONLY bool) {
-	MORAddROWS_ONLY(builder, ROWS_ONLY)
+func MORAddRecordKind(builder *flatbuffers.Builder, RECORD_KIND morRecordKind) {
+	MORAddRECORD_KIND(builder, RECORD_KIND)
 }
 func MORAddWINDOWS(builder *flatbuffers.Builder, WINDOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(WINDOWS), 0)
@@ -1290,7 +1296,7 @@ func MORAddWeightedRms(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
 	MORAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 }
 func MORAddOD_EPOCH_UNIX_US(builder *flatbuffers.Builder, OD_EPOCH_UNIX_US int64) {
-	builder.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775808)
+	builder.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775807)
 }
 func MORAddOdEpochUnixUs(builder *flatbuffers.Builder, OD_EPOCH_UNIX_US int64) {
 	MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US)

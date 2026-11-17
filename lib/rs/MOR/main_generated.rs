@@ -217,6 +217,105 @@ impl<'a> ::flatbuffers::Verifiable for morCovarianceFloor {
 impl ::flatbuffers::SimpleToVerifyInSlice for morCovarianceFloor {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MOR_RECORD_KIND: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MOR_RECORD_KIND: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MOR_RECORD_KIND: [morRecordKind; 2] = [
+    morRecordKind::FULL,
+    morRecordKind::ROWS_ONLY,
+];
+
+/// What a record is. A reader that meets a kind it does not know ignores the record and changes nothing
+/// it holds. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct morRecordKind(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl morRecordKind {
+    /// A whole element set, with everything this record can carry.
+    pub const FULL: Self = Self(0);
+    /// New rows for a set the receiver already holds (see "Rows only").
+    pub const ROWS_ONLY: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::FULL,
+        Self::ROWS_ONLY,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::FULL => Some("FULL"),
+            Self::ROWS_ONLY => Some("ROWS_ONLY"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for morRecordKind {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for morRecordKind {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for morRecordKind {
+    type Output = morRecordKind;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for morRecordKind {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for morRecordKind {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for morRecordKind {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_MOR_GRAVITY_FIELD: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1575,7 +1674,7 @@ impl<'a> MOR<'a> {
     pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 8;
     pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 10;
     pub const VT_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 12;
-    pub const VT_ROWS_ONLY: ::flatbuffers::VOffsetT = 14;
+    pub const VT_RECORD_KIND: ::flatbuffers::VOffsetT = 14;
     pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 16;
     pub const VT_WINDOW_COEFF_HEADS: ::flatbuffers::VOffsetT = 18;
     pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 20;
@@ -1670,7 +1769,7 @@ impl<'a> MOR<'a> {
         builder.add_MAXIMUM_ZONAL_DEGREE(args.MAXIMUM_ZONAL_DEGREE);
         builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
         builder.add_GRAVITY_FIELD(args.GRAVITY_FIELD);
-        builder.add_ROWS_ONLY(args.ROWS_ONLY);
+        builder.add_RECORD_KIND(args.RECORD_KIND);
         builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
         builder.finish()
     }
@@ -1685,7 +1784,7 @@ impl<'a> MOR<'a> {
         });
         let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
         let EPOCH_UNIX_US = self.EPOCH_UNIX_US();
-        let ROWS_ONLY = self.ROWS_ONLY();
+        let RECORD_KIND = self.RECORD_KIND();
         let WINDOWS = self.WINDOWS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
@@ -1749,7 +1848,7 @@ impl<'a> MOR<'a> {
             ORIGINATOR,
             MEAN_ELEMENT_THEORY,
             EPOCH_UNIX_US,
-            ROWS_ONLY,
+            RECORD_KIND,
             WINDOWS,
             WINDOW_COEFF_HEADS,
             WINDOW_COEFF_TAILS,
@@ -1840,13 +1939,13 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<i64>(MOR::VT_EPOCH_UNIX_US, Some(0)).unwrap()}
     }
 
-    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
     #[inline]
-    pub fn ROWS_ONLY(&self) -> bool {
+    pub fn RECORD_KIND(&self) -> morRecordKind {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(MOR::VT_ROWS_ONLY, Some(false)).unwrap()}
+        unsafe { self._tab.get::<morRecordKind>(MOR::VT_RECORD_KIND, Some(morRecordKind::FULL)).unwrap()}
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
@@ -2039,13 +2138,15 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<f64>(MOR::VT_WEIGHTED_RMS, Some(f64::NAN)).unwrap()}
     }
 
-    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+    /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+    /// itself as a floating-point literal.
     #[inline]
     pub fn OD_EPOCH_UNIX_US(&self) -> i64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<i64>(MOR::VT_OD_EPOCH_UNIX_US, Some(-9223372036854775808)).unwrap()}
+        unsafe { self._tab.get::<i64>(MOR::VT_OD_EPOCH_UNIX_US, Some(-9223372036854775807)).unwrap()}
     }
 
     /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
@@ -2182,7 +2283,8 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<f64>(MOR::VT_ECOM2_Y0, Some(0.0)).unwrap()}
     }
 
-    /// Whether the set is real or test data.
+    /// Whether the set is real or test data. A record that does not state it is an operational record of
+    /// unstated status; a publisher states it only when it is TEST.
     #[inline]
     pub fn MESSAGE_STATUS(&self) -> morMessageStatus {
         // Safety:
@@ -2231,7 +2333,7 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
             .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
             .visit_field::<i64>("EPOCH_UNIX_US", Self::VT_EPOCH_UNIX_US, false)?
-            .visit_field::<bool>("ROWS_ONLY", Self::VT_ROWS_ONLY, false)?
+            .visit_field::<morRecordKind>("RECORD_KIND", Self::VT_RECORD_KIND, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, MORWindow>>>("WINDOWS", Self::VT_WINDOWS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WINDOW_COEFF_HEADS", Self::VT_WINDOW_COEFF_HEADS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("WINDOW_COEFF_TAILS", Self::VT_WINDOW_COEFF_TAILS, false)?
@@ -2282,7 +2384,7 @@ pub struct MORArgs<'a> {
     pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
     pub EPOCH_UNIX_US: i64,
-    pub ROWS_ONLY: bool,
+    pub RECORD_KIND: morRecordKind,
     pub WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, MORWindow>>>,
     pub WINDOW_COEFF_HEADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub WINDOW_COEFF_TAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
@@ -2333,7 +2435,7 @@ impl<'a> Default for MORArgs<'a> {
             ORIGINATOR: None,
             MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
             EPOCH_UNIX_US: 0,
-            ROWS_ONLY: false,
+            RECORD_KIND: morRecordKind::FULL,
             WINDOWS: None,
             WINDOW_COEFF_HEADS: None,
             WINDOW_COEFF_TAILS: None,
@@ -2354,7 +2456,7 @@ impl<'a> Default for MORArgs<'a> {
             ACTUAL_OD_SPAN: f64::NAN,
             OD_OBSERVATIONS_USED: -1,
             WEIGHTED_RMS: f64::NAN,
-            OD_EPOCH_UNIX_US: -9223372036854775808,
+            OD_EPOCH_UNIX_US: -9223372036854775807,
             OD_TRACKS_USED: -1,
             DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
@@ -2409,8 +2511,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_ROWS_ONLY(&mut self, ROWS_ONLY: bool) {
-        self.fbb_.push_slot::<bool>(MOR::VT_ROWS_ONLY, ROWS_ONLY, false);
+    pub fn add_RECORD_KIND(&mut self, RECORD_KIND: morRecordKind) {
+        self.fbb_.push_slot::<morRecordKind>(MOR::VT_RECORD_KIND, RECORD_KIND, morRecordKind::FULL);
     }
 
     #[inline]
@@ -2515,7 +2617,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
 
     #[inline]
     pub fn add_OD_EPOCH_UNIX_US(&mut self, OD_EPOCH_UNIX_US: i64) {
-        self.fbb_.push_slot::<i64>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, -9223372036854775808);
+        self.fbb_.push_slot::<i64>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, -9223372036854775807);
     }
 
     #[inline]
@@ -2632,7 +2734,7 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("ORIGINATOR", &self.ORIGINATOR());
         ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
         ds.field("EPOCH_UNIX_US", &self.EPOCH_UNIX_US());
-        ds.field("ROWS_ONLY", &self.ROWS_ONLY());
+        ds.field("RECORD_KIND", &self.RECORD_KIND());
         ds.field("WINDOWS", &self.WINDOWS());
         ds.field("WINDOW_COEFF_HEADS", &self.WINDOW_COEFF_HEADS());
         ds.field("WINDOW_COEFF_TAILS", &self.WINDOW_COEFF_TAILS());
@@ -2684,7 +2786,7 @@ pub struct MORT {
     pub ORIGINATOR: Option<alloc::string::String>,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
     pub EPOCH_UNIX_US: i64,
-    pub ROWS_ONLY: bool,
+    pub RECORD_KIND: morRecordKind,
     pub WINDOWS: Option<alloc::vec::Vec<MORWindowT>>,
     pub WINDOW_COEFF_HEADS: Option<alloc::vec::Vec<f64>>,
     pub WINDOW_COEFF_TAILS: Option<alloc::vec::Vec<f32>>,
@@ -2734,7 +2836,7 @@ impl Default for MORT {
             ORIGINATOR: None,
             MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
             EPOCH_UNIX_US: 0,
-            ROWS_ONLY: false,
+            RECORD_KIND: morRecordKind::FULL,
             WINDOWS: None,
             WINDOW_COEFF_HEADS: None,
             WINDOW_COEFF_TAILS: None,
@@ -2755,7 +2857,7 @@ impl Default for MORT {
             ACTUAL_OD_SPAN: f64::NAN,
             OD_OBSERVATIONS_USED: -1,
             WEIGHTED_RMS: f64::NAN,
-            OD_EPOCH_UNIX_US: -9223372036854775808,
+            OD_EPOCH_UNIX_US: -9223372036854775807,
             OD_TRACKS_USED: -1,
             DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
@@ -2792,7 +2894,7 @@ impl MORT {
         });
         let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
         let EPOCH_UNIX_US = self.EPOCH_UNIX_US;
-        let ROWS_ONLY = self.ROWS_ONLY;
+        let RECORD_KIND = self.RECORD_KIND;
         let WINDOWS = self.WINDOWS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack()).collect();_fbb.create_vector(&w)
         });
@@ -2855,7 +2957,7 @@ impl MORT {
             ORIGINATOR,
             MEAN_ELEMENT_THEORY,
             EPOCH_UNIX_US,
-            ROWS_ONLY,
+            RECORD_KIND,
             WINDOWS,
             WINDOW_COEFF_HEADS,
             WINDOW_COEFF_TAILS,

@@ -1,0 +1,100 @@
+// Hash: 5771e0b46222977e934a32c1ee6b534bc5a23b2cd772886f9741196907649920
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum imageCategory : byte {
+  VISIBLE,
+  INFRARED,
+  MULTISPECTRAL,
+  HYPERSPECTRAL,
+  UV,
+  BROADBAND
+}
+
+/// Sky Imagery
+table SKI {
+  /// Unique identifier
+  ID:string;
+  /// On-orbit reference
+  ON_ORBIT:string;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// Sensor identifier
+  ID_SENSOR:string;
+  /// Original sensor identifier
+  ORIG_SENSOR_ID:string;
+  /// Sensor geodetic latitude (degrees)
+  SENLAT:double;
+  /// Sensor geodetic longitude (degrees)
+  SENLON:double;
+  /// Sensor altitude (km)
+  SENALT:double;
+  /// Sensor ECEF X position (km)
+  SENX:double;
+  /// Sensor ECEF Y position (km)
+  SENY:double;
+  /// Sensor ECEF Z position (km)
+  SENZ:double;
+  /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+  SEN_QUAT:[double];
+  /// Sensor quaternion rate
+  SEN_QUAT_DOT:[double];
+  /// Image type
+  IMAGE_TYPE:imageCategory;
+  /// Exposure start time (ISO 8601)
+  EXP_START_TIME:string;
+  /// Exposure end time (ISO 8601)
+  EXP_END_TIME:string;
+  /// Image source information
+  IMAGE_SOURCE_INFO:string;
+  /// Top-left corner start azimuth (degrees)
+  TOP_LEFT_START_AZ:double;
+  /// Top-left corner start elevation (degrees)
+  TOP_LEFT_START_EL:double;
+  /// Top-left corner stop azimuth (degrees)
+  TOP_LEFT_STOP_AZ:double;
+  /// Top-left corner stop elevation (degrees)
+  TOP_LEFT_STOP_EL:double;
+  /// Image set identifier
+  IMAGE_SET_ID:string;
+  /// Number of images in set
+  IMAGE_SET_LENGTH:uint16;
+  /// Sequence number within set
+  SEQUENCE_ID:uint16;
+  /// Frame field-of-view width (degrees)
+  FRAME_FOVWIDTH:double;
+  /// Frame field-of-view height (degrees)
+  FRAME_FOVHEIGHT:double;
+  /// Pixel field-of-view width (arcseconds)
+  PIXEL_FOVWIDTH:double;
+  /// Pixel field-of-view height (arcseconds)
+  PIXEL_FOVHEIGHT:double;
+  /// Frame width (pixels)
+  FRAME_WIDTH_PIXELS:uint16;
+  /// Frame height (pixels)
+  FRAME_HEIGHT_PIXELS:uint16;
+  /// Pixel bit depth
+  PIXEL_BIT_DEPTH:uint8;
+  /// Annotation key reference
+  ANNOTATION_KEY:string;
+  /// Calibration key reference
+  CALIBRATION_KEY:string;
+  /// Image filename
+  FILENAME:string;
+  /// File size (bytes)
+  FILESIZE:long;
+  /// File checksum value
+  CHECKSUM_VALUE:string;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Associated tags
+  TAGS:[string];
+  /// Description
+  DESCRIPTION:string;
+  /// Associated EO observation references
+  EO_OBSERVATIONS:[string];
+}
+
+root_type SKI;
+file_identifier "$SKI";

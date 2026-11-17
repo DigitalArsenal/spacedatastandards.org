@@ -1,0 +1,1303 @@
+// Hash: a7daf548117e22885027989c8374bf329dfdbae3b547f99a45c1cccca02dafa4
+// Version: 2.1.11
+// -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+include "../CVR/main.fbs";
+include "../PPE/main.fbs";
+include "../PVN/main.fbs";
+include "../RFM/main.fbs";
+include "../MET/main.fbs";
+include "../PCF/main.fbs";
+include "../PRW/main.fbs";
+
+// Orbit Comprehensive Message (OCM)
+// Description
+// The Orbit Comprehensive Message (OCM) is a standardized format used for exchanging detailed
+// orbit data between participants. It includes state vectors, physical properties, maneuver information,
+// perturbation parameters, covariance data, orbit determination details, and user-defined parameters.
+// The OCM is designed to provide a comprehensive set of orbit-related information to support mission
+// operations, analysis, and planning activities.
+// CCSDS Reference documentation: 502.0-B-3 (April 2023).
+//
+// COMPACT FORMAT (v2.0.0):
+// This schema uses a compact row-major array format for state and covariance data instead of
+// individual StateVector objects. This provides significant storage and parsing efficiency for
+// time-series ephemeris data with uniform time steps.
+//
+// State data layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, X_DOT1, ...]
+// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
+//
+// Covariance is one matrix per state epoch. Without COV_TYPE, COV_ORDERING and COV_SIZE it is 21 elements
+// (the lower triangular 6x6 matrix of position and velocity). COV_SIZE, COV_ORDERING and COV_PARAMETERS state
+// larger matrices, a state with the dynamical-model parameters an orbit determination solved for (a VCM's
+// B, BDOT, AGOM and in-track thrust), so everything the legacy Vector Covariance Message ($VCM) holds fits here.
+
+/// Trajectory state representation type.
+/// Defines how trajectory data is parameterized in this OCM.
+/// CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
+enum trajectoryType : byte {
+  /// Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
+  CARTESIAN_PV,
+
+  /// Cartesian position, velocity, and acceleration (9 components).
+  CARTESIAN_PVA,
+
+  /// Polynomial coefficients for Cartesian position (and optionally velocity).
+  /// Associated data in POLYNOMIAL_POSITION_RECORDS.
+  POLYNOMIAL_POS,
+
+  /// Polynomial coefficients for classical orbital elements.
+  /// Associated data in POLYNOMIAL_OE_RECORDS.
+  POLYNOMIAL_OE,
+
+  /// Hermite interpolating polynomial representation.
+  HERMITE,
+
+  /// Lagrange interpolating polynomial representation.
+  LAGRANGE,
+
+  /// Keplerian classical set in STATE_DATA, 6 values per row: semi-major axis
+  /// [km], eccentricity, inclination, right ascension of the ascending node,
+  /// argument of periapsis and true anomaly [deg]. SANA Orbital Elements
+  /// KEPLERIAN (OID 1.3.112.4.57.5.11).
+  KEPLERIAN,
+
+  /// As KEPLERIAN with the mean anomaly in place of the true anomaly. SANA
+  /// Orbital Elements KEPLERIANMEAN (OID 1.3.112.4.57.5.12).
+  KEPLERIAN_MEAN,
+
+  /// Equinoctial set in STATE_DATA, 7 values per row: semi-major axis [km],
+  /// af = e cos(argp + fr RAAN), ag = e sin(argp + fr RAAN), mean longitude
+  /// L = M + argp + fr RAAN [deg], chi = tan(i/2)^fr sin(RAAN),
+  /// psi = tan(i/2)^fr cos(RAAN), and the retrograde factor fr (+1 or -1).
+  /// SANA Orbital Elements EQUINOCTIAL (OID 1.3.112.4.57.5.8).
+  EQUINOCTIAL,
+
+  /// Modified equinoctial set, 7 values per row: semi-latus rectum
+  /// p = a (1 - e^2) [km], af, ag, true longitude L' = nu + argp + fr RAAN
+  /// [deg], chi, psi, fr. SANA Orbital Elements EQUINOCTIALMOD
+  /// (OID 1.3.112.4.57.5.9).
+  EQUINOCTIAL_MOD
+}
+
+/// Whether a message is real, test or exercise data (the Real/Test/Exercise
+/// indicator of the legacy SP Vector/Covariance Message). Append new values
+/// only.
+enum ocmMessageStatus : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Real data.
+  REAL = 1,
+  /// Test data.
+  TEST = 2,
+  /// Exercise data; the exercise is named in EXERCISE_NAME.
+  EXERCISE = 3
+}
+
+/// Basis of a trajectory (CCSDS 502.0-B-3 TRAJ_BASIS, a closed set). Append new
+/// values only.
+enum ocmTrajectoryBasis : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Computed forward from a determination or a plan.
+  PREDICTED = 1,
+  /// Determined from observations or from element sets in force at each time.
+  DETERMINED = 2,
+  /// Reported by the object.
+  TELEMETRY = 3,
+  /// Produced by a simulation.
+  SIMULATED = 4,
+  /// None of the above.
+  OTHER = 5
+}
+
+/// Integrator mode of the legacy SP system that made a solution (INTEGRATOR
+/// MODE of the SP Vector/Covariance Message). Append new values only.
+enum ocmIntegratorMode : ubyte {
+  /// Not stated: the solution did not come from an SP integrator.
+  UNSPECIFIED = 0,
+  /// SPADOC.
+  SPADOC = 1,
+  /// ASW.
+  ASW = 2
+}
+
+/// Coordinate system a numerical integrator integrates in (COORD SYS of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmIntegrationFrame : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Mean equator and mean equinox of J2000.0.
+  J2000 = 1,
+  /// True equator and mean equinox of the epoch of the solution.
+  EPOCH = 2
+}
+
+/// How the partial derivatives of the dynamics are computed (PARTIALS of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmPartialsMethod : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Analytic partials.
+  ANALYTIC = 1,
+  /// Full numerical partials.
+  FULL_NUMERICAL = 2,
+  /// Fast numerical partials.
+  FAST_NUMERICAL = 3
+}
+
+/// Integrator step mode (STEP MODE of the SP Vector/Covariance Message). Append
+/// new values only.
+enum ocmStepMode : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The integrator chooses.
+  AUTO = 1,
+  /// Steps in time.
+  TIME = 2,
+  /// Steps in the integrator's variable S, which the format does not define
+  /// further.
+  S = 3
+}
+
+/// How the initial integration step is selected (STEP SIZE SELECTION of the SP
+/// Vector/Covariance Message). Append new values only.
+enum ocmStepSelection : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The integrator selects it.
+  AUTO = 1,
+  /// INITIAL_STEP_SECONDS states it.
+  MANUAL = 2
+}
+
+table Header {
+  /// Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
+  CCSDS_OCM_VERS: string;
+  /// Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
+  COMMENT: [string];
+  /// User-defined free-text message classification/caveats of this OCM.
+  CLASSIFICATION: string;
+  /// File creation date/time in UTC.
+  CREATION_DATE: string;
+  /// Creating agency or operator.
+  ORIGINATOR: string;
+  /// Free-text field containing an ID that uniquely identifies a message from this originator.
+  MESSAGE_ID: string;
+  /// Whether the message is real, test or exercise data.
+  MESSAGE_STATUS: ocmMessageStatus = UNSPECIFIED;
+  /// Name of the exercise when MESSAGE_STATUS is EXERCISE; empty otherwise.
+  EXERCISE_NAME: string;
+}
+
+table Metadata {
+  /// Comments in the Metadata section.
+  COMMENT: [string];
+  /// Free-text field containing the name of the object.
+  OBJECT_NAME: string;
+  /// International designator for the object as assigned by COSPAR.
+  INTERNATIONAL_DESIGNATOR: string;
+  /// Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
+  CATALOG_NAME: string;
+  /// Unique satellite identification designator from the catalog.
+  OBJECT_DESIGNATOR: string;
+  /// Alternate names of this space object.
+  ALTERNATE_NAMES: [string];
+  /// Originator or programmatic Point-of-Contact (PoC) for OCM.
+  ORIGINATOR_POC: string;
+  /// Contact position of the originator PoC.
+  ORIGINATOR_POSITION: string;
+  /// Originator PoC phone number.
+  ORIGINATOR_PHONE: string;
+  /// Originator PoC email address.
+  ORIGINATOR_EMAIL: string;
+  /// Originator's physical address information.
+  ORIGINATOR_ADDRESS: string;
+  /// Creating agency or operator for technical contact.
+  TECH_ORG: string;
+  /// Technical Point-of-Contact (PoC) for OCM.
+  TECH_POC: string;
+  /// Contact position of the technical PoC.
+  TECH_POSITION: string;
+  /// Technical PoC phone number.
+  TECH_PHONE: string;
+  /// Technical PoC email address.
+  TECH_EMAIL: string;
+  /// Technical PoC physical address information.
+  TECH_ADDRESS: string;
+  /// ID that uniquely identifies the previous message from this originator.
+  PREVIOUS_MESSAGE_ID: string;
+  /// ID that uniquely identifies the next message from this originator.
+  NEXT_MESSAGE_ID: string;
+  /// Unique identifier of Attitude Data Messages linked to this OCM.
+  ADM_MSG_LINK: string;
+  /// Unique identifier of Conjunction Data Messages linked to this OCM.
+  CDM_MSG_LINK: string;
+  /// Unique identifier of Pointing Request Messages linked to this OCM.
+  PRM_MSG_LINK: string;
+  /// Unique identifier of Reentry Data Messages linked to this OCM.
+  RDM_MSG_LINK: string;
+  /// List of Tracking Data Messages upon which this orbit determination is based.
+  TDM_MSG_LINK: [string];
+  /// Operator of the space object.
+  OPERATOR: string;
+  /// Owner of the space object.
+  OWNER: string;
+  /// Country where the space object owner is based.
+  COUNTRY: string;
+  /// Name of the constellation to which this space object belongs.
+  CONSTELLATION: string;
+  /// Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
+  OBJECT_TYPE: string;
+  /// Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
+  TIME_SYSTEM: string;
+  /// Default epoch to which all relative times are referenced in data blocks.
+  EPOCH_TZERO: string;
+  /// Specification of the operational status of the space object.
+  OPS_STATUS: string;
+  /// Specification of the type of orbit (e.g., GEO, LEO).
+  ORBIT_CATEGORY: string;
+  /// List of elements of information data blocks included in this message.
+  OCM_DATA_ELEMENTS: [string];
+  /// Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
+  SCLK_OFFSET_AT_EPOCH: double;
+  /// Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
+  SCLK_SEC_PER_SI_SEC: double;
+  /// Creation epoch of the previous message from this originator.
+  PREVIOUS_MESSAGE_EPOCH: string;
+  /// Anticipated (or actual) epoch of the next message from this originator.
+  NEXT_MESSAGE_EPOCH: string;
+  /// Time of the earliest data contained in the OCM.
+  START_TIME: string;
+  /// Time of the latest data contained in the OCM.
+  STOP_TIME: string;
+  /// Span of time that the OCM covers, measured in days.
+  TIME_SPAN: double;
+  /// Difference (TAI - UTC) in seconds at EPOCH_TZERO.
+  TAIMUTC_AT_TZERO: double;
+  /// Epoch of next leap second.
+  NEXT_LEAP_EPOCH: string;
+  /// Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
+  NEXT_LEAP_TAIMUTC: double;
+  /// Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
+  UT1MUTC_AT_TZERO: double;
+  /// Source and version of Earth Orientation Parameters used.
+  EOP_SOURCE: string;
+  /// Method used to select or interpolate sequential EOP data.
+  INTERP_METHOD_EOP: string;
+  /// Source and version of celestial body ephemeris data used.
+  CELESTIAL_SOURCE: string;
+  /// NORAD_CAT_ID: the object's NORAD catalog number, the typed join key to $CAT and $OMM
+  /// NORAD_CAT_ID. SDS addition: CCSDS 502.0-B-3 names the catalog designator only as the
+  /// strings CATALOG_NAME and OBJECT_DESIGNATOR, which stay as CCSDS defines them. 0 when
+  /// the object has no NORAD number.
+  NORAD_CAT_ID: uint32;
+}
+
+table StateVector {
+  /// Epoch of the state vector.
+  EPOCH: string;
+  /// X component of position in the specified reference frame.
+  X: double;
+  /// Y component of position.
+  Y: double;
+  /// Z component of position.
+  Z: double;
+  /// X component of velocity.
+  X_DOT: double;
+  /// Y component of velocity.
+  Y_DOT: double;
+  /// Z component of velocity.
+  Z_DOT: double;
+  /// X component of acceleration.
+  X_DDOT: double;
+  /// Y component of acceleration.
+  Y_DDOT: double;
+  /// Z component of acceleration.
+  Z_DDOT: double;
+}
+
+table PhysicalProperties {
+  /// Comments in the Physical Properties section.
+  COMMENT: [string];
+  /// Wet mass of the space object.
+  WET_MASS: double;
+  /// Dry mass of the space object.
+  DRY_MASS: double;
+  /// Units for mass values.
+  MASS_UNITS: string;
+  /// Quaternion component q1 of orientation from OEB to EME2000.
+  OEB_Q1: double;
+  /// Quaternion component q2.
+  OEB_Q2: double;
+  /// Quaternion component q3.
+  OEB_Q3: double;
+  /// Quaternion scalar component qc.
+  OEB_QC: double;
+  /// Maximum dimension of the object along OEB frame axes.
+  OEB_MAX: double;
+  /// Intermediate dimension along OEB frame axes.
+  OEB_INT: double;
+  /// Minimum dimension of the object along OEB frame axes.
+  OEB_MIN: double;
+  /// Area along OEB_MAX axis.
+  AREA_ALONG_OEB_MAX: double;
+  /// Area along OEB_INT axis.
+  AREA_ALONG_OEB_INT: double;
+  /// Area along OEB_MIN axis.
+  AREA_ALONG_OEB_MIN: double;
+  /// Units for area values.
+  AREA_UNITS: string;
+  /// Constant area for drag computations.
+  DRAG_CONST_AREA: double;
+  /// Nominal drag coefficient.
+  DRAG_COEFF_NOM: double;
+  /// Uncertainty in the drag coefficient.
+  DRAG_UNCERTAINTY: double;
+  /// Constant area for solar radiation pressure computations.
+  SRP_CONST_AREA: double;
+  /// Nominal solar radiation pressure coefficient.
+  SOLAR_RAD_COEFF: double;
+  /// Uncertainty in the solar radiation pressure coefficient.
+  SRP_UNCERTAINTY: double;
+  /// MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer.
+  MANUFACTURER: string;
+  /// BUS_MODEL: the object's bus model.
+  BUS_MODEL: string;
+  /// DOCKED_WITH: comma-separated names of the objects it is docked with.
+  DOCKED_WITH: string;
+  /// INITIAL_WET_MASS in kg, NaN when not stated.
+  INITIAL_WET_MASS: double = nan;
+  /// OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in.
+  OEB_PARENT_FRAME: string;
+  /// OEB_PARENT_FRAME_EPOCH.
+  OEB_PARENT_FRAME_EPOCH: string;
+  /// AREA_MIN_FOR_PC in m**2, NaN when not stated.
+  AREA_MIN_FOR_PC: double = nan;
+  /// AREA_MAX_FOR_PC in m**2, NaN when not stated.
+  AREA_MAX_FOR_PC: double = nan;
+  /// AREA_TYP_FOR_PC in m**2, NaN when not stated.
+  AREA_TYP_FOR_PC: double = nan;
+  /// RCS in m**2, NaN when not stated.
+  RCS: double = nan;
+  /// RCS_MIN in m**2, NaN when not stated.
+  RCS_MIN: double = nan;
+  /// RCS_MAX in m**2, NaN when not stated.
+  RCS_MAX: double = nan;
+  /// VM_ABSOLUTE: absolute visual magnitude, NaN when not stated.
+  VM_ABSOLUTE: double = nan;
+  /// VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MIN: double = nan;
+  /// VM_APPARENT: apparent visual magnitude, NaN when not stated.
+  VM_APPARENT: double = nan;
+  /// VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated.
+  VM_APPARENT_MAX: double = nan;
+  /// REFLECTANCE: typical reflectivity, NaN when not stated.
+  REFLECTANCE: double = nan;
+  /// ATT_CONTROL_MODE.
+  ATT_CONTROL_MODE: string;
+  /// ATT_ACTUATOR_TYPE.
+  ATT_ACTUATOR_TYPE: string;
+  /// ATT_KNOWLEDGE in degrees, NaN when not stated.
+  ATT_KNOWLEDGE: double = nan;
+  /// ATT_CONTROL in degrees, NaN when not stated.
+  ATT_CONTROL: double = nan;
+  /// ATT_POINTING in degrees, NaN when not stated.
+  ATT_POINTING: double = nan;
+  /// AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated.
+  AVG_MANEUVER_FREQ: double = nan;
+  /// MAX_THRUST in N, NaN when not stated.
+  MAX_THRUST: double = nan;
+  /// DV_BOL: delta-v at beginning of life in km/s, NaN when not stated.
+  DV_BOL: double = nan;
+  /// DV_REMAINING in km/s, NaN when not stated.
+  DV_REMAINING: double = nan;
+  /// IXX in kg*m**2, NaN when not stated.
+  IXX: double = nan;
+  /// IYY in kg*m**2, NaN when not stated.
+  IYY: double = nan;
+  /// IZZ in kg*m**2, NaN when not stated.
+  IZZ: double = nan;
+  /// IXY in kg*m**2, NaN when not stated.
+  IXY: double = nan;
+  /// IXZ in kg*m**2, NaN when not stated.
+  IXZ: double = nan;
+  /// IYZ in kg*m**2, NaN when not stated.
+  IYZ: double = nan;
+}
+
+table Perturbations {
+  /// Comments in the Perturbations section.
+  COMMENT: [string];
+  /// Atmospheric model used.
+  ATMOSPHERIC_MODEL: ATM;
+  /// Gravity model used.
+  GRAVITY_MODEL: string;
+  /// Degree of the gravity model.
+  GRAVITY_DEGREE: int;
+  /// Order of the gravity model.
+  GRAVITY_ORDER: int;
+  /// Gravitational constant times the mass of the central body.
+  GM: double;
+  /// List of celestial bodies included in n-body perturbations.
+  N_BODY_PERTURBATIONS: [string];
+  /// Ocean tides model used.
+  OCEAN_TIDES_MODEL: string;
+  /// Solid tides model used.
+  SOLID_TIDES_MODEL: string;
+  /// Atmospheric tides model used.
+  ATMOSPHERIC_TIDES_MODEL: string;
+  /// Geopotential model used.
+  GEOPOTENTIAL_MODEL: string;
+  /// Solar radiation pressure model used.
+  SOLAR_RAD_PRESSURE: string;
+  /// Albedo model used.
+  ALBEDO: string;
+  /// Thermal model used.
+  THERMAL: string;
+  /// Relativity model used.
+  RELATIVITY: string;
+  /// Atmospheric drag model used.
+  ATMOSPHERIC_DRAG: string;
+  /// Fixed geomagnetic Kp index used.
+  FIXED_GEOMAG_KP: double;
+  /// Fixed F10.7 solar flux value used.
+  FIXED_F10P7: double;
+  /// Fixed mean F10.7 solar flux value used.
+  FIXED_F10P7_MEAN: double;
+  /// Fixed (time-invariant) geomagnetic index ap used in place of the normal
+  /// time-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP).
+  FIXED_GEOMAG_AP: double;
+  /// ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL
+  /// above is the model family when the text names one.
+  ATMOSPHERIC_MODEL_NAME: string;
+  /// EQUATORIAL_RADIUS in km, NaN when not stated.
+  EQUATORIAL_RADIUS: double = nan;
+  /// CENTRAL_BODY_ROTATION in deg/s, NaN when not stated.
+  CENTRAL_BODY_ROTATION: double = nan;
+  /// OBLATE_FLATTENING, NaN when not stated.
+  OBLATE_FLATTENING: double = nan;
+  /// REDUCTION_THEORY.
+  REDUCTION_THEORY: string;
+  /// ALBEDO_GRID_SIZE.
+  ALBEDO_GRID_SIZE: uint;
+  /// SHADOW_MODEL.
+  SHADOW_MODEL: string;
+  /// SHADOW_BODIES.
+  SHADOW_BODIES: string;
+  /// SW_DATA_SOURCE: the space weather data source.
+  SW_DATA_SOURCE: string;
+  /// SW_DATA_EPOCH.
+  SW_DATA_EPOCH: string;
+  /// SW_INTERP_METHOD.
+  SW_INTERP_METHOD: string;
+  /// FIXED_GEOMAG_DST in nT, NaN when not stated.
+  FIXED_GEOMAG_DST: double = nan;
+  /// FIXED_M10P7, NaN when not stated.
+  FIXED_M10P7: double = nan;
+  /// FIXED_M10P7_MEAN, NaN when not stated.
+  FIXED_M10P7_MEAN: double = nan;
+  /// FIXED_S10P7, NaN when not stated.
+  FIXED_S10P7: double = nan;
+  /// FIXED_S10P7_MEAN, NaN when not stated.
+  FIXED_S10P7_MEAN: double = nan;
+  /// FIXED_Y10P7, NaN when not stated.
+  FIXED_Y10P7: double = nan;
+  /// FIXED_Y10P7_MEAN, NaN when not stated.
+  FIXED_Y10P7_MEAN: double = nan;
+  /// Highest degree of the tesseral and sectorial terms (order 1 and above) of
+  /// the gravity field the record was computed with (SDS addition; the $PCF
+  /// FORCES name). For a mean-element set (MEAN_ELEMENTS) the cap beyond its
+  /// theory: 0 is the theory's own terms. For a numerical solution the nn of a
+  /// legacy VCM's "mmZ,nnT". 0 is otherwise not stated. A record that writes
+  /// either cap leaves GRAVITY_DEGREE and GRAVITY_ORDER unwritten: a degree and
+  /// order pair cannot state a tesseral cap below a zonal one.
+  MAXIMUM_TESSERAL_DEGREE: ushort;
+  /// Highest degree of the zonal terms (order 0) of the gravity field the
+  /// record was computed with (SDS addition). For a mean-element set the tail
+  /// J6..Jz beyond its theory: 0 is the theory's own zonals, below 6 is none.
+  /// For a numerical solution the mm of a legacy VCM's "mmZ,nnT". 0 is
+  /// otherwise not stated.
+  MAXIMUM_ZONAL_DEGREE: ushort;
+  /// Where the space weather behind the drag density comes from. RECORDS: the
+  /// daily rows in SPACE_WEATHER; THEORY_FLUX_MODEL: the theory's own generic
+  /// flux model; NONE: no drag weather (SGP4's BSTAR). UNSPECIFIED is refused
+  /// in an element-set record.
+  WEATHER_SOURCE: pcfWeatherSource = UNSPECIFIED;
+  /// Correction applied to the atmosphere model's density.
+  DENSITY_CORRECTION: pcfDensityCorrection = NONE;
+  /// CID of the $DCL whose nodes DENSITY_CORRECTION_NODE_TIMES_MS and
+  /// DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS copy; required when
+  /// DENSITY_CORRECTION is not NONE. Provenance: not compared at flight.
+  DENSITY_CORRECTION_CID: string;
+  /// The daily space weather the drag density reads (SDS addition; CCSDS
+  /// 502.0-B-3 names only the source, epoch and interpolation as text and
+  /// fixed values). Present iff WEATHER_SOURCE is RECORDS: one $SPW row per
+  /// UTC day, DATE ascending, no gap, from the day before the first day the
+  /// record is flown or was fitted through its last day. The record is flown
+  /// to the end of the last row's day and no further. Each row carries DATE,
+  /// F107_OBS, F107_OBS_CENTER81, AP_AVG and F107_DATA_TYPE (OBS observed;
+  /// PRD, PRM predicted); other SPW fields unwritten.
+  SPACE_WEATHER: [SPW];
+  /// DENSITY_CORRECTION DCA_COMMON_MODE: the $DCL LogDensityNodes layer the
+  /// set flies under, as that $DCL's CORRECTION.NODE_TIMES_MS (UTC Unix
+  /// milliseconds, strictly increasing) over the span of SPACE_WEATHER.
+  /// Empty when DENSITY_CORRECTION is NONE.
+  DENSITY_CORRECTION_NODE_TIMES_MS: [int64];
+  /// One finite s = ln(rho / rho_NRLMSISE00) per DENSITY_CORRECTION_NODE_TIMES_MS
+  /// entry, dimensionless, as that $DCL's
+  /// CORRECTION.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: linear between nodes,
+  /// held at the end values outside them.
+  DENSITY_CORRECTION_LOG_DENSITY_SCALE_DIMENSIONLESS: [double];
+  /// Number of terms of the nutation series REDUCTION_THEORY names that the
+  /// force model sums (the series of a legacy VCM's "IAU 1980 NUTAT: ttt TERMS":
+  /// 4, 50 or 106). 0 when the series is not truncated or the count is not
+  /// stated.
+  REDUCTION_THEORY_TERMS: ushort;
+}
+
+table Maneuver {
+  /// Unique identifier for the maneuver.
+  MAN_ID: string;
+  /// Basis of the maneuver plan (e.g., planned, predicted, estimated).
+  MAN_BASIS: string;
+  /// Identifier of the maneuver device.
+  MAN_DEVICE_ID: string;
+  /// Identifier of the previous maneuver.
+  MAN_PREV_ID: string;
+  /// Purpose of the maneuver.
+  MAN_PURPOSE: string;
+  /// Reference frame for the maneuver data.
+  MAN_REF_FRAME: string;
+  /// Epoch of the maneuver reference frame.
+  MAN_FRAME_EPOCH: string;
+  /// Type of maneuver (e.g., IMPULSIVE, FINITE).
+  MAN_TYPE: string;
+  /// Start epoch of the maneuver.
+  MAN_EPOCH_START: string;
+  /// Duration of the maneuver.
+  MAN_DURATION: double;
+  /// Units for the maneuver data values.
+  MAN_UNITS: [string];
+  /// Data associated with the maneuver.
+  DATA: [string];
+  /// Comments related to the maneuver.
+  MAN_COMMENT: [string];
+  /// Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.
+  /// CCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.
+  /// DATA entries are complete time-history lines; MAN_UNITS excludes time tags.
+  /// Relative time tags are seconds from METADATA.EPOCH_TZERO.
+  MAN_COMPOSITION: [string];
+  /// Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7).
+  MAN_NEXT_ID: string;
+  /// OD, navigation solution or simulation identifier (Table 6-7).
+  MAN_BASIS_ID: string;
+  /// Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.
+  /// CCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM.
+  MAN_PREV_EPOCH: string;
+  /// Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7).
+  MAN_NEXT_EPOCH: string;
+  /// Source of predicted orbit or attitude states (Table 6-7).
+  MAN_PRED_SOURCE: string;
+  /// Gravitational assist body name (Table 6-7).
+  GRAV_ASSIST_NAME: string;
+  /// CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7).
+  DC_TYPE: string;
+  /// Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7).
+  DC_WIN_OPEN: string;
+  /// Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7).
+  DC_WIN_CLOSE: string;
+  /// Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7).
+  DC_MIN_CYCLES: uint;
+  DC_MAX_CYCLES: uint;
+  /// Presence of the corresponding cycle bound; zero remains representable.
+  HAS_DC_MIN_CYCLES: bool = false;
+  HAS_DC_MAX_CYCLES: bool = false;
+  /// First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.
+  /// Required with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7).
+  DC_EXEC_START: string;
+  DC_EXEC_STOP: string;
+  /// Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7).
+  DC_REF_TIME: string;
+  /// Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).
+  /// Required with DC_REF_TIME for non-continuous cycles; period >= duration.
+  DC_TIME_PULSE_DURATION: double = nan;
+  DC_TIME_PULSE_PERIOD: double = nan;
+  /// Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).
+  /// Required with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE.
+  DC_REF_DIR: [double];
+  /// Body frame of DC_BODY_TRIGGER (Table 6-7).
+  DC_BODY_FRAME: string;
+  /// Three-component body-frame trigger unit direction (Table 6-7).
+  DC_BODY_TRIGGER: [double];
+  /// Pulse start and stop phase angles, degrees; NaN means unspecified.
+  /// CCSDS 502.0-B-3 Table 6-7.
+  DC_PA_START_ANGLE: double = nan;
+  DC_PA_STOP_ANGLE: double = nan;
+  /// NORAD_CAT_ID of the object that maneuvered, for a message whose
+  /// maneuvers belong to more than one object (a relative-motion message's
+  /// chaser and target). 0 when the message's own object maneuvered.
+  NORAD_CAT_ID: uint32;
+}
+
+/// Estimator class that produced an orbit-determination solution
+/// (batch-vs-filter provenance).
+enum estimatorCategory : byte {
+  /// Estimator class not specified
+  Unknown,
+  /// Batch least-squares fit
+  BatchLeastSquares,
+  /// Extended Kalman filter
+  ExtendedKalman,
+  /// Unscented Kalman filter
+  UnscentedKalman,
+  /// Smoothed sequential solution
+  Smoother
+}
+
+/// Order in which the values of an N x N covariance matrix are written at each epoch (CCSDS 502.0-B-3 COV_ORDERING).
+enum covarianceOrdering : byte {
+  /// Lower triangle row by row, [1,1], [2,1], [2,2], [3,1] ...: N(N+1)/2 values.
+  LTM,
+  /// Upper triangle row by row, [1,1], [1,2], [1,3], [2,2] ...: N(N+1)/2 values.
+  UTM,
+  /// The whole matrix row by row: N*N values.
+  FULL,
+  /// The whole matrix row by row: N*N values. The lower triangle with its diagonal holds the covariances; the places
+  /// above the diagonal hold the correlation coefficients (covariance over the product of standard deviations).
+  LTMWCC,
+  /// The whole matrix row by row: N*N values. The upper triangle with its diagonal holds the covariances; the places
+  /// below the diagonal hold the correlation coefficients.
+  UTMWCC
+}
+
+/// A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
+/// epoch and whether the orbit determination solved for it (a held value is a catalog value).
+table OCMDynamicParameter {
+  /// Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,
+  /// SRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. NAME is the
+  /// label; PARAMETER is the typed key. A producer-specific parameter is not carried here.
+  NAME: string;
+  /// Value at the solution epoch, in UNITS.
+  VALUE: double;
+  /// Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,
+  /// m/s**2 for IN_TRACK_ACCELERATION, km/s**2 for OUTGASSING_ACCELERATION.
+  UNITS: string;
+  /// True when the orbit determination solved for the parameter, false when VALUE was held.
+  SOLVED_FOR: bool = false;
+  /// The parameter, typed: every reader keys on this, never on NAME.
+  PARAMETER: prwDynamicParameter = UNSPECIFIED;
+}
+
+/// One day of held-out prediction error after the end of a fit arc.
+table OCMHeldOutDay {
+  /// The day after the end of the fit arc, from 1.
+  DAY: ushort;
+  /// Reference states in the day.
+  STATES: uint;
+  /// Position RMS over the day, km.
+  RMS_KM: double = nan;
+}
+
+/// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
+/// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
+table OCMFitStatistics {
+  /// Reference states fitted.
+  FIT_STATES: uint;
+  /// Position RMS over the fit arc, km.
+  FIT_RMS_KM: double = nan;
+  /// Largest position error over the fit arc, km.
+  FIT_MAX_KM: double = nan;
+  /// RMS of each position error component in the model's radial, in-track and cross-track
+  /// axes, km.
+  FIT_RADIAL_RMS_KM: double = nan;
+  FIT_IN_TRACK_RMS_KM: double = nan;
+  FIT_CROSS_TRACK_RMS_KM: double = nan;
+  /// Iterations the fit took.
+  ITERATIONS: uint;
+  /// True when the fit converged.
+  CONVERGED: bool = false;
+  /// End of the held-out window (ISO 8601 UTC); empty without one.
+  HELD_OUT_STOP: string;
+  /// Held-out reference states, their position RMS and largest error, km.
+  HELD_OUT_STATES: uint;
+  HELD_OUT_RMS_KM: double = nan;
+  HELD_OUT_MAX_KM: double = nan;
+  /// The held-out error by day after the fit arc.
+  HELD_OUT_DAYS: [OCMHeldOutDay];
+  /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  PCF_CID: string;
+  /// First epoch of the fit arc (ISO 8601 UTC).
+  FIT_START: string;
+  /// Last epoch of the fit arc (ISO 8601 UTC).
+  FIT_STOP: string;
+}
+
+/// A mean element set under a named theory, with the elements exactly as the theory defines
+/// them. SDS addition: CCSDS 502.0-B-3 OCM carries no mean-motion element set. Epoch in
+/// METADATA.TIME_SYSTEM; frame is TRAJ_REF_FRAME about CENTER_NAME (EARTH).
+table OCMMeanElements {
+  /// The theory the set is defined under and flies on, written explicitly, SGP4 (0)
+  /// included. A reader refuses UNSPECIFIED.
+  MEAN_ELEMENT_THEORY: meanElementSource = UNSPECIFIED;
+  /// EPOCH of the elements (ISO 8601 UTC).
+  EPOCH: string (required);
+  /// MEAN_MOTION in rev/day as the theory defines it: Kozai for SGP4, Brouwer for SGP4-XP
+  /// and AP. Never derived from a semi-major axis.
+  MEAN_MOTION: double;
+  /// ECCENTRICITY (unitless).
+  ECCENTRICITY: double;
+  /// INCLINATION, deg.
+  INCLINATION: double;
+  /// RA_OF_ASC_NODE, deg.
+  RA_OF_ASC_NODE: double;
+  /// ARG_OF_PERICENTER, deg.
+  ARG_OF_PERICENTER: double;
+  /// MEAN_ANOMALY, deg.
+  MEAN_ANOMALY: double;
+  /// BSTAR in 1/Earth radii. SGP4 only; 0 for SGP4-XP and AP.
+  BSTAR: double;
+  /// MEAN_MOTION_DOT in rev/day**2. SGP4 only.
+  MEAN_MOTION_DOT: double;
+  /// MEAN_MOTION_DDOT in rev/day**3. SGP4 only.
+  MEAN_MOTION_DDOT: double;
+  /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+  BTERM: double;
+  /// AGOM, the SGP4-XP radiation term Cr*A/m in m**2/kg. SGP4-XP and AP only; 0 for SGP4.
+  AGOM: double;
+}
+
+/// What propagates the covariance of a mean element set beyond its epoch value.
+/// SDS addition (no CCSDS counterpart; OD_PROCESS_NOISE is free text).
+table OCMCovariancePropagation {
+  /// Theory floor, the fit's residual covariance in the UVW axes of the state at each time
+  /// (U radial, V in-track, W along r x v), km**2: the uu, vu, vv, wu, wv and ww entries.
+  /// Included in the state block of COVARIANCE_DATA at epoch; subtracted when read, added at
+  /// every time.
+  FLOOR_UU_KM2: double;
+  FLOOR_VU_KM2: double;
+  FLOOR_VV_KM2: double;
+  FLOOR_WU_KM2: double;
+  FLOOR_WV_KM2: double;
+  FLOOR_WW_KM2: double;
+  /// Rate errors of the mean elements from NOISE_START_MINUTES on: eccentricity vector and
+  /// inclination vector, 1/day.
+  NOISE_ECCENTRICITY_PER_DAY: double;
+  NOISE_INCLINATION_PER_DAY: double;
+  /// Relative mean-motion error, dimensionless.
+  NOISE_MEAN_MOTION_RELATIVE: double;
+  /// Non-gravitational mean-motion rate error, rad/day**2: the value that flies.
+  NOISE_NON_GRAVITATIONAL_RAD_DAY2: double;
+  /// Start of the rate errors: end of the fit arc, minutes from the set's epoch (signed).
+  NOISE_START_MINUTES: double;
+  /// Share c of the non-gravitational mean-motion rate that is error, dimensionless, and the
+  /// rate itself as n-dot_ng / n, 1/day. NOISE_NON_GRAVITATIONAL_RAD_DAY2 = c |n-dot_ng|.
+  NON_GRAVITATIONAL_SHARE: double;
+  NON_GRAVITATIONAL_RATE_PER_DAY: double;
+}
+
+/// An element set a trajectory was computed from (SDS addition: CCSDS 502.0-B-3
+/// TRAJ_BASIS_ID names one determination, a relative trajectory has two).
+table OCMSeedSet {
+  /// NORAD_CAT_ID of the object the set describes.
+  NORAD_CAT_ID: uint32;
+  /// EPOCH of the element set, ISO 8601 UTC.
+  EPOCH: string;
+  /// CREATION_DATE of the element set: when its originator made it, ISO 8601
+  /// UTC.
+  CREATION_DATE: string;
+  /// MESSAGE_ID of the element set; for a Space-Track set its GP_ID.
+  MESSAGE_ID: string;
+}
+
+/// Settings of the numerical integrator that made a solution, as a legacy SP
+/// Vector/Covariance Message states them (SDS addition: CCSDS 502.0-B-3 has no
+/// integrator keywords). Present only on a message made from such a message;
+/// a reader of any other message treats it as absent.
+table OCMIntegrator {
+  /// INTEGRATOR MODE.
+  MODE: ocmIntegratorMode = UNSPECIFIED;
+  /// COORD SYS: the coordinate system the integration ran in. Not
+  /// TRAJ_REF_FRAME, which is the frame of STATE_DATA.
+  COORDINATE_SYSTEM: ocmIntegrationFrame = UNSPECIFIED;
+  /// PARTIALS.
+  PARTIALS: ocmPartialsMethod = UNSPECIFIED;
+  /// STEP MODE.
+  STEP_MODE: ocmStepMode = UNSPECIFIED;
+  /// FIXED STEP: true for ON.
+  FIXED_STEP: bool = false;
+  /// STEP SIZE SELECTION.
+  STEP_SIZE_SELECTION: ocmStepSelection = UNSPECIFIED;
+  /// INITIAL STEP SIZE, s. NaN when not stated.
+  INITIAL_STEP_SECONDS: double = nan;
+  /// ERROR CONTROL, dimensionless, as the SP integrator takes it. NaN when not
+  /// stated.
+  ERROR_CONTROL: double = nan;
+}
+
+/// Relative-motion geometry of a chaser about a target on the time grid of the
+/// message (SDS addition: CCSDS 502.0-B-3 has no curvilinear or
+/// relative-orbital-element trajectory type). Every vector holds one entry per
+/// time, in order: entry i is at STATE_EPOCHS[i], or at Metadata.START_TIME +
+/// i * STATE_STEP_SIZE. The target is CENTER_NAME and TRAJ_REF_FRAME its RTN
+/// axes. NaN where a quantity is not defined at a time. The first fourteen
+/// vectors are derived from the two element sets (SEED_SETS); the seven SIGMA_*
+/// and BAND3_* vectors are the projection's, NaN in a history segment.
+table OCMRelativeGeometry {
+  /// Curvilinear radial offset R = |p| - r0, km: p the chaser's geocentric
+  /// position, r0 = |r_target|.
+  R_KM: [double];
+  /// Curvilinear in-track offset I = r0 atan2(y, r0 + x), km, wrapped to
+  /// +-pi r0; (x, y, z) the chaser's rectilinear RTN offset from the target.
+  I_KM: [double];
+  /// Curvilinear cross-track offset C = r0 atan2(z, hypot(r0 + x, y)), km.
+  C_KM: [double];
+  /// I_KM continuous within the message (unwrapped), km.
+  I_UNWRAPPED_KM: [double];
+  /// Chaser-target distance, km.
+  SEPARATION_KM: [double];
+  /// Rate of the separation, km/s.
+  RANGE_RATE_KM_S: [double];
+  /// Angle between the orbit normals (osculating angular momenta) of the chaser
+  /// and the target, deg.
+  PLANE_ANGLE_DEG: [double];
+  /// Semi-major axis of the chief (the target), from its osculating two-body
+  /// elements, km.
+  A_CHIEF_KM: [double];
+  /// Quasi-nonsingular relative orbital elements after D'Amico (2010), chief =
+  /// target, from osculating two-body elements: DA = (a_d - a_c) / a_c,
+  /// dimensionless.
+  DA: [double];
+  /// DLAMBDA = du + dRAAN cos i_c, rad.
+  DLAMBDA: [double];
+  /// DEX: difference of e cos(w), dimensionless.
+  DEX: [double];
+  /// DEY: difference of e sin(w), dimensionless.
+  DEY: [double];
+  /// DIX = di, rad.
+  DIX: [double];
+  /// DIY = dRAAN sin i_c, rad.
+  DIY: [double];
+  /// 1-sigma of R_KM, I_KM and C_KM: the GP error model's sigma times a
+  /// per-axis factor, the 68.27 % quantile of |error| / model sigma over the
+  /// pair's own relative samples (predictions against the next element sets) in
+  /// the trailing calibration window; km.
+  SIGMA_R_KM: [double];
+  SIGMA_I_KM: [double];
+  SIGMA_C_KM: [double];
+  /// 1-sigma of SEPARATION_KM, km.
+  SIGMA_SEPARATION_KM: [double];
+  /// 3-sigma band half-width of R_KM, I_KM and C_KM from the 99.73 % quantile of
+  /// the same ratio (not 3 SIGMA_* when the errors are not Gaussian), km.
+  BAND3_R_KM: [double];
+  BAND3_I_KM: [double];
+  BAND3_C_KM: [double];
+}
+
+/// The side-looking radar a chaser's position is tested against (the inputs
+/// only: wavelength, beamwidths and look angles follow from them).
+table OCMRadarInputs {
+  /// Citation of the radar's published characteristics.
+  SOURCE: string;
+  /// Carrier frequency, GHz. NaN when not stated.
+  FREQUENCY_GHZ: double = nan;
+  /// Antenna aperture along track, m. NaN when not stated.
+  ANTENNA_LENGTH_M: double = nan;
+  /// Antenna aperture across track, m. NaN when not stated.
+  ANTENNA_HEIGHT_M: double = nan;
+  /// Incidence-angle band of the swath, deg. NaN when not stated.
+  INCIDENCE_MIN_DEG: double = nan;
+  INCIDENCE_MAX_DEG: double = nan;
+}
+
+/// Inspection geometry of a chaser about a target on the time grid of the
+/// message (SDS addition; CCSDS 502.0-B-3 has none). Every vector holds one
+/// entry per time, in order: entry i is at STATE_EPOCHS[i], or at
+/// Metadata.START_TIME + i * STATE_STEP_SIZE. The target is CENTER_NAME. The
+/// Earth shadow is the conical model of a spherical Earth (6378.137 km) and a
+/// spherical Sun (695700 km); the target's nadir is -r / |r|; the along-track
+/// direction is the Earth-relative velocity perpendicular to r; right is nadir
+/// x along-track.
+table OCMInspectionGeometry {
+  /// Angle at the target between the Sun and the chaser, deg.
+  PHASE_ANGLE_DEG: [double];
+  /// Fraction of the Sun's disk the target sees: 0 umbra, 1 sunlit.
+  TARGET_SUNLIT: [double];
+  /// The same for the chaser.
+  CHASER_SUNLIT: [double];
+  /// True when the chaser-target segment clears a sphere of 6378.137 km.
+  LINE_OF_SIGHT: [bool];
+  /// TARGET_SUNLIT times LINE_OF_SIGHT.
+  TARGET_LIT_FROM_CHASER: [double];
+  /// Angle at the chaser between the target and the Sun, deg.
+  SUN_FROM_LINE_OF_SIGHT_DEG: [double];
+  /// Chaser-target distance, km.
+  RANGE_KM: [double];
+  /// Angle at the target between its nadir and the chaser, deg.
+  CHASER_OFF_NADIR_DEG: [double];
+  /// The chaser's clock angle about the target's nadir, deg, from along-track
+  /// toward right (90 right of the track, 270 left).
+  CHASER_CLOCK_DEG: [double];
+  /// True when the chaser is inside the target radar's field of regard on that
+  /// side: off-nadir between the look angles of the incidence band, within half
+  /// the azimuth beamwidth (0.886 wavelength / aperture length, -3 dB, uniform
+  /// aperture) of the broadside plane. Empty without RADAR.
+  IN_SAR_RIGHT: [bool];
+  IN_SAR_LEFT: [bool];
+  /// The radar. Absent when no radar was given.
+  RADAR: OCMRadarInputs;
+}
+
+table OrbitDetermination {
+  /// Unique identifier for the orbit determination.
+  OD_ID: string;
+  /// Identifier of the previous orbit determination.
+  OD_PREV_ID: string;
+  /// Algorithm used for orbit determination.
+  OD_ALGORITHM: string;
+  /// Method used for orbit determination.
+  OD_METHOD: string;
+  /// Epoch of the orbit determination.
+  OD_EPOCH: string;
+  /// Time tag of the orbit determination.
+  OD_TIME_TAG: string;
+  /// Process noise model used.
+  OD_PROCESS_NOISE: string;
+  /// Covariance reduction techniques used.
+  OD_COV_REDUCTION: string;
+  /// Noise models used.
+  OD_NOISE_MODELS: string;
+  /// Types of observations used (e.g., RANGE, DOPPLER).
+  OD_OBSERVATIONS_TYPE: [string];
+  /// Number of observations used.
+  OD_OBSERVATIONS_USED: int;
+  /// Number of tracks used.
+  OD_TRACKS_USED: int;
+  /// Data weighting scheme used.
+  OD_DATA_WEIGHTING: string;
+  /// Convergence criteria used.
+  OD_CONVERGENCE_CRITERIA: string;
+  /// Parameters estimated during orbit determination.
+  OD_EST_PARAMETERS: [string];
+  /// A priori data used for orbit determination.
+  OD_APRIORI_DATA: string;
+  /// Residuals from the orbit determination.
+  OD_RESIDUALS: string;
+  /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  OD_ESTIMATOR: estimatorCategory;
+  /// RMS of post-fit residuals for this solution. In the unit of the residuals the
+  /// observation types state: arcsec for RADEC angles. A position RMS in km is
+  /// OCMFitStatistics.FIT_RMS_KM.
+  OD_RESIDUAL_RMS: double;
+  /// Post-fit residual series, one entry per accepted observation.
+  OD_RESIDUALS_SERIES: [double];
+  /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  /// since 1970-01-01T00:00:00 UTC].
+  OD_RESIDUAL_EPOCHS: [double];
+  /// OD_ID of the batch baseline solution a filtered solution derives from and
+  /// is compared against (empty for batch solutions).
+  OD_BATCH_BASELINE_ID: string;
+  /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  /// comparison.
+  OD_BATCH_BASELINE_RMS: double;
+  /// Specific energy dissipation rate in W/kg: energy removed from the orbit
+  /// by non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR).
+  SEDR: double;
+  /// Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS).
+  WEIGHTED_RMS: double;
+  /// Dynamical-model parameters of the solution with their values, solved for or held. An
+  /// IN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model.
+  /// OD_DYNAMIC_PARAMETERS names every COV_PARAMETERS row, and SOLVED_FOR is truthful: true for every
+  /// row of the covariance, false for a parameter the determination held.
+  OD_DYNAMIC_PARAMETERS: [OCMDynamicParameter];
+  /// DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated.
+  DAYS_SINCE_FIRST_OBS: double = nan;
+  /// DAYS_SINCE_LAST_OBS, NaN when not stated.
+  DAYS_SINCE_LAST_OBS: double = nan;
+  /// RECOMMENDED_OD_SPAN in days, NaN when not stated.
+  RECOMMENDED_OD_SPAN: double = nan;
+  /// ACTUAL_OD_SPAN in days, NaN when not stated.
+  ACTUAL_OD_SPAN: double = nan;
+  /// OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED.
+  OBS_AVAILABLE: uint;
+  /// TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED.
+  TRACKS_AVAILABLE: uint;
+  /// MAXIMUM_OBS_GAP in days, NaN when not stated.
+  MAXIMUM_OBS_GAP: double = nan;
+  /// OD_EPOCH_EIGMAJ in m, NaN when not stated.
+  OD_EPOCH_EIGMAJ: double = nan;
+  /// OD_EPOCH_EIGINT in m, NaN when not stated.
+  OD_EPOCH_EIGINT: double = nan;
+  /// OD_EPOCH_EIGMIN in m, NaN when not stated.
+  OD_EPOCH_EIGMIN: double = nan;
+  /// OD_MAX_PRED_EIGMAJ in m, NaN when not stated.
+  OD_MAX_PRED_EIGMAJ: double = nan;
+  /// OD_MIN_PRED_EIGMIN in m, NaN when not stated.
+  OD_MIN_PRED_EIGMIN: double = nan;
+  /// OD_CONFIDENCE in percent, NaN when not stated.
+  OD_CONFIDENCE: double = nan;
+  /// GDOP, NaN when not stated.
+  GDOP: double = nan;
+  /// SOLVE_N: the number of solved-for states.
+  SOLVE_N: uint;
+  /// SOLVE_STATES: the solved-for states, as written.
+  SOLVE_STATES: string;
+  /// CONSIDER_N: the number of consider parameters.
+  CONSIDER_N: uint;
+  /// CONSIDER_PARAMS: the consider parameters, as written.
+  CONSIDER_PARAMS: string;
+  /// SENSORS_N: the number of sensors.
+  SENSORS_N: uint;
+  /// SENSORS: the sensors, as written.
+  SENSORS: string;
+  /// COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line.
+  COMMENT: [string];
+  /// Position statistics of a fit to a reference ephemeris.
+  FIT_STATISTICS: OCMFitStatistics;
+}
+
+/// One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):
+/// the block's keywords, and its data lines as written (a time tag, then the
+/// numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
+/// the first block's CARTPV or CARTPVA states for the modules that read those.
+table OCMTrajectoryBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// TRAJ_ID.
+  TRAJ_ID: string;
+  /// TRAJ_PREV_ID.
+  TRAJ_PREV_ID: string;
+  /// TRAJ_NEXT_ID.
+  TRAJ_NEXT_ID: string;
+  /// TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER.
+  TRAJ_BASIS: string;
+  /// TRAJ_BASIS_ID.
+  TRAJ_BASIS_ID: string;
+  /// INTERPOLATION: the recommended interpolation method.
+  INTERPOLATION: string;
+  /// INTERPOLATION_DEGREE.
+  INTERPOLATION_DEGREE: uint;
+  /// PROPAGATOR.
+  PROPAGATOR: string;
+  /// CENTER_NAME.
+  CENTER_NAME: string;
+  /// TRAJ_REF_FRAME.
+  TRAJ_REF_FRAME: string;
+  /// TRAJ_FRAME_EPOCH.
+  TRAJ_FRAME_EPOCH: string;
+  /// USEABLE_START_TIME.
+  USEABLE_START_TIME: string;
+  /// USEABLE_STOP_TIME.
+  USEABLE_STOP_TIME: string;
+  /// ORB_REVNUM, NaN when not stated.
+  ORB_REVNUM: double = nan;
+  /// ORB_REVNUM_BASIS: 0 or 1, -1 when not stated.
+  ORB_REVNUM_BASIS: int = -1;
+  /// TRAJ_TYPE as written, for example CARTPV.
+  TRAJ_TYPE: string;
+  /// ORB_AVERAGING.
+  ORB_AVERAGING: string;
+  /// TRAJ_UNITS.
+  TRAJ_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
+}
+
+/// One covariance time history of an OCM (Table 6-6): the block's keywords and its
+/// data lines as written (a time tag, then the covariance in COV_ORDERING). The
+/// single-covariance fields of the OCM above state the first block when it is one
+/// line.
+table OCMCovarianceBlock {
+  /// COMMENT lines of this block, joined by a line feed.
+  COMMENT: string;
+  /// COV_ID.
+  COV_ID: string;
+  /// COV_PREV_ID.
+  COV_PREV_ID: string;
+  /// COV_NEXT_ID.
+  COV_NEXT_ID: string;
+  /// COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER.
+  COV_BASIS: string;
+  /// COV_BASIS_ID.
+  COV_BASIS_ID: string;
+  /// COV_REF_FRAME.
+  COV_REF_FRAME: string;
+  /// COV_FRAME_EPOCH.
+  COV_FRAME_EPOCH: string;
+  /// COV_SCALE_MIN, NaN when not stated.
+  COV_SCALE_MIN: double = nan;
+  /// COV_SCALE_MAX, NaN when not stated.
+  COV_SCALE_MAX: double = nan;
+  /// COV_CONFIDENCE in percent, NaN when not stated.
+  COV_CONFIDENCE: double = nan;
+  /// COV_TYPE as written, for example CARTPV.
+  COV_TYPE: string;
+  /// COV_ORDERING.
+  COV_ORDERING: covarianceOrdering = LTM;
+  /// COV_UNITS.
+  COV_UNITS: string;
+  /// The data lines, as written.
+  LINES: [string];
+  /// Realism of the block's covariance: one entry per line of LINES, in order,
+  /// or one entry for every line.
+  COV_REALISM: [CVR];
+}
+
+table UserDefinedParameters {
+  /// Name of the user-defined parameter.
+  PARAM_NAME: string;
+  /// Value of the user-defined parameter.
+  PARAM_VALUE: string;
+}
+
+/// Orbit Comprehensive Message
+table OCM {
+  /// Header section of the OCM.
+  HEADER: Header;
+  /// Metadata section of the OCM.
+  METADATA: Metadata;
+  /// Trajectory state representation type.
+  /// Determines how orbit state data is parameterized in this message.
+  /// For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+  /// For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+  TRAJ_TYPE: trajectoryType = CARTESIAN_PV;
+
+  /// Legacy trajectory type string for backward compatibility and extended types
+  /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+  TRAJ_TYPE_DESCRIPTION: string;
+
+  /// Time interval between state vectors in seconds; required without STATE_EPOCHS.
+  STATE_STEP_SIZE:double;
+
+  /// Number of components per state vector.
+  /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+  /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+  /// 6 or 7 for the element sets named by TRAJ_TYPE.
+  STATE_VECTOR_SIZE:uint8 = 6;
+
+  /// State data as row-major array of doubles.
+  /// Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+  /// Time reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.
+  /// Length must be divisible by STATE_VECTOR_SIZE.
+  /// Units: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME.
+  /// Empty when MEAN_ELEMENTS, RPO_GEOMETRY or RPO_INSPECTION is present.
+  STATE_DATA:[double];
+
+  /// Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.
+  /// COV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]
+  /// has the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity
+  /// state), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per
+  /// epoch, the lower triangle of the 6x6 position and velocity covariance.
+  COVARIANCE_DATA:[double];
+
+  /// Polynomial position records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+  /// with polynomial coefficients for X, Y, Z position (and optionally velocity).
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_POSITION_RECORDS: [PPEPositionRecord];
+
+  /// Polynomial orbital element records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+  /// with polynomial coefficients for classical orbital elements.
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_OE_RECORDS: [PPEOrbitalElementRecord];
+
+  /// Physical properties of the space object.
+  PHYSICAL_PROPERTIES: PhysicalProperties;
+  /// Maneuver data.
+  MANEUVER_DATA: [Maneuver];
+  /// Perturbations parameters used.
+  PERTURBATIONS: Perturbations;
+  /// Orbit determination data.
+  ORBIT_DETERMINATION: OrbitDetermination;
+  /// CCSDS 502.0-B-3 USER_DEFINED_x of a foreign message. SDN producers never write it and
+  /// SDN readers never read it.
+  USER_DEFINED_PARAMETERS: [UserDefinedParameters];
+  /// Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME).
+  CENTER_NAME: string;
+  /// Reference frame of STATE_DATA and the polynomial records; for MEAN_ELEMENTS, the
+  /// frame of the elements (CCSDS 502.0-B-3 TRAJ_REF_FRAME).
+  TRAJ_REF_FRAME: RFM;
+  /// Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame
+  /// (CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH).
+  TRAJ_FRAME_EPOCH: string;
+  /// Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME). COV_REF_FRAME UVW is the frame of a
+  /// local-orbital covariance: U radial, V along-track, W cross-track, the velocity rows on the same axes.
+  COV_REF_FRAME: RFM;
+  /// Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM).
+  ORB_REVNUM: uint;
+  /// For element sets: OSCULATING, or the mean-element theory used (BROUWER,
+  /// KOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING.
+  ORB_AVERAGING: string;
+  /// Whether COVARIANCE_DATA's coverage was measured against independent
+  /// reference states: Calibrated only when every COV_REALISM entry is.
+  COV_CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of that calibration evidence (a report or record).
+  COV_CALIBRATION_REFERENCE: string;
+  /// Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3
+  /// section 6.2.4). When nonempty, length equals STATE_DATA.length /
+  /// STATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.
+  /// Absent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs.
+  STATE_EPOCHS: [string];
+  /// Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set
+  /// (CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and
+  /// TSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV.
+  COV_TYPE: string;
+  /// Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING). COV_ORDERING LTM is the only ordering
+  /// the product writers (lib/js/PROD) accept.
+  COV_ORDERING: covarianceOrdering = LTM;
+  /// Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows
+  /// COV_PARAMETERS names.
+  COV_SIZE: uint8 = 6;
+  /// Names of the covariance rows after the state block, by their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.
+  /// COV_PARAMETERS lists only the parameters the orbit determination solved for, in the fixed order DRAG_AREA_OVER_MASS,
+  /// DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION, OUTGASSING_ACCELERATION (a VCM's B, BDOT, AGOM
+  /// and T are the first four): COV_SIZE - 6 entries, no row for a parameter the determination held.
+  COV_PARAMETERS: [string];
+  /// Units of the standard deviation of each diagonal element (CCSDS 502.0-B-3 COV_UNITS): COV_UNITS has exactly
+  /// COV_SIZE entries, km and km/s for the state rows, then m**2/kg, m**2/kg/s, m**2/kg, m/s**2 and km/s**2 for the
+  /// parameter rows COV_PARAMETERS names; "n/a" for a dimensionless one.
+  COV_UNITS: [string];
+  /// Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START
+  /// blocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with
+  /// them above state the first block's CARTPV or CARTPVA states.
+  TRAJECTORY_BLOCKS: [OCMTrajectoryBlock];
+  /// Every covariance time history of the message (COV_START blocks), in message
+  /// order. COVARIANCE_DATA and the fields that go with it above state the first
+  /// block when it is one line.
+  COVARIANCE_BLOCKS: [OCMCovarianceBlock];
+  /// Where the message's data comes from and the terms it travels under.
+  PROVENANCE: PVN;
+  /// Realism of COVARIANCE_DATA: one entry per epoch, in the order of the
+  /// STATE_DATA epochs, or one entry for every epoch.
+  COV_REALISM: [CVR];
+  /// The mean element set this message carries, under the theory it names. STATE_DATA is
+  /// empty when this is present; no state travels beside a set.
+  MEAN_ELEMENTS: OCMMeanElements;
+  /// What propagates COVARIANCE_DATA beyond its epoch (mean element sets).
+  COV_PROPAGATION: OCMCovariancePropagation;
+  /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
+  /// every reader keys on these, never on the COV_PARAMETERS strings.
+  COV_PARAMETER_KINDS: [prwDynamicParameter];
+  /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS
+  /// (CCSDS 502.0-B-3 TRAJ_BASIS).
+  TRAJ_BASIS: ocmTrajectoryBasis = UNSPECIFIED;
+  /// The element sets the trajectory was computed from, one per object whose
+  /// elements it used.
+  SEED_SETS: [OCMSeedSet];
+  /// Integrator settings of a solution made from a legacy VCM.
+  INTEGRATOR: OCMIntegrator;
+  /// Relative-motion geometry; STATE_DATA is empty when this is present.
+  RPO_GEOMETRY: OCMRelativeGeometry;
+  /// Inspection geometry; STATE_DATA is empty when this is present.
+  RPO_INSPECTION: OCMInspectionGeometry;
+  /// The polynomial ephemeris derived from this record's MEAN_ELEMENTS by the builder
+  /// named in its BUILD, valid only while its BUILD.RECORD_DIGEST matches this record.
+  /// MEAN_ELEMENTS and the record's other fields remain the authoritative content; a
+  /// reader may ignore this. How many windows it holds is the publisher's choice.
+  /// TRAJ_TYPE and POLYNOMIAL_POSITION_RECORDS do not apply to it.
+  DERIVED_EPHEMERIS: PPE;
+}
+
+root_type OCM;
+file_identifier "$OCM";

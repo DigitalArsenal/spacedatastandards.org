@@ -1,0 +1,139 @@
+// Hash: e909de4daeb72ba381bfa35774be14484a43ea3c3f787e0c724d643b436fbf8f
+// Version: 1.247.0
+// -----------------------------------END_HEADER
+// Small Body (SBD)
+//
+// One asteroid or comet of a small-body catalog (JPL SBDB, the Minor Planet
+// Center, Lowell astorb): who it is, its osculating heliocentric orbit at one
+// epoch, its photometry and size, and how well the orbit is known. A small body
+// does not orbit the Earth, so it is never an $OMM.
+//
+// The orbit uses the CCSDS ODM (502.0-B-3) OPM keywords and units: CENTER_NAME,
+// REF_FRAME, TIME_SYSTEM, EPOCH, SEMI_MAJOR_AXIS (km), ECCENTRICITY,
+// INCLINATION, RA_OF_ASC_NODE, ARG_OF_PERICENTER, MEAN_ANOMALY (deg) and GM
+// (km**3/s**2). Angles are measured in REF_FRAME. A comet's orbit is given by
+// PERICENTER_DISTANCE and PERICENTER_EPOCH; an asteroid's by SEMI_MAJOR_AXIS and
+// MEAN_ANOMALY. A value the source does not give is NaN (or empty).
+
+include "../PVN/main.fbs";
+
+/// Orbit class, as JPL SBDB names them.
+enum sbdOrbitClass : ubyte {
+  /// Not classified
+  Unspecified,
+  /// Atira (interior Earth object): Q < 0.983 AU
+  IEO,
+  /// Aten: a < 1.0 AU, Q > 0.983 AU
+  ATE,
+  /// Apollo: a > 1.0 AU, q < 1.017 AU
+  APO,
+  /// Amor: 1.017 AU < q < 1.3 AU
+  AMO,
+  /// Mars-crossing asteroid: 1.3 AU < q < 1.666 AU, a < 3.2 AU
+  MCA,
+  /// Inner main-belt asteroid: a < 2.0 AU, q > 1.666 AU
+  IMB,
+  /// Main-belt asteroid: 2.0 AU < a < 3.2 AU, q > 1.666 AU
+  MBA,
+  /// Outer main-belt asteroid: 3.2 AU < a < 4.6 AU
+  OMB,
+  /// Jupiter trojan: 4.6 AU < a < 5.5 AU, e < 0.3
+  TJN,
+  /// Centaur: 5.5 AU < a < 30.1 AU
+  CEN,
+  /// Trans-Neptunian object: a > 30.1 AU
+  TNO,
+  /// Parabolic asteroid: e = 1
+  PAA,
+  /// Hyperbolic asteroid: e > 1
+  HYA,
+  /// Asteroid on an orbit matching no other class
+  AST,
+  /// Encke-type comet: Tisserand parameter with Jupiter > 3, a < a(Jupiter)
+  ETc,
+  /// Jupiter-family comet: 2 < Tisserand parameter with Jupiter < 3
+  JFc,
+  /// Halley-type comet: 20 y < P < 200 y
+  HTC,
+  /// Chiron-type comet: Tisserand parameter with Jupiter > 3, a > a(Jupiter)
+  CTc,
+  /// Parabolic comet: e = 1
+  PAR,
+  /// Hyperbolic comet: e > 1
+  HYP,
+  /// Comet on an orbit matching no other class
+  COM
+}
+
+/// Small Body
+table SBD {
+  /// Minor-planet number; 0 when the body is not numbered.
+  NUMBER: uint;
+  /// Principal provisional designation (e.g. "1999 RQ36"), or the comet
+  /// designation (e.g. "1P"); empty when the source gives none.
+  DESIGNATION: string;
+  /// IAU name (e.g. "Bennu"); empty when the body is not named.
+  NAME: string;
+  /// Orbit class.
+  ORBIT_CLASS: sbdOrbitClass = Unspecified;
+  /// Near-Earth object: perihelion distance below 1.3 AU.
+  NEO: bool = false;
+  /// Potentially hazardous: Earth MOID at most 0.05 AU and H at most 22. False
+  /// when EARTH_MOID is not given.
+  PHA: bool = false;
+  /// Earth minimum orbit intersection distance, AU.
+  EARTH_MOID: double = nan;
+  /// Origin of the orbit (CCSDS CENTER_NAME), "SUN" for a heliocentric orbit.
+  CENTER_NAME: string;
+  /// Frame the angles are measured in (CCSDS REF_FRAME), e.g. "ICRF", or
+  /// "ECLIPJ2000" for the mean ecliptic and equinox of J2000.
+  REF_FRAME: string;
+  /// Time system of EPOCH and PERICENTER_EPOCH (CCSDS TIME_SYSTEM), e.g. "TDB".
+  TIME_SYSTEM: string;
+  /// Epoch of osculation, ISO 8601 in TIME_SYSTEM.
+  EPOCH: string;
+  /// Semi-major axis, km.
+  SEMI_MAJOR_AXIS: double = nan;
+  /// Eccentricity.
+  ECCENTRICITY: double = nan;
+  /// Inclination, deg.
+  INCLINATION: double = nan;
+  /// Right ascension (longitude) of the ascending node, deg.
+  RA_OF_ASC_NODE: double = nan;
+  /// Argument of pericenter, deg.
+  ARG_OF_PERICENTER: double = nan;
+  /// Mean anomaly at EPOCH, deg.
+  MEAN_ANOMALY: double = nan;
+  /// Gravitational parameter of CENTER_NAME the elements were computed with,
+  /// km**3/s**2.
+  GM: double = nan;
+  /// Pericenter distance (q), km: the orbit size of a comet.
+  PERICENTER_DISTANCE: double = nan;
+  /// Time of pericenter passage, ISO 8601 in TIME_SYSTEM.
+  PERICENTER_EPOCH: string;
+  /// Absolute magnitude H (IAU H, G system).
+  ABSOLUTE_MAGNITUDE: double = nan;
+  /// Slope parameter G (IAU H, G system).
+  SLOPE_PARAMETER: double = nan;
+  /// Diameter, km.
+  DIAMETER: double = nan;
+  /// Geometric albedo.
+  ALBEDO: double = nan;
+  /// Rotation period, hours.
+  ROTATION_PERIOD: double = nan;
+  /// Current ephemeris uncertainty (Lowell astorb CEU) at CEU_EPOCH, arcsec.
+  CEU: double = nan;
+  /// Rate of change of CEU, arcsec/day.
+  CEU_RATE: double = nan;
+  /// Date CEU holds at, ISO 8601.
+  CEU_EPOCH: string;
+  /// Observed arc the orbit was fitted to, days.
+  ORBIT_ARC: double = nan;
+  /// Observations the orbit was fitted to.
+  OBSERVATION_COUNT: uint;
+  /// Where the record comes from and the terms it travels under.
+  PROVENANCE: PVN;
+}
+
+root_type SBD;
+file_identifier "$SBD";

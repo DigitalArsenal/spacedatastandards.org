@@ -21,7 +21,8 @@ export const SRP_TEXT = {
 };
 export const TIDE_TEXT = { 1: 'IERS 2010' };
 const DAY_US = 86400000000n;
-export const NOT_STATED_US = -9223372036854775808n;
+export const NOT_STATED_US = -9223372036854775807n;
+export const KIND = { FULL: 0, ROWS_ONLY: 1 };
 export const FLOOR_PRODUCER = 'com.spacedatanetwork.sdn-ap-propagator 0.6.39';
 /// COV_FLOOR of an $OCM covariance from its PROVENANCE.PRODUCER (morCovarianceFloor): 2 at the two-body state
 /// of the mean elements, 1 at the writer's theory state.
@@ -93,10 +94,10 @@ export function invalid(m) {
     if (i > 0 && !(w[i - 1].EPOCH_MID_SECONDS + w[i - 1].EPOCH_HALF_SPAN <= w[i].EPOCH_MID_SECONDS - w[i].EPOCH_HALF_SPAN)) out.push(`WINDOWS[${i}] out of order or overlapping`);
   }
   if (m.FALLBACK && (m.FALLBACK.ENTITY_ID != null || m.FALLBACK.TARGETER != null)) out.push('FALLBACK states an ENTITY_ID or a TARGETER');
-  if (m.ROWS_ONLY) {
+  if (m.RECORD_KIND === KIND.ROWS_ONLY) {
     if (w.length === 0 || BigInt(m.WINDOW_RECORD_CHECK ?? 0) === 0n) out.push('ROWS_ONLY without WINDOWS or WINDOW_RECORD_CHECK');
     if (![THEORY.SGP4, THEORY.SGP4XP, THEORY.AP].includes(m.MEAN_ELEMENT_THEORY)) out.push('ROWS_ONLY without a theory');
-    const keep = new Set(['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US', 'WINDOWS', 'WINDOW_COEFF_HEADS', 'WINDOW_COEFF_TAILS', 'WINDOW_RECORD_CHECK', 'ROWS_ONLY']);
+    const keep = new Set(['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US', 'WINDOWS', 'WINDOW_COEFF_HEADS', 'WINDOW_COEFF_TAILS', 'WINDOW_RECORD_CHECK', 'RECORD_KIND']);
     const fresh = new m.constructor();
     for (const k of Object.keys(fresh)) if (!keep.has(k) && !same(m[k], fresh[k])) out.push(`ROWS_ONLY states ${k}`);
   }
@@ -106,12 +107,14 @@ export function invalid(m) {
 export function rowsOnly(m, M, windows, heads, tails, check) {
   const r = new M.MORT();
   for (const k of ['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US']) r[k] = m[k];
-  Object.assign(r, { WINDOWS: windows, WINDOW_COEFF_HEADS: heads, WINDOW_COEFF_TAILS: tails, WINDOW_RECORD_CHECK: check, ROWS_ONLY: true });
+  Object.assign(r, { WINDOWS: windows, WINDOW_COEFF_HEADS: heads, WINDOW_COEFF_TAILS: tails, WINDOW_RECORD_CHECK: check, RECORD_KIND: KIND.ROWS_ONLY });
   return r;
 }
 export function expand(m, asset, O) {
+  // a kind this reader does not know: ignore the record, change nothing
+  if (m.RECORD_KIND !== KIND.FULL && m.RECORD_KIND !== KIND.ROWS_ONLY) return { ocm: null, fallback: null, refused: [`RECORD_KIND ${m.RECORD_KIND} unknown: ignored`], unresolved: [], ignored: true };
   const refused = invalid(m);
-  if (m.ROWS_ONLY) refused.push('ROWS_ONLY has no expansion');
+  if (m.RECORD_KIND === KIND.ROWS_ONLY) refused.push('ROWS_ONLY has no expansion');
   // COV_FLOOR governs; an $OCM can state the floor only through PRODUCER, so a contradicting asset text is refused
   if ((m.COVARIANCE_DATA ?? []).length > 0 && asset?.provenance && floorOf(asset.provenance.PRODUCER) !== m.COV_FLOOR) refused.push('COV_FLOOR differs from the asset PRODUCER');
   if (refused.length > 0) return { ocm: null, fallback: null, refused, unresolved: [] };
@@ -426,7 +429,7 @@ export function encode(fb, M, m) {
   M.MOR.addSolarRadPressure(b, m.SOLAR_RAD_PRESSURE);
   M.MOR.addCovCalibration(b, m.COV_CALIBRATION);
   M.MOR.addCovFloor(b, m.COV_FLOOR);
-  M.MOR.addRowsOnly(b, !!m.ROWS_ONLY);
+  M.MOR.addRecordKind(b, m.RECORD_KIND);
   M.MOR.finishSizePrefixedMORBuffer(b, M.MOR.endMOR(b));
   return b.asUint8Array();
 }

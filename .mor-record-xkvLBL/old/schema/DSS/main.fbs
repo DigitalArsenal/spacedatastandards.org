@@ -1,0 +1,152 @@
+// Hash: 86bdf8265752c1fffd2366992e45a56e3ba83ed041c4dcf184de51975e64af1a
+// Version: 1.99.4
+// -----------------------------------END_HEADER
+/// Data Sync Status
+///
+/// Runtime status envelope for a FlatSQL-backed dataset synchronization. This
+/// message is used for worker/backend-to-frontend status transport; record
+/// bytes themselves remain in their original SDS FlatBuffer schema.
+enum dssSyncState : byte {
+  IDLE,
+  SYNCING,
+  SYNCED,
+  CAPPED,
+  ERROR
+}
+
+/// Retention policy for a lane on this node. Append new values only; never
+/// reorder or reuse existing values.
+enum dssPinPolicy : byte {
+  None,
+  /// Keep a bounded local cache.
+  Cache,
+  /// Pin every publication.
+  Pin,
+  /// Pin and archive every publication.
+  Archive
+}
+
+/// Action a client requests on a lane. Append new values only; never reorder
+/// or reuse existing values.
+enum dssAction : byte {
+  None,
+  /// Run one bounded catch-up pass now.
+  Sync,
+  Subscribe,
+  Unsubscribe,
+  Pin,
+  Unpin,
+  /// Rebuild the local materialisation from pinned publications.
+  Hydrate,
+  /// Set RETENTION and leave the subscription alone: the lane's rule, or,
+  /// when the frame names no PROVIDER_ID and no SOURCE_NAME, the default for
+  /// every lane of SCHEMA_NAME. A frame without RETENTION clears the choice,
+  /// so the default applies again.
+  SetRetention
+}
+
+/// Retention rule for a lane's publications on the subscribing node. Append
+/// new values only; never reorder or reuse existing values.
+enum dssRetention : byte {
+  /// Each new publication replaces the previous batch; the lane holds one
+  /// current set.
+  ReplaceCurrent,
+  /// Every publication is kept and pinned; history stays retrievable.
+  ArchiveAll,
+  /// Every publication stays in the store; nothing is superseded and nothing
+  /// is pinned, so history stays queryable from the store.
+  KeepAll
+}
+
+table DSS {
+  STATUS:dssSyncState = IDLE;
+  SYNCED_ROWS:uint64;
+  TOTAL_ROWS:uint64;
+  LOCAL_ROWS:uint64;
+  PINNED_ROWS:uint64;
+  MISSING_ROWS:uint64;
+  CACHED_BYTES:uint64;
+  PINNED_BYTES:uint64;
+  DOWNLOADED_BYTES:uint64;
+  DOWNLOAD_SPEED_BYTES_PER_SECOND:uint64;
+  MEASURED_WIRE_SPEED_BYTES_PER_SECOND:uint64;
+  HAS_WIRE_SPEED_UTILIZATION:bool;
+  WIRE_SPEED_UTILIZATION:double;
+  WIRE_SPEED_TARGET:double;
+  HAS_WIRE_SPEED_TARGET_MET:bool;
+  WIRE_SPEED_TARGET_MET:bool;
+  MANIFEST_DISCOVERY_MS:uint64;
+  NETWORK_TRANSFER_MS:uint64;
+  VERIFICATION_MS:uint64;
+  FLATSQL_MATERIALIZATION_MS:uint64;
+  PROVIDER_PEER_ID:string;
+  PROVIDER_PUBLIC_KEY:string;
+  SNAPSHOT_ID:string;
+  HEAD:string;
+  CURSOR:string;
+  NEXT_CURSOR:string;
+  HIGH_WATER_MARK:string;
+  QUERY_PROFILE:string;
+  CHUNK_HASH:string;
+  SYNC_PROTOCOL:string;
+  SYNC_FILTER:string;
+  VERIFIED_CHUNKS:[string];
+  LAST_SYNCED_AT:string;
+  ERROR:string;
+
+  /// Standard code of the lane, e.g. "OMM".
+  SCHEMA_NAME: string;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+  /// Stable dataset identifier within the origin.
+  DATASET_ID: string;
+  /// Ingest connector that produces the lane, when known.
+  CONNECTOR_ID: string;
+  /// Channel identifier the lane is announced on.
+  CHANNEL_ID: string;
+  /// Publish/subscribe topic of the lane.
+  TOPIC: string;
+  /// True when this node subscribes to the lane.
+  SUBSCRIBED: bool;
+  PIN_POLICY: dssPinPolicy = None;
+  /// Visibility of the lane, e.g. "public", "private".
+  VISIBILITY: string;
+  /// Encryption state of the lane's publications, e.g. "plain", "encrypted".
+  ENCRYPTION_STATE: string;
+  /// Grant state for an encrypted lane, e.g. "granted", "pending", "none".
+  GRANT_STATE: string;
+  /// Feed head this node has materialised up to.
+  FEED_HEAD: string;
+  /// Content identifier of the newest publication manifest known.
+  LAST_PUBLICATION_CID: string;
+  /// Content identifier of the newest publish notification known.
+  LAST_PNM_CID: string;
+  /// Rows materialised since the previous SYNCED state.
+  DELTA_ROWS: uint64;
+  /// Unix milliseconds the current or last sync pass started; 0 = never.
+  LAST_SYNC_STARTED_AT: uint64;
+  /// Action a client requests when sending this record to a node.
+  REQUESTED_ACTION: dssAction = None;
+  /// Upstream publisher of the lane's records.
+  ORIGIN_ID: string;
+
+  /// How this node keeps a lane's publications. ReplaceCurrent supersedes the
+  /// previous batch of the lane with each new publication so the lane holds
+  /// one current set; KeepAll keeps every publication in the store and pins
+  /// none; ArchiveAll keeps and pins every publication so history stays
+  /// retrievable by content identifier. A lane without a rule of its own
+  /// follows its standard's default. A Subscribe without RETENTION keeps the
+  /// lane's rule; SetRetention changes it.
+  RETENTION: dssRetention = ReplaceCurrent;
+  /// Subscribers following this dataset on this node now.
+  SUBSCRIBER_COUNT:uint32;
+  /// Record bytes this node has sent to followers of this dataset since the
+  /// node started.
+  SERVED_BYTES:uint64;
+  /// Current rate of record bytes sent to followers of this dataset, in bytes
+  /// per second.
+  SERVE_SPEED_BYTES_PER_SECOND:uint64;
+}
+
+root_type DSS;
+file_identifier "$DSS";

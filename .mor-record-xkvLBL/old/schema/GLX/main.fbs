@@ -1,0 +1,91 @@
+// Hash: af785b8fdaf514c88bd001d547ff1f4fb095de89b3f83be74bbeb3c89f2bb4ce
+// Version: 1.252.0
+// -----------------------------------END_HEADER
+/// Galaxy structural catalog record, including redshift-survey targets.
+/// CSO describes detections, localization and alerts; CSO_ID links that record.
+/// Positions use ICRS degrees (IVOA STC 1.33); no distance is inferred from z.
+/// Source conventions: NED https://ned.ipac.caltech.edu/ and HyperLEDA
+/// http://leda.univ-lyon1.fr/leda/param/ (D25, axis ratio, position angle, T).
+/// Unknown floating quantities are NaN, never a measured zero.
+
+enum glxDistanceTechnique : ubyte {
+  UNSPECIFIED = 0, TRGB = 1, CEPHEID = 2, SBF = 3, TULLY_FISHER = 4,
+  FUNDAMENTAL_PLANE = 5, SN_IA = 6, MEMBERSHIP = 7, HUBBLE_FLOW = 8, OTHER = 9
+}
+
+enum glxRedshiftTechnique : ubyte {
+  UNSPECIFIED = 0, SPECTROSCOPIC = 1, PHOTOMETRIC = 2, OTHER = 3
+}
+
+/// HELIOCENTER follows IVOA STC's reference-position spelling. CMB names
+/// the cosmic microwave background rest frame; it is not an origin in space.
+enum glxSpectralRestFrame : ubyte {
+  UNSPECIFIED = 0, HELIOCENTER = 1, CMB = 2, BARYCENTER = 3, OTHER = 4
+}
+
+enum glxObjectCategory : ubyte {
+  UNSPECIFIED = 0, GALAXY = 1, QUASAR = 2, OTHER = 3
+}
+
+/// A missing classification is distinct from a measured negative.
+enum glxTruthValue : ubyte { UNKNOWN = 0, NO = 1, YES = 2 }
+
+table GLX {
+  ID: string (required);
+  NAME: string;
+  DESIGNATIONS: [string];
+  /// ICRS right ascension and declination, degrees.
+  RA_DEG: double = nan;
+  DEC_DEG: double = nan;
+  CSO_ID: string;
+  /// Published distance and uncertainty in Mpc; METHOD and REF name its basis.
+  DISTANCE_MPC: double = nan;
+  DISTANCE_UNC_MPC: double = nan;
+  DISTANCE_METHOD: glxDistanceTechnique = UNSPECIFIED;
+  DISTANCE_REF: string;
+  /// Published heliocentric radial velocity, km/s. Do not substitute c*z.
+  HELIO_VELOCITY_KMS: double = nan;
+  /// Dimensionless z; its uncertainty, technique and rest frame are below.
+  REDSHIFT: double = nan;
+  /// Full major-axis diameter, arcmin, at the named band and surface brightness.
+  ISOPHOTAL_MAJOR_ARCMIN: double = nan;
+  /// Source band token, e.g. B or Ks. D25 B and K20 Ks are different isophotes.
+  ISOPHOTE_BAND: string;
+  /// Surface-brightness threshold in mag/arcsec^2, e.g. 25 in B or 20 in Ks.
+  ISOPHOTE_LEVEL: double = nan;
+  /// Minor/major ratio b/a, dimensionless; position angle east of north, degrees.
+  AXIS_RATIO: double = nan;
+  PA_DEG: double = nan;
+  /// Disk inclination, degrees; source estimate, never inferred from b/a here.
+  INCLINATION_DEG: double = nan;
+  /// Numerical de Vaucouleurs morphology, not an integer category or default.
+  T_TYPE: double = nan;
+  HUBBLE_CLASS: string;
+  /// Source bar classification verbatim (e.g. SA, SAB, SB); absent is unknown.
+  BAR: string;
+  B_TOTAL_MAG: double = nan;
+  K_TOTAL_MAG: double = nan;
+  /// Catalog-qualified group identifier, also usable for finger-of-God grouping.
+  GROUP_ID: string;
+  LOCAL_GROUP_MEMBER: glxTruthValue = UNKNOWN;
+  SOURCE_CATALOG: string;
+  CITATION: string;
+  /// Dataset license; absent means unknown terms, not a redistribution grant.
+  LICENSE: string;
+  REDSHIFT_UNC: double = nan;
+  REDSHIFT_KIND: glxRedshiftTechnique = UNSPECIFIED;
+  REDSHIFT_FRAME: glxSpectralRestFrame = UNSPECIFIED;
+  SOURCE_CLASS: glxObjectCategory = UNSPECIFIED;
+  SURVEY: string;
+  RELEASE: string;
+  TARGET_SAMPLE: string;
+  /// Line-of-sight comoving distance in Mpc, with the adopted cosmology below.
+  COMOVING_DISTANCE_MPC: double = nan;
+  /// c times lookback time, Mpc; distinct from comoving or luminosity distance.
+  LIGHT_TRAVEL_DISTANCE_MPC: double = nan;
+  /// Versioned parameter-set identifier, e.g. Planck18; no implicit cosmology.
+  COSMOLOGY_ID: string;
+}
+
+root_type GLX;
+file_identifier "$GLX";

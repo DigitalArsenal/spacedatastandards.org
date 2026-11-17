@@ -1,0 +1,70 @@
+// Hash: a31e1fbb0e55c39a916cdc1c56b67e10cfd7ce560340efc49b9895e4bcad085d
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum ArmorMaterial : byte {
+  RHA = 0,            // Rolled Homogeneous Armor
+  CHA = 1,            // Cast Homogeneous Armor
+  FHA = 2,            // Face-Hardened Armor
+  HHA = 3,            // High-Hardness Armor
+  ALUMINUM = 4,       // Aluminum alloy
+  COMPOSITE = 5,      // Composite (steel/ceramic/steel)
+  CERAMIC = 6,        // Ceramic plate
+  ERA = 7,            // Explosive Reactive Armor
+  NERA = 8,           // Non-Explosive Reactive Armor
+  SPACED = 9,         // Spaced armor
+  RUBBER = 10,        // Rubber sideskirts
+  STRUCTURAL = 11,    // Structural steel
+  TITANIUM = 12,      // Titanium alloy
+  KEVLAR = 13,        // Kevlar/aramid
+  GLASS = 14,         // Bullet-resistant glass
+}
+
+enum AmmoType : byte {
+  AP = 0,             // Armor-Piercing (uncapped)
+  APC = 1,            // Armor-Piercing Capped
+  APCBC = 2,          // AP Capped Ballistic Cap
+  APCR = 3,           // AP Composite Rigid (HVAP)
+  APDS = 4,           // AP Discarding Sabot
+  APFSDS = 5,         // AP Fin-Stabilized Discarding Sabot
+  HEAT = 6,           // High-Explosive Anti-Tank
+  HEAT_FS = 7,        // HEAT Fin-Stabilized
+  HESH = 8,           // High-Explosive Squash Head
+  HE = 9,             // High-Explosive
+  HE_FRAG = 10,       // High-Explosive Fragmentation
+  HEDP = 11,          // High-Explosive Dual-Purpose
+  APHE = 12,          // Armor-Piercing High-Explosive
+  SAP = 13,           // Semi-Armor-Piercing
+  ATGM = 14,          // Anti-Tank Guided Missile
+  TANDEM_HEAT = 15,   // Tandem HEAT (ERA defeat)
+  TOP_ATTACK = 16,    // Top-attack munition
+  EFP = 17,           // Explosively Formed Penetrator
+}
+
+enum PenResult : byte {
+  NO_PENETRATION = 0, // Complete stop
+  PARTIAL_PEN = 1,    // Partial penetration
+  FULL_PEN = 2,       // Full penetration
+  RICOCHET = 3,       // Deflected
+  SHATTERED = 4,      // Projectile shattered
+  OVER_MATCH = 5,     // Armor overmatched
+}
+
+/// Armor and Protection
+table ARM {
+  THICKNESS:double;
+  ANGLE:double;
+  MATERIAL:ubyte;
+  HARDNESS:ubyte;
+  QUALITY:ubyte;
+  ERA_TYPE:ubyte;
+  ERA_EFFECTIVENESS:float;
+  ERA_VS_KE:float;
+  RHA_EQUIVALENT:float;
+  NORMAL_X:double;
+  NORMAL_Y:double;
+  NORMAL_Z:double;
+  RESERVED:[uint8];
+}
+
+root_type ARM;
+file_identifier "$ARM";

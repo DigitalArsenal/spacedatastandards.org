@@ -1,0 +1,75 @@
+// Hash: fcf879081f4b71283f41907791dd7175eb4bc16332210a38c9ed6b83328c015b
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Region Observation (SRO)
+//
+// One numbered solar active region as stated by its numbering authority on
+// one issue. Every value is copied verbatim from the source or left absent:
+// an absent double is NaN, an absent count has HAS_SPOT_COUNT = false.
+// Positions are heliographic; sign conversions from a source whose longitude
+// sign is opposite happen in the producer, never in this schema.
+
+/// What kind of region the source lists.
+enum sroRegionKind : byte {
+  /// Not stated. Ordinal 0 so an unset field is never read as a real kind.
+  UNSPECIFIED,
+  /// A sunspot group (e.g. SRS Part I).
+  SUNSPOT_GROUP,
+  /// A plage region without spots (e.g. SRS Part IA).
+  PLAGE,
+  /// A kind this enum does not model.
+  CUSTOM
+}
+
+/// Solar Region Observation
+table SRO {
+  /// Region number, verbatim, with no solar cycle prefix added or removed.
+  REGION_NUMBER: uint32;
+  /// The numbering authority, verbatim (e.g. NOAA/SWPC).
+  REGION_AUTHORITY: string;
+  /// When the source issued this report, RFC 3339 UTC.
+  ISSUED_AT: string;
+  /// The source's observation date label, verbatim.
+  OBSERVED_DATE: string;
+  /// The instant the position below refers to, RFC 3339 UTC.
+  POSITION_EPOCH: string (required);
+  /// Region kind as listed by the source.
+  REGION_KIND: sroRegionKind;
+  /// Heliographic location token, verbatim (e.g. N14W32).
+  LOCATION_TOKEN: string;
+  /// Heliographic latitude in degrees, north positive.
+  HG_LATITUDE_DEG: double = nan;
+  /// Stonyhurst heliographic longitude in degrees: 0 is the central meridian
+  /// as seen from Earth, west positive.
+  HG_LONGITUDE_DEG: double = nan;
+  /// Carrington longitude in degrees.
+  CARRINGTON_LONGITUDE_DEG: double = nan;
+  /// Corrected area in millionths of the solar hemisphere.
+  AREA_MSH: double = nan;
+  /// Longitudinal extent in degrees.
+  LONGITUDINAL_EXTENT_DEG: double = nan;
+  /// Number of spots in the region; meaningful only when HAS_SPOT_COUNT.
+  SPOT_COUNT: uint32;
+  /// True when the source states SPOT_COUNT.
+  HAS_SPOT_COUNT: bool = false;
+  /// McIntosh classification, verbatim (e.g. Dao).
+  MCINTOSH_CLASS: string;
+  /// Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).
+  MAGNETIC_CLASS: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SROCOLLECTION {
+  RECORDS: [SRO];
+}
+
+root_type SRO;
+file_identifier "$SRO";

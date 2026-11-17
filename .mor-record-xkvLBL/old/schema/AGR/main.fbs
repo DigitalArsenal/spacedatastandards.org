@@ -1,0 +1,100 @@
+// Hash: 70e12e02c9f765464551d2c6dbbd4b893596046138b1de35a4a5ac266df0234c
+// Version: 1.207.0
+// -----------------------------------END_HEADER
+/// Aggregation Result (AGR)
+/// Description
+/// A server-computed summary over one standard's records so charts, pivots,
+/// timelines and catalogue tallies are one frame computed in one pass over
+/// every record in the selection, never a client-side scan. A histogram bins a
+/// numeric or time field; a category tally counts distinct values; a series
+/// carries parallel X and Y vectors per named series (time or numeric X); a
+/// scatter is a series without ordering; a pivot tallies a row key against a
+/// column key. The frame states what was scanned and whether the scan was
+/// bounded, exactly as a Query Page does.
+
+/// Shape of the aggregate. Append new values only; never reorder or reuse
+/// existing values.
+enum agrKind : byte {
+  Histogram,
+  Category,
+  Series,
+  Scatter,
+  Pivot
+}
+
+/// One histogram bin over [LOW, HIGH).
+table AGRBin {
+  LOW: double;
+  HIGH: double;
+  COUNT: uint64;
+  SUM: double;
+  MIN: double;
+  MAX: double;
+  MEAN: double;
+}
+
+/// One category tally.
+table AGRCategory {
+  KEY: string;
+  COUNT: uint64;
+  SUM: double;
+}
+
+/// One named series with parallel X and Y vectors.
+table AGRSeries {
+  NAME: string;
+  X: [double];
+  Y: [double];
+}
+
+/// One pivot cell.
+table AGRPivotCell {
+  ROW_KEY: string;
+  COL_KEY: string;
+  COUNT: uint64;
+  SUM: double;
+}
+
+/// Aggregation Result - one summary over one standard's records.
+table AGR {
+  KIND: agrKind = Histogram;
+  /// Standard code of the records aggregated, e.g. "OMM".
+  SCHEMA_NAME: string;
+  /// SQL selection the aggregate was computed over, when any.
+  SQL: string;
+  /// Field on the X axis; may be a derived field the serving node computes.
+  X_FIELD: string;
+  /// Fields on the Y axis, one series each.
+  Y_FIELDS: [string];
+  /// True when X values are Unix milliseconds.
+  X_IS_TIME: bool;
+  /// Unit of X when the standard declares one.
+  X_UNIT: string;
+  BINS: [AGRBin];
+  CATEGORIES: [AGRCategory];
+  SERIES: [AGRSeries];
+  PIVOT: [AGRPivotCell];
+  /// Row keys of a pivot in display order.
+  ROW_KEYS: [string];
+  /// Column keys of a pivot in display order.
+  COL_KEYS: [string];
+  /// Records scanned to compute the aggregate.
+  SCANNED: uint64;
+  /// Records that matched the selection.
+  MATCHED: uint64;
+  /// Records the serving node holds for the standard.
+  STORED: uint64;
+  /// True when a bounded scan returned before covering every stored record.
+  PARTIAL: bool;
+  /// True when a category or pivot was cut to its top entries.
+  TRUNCATED: bool;
+  /// Milliseconds the serving node spent computing the aggregate.
+  ELAPSED_MS: uint32;
+  /// Unix milliseconds the serving numbers were last true.
+  AS_OF_MS: int64;
+  PROVIDER_ID: string;
+  SOURCE_NAME: string;
+}
+
+root_type AGR;
+file_identifier "$AGR";

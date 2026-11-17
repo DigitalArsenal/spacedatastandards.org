@@ -1,0 +1,458 @@
+// Hash: 63b30ae792ef43ea30c63e625212670f333422c2669b4acd9d1036952692eb7d
+// Version: 1.101.6
+// -----------------------------------END_HEADER
+/// Sensor Coverage Analytics — canonical request/result/progress ABI for
+/// access, coverage, swath, and coverage-geometry products produced by SDN
+/// modules and consumed by OrbPro analytics sessions.
+
+enum scvEnvelopeKind : ubyte {
+  REQUEST,
+  RESULT,
+  PROGRESS,
+  CANCEL,
+  GEOMETRY
+}
+
+enum scvAnalysisMode : ubyte {
+  COVERAGE,
+  ACCESS,
+  SWATH,
+  COMBINED
+}
+
+enum scvCoordinateFrame : ubyte {
+  UNKNOWN,
+  BODY_FIXED,
+  INERTIAL,
+  ECEF,
+  ECI,
+  CUSTOM,
+  SENSOR_LOCAL
+}
+
+enum scvBodyKind : ubyte {
+  EARTH,
+  MOON,
+  MARS,
+  CUSTOM
+}
+
+enum scvSensorShapeKind : ubyte {
+  CONIC,
+  RECTANGULAR,
+  CUSTOM_POLYGON,
+  SAR_ANNULAR_SECTOR
+}
+
+enum scvSensorAxisConvention : ubyte {
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+}
+
+enum scvSensorRangeBoundaryKind : ubyte {
+  RADIAL_SPHERICAL,
+  LOCAL_Z_PLANE
+}
+
+enum scvGeometryDomain : ubyte {
+  SURFACE,
+  SPACE,
+  ELLIPSOID,
+  PLANE,
+  CUSTOM_MESH
+}
+
+enum scvTargetShape : ubyte {
+  POINT,
+  POLYGON,
+  RECTANGLE,
+  BOX,
+  SPHERE,
+  EXTRUDED_POLYGON
+}
+
+enum scvResultState : ubyte {
+  OK,
+  PARTIAL,
+  CANCELLED,
+  FAILED
+}
+
+enum scvMetricSeriesKind : ushort {
+  PERCENT_COVERED,
+  COVERED_CELL_COUNT,
+  ACCESS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  OVERLAP_COUNT,
+  LATITUDE_BAND_COVERAGE
+}
+
+enum scvGeometryEncoding : ubyte {
+  FLAT_FLOAT32,
+  INTERLEAVED_FLOAT32,
+  QUANTIZED_UINT16,
+  SHARED_MEMORY_OFFSET
+}
+
+enum scvRasterProductKind : ushort {
+  CELL_BOUNDS_DEG,
+  CELL_CENTERS_DEG,
+  PERCENT_COVERAGE,
+  PASS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  CURRENT_ACCESS_BITSET,
+  BUCKET_START_SECONDS,
+  BUCKET_STOP_SECONDS,
+  BUCKET_ACTIVE_CELL_COUNT,
+  PASS_COUNT_RGBA,
+  CURRENT_ACCESS_RGBA,
+  LATITUDE_BAND_COVERAGE,
+  BUCKET_PASS_START_COUNT,
+  WINDOW_START_ACCESS_BITSET,
+  WINDOW_STOP_ACCESS_BITSET
+}
+
+enum scvRasterProductEncoding : ubyte {
+  FLOAT32,
+  FLOAT64,
+  UINT32,
+  BITSET_UINT32,
+  UINT8
+}
+
+table SCVVec3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+table SCVEllipsoid {
+  BODY:scvBodyKind;
+  NAME:string;
+  SEMI_MAJOR_M:double;
+  SEMI_MINOR_M:double;
+  SEMI_INTERMEDIATE_M:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTimeGrid {
+  EPOCH_ISO:string;
+  EPOCH_JULIAN_DATE:double;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  STEP_SEC:double;
+  GRID_INDEX_START:uint32;
+  GRID_INDEX_COUNT:uint32;
+}
+
+/// One point of an azimuth/elevation mask: the lowest elevation at which the
+/// sensor sees at that azimuth (a terrain or structure horizon). The mask is the
+/// polyline through its points ordered by AZIMUTH_DEG, wrapping from the last
+/// point to the first across 360 degrees, linearly interpolated in azimuth.
+table SCVAzElMaskPoint {
+  /// Azimuth, degrees clockwise from north, in [0, 360).
+  AZIMUTH_DEG:double;
+  /// Minimum visible elevation at AZIMUTH_DEG, degrees above the local horizontal.
+  MIN_ELEVATION_DEG:double;
+}
+
+/// The field-of-view shape of one sensor. $SCV carries it in SCVSensor; $SNR
+/// carries the same table as the sensor definition's FIELD_OF_VIEW, so a
+/// definition and an analysis request never describe a shape in two types.
+table SCVSensorShapeContract {
+  SHAPE_KIND:scvSensorShapeKind;
+  AXIS_CONVENTION:scvSensorAxisConvention;
+  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;
+  OUTER_HALF_ANGLE_DEG:double;
+  INNER_HALF_ANGLE_DEG:double;
+  MIN_CLOCK_ANGLE_DEG:double;
+  MAX_CLOCK_ANGLE_DEG:double = 360.0;
+  X_HALF_ANGLE_DEG:double;
+  Y_HALF_ANGLE_DEG:double;
+  INNER_LOOK_ANGLE_DEG:double;
+  OUTER_LOOK_ANGLE_DEG:double;
+  SAR_SAMPLING_DENSITY:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  POLYGON_VERTICES:[SCVVec3];
+  POLYGON_FRAME:scvCoordinateFrame;
+  /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
+  /// Clips the shape: a direction below the mask is outside the field of view.
+  AZ_EL_MASK:[SCVAzElMaskPoint];
+}
+
+table SCVSensor {
+  SENSOR_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  BORESIGHT_UNIT:SCVVec3;
+  UP_UNIT:SCVVec3;
+  SHAPE_CONTRACT:SCVSensorShapeContract;
+}
+
+table SCVStateSample {
+  SENSOR_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVTarget {
+  TARGET_ID:uint32;
+  OBJECT_ID:string;
+  NAME:string;
+  FRAME:scvCoordinateFrame;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  RADIUS_M:double;
+  TARGET_KIND:scvTargetShape;
+  DOMAIN:scvGeometryDomain;
+  POLYGON_VERTICES:[SCVVec3];
+  MIN_ALTITUDE_M:double;
+  MAX_ALTITUDE_M:double;
+}
+
+table SCVTargetStateSample {
+  TARGET_ID:uint32;
+  TIME_OFFSET_SEC:double;
+  POSITION_M:SCVVec3;
+  VELOCITY_MPS:SCVVec3;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  FRAME:scvCoordinateFrame;
+}
+
+table SCVCoverageGrid {
+  GRID_ID:string;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  MIN_LAT_DEG:double;
+  MAX_LAT_DEG:double;
+  MIN_LON_DEG:double;
+  MAX_LON_DEG:double;
+  LAT_STEP_DEG:double;
+  LON_STEP_DEG:double;
+  ALTITUDE_M:double;
+  CELL_COUNT:uint32;
+  RESOLUTION_DEG:double;
+}
+
+table SCVCoverageRequest {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  ANALYSIS_MODE:scvAnalysisMode;
+  TARGET_BODY:SCVEllipsoid;
+  TIME_GRID:SCVTimeGrid;
+  COVERAGE_GRID:SCVCoverageGrid;
+  SENSORS:[SCVSensor];
+  STATE_SAMPLES:[SCVStateSample];
+  TARGETS:[SCVTarget];
+  TARGET_STATE_SAMPLES:[SCVTargetStateSample];
+  REQUESTED_PRODUCTS:[scvMetricSeriesKind];
+  SENSOR_BATCH_START:uint32;
+  SENSOR_BATCH_COUNT:uint32;
+  WINDOW_BATCH_START:uint32;
+  WINDOW_BATCH_COUNT:uint32;
+  GEOMETRY_ENCODING:scvGeometryEncoding;
+  INCLUDE_PACKED_GEOMETRY:bool;
+}
+
+table SCVProgress {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  COMPLETED_SENSORS:uint32;
+  TOTAL_SENSORS:uint32;
+  COMPLETED_WINDOWS:uint32;
+  TOTAL_WINDOWS:uint32;
+  BACKLOG_REMAINING:uint32;
+  COMPLETION_FRACTION:double;
+  MESSAGE:string;
+}
+
+table SCVCancel {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  REASON:string;
+  CANCEL_AFTER_WINDOW_INDEX:uint32;
+}
+
+table SCVSensorContribution {
+  SENSOR_ID:uint32;
+  FIRST_WINDOW_INDEX:uint32;
+  LAST_WINDOW_INDEX:uint32;
+  CONTRIBUTION_COUNT:uint32;
+}
+
+table SCVHistogramBin {
+  METRIC_KIND:scvMetricSeriesKind;
+  MIN_VALUE:double;
+  MAX_VALUE:double;
+  COUNT:uint32;
+  WEIGHT:double;
+}
+
+table SCVSwathSegment {
+  SEGMENT_ID:uint32;
+  SENSOR_ID:uint32;
+  WINDOW_INDEX:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  START_OFFSET_SEC:double;
+  STOP_OFFSET_SEC:double;
+  VERTEX_OFFSET:uint32;
+  VERTEX_COUNT:uint32;
+  INDEX_OFFSET:uint32;
+  INDEX_COUNT:uint32;
+  SENSOR_IDS:[uint32];
+}
+
+table SCVMemoryRegion {
+  REGION_ID:uint32;
+  RECORD_INDEX:uint32;
+  REGION_KEY:string;
+  BYTE_OFFSET:uint64;
+  BYTE_LENGTH:uint64;
+  BYTE_STRIDE:uint32;
+  ALIGNMENT:uint32;
+  SHARED:bool;
+  MUTABLE:bool;
+}
+
+table SCVPackedGeometryChunk {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  CHUNK_INDEX:uint32;
+  WINDOW_START_INDEX:uint32;
+  WINDOW_COUNT:uint32;
+  DOMAIN:scvGeometryDomain;
+  FRAME:scvCoordinateFrame;
+  ENCODING:scvGeometryEncoding;
+  TIME_START_OFFSET_SEC:double;
+  TIME_STOP_OFFSET_SEC:double;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  POSITIONS_REGION_ID:uint32;
+  POSITIONS_RECORD_INDEX:uint32;
+  NORMALS_REGION_ID:uint32;
+  NORMALS_RECORD_INDEX:uint32;
+  ST_REGION_ID:uint32;
+  ST_RECORD_INDEX:uint32;
+  REVEAL_COORDS_REGION_ID:uint32;
+  REVEAL_COORDS_RECORD_INDEX:uint32;
+  INDICES_REGION_ID:uint32;
+  INDICES_RECORD_INDEX:uint32;
+  POSITIONS:[float];
+  NORMALS:[float];
+  ST:[float];
+  REVEAL_COORDS:[float];
+  INDICES:[uint32];
+  SEGMENT_IDS:[uint32];
+  SENSOR_IDS:[uint32];
+  SEGMENTS:[SCVSwathSegment];
+}
+
+table SCVPackedRasterBand {
+  PRODUCT_KIND:scvRasterProductKind;
+  METRIC_KIND:scvMetricSeriesKind;
+  ENCODING:scvRasterProductEncoding;
+  COMPONENTS_PER_CELL:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGION_ID:uint32;
+  MEMORY_RECORD_INDEX:uint32;
+  FLOAT32_VALUES:[float];
+  FLOAT64_VALUES:[double];
+  UINT32_VALUES:[uint32];
+}
+
+table SCVPackedRasterProducts {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  GRID:SCVCoverageGrid;
+  TIME_GRID:SCVTimeGrid;
+  ROWS:uint32;
+  COLUMNS:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  BANDS:[SCVPackedRasterBand];
+}
+
+table SCVAggregateStatistics {
+  TOTAL_CELLS:uint32;
+  ACCESSED_CELLS:uint32;
+  MULTI_ACCESS_CELLS:uint32;
+  ACTIVE_SENSOR_COUNT:uint32;
+  SWATH_COUNT:uint32;
+  TOTAL_WINDOWS:uint32;
+  TOTAL_INTERVAL_COUNT:uint32;
+  TOTAL_REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  TOTAL_GAP_DURATION_SEC:double;
+  MAX_GAP_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_RESPONSE_TIME_SEC:double;
+  MEAN_RESPONSE_TIME_SEC:double;
+  PERCENT_COVERAGE:double;
+}
+
+table SCVTargetResult {
+  TARGET_ID:uint32;
+  NAME:string;
+  ACCESS_COUNT:uint32;
+  REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_GAP_SEC:double;
+  INTERVAL_START_SEC:[double];
+  INTERVAL_STOP_SEC:[double];
+  PASS_START_BUCKETS:[uint32];
+  ACCESS_BITSET:[uint32];
+}
+
+table SCVResult {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  STATUS:scvResultState;
+  TIME_GRID:SCVTimeGrid;
+  TARGET_BODY:SCVEllipsoid;
+  TOTAL_SENSORS:uint32;
+  TOTAL_WINDOWS:uint32;
+  HISTOGRAMS:[SCVHistogramBin];
+  CONTRIBUTIONS:[SCVSensorContribution];
+  GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
+  MESSAGE:string;
+  AGGREGATE_STATISTICS:SCVAggregateStatistics;
+  TARGET_RESULTS:[SCVTargetResult];
+}
+
+table SCV {
+  ENVELOPE_KIND:scvEnvelopeKind;
+  REQUEST:SCVCoverageRequest;
+  PROGRESS:SCVProgress;
+  CANCEL:SCVCancel;
+  RESULT:SCVResult;
+  GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
+}
+
+root_type SCV;
+file_identifier "$SCV";

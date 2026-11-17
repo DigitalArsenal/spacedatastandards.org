@@ -1,0 +1,73 @@
+// Hash: 02dd420890310222b88786aa1a99e171422ffa047e85e79e902aaacbcb5b3cbf
+// Version: 1.145.0
+// -----------------------------------END_HEADER
+/// Peer Registry Record - Durable trusted-peer registry state for an SDN node.
+///
+/// PRR records describe one libp2p peer entry in a node's local peer registry.
+/// The current registry is a projection over the latest PRR records by PEER_ID,
+/// with deleted records acting as tombstones.
+enum peerRegistryTrustCategory : byte {
+  Untrusted,
+  Limited,
+  Standard,
+  Trusted,
+  Admin
+}
+
+/// String metadata key/value attached to a peer registry entry.
+table PRRMetadataEntry {
+  /// Metadata key.
+  KEY: string;
+  /// Metadata value.
+  VALUE: string;
+}
+
+table PRR {
+  /// libp2p peer ID.
+  PEER_ID: string (required);
+  /// Known libp2p/IPFS multiaddresses for this peer.
+  MULTIFORMAT_ADDRESS: [string];
+  /// Trust level assigned to this peer by the local registry.
+  TRUST_LEVEL: peerRegistryTrustCategory = Standard;
+  /// Optional display name.
+  NAME: string;
+  /// Optional organization name.
+  ORGANIZATION: string;
+  /// Peer group names this peer belongs to.
+  GROUPS: [string];
+  /// Operator notes for this peer.
+  NOTES: string;
+  /// Unix timestamp in milliseconds when this peer was added.
+  ADDED_AT: uint64;
+  /// Unix timestamp in milliseconds when this peer was last observed.
+  LAST_SEEN: uint64;
+  /// Unix timestamp in milliseconds when this peer last connected.
+  LAST_CONNECTED: uint64;
+  /// Number of successful connections observed by this node.
+  CONNECTION_COUNT: uint64;
+  /// Number of messages received from this peer.
+  MESSAGES_RECEIVED: uint64;
+  /// Number of messages sent to this peer.
+  MESSAGES_SENT: uint64;
+  /// Number of bytes received from this peer.
+  BYTES_RECEIVED: uint64;
+  /// Number of bytes sent to this peer.
+  BYTES_SENT: uint64;
+  /// Optional EPM.fbs bytes for the peer identity profile.
+  EPM_DATA: [ubyte];
+  /// Optional vCard projection for compatibility views.
+  VCARD_DATA: string;
+  /// Additional peer metadata as string key/value entries.
+  METADATA: [PRRMetadataEntry];
+  /// Unix timestamp in milliseconds when this registry record was last updated.
+  UPDATED_AT: uint64;
+  /// True when this record tombstones the peer from the current registry.
+  DELETED: bool;
+  /// Peer ID of the node/provider that issued this registry record.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the peer registry record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type PRR;
+file_identifier "$PRR";

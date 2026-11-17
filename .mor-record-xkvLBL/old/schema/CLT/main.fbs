@@ -1,0 +1,37 @@
+// Hash: b1d160ce5675a3d7c990b20f195577214c733b04093ad42cf8c27357b5eb135b
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum cltuPduType : byte {
+  BIND_INVOCATION,
+  BIND_RETURN,
+  UNBIND_INVOCATION,
+  UNBIND_RETURN,
+  START_INVOCATION,
+  START_RETURN,
+  STOP_INVOCATION,
+  STOP_RETURN,
+  TRANSFER_DATA_INVOCATION,
+  TRANSFER_DATA_RETURN,
+  PEER_ABORT
+}
+
+/// Command Link Transmission Unit Service (CCSDS 912.3-B-2)
+table CLT {
+  /// PDU type
+  PDU_TYPE:cltuPduType;
+  /// Initiator identifier
+  INITIATOR_ID:string;
+  /// Responder port identifier
+  RESPONDER_PORT_ID:string;
+  /// Service type
+  SERVICE_TYPE:ubyte;
+  /// Version number
+  VERSION:ushort;
+  /// Invoke ID
+  INVOKE_ID:uint;
+  /// CLTU data
+  DATA:[ubyte];
+}
+
+root_type CLT;
+file_identifier "$CLT";

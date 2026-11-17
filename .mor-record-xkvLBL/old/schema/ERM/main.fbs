@@ -1,0 +1,1454 @@
+// Hash: c5e37954af7883e5bd7c06132056e8dfded65b546c3486f42d2435ab2d85d3f8
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Orbit Error Model (ERM)
+/// Description
+/// Empirical statistics of orbit prediction error, stratified by orbit regime
+/// and prediction age (or horizon), and everything needed to build, test and
+/// apply them. The error of a prediction (from an element set, an
+/// ephemeris or a numerical propagation) is taken against later predictions
+/// or independent reference states in the radial, transverse and normal
+/// (RTN) axes of the reference, and accumulated per stratum into counts,
+/// moments and histograms; a model gives each stratum's mean, covariance,
+/// quantiles and robust sigma, optionally clipped and scaled, and the
+/// realism of its covariance against held-out reference states (mean d2/3,
+/// coverage, verdict). Users apply a model to give an element set or state
+/// a covariance (an empirical covariance by regime and age), to screen
+/// conjunctions, or to choose between sources.
+///
+/// ERM also carries the work products of building and testing models: the
+/// accumulator and its prior, propagation arc plans and the predictions made
+/// for them, common-epoch differences, covariance mapping through state
+/// transition matrices, pair statistics, calibration factors, calibrated
+/// covariances, density-forecast consider covariances, process-noise
+/// responses, element-set fits to ephemerides and their residuals, and the
+/// recipe and report of attaching covariances to a source's products. The
+/// covariance label one product carries is a $CVR; the source of a product
+/// is its $PVN; the products themselves are $OMM, $OEM and $OCM records.
+///
+/// Conventions. Six-component vectors are R, T, N (km) then dR, dT, dN
+/// (km/s) unless a field says SI. "Lower21" is the row-major lower triangle
+/// of a 6x6 matrix: RR, TR, TT, NR, NT, NN, dR R, dR T, dR N, dR dR, ...;
+/// "Lower6" the same for 3x3. Epochs that name element sets or ephemeris
+/// samples are ISO 8601 UTC text as the records give them (CCSDS), because
+/// sets are matched by epoch; other times are Unix milliseconds (*_MS).
+/// One ERM carries one arm.
+include "../CVR/main.fbs";
+include "../PVN/main.fbs";
+
+/// What the errors are taken against. Append new values only; never reorder
+/// or reuse existing values.
+enum ermErrorBasis : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Later element sets of the same object (consecutive-set differences;
+  /// not truth).
+  SetDifferences,
+  /// Independent reference states.
+  ReferenceStates
+}
+
+/// Form of a model. Append new values only; never reorder or reuse existing
+/// values.
+enum ermModelForm : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Stratified moments, quantiles and covariance by regime and age (the
+  /// output of finalize).
+  StratifiedStatistics,
+  /// Frozen element-set covariance model by regime and age, with realism
+  /// cells.
+  ElementSetModel,
+  /// Covariance scale factors by regime and prediction horizon.
+  HorizonFactors,
+  /// Initial covariance and process noise of a numerical propagator by
+  /// regime.
+  PropagatorCovariance
+}
+
+/// Realism verdict of a stratum. Append new values only; never reorder or
+/// reuse existing values.
+enum ermCoverageVerdict : ubyte {
+  /// Not tested.
+  Unspecified,
+  /// Coverage within tolerance on enough samples and objects.
+  Calibrated,
+  /// Coverage outside tolerance.
+  Failed,
+  /// Too few samples or objects.
+  Insufficient,
+  /// No model covariance to test.
+  NoModel
+}
+
+/// Mode of a propagator covariance coverage run. Append new values only;
+/// never reorder or reuse existing values.
+enum ermCoverageMode : ubyte {
+  /// Fit the initial covariance at the element-set epoch.
+  EpochCovariance,
+  /// Fit the process noise.
+  ProcessNoise,
+  /// Test coverage.
+  CoverageTest
+}
+
+/// Origin of common-epoch differences. Append new values only; never reorder
+/// or reuse existing values.
+enum ermDifferenceOrigin : ubyte {
+  /// An independent reference state.
+  ReferenceState,
+  /// The mean of the propagated element sets.
+  SetMean,
+  /// One named element set.
+  OneSet
+}
+
+/// State transition used to map a covariance. Append new values only; never
+/// reorder or reuse existing values.
+enum ermMapMethod : ubyte {
+  /// SGP4 (central differences in nonsingular mean elements).
+  Sgp4,
+  /// Two-body (complex-step Kepler).
+  TwoBody,
+  /// The Lambert arc between the two epochs.
+  Lambert
+}
+
+/// Axes a covariance is expressed in. Append new values only; never reorder
+/// or reuse existing values.
+enum ermCovarianceAxes : ubyte {
+  /// Radial, transverse, normal of the state.
+  Rtn,
+  /// UVW of the state (radial, in-track, cross-track).
+  Uvw,
+  /// The inertial frame of the state.
+  Inertial
+}
+
+/// Whose state's axes pair errors are taken in. Append new values only; never
+/// reorder or reuse existing values.
+enum ermAxesSource : ubyte {
+  Predicted,
+  Truth
+}
+
+/// How calibration factors are fitted. Append new values only; never reorder
+/// or reuse existing values.
+enum ermCalibrationFit : ubyte {
+  /// One variance factor by maximum likelihood.
+  ScalarMle,
+  /// One factor per axis by maximum likelihood.
+  AxesMle,
+  /// The factor that puts the coverage at the target.
+  CoverageTarget
+}
+
+/// Status of a fitted calibration stratum. Append new values only; never
+/// reorder or reuse existing values.
+enum ermFitStatus : ubyte {
+  Unspecified,
+  Fitted,
+  Insufficient
+}
+
+/// Which epoch an element-set fit is placed at. Append new values only; never
+/// reorder or reuse existing values.
+enum ermFitEpochChoice : ubyte {
+  First,
+  Last,
+  Middle,
+  /// The epoch given in EPOCH.
+  GivenEpoch
+}
+
+/// Weighting of an element-set fit. Append new values only; never reorder or
+/// reuse existing values.
+enum ermFitWeighting : ubyte {
+  Uniform,
+  /// Per-axis RTN sigmas.
+  RtnSigmas,
+  /// The ephemeris covariance.
+  EphemerisCovariance
+}
+
+/// Starting point of an element-set fit. Append new values only; never
+/// reorder or reuse existing values.
+enum ermFitStart : ubyte {
+  /// From the ephemeris (osculating to mean).
+  FromEphemeris,
+  /// From the a priori element set.
+  FromApriori
+}
+
+/// Which end of the span a fit's half-life weighting favours. Append new
+/// values only; never reorder or reuse existing values.
+enum ermFitFavour : ubyte {
+  SpanEnd,
+  SpanStart
+}
+
+/// One orbit regime: a set falls in the first regime whose half-open ranges
+/// hold its mean altitude (from un-Kozai'd SGP4 mean motion, WGS-72) and
+/// eccentricity.
+table ERMRegime {
+  ID: string;
+  ALTITUDE_MIN_KM: double;
+  ALTITUDE_MAX_KM: double;
+  ECCENTRICITY_MIN: double;
+  ECCENTRICITY_MAX: double;
+}
+
+/// A prediction-age bin, days, half-open (the last bin includes its upper
+/// edge).
+table ERMAgeBin {
+  MIN_DAYS: double;
+  MAX_DAYS: double;
+}
+
+/// Robust clipping centre and scale of one stratum.
+table ERMClipCentre {
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  /// Centre of the R, T, N position errors, km (3 values).
+  CENTRE_KM: [double];
+  /// Robust scale of the R, T, N position errors, km (3 values).
+  SCALE_KM: [double];
+}
+
+/// Clipping of outlying errors.
+table ERMClipSettings {
+  /// Errors further than K robust scales from the centre are clipped; 0 = no
+  /// clipping.
+  K: double;
+  STRATA: [ERMClipCentre];
+}
+
+/// The strata of a model and how samples are taken. Empty REGIMES and
+/// AGE_BINS mean the producer's defaults.
+table ERMStrataSettings {
+  REGIMES: [ERMRegime];
+  AGE_BINS: [ERMAgeBin];
+  /// Reference states are thinned to this step, s.
+  REFERENCE_STEP_S: double = 300;
+  CLIP: ERMClipSettings;
+}
+
+/// Coverage gate of a realism test.
+table ERMGate {
+  /// Allowed departure of each coverage fraction from nominal.
+  TOLERANCE: double = 0.05;
+  /// Allowed excess in the 3-sigma tail.
+  TAIL_LIMIT: double = 0.01;
+  MINIMUM_SAMPLES: uint32 = 30;
+  MINIMUM_OBJECTS: uint32 = 3;
+  /// The rule, human-readable.
+  RULE: string;
+  /// Nominal 1, 2, 3 sigma coverage of chi-square with 3 degrees of freedom
+  /// (3 values).
+  NOMINAL: [double];
+}
+
+/// Counters of a run. A counter a run does not keep is 0.
+table ERMCounts {
+  ELEMENT_SETS: uint32;
+  REFUSED: uint32;
+  DUPLICATE_EPOCHS: uint32;
+  UNCLASSIFIED: uint32;
+  OBJECTS: uint32;
+  SAMPLES: uint32;
+  PROPAGATION_FAILURES: uint32;
+  REFERENCE_EPOCHS: uint32;
+  REFERENCE_OBJECTS_WITHOUT_ELEMENTS: uint32;
+  ARCS: uint32;
+  TARGETS: uint32;
+  SETS_WITHOUT_REFERENCE: uint32;
+  SETS_WITHOUT_TARGETS: uint32;
+  ARCS_WITHOUT_MODEL_REGIME: uint32;
+  TARGETS_OUTSIDE_WINDOW: uint32;
+  TARGETS_WITHOUT_PREDICTION: uint32;
+  OUTSIDE_AGE_BINS: uint32;
+  WITHOUT_COVARIANCE: uint32;
+  NOT_POSITIVE_DEFINITE: uint32;
+  MISSING_TARGETS: uint32;
+  MISSING_SETS: uint32;
+  DIFFERENCES: uint32;
+  MAPPED: uint32;
+  FAILED: uint32;
+  PAIRS: uint32;
+  WITHOUT_TRUTH_COVARIANCE: uint32;
+  OUTSIDE_REGIMES: uint32;
+  STATES: uint32;
+  STREAMS: uint32;
+  BLOCKS: uint32;
+  COVARIANCES: uint32;
+  APRIORI_SETS: uint32;
+  FITTED: uint32;
+  /// States by frame name, e.g. "TEME", "GCRF", "unsupported".
+  FRAME_COUNTS: [ERMNamedCount];
+  /// Products whose covariance came from each rule, 1 to 4 (4 values).
+  RULE_COUNTS: [uint32];
+  CALIBRATED_ROWS: uint32;
+  UNCALIBRATED_ROWS: uint32;
+  STATES_OF_OLDER_SETS: uint32;
+  MANEUVERS: uint32;
+}
+
+/// A count under a name.
+table ERMNamedCount {
+  NAME: string;
+  COUNT: uint32;
+}
+
+/// First and second moments of error vectors.
+table ERMMoments {
+  N: uint64;
+  /// Sum of the 6 components.
+  SUM: [double];
+  /// Sum of products, Lower21.
+  SQUARES: [double];
+}
+
+/// One histogram bin: |x| in 20 bins per decade from 1e-9 to 1e5, signed bin
+/// number (0 = |x| < 1e-9, +-k for k = 1..280).
+struct ERMHistogramBin {
+  BIN: int16;
+  COUNT: uint64;
+}
+
+/// Histogram of one error component.
+table ERMHistogram {
+  BINS: [ERMHistogramBin];
+}
+
+/// Running realism test of one stratum.
+table ERMCoverageTally {
+  N: uint64;
+  /// Samples without a model covariance.
+  MISSING: uint64;
+  /// Sum of d2.
+  SUM_D2: double;
+  /// Samples inside the 1, 2, 3 sigma regions (3 values).
+  INSIDE: [uint64];
+  /// Probability-integral-transform histogram (20 values).
+  PIT: [uint64];
+  /// NORAD numbers of the objects sampled.
+  OBJECTS: [uint32];
+}
+
+/// Accumulated errors of one stratum.
+table ERMAccumulatorStratum {
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  MOMENTS: ERMMoments;
+  /// One per component (6).
+  HISTOGRAMS: [ERMHistogram];
+  /// Moments after clipping (when clipping).
+  CLIPPED: ERMMoments;
+  /// Realism tally (when a model is tested).
+  COVERAGE: ERMCoverageTally;
+}
+
+/// Errors accumulated over batches; a later batch adds to it as its prior.
+table ERMAccumulator {
+  STRATA_SETTINGS: ERMStrataSettings;
+  BASIS: ermErrorBasis = Unspecified;
+  /// Clip multiple used, 0 = none.
+  CLIP_K: double;
+  COUNTS: ERMCounts;
+  /// The model tested against, e.g. "reference", "reference+scaled"; empty =
+  /// none.
+  COVERAGE_MODEL: string;
+  STRATA: [ERMAccumulatorStratum];
+}
+
+/// Statistics after clipping.
+table ERMClippedStatistics {
+  K: double;
+  N: uint64;
+  FRACTION_REMOVED: double;
+  /// Mean, 6 values; empty when N is 0.
+  MEAN: [double];
+  /// Covariance, Lower21; empty when N < 2.
+  COVARIANCE: [double];
+}
+
+/// Result of a realism test of one stratum.
+table ERMCoverage {
+  N: uint64;
+  OBJECTS: uint32;
+  VERDICT: ermCoverageVerdict = Unspecified;
+  /// Mean d2 (3 for a realistic covariance); NaN when N is 0.
+  MEAN_D2: double = nan;
+  /// Fractions inside the 1, 2, 3 sigma regions (3 values).
+  INSIDE: [double];
+  /// PIT histogram fractions (20 values).
+  PIT: [double];
+  /// Largest gap of the PIT cumulative distribution from uniform.
+  PIT_MAX_CDF_GAP: double = nan;
+  /// Samples without a model covariance.
+  MISSING_MODEL: uint64;
+}
+
+/// Per-axis scale applied to a stratum's position covariance.
+table ERMStratumScale {
+  /// s_R, s_T, s_N (covariance scaled by s_a s_b), 3 values.
+  FACTORS: [double];
+  /// Reference samples behind them.
+  TRUTH_N: uint64;
+}
+
+/// One stratum of a model.
+table ERMModelStratum {
+  /// Regime ID.
+  REGIME: string;
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  /// Age bin, days.
+  AGE_MIN_DAYS: double;
+  AGE_MAX_DAYS: double;
+  /// Samples.
+  N: uint64;
+  /// Mean error, 6 values.
+  MEAN: [double];
+  /// Sample covariance, Lower21; empty when N < 2.
+  COVARIANCE: [double];
+  /// Quantiles, per component at the model's QUANTILE_PROBABILITIES,
+  /// component-major (6 x 7 values).
+  QUANTILES: [double];
+  MEDIAN: [double];
+  /// (q84 - q16) / 2 per component.
+  ROBUST_SIGMA: [double];
+  CLIPPED: ERMClippedStatistics;
+  COVERAGE: ERMCoverage;
+  /// Absent when unscaled.
+  SCALE: ERMStratumScale;
+  /// Whether the stratum's covariance passed its realism test.
+  CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of the realism evidence; empty unless calibrated.
+  CALIBRATION_REFERENCE: string;
+}
+
+/// A realism cell: a regime and age tested at a horizon.
+table ERMRealismCell {
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  /// The test's decision as worded, e.g. "REALISTIC",
+  /// "NOT REALISTIC (overconfident)".
+  DECISION: string;
+  /// REGIME, HORIZON_DAYS, MEAN_D2_OVER_3, COVERAGE_95, SAMPLES, OBJECTS,
+  /// CALIBRATION of the cell.
+  REALISM: CVR;
+}
+
+/// A factor applied to one stratum (or a status for it).
+table ERMStratumFactor {
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  /// Variance factor, > 0; NaN = none.
+  FACTOR: double = nan;
+  /// Status string of the stratum, e.g. "CALIBRATED"; empty = none.
+  STATUS: string;
+}
+
+/// A factor by regime and horizon.
+table ERMHorizonFactor {
+  /// Regime ID; empty = any regime.
+  REGIME: string;
+  /// Horizon range, days, half-open.
+  HORIZON_MIN_DAYS: double;
+  HORIZON_MAX_DAYS: double;
+  /// Variance factor; NaN when AXES_FACTORS is given.
+  FACTOR: double = nan;
+  /// Per-axis factors R, T, N (3 values); empty when FACTOR is given.
+  AXES_FACTORS: [double];
+  STATUS: string;
+}
+
+/// Process noise of a numerical propagation: white acceleration.
+table ERMProcessNoise {
+  /// Model, e.g. "WHITE_ACCELERATION".
+  MODEL: string;
+  /// Axes of the densities, e.g. "RADIAL_TRANSVERSE_NORMAL".
+  AXES: string;
+  /// Spectral densities, m**2/s**3 (3 values).
+  SPECTRAL_DENSITY_M2_S3: [double];
+  /// Discretization interval, s.
+  DISCRETIZATION_S: double;
+}
+
+/// How a process noise was fitted.
+table ERMNoiseFit {
+  SAMPLES: uint64;
+  OBJECTS: uint32;
+  /// Window of the samples, ISO 8601 UTC.
+  WINDOW_START: string;
+  WINDOW_STOP: string;
+  NEGATIVE_LOG_LIKELIHOOD_Q0: double;
+  NEGATIVE_LOG_LIKELIHOOD: double;
+  /// Maximum-likelihood densities, m**2/s**3 (3 values).
+  MAXIMUM_LIKELIHOOD_M2_S3: [double];
+  /// Strata calibrated with the ML densities and with P0 alone.
+  CALIBRATED_STRATA_MAXIMUM_LIKELIHOOD: uint32;
+  CALIBRATED_STRATA_P0_ALONE: uint32;
+  /// Which was selected: "P0 alone" or "maximum likelihood".
+  SELECTED: string;
+  RULE: string;
+}
+
+/// Initial covariance and process noise of one regime.
+table ERMPropagatorRegime {
+  REGIME_INDEX: uint32;
+  REGIME: string;
+  /// Samples and those kept after clipping.
+  N: uint64;
+  KEPT: uint64;
+  OBJECTS: uint32;
+  CLIP_K: double;
+  /// Covariance at the element-set epoch, Lower21 RTN (km, km/s); empty =
+  /// none.
+  P0: [double];
+  PROCESS_NOISE: ERMProcessNoise;
+  FIT: ERMNoiseFit;
+}
+
+/// Where a model was measured.
+table ERMMeasuredOn {
+  /// Lineages of the reference data.
+  LINEAGES: [string];
+  /// ISO 8601 interval start/end.
+  WINDOW: string;
+  RULE: string;
+  EVIDENCE: string;
+}
+
+/// A file a model was derived from.
+table ERMProvenanceFile {
+  NAME: string;
+  SHA256: string;
+}
+
+/// Model-level scaling record.
+table ERMModelScale {
+  BASIS: string;
+  /// Counts of the truth model.
+  TRUTH_COUNTS: ERMCounts;
+  /// Window of the truth model, ISO 8601 interval; empty = not stated.
+  TRUTH_WINDOW: string;
+  MINIMUM_SAMPLES: uint32;
+}
+
+/// An orbit error model.
+table ERMModel {
+  /// Model identifier (e.g. a calibration version); empty = none.
+  ID: string;
+  /// Version of the calibration the model freezes; empty = none.
+  CALIBRATION_VERSION: string;
+  /// Name of the candidate or variant, e.g. "S3-KC".
+  CANDIDATE: string;
+  FORM: ermModelForm = Unspecified;
+  BASIS: ermErrorBasis = Unspecified;
+  /// How the statistics were formed, human-readable.
+  BASIS_TEXT: string;
+  /// Propagator the predictions came from, e.g. "SGP4 (Vallado 2020,
+  /// WGS-72, opsmode i)".
+  PROPAGATOR: string;
+  STRATA_SETTINGS: ERMStrataSettings;
+  /// Horizons of the realism cells, days.
+  HORIZONS_DAYS: [double];
+  COUNTS: ERMCounts;
+  /// Probabilities of the stratum quantiles (7 values).
+  QUANTILE_PROBABILITIES: [double];
+  /// Model the realism was tested against; empty = none.
+  COVERAGE_MODEL: string;
+  GATE: ERMGate;
+  STRATA: [ERMModelStratum];
+  SCALE: ERMModelScale;
+  CELLS: [ERMRealismCell];
+  /// ElementSetModel: factors and statuses by stratum.
+  STRATUM_FACTORS: [ERMStratumFactor];
+  /// ElementSetModel: strata with fewer samples are not used.
+  MINIMUM_BIN_SAMPLES: uint64;
+  /// HorizonFactors: the factors.
+  HORIZON_FACTORS: [ERMHorizonFactor];
+  /// PropagatorCovariance: per regime.
+  PROPAGATOR_REGIMES: [ERMPropagatorRegime];
+  /// PropagatorCovariance: window of the epoch fit, ISO 8601.
+  EPOCH_WINDOW_START: string;
+  EPOCH_WINDOW_STOP: string;
+  MEASURED_ON: ERMMeasuredOn;
+  /// Sources (lineages) the model applies to; empty = any.
+  SOURCES: [string];
+  /// True for a model pooled over all sources.
+  POOLED: bool;
+  /// Repository, commit and files the model was derived from.
+  PROVENANCE_REPOSITORY: string;
+  PROVENANCE_COMMIT: string;
+  PROVENANCE_FILES: [ERMProvenanceFile];
+  /// Free label, e.g. the model and calibration paths.
+  LABEL: string;
+}
+
+/// Options of a model scaling.
+table ERMScaleOptions {
+  /// Strata with fewer clipped reference samples stay unscaled.
+  MINIMUM_SAMPLES: uint32 = 30;
+}
+
+/// Settings of a screening-rule evaluation.
+table ERMScreeningSettings {
+  STRATA_SETTINGS: ERMStrataSettings;
+  HARD_BODY_RADIUS_M: double = 20;
+  PC_THRESHOLD: double = 0.0001;
+  NECESSITY_LEVEL: double = 0.9973;
+  BOUND_COVERAGE: double = 0.9973;
+  DIRECTIONS: uint32 = 4;
+  /// Miss distances evaluated, m; empty = 0, 10, 50, 100, 500, 1000, 2000,
+  /// 5000.
+  MISS_DISTANCES_M: [double];
+  PAIRS_PER_STRATUM: uint32 = 500;
+  SEED: uint64 = 1;
+}
+
+/// A screening case: two objects' position errors and covariances.
+table ERMScreeningCase {
+  /// RTN position errors, km (3 values each).
+  ERROR1_KM: [double];
+  ERROR2_KM: [double];
+  /// Position covariances, Lower6, km**2.
+  COVARIANCE1_KM2: [double];
+  COVARIANCE2_KM2: [double];
+}
+
+/// Caller-supplied screening cases.
+table ERMScreeningCases {
+  CASES: [ERMScreeningCase];
+}
+
+/// Rule scores at one miss distance.
+table ERMScreeningRow {
+  MISS_M: double;
+  /// True when the miss is within the hard-body radius.
+  COLLISION: bool;
+  CASES: uint32;
+  PC_ALERT_RATE: double;
+  MEAN_PC: double;
+  BRIER: double;
+  BOUNDED_SET_ALERT_RATE: double;
+  POSSIBILITY_ALERT_RATE: double;
+  MEAN_POSSIBILITY_OF_COLLISION: double;
+}
+
+/// Scores for one encounter geometry.
+table ERMScreeningGeometry {
+  /// "head-on" or "crossing-90".
+  GEOMETRY: string;
+  ROWS: [ERMScreeningRow];
+}
+
+/// Screening scores of one stratum.
+table ERMScreeningStratum {
+  REGIME: string;
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  AGE_MIN_DAYS: double;
+  AGE_MAX_DAYS: double;
+  OBJECTS: uint32;
+  SAMPLES: uint64;
+  PAIRS: uint32;
+  /// RTN position sigmas, km (3 values).
+  SIGMA_RTN_KM: [double];
+  GEOMETRIES: [ERMScreeningGeometry];
+}
+
+/// Definitions of the terms of a screening report (human-readable).
+table ERMScreeningDefinitions {
+  CASES: string;
+  COLLISION: string;
+  PROBABILISTIC: string;
+  BOUNDED_SET: string;
+  POSSIBILITY: string;
+  MISSED_COLLISION: string;
+  FALSE_ALERT: string;
+}
+
+/// Scores of probabilistic, bounded-set and possibility screening rules.
+table ERMScreeningReport {
+  COUNTS: ERMCounts;
+  DEFINITIONS: ERMScreeningDefinitions;
+  SETTINGS: ERMScreeningSettings;
+  /// Over all strata, by geometry.
+  SUMMARY: [ERMScreeningGeometry];
+  /// Per stratum (empty for caller-supplied cases).
+  STRATA: [ERMScreeningStratum];
+}
+
+/// Settings of an arc plan.
+table ERMArcOptions {
+  STRATA_SETTINGS: ERMStrataSettings;
+  /// Target prediction ages, days; empty = 0, 0.25, 0.75, 1.5, 2.5, 4, 6.
+  TARGET_AGES_DAYS: [double];
+  /// Age 0 uses the first reference epoch at or after the set epoch within
+  /// this, s.
+  EPOCH_TOLERANCE_S: double = 1800;
+  /// Other ages use the nearest reference epoch within this, s.
+  TARGET_TOLERANCE_S: double = 900;
+}
+
+/// One target of an arc.
+table ERMArcTarget {
+  NOMINAL_DAYS: double;
+  AGE_DAYS: double;
+  /// Reference epoch, ISO 8601.
+  EPOCH: string;
+  /// Reference state, GCRF, km and km/s (6 values).
+  TRUTH: [double];
+}
+
+/// One propagation arc from an element set.
+table ERMArc {
+  ARC: uint32;
+  NORAD_CAT_ID: uint32;
+  /// Element-set epoch, as the record gives it.
+  EPOCH: string;
+  REGIME_INDEX: uint32;
+  REGIME: string;
+  TARGETS: [ERMArcTarget];
+  /// Initial covariance, 6x6 row-major GCRF, SI (36 values); empty = none.
+  COVARIANCE: [double];
+  PROCESS_NOISE: ERMProcessNoise;
+}
+
+/// Propagation arcs to run.
+table ERMArcPlan {
+  TARGET_AGES_DAYS: [double];
+  EPOCH_TOLERANCE_S: double;
+  TARGET_TOLERANCE_S: double;
+  /// How the covariance and the truth were formed, human-readable.
+  COVARIANCE_NOTE: string;
+  TRUTH_NOTE: string;
+  COUNTS: ERMCounts;
+  ARCS: [ERMArc];
+}
+
+/// A propagated state at one arc target.
+table ERMPredictionSample {
+  /// State, GCRF, m and m/s (6 values); empty = no prediction.
+  STATE: [double];
+  /// Position covariance from P0 alone, m**2, xx, xy, xz, yy, yz, zz (6
+  /// values); empty = none.
+  P0_POSITION: [double];
+  /// Unit-density process-noise responses for R, T, N, each in the order of
+  /// P0_POSITION (3 x 6 values); empty = none.
+  NOISE_RESPONSES: [double];
+}
+
+/// Predictions of one arc, aligned with its targets.
+table ERMArcPrediction {
+  ARC: uint32;
+  SAMPLES: [ERMPredictionSample];
+}
+
+/// Predictions for an arc plan.
+table ERMArcPredictions {
+  ARCS: [ERMArcPrediction];
+}
+
+/// Settings of a propagator covariance coverage run.
+table ERMCoverageOptions {
+  MODE: ermCoverageMode = CoverageTest;
+  /// Targets whose epoch is in [start, stop), ISO 8601.
+  WINDOW_START: string;
+  WINDOW_STOP: string;
+  STRATA_SETTINGS: ERMStrataSettings;
+  GATE: ERMGate;
+  /// Robust clip multiple of the epoch fit.
+  CLIP_K: double = 5;
+  /// Discretization of the noise fit, s.
+  DISCRETIZATION_S: double = 600;
+}
+
+/// Coverage of one stratum of a propagator covariance.
+table ERMPropagatorCoverageStratum {
+  REGIME: string;
+  REGIME_INDEX: uint32;
+  AGE_INDEX: uint32;
+  AGE_MIN_DAYS: double;
+  AGE_MAX_DAYS: double;
+  /// RMS errors and sigmas, km (3 values each).
+  RMS_ERROR_RTN_KM: [double];
+  RMS_SIGMA_RTN_KM: [double];
+  RMS_SIGMA_P0_ONLY_RTN_KM: [double];
+  SPECTRAL_DENSITY_M2_S3: [double];
+  COVERAGE: ERMCoverage;
+  COVERAGE_P0_ONLY: ERMCoverage;
+}
+
+/// Coverage test of a propagator covariance.
+table ERMPropagatorCoverageReport {
+  WINDOW_START: string;
+  WINDOW_STOP: string;
+  GATE: ERMGate;
+  COUNTS: ERMCounts;
+  STRATA: [ERMPropagatorCoverageStratum];
+}
+
+/// A request for differences at a common epoch.
+table ERMCommonEpochTarget {
+  NORAD_CAT_ID: uint32;
+  /// Requested epoch, ISO 8601.
+  EPOCH: string;
+  /// Element-set epochs to propagate there (matched within 1 s).
+  SETS: [string];
+  ORIGIN: ermDifferenceOrigin = ReferenceState;
+  /// Use the first reference epoch within this after EPOCH, s; 0 = exact.
+  AFTER_S: double;
+  /// The origin set's epoch (ORIGIN OneSet).
+  ORIGIN_SET: string;
+}
+
+/// One element set's difference from the origin.
+table ERMSetDifference {
+  /// Set epoch.
+  EPOCH: string;
+  /// Target minus set epoch, days.
+  AGE_DAYS: double;
+  /// Prediction minus origin in the origin's RTN axes (6 values).
+  RTN: [double];
+}
+
+/// Differences at one common epoch.
+table ERMCommonEpochResult {
+  NORAD_CAT_ID: uint32;
+  ORIGIN: ermDifferenceOrigin = ReferenceState;
+  /// Epoch used.
+  EPOCH: string;
+  /// Why there are no differences; empty otherwise.
+  MISSING: string;
+  ORIGIN_SET: string;
+  /// Origin state, GCRF, km and km/s (6 values).
+  STATE: [double];
+  SETS: [ERMSetDifference];
+  /// Requested sets not found.
+  MISSING_SETS: [string];
+}
+
+/// Common-epoch requests or results.
+table ERMCommonEpoch {
+  UNITS: string;
+  COUNTS: ERMCounts;
+  REQUESTS: [ERMCommonEpochTarget];
+  RESULTS: [ERMCommonEpochResult];
+}
+
+/// A covariance to map through a state transition.
+table ERMMapRequest {
+  NORAD_CAT_ID: uint32;
+  /// Anchor set epoch.
+  SET_EPOCH: string;
+  /// Covariance, Lower21 RTN (km, km/s).
+  COVARIANCE: [double];
+  /// Target epochs.
+  TO_EPOCHS: [string];
+  /// Covariance epoch; empty = the set epoch.
+  FROM_EPOCH: string;
+  METHOD: ermMapMethod = Sgp4;
+  /// Report the STM.
+  INCLUDE_STM: bool = false;
+  /// Set whose state at FROM_EPOCH defines the input axes; empty = the anchor.
+  AXES_SET: string;
+}
+
+/// The Lambert arc of a mapping.
+table ERMLambertArc {
+  REVOLUTIONS: int32;
+  /// "single", "long-period", "short-period" or "short-arc".
+  BRANCH: string;
+  /// Departure velocity, km/s (3 values).
+  V1_KM_S: [double];
+  ENERGY: double;
+  SGP4_ENERGY: double;
+  PERIGEE_RADIUS_KM: double;
+}
+
+/// A mapped covariance at one target.
+table ERMMappedCovariance {
+  EPOCH: string;
+  /// Lower21 RTN at the target.
+  COVARIANCE: [double];
+  /// STM, 6x6 row-major (TEME, km, km/s); empty unless requested.
+  STM: [double];
+  LAMBERT: ERMLambertArc;
+  /// Failure text; empty on success.
+  ERROR: string;
+}
+
+/// Mapping of one request.
+table ERMMapResult {
+  NORAD_CAT_ID: uint32;
+  SET_EPOCH: string;
+  METHOD: ermMapMethod = Sgp4;
+  FROM_EPOCH: string;
+  AXES_SET: string;
+  ERROR: string;
+  TARGETS: [ERMMappedCovariance];
+}
+
+/// Covariance mapping requests or results.
+table ERMCovarianceMap {
+  UNITS: string;
+  COUNTS: ERMCounts;
+  REQUESTS: [ERMMapRequest];
+  RESULTS: [ERMMapResult];
+}
+
+/// A weighted covariance term.
+table ERMWeightedCovariance {
+  WEIGHT: double = 1;
+  /// 6, 9, 21 or 36 values, SI.
+  COVARIANCE: [double];
+}
+
+/// A sampled state with a covariance.
+table ERMStateSample {
+  EPOCH: string;
+  POSITION_M: [double];
+  VELOCITY_M_S: [double];
+  COVARIANCE: [double];
+}
+
+/// One side of a predicted-versus-truth pair.
+table ERMPairSide {
+  /// Epoch (sampled form).
+  EPOCH: string;
+  /// Position, m, and velocity, m/s, inertial (3 values each).
+  POSITION_M: [double];
+  VELOCITY_M_S: [double];
+  /// Covariance: Lower6, 3x3 (9), Lower21 or 6x6 (36), SI; empty = none.
+  COVARIANCE: [double];
+  /// Summed covariance terms, instead of COVARIANCE.
+  COVARIANCE_TERMS: [ERMWeightedCovariance];
+  COVARIANCE_AXES: ermCovarianceAxes = Rtn;
+  /// Samples to interpolate at EPOCH (sampled form).
+  SAMPLES: [ERMStateSample];
+  INTERPOLATION_DEGREE: uint8 = 5;
+}
+
+/// A predicted state and a truth state.
+table ERMStatePair {
+  ID: string;
+  PREDICTED: ERMPairSide;
+  TRUTH: ERMPairSide;
+}
+
+/// Statistics of one pair.
+table ERMPairStatistic {
+  ID: string;
+  /// Why the pair could not be evaluated; empty otherwise.
+  MISSING: string;
+  /// Error (predicted minus truth), RTN, m and m/s (3 values each).
+  ERROR_RTN_M: [double];
+  VELOCITY_ERROR_RTN_M_S: [double];
+  /// Interpolation of the predicted side: degree, first sample index,
+  /// samples; 0 = not interpolated.
+  INTERPOLATION_DEGREE: uint8;
+  INTERPOLATION_FROM: uint32;
+  INTERPOLATION_SAMPLES: uint32;
+  /// Position covariances, Lower6, RTN, m**2; TRUTH_RTN empty = none.
+  PREDICTED_RTN: [double];
+  TRUTH_RTN: [double];
+  D2_COMBINED: double = nan;
+  LOG_DET_COMBINED: double = nan;
+  D2_PREDICTED: double = nan;
+  /// Whitened errors (3 values each).
+  Z_COMBINED: [double];
+  Z_PREDICTED: [double];
+}
+
+/// Pair statistics request or result.
+table ERMPairStatistics {
+  AXES_FROM: ermAxesSource = Predicted;
+  UNITS: string;
+  COUNTS: ERMCounts;
+  PAIRS: [ERMStatePair];
+  STATISTICS: [ERMPairStatistic];
+}
+
+/// An error with its predicted covariance, for fitting calibration factors.
+table ERMCalibrationSample {
+  STRATUM: string;
+  /// Object identifier; empty = unknown.
+  OBJECT: string;
+  /// Position error (3 values).
+  ERROR: [double];
+  /// Covariance: 6, 9, 21 or 36 values (position block used).
+  COVARIANCE: [double];
+}
+
+/// Fitted calibration of one stratum.
+table ERMCalibrationStratum {
+  STRATUM: string;
+  N: uint64;
+  OBJECTS: uint32;
+  NOT_POSITIVE_DEFINITE: uint32;
+  STATUS: ermFitStatus = Unspecified;
+  BEFORE_MEAN_D2_OVER_3: double = nan;
+  BEFORE_COVERAGE_95: double = nan;
+  /// Variance factor; NaN when per axis.
+  FACTOR: double = nan;
+  /// Per-axis variance factors (3 values); empty when scalar.
+  AXES_FACTORS: [double];
+  AFTER_MEAN_D2_OVER_3: double = nan;
+  AFTER_COVERAGE_95: double = nan;
+}
+
+/// Calibration factor fit: samples, settings and result.
+table ERMCalibration {
+  METHOD: ermCalibrationFit = ScalarMle;
+  /// Target coverage, (0, 1).
+  COVERAGE: double = 0.95;
+  MINIMUM_SAMPLES: uint32 = 1;
+  MINIMUM_OBJECTS: uint32 = 1;
+  RULE: string;
+  SAMPLES: [ERMCalibrationSample];
+  STRATA: [ERMCalibrationStratum];
+}
+
+/// An object to give a calibrated covariance.
+table ERMCalibrationObject {
+  ID: string;
+  /// Regime ID, when known.
+  REGIME: string;
+  /// Element set placing it in a regime: NORAD number and epoch.
+  SET_NORAD_CAT_ID: uint32;
+  SET_EPOCH: string;
+  /// Inertial state, m and m/s (3 values each); empty = none.
+  POSITION_M: [double];
+  VELOCITY_M_S: [double];
+  OBJECT_FACTOR: double = 1;
+  /// Element-set age, days (set models); NaN = none.
+  AGE_DAYS: double = nan;
+  /// Prediction horizon, days (factor models); NaN = none.
+  HORIZON_DAYS: double = nan;
+  /// Covariance to scale: 6, 9, 21 or 36 values, SI.
+  COVARIANCE: [double];
+  COVARIANCE_AXES: ermCovarianceAxes = Rtn;
+}
+
+/// A calibrated covariance.
+table ERMCalibratedCovariance {
+  ID: string;
+  REGIME: string;
+  /// "OUTSIDE", "NO_MODEL", the cell's status, or "UNSTATED".
+  STATUS: string;
+  /// Cell: age index (-1 outside) or horizon range.
+  AGE_INDEX: int32 = -1;
+  AGE_DAYS: double = nan;
+  HORIZON_MIN_DAYS: double = nan;
+  HORIZON_MAX_DAYS: double = nan;
+  FACTOR: double = nan;
+  AXES_FACTORS: [double];
+  /// Lower21 RTN, SI.
+  COVARIANCE_RTN: [double];
+  /// 6x6 row-major inertial, SI; empty unless a state was given.
+  COVARIANCE_INERTIAL: [double];
+}
+
+/// Calibrated covariances: the objects and the result.
+table ERMCalibratedCovariances {
+  CALIBRATION_VERSION: string;
+  MODEL_FORM: ermModelForm = Unspecified;
+  UNITS: string;
+  RULE: string;
+  COUNTS: ERMCounts;
+  OBJECTS: [ERMCalibrationObject];
+  RESULTS: [ERMCalibratedCovariance];
+}
+
+/// A segment of the density forecast at one lead day.
+table ERMDensitySegment {
+  FROM_EPOCH: string;
+  TO_EPOCH: string;
+  /// Lead day, 1 to K.
+  LEAD: uint32;
+}
+
+/// Sensitivity of one epoch to the density error.
+table ERMConsiderEpoch {
+  EPOCH: string;
+  /// dx/d ln B from the start, SI (6 values); empty when STM and S are given.
+  SENSITIVITY: [double];
+  /// STM from the start (36 values) and dx/dB (6 values).
+  STM: [double];
+  S: [double];
+  /// Base covariance, 21 or 36 values, SI; empty = none.
+  BASE: [double];
+}
+
+/// A density-forecast consider covariance at one epoch.
+table ERMConsiderCovariance {
+  EPOCH: string;
+  SECONDS_FROM_START: double;
+  SIGMA_EFFECTIVE: double;
+  /// Weight of each lead day (K values).
+  WEIGHTS: [double];
+  WEIGHT_COVERED: double;
+  SENSITIVITY: [double];
+  /// Consider covariance, 6x6 row-major, SI.
+  COVARIANCE: [double];
+  /// BASE plus COVARIANCE; empty when no base.
+  TOTAL: [double];
+}
+
+/// Density-forecast consider covariance: request and result.
+table ERMConsiderCovariances {
+  /// Number of lead days K.
+  LEAD_DAYS: uint32;
+  /// Covariance of the daily ln-density error by lead day, K x K row-major.
+  LEAD_COVARIANCE: [double];
+  /// Forecast start.
+  START: string;
+  SEGMENTS: [ERMDensitySegment];
+  BALLISTIC_COEFFICIENT: double;
+  /// STM (36) and dx/dB (6) at the start; empty = none.
+  START_STM: [double];
+  START_S: [double];
+  EPOCHS: [ERMConsiderEpoch];
+  RULE: string;
+  RESULTS: [ERMConsiderCovariance];
+}
+
+/// An STM sample of a propagation.
+table ERMStmSample {
+  EPOCH: string;
+  /// SI (6 values).
+  STATE: [double];
+  /// Row-major n x n, 6 <= n <= 36 (top-left 6x6 used).
+  STM: [double];
+}
+
+/// Unit process-noise responses at one target.
+table ERMNoiseResponse {
+  EPOCH: string;
+  STEPS: uint32;
+  STEP_S: double = nan;
+  /// 6x6 row-major per unit density on R, T, N (3 x 36 values).
+  RESPONSES: [double];
+}
+
+/// Process-noise responses: request and result.
+table ERMNoiseResponses {
+  START: string;
+  DISCRETIZATION_S: double = 600;
+  SAMPLES: [ERMStmSample];
+  /// Target epochs.
+  TARGET_EPOCHS: [string];
+  UNITS: string;
+  RESULTS: [ERMNoiseResponse];
+}
+
+/// Settings of a fit of element sets to an ephemeris (shared, or for one
+/// object when NORAD_CAT_ID is set).
+table ERMFitSettings {
+  /// Object; 0 = the shared settings.
+  NORAD_CAT_ID: uint32;
+  FROM_EPOCH: string;
+  TO_EPOCH: string;
+  EPOCH_CHOICE: ermFitEpochChoice = First;
+  EPOCH: string;
+  /// Thin the ephemeris to this step, s; 0 = every state.
+  STEP_S: double;
+  FIT_BSTAR: bool = true;
+  /// Fixed B*, 1/earth radii; NaN = the a priori set's, else 0.
+  BSTAR: double = nan;
+  /// Take B* from the a priori set.
+  BSTAR_FROM_APRIORI: bool;
+  WEIGHTING: ermFitWeighting = Uniform;
+  SIGMA_RTN_KM: [double];
+  /// Fit velocities too.
+  VELOCITY: bool = false;
+  SIGMA_VELOCITY_KM_S: double = 0.001;
+  /// Exponential weighting half-life, hours; 0 = none.
+  HALF_LIFE_HOURS: double;
+  TOWARDS: ermFitFavour = SpanEnd;
+  MAX_ITERATIONS: uint32 = 100;
+  TOLERANCE: double = 1e-10;
+  FLOOR_KM: double = 1e-6;
+  INITIAL: ermFitStart = FromEphemeris;
+  /// Reject residuals beyond this many sigma; 0 = none.
+  REJECT_SIGMA: double;
+  /// Scale the fit covariance by the residual variance (default true unless
+  /// WEIGHTING is EphemerisCovariance).
+  SCALE_COVARIANCE: bool;
+  /// True when SCALE_COVARIANCE carries a value; false means the default.
+  HAS_SCALE_COVARIANCE: bool = false;
+  RESIDUALS: bool = false;
+  CLOSURE: bool = true;
+  /// Ephemeris stream to use; -1 = all.
+  EPHEMERIS_STREAM: int32 = -1;
+  /// Metadata of the fitted OMM.
+  ORIGINATOR: string;
+  CREATION_DATE: string;
+  CLASSIFICATION: string;
+  COMMENT: string;
+  OBJECT_NAME: string;
+  OBJECT_ID: string;
+  ELEMENT_SET_NO: uint32;
+}
+
+/// Fit settings: shared by every object, and per object.
+table ERMFitOptions {
+  /// Settings for every object without its own entry in FITS.
+  SHARED: ERMFitSettings;
+  /// Per-object overrides (NORAD_CAT_ID set); empty = fit every object of
+  /// the ephemeris with SHARED.
+  FITS: [ERMFitSettings];
+}
+
+/// A residual sample, km.
+table ERMResidualSample {
+  EPOCH: string;
+  R_KM: double;
+  T_KM: double;
+  N_KM: double;
+}
+
+/// Residual statistics over a span.
+table ERMResidualStatistics {
+  /// Window label and bounds (when for a window).
+  LABEL: string;
+  FROM_EPOCH: string;
+  TO_EPOCH: string;
+  N: uint32;
+  FAILURES: uint32;
+  SPAN_START: string;
+  SPAN_STOP: string;
+  RMS_3D_KM: double = nan;
+  /// RMS_3D_KM / sqrt(3).
+  RMS_PER_COORDINATE_KM: double = nan;
+  RMS_RTN_KM: [double];
+  MEAN_RTN_KM: [double];
+  MAX_3D_KM: double = nan;
+  MAX_AT: string;
+  MAX_RTN_KM: [double];
+  RMS_VELOCITY_KM_S: double = nan;
+  SAMPLES: [ERMResidualSample];
+}
+
+/// One stage of a fit.
+table ERMFitStage {
+  /// How the stage started, e.g. "osculating-to-mean", "apriori".
+  START: string;
+  /// Half-width of the stage's span, s; NaN = whole span.
+  HALF_WIDTH_S: double = nan;
+  STATES: uint32;
+  ITERATIONS: uint32;
+  STOP: string;
+  REJECTED: uint32;
+}
+
+/// Covariance of a fit.
+table ERMFitCovariance {
+  /// Parameters, of "n", "af", "ag", "chi", "psi", "lambda", "bstar".
+  PARAMETERS: [string];
+  /// Equinoctial covariance, lower triangle.
+  EQUINOCTIAL: [double];
+  SCALE: double;
+  /// Classical-element covariance, lower 6x6 or 7x7; empty = none.
+  CLASSICAL: [double];
+  CLASSICAL_UNITS: string;
+  /// Cartesian RSW covariance, Lower21 (km, km/s); empty = none.
+  CARTESIAN_RSW: [double];
+  CARTESIAN_UNITS: string;
+}
+
+/// The half-split closure test of a fit.
+table ERMClosureTest {
+  DEFINITION: string;
+  SPLIT_EPOCH: string;
+  FIT_STATES: uint32;
+  ITERATIONS: uint32;
+  RMS: ERMResidualStatistics;
+  ERROR: string;
+}
+
+/// The fit of one object. The fitted element set is the companion $OMM.
+table ERMElementFit {
+  NORAD_CAT_ID: uint32;
+  OBJECT_NAME: string;
+  /// Why the fit failed; empty on success.
+  ERROR: string;
+  STATES_IN_SPAN: uint32;
+  STATES_FITTED: uint32;
+  STATES_WITHOUT_WEIGHTS: uint32;
+  STATES_REJECTED: uint32;
+  STAGES: [ERMFitStage];
+  ITERATIONS: uint32;
+  CONVERGED: bool;
+  STOP: string;
+  CRITERION: string;
+  RMS: ERMResidualStatistics;
+  RESIDUALS: [ERMResidualSample];
+  CLOSURE: ERMClosureTest;
+  WEIGHTED_RMS: double = nan;
+  CONDITION_NUMBER: double = nan;
+  COVARIANCE: ERMFitCovariance;
+  /// Fit epoch, ISO 8601 (microseconds).
+  EPOCH: string;
+  /// n (rad/min), af, ag, chi, psi, lambda, B* (7 values).
+  EQUINOCTIAL: [double];
+  BSTAR_FITTED: bool;
+  BSTAR_INITIAL: double;
+}
+
+/// A residual request.
+table ERMResidualRequest {
+  NORAD_CAT_ID: uint32;
+  /// Element-set epoch.
+  SET_EPOCH: string;
+  WINDOWS: [ERMResidualStatistics];
+  STEP_S: double;
+  EPHEMERIS_STREAM: int32 = -1;
+  LABEL: string;
+}
+
+/// Residuals of one request.
+table ERMResidualResult {
+  NORAD_CAT_ID: uint32;
+  SET_EPOCH: string;
+  LABEL: string;
+  ERROR: string;
+  WINDOWS: [ERMResidualStatistics];
+}
+
+/// Element-set fits or residuals against an ephemeris.
+table ERMElementFits {
+  /// Model, e.g. "SGP4 (Vallado 2020), WGS-72, opsmode i; TEME".
+  MODEL: string;
+  /// e.g. "model minus ephemeris".
+  RESIDUAL_SIGN: string;
+  UNITS: string;
+  COUNTS: ERMCounts;
+  OPTIONS: ERMFitOptions;
+  FITS: [ERMElementFit];
+  /// Residual requests; include per-window samples.
+  INCLUDE_SAMPLES: bool;
+  RESIDUAL_REQUESTS: [ERMResidualRequest];
+  RESIDUAL_RESULTS: [ERMResidualResult];
+}
+
+/// A measured realism factor for a source's fit class.
+table ERMRealismFactor {
+  /// Sources it applies to; "*" = any.
+  SOURCES: [string];
+  /// Fit class.
+  FIT_CLASS: string;
+  /// SCALE_FACTOR, MEAN_D2_OVER_3, COVERAGE_95, SAMPLES, OBJECTS, EVIDENCE,
+  /// TEST_WINDOW.
+  REALISM: CVR;
+}
+
+/// Recipe for attaching covariances to one source's products.
+table ERMAttachRecipe {
+  /// The source (SOURCE_ID, SOURCE_KIND, LINEAGE, ORIGINATOR, PROVIDER_ID,
+  /// LICENSE_CLASS, LICENSE_ID) and the producer.
+  SOURCE: PVN;
+  FIT_CLASS: string;
+  /// Creation date written to the products, ISO 8601.
+  CREATED: string;
+  /// Only the newest set of each object.
+  LATEST_ONLY: bool = true;
+  MAX_OPERATOR_ROWS: uint32 = 8;
+  REALISM: [ERMRealismFactor];
+  MODELS: [ERMModel];
+}
+
+/// Why an earlier rule did not apply.
+table ERMRuleNote {
+  RULE: covarianceRule = Unspecified;
+  REASON: string;
+  /// Row epoch; empty = whole product.
+  ROW: string;
+  AGE_DAYS: double = nan;
+}
+
+/// The covariance of one row of a product.
+table ERMRowLabel {
+  EPOCH: string;
+  /// The label (rule, model, regime, age, horizon, verdict numbers).
+  REALISM: CVR;
+  /// Method, e.g. "operator-supplied", "fit-formal-scaled", "e14-s3-kc".
+  METHOD: string;
+  BASIS: string;
+  AGE_INDEX: int32 = -1;
+  /// The cell's decision or "formal covariance, before scaling".
+  VERDICT: string;
+}
+
+/// One object's product and the covariance it got.
+table ERMAttachedObject {
+  OBJECT_KEY: string;
+  EPOCH: string;
+  /// Mean element theory, e.g. "SGP4".
+  THEORY: string;
+  OMM_SHA256: string;
+  OCM_SHA256: string;
+  RULE: covarianceRule = Unspecified;
+  METHOD: string;
+  /// e.g. "operator-ephemeris", "fit-state", "sgp4-epoch-state".
+  PRODUCT: string;
+  CALIBRATED: bool;
+  /// "rtn" or "unavailable".
+  OMM_COVARIANCE: string;
+  ROWS: [ERMRowLabel];
+  NOTES: [ERMRuleNote];
+}
+
+/// A record that could not be used.
+table ERMRefusedRecord {
+  /// 0-based input record.
+  RECORD: uint32;
+  REASON: string;
+  OBJECT_KEY: string;
+  /// First epoch, when relevant.
+  FIRST: string;
+}
+
+/// Report of attaching covariances (or attributing maneuvers).
+table ERMAttachReport {
+  SOURCE: PVN;
+  COUNTS: ERMCounts;
+  REFUSED_ELEMENT_SETS: [ERMRefusedRecord];
+  UNMATCHED_STATES: [ERMRefusedRecord];
+  UNMATCHED_OPERATOR: [ERMRefusedRecord];
+  OBJECTS: [ERMAttachedObject];
+}
+
+/// Orbit Error Model - exactly one arm is set.
+table ERM {
+  STRATA_SETTINGS: ERMStrataSettings;
+  ACCUMULATOR: ERMAccumulator;
+  GATE: ERMGate;
+  MODEL: ERMModel;
+  SCALE_OPTIONS: ERMScaleOptions;
+  SCREENING_SETTINGS: ERMScreeningSettings;
+  SCREENING_CASES: ERMScreeningCases;
+  SCREENING_REPORT: ERMScreeningReport;
+  ARC_OPTIONS: ERMArcOptions;
+  ARC_PLAN: ERMArcPlan;
+  ARC_PREDICTIONS: ERMArcPredictions;
+  COVERAGE_OPTIONS: ERMCoverageOptions;
+  PROPAGATOR_COVERAGE: ERMPropagatorCoverageReport;
+  COMMON_EPOCH: ERMCommonEpoch;
+  COVARIANCE_MAP: ERMCovarianceMap;
+  PAIR_STATISTICS: ERMPairStatistics;
+  CALIBRATION: ERMCalibration;
+  CALIBRATED_COVARIANCES: ERMCalibratedCovariances;
+  CONSIDER_COVARIANCES: ERMConsiderCovariances;
+  NOISE_RESPONSES: ERMNoiseResponses;
+  ELEMENT_FITS: ERMElementFits;
+  ATTACH_RECIPE: ERMAttachRecipe;
+  ATTACH_REPORT: ERMAttachReport;
+}
+
+root_type ERM;
+file_identifier "$ERM";

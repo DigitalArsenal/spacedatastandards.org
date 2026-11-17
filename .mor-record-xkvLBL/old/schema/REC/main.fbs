@@ -1,0 +1,456 @@
+// Hash: 5c8076966a3c6f63e900e431f05c9050c747eacf2560c6b03fce03ade73c9beb
+// Version: 1.44.89
+// -----------------------------------END_HEADER
+include "../ABA/main.fbs";
+include "../ACI/main.fbs";
+include "../ACL/main.fbs";
+include "../ACM/main.fbs";
+include "../ACR/main.fbs";
+include "../ACT/main.fbs";
+include "../ACW/main.fbs";
+include "../AEM/main.fbs";
+include "../AGR/main.fbs";
+include "../ANI/main.fbs";
+include "../AOF/main.fbs";
+include "../APL/main.fbs";
+include "../APM/main.fbs";
+include "../APP/main.fbs";
+include "../APR/main.fbs";
+include "../ARM/main.fbs";
+include "../ASG/main.fbs";
+include "../AST/main.fbs";
+include "../ATD/main.fbs";
+include "../ATM/main.fbs";
+include "../AVL/main.fbs";
+include "../BAL/main.fbs";
+include "../BEM/main.fbs";
+include "../BMC/main.fbs";
+include "../BOV/main.fbs";
+include "../BPF/main.fbs";
+include "../BSP/main.fbs";
+include "../BUS/main.fbs";
+include "../CAQ/main.fbs";
+include "../CAT/main.fbs";
+include "../CCT/main.fbs";
+include "../CDM/main.fbs";
+include "../CES/main.fbs";
+include "../CFP/main.fbs";
+include "../CHN/main.fbs";
+include "../CLM/main.fbs";
+include "../CLT/main.fbs";
+include "../CME/main.fbs";
+include "../CMR/main.fbs";
+include "../CMS/main.fbs";
+include "../CMT/main.fbs";
+include "../CNP/main.fbs";
+include "../COM/main.fbs";
+include "../COT/main.fbs";
+include "../CPS/main.fbs";
+include "../CQR/main.fbs";
+include "../CRD/main.fbs";
+include "../CRM/main.fbs";
+include "../CSM/main.fbs";
+include "../CSO/main.fbs";
+include "../CTR/main.fbs";
+include "../CVG/main.fbs";
+include "../CVP/main.fbs";
+include "../CVR/main.fbs";
+include "../CZM/main.fbs";
+include "../DAV/main.fbs";
+include "../DCL/main.fbs";
+include "../DFH/main.fbs";
+include "../DMG/main.fbs";
+include "../DOA/main.fbs";
+include "../DPM/main.fbs";
+include "../DSS/main.fbs";
+include "../DTT/main.fbs";
+include "../EGP/main.fbs";
+include "../EMC/main.fbs";
+include "../EME/main.fbs";
+include "../ENC/main.fbs";
+include "../ENT/main.fbs";
+include "../ENV/main.fbs";
+include "../EOO/main.fbs";
+include "../EOP/main.fbs";
+include "../EPF/main.fbs";
+include "../EPM/main.fbs";
+include "../ERM/main.fbs";
+include "../ESL/main.fbs";
+include "../ETM/main.fbs";
+include "../ETS/main.fbs";
+include "../EVL/main.fbs";
+include "../EWR/main.fbs";
+include "../EXO/main.fbs";
+include "../FCK/main.fbs";
+include "../FCS/main.fbs";
+include "../FIL/main.fbs";
+include "../FMB/main.fbs";
+include "../FPC/main.fbs";
+include "../FRM/main.fbs";
+include "../FSB/main.fbs";
+include "../FSG/main.fbs";
+include "../FSM/main.fbs";
+include "../FSO/main.fbs";
+include "../FSP/main.fbs";
+include "../GCT/main.fbs";
+include "../GDI/main.fbs";
+include "../GEL/main.fbs";
+include "../GEO/main.fbs";
+include "../GJN/main.fbs";
+include "../GLX/main.fbs";
+include "../GNM/main.fbs";
+include "../GNO/main.fbs";
+include "../GNP/main.fbs";
+include "../GPX/main.fbs";
+include "../GRV/main.fbs";
+include "../GST/main.fbs";
+include "../GVH/main.fbs";
+include "../HEL/main.fbs";
+include "../HFC/main.fbs";
+include "../HYP/main.fbs";
+include "../ICN/main.fbs";
+include "../IDM/main.fbs";
+include "../ION/main.fbs";
+include "../IQC/main.fbs";
+include "../IRM/main.fbs";
+include "../IRO/main.fbs";
+include "../KMF/main.fbs";
+include "../KML/main.fbs";
+include "../KRF/main.fbs";
+include "../LAM/main.fbs";
+include "../LCC/main.fbs";
+include "../LCF/main.fbs";
+include "../LCH/main.fbs";
+include "../LDM/main.fbs";
+include "../LFV/main.fbs";
+include "../LGR/main.fbs";
+include "../LKS/main.fbs";
+include "../LMO/main.fbs";
+include "../LMR/main.fbs";
+include "../LMS/main.fbs";
+include "../LND/main.fbs";
+include "../LNE/main.fbs";
+include "../LPF/main.fbs";
+include "../LWK/main.fbs";
+include "../MBL/main.fbs";
+include "../MDE/main.fbs";
+include "../MDP/main.fbs";
+include "../MDS/main.fbs";
+include "../MEM/main.fbs";
+include "../MET/main.fbs";
+include "../MFE/main.fbs";
+include "../MNF/main.fbs";
+include "../MNV/main.fbs";
+include "../MPE/main.fbs";
+include "../MPL/main.fbs";
+include "../MSL/main.fbs";
+include "../MST/main.fbs";
+include "../MTI/main.fbs";
+include "../NAV/main.fbs";
+include "../NCD/main.fbs";
+include "../NDS/main.fbs";
+include "../NEV/main.fbs";
+include "../NHS/main.fbs";
+include "../NST/main.fbs";
+include "../NUM/main.fbs";
+include "../OBD/main.fbs";
+include "../OBT/main.fbs";
+include "../OCM/main.fbs";
+include "../ODR/main.fbs";
+include "../OEM/main.fbs";
+include "../OIL/main.fbs";
+include "../OMM/main.fbs";
+include "../OOA/main.fbs";
+include "../OOB/main.fbs";
+include "../OOD/main.fbs";
+include "../OOE/main.fbs";
+include "../OOI/main.fbs";
+include "../OOL/main.fbs";
+include "../OON/main.fbs";
+include "../OOS/main.fbs";
+include "../OOT/main.fbs";
+include "../OPM/main.fbs";
+include "../OPP/main.fbs";
+include "../OSM/main.fbs";
+include "../PAP/main.fbs";
+include "../PCE/main.fbs";
+include "../PCF/main.fbs";
+include "../PGM/main.fbs";
+include "../PHB/main.fbs";
+include "../PHY/main.fbs";
+include "../PIN/main.fbs";
+include "../PIV/main.fbs";
+include "../PKB/main.fbs";
+include "../PLD/main.fbs";
+include "../PLG/main.fbs";
+include "../PLK/main.fbs";
+include "../PMM/main.fbs";
+include "../PNL/main.fbs";
+include "../PNM/main.fbs";
+include "../PNV/main.fbs";
+include "../PPE/main.fbs";
+include "../PPS/main.fbs";
+include "../PRG/main.fbs";
+include "../PRR/main.fbs";
+include "../PRW/main.fbs";
+include "../PSS/main.fbs";
+include "../PUR/main.fbs";
+include "../PVN/main.fbs";
+include "../QEM/main.fbs";
+include "../QRP/main.fbs";
+include "../RAF/main.fbs";
+include "../RBK/main.fbs";
+include "../RCF/main.fbs";
+include "../RDM/main.fbs";
+include "../RDO/main.fbs";
+include "../REM/main.fbs";
+include "../REV/main.fbs";
+include "../RFB/main.fbs";
+include "../RFE/main.fbs";
+include "../RFL/main.fbs";
+include "../RFM/main.fbs";
+include "../RFO/main.fbs";
+include "../RFS/main.fbs";
+include "../RND/main.fbs";
+include "../ROC/main.fbs";
+include "../RPC/main.fbs";
+include "../RPT/main.fbs";
+include "../RSD/main.fbs";
+include "../SAR/main.fbs";
+include "../SBC/main.fbs";
+include "../SBD/main.fbs";
+include "../SBM/main.fbs";
+include "../SCC/main.fbs";
+include "../SCM/main.fbs";
+include "../SCN/main.fbs";
+include "../SCR/main.fbs";
+include "../SCV/main.fbs";
+include "../SCX/main.fbs";
+include "../SDF/main.fbs";
+include "../SDI/main.fbs";
+include "../SDL/main.fbs";
+include "../SDR/main.fbs";
+include "../SEN/main.fbs";
+include "../SEO/main.fbs";
+include "../SEV/main.fbs";
+include "../SFE/main.fbs";
+include "../SHC/main.fbs";
+include "../SHW/main.fbs";
+include "../SIT/main.fbs";
+include "../SKI/main.fbs";
+include "../SKQ/main.fbs";
+include "../SKR/main.fbs";
+include "../SKT/main.fbs";
+include "../SLP/main.fbs";
+include "../SNR/main.fbs";
+include "../SNW/main.fbs";
+include "../SOI/main.fbs";
+include "../SON/main.fbs";
+include "../SPP/main.fbs";
+include "../SPW/main.fbs";
+include "../SRG/main.fbs";
+include "../SRI/main.fbs";
+include "../SRO/main.fbs";
+include "../SRT/main.fbs";
+include "../SSY/main.fbs";
+include "../STF/main.fbs";
+include "../STO/main.fbs";
+include "../STR/main.fbs";
+include "../STV/main.fbs";
+include "../STX/main.fbs";
+include "../SUB/main.fbs";
+include "../SWA/main.fbs";
+include "../SWR/main.fbs";
+include "../SWS/main.fbs";
+include "../TAB/main.fbs";
+include "../TBP/main.fbs";
+include "../TBS/main.fbs";
+include "../TCF/main.fbs";
+include "../TCT/main.fbs";
+include "../TDM/main.fbs";
+include "../TFN/main.fbs";
+include "../TIM/main.fbs";
+include "../TKG/main.fbs";
+include "../TME/main.fbs";
+include "../TMF/main.fbs";
+include "../TMS/main.fbs";
+include "../TNR/main.fbs";
+include "../TPN/main.fbs";
+include "../TRE/main.fbs";
+include "../TRH/main.fbs";
+include "../TRK/main.fbs";
+include "../TRN/main.fbs";
+include "../TRP/main.fbs";
+include "../TRS/main.fbs";
+include "../TRV/main.fbs";
+include "../TXS/main.fbs";
+include "../VAM/main.fbs";
+include "../VCF/main.fbs";
+include "../VCM/main.fbs";
+include "../VEP/main.fbs";
+include "../VST/main.fbs";
+include "../WHA/main.fbs";
+include "../WKS/main.fbs";
+include "../WPN/main.fbs";
+include "../WTH/main.fbs";
+include "../WXF/main.fbs";
+include "../XMT/main.fbs";
+include "../XTC/main.fbs";
+
+/// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
+/// A member's position IS its wire value: flatc writes it into the
+/// Record.value_type byte of every $REC ever serialized, including the
+/// publication trailer of every protected module artifact. Inserting,
+/// reordering or removing a member silently re-points every record ever
+/// written at the wrong standard. This has already happened three times;
+/// inserting $PGM mid-union (c1580d4700, 2026-07-08) moved $PNM 113 -> 114
+/// and broke protected-plugin decryption fleet-wide for three weeks.
+/// New standards are APPENDED at the end. A retired standard is deprecated
+/// in place, never deleted -- an ordinal is never reused.
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+/// Records written before 2026-07-08 are only decodable via Record.standard,
+/// which is the sole discriminator that has never shifted.
+union RecordType {
+  ACL, ACM, ACR, ACW,
+  AEM, ANI, AOF, APM,
+  ARM, AST, ATD, ATM,
+  BAL, BEM, BMC, BOV,
+  BSP, BUS, CAQ, CAT,
+  CDM, CFP, CHN, CLT,
+  CMS, COM, COT, CRD,
+  CRM, CSM, CTR, CZM,
+  DFH, DMG, DOA, DPM,
+  DSS, EME, ENC, ENV,
+  EOO, EOP, EPM, ESL,
+  ETM, EWR, FCS, FPC,
+  FRM, GDI, GEO, GJN,
+  GNO, GPX, GRV, GVH,
+  HEL, HFC, HYP, IDM,
+  ION, IRO, KMF, KML,
+  KRF, LAM, LCC, LCF,
+  LCH, LDM, LGR, LKS,
+  LMO, LMR, LMS, LND,
+  LNE, LPF, LWK, MBL,
+  MET, MFE, MNF, MNV,
+  MPE, MSL, MST, MTI,
+  NAV, NUM, OBD, OBT,
+  OCM, OEM, OMM, OOA,
+  OOB, OOD, OOE, OOI,
+  OOL, OON, OOS, OOT,
+  OPM, OSM, PCF, PHY,
+  PGM, PIV, PLD, PLG,
+  PLK, PNM, PPE, PRG,
+  PRR, PRW, PUR, RAF,
+  RBK, RCF, RDM, RDO,
+  REM, REV, RFB, RFE,
+  RFM, RFO, ROC, SAR,
+  SCM, SDF, SDL, SDR,
+  SEN, SEO, SEV, SHW,
+  SIT, SKI, SNR, SNW,
+  SOI, SON, SPP, SPW,
+  SRI, STF, STR, STV,
+  SWR, TAB, TCF, TDM,
+  TIM, TKG, TME, TMF,
+  TNR, TPN, TRE, TRK,
+  TRN, VCM, WPN, WTH,
+  XTC, SCV, FSM, FSP,
+  SCC, SCN, VST, ENT,
+  VAM, APP, CMT, SCX,
+  CVG, PKB, RPT, STO,
+  SUB, WKS, CPS, FSB,
+  FSO, GST, MDP, MDS,
+  PNL, SHC, CES, QEM,
+  SBM, PMM, OPP, IQC,
+  CNP, CMR, TBS, CCT,
+  ACI, CVP, RFL, RFS,
+  TRS, GNP, DTT, AVL,
+  TFN, TMS, VEP, EGP,
+  APL, EMC, EPF, GEL,
+  PAP, RSD, IRM, VCF,
+  STX, TXS, BPF, EVL,
+  PCE, NCD, MEM, ODR,
+  TRH, SLP, PSS, ICN,
+  TRP, TRV, ACT, AGR,
+  NDS, NST, QRP, TCT,
+  WXF, CLM, GCT, CQR,
+  RPC, CSO, PHB, SKT,
+  SKQ, SKR, ETS
+}  // Union of all record types
+
+/// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
+/// union RecordType holds at most 255 members (a FlatBuffers union tag is
+/// one byte). Every later standard gets an ordinal here, from 256, and its
+/// records carry it in Record.EXTENDED_TYPE with the record's own
+/// FlatBuffer in Record.EXTENDED_VALUE (Record.value stays NONE).
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json (extended_ordinals)
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+enum RecordTypeExtended : ushort {
+  NONE = 0,
+  ABA = 256,
+  CVR = 257,
+  PVN = 258,
+  SBD = 259,
+  APR = 260,
+  ASG = 261,
+  DAV = 262,
+  DCL = 263,
+  ERM = 264,
+  FIL = 265,
+  LFV = 266,
+  MDE = 267,
+  MPL = 268,
+  NEV = 269,
+  NHS = 270,
+  OIL = 271,
+  PNV = 272,
+  PPS = 273,
+  RND = 274,
+  SBC = 275,
+  SCR = 276,
+  SRG = 277,
+  TBP = 278,
+  WHA = 279,
+  XMT = 280,
+  EXO = 281,
+  GLX = 282,
+  FCK = 283,
+  FMB = 284,
+  FSG = 285,
+  PIN = 286,
+  SDI = 287,
+  SFE = 288,
+  SRO = 289,
+  SRT = 290,
+  GNM = 291,
+  CME = 292,
+  SWA = 293,
+  SWS = 294,
+  SSY = 295
+}  // Wide record types
+
+/// Individual record wrapper for any standard type
+table Record {
+  /// The record data (union of all supported standards)
+  value: RecordType;
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
+  standard: string;
+  /// Wide record type, for a standard numbered in RecordTypeExtended
+  /// (ordinals 256 and up) because union RecordType has no room for it.
+  /// value is then NONE. Readers dispatch on standard or EXTENDED_TYPE.
+  EXTENDED_TYPE: RecordTypeExtended = NONE;
+  /// The record's root FlatBuffer, with its file identifier, when
+  /// EXTENDED_TYPE is set.
+  EXTENDED_VALUE: [ubyte];
+}
+
+/// Collection of Standard Records
+table REC {
+  /// Schema version identifier
+  version: string;
+  /// Array of heterogeneous records from any supported standard
+  RECORDS: [Record];
+}
+
+root_type REC;
+file_identifier "$REC";

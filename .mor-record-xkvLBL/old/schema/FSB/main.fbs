@@ -1,0 +1,37 @@
+// Hash: 0b23aa63d0e3f17d828fc84dd433605c2794cb81ade7c043cb200e954c84e945
+// Version: 1.164.0
+// -----------------------------------END_HEADER
+attribute "aligned_max_count";
+attribute "aligned_max_length";
+
+/// Meaning of the bytes in one bounded FlatSQL stream chunk. All durable
+/// variants are emitted as canonical FSB FlatBuffers. Aligned FSB frames are
+/// transient same-arena views and never the sole durable representation.
+enum flatSqlByteStreamKind : ubyte {
+  UNSPECIFIED,
+  RECORD_STREAM,
+  QUERY_RESULT,
+  SNAPSHOT,
+  WRITE_AHEAD_LOG
+}
+
+/// FlatSQL Byte Stream — a bounded, typed chunk used for append/query and
+/// opaque snapshot/WAL persistence. DATA carries at most one MiB so larger
+/// inputs and snapshots are delivered as ordered chunks. The host may persist
+/// canonical FSB bytes but must not interpret DATA as tables, rows, or SQL.
+table FSB {
+  REQUEST_ID:ulong;
+  KIND:flatSqlByteStreamKind = UNSPECIFIED;
+  CHUNK_SEQUENCE:uint;
+  FINAL:bool;
+  TOTAL_BYTES:ulong;
+  RECORD_COUNT:ulong;
+  COLUMN_COUNT:uint;
+  SCHEMA_NAME:string (aligned_max_length: 64);
+  FILE_IDENTIFIER:string (aligned_max_length: 4);
+  DATA:[ubyte] (aligned_max_count: 1048576);
+  SHA256:[ubyte] (aligned_max_count: 32);
+}
+
+root_type FSB;
+file_identifier "$FSB";

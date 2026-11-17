@@ -88,14 +88,14 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
-    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
     /**
-     * @return bool
+     * @return byte
      */
-    public function getROWS_ONLY()
+    public function getRECORD_KIND()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \morRecordKind::FULL;
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
@@ -338,14 +338,16 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+    /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+    /// itself as a floating-point literal.
     /**
      * @return long
      */
     public function getOD_EPOCH_UNIX_US()
     {
         $o = $this->__offset(56);
-        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : -9223372036854775808;
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : -9223372036854775807;
     }
 
     /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
@@ -502,7 +504,8 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Whether the set is real or test data.
+    /// Whether the set is real or test data. A record that does not state it is an operational record of
+    /// unstated status; a publisher states it only when it is TEST.
     /**
      * @return byte
      */
@@ -548,7 +551,7 @@ class MOR extends Table
      * @param FlatBufferBuilder $builder
      * @return MOR
      */
-    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $MEAN_ELEMENT_THEORY, $EPOCH_UNIX_US, $ROWS_ONLY, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $OD_TRACKS_USED, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_CALIBRATION, $FALLBACK, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $ECOM2_Y0, $MESSAGE_STATUS, $OBJECT_NAME, $COV_REALISM, $COV_CALIBRATION_REFERENCE)
+    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $MEAN_ELEMENT_THEORY, $EPOCH_UNIX_US, $RECORD_KIND, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $OD_TRACKS_USED, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_CALIBRATION, $FALLBACK, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $ECOM2_Y0, $MESSAGE_STATUS, $OBJECT_NAME, $COV_REALISM, $COV_CALIBRATION_REFERENCE)
     {
         $builder->startObject(45);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -556,7 +559,7 @@ class MOR extends Table
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addMEAN_ELEMENT_THEORY($builder, $MEAN_ELEMENT_THEORY);
         self::addEPOCH_UNIX_US($builder, $EPOCH_UNIX_US);
-        self::addROWS_ONLY($builder, $ROWS_ONLY);
+        self::addRECORD_KIND($builder, $RECORD_KIND);
         self::addWINDOWS($builder, $WINDOWS);
         self::addWINDOW_COEFF_HEADS($builder, $WINDOW_COEFF_HEADS);
         self::addWINDOW_COEFF_TAILS($builder, $WINDOW_COEFF_TAILS);
@@ -652,12 +655,12 @@ class MOR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param bool
+     * @param byte
      * @return void
      */
-    public static function addROWS_ONLY(FlatBufferBuilder $builder, $ROWS_ONLY)
+    public static function addRECORD_KIND(FlatBufferBuilder $builder, $RECORD_KIND)
     {
-        $builder->addBoolX(5, $ROWS_ONLY, false);
+        $builder->addByteX(5, $RECORD_KIND, 0);
     }
 
     /**
@@ -939,7 +942,7 @@ class MOR extends Table
      */
     public static function addOD_EPOCH_UNIX_US(FlatBufferBuilder $builder, $OD_EPOCH_UNIX_US)
     {
-        $builder->addLongX(26, $OD_EPOCH_UNIX_US, -9223372036854775808);
+        $builder->addLongX(26, $OD_EPOCH_UNIX_US, -9223372036854775807);
     }
 
     /**

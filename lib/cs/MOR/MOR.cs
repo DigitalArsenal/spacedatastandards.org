@@ -44,8 +44,8 @@ public struct MOR : IFlatbufferObject
   /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   /// ways without loss; an instant inside a leap second has no value here.
   public long EPOCH_UNIX_US { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  public bool ROWS_ONLY { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
+  public morRecordKind RECORD_KIND { get { int o = __p.__offset(14); return o != 0 ? (morRecordKind)__p.bb.Get(o + __p.bb_pos) : morRecordKind.FULL; } }
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -111,8 +111,10 @@ public struct MOR : IFlatbufferObject
   public int OD_OBSERVATIONS_USED { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
   /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
   public double WEIGHTED_RMS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  public long OD_EPOCH_UNIX_US { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)-9223372036854775808; } }
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+  /// meaning not stated: the least int64 plus one, because some generated languages read the least int64
+  /// itself as a floating-point literal.
+  public long OD_EPOCH_UNIX_US { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)-9223372036854775807; } }
   /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
   public int OD_TRACKS_USED { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
@@ -156,7 +158,8 @@ public struct MOR : IFlatbufferObject
   public morRadiationModel SOLAR_RAD_PRESSURE { get { int o = __p.__offset(82); return o != 0 ? (morRadiationModel)__p.bb.Get(o + __p.bb_pos) : morRadiationModel.UNSTATED; } }
   /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
   public double ECOM2_Y0 { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Whether the set is real or test data.
+  /// Whether the set is real or test data. A record that does not state it is an operational record of
+  /// unstated status; a publisher states it only when it is TEST.
   public morMessageStatus MESSAGE_STATUS { get { int o = __p.__offset(86); return o != 0 ? (morMessageStatus)__p.bb.Get(o + __p.bb_pos) : morMessageStatus.UNSPECIFIED; } }
   /// The object's name; absent unless a reader copies it into what it writes.
   public string OBJECT_NAME { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -184,7 +187,7 @@ public struct MOR : IFlatbufferObject
       StringOffset ORIGINATOROffset = default(StringOffset),
       meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.UNSPECIFIED,
       long EPOCH_UNIX_US = 0,
-      bool ROWS_ONLY = false,
+      morRecordKind RECORD_KIND = morRecordKind.FULL,
       VectorOffset WINDOWSOffset = default(VectorOffset),
       VectorOffset WINDOW_COEFF_HEADSOffset = default(VectorOffset),
       VectorOffset WINDOW_COEFF_TAILSOffset = default(VectorOffset),
@@ -205,7 +208,7 @@ public struct MOR : IFlatbufferObject
       double ACTUAL_OD_SPAN = Double.NaN,
       int OD_OBSERVATIONS_USED = -1,
       double WEIGHTED_RMS = Double.NaN,
-      long OD_EPOCH_UNIX_US = -9223372036854775808,
+      long OD_EPOCH_UNIX_US = -9223372036854775807,
       int OD_TRACKS_USED = -1,
       double DAYS_SINCE_LAST_OBS = Double.NaN,
       VectorOffset COVARIANCE_DATAOffset = default(VectorOffset),
@@ -268,7 +271,7 @@ public struct MOR : IFlatbufferObject
     MOR.AddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE);
     MOR.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
     MOR.AddGRAVITY_FIELD(builder, GRAVITY_FIELD);
-    MOR.AddROWS_ONLY(builder, ROWS_ONLY);
+    MOR.AddRECORD_KIND(builder, RECORD_KIND);
     MOR.AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY);
     return MOR.EndMOR(builder);
   }
@@ -279,7 +282,7 @@ public struct MOR : IFlatbufferObject
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
   public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(3, (sbyte)MEAN_ELEMENT_THEORY, 6); }
   public static void AddEPOCH_UNIX_US(FlatBufferBuilder builder, long EPOCH_UNIX_US) { builder.AddLong(4, EPOCH_UNIX_US, 0); }
-  public static void AddROWS_ONLY(FlatBufferBuilder builder, bool ROWS_ONLY) { builder.AddBool(5, ROWS_ONLY, false); }
+  public static void AddRECORD_KIND(FlatBufferBuilder builder, morRecordKind RECORD_KIND) { builder.AddByte(5, (byte)RECORD_KIND, 0); }
   public static void AddWINDOWS(FlatBufferBuilder builder, VectorOffset WINDOWSOffset) { builder.AddOffset(6, WINDOWSOffset.Value, 0); }
   public static void StartWINDOWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(24, numElems, 8); }
   public static void AddWINDOW_COEFF_HEADS(FlatBufferBuilder builder, VectorOffset WINDOW_COEFF_HEADSOffset) { builder.AddOffset(7, WINDOW_COEFF_HEADSOffset.Value, 0); }
@@ -311,7 +314,7 @@ public struct MOR : IFlatbufferObject
   public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(23, ACTUAL_OD_SPAN, Double.NaN); }
   public static void AddOD_OBSERVATIONS_USED(FlatBufferBuilder builder, int OD_OBSERVATIONS_USED) { builder.AddInt(24, OD_OBSERVATIONS_USED, -1); }
   public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(25, WEIGHTED_RMS, Double.NaN); }
-  public static void AddOD_EPOCH_UNIX_US(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.AddLong(26, OD_EPOCH_UNIX_US, -9223372036854775808); }
+  public static void AddOD_EPOCH_UNIX_US(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.AddLong(26, OD_EPOCH_UNIX_US, -9223372036854775807); }
   public static void AddOD_TRACKS_USED(FlatBufferBuilder builder, int OD_TRACKS_USED) { builder.AddInt(27, OD_TRACKS_USED, -1); }
   public static void AddDAYS_SINCE_LAST_OBS(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.AddDouble(28, DAYS_SINCE_LAST_OBS, Double.NaN); }
   public static void AddCOVARIANCE_DATA(FlatBufferBuilder builder, VectorOffset COVARIANCE_DATAOffset) { builder.AddOffset(29, COVARIANCE_DATAOffset.Value, 0); }
@@ -352,7 +355,7 @@ public struct MOR : IFlatbufferObject
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY;
     _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US;
-    _o.ROWS_ONLY = this.ROWS_ONLY;
+    _o.RECORD_KIND = this.RECORD_KIND;
     _o.WINDOWS = new List<MORWindowT>();
     for (var _j = 0; _j < this.WINDOWSLength; ++_j) {_o.WINDOWS.Add(this.WINDOWS(_j).HasValue ? this.WINDOWS(_j).Value.UnPack() : null);}
     _o.WINDOW_COEFF_HEADS = new List<double>();
@@ -433,7 +436,7 @@ public struct MOR : IFlatbufferObject
       _ORIGINATOR,
       _o.MEAN_ELEMENT_THEORY,
       _o.EPOCH_UNIX_US,
-      _o.ROWS_ONLY,
+      _o.RECORD_KIND,
       _WINDOWS,
       _WINDOW_COEFF_HEADS,
       _WINDOW_COEFF_TAILS,
@@ -483,7 +486,7 @@ public class MORT
   public string ORIGINATOR { get; set; }
   public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
   public long EPOCH_UNIX_US { get; set; }
-  public bool ROWS_ONLY { get; set; }
+  public morRecordKind RECORD_KIND { get; set; }
   public List<MORWindowT> WINDOWS { get; set; }
   public List<double> WINDOW_COEFF_HEADS { get; set; }
   public List<float> WINDOW_COEFF_TAILS { get; set; }
@@ -530,7 +533,7 @@ public class MORT
     this.ORIGINATOR = null;
     this.MEAN_ELEMENT_THEORY = meanElementSource.UNSPECIFIED;
     this.EPOCH_UNIX_US = 0;
-    this.ROWS_ONLY = false;
+    this.RECORD_KIND = morRecordKind.FULL;
     this.WINDOWS = null;
     this.WINDOW_COEFF_HEADS = null;
     this.WINDOW_COEFF_TAILS = null;
@@ -551,7 +554,7 @@ public class MORT
     this.ACTUAL_OD_SPAN = Double.NaN;
     this.OD_OBSERVATIONS_USED = -1;
     this.WEIGHTED_RMS = Double.NaN;
-    this.OD_EPOCH_UNIX_US = -9223372036854775808;
+    this.OD_EPOCH_UNIX_US = -9223372036854775807;
     this.OD_TRACKS_USED = -1;
     this.DAYS_SINCE_LAST_OBS = Double.NaN;
     this.COVARIANCE_DATA = null;
@@ -592,7 +595,7 @@ static public class MORVerify
       && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
       && verifier.VerifyField(tablePos, 10 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
       && verifier.VerifyField(tablePos, 12 /*EPOCH_UNIX_US*/, 8 /*long*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*ROWS_ONLY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*RECORD_KIND*/, 1 /*morRecordKind*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 16 /*WINDOWS*/, 24 /*MORWindow*/, false)
       && verifier.VerifyVectorOfData(tablePos, 18 /*WINDOW_COEFF_HEADS*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 20 /*WINDOW_COEFF_TAILS*/, 4 /*float*/, false)

@@ -1,0 +1,235 @@
+// Hash: 94ad604b9b9ecc6feaea2d9f3e6f9f90489cd5e0397b1c51543b48918a01226b
+// Version: 1.191.0
+// -----------------------------------END_HEADER
+// Airspace Volume (AVL)
+// Description
+// One published airspace volume: its designator and class, the vertical slab
+// it occupies stated as a floor and a ceiling that each name their own datum,
+// the horizontal boundary as packed rings, the period and schedule it is
+// active over, and the dataset edition and licence it was redistributed
+// under. The record is the durable, renderable airspace boundary a consumer
+// can intersect tracks against without holding the aeronautical source
+// dataset.
+//
+// Division of labour: `$CVP` carries computed RF coverage geometry; `$AVL`
+// carries PUBLISHED aeronautical volumes. Both use the same packed-ring
+// polygon encoding — parallel arrays, never nested ring tables — so one
+// spatial pipeline serves both. `$GNP` holds gazetteer place identity;
+// `$TFN` holds transport facility operations; an airspace volume joins to
+// either, it never restates them.
+//
+// PACKED RINGS, the `$CVP` rules verbatim:
+//   - RING_OFFSETS has exactly RING_COUNT + 1 entries; ring r spans vertex
+//     indexes [RING_OFFSETS[r], RING_OFFSETS[r+1]). The last entry equals
+//     the vertex count.
+//   - Rings are IMPLICITLY CLOSED; the first vertex is not repeated.
+//   - A ring has at least 3 vertices.
+//   - OUTER rings wind counter-clockwise, INNER (hole) rings clockwise,
+//     seen from outside the ellipsoid.
+//   - A ring MUST NOT cross the ±180° meridian; a volume spanning it is
+//     split into two rings of the same polygon. Longitudes in [-180, 180].
+//   - Vertices are geodetic degrees on WGS 84, never projected coordinates.
+//
+// ARCS ARE A DECLARED TRANSFORM. Aeronautical sources publish arc and circle
+// boundary segments; this record carries only vertices. An ingest that
+// densified arcs into vertices sets ARC_DENSIFIED and states the tolerance
+// it densified to, so a consumer knows the boundary is an approximation of
+// the published arc and how coarse it is.
+//
+// ABSENT IS NOT ZERO. A numeric field whose value is unknown is written NaN.
+// A floor of 0 with datum SURFACE is a real claim; a missing ceiling is not
+// "0". UNLIMITED is a DATUM MEMBER, never a sentinel altitude: an upper
+// limit of "unlimited" is CEILING_DATUM = UNLIMITED with CEILING_VALUE NaN.
+
+/// Whether a ring bounds airspace or punches a hole in it.
+///
+/// `UNSPECIFIED` holds ordinal 0 deliberately; a consumer MUST refuse a ring
+/// that does not state its role rather than assume OUTER.
+enum avlRingRole : byte {
+  UNSPECIFIED = 0,
+  OUTER,
+  INNER
+}
+
+/// ICAO airspace classification of the volume, as the source publishes it.
+enum avlAirspaceClass : byte {
+  /// The source publishes no class, or a class this enum does not model.
+  UNSPECIFIED = 0,
+  CLASS_A,
+  CLASS_B,
+  CLASS_C,
+  CLASS_D,
+  CLASS_E,
+  CLASS_F,
+  CLASS_G
+}
+
+/// The kind of volume this record describes, as the source publishes it.
+/// Ordinals are wire values: append only; never reorder or reuse.
+enum avlVolumeType : byte {
+  UNSPECIFIED = 0,
+  /// A controlled airspace volume not otherwise classified below.
+  CONTROLLED,
+  /// Restricted area: entry restricted per published conditions.
+  RESTRICTED,
+  /// Prohibited area: flight prohibited.
+  PROHIBITED,
+  /// Danger area: activities hazardous to flight may exist.
+  DANGER,
+  /// Terminal control area.
+  TMA,
+  /// Control zone.
+  CTR,
+  /// Aerodrome traffic zone.
+  ATZ,
+  /// Flight information region.
+  FIR,
+  /// Upper flight information region.
+  UIR,
+  /// Military operations area.
+  MOA,
+  /// Air defense identification zone.
+  ADIZ
+}
+
+/// The reference a vertical boundary value is stated against. Datum rides
+/// PER BOUNDARY, never once for the volume: a floor of 1200 ft AGL under a
+/// ceiling of FL180 is the common case, not the exception. Values are metres
+/// for every member except FLIGHT_LEVEL, which is hundreds of feet by
+/// definition of the flight-level scale.
+enum avlVerticalDatum : byte {
+  /// No datum stated. A consumer MUST refuse a boundary whose value is
+  /// present but whose datum is UNSPECIFIED rather than guess a reference.
+  UNSPECIFIED = 0,
+  /// Metres above ground level.
+  AGL,
+  /// Metres above mean sea level.
+  MSL,
+  /// Flight level: the value is the flight level number (hundreds of feet
+  /// on the standard atmosphere), not metres.
+  FLIGHT_LEVEL,
+  /// Metres above the WGS 84 ellipsoid.
+  WGS84_ELLIPSOID,
+  /// The ground or water surface itself; the boundary value is NaN.
+  SURFACE,
+  /// No upper limit; the boundary value is NaN. A datum member, never a
+  /// sentinel altitude.
+  UNLIMITED
+}
+
+/// Dataset lineage and redistribution terms for one airspace volume.
+///
+/// Required on every record: a redistributed volume whose dataset, epoch,
+/// and licence are unstated is not publishable. Dataset identity is DATA;
+/// the standard names no dataset, provider, or site.
+table AVLProvenance {
+  /// Publisher-stable, lowercase identifier for the aeronautical dataset
+  /// this volume was taken from, unique within the publisher's own dataset
+  /// registry. Never a display name and never a URL.
+  DATASET_ID:string (required);
+  /// The dataset's own name, verbatim as its publisher states it.
+  DATASET_NAME:string;
+  /// Replayable URL of the dataset as published.
+  DATASET_URL:string;
+  /// RFC 3339 UTC fixed-millisecond epoch of the dataset edition this
+  /// volume was decoded from — the edition boundary (e.g. an AIRAC cycle
+  /// effective date), not the fetch.
+  DATASET_EPOCH:string (required);
+  /// Content identifier of the exact dataset artifact, when the publisher
+  /// distributes one.
+  DATASET_CID:string;
+  /// Replayable URL identifying the source material within the dataset.
+  SOURCE_URL:string;
+  /// The exact query, filter, or file selection used.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Unknown terms are never public domain
+  /// and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as the dataset publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// The licence obliges derived works to carry the same terms.
+  SHARE_ALIKE:bool = false;
+  /// The source dataset's own identifier for this volume, verbatim. The
+  /// join key back to the source; never re-minted by the publisher.
+  NATIVE_ID:string (required);
+  /// RFC 3339 UTC date the source last modified this volume, as it states.
+  NATIVE_MODIFIED:string;
+}
+
+/// Airspace Volume
+table AVL {
+  /// Publisher-stable identifier for this volume record. Never the source's
+  /// own identifier, which rides verbatim in SOURCE.NATIVE_ID.
+  ID:string (required);
+  /// Published designator of the volume, verbatim (e.g. an area designator).
+  DESIGNATOR:string;
+  /// Published display name of the volume, verbatim.
+  NAME:string;
+  /// ICAO airspace class.
+  AIRSPACE_CLASS:avlAirspaceClass = UNSPECIFIED;
+  /// Kind of volume.
+  VOLUME_TYPE:avlVolumeType = UNSPECIFIED;
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the source states it.
+  COUNTRY_CODE:string;
+
+  // ---- Vertical extent: value + datum per boundary ----
+  /// Lower vertical limit, metres in FLOOR_DATUM (flight-level number when
+  /// FLOOR_DATUM is FLIGHT_LEVEL; NaN when SURFACE). NaN when unpublished.
+  FLOOR_VALUE:double;
+  /// Datum of FLOOR_VALUE.
+  FLOOR_DATUM:avlVerticalDatum = UNSPECIFIED;
+  /// Upper vertical limit, metres in CEILING_DATUM (flight-level number
+  /// when FLIGHT_LEVEL; NaN when UNLIMITED). NaN when unpublished.
+  CEILING_VALUE:double;
+  /// Datum of CEILING_VALUE.
+  CEILING_DATUM:avlVerticalDatum = UNSPECIFIED;
+
+  // ---- Activity ----
+  /// RFC 3339 UTC fixed-millisecond instant this volume becomes effective.
+  EFFECTIVE_FROM:string;
+  /// RFC 3339 UTC fixed-millisecond instant this volume ceases. Absent for
+  /// a volume with no published end.
+  EFFECTIVE_TO:string;
+  /// Activity schedule verbatim as the source publishes it (NOTAM-style
+  /// text). Never parsed into structure by the publisher: schedule grammar
+  /// is source-specific and coercion would invent activations.
+  TIME_OF_ACTIVITY:string;
+
+  // ---- Packed rings ----
+  /// Vertex longitudes, geodetic degrees in [-180, 180].
+  VERTEX_LONGITUDE_DEG:[double] (required);
+  /// Vertex latitudes, geodetic degrees in [-90, 90]. Same length as
+  /// VERTEX_LONGITUDE_DEG.
+  VERTEX_LATITUDE_DEG:[double] (required);
+  /// Ring start indexes; RING_COUNT + 1 entries, last equals vertex count.
+  RING_OFFSETS:[uint32] (required);
+  /// Polygon each ring belongs to. One entry per ring, so its length is
+  /// RING_OFFSETS length - 1.
+  RING_POLYGON_INDEXES:[uint32] (required);
+  /// Role of each ring. One entry per ring, so its length is RING_OFFSETS
+  /// length - 1.
+  RING_ROLES:[avlRingRole] (required);
+  /// Number of polygons; equals max(RING_POLYGON_INDEXES) + 1, published so
+  /// an empty geometry is distinguishable from an unpopulated record.
+  POLYGON_COUNT:uint32;
+
+  // ---- Declared geometry transforms ----
+  /// The source's arc or circle boundary segments were densified into the
+  /// vertices above by the ingest.
+  ARC_DENSIFIED:bool = false;
+  /// Maximum deviation, metres, between a densified chord and the published
+  /// arc. Required knowledge when ARC_DENSIFIED; NaN otherwise.
+  DENSIFICATION_TOLERANCE_M:double;
+
+  /// Dataset lineage and licence. Required.
+  SOURCE:AVLProvenance (required);
+}
+
+root_type AVL;
+file_identifier "$AVL";

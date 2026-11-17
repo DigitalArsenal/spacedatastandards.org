@@ -1,0 +1,124 @@
+// Hash: ae3d2d52a501570ae34eddbece952dc023b4c84a562c81d3071ae50abb3af4e1
+// Version: 0.0.4
+// -----------------------------------END_HEADER
+enum CmsModulationType : byte {
+  BPSK,
+  QPSK,
+  OQPSK,
+  PSK8,
+  QAM16,
+  QAM64,
+  FSK,
+  MSK,
+  GMSK,
+  AM,
+  FM,
+  PM,
+  SPREAD_SPECTRUM,
+  DVB_S2,
+  DVB_S2X
+}
+
+enum encryptionType : byte {
+  NONE,
+  DES,
+  TRIPLE_DES,
+  AES_128,
+  AES_256,
+  TYPE_1,
+  TYPE_2,
+  CUSTOM
+}
+
+/// Transponder Channel
+table commsChannel {
+  /// Channel identifier
+  CHANNEL_ID:string;
+  /// Channel name
+  NAME:string;
+  /// Uplink frequency in MHz
+  UPLINK_FREQ:double;
+  /// Downlink frequency in MHz
+  DOWNLINK_FREQ:double;
+  /// Channel bandwidth in MHz
+  BANDWIDTH:double;
+  /// Modulation type
+  MODULATION:CmsModulationType;
+  /// Data rate in Mbps
+  DATA_RATE:double;
+  /// Encryption method
+  ENCRYPTION:encryptionType;
+  /// Forward error correction coding rate (e.g., 0.5, 0.75)
+  FEC_RATE:double;
+  /// Channel power in dBW
+  POWER:double;
+}
+
+/// Transponder
+table commsTransponder {
+  /// Transponder identifier
+  TRANSPONDER_ID:string;
+  /// Transponder name
+  NAME:string;
+  /// Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
+  TYPE:string;
+  /// Operating band (e.g., C, Ku, Ka, L, S, X)
+  BAND:string;
+  /// Uplink frequency range minimum in MHz
+  UPLINK_FREQ_MIN:double;
+  /// Uplink frequency range maximum in MHz
+  UPLINK_FREQ_MAX:double;
+  /// Downlink frequency range minimum in MHz
+  DOWNLINK_FREQ_MIN:double;
+  /// Downlink frequency range maximum in MHz
+  DOWNLINK_FREQ_MAX:double;
+  /// Saturated EIRP in dBW
+  EIRP:double;
+  /// G/T in dB/K
+  G_OVER_T:double;
+  /// Total bandwidth in MHz
+  BANDWIDTH:double;
+  /// Number of channels
+  NUM_CHANNELS:uint;
+  /// Channels on this transponder
+  CHANNELS:[commsChannel];
+  /// Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
+  POLARIZATION:string;
+}
+
+/// Communications Payload
+table CMS {
+  /// Unique identifier
+  ID:string;
+  /// Reference to parent entity
+  ID_ENTITY:string;
+  /// Communications payload name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Parent entity designator
+  ENTITY:string;
+  /// Satellite number
+  SAT_NO:uint32;
+  /// Number of transponders
+  NUM_TRANSPONDERS:uint;
+  /// Transponders
+  TRANSPONDERS:[commsTransponder];
+  /// Total payload power in Watts
+  TOTAL_POWER:double;
+  /// Total payload mass in kg
+  TOTAL_MASS:double;
+  /// Total aggregate bandwidth in MHz
+  TOTAL_BANDWIDTH:double;
+  /// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  MISSION:string;
+  /// Coverage region description
+  COVERAGE:string;
+  /// Design lifetime in years
+  DESIGN_LIFE:double;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type CMS;
+file_identifier "$CMS";

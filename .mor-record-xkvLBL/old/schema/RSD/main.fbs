@@ -1,0 +1,103 @@
+// Hash: f2141818a188e7f0af5f8ff61df84ba1f02c302b3615abb11b89a496f05b75e4
+// Version: 1.193.1
+// -----------------------------------END_HEADER
+include "../RFL/main.fbs";
+
+// Radar Sensitivity and Detection Performance (RSD)
+// Durable statistical performance output. `$SDR` remains runtime detection
+// I/O and `$RDO` remains the observation record.
+
+/// Waveform capability class used for the performance evaluation.
+enum rsdWaveformClass : byte {
+  UNSPECIFIED = 0,
+  CONTINUOUS_WAVE,
+  PULSED,
+  FREQUENCY_MODULATED_CONTINUOUS_WAVE,
+  LINEAR_FREQUENCY_SWEEP,
+  PHASE_CODED,
+  FREQUENCY_AGILE
+}
+
+/// Pulse-integration strategy.
+enum rsdIntegrationStrategy : byte {
+  UNSPECIFIED = 0,
+  SINGLE_PULSE,
+  COHERENT,
+  NONCOHERENT,
+  HYBRID
+}
+
+/// Adaptive threshold strategy.
+enum rsdThresholdStrategy : byte {
+  UNSPECIFIED = 0,
+  NONE,
+  CELL_AVERAGING,
+  GREATEST_OF,
+  SMALLEST_OF,
+  ORDER_STATISTIC,
+  ADAPTIVE
+}
+
+/// Target-amplitude fluctuation class. Names describe behavior rather than a
+/// particular publication or implementation.
+enum rsdTargetFluctuation : byte {
+  UNSPECIFIED = 0,
+  NONFLUCTUATING,
+  SCAN_TO_SCAN_EXPONENTIAL,
+  PULSE_TO_PULSE_EXPONENTIAL,
+  SCAN_TO_SCAN_FOURTH_MOMENT,
+  PULSE_TO_PULSE_FOURTH_MOMENT
+}
+
+/// Radar Sensitivity and Detection Performance
+table RSD {
+  RSD_ID: string (required);
+  NAME: string;
+  SCENARIO_ID: string;
+  SENSOR_ID: string;
+  SNR_ID: string;
+  SDR_ID: string;
+  /// `$APL.APL_ID` supplying the propagation-loss statistics.
+  APL_ID: string;
+  WAVEFORM: rsdWaveformClass = UNSPECIFIED;
+  INTEGRATION: rsdIntegrationStrategy = UNSPECIFIED;
+  CFAR: rsdThresholdStrategy = UNSPECIFIED;
+  TARGET_MODEL: rsdTargetFluctuation = UNSPECIFIED;
+
+  PULSE_COUNT: uint32;
+  CFAR_REFERENCE_CELL_COUNT: uint32;
+  CFAR_GUARD_CELL_COUNT: uint32;
+  CFAR_LOSS_DB: double;
+  TARGET_RCS_M2: double;
+  FALSE_ALARM_PROBABILITY_REQUIREMENT: double;
+  DETECTION_PROBABILITY_REQUIREMENT: double;
+
+  /// Parallel detection-performance curve arrays.
+  RANGE_M: [double] (required);
+  DETECTION_PROBABILITY: [double] (required);
+  FALSE_ALARM_PROBABILITY: [double] (required);
+  SNR_DB: [double] (required);
+
+  MAXIMUM_DETECTION_RANGE_M: double;
+  MINIMUM_DETECTABLE_RCS_M2: double;
+  RANGE_AT_PD_0P5_M: double;
+  RANGE_AT_PD_0P9_M: double;
+  CLUTTER_TO_NOISE_DB: double;
+  PROPAGATION_LOSS_DB: double;
+  JAMMING_TO_SIGNAL_DB: double;
+  BURN_THROUGH_RANGE_M: double;
+
+  PROVENANCE: RFLProvenance (required);
+  COMPUTED_AT: uint64;
+  PRODUCER_ID: string (required);
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type RSD;
+file_identifier "$RSD";

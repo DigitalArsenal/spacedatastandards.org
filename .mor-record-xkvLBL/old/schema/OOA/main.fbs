@@ -1,0 +1,43 @@
+// Hash: 129e7e88fd73253d457497aab2bbe6c136b19747f23beef6adecf7f55aac837a
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Antenna
+table OOA {
+  /// Unique identifier
+  ID:string;
+  /// Reference to parent on-orbit object
+  ID_ON_ORBIT:string;
+  /// Reference to antenna specification
+  ID_ANTENNA:string;
+  /// Antenna name or designation
+  NAME:string;
+  /// Antenna type (e.g., PARABOLIC, PHASED_ARRAY, HORN, HELICAL, DIPOLE, PATCH, YAGI)
+  ANTENNA_TYPE:string;
+  /// Number of antennas of this type
+  QUANTITY:uint;
+  /// Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)
+  BAND:string;
+  /// Minimum operating frequency in MHz
+  FREQ_MIN:double;
+  /// Maximum operating frequency in MHz
+  FREQ_MAX:double;
+  /// Antenna gain in dBi
+  GAIN:double;
+  /// Antenna diameter or aperture in meters
+  APERTURE:double;
+  /// Beamwidth in degrees
+  BEAMWIDTH:double;
+  /// Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)
+  POLARIZATION:string;
+  /// Whether the antenna is steerable
+  STEERABLE:bool;
+  /// Maximum slew rate in degrees per second
+  SLEW_RATE:double;
+  /// Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)
+  PURPOSE:string;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type OOA;
+file_identifier "$OOA";

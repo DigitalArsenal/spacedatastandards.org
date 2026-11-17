@@ -1,0 +1,100 @@
+// Hash: cc80b0756da51523b5a5835e43001207edd911703ac17839f500d59fd199c440
+// Version: 1.220.0
+// -----------------------------------END_HEADER
+include "../ENC/main.fbs";
+
+// Sealed Remote Procedure Call (RPC)
+// A signed, encrypted request/response envelope for authenticated commands
+// sent to a node over any transport, including transports that provide no
+// confidentiality or integrity of their own.
+//
+// Construction (normative): ENCRYPT-THEN-SIGN.
+//   1. The sender builds an RPCBody and serializes it size-prefixed.
+//   2. The size-prefixed RPCBody bytes are encrypted per ENCRYPTION ($ENC) and
+//      carried in CIPHERTEXT. ENC.CONTEXT is exactly "RPC/1|request" for a
+//      request and "RPC/1|response" for a response; a receiver rejects any
+//      other value, and rejects a CONTEXT that disagrees with DIRECTION.
+//   3. The sender fills every outer field, then signs (SIGNATURE and
+//      CANONICAL_JSON_SIGNATURE below). $ENC provides confidentiality only;
+//      integrity comes from the signatures, so a receiver verifies BOTH
+//      signatures before decrypting and never acts on unverified plaintext.
+//
+// Request: sealed to the node's advertised encryption public key.
+// Response: sealed to RPCBody.REPLY_KEY of the request using a FRESH ephemeral
+// key, signed by the node's signing key, and echoing the request's
+// REQUEST_NONCE and REQUEST_DIGEST so a response cannot be replayed against,
+// or substituted for, a different request.
+//
+// Anti-replay: a receiver enforces a TIMESTAMP acceptance window and rejects a
+// (SIGNER_PUBLIC_KEY, NONCE) pair it has already accepted within that window.
+//
+// Anti-stripping: RPCBody.SIGNER_KEY_ID repeats the signer identity inside the
+// ciphertext. A receiver rejects an envelope whose decrypted SIGNER_KEY_ID does
+// not identify SIGNER_PUBLIC_KEY, so an attacker who strips the outer
+// signature and re-signs the unchanged ciphertext with their own key fails.
+
+/// Direction of an RPC envelope.
+enum rpcDirection : byte {
+  Request,
+  Response
+}
+
+/// Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.
+table RPCBody {
+  /// Request method verb (for example GET, POST). Empty on a response.
+  METHOD: string;
+  /// Request route, path plus optional query. Empty on a response.
+  ROUTE: string;
+  /// Request or response payload bytes.
+  BODY: [ubyte];
+  /// Four-character file identifier of BODY when BODY is a FlatBuffer,
+  /// `$` included (for example "$EPM"). Empty when BODY is not a FlatBuffer.
+  BODY_FILE_ID: string;
+  /// Response status code. Zero on a request.
+  STATUS: uint16;
+  /// Identifier of the signer's key; MUST identify RPC.SIGNER_PUBLIC_KEY.
+  SIGNER_KEY_ID: [ubyte];
+  /// Request only: public key the response is sealed to.
+  REPLY_KEY: [ubyte];
+  /// Response only: RPC.NONCE of the request being answered.
+  REQUEST_NONCE: [ubyte];
+  /// Response only: SHA-256 (32 bytes) of the complete size-prefixed request
+  /// RPC FlatBuffer as received, signatures included.
+  REQUEST_DIGEST: [ubyte];
+}
+
+/// Sealed Remote Procedure Call envelope (outer, plaintext, signed).
+table RPC {
+  /// Envelope version. This document defines version 1.
+  VERSION: ubyte = 1;
+  /// Request or response.
+  DIRECTION: rpcDirection = Request;
+  /// Encryption header for CIPHERTEXT. CONTEXT is "RPC/1|request" or
+  /// "RPC/1|response" matching DIRECTION.
+  ENCRYPTION: ENC (required);
+  /// Optional session identifier established by a prior sign-in.
+  SESSION_ID: string;
+  /// Optional identifier of the sender's key (routing hint only; the binding
+  /// identity is SIGNER_PUBLIC_KEY checked against RPCBody.SIGNER_KEY_ID).
+  SENDER_KEY_ID: [ubyte];
+  /// Sender clock at signing, milliseconds since the Unix epoch (UTC).
+  TIMESTAMP: uint64;
+  /// Random 16-byte nonce, unique per envelope.
+  NONCE: [ubyte];
+  /// Encrypted size-prefixed RPCBody.
+  CIPHERTEXT: [ubyte] (required);
+  /// Ed25519 public key (32 bytes) that verifies both signatures.
+  SIGNER_PUBLIC_KEY: [ubyte] (required);
+  /// Signature algorithm name. Version 1 defines "Ed25519".
+  SIGNATURE_TYPE: string;
+  /// Ed25519 signature over the size-prefixed FlatBuffer with both 64-byte
+  /// signature payloads zeroed while preserving their vectors and offsets.
+  SIGNATURE: [ubyte] (required);
+  /// Ed25519 signature over canonical JSON with IDL field order and
+  /// capitalization, no insignificant whitespace, and both signature fields
+  /// omitted.
+  CANONICAL_JSON_SIGNATURE: [ubyte] (required);
+}
+
+root_type RPC;
+file_identifier "$RPC";

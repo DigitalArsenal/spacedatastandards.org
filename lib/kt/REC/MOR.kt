@@ -85,12 +85,12 @@ class MOR : Table() {
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     /**
-     * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+     * What this record is (see "Record kinds" and "Rows only" above). An unknown kind: ignore the record.
      */
-    val rowsOnly : Boolean
+    val recordKind : UByte
         get() {
             val o = __offset(14)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
      * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
@@ -289,12 +289,14 @@ class MOR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+     * Epoch of the orbit determination, in the form of EPOCH_UNIX_US. -9223372036854775807 is a sentinel
+     * meaning not stated: the least int64 plus one, because some generated languages read the least int64
+     * itself as a floating-point literal.
      */
     val odEpochUnixUs : Long
         get() {
             val o = __offset(56)
-            return if(o != 0) bb.getLong(o + bb_pos) else Long.MIN_VALUE
+            return if(o != 0) bb.getLong(o + bb_pos) else -9223372036854775807L
         }
     /**
      * Tracks the orbit determination used; -1 when not stated ($OCM 0).
@@ -434,7 +436,8 @@ class MOR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Whether the set is real or test data.
+     * Whether the set is real or test data. A record that does not state it is an operational record of
+     * unstated status; a publisher states it only when it is TEST.
      */
     val messageStatus : UByte
         get() {
@@ -496,7 +499,7 @@ class MOR : Table() {
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
         fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(3, meanElementTheory, 6)
         fun addEPOCHUNIXUS(builder: FlatBufferBuilder, epochUnixUs: Long) = builder.addLong(4, epochUnixUs, 0L)
-        fun addROWSONLY(builder: FlatBufferBuilder, rowsOnly: Boolean) = builder.addBoolean(5, rowsOnly, false)
+        fun addRECORDKIND(builder: FlatBufferBuilder, recordKind: UByte) = builder.addByte(5, recordKind.toByte(), 0)
         fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(6, windows, 0)
         fun startWindowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(24, numElems, 8)
         fun addWINDOWCOEFFHEADS(builder: FlatBufferBuilder, windowCoeffHeads: Int) = builder.addOffset(7, windowCoeffHeads, 0)
@@ -534,7 +537,7 @@ class MOR : Table() {
         fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(23, actualOdSpan, Double.NaN)
         fun addODOBSERVATIONSUSED(builder: FlatBufferBuilder, odObservationsUsed: Int) = builder.addInt(24, odObservationsUsed, -1)
         fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(25, weightedRms, Double.NaN)
-        fun addODEPOCHUNIXUS(builder: FlatBufferBuilder, odEpochUnixUs: Long) = builder.addLong(26, odEpochUnixUs, Long.MIN_VALUE)
+        fun addODEPOCHUNIXUS(builder: FlatBufferBuilder, odEpochUnixUs: Long) = builder.addLong(26, odEpochUnixUs, -9223372036854775807L)
         fun addODTRACKSUSED(builder: FlatBufferBuilder, odTracksUsed: Int) = builder.addInt(27, odTracksUsed, -1)
         fun addDAYSSINCELASTOBS(builder: FlatBufferBuilder, daysSinceLastObs: Double) = builder.addDouble(28, daysSinceLastObs, Double.NaN)
         fun addCOVARIANCEDATA(builder: FlatBufferBuilder, covarianceData: Int) = builder.addOffset(29, covarianceData, 0)

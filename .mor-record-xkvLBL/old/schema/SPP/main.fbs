@@ -1,0 +1,30 @@
+// Hash: 4273614b2c83f9753458492399f636bc04b8b10c23bf47e4a2c32c4bf992bdda
+// Version: 0.0.3
+// -----------------------------------END_HEADER
+enum packetKind : byte {
+  TM,
+  TC
+}
+
+/// Space Packet Protocol (CCSDS 133.0-B-1)
+table SPP {
+  /// Packet version number
+  VERSION:ubyte;
+  /// Packet type (TM or TC)
+  PACKET_TYPE:packetKind;
+  /// Secondary header flag
+  SEC_HDR_FLAG:bool;
+  /// Application Process Identifier
+  APID:ushort;
+  /// Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)
+  SEQUENCE_FLAGS:ubyte;
+  /// Sequence count
+  SEQUENCE_COUNT:ushort;
+  /// Data length minus 1
+  DATA_LENGTH:ushort;
+  /// Packet data zone
+  DATA:[ubyte];
+}
+
+root_type SPP;
+file_identifier "$SPP";

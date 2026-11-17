@@ -1,0 +1,167 @@
+// Hash: d87c836ec91004f3fbe4b79da4ad9c2473c15f5a0cdaa51c2314a13c868833e8
+// Version: 1.169.0
+// -----------------------------------END_HEADER
+/// Breakup event type. Selects the NASA Standard Satellite Breakup Model
+/// (SSBM) branch used to generate the fragment population.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmEventType : byte {
+  UNKNOWN,
+  EXPLOSION,
+  COLLISION
+}
+
+/// Parent object class. Selects the SSBM characteristic-length distribution
+/// coefficients; spacecraft and rocket bodies fragment differently.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmObjectClass : byte {
+  UNKNOWN,
+  SPACECRAFT,
+  ROCKET_BODY
+}
+
+/// Which parent body a fragment was generated from. Always TARGET for an
+/// EXPLOSION event; a COLLISION population carries fragments from both bodies.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmFragmentOrigin : byte {
+  UNKNOWN,
+  TARGET,
+  IMPACTOR
+}
+
+/// One debris fragment produced by a breakup event.
+///
+/// Vector components are expressed in the parent SBM.REF_FRAME axes.
+/// Position and velocity are the fragment's state at SBM.EPOCH, i.e. the
+/// parent state plus the ejection delta-V, before any propagation.
+table sbmFragment {
+  /// Which parent body this fragment came from.
+  ORIGIN:sbmFragmentOrigin;
+  /// Characteristic length L_c in meters.
+  L_C_M:double;
+  /// Area-to-mass ratio in square meters per kilogram.
+  AM_RATIO_M2_PER_KG:double;
+  /// Average cross-sectional area in square meters.
+  AREA_M2:double;
+  /// Fragment mass in kilograms.
+  MASS_KG:double;
+  /// Magnitude of the ejection delta-V in meters per second.
+  DELTA_V_MAG_M_PER_S:double;
+  /// Ejection delta-V X component in meters per second.
+  DELTA_V_X_M_PER_S:double;
+  /// Ejection delta-V Y component in meters per second.
+  DELTA_V_Y_M_PER_S:double;
+  /// Ejection delta-V Z component in meters per second.
+  DELTA_V_Z_M_PER_S:double;
+  /// Fragment position X component in kilometers.
+  POSITION_X_KM:double;
+  /// Fragment position Y component in kilometers.
+  POSITION_Y_KM:double;
+  /// Fragment position Z component in kilometers.
+  POSITION_Z_KM:double;
+  /// Fragment velocity X component in kilometers per second.
+  VELOCITY_X_KM_PER_S:double;
+  /// Fragment velocity Y component in kilometers per second.
+  VELOCITY_Y_KM_PER_S:double;
+  /// Fragment velocity Z component in kilometers per second.
+  VELOCITY_Z_KM_PER_S:double;
+}
+
+/// Satellite Breakup Model
+///
+/// One SBM record is a single on-orbit fragmentation event — an explosion or
+/// a collision — together with the debris population a breakup model produced
+/// for it. It carries the model inputs (parent states, masses, relative
+/// velocity, object class, cutoff, seed) so the population is reproducible,
+/// and the resulting fragments in FRAGMENTS.
+///
+/// Units on the wire: parent and fragment position are KILOMETERS, parent and
+/// fragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and
+/// $CDM state conventions); ejection delta-V, relative velocity and
+/// characteristic length are METERS PER SECOND and METERS respectively
+/// (matching the breakup-model literature). Every field name states its unit.
+///
+/// This record describes an ON-ORBIT breakup. Atmospheric reentry breakup and
+/// demise stay in $RDM/$REM; a business-loss classification of the event stays
+/// in $OOE.
+table SBM {
+  /// Producer-defined message identifier.
+  MESSAGE_ID:string;
+  /// Message creation date in ISO 8601 UTC format.
+  CREATION_DATE:string;
+  /// Creating agency, application, or service.
+  ORIGINATOR:string;
+  /// Breakup event type.
+  EVENT_TYPE:sbmEventType;
+  /// Parent object class used to select model coefficients.
+  OBJECT_CLASS:sbmObjectClass;
+  /// Event epoch in ISO 8601 UTC format. Fragment states are given at this
+  /// epoch.
+  EPOCH:string;
+  /// Time system used by all epochs.
+  TIME_SYSTEM:string;
+  /// Reference frame for all position, velocity and delta-V components.
+  REF_FRAME:string;
+  /// Target object name.
+  OBJECT_NAME:string;
+  /// Target international designator or producer object identifier.
+  OBJECT_ID:string;
+  /// Target satellite catalog number. Joins to CAT.NORAD_CAT_ID and
+  /// OMM.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID:uint;
+  /// Impactor object name. COLLISION events only.
+  IMPACTOR_OBJECT_NAME:string;
+  /// Impactor satellite catalog number. COLLISION events only. 0 when unbound.
+  IMPACTOR_NORAD_CAT_ID:uint;
+  /// Target mass in kilograms.
+  TARGET_MASS_KG:double;
+  /// Target characteristic length in meters.
+  TARGET_L_C_M:double;
+  /// Impactor mass in kilograms. COLLISION events only.
+  IMPACTOR_MASS_KG:double;
+  /// Impactor characteristic length in meters. COLLISION events only.
+  IMPACTOR_L_C_M:double;
+  /// Collision relative velocity in meters per second. COLLISION events only.
+  RELATIVE_VELOCITY_M_PER_S:double;
+  /// True when the collision energy-to-mass ratio met the catastrophic
+  /// threshold and both bodies were fully fragmented.
+  CATASTROPHIC:bool;
+  /// Parent position X component in kilometers at EPOCH.
+  PARENT_POSITION_X_KM:double;
+  /// Parent position Y component in kilometers at EPOCH.
+  PARENT_POSITION_Y_KM:double;
+  /// Parent position Z component in kilometers at EPOCH.
+  PARENT_POSITION_Z_KM:double;
+  /// Parent velocity X component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_X_KM_PER_S:double;
+  /// Parent velocity Y component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_Y_KM_PER_S:double;
+  /// Parent velocity Z component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_Z_KM_PER_S:double;
+  /// Lower characteristic-length cutoff in meters. Fragments smaller than
+  /// this were not generated.
+  MIN_LC_M:double;
+  /// Random number generator seed. A producer that reports the same
+  /// MODEL_NAME, MODEL_VERSION, inputs and SEED must reproduce FRAGMENTS
+  /// exactly.
+  SEED:uint32;
+  /// Breakup model name, e.g. "NASA_SSBM".
+  MODEL_NAME:string;
+  /// Breakup model implementation version.
+  MODEL_VERSION:string;
+  /// Number of fragments generated. Equals the length of FRAGMENTS when the
+  /// population is carried in this record.
+  FRAGMENT_COUNT:uint;
+  /// Total parent mass fed to the model in kilograms.
+  INPUT_MASS_KG:double;
+  /// Total mass carried by the generated fragments in kilograms.
+  OUTPUT_MASS_KG:double;
+  /// Generated fragment population.
+  FRAGMENTS:[sbmFragment];
+  /// Free-form model assumptions or limitations.
+  ASSUMPTIONS:[string];
+  /// Additional comments.
+  COMMENT:string;
+}
+
+root_type SBM;
+file_identifier "$SBM";

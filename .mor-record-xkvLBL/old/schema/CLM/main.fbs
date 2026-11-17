@@ -1,0 +1,104 @@
+// Hash: 033f524f07523f4b54fb9449a2c65e9029de9e34abeb8393394c5c5ca3880428
+// Version: 1.210.0
+// -----------------------------------END_HEADER
+/// Ownership Claim Record (CLM)
+/// Description
+/// One signed statement by a claimant that it owns, operates or provides a
+/// named object in a shared catalog: a space object, a ground site, a sensor,
+/// or a service offering. A CLM asserts the relationship only; it never
+/// restates the object's own record. The object is referenced by the
+/// identifier that object's standard already publishes, so a claim resolves
+/// without a side table.
+///
+/// The current claim set is a projection over the latest CLM records by
+/// CLAIM_ID, with DELETED records acting as tombstones, in the same way a
+/// trust graph projects over trust edge records.
+///
+/// A claim is self-asserted and carries no authority by itself. SIGNATURE is
+/// the claimant's signature over the canonical form of the record with
+/// SIGNATURE and COUNTERSIGNATURES cleared, matching the signing convention
+/// used by the trust edge record. Other parties may attest to a claim by
+/// appending a countersignature over the same canonical form; consumers decide
+/// which countersigners they accept and must never present an uncountersigned
+/// claim as a verified fact.
+
+/// Class of catalog object a claim is made over. Append new values only; never
+/// reorder or reuse existing values.
+enum clmObjectKind : byte {
+  /// Not stated.
+  Unspecified,
+  /// A space object carried in a space object catalog.
+  Satellite,
+  /// A fixed or mobile ground site.
+  Site,
+  /// An observing sensor.
+  Sensor,
+  /// A service offering published as a listing.
+  Service
+}
+
+/// Relationship the claimant asserts over the object. Append new values only;
+/// never reorder or reuse existing values.
+enum clmClaimRole : byte {
+  /// Not stated.
+  Unspecified,
+  /// The claimant holds title to the object.
+  Owner,
+  /// The claimant operates or commands the object, with or without title.
+  Operator,
+  /// The claimant provides the service the claim references.
+  Provider
+}
+
+/// One party's attestation to a claim, signed over the same canonical form the
+/// claimant signed.
+table CLMCountersignature {
+  /// Peer identifier of the countersigning party.
+  PEER_ID: string (required);
+  /// Content identifier of the countersigning party's identity record.
+  PROFILE_CID: string;
+  /// Unix timestamp in milliseconds when the countersignature was made.
+  SIGNED_AT: uint64;
+  /// Countersignature over the canonical claim form.
+  SIGNATURE: [ubyte];
+}
+
+/// Ownership Claim Record - one claimant's signed statement over one object.
+table CLM {
+  /// Stable claim identifier, normally
+  /// "<CLAIMANT_PEER_ID>:<OBJECT_KIND>:<OBJECT_ID>".
+  CLAIM_ID: string (required);
+  /// Peer identifier of the claiming party.
+  CLAIMANT_PEER_ID: string (required);
+  /// Content identifier of the claiming party's identity record.
+  CLAIMANT_PROFILE_CID: string;
+  /// Class of object being claimed.
+  OBJECT_KIND: clmObjectKind;
+  /// Identifier of the claimed object, in the form its own standard publishes:
+  /// the catalog number or international designator for a space object, the
+  /// site identifier for a site, the sensor identifier for a sensor, the
+  /// listing content identifier for a service.
+  OBJECT_ID: string (required);
+  /// Human-readable name of the claimed object at the time of the claim.
+  OBJECT_NAME: string;
+  /// Relationship asserted over the object.
+  ROLE: clmClaimRole;
+  /// Free-text statement by the claimant, in the claimant's own words.
+  STATEMENT: string;
+  /// Locator of publicly checkable evidence supporting the claim.
+  EVIDENCE_URL: string;
+  /// Unix timestamp in milliseconds when the claim was first made.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds when this record was last updated.
+  UPDATED_AT: uint64;
+  /// True when this record tombstones the claim from the current set.
+  DELETED: bool;
+  /// Claimant signature over the canonical claim form with SIGNATURE and
+  /// COUNTERSIGNATURES cleared.
+  SIGNATURE: [ubyte];
+  /// Attestations to this claim by other parties.
+  COUNTERSIGNATURES: [CLMCountersignature];
+}
+
+root_type CLM;
+file_identifier "$CLM";
