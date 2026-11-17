@@ -465,6 +465,256 @@ class ACWStateSampleObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Body-fixed to STATES-frame rotation at one epoch.
+class ACWOrientationSample {
+  ACWOrientationSample._(this._bc, this._bcOffset);
+  factory ACWOrientationSample(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACWOrientationSample> reader = _ACWOrientationSampleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Sample epoch as Julian Date in TT.
+  double get JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get julianDateTt => JULIAN_DATE_TT;
+  ///  Quaternion rotating body-fixed axes into the STATES frame
+  ///  (Earth-fixed); vector part Q1..Q3, scalar QC.
+  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+
+  @override
+  String toString() {
+    return 'ACWOrientationSample{julianDateTt: ${julianDateTt}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC: ${QC}}';
+  }
+}
+
+class _ACWOrientationSampleReader extends fb.TableReader<ACWOrientationSample> {
+  const _ACWOrientationSampleReader();
+
+  @override
+  ACWOrientationSample createObject(fb.BufferContext bc, int offset) =>
+    ACWOrientationSample._(bc, offset);
+}
+
+class ACWOrientationSampleBuilder {
+  ACWOrientationSampleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addJulianDateTt(double? JULIAN_DATE_TT) {
+    fbBuilder.addFloat64(0, JULIAN_DATE_TT);
+    return fbBuilder.offset;
+  }
+  int addQ1(double? Q1) {
+    fbBuilder.addFloat64(1, Q1);
+    return fbBuilder.offset;
+  }
+  int addQ2(double? Q2) {
+    fbBuilder.addFloat64(2, Q2);
+    return fbBuilder.offset;
+  }
+  int addQ3(double? Q3) {
+    fbBuilder.addFloat64(3, Q3);
+    return fbBuilder.offset;
+  }
+  int addQc(double? QC) {
+    fbBuilder.addFloat64(4, QC);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACWOrientationSampleObjectBuilder extends fb.ObjectBuilder {
+  final double? _JULIAN_DATE_TT;
+  final double? _Q1;
+  final double? _Q2;
+  final double? _Q3;
+  final double? _QC;
+
+  ACWOrientationSampleObjectBuilder({
+    double? JULIAN_DATE_TT,
+    double? julianDateTt,
+    double? Q1,
+    double? Q2,
+    double? Q3,
+    double? QC,
+  })
+      : _JULIAN_DATE_TT = julianDateTt ?? JULIAN_DATE_TT,
+        _Q1 = Q1,
+        _Q2 = Q2,
+        _Q3 = Q3,
+        _QC = QC;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(5);
+    fbBuilder.addFloat64(0, _JULIAN_DATE_TT);
+    fbBuilder.addFloat64(1, _Q1);
+    fbBuilder.addFloat64(2, _Q2);
+    fbBuilder.addFloat64(3, _Q3);
+    fbBuilder.addFloat64(4, _QC);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A body other than the central body that may block a line of sight.
+class ACWOccultingBody {
+  ACWOccultingBody._(this._bc, this._bcOffset);
+  factory ACWOccultingBody(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ACWOccultingBody> reader = _ACWOccultingBodyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+  ///  body (399) are invalid here.
+  int get BODY_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get bodyNaifId => BODY_NAIF_ID;
+  ///  Radii along the body-fixed x, y, z axes, meters. All > 0.
+  double get SEMI_MAJOR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get semiMajorM => SEMI_MAJOR_M;
+  double get SEMI_INTERMEDIATE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get semiIntermediateM => SEMI_INTERMEDIATE_M;
+  double get SEMI_MINOR_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get semiMinorM => SEMI_MINOR_M;
+  ///  Body-center states in the STATES frame and time scale, interpolated
+  ///  to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+  ///  or MOON_STATES; required for every other body.
+  List<ACWStateSample>? get STATES => const fb.ListReader<ACWStateSample>(ACWStateSample.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Orientation samples, interpolated to sample epochs. Absent only when
+  ///  the three radii are equal (a sphere).
+  List<ACWOrientationSample>? get ORIENTATION => const fb.ListReader<ACWOrientationSample>(ACWOrientationSample.reader).vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'ACWOccultingBody{bodyNaifId: ${bodyNaifId}, semiMajorM: ${semiMajorM}, semiIntermediateM: ${semiIntermediateM}, semiMinorM: ${semiMinorM}, STATES: ${STATES}, ORIENTATION: ${ORIENTATION}}';
+  }
+}
+
+class _ACWOccultingBodyReader extends fb.TableReader<ACWOccultingBody> {
+  const _ACWOccultingBodyReader();
+
+  @override
+  ACWOccultingBody createObject(fb.BufferContext bc, int offset) =>
+    ACWOccultingBody._(bc, offset);
+}
+
+class ACWOccultingBodyBuilder {
+  ACWOccultingBodyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addBodyNaifId(int? BODY_NAIF_ID) {
+    fbBuilder.addInt32(0, BODY_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addSemiMajorM(double? SEMI_MAJOR_M) {
+    fbBuilder.addFloat64(1, SEMI_MAJOR_M);
+    return fbBuilder.offset;
+  }
+  int addSemiIntermediateM(double? SEMI_INTERMEDIATE_M) {
+    fbBuilder.addFloat64(2, SEMI_INTERMEDIATE_M);
+    return fbBuilder.offset;
+  }
+  int addSemiMinorM(double? SEMI_MINOR_M) {
+    fbBuilder.addFloat64(3, SEMI_MINOR_M);
+    return fbBuilder.offset;
+  }
+  int addStatesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addOrientationOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ACWOccultingBodyObjectBuilder extends fb.ObjectBuilder {
+  final int? _BODY_NAIF_ID;
+  final double? _SEMI_MAJOR_M;
+  final double? _SEMI_INTERMEDIATE_M;
+  final double? _SEMI_MINOR_M;
+  final List<ACWStateSampleObjectBuilder>? _STATES;
+  final List<ACWOrientationSampleObjectBuilder>? _ORIENTATION;
+
+  ACWOccultingBodyObjectBuilder({
+    int? BODY_NAIF_ID,
+    int? bodyNaifId,
+    double? SEMI_MAJOR_M,
+    double? semiMajorM,
+    double? SEMI_INTERMEDIATE_M,
+    double? semiIntermediateM,
+    double? SEMI_MINOR_M,
+    double? semiMinorM,
+    List<ACWStateSampleObjectBuilder>? STATES,
+    List<ACWOrientationSampleObjectBuilder>? ORIENTATION,
+  })
+      : _BODY_NAIF_ID = bodyNaifId ?? BODY_NAIF_ID,
+        _SEMI_MAJOR_M = semiMajorM ?? SEMI_MAJOR_M,
+        _SEMI_INTERMEDIATE_M = semiIntermediateM ?? SEMI_INTERMEDIATE_M,
+        _SEMI_MINOR_M = semiMinorM ?? SEMI_MINOR_M,
+        _STATES = STATES,
+        _ORIENTATION = ORIENTATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STATESOffset = _STATES == null ? null
+        : fbBuilder.writeList(_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ORIENTATIONOffset = _ORIENTATION == null ? null
+        : fbBuilder.writeList(_ORIENTATION!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addInt32(0, _BODY_NAIF_ID);
+    fbBuilder.addFloat64(1, _SEMI_MAJOR_M);
+    fbBuilder.addFloat64(2, _SEMI_INTERMEDIATE_M);
+    fbBuilder.addFloat64(3, _SEMI_MINOR_M);
+    fbBuilder.addOffset(4, STATESOffset);
+    fbBuilder.addOffset(5, ORIENTATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Azimuth-dependent minimum elevation mask point.
 class ACWElevationMaskPoint {
   ACWElevationMaskPoint._(this._bc, this._bcOffset);
@@ -2144,10 +2394,14 @@ class ACWRequest {
   double get startJulianDateTt => START_JULIAN_DATE_TT;
   double get END_JULIAN_DATE_TT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
   double get endJulianDateTt => END_JULIAN_DATE_TT;
+  ///  Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  ///  tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  List<ACWOccultingBody>? get OCCULTING_BODIES => const fb.ListReader<ACWOccultingBody>(ACWOccultingBody.reader).vTableGetNullable(_bc, _bcOffset, 46);
+  List<ACWOccultingBody>? get occultingBodies => OCCULTING_BODIES;
 
   @override
   String toString() {
-    return 'ACWRequest{OPERATION: ${OPERATION}, groundStations: ${groundStations}, STATES: ${STATES}, targetStationId: ${targetStationId}, minElevationOverrideRad: ${minElevationOverrideRad}, traceId: ${traceId}, elevationMask: ${elevationMask}, refractionModel: ${refractionModel}, CONSTRAINTS: ${CONSTRAINTS}, OBSERVERS: ${OBSERVERS}, evaluationMode: ${evaluationMode}, rootToleranceS: ${rootToleranceS}, sunStates: ${sunStates}, moonStates: ${moonStates}, TARGETS: ${TARGETS}, SENSORS: ${SENSORS}, ACCESS: ${ACCESS}, earthOrientation: ${earthOrientation}, randomSeed: ${randomSeed}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}}';
+    return 'ACWRequest{OPERATION: ${OPERATION}, groundStations: ${groundStations}, STATES: ${STATES}, targetStationId: ${targetStationId}, minElevationOverrideRad: ${minElevationOverrideRad}, traceId: ${traceId}, elevationMask: ${elevationMask}, refractionModel: ${refractionModel}, CONSTRAINTS: ${CONSTRAINTS}, OBSERVERS: ${OBSERVERS}, evaluationMode: ${evaluationMode}, rootToleranceS: ${rootToleranceS}, sunStates: ${sunStates}, moonStates: ${moonStates}, TARGETS: ${TARGETS}, SENSORS: ${SENSORS}, ACCESS: ${ACCESS}, earthOrientation: ${earthOrientation}, randomSeed: ${randomSeed}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, occultingBodies: ${occultingBodies}}';
   }
 }
 
@@ -2165,7 +2419,7 @@ class ACWRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(22);
   }
 
   int addOperation(acwOperationCode? OPERATION) {
@@ -2252,6 +2506,10 @@ class ACWRequestBuilder {
     fbBuilder.addFloat64(20, END_JULIAN_DATE_TT);
     return fbBuilder.offset;
   }
+  int addOccultingBodiesOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2280,6 +2538,7 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
   final int? _RANDOM_SEED;
   final double? _START_JULIAN_DATE_TT;
   final double? _END_JULIAN_DATE_TT;
+  final List<ACWOccultingBodyObjectBuilder>? _OCCULTING_BODIES;
 
   ACWRequestObjectBuilder({
     acwOperationCode? OPERATION,
@@ -2317,6 +2576,8 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
     double? startJulianDateTt,
     double? END_JULIAN_DATE_TT,
     double? endJulianDateTt,
+    List<ACWOccultingBodyObjectBuilder>? OCCULTING_BODIES,
+    List<ACWOccultingBodyObjectBuilder>? occultingBodies,
   })
       : _OPERATION = OPERATION,
         _GROUND_STATIONS = groundStations ?? GROUND_STATIONS,
@@ -2338,7 +2599,8 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
         _EARTH_ORIENTATION = earthOrientation ?? EARTH_ORIENTATION,
         _RANDOM_SEED = randomSeed ?? RANDOM_SEED,
         _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
-        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT;
+        _END_JULIAN_DATE_TT = endJulianDateTt ?? END_JULIAN_DATE_TT,
+        _OCCULTING_BODIES = occultingBodies ?? OCCULTING_BODIES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2369,7 +2631,9 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ACCESS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? EARTH_ORIENTATIONOffset = _EARTH_ORIENTATION == null ? null
         : fbBuilder.writeList(_EARTH_ORIENTATION!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(21);
+    final int? OCCULTING_BODIESOffset = _OCCULTING_BODIES == null ? null
+        : fbBuilder.writeList(_OCCULTING_BODIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(22);
     fbBuilder.addInt8(0, _OPERATION?.value);
     fbBuilder.addOffset(1, GROUND_STATIONSOffset);
     fbBuilder.addOffset(2, STATESOffset);
@@ -2391,6 +2655,7 @@ class ACWRequestObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(18, _RANDOM_SEED);
     fbBuilder.addFloat64(19, _START_JULIAN_DATE_TT);
     fbBuilder.addFloat64(20, _END_JULIAN_DATE_TT);
+    fbBuilder.addOffset(21, OCCULTING_BODIESOffset);
     return fbBuilder.endTable();
   }
 
@@ -2455,10 +2720,17 @@ class ACWAccessWindow {
   ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
   bool get EDGES_REFINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
   bool get edgesRefined => EDGES_REFINED;
+  ///  NAIF code of the body whose occultation opens the window (399 for the
+  ///  central body); 0 when the opening edge is not an occultation.
+  int get START_OCCULTING_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get startOccultingBodyId => START_OCCULTING_BODY_ID;
+  ///  Same, for the closing edge.
+  int get END_OCCULTING_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get endOccultingBodyId => END_OCCULTING_BODY_ID;
 
   @override
   String toString() {
-    return 'ACWAccessWindow{stationId: ${stationId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, maxElevationRad: ${maxElevationRad}, sampleCount: ${sampleCount}, observerId: ${observerId}, startLimitingConstraintIndex: ${startLimitingConstraintIndex}, endLimitingConstraintIndex: ${endLimitingConstraintIndex}, startLimitingConstraintLabel: ${startLimitingConstraintLabel}, endLimitingConstraintLabel: ${endLimitingConstraintLabel}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, edgesRefined: ${edgesRefined}}';
+    return 'ACWAccessWindow{stationId: ${stationId}, startJulianDateTt: ${startJulianDateTt}, endJulianDateTt: ${endJulianDateTt}, maxElevationRad: ${maxElevationRad}, sampleCount: ${sampleCount}, observerId: ${observerId}, startLimitingConstraintIndex: ${startLimitingConstraintIndex}, endLimitingConstraintIndex: ${endLimitingConstraintIndex}, startLimitingConstraintLabel: ${startLimitingConstraintLabel}, endLimitingConstraintLabel: ${endLimitingConstraintLabel}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, edgesRefined: ${edgesRefined}, startOccultingBodyId: ${startOccultingBodyId}, endOccultingBodyId: ${endOccultingBodyId}}';
   }
 }
 
@@ -2476,7 +2748,7 @@ class ACWAccessWindowBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(15);
   }
 
   int addStationIdOffset(int? offset) {
@@ -2531,6 +2803,14 @@ class ACWAccessWindowBuilder {
     fbBuilder.addBool(12, EDGES_REFINED);
     return fbBuilder.offset;
   }
+  int addStartOccultingBodyId(int? START_OCCULTING_BODY_ID) {
+    fbBuilder.addInt32(13, START_OCCULTING_BODY_ID);
+    return fbBuilder.offset;
+  }
+  int addEndOccultingBodyId(int? END_OCCULTING_BODY_ID) {
+    fbBuilder.addInt32(14, END_OCCULTING_BODY_ID);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2551,6 +2831,8 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
   final double? _MIN_RANGE_M;
   final double? _MAX_RANGE_M;
   final bool? _EDGES_REFINED;
+  final int? _START_OCCULTING_BODY_ID;
+  final int? _END_OCCULTING_BODY_ID;
 
   ACWAccessWindowObjectBuilder({
     String? STATION_ID,
@@ -2579,6 +2861,10 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
     double? maxRangeM,
     bool? EDGES_REFINED,
     bool? edgesRefined,
+    int? START_OCCULTING_BODY_ID,
+    int? startOccultingBodyId,
+    int? END_OCCULTING_BODY_ID,
+    int? endOccultingBodyId,
   })
       : _STATION_ID = stationId ?? STATION_ID,
         _START_JULIAN_DATE_TT = startJulianDateTt ?? START_JULIAN_DATE_TT,
@@ -2592,7 +2878,9 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
         _END_LIMITING_CONSTRAINT_LABEL = endLimitingConstraintLabel ?? END_LIMITING_CONSTRAINT_LABEL,
         _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
         _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
-        _EDGES_REFINED = edgesRefined ?? EDGES_REFINED;
+        _EDGES_REFINED = edgesRefined ?? EDGES_REFINED,
+        _START_OCCULTING_BODY_ID = startOccultingBodyId ?? START_OCCULTING_BODY_ID,
+        _END_OCCULTING_BODY_ID = endOccultingBodyId ?? END_OCCULTING_BODY_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2605,7 +2893,7 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_START_LIMITING_CONSTRAINT_LABEL!);
     final int? END_LIMITING_CONSTRAINT_LABELOffset = _END_LIMITING_CONSTRAINT_LABEL == null ? null
         : fbBuilder.writeString(_END_LIMITING_CONSTRAINT_LABEL!);
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, STATION_IDOffset);
     fbBuilder.addFloat64(1, _START_JULIAN_DATE_TT);
     fbBuilder.addFloat64(2, _END_JULIAN_DATE_TT);
@@ -2619,6 +2907,8 @@ class ACWAccessWindowObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(10, _MIN_RANGE_M);
     fbBuilder.addFloat64(11, _MAX_RANGE_M);
     fbBuilder.addBool(12, _EDGES_REFINED);
+    fbBuilder.addInt32(13, _START_OCCULTING_BODY_ID);
+    fbBuilder.addInt32(14, _END_OCCULTING_BODY_ID);
     return fbBuilder.endTable();
   }
 

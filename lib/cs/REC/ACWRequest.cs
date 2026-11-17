@@ -88,6 +88,10 @@ public struct ACWRequest : IFlatbufferObject
   /// states.
   public double START_JULIAN_DATE_TT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double END_JULIAN_DATE_TT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  public ACWOccultingBody? OCCULTING_BODIES(int j) { int o = __p.__offset(46); return o != 0 ? (ACWOccultingBody?)(new ACWOccultingBody()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int OCCULTING_BODIESLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ACWRequest> CreateACWRequest(FlatBufferBuilder builder,
       acwOperationCode OPERATION = acwOperationCode.UNKNOWN,
@@ -110,13 +114,15 @@ public struct ACWRequest : IFlatbufferObject
       VectorOffset EARTH_ORIENTATIONOffset = default(VectorOffset),
       ulong RANDOM_SEED = 0,
       double START_JULIAN_DATE_TT = 0.0,
-      double END_JULIAN_DATE_TT = 0.0) {
-    builder.StartTable(21);
+      double END_JULIAN_DATE_TT = 0.0,
+      VectorOffset OCCULTING_BODIESOffset = default(VectorOffset)) {
+    builder.StartTable(22);
     ACWRequest.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
     ACWRequest.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
     ACWRequest.AddRANDOM_SEED(builder, RANDOM_SEED);
     ACWRequest.AddROOT_TOLERANCE_S(builder, ROOT_TOLERANCE_S);
     ACWRequest.AddMIN_ELEVATION_OVERRIDE_RAD(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.AddOCCULTING_BODIES(builder, OCCULTING_BODIESOffset);
     ACWRequest.AddEARTH_ORIENTATION(builder, EARTH_ORIENTATIONOffset);
     ACWRequest.AddACCESS(builder, ACCESSOffset);
     ACWRequest.AddSENSORS(builder, SENSORSOffset);
@@ -136,7 +142,7 @@ public struct ACWRequest : IFlatbufferObject
     return ACWRequest.EndACWRequest(builder);
   }
 
-  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartACWRequest(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddOPERATION(FlatBufferBuilder builder, acwOperationCode OPERATION) { builder.AddSbyte(0, (sbyte)OPERATION, 0); }
   public static void AddGROUND_STATIONS(FlatBufferBuilder builder, VectorOffset GROUND_STATIONSOffset) { builder.AddOffset(1, GROUND_STATIONSOffset.Value, 0); }
   public static VectorOffset CreateGROUND_STATIONSVector(FlatBufferBuilder builder, Offset<ACWGroundStation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -208,6 +214,12 @@ public struct ACWRequest : IFlatbufferObject
   public static void AddRANDOM_SEED(FlatBufferBuilder builder, ulong RANDOM_SEED) { builder.AddUlong(18, RANDOM_SEED, 0); }
   public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(19, START_JULIAN_DATE_TT, 0.0); }
   public static void AddEND_JULIAN_DATE_TT(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.AddDouble(20, END_JULIAN_DATE_TT, 0.0); }
+  public static void AddOCCULTING_BODIES(FlatBufferBuilder builder, VectorOffset OCCULTING_BODIESOffset) { builder.AddOffset(21, OCCULTING_BODIESOffset.Value, 0); }
+  public static VectorOffset CreateOCCULTING_BODIESVector(FlatBufferBuilder builder, Offset<ACWOccultingBody>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOCCULTING_BODIESVectorBlock(FlatBufferBuilder builder, Offset<ACWOccultingBody>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOCCULTING_BODIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ACWOccultingBody>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOCCULTING_BODIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ACWOccultingBody>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOCCULTING_BODIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ACWRequest> EndACWRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWRequest>(o);
@@ -249,6 +261,8 @@ public struct ACWRequest : IFlatbufferObject
     _o.RANDOM_SEED = this.RANDOM_SEED;
     _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT;
     _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT;
+    _o.OCCULTING_BODIES = new List<ACWOccultingBodyT>();
+    for (var _j = 0; _j < this.OCCULTING_BODIESLength; ++_j) {_o.OCCULTING_BODIES.Add(this.OCCULTING_BODIES(_j).HasValue ? this.OCCULTING_BODIES(_j).Value.UnPack() : null);}
   }
   public static Offset<ACWRequest> Pack(FlatBufferBuilder builder, ACWRequestT _o) {
     if (_o == null) return default(Offset<ACWRequest>);
@@ -316,6 +330,12 @@ public struct ACWRequest : IFlatbufferObject
       for (var _j = 0; _j < __EARTH_ORIENTATION.Length; ++_j) { __EARTH_ORIENTATION[_j] = EOP.Pack(builder, _o.EARTH_ORIENTATION[_j]); }
       _EARTH_ORIENTATION = CreateEARTH_ORIENTATIONVector(builder, __EARTH_ORIENTATION);
     }
+    var _OCCULTING_BODIES = default(VectorOffset);
+    if (_o.OCCULTING_BODIES != null) {
+      var __OCCULTING_BODIES = new Offset<ACWOccultingBody>[_o.OCCULTING_BODIES.Count];
+      for (var _j = 0; _j < __OCCULTING_BODIES.Length; ++_j) { __OCCULTING_BODIES[_j] = ACWOccultingBody.Pack(builder, _o.OCCULTING_BODIES[_j]); }
+      _OCCULTING_BODIES = CreateOCCULTING_BODIESVector(builder, __OCCULTING_BODIES);
+    }
     return CreateACWRequest(
       builder,
       _o.OPERATION,
@@ -338,7 +358,8 @@ public struct ACWRequest : IFlatbufferObject
       _EARTH_ORIENTATION,
       _o.RANDOM_SEED,
       _o.START_JULIAN_DATE_TT,
-      _o.END_JULIAN_DATE_TT);
+      _o.END_JULIAN_DATE_TT,
+      _OCCULTING_BODIES);
   }
 }
 
@@ -365,6 +386,7 @@ public class ACWRequestT
   public ulong RANDOM_SEED { get; set; }
   public double START_JULIAN_DATE_TT { get; set; }
   public double END_JULIAN_DATE_TT { get; set; }
+  public List<ACWOccultingBodyT> OCCULTING_BODIES { get; set; }
 
   public ACWRequestT() {
     this.OPERATION = acwOperationCode.UNKNOWN;
@@ -388,6 +410,7 @@ public class ACWRequestT
     this.RANDOM_SEED = 0;
     this.START_JULIAN_DATE_TT = 0.0;
     this.END_JULIAN_DATE_TT = 0.0;
+    this.OCCULTING_BODIES = null;
   }
 }
 
@@ -418,6 +441,7 @@ static public class ACWRequestVerify
       && verifier.VerifyField(tablePos, 40 /*RANDOM_SEED*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*START_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 44 /*END_JULIAN_DATE_TT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 46 /*OCCULTING_BODIES*/, ACWOccultingBodyVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

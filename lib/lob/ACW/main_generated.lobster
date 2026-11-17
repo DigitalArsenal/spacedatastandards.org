@@ -51,7 +51,8 @@ enum acwConstraintKind:
     /// Target illumination state matches LIGHTING.
     acwConstraintKind_TARGET_LIGHTING = 7
     /// Straight-line visibility between observer and target not occulted by the
-    /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+    /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+    /// ACWRequest.OCCULTING_BODIES entry.
     acwConstraintKind_LINE_OF_SIGHT = 8
     /// Outside every observer blackout window.
     acwConstraintKind_BLACKOUT = 9
@@ -95,6 +96,10 @@ enum acwSensorPhenomenology:
     acwSensorPhenomenology_LASER_RANGING = 4
 
 class ACWStateSample
+
+class ACWOrientationSample
+
+class ACWOccultingBody
 
 class ACWElevationMaskPoint
 
@@ -181,6 +186,116 @@ struct ACWStateSampleBuilder:
         return this
     def end():
         return b_.EndObject()
+
+/// Body-fixed to STATES-frame rotation at one epoch.
+class ACWOrientationSample : flatbuffers.handle
+    /// Sample epoch as Julian Date in TT.
+    def JULIAN_DATE_TT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Quaternion rotating body-fixed axes into the STATES frame
+    /// (Earth-fixed); vector part Q1..Q3, scalar QC.
+    def Q1() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    def Q2() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def Q3() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    def QC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+
+def GetRootAsACWOrientationSample(buf:string): return ACWOrientationSample { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACWOrientationSampleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_JULIAN_DATE_TT(JULIAN_DATE_TT:float):
+        b_.PrependFloat64Slot(0, JULIAN_DATE_TT, 0.0)
+        return this
+    def add_Q1(Q1:float):
+        b_.PrependFloat64Slot(1, Q1, 0.0)
+        return this
+    def add_Q2(Q2:float):
+        b_.PrependFloat64Slot(2, Q2, 0.0)
+        return this
+    def add_Q3(Q3:float):
+        b_.PrependFloat64Slot(3, Q3, 0.0)
+        return this
+    def add_QC(QC:float):
+        b_.PrependFloat64Slot(4, QC, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A body other than the central body that may block a line of sight.
+class ACWOccultingBody : flatbuffers.handle
+    /// NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+    /// body (399) are invalid here.
+    def BODY_NAIF_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 4, 0)
+    /// Radii along the body-fixed x, y, z axes, meters. All > 0.
+    def SEMI_MAJOR_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    def SEMI_INTERMEDIATE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    def SEMI_MINOR_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Body-center states in the STATES frame and time scale, interpolated
+    /// to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+    /// or MOON_STATES; required for every other body.
+    def STATES(i:int) -> ACWStateSample:
+        return ACWStateSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Orientation samples, interpolated to sample epochs. Absent only when
+    /// the three radii are equal (a sphere).
+    def ORIENTATION(i:int) -> ACWOrientationSample:
+        return ACWOrientationSample { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+    def ORIENTATION_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAsACWOccultingBody(buf:string): return ACWOccultingBody { buf, flatbuffers.indirect(buf, 0) }
+
+struct ACWOccultingBodyBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_BODY_NAIF_ID(BODY_NAIF_ID:int):
+        b_.PrependInt32Slot(0, BODY_NAIF_ID, 0)
+        return this
+    def add_SEMI_MAJOR_M(SEMI_MAJOR_M:float):
+        b_.PrependFloat64Slot(1, SEMI_MAJOR_M, 0.0)
+        return this
+    def add_SEMI_INTERMEDIATE_M(SEMI_INTERMEDIATE_M:float):
+        b_.PrependFloat64Slot(2, SEMI_INTERMEDIATE_M, 0.0)
+        return this
+    def add_SEMI_MINOR_M(SEMI_MINOR_M:float):
+        b_.PrependFloat64Slot(3, SEMI_MINOR_M, 0.0)
+        return this
+    def add_STATES(STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, STATES)
+        return this
+    def add_ORIENTATION(ORIENTATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, ORIENTATION)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ACWOccultingBodyStartSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWOccultingBodyCreateSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def ACWOccultingBodyStartORIENTATIONVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWOccultingBodyCreateORIENTATIONVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Azimuth-dependent minimum elevation mask point.
 class ACWElevationMaskPoint : flatbuffers.handle
@@ -924,13 +1039,19 @@ class ACWRequest : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
     def END_JULIAN_DATE_TT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+    /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+    def OCCULTING_BODIES(i:int) -> ACWOccultingBody:
+        return ACWOccultingBody { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 46) + i * 4) }
+    def OCCULTING_BODIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 46)
 
 def GetRootAsACWRequest(buf:string): return ACWRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(22)
         return this
     def add_OPERATION(OPERATION:acwOperationCode):
         b_.PrependInt8Slot(0, OPERATION, 0)
@@ -994,6 +1115,9 @@ struct ACWRequestBuilder:
         return this
     def add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT:float):
         b_.PrependFloat64Slot(20, END_JULIAN_DATE_TT, 0.0)
+        return this
+    def add_OCCULTING_BODIES(OCCULTING_BODIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, OCCULTING_BODIES)
         return this
     def end():
         return b_.EndObject()
@@ -1068,6 +1192,13 @@ def ACWRequestCreateEARTHORIENTATIONVector(b_:flatbuffers.builder, v_:[flatbuffe
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+def ACWRequestStartOCCULTINGBODIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ACWRequestCreateOCCULTINGBODIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// One computed access interval.
 class ACWAccessWindow : flatbuffers.handle
     def STATION_ID() -> string:
@@ -1110,13 +1241,20 @@ class ACWAccessWindow : flatbuffers.handle
     /// True when edges were root-refined (CONTINUOUS); false when they are samples.
     def EDGES_REFINED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// NAIF code of the body whose occultation opens the window (399 for the
+    /// central body); 0 when the opening edge is not an occultation.
+    def START_OCCULTING_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 30, 0)
+    /// Same, for the closing edge.
+    def END_OCCULTING_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 32, 0)
 
 def GetRootAsACWAccessWindow(buf:string): return ACWAccessWindow { buf, flatbuffers.indirect(buf, 0) }
 
 struct ACWAccessWindowBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(15)
         return this
     def add_STATION_ID(STATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, STATION_ID)
@@ -1156,6 +1294,12 @@ struct ACWAccessWindowBuilder:
         return this
     def add_EDGES_REFINED(EDGES_REFINED:bool):
         b_.PrependBoolSlot(12, EDGES_REFINED, 0)
+        return this
+    def add_START_OCCULTING_BODY_ID(START_OCCULTING_BODY_ID:int):
+        b_.PrependInt32Slot(13, START_OCCULTING_BODY_ID, 0)
+        return this
+    def add_END_OCCULTING_BODY_ID(END_OCCULTING_BODY_ID:int):
+        b_.PrependInt32Slot(14, END_OCCULTING_BODY_ID, 0)
         return this
     def end():
         return b_.EndObject()

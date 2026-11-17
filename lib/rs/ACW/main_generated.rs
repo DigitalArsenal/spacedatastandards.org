@@ -357,7 +357,8 @@ impl acwConstraintKind {
     /// Target illumination state matches LIGHTING.
     pub const TARGET_LIGHTING: Self = Self(7);
     /// Straight-line visibility between observer and target not occulted by the
-    /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+    /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+    /// ACWRequest.OCCULTING_BODIES entry.
     pub const LINE_OF_SIGHT: Self = Self(8);
     /// Outside every observer blackout window.
     pub const BLACKOUT: Self = Self(9);
@@ -1160,6 +1161,524 @@ impl ACWStateSampleT {
             VELOCITY_X_MPS,
             VELOCITY_Y_MPS,
             VELOCITY_Z_MPS,
+        })
+    }
+}
+
+pub enum ACWOrientationSampleOffset {}
+
+/// Body-fixed to STATES-frame rotation at one epoch.
+#[derive(Copy, Clone, PartialEq)]
+pub struct ACWOrientationSample<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACWOrientationSample<'a> {
+    type Inner = ACWOrientationSample<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> ACWOrientationSample<'a> {
+    pub const VT_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_Q1: ::flatbuffers::VOffsetT = 6;
+    pub const VT_Q2: ::flatbuffers::VOffsetT = 8;
+    pub const VT_Q3: ::flatbuffers::VOffsetT = 10;
+    pub const VT_QC: ::flatbuffers::VOffsetT = 12;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        ACWOrientationSample { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args ACWOrientationSampleArgs
+    ) -> ::flatbuffers::WIPOffset<ACWOrientationSample<'bldr>> {
+        let mut builder = ACWOrientationSampleBuilder::new(_fbb);
+        builder.add_QC(args.QC);
+        builder.add_Q3(args.Q3);
+        builder.add_Q2(args.Q2);
+        builder.add_Q1(args.Q1);
+        builder.add_JULIAN_DATE_TT(args.JULIAN_DATE_TT);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> ACWOrientationSampleT {
+        let JULIAN_DATE_TT = self.JULIAN_DATE_TT();
+        let Q1 = self.Q1();
+        let Q2 = self.Q2();
+        let Q3 = self.Q3();
+        let QC = self.QC();
+        ACWOrientationSampleT {
+            JULIAN_DATE_TT,
+            Q1,
+            Q2,
+            Q3,
+            QC,
+        }
+    }
+
+    /// Sample epoch as Julian Date in TT.
+    #[inline]
+    pub fn JULIAN_DATE_TT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOrientationSample::VT_JULIAN_DATE_TT, Some(0.0)).unwrap()}
+    }
+
+    /// Quaternion rotating body-fixed axes into the STATES frame
+    /// (Earth-fixed); vector part Q1..Q3, scalar QC.
+    #[inline]
+    pub fn Q1(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOrientationSample::VT_Q1, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn Q2(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOrientationSample::VT_Q2, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn Q3(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOrientationSample::VT_Q3, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn QC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOrientationSample::VT_QC, Some(0.0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for ACWOrientationSample<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<f64>("JULIAN_DATE_TT", Self::VT_JULIAN_DATE_TT, false)?
+            .visit_field::<f64>("Q1", Self::VT_Q1, false)?
+            .visit_field::<f64>("Q2", Self::VT_Q2, false)?
+            .visit_field::<f64>("Q3", Self::VT_Q3, false)?
+            .visit_field::<f64>("QC", Self::VT_QC, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct ACWOrientationSampleArgs {
+    pub JULIAN_DATE_TT: f64,
+    pub Q1: f64,
+    pub Q2: f64,
+    pub Q3: f64,
+    pub QC: f64,
+}
+
+impl<'a> Default for ACWOrientationSampleArgs {
+    #[inline]
+    fn default() -> Self {
+        ACWOrientationSampleArgs {
+            JULIAN_DATE_TT: 0.0,
+            Q1: 0.0,
+            Q2: 0.0,
+            Q3: 0.0,
+            QC: 0.0,
+        }
+    }
+}
+
+pub struct ACWOrientationSampleBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWOrientationSampleBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_JULIAN_DATE_TT(&mut self, JULIAN_DATE_TT: f64) {
+        self.fbb_.push_slot::<f64>(ACWOrientationSample::VT_JULIAN_DATE_TT, JULIAN_DATE_TT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Q1(&mut self, Q1: f64) {
+        self.fbb_.push_slot::<f64>(ACWOrientationSample::VT_Q1, Q1, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Q2(&mut self, Q2: f64) {
+        self.fbb_.push_slot::<f64>(ACWOrientationSample::VT_Q2, Q2, 0.0);
+    }
+
+    #[inline]
+    pub fn add_Q3(&mut self, Q3: f64) {
+        self.fbb_.push_slot::<f64>(ACWOrientationSample::VT_Q3, Q3, 0.0);
+    }
+
+    #[inline]
+    pub fn add_QC(&mut self, QC: f64) {
+        self.fbb_.push_slot::<f64>(ACWOrientationSample::VT_QC, QC, 0.0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWOrientationSampleBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        ACWOrientationSampleBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<ACWOrientationSample<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for ACWOrientationSample<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("ACWOrientationSample");
+        ds.field("JULIAN_DATE_TT", &self.JULIAN_DATE_TT());
+        ds.field("Q1", &self.Q1());
+        ds.field("Q2", &self.Q2());
+        ds.field("Q3", &self.Q3());
+        ds.field("QC", &self.QC());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACWOrientationSampleT {
+    pub JULIAN_DATE_TT: f64,
+    pub Q1: f64,
+    pub Q2: f64,
+    pub Q3: f64,
+    pub QC: f64,
+}
+
+impl Default for ACWOrientationSampleT {
+    fn default() -> Self {
+        Self {
+            JULIAN_DATE_TT: 0.0,
+            Q1: 0.0,
+            Q2: 0.0,
+            Q3: 0.0,
+            QC: 0.0,
+        }
+    }
+}
+
+impl ACWOrientationSampleT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<ACWOrientationSample<'b>> {
+        let JULIAN_DATE_TT = self.JULIAN_DATE_TT;
+        let Q1 = self.Q1;
+        let Q2 = self.Q2;
+        let Q3 = self.Q3;
+        let QC = self.QC;
+        ACWOrientationSample::create(_fbb, &ACWOrientationSampleArgs{
+            JULIAN_DATE_TT,
+            Q1,
+            Q2,
+            Q3,
+            QC,
+        })
+    }
+}
+
+pub enum ACWOccultingBodyOffset {}
+
+/// A body other than the central body that may block a line of sight.
+#[derive(Copy, Clone, PartialEq)]
+pub struct ACWOccultingBody<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ACWOccultingBody<'a> {
+    type Inner = ACWOccultingBody<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> ACWOccultingBody<'a> {
+    pub const VT_BODY_NAIF_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_SEMI_MAJOR_M: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SEMI_INTERMEDIATE_M: ::flatbuffers::VOffsetT = 8;
+    pub const VT_SEMI_MINOR_M: ::flatbuffers::VOffsetT = 10;
+    pub const VT_STATES: ::flatbuffers::VOffsetT = 12;
+    pub const VT_ORIENTATION: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        ACWOccultingBody { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args ACWOccultingBodyArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<ACWOccultingBody<'bldr>> {
+        let mut builder = ACWOccultingBodyBuilder::new(_fbb);
+        builder.add_SEMI_MINOR_M(args.SEMI_MINOR_M);
+        builder.add_SEMI_INTERMEDIATE_M(args.SEMI_INTERMEDIATE_M);
+        builder.add_SEMI_MAJOR_M(args.SEMI_MAJOR_M);
+        if let Some(x) = args.ORIENTATION { builder.add_ORIENTATION(x); }
+        if let Some(x) = args.STATES { builder.add_STATES(x); }
+        builder.add_BODY_NAIF_ID(args.BODY_NAIF_ID);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> ACWOccultingBodyT {
+        let BODY_NAIF_ID = self.BODY_NAIF_ID();
+        let SEMI_MAJOR_M = self.SEMI_MAJOR_M();
+        let SEMI_INTERMEDIATE_M = self.SEMI_INTERMEDIATE_M();
+        let SEMI_MINOR_M = self.SEMI_MINOR_M();
+        let STATES = self.STATES().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let ORIENTATION = self.ORIENTATION().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        ACWOccultingBodyT {
+            BODY_NAIF_ID,
+            SEMI_MAJOR_M,
+            SEMI_INTERMEDIATE_M,
+            SEMI_MINOR_M,
+            STATES,
+            ORIENTATION,
+        }
+    }
+
+    /// NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+    /// body (399) are invalid here.
+    #[inline]
+    pub fn BODY_NAIF_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(ACWOccultingBody::VT_BODY_NAIF_ID, Some(0)).unwrap()}
+    }
+
+    /// Radii along the body-fixed x, y, z axes, meters. All > 0.
+    #[inline]
+    pub fn SEMI_MAJOR_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOccultingBody::VT_SEMI_MAJOR_M, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SEMI_INTERMEDIATE_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOccultingBody::VT_SEMI_INTERMEDIATE_M, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SEMI_MINOR_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ACWOccultingBody::VT_SEMI_MINOR_M, Some(0.0)).unwrap()}
+    }
+
+    /// Body-center states in the STATES frame and time scale, interpolated
+    /// to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+    /// or MOON_STATES; required for every other body.
+    #[inline]
+    pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>(ACWOccultingBody::VT_STATES, None)}
+    }
+
+    /// Orientation samples, interpolated to sample epochs. Absent only when
+    /// the three radii are equal (a sphere).
+    #[inline]
+    pub fn ORIENTATION(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOrientationSample<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOrientationSample>>>>(ACWOccultingBody::VT_ORIENTATION, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for ACWOccultingBody<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<i32>("BODY_NAIF_ID", Self::VT_BODY_NAIF_ID, false)?
+            .visit_field::<f64>("SEMI_MAJOR_M", Self::VT_SEMI_MAJOR_M, false)?
+            .visit_field::<f64>("SEMI_INTERMEDIATE_M", Self::VT_SEMI_INTERMEDIATE_M, false)?
+            .visit_field::<f64>("SEMI_MINOR_M", Self::VT_SEMI_MINOR_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWStateSample>>>>("STATES", Self::VT_STATES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWOrientationSample>>>>("ORIENTATION", Self::VT_ORIENTATION, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct ACWOccultingBodyArgs<'a> {
+    pub BODY_NAIF_ID: i32,
+    pub SEMI_MAJOR_M: f64,
+    pub SEMI_INTERMEDIATE_M: f64,
+    pub SEMI_MINOR_M: f64,
+    pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWStateSample<'a>>>>>,
+    pub ORIENTATION: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOrientationSample<'a>>>>>,
+}
+
+impl<'a> Default for ACWOccultingBodyArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        ACWOccultingBodyArgs {
+            BODY_NAIF_ID: 0,
+            SEMI_MAJOR_M: 0.0,
+            SEMI_INTERMEDIATE_M: 0.0,
+            SEMI_MINOR_M: 0.0,
+            STATES: None,
+            ORIENTATION: None,
+        }
+    }
+}
+
+pub struct ACWOccultingBodyBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWOccultingBodyBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_BODY_NAIF_ID(&mut self, BODY_NAIF_ID: i32) {
+        self.fbb_.push_slot::<i32>(ACWOccultingBody::VT_BODY_NAIF_ID, BODY_NAIF_ID, 0);
+    }
+
+    #[inline]
+    pub fn add_SEMI_MAJOR_M(&mut self, SEMI_MAJOR_M: f64) {
+        self.fbb_.push_slot::<f64>(ACWOccultingBody::VT_SEMI_MAJOR_M, SEMI_MAJOR_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SEMI_INTERMEDIATE_M(&mut self, SEMI_INTERMEDIATE_M: f64) {
+        self.fbb_.push_slot::<f64>(ACWOccultingBody::VT_SEMI_INTERMEDIATE_M, SEMI_INTERMEDIATE_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SEMI_MINOR_M(&mut self, SEMI_MINOR_M: f64) {
+        self.fbb_.push_slot::<f64>(ACWOccultingBody::VT_SEMI_MINOR_M, SEMI_MINOR_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_STATES(&mut self, STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWStateSample<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWOccultingBody::VT_STATES, STATES);
+    }
+
+    #[inline]
+    pub fn add_ORIENTATION(&mut self, ORIENTATION: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWOrientationSample<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWOccultingBody::VT_ORIENTATION, ORIENTATION);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWOccultingBodyBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        ACWOccultingBodyBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<ACWOccultingBody<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for ACWOccultingBody<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("ACWOccultingBody");
+        ds.field("BODY_NAIF_ID", &self.BODY_NAIF_ID());
+        ds.field("SEMI_MAJOR_M", &self.SEMI_MAJOR_M());
+        ds.field("SEMI_INTERMEDIATE_M", &self.SEMI_INTERMEDIATE_M());
+        ds.field("SEMI_MINOR_M", &self.SEMI_MINOR_M());
+        ds.field("STATES", &self.STATES());
+        ds.field("ORIENTATION", &self.ORIENTATION());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ACWOccultingBodyT {
+    pub BODY_NAIF_ID: i32,
+    pub SEMI_MAJOR_M: f64,
+    pub SEMI_INTERMEDIATE_M: f64,
+    pub SEMI_MINOR_M: f64,
+    pub STATES: Option<alloc::vec::Vec<ACWStateSampleT>>,
+    pub ORIENTATION: Option<alloc::vec::Vec<ACWOrientationSampleT>>,
+}
+
+impl Default for ACWOccultingBodyT {
+    fn default() -> Self {
+        Self {
+            BODY_NAIF_ID: 0,
+            SEMI_MAJOR_M: 0.0,
+            SEMI_INTERMEDIATE_M: 0.0,
+            SEMI_MINOR_M: 0.0,
+            STATES: None,
+            ORIENTATION: None,
+        }
+    }
+}
+
+impl ACWOccultingBodyT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<ACWOccultingBody<'b>> {
+        let BODY_NAIF_ID = self.BODY_NAIF_ID;
+        let SEMI_MAJOR_M = self.SEMI_MAJOR_M;
+        let SEMI_INTERMEDIATE_M = self.SEMI_INTERMEDIATE_M;
+        let SEMI_MINOR_M = self.SEMI_MINOR_M;
+        let STATES = self.STATES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let ORIENTATION = self.ORIENTATION.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        ACWOccultingBody::create(_fbb, &ACWOccultingBodyArgs{
+            BODY_NAIF_ID,
+            SEMI_MAJOR_M,
+            SEMI_INTERMEDIATE_M,
+            SEMI_MINOR_M,
+            STATES,
+            ORIENTATION,
         })
     }
 }
@@ -4460,6 +4979,7 @@ impl<'a> ACWRequest<'a> {
     pub const VT_RANDOM_SEED: ::flatbuffers::VOffsetT = 40;
     pub const VT_START_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 42;
     pub const VT_END_JULIAN_DATE_TT: ::flatbuffers::VOffsetT = 44;
+    pub const VT_OCCULTING_BODIES: ::flatbuffers::VOffsetT = 46;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4477,6 +4997,7 @@ impl<'a> ACWRequest<'a> {
         builder.add_RANDOM_SEED(args.RANDOM_SEED);
         builder.add_ROOT_TOLERANCE_S(args.ROOT_TOLERANCE_S);
         builder.add_MIN_ELEVATION_OVERRIDE_RAD(args.MIN_ELEVATION_OVERRIDE_RAD);
+        if let Some(x) = args.OCCULTING_BODIES { builder.add_OCCULTING_BODIES(x); }
         if let Some(x) = args.EARTH_ORIENTATION { builder.add_EARTH_ORIENTATION(x); }
         if let Some(x) = args.ACCESS { builder.add_ACCESS(x); }
         if let Some(x) = args.SENSORS { builder.add_SENSORS(x); }
@@ -4546,6 +5067,9 @@ impl<'a> ACWRequest<'a> {
         let RANDOM_SEED = self.RANDOM_SEED();
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT();
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT();
+        let OCCULTING_BODIES = self.OCCULTING_BODIES().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         ACWRequestT {
             OPERATION,
             GROUND_STATIONS,
@@ -4568,6 +5092,7 @@ impl<'a> ACWRequest<'a> {
             RANDOM_SEED,
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            OCCULTING_BODIES,
         }
     }
 
@@ -4766,6 +5291,16 @@ impl<'a> ACWRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(ACWRequest::VT_END_JULIAN_DATE_TT, Some(0.0)).unwrap()}
     }
+
+    /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+    /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+    #[inline]
+    pub fn OCCULTING_BODIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOccultingBody<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOccultingBody>>>>(ACWRequest::VT_OCCULTING_BODIES, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWRequest<'_> {
@@ -4795,6 +5330,7 @@ impl ::flatbuffers::Verifiable for ACWRequest<'_> {
             .visit_field::<u64>("RANDOM_SEED", Self::VT_RANDOM_SEED, false)?
             .visit_field::<f64>("START_JULIAN_DATE_TT", Self::VT_START_JULIAN_DATE_TT, false)?
             .visit_field::<f64>("END_JULIAN_DATE_TT", Self::VT_END_JULIAN_DATE_TT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ACWOccultingBody>>>>("OCCULTING_BODIES", Self::VT_OCCULTING_BODIES, false)?
             .finish();
         Ok(())
     }
@@ -4822,6 +5358,7 @@ pub struct ACWRequestArgs<'a> {
     pub RANDOM_SEED: u64,
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub OCCULTING_BODIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ACWOccultingBody<'a>>>>>,
 }
 
 impl<'a> Default for ACWRequestArgs<'a> {
@@ -4849,6 +5386,7 @@ impl<'a> Default for ACWRequestArgs<'a> {
             RANDOM_SEED: 0,
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            OCCULTING_BODIES: None,
         }
     }
 }
@@ -4965,6 +5503,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWRequestBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_OCCULTING_BODIES(&mut self, OCCULTING_BODIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<ACWOccultingBody<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACWRequest::VT_OCCULTING_BODIES, OCCULTING_BODIES);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWRequestBuilder {
@@ -5004,6 +5547,7 @@ impl ::core::fmt::Debug for ACWRequest<'_> {
         ds.field("RANDOM_SEED", &self.RANDOM_SEED());
         ds.field("START_JULIAN_DATE_TT", &self.START_JULIAN_DATE_TT());
         ds.field("END_JULIAN_DATE_TT", &self.END_JULIAN_DATE_TT());
+        ds.field("OCCULTING_BODIES", &self.OCCULTING_BODIES());
         ds.finish()
     }
 }
@@ -5032,6 +5576,7 @@ pub struct ACWRequestT {
     pub RANDOM_SEED: u64,
     pub START_JULIAN_DATE_TT: f64,
     pub END_JULIAN_DATE_TT: f64,
+    pub OCCULTING_BODIES: Option<alloc::vec::Vec<ACWOccultingBodyT>>,
 }
 
 impl Default for ACWRequestT {
@@ -5058,6 +5603,7 @@ impl Default for ACWRequestT {
             RANDOM_SEED: 0,
             START_JULIAN_DATE_TT: 0.0,
             END_JULIAN_DATE_TT: 0.0,
+            OCCULTING_BODIES: None,
         }
     }
 }
@@ -5116,6 +5662,9 @@ impl ACWRequestT {
         let RANDOM_SEED = self.RANDOM_SEED;
         let START_JULIAN_DATE_TT = self.START_JULIAN_DATE_TT;
         let END_JULIAN_DATE_TT = self.END_JULIAN_DATE_TT;
+        let OCCULTING_BODIES = self.OCCULTING_BODIES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         ACWRequest::create(_fbb, &ACWRequestArgs{
             OPERATION,
             GROUND_STATIONS,
@@ -5138,6 +5687,7 @@ impl ACWRequestT {
             RANDOM_SEED,
             START_JULIAN_DATE_TT,
             END_JULIAN_DATE_TT,
+            OCCULTING_BODIES,
         })
     }
 }
@@ -5173,6 +5723,8 @@ impl<'a> ACWAccessWindow<'a> {
     pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 24;
     pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 26;
     pub const VT_EDGES_REFINED: ::flatbuffers::VOffsetT = 28;
+    pub const VT_START_OCCULTING_BODY_ID: ::flatbuffers::VOffsetT = 30;
+    pub const VT_END_OCCULTING_BODY_ID: ::flatbuffers::VOffsetT = 32;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5190,6 +5742,8 @@ impl<'a> ACWAccessWindow<'a> {
         builder.add_MAX_ELEVATION_RAD(args.MAX_ELEVATION_RAD);
         builder.add_END_JULIAN_DATE_TT(args.END_JULIAN_DATE_TT);
         builder.add_START_JULIAN_DATE_TT(args.START_JULIAN_DATE_TT);
+        builder.add_END_OCCULTING_BODY_ID(args.END_OCCULTING_BODY_ID);
+        builder.add_START_OCCULTING_BODY_ID(args.START_OCCULTING_BODY_ID);
         if let Some(x) = args.END_LIMITING_CONSTRAINT_LABEL { builder.add_END_LIMITING_CONSTRAINT_LABEL(x); }
         if let Some(x) = args.START_LIMITING_CONSTRAINT_LABEL { builder.add_START_LIMITING_CONSTRAINT_LABEL(x); }
         builder.add_END_LIMITING_CONSTRAINT_INDEX(args.END_LIMITING_CONSTRAINT_INDEX);
@@ -5223,6 +5777,8 @@ impl<'a> ACWAccessWindow<'a> {
         let MIN_RANGE_M = self.MIN_RANGE_M();
         let MAX_RANGE_M = self.MAX_RANGE_M();
         let EDGES_REFINED = self.EDGES_REFINED();
+        let START_OCCULTING_BODY_ID = self.START_OCCULTING_BODY_ID();
+        let END_OCCULTING_BODY_ID = self.END_OCCULTING_BODY_ID();
         ACWAccessWindowT {
             STATION_ID,
             START_JULIAN_DATE_TT,
@@ -5237,6 +5793,8 @@ impl<'a> ACWAccessWindow<'a> {
             MIN_RANGE_M,
             MAX_RANGE_M,
             EDGES_REFINED,
+            START_OCCULTING_BODY_ID,
+            END_OCCULTING_BODY_ID,
         }
     }
 
@@ -5357,6 +5915,25 @@ impl<'a> ACWAccessWindow<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(ACWAccessWindow::VT_EDGES_REFINED, Some(false)).unwrap()}
     }
+
+    /// NAIF code of the body whose occultation opens the window (399 for the
+    /// central body); 0 when the opening edge is not an occultation.
+    #[inline]
+    pub fn START_OCCULTING_BODY_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(ACWAccessWindow::VT_START_OCCULTING_BODY_ID, Some(0)).unwrap()}
+    }
+
+    /// Same, for the closing edge.
+    #[inline]
+    pub fn END_OCCULTING_BODY_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(ACWAccessWindow::VT_END_OCCULTING_BODY_ID, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
@@ -5378,6 +5955,8 @@ impl ::flatbuffers::Verifiable for ACWAccessWindow<'_> {
             .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
             .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
             .visit_field::<bool>("EDGES_REFINED", Self::VT_EDGES_REFINED, false)?
+            .visit_field::<i32>("START_OCCULTING_BODY_ID", Self::VT_START_OCCULTING_BODY_ID, false)?
+            .visit_field::<i32>("END_OCCULTING_BODY_ID", Self::VT_END_OCCULTING_BODY_ID, false)?
             .finish();
         Ok(())
     }
@@ -5397,6 +5976,8 @@ pub struct ACWAccessWindowArgs<'a> {
     pub MIN_RANGE_M: f64,
     pub MAX_RANGE_M: f64,
     pub EDGES_REFINED: bool,
+    pub START_OCCULTING_BODY_ID: i32,
+    pub END_OCCULTING_BODY_ID: i32,
 }
 
 impl<'a> Default for ACWAccessWindowArgs<'a> {
@@ -5416,6 +5997,8 @@ impl<'a> Default for ACWAccessWindowArgs<'a> {
             MIN_RANGE_M: 0.0,
             MAX_RANGE_M: 0.0,
             EDGES_REFINED: false,
+            START_OCCULTING_BODY_ID: 0,
+            END_OCCULTING_BODY_ID: 0,
         }
     }
 }
@@ -5492,6 +6075,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACWAccessWindowBuilder<'a, 'b
     }
 
     #[inline]
+    pub fn add_START_OCCULTING_BODY_ID(&mut self, START_OCCULTING_BODY_ID: i32) {
+        self.fbb_.push_slot::<i32>(ACWAccessWindow::VT_START_OCCULTING_BODY_ID, START_OCCULTING_BODY_ID, 0);
+    }
+
+    #[inline]
+    pub fn add_END_OCCULTING_BODY_ID(&mut self, END_OCCULTING_BODY_ID: i32) {
+        self.fbb_.push_slot::<i32>(ACWAccessWindow::VT_END_OCCULTING_BODY_ID, END_OCCULTING_BODY_ID, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACWAccessWindowBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ACWAccessWindowBuilder {
@@ -5523,6 +6116,8 @@ impl ::core::fmt::Debug for ACWAccessWindow<'_> {
         ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
         ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
         ds.field("EDGES_REFINED", &self.EDGES_REFINED());
+        ds.field("START_OCCULTING_BODY_ID", &self.START_OCCULTING_BODY_ID());
+        ds.field("END_OCCULTING_BODY_ID", &self.END_OCCULTING_BODY_ID());
         ds.finish()
     }
 }
@@ -5543,6 +6138,8 @@ pub struct ACWAccessWindowT {
     pub MIN_RANGE_M: f64,
     pub MAX_RANGE_M: f64,
     pub EDGES_REFINED: bool,
+    pub START_OCCULTING_BODY_ID: i32,
+    pub END_OCCULTING_BODY_ID: i32,
 }
 
 impl Default for ACWAccessWindowT {
@@ -5561,6 +6158,8 @@ impl Default for ACWAccessWindowT {
             MIN_RANGE_M: 0.0,
             MAX_RANGE_M: 0.0,
             EDGES_REFINED: false,
+            START_OCCULTING_BODY_ID: 0,
+            END_OCCULTING_BODY_ID: 0,
         }
     }
 }
@@ -5591,6 +6190,8 @@ impl ACWAccessWindowT {
         let MIN_RANGE_M = self.MIN_RANGE_M;
         let MAX_RANGE_M = self.MAX_RANGE_M;
         let EDGES_REFINED = self.EDGES_REFINED;
+        let START_OCCULTING_BODY_ID = self.START_OCCULTING_BODY_ID;
+        let END_OCCULTING_BODY_ID = self.END_OCCULTING_BODY_ID;
         ACWAccessWindow::create(_fbb, &ACWAccessWindowArgs{
             STATION_ID,
             START_JULIAN_DATE_TT,
@@ -5605,6 +6206,8 @@ impl ACWAccessWindowT {
             MIN_RANGE_M,
             MAX_RANGE_M,
             EDGES_REFINED,
+            START_OCCULTING_BODY_ID,
+            END_OCCULTING_BODY_ID,
         })
     }
 }

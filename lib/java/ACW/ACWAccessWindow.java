@@ -82,6 +82,15 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
    * True when edges were root-refined (CONTINUOUS); false when they are samples.
    */
   public boolean EDGES_REFINED() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * NAIF code of the body whose occultation opens the window (399 for the
+   * central body); 0 when the opening edge is not an occultation.
+   */
+  public int START_OCCULTING_BODY_ID() { int o = __offset(30); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Same, for the closing edge.
+   */
+  public int END_OCCULTING_BODY_ID() { int o = __offset(32); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createACWAccessWindow(FlatBufferBuilder builder,
       int STATION_IDOffset,
@@ -96,13 +105,17 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
       int END_LIMITING_CONSTRAINT_LABELOffset,
       double MIN_RANGE_M,
       double MAX_RANGE_M,
-      boolean EDGES_REFINED) {
-    builder.startTable(13);
+      boolean EDGES_REFINED,
+      int START_OCCULTING_BODY_ID,
+      int END_OCCULTING_BODY_ID) {
+    builder.startTable(15);
     ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
     ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
     ACWAccessWindow.addMaxElevationRad(builder, MAX_ELEVATION_RAD);
     ACWAccessWindow.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWAccessWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
+    ACWAccessWindow.addEndOccultingBodyId(builder, END_OCCULTING_BODY_ID);
+    ACWAccessWindow.addStartOccultingBodyId(builder, START_OCCULTING_BODY_ID);
     ACWAccessWindow.addEndLimitingConstraintLabel(builder, END_LIMITING_CONSTRAINT_LABELOffset);
     ACWAccessWindow.addStartLimitingConstraintLabel(builder, START_LIMITING_CONSTRAINT_LABELOffset);
     ACWAccessWindow.addEndLimitingConstraintIndex(builder, END_LIMITING_CONSTRAINT_INDEX);
@@ -114,7 +127,7 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
     return ACWAccessWindow.endACWAccessWindow(builder);
   }
 
-  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startACWAccessWindow(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addStationId(FlatBufferBuilder builder, int STATION_IDOffset) { builder.addOffset(0, STATION_IDOffset, 0); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(1, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(2, END_JULIAN_DATE_TT, 0.0); }
@@ -128,6 +141,8 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
   public static void addMinRangeM(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.addDouble(10, MIN_RANGE_M, 0.0); }
   public static void addMaxRangeM(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.addDouble(11, MAX_RANGE_M, 0.0); }
   public static void addEdgesRefined(FlatBufferBuilder builder, boolean EDGES_REFINED) { builder.addBoolean(12, EDGES_REFINED, false); }
+  public static void addStartOccultingBodyId(FlatBufferBuilder builder, int START_OCCULTING_BODY_ID) { builder.addInt(13, START_OCCULTING_BODY_ID, 0); }
+  public static void addEndOccultingBodyId(FlatBufferBuilder builder, int END_OCCULTING_BODY_ID) { builder.addInt(14, END_OCCULTING_BODY_ID, 0); }
   public static int endACWAccessWindow(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

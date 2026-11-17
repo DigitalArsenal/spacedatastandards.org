@@ -1,5 +1,5 @@
-// Hash: 29e529f09e927164c78b97475a9452ae9ca741c7551769b87ce32dc2f8632c5a
-// Version: 0.0.5
+// Hash: 0218c6892a6094c2e8840cbe5faceebbfe1b54f2d4d66ed971dc6049f83cc85b
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
@@ -51,6 +51,36 @@ table ACWStateSample {
   VELOCITY_X_MPS:double;
   VELOCITY_Y_MPS:double;
   VELOCITY_Z_MPS:double;
+}
+
+/// Body-fixed to STATES-frame rotation at one epoch.
+table ACWOrientationSample {
+  /// Sample epoch as Julian Date in TT.
+  JULIAN_DATE_TT:double;
+  /// Quaternion rotating body-fixed axes into the STATES frame
+  /// (Earth-fixed); vector part Q1..Q3, scalar QC.
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+}
+
+/// A body other than the central body that may block a line of sight.
+table ACWOccultingBody {
+  /// NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+  /// body (399) are invalid here.
+  BODY_NAIF_ID:int;
+  /// Radii along the body-fixed x, y, z axes, meters. All > 0.
+  SEMI_MAJOR_M:double;
+  SEMI_INTERMEDIATE_M:double;
+  SEMI_MINOR_M:double;
+  /// Body-center states in the STATES frame and time scale, interpolated
+  /// to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+  /// or MOON_STATES; required for every other body.
+  STATES:[ACWStateSample];
+  /// Orientation samples, interpolated to sample epochs. Absent only when
+  /// the three radii are equal (a sphere).
+  ORIENTATION:[ACWOrientationSample];
 }
 
 /// Azimuth-dependent minimum elevation mask point.
@@ -116,7 +146,8 @@ enum acwConstraintKind : byte {
   /// Target illumination state matches LIGHTING.
   TARGET_LIGHTING = 7,
   /// Straight-line visibility between observer and target not occulted by the
-  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+  /// ACWRequest.OCCULTING_BODIES entry.
   LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
   BLACKOUT = 9
@@ -343,6 +374,9 @@ table ACWRequest {
   /// states.
   START_JULIAN_DATE_TT:double;
   END_JULIAN_DATE_TT:double;
+  /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  OCCULTING_BODIES:[ACWOccultingBody];
 }
 
 /// One computed access interval.
@@ -374,6 +408,11 @@ table ACWAccessWindow {
   MAX_RANGE_M:double;
   /// True when edges were root-refined (CONTINUOUS); false when they are samples.
   EDGES_REFINED:bool;
+  /// NAIF code of the body whose occultation opens the window (399 for the
+  /// central body); 0 when the opening edge is not an occultation.
+  START_OCCULTING_BODY_ID:int;
+  /// Same, for the closing edge.
+  END_OCCULTING_BODY_ID:int;
 }
 
 /// Result for one access-window compute request.

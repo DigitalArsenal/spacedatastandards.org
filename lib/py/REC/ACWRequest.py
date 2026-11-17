@@ -392,8 +392,35 @@ class ACWRequest(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Bodies besides the central body that a LINE_OF_SIGHT constraint also
+    # tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+    # ACWRequest
+    def OCCULTING_BODIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ACWOccultingBody import ACWOccultingBody
+            obj = ACWOccultingBody()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACWRequest
+    def OCCULTING_BODIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACWRequest
+    def OCCULTING_BODIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
 def ACWRequestStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(22)
 
 def Start(builder):
     ACWRequestStart(builder)
@@ -644,6 +671,24 @@ def ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
 def AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT):
     ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
 
+def ACWRequestAddOCCULTING_BODIES(builder, OCCULTING_BODIES):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OCCULTING_BODIES), 0)
+
+def AddOCCULTING_BODIES(builder, OCCULTING_BODIES):
+    ACWRequestAddOCCULTING_BODIES(builder, OCCULTING_BODIES)
+
+def ACWRequestStartOCCULTING_BODIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOCCULTING_BODIESVector(builder, numElems):
+    return ACWRequestStartOCCULTING_BODIESVector(builder, numElems)
+
+def ACWRequestCreateOCCULTING_BODIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOCCULTING_BODIESVector(builder, data):
+    return ACWRequestCreateOCCULTING_BODIESVector(builder, data)
+
 def ACWRequestEnd(builder):
     return builder.EndObject()
 
@@ -654,6 +699,7 @@ import ACWConstraintSet
 import ACWElevationMaskPoint
 import ACWGroundStation
 import ACWObserverTrajectory
+import ACWOccultingBody
 import ACWRefractionModel
 import ACWSensor
 import ACWSensorAccess
@@ -691,6 +737,7 @@ class ACWRequestT(object):
         RANDOM_SEED = 0,
         START_JULIAN_DATE_TT = 0.0,
         END_JULIAN_DATE_TT = 0.0,
+        OCCULTING_BODIES = None,
     ):
         self.OPERATION = OPERATION  # type: int
         self.GROUND_STATIONS = GROUND_STATIONS  # type: Optional[List[ACWGroundStation.ACWGroundStationT]]
@@ -713,6 +760,7 @@ class ACWRequestT(object):
         self.RANDOM_SEED = RANDOM_SEED  # type: int
         self.START_JULIAN_DATE_TT = START_JULIAN_DATE_TT  # type: float
         self.END_JULIAN_DATE_TT = END_JULIAN_DATE_TT  # type: float
+        self.OCCULTING_BODIES = OCCULTING_BODIES  # type: Optional[List[ACWOccultingBody.ACWOccultingBodyT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -828,6 +876,14 @@ class ACWRequestT(object):
         self.RANDOM_SEED = ACWRequest.RANDOM_SEED()
         self.START_JULIAN_DATE_TT = ACWRequest.START_JULIAN_DATE_TT()
         self.END_JULIAN_DATE_TT = ACWRequest.END_JULIAN_DATE_TT()
+        if not ACWRequest.OCCULTING_BODIESIsNone():
+            self.OCCULTING_BODIES = []
+            for i in range(ACWRequest.OCCULTING_BODIESLength()):
+                if ACWRequest.OCCULTING_BODIES(i) is None:
+                    self.OCCULTING_BODIES.append(None)
+                else:
+                    aCWOccultingBody_ = ACWOccultingBody.ACWOccultingBodyT.InitFromObj(ACWRequest.OCCULTING_BODIES(i))
+                    self.OCCULTING_BODIES.append(aCWOccultingBody_)
 
     # ACWRequestT
     def Pack(self, builder):
@@ -919,6 +975,14 @@ class ACWRequestT(object):
             for i in reversed(range(len(self.EARTH_ORIENTATION))):
                 builder.PrependUOffsetTRelative(EARTH_ORIENTATIONlist[i])
             EARTH_ORIENTATION = builder.EndVector()
+        if self.OCCULTING_BODIES is not None:
+            OCCULTING_BODIESlist = []
+            for i in range(len(self.OCCULTING_BODIES)):
+                OCCULTING_BODIESlist.append(self.OCCULTING_BODIES[i].Pack(builder))
+            ACWRequestStartOCCULTING_BODIESVector(builder, len(self.OCCULTING_BODIES))
+            for i in reversed(range(len(self.OCCULTING_BODIES))):
+                builder.PrependUOffsetTRelative(OCCULTING_BODIESlist[i])
+            OCCULTING_BODIES = builder.EndVector()
         ACWRequestStart(builder)
         ACWRequestAddOPERATION(builder, self.OPERATION)
         if self.GROUND_STATIONS is not None:
@@ -955,5 +1019,7 @@ class ACWRequestT(object):
         ACWRequestAddRANDOM_SEED(builder, self.RANDOM_SEED)
         ACWRequestAddSTART_JULIAN_DATE_TT(builder, self.START_JULIAN_DATE_TT)
         ACWRequestAddEND_JULIAN_DATE_TT(builder, self.END_JULIAN_DATE_TT)
+        if self.OCCULTING_BODIES is not None:
+            ACWRequestAddOCCULTING_BODIES(builder, OCCULTING_BODIES)
         ACWRequest = ACWRequestEnd(builder)
         return ACWRequest

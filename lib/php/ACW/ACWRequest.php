@@ -348,22 +348,43 @@ class ACWRequest extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+    /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+    /**
+     * @returnVectorOffset
+     */
+    public function getOCCULTING_BODIES($j)
+    {
+        $o = $this->__offset(46);
+        $obj = new ACWOccultingBody();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOCCULTING_BODIESLength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(21);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWRequest
      */
-    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES, $TARGETS, $SENSORS, $ACCESS, $EARTH_ORIENTATION, $RANDOM_SEED, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT)
+    public static function createACWRequest(FlatBufferBuilder $builder, $OPERATION, $GROUND_STATIONS, $STATES, $TARGET_STATION_ID, $MIN_ELEVATION_OVERRIDE_RAD, $TRACE_ID, $ELEVATION_MASK, $REFRACTION_MODEL, $CONSTRAINTS, $OBSERVERS, $EVALUATION_MODE, $ROOT_TOLERANCE_S, $SUN_STATES, $MOON_STATES, $TARGETS, $SENSORS, $ACCESS, $EARTH_ORIENTATION, $RANDOM_SEED, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $OCCULTING_BODIES)
     {
-        $builder->startObject(21);
+        $builder->startObject(22);
         self::addOPERATION($builder, $OPERATION);
         self::addGROUND_STATIONS($builder, $GROUND_STATIONS);
         self::addSTATES($builder, $STATES);
@@ -385,6 +406,7 @@ class ACWRequest extends Table
         self::addRANDOM_SEED($builder, $RANDOM_SEED);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
+        self::addOCCULTING_BODIES($builder, $OCCULTING_BODIES);
         $o = $builder->endObject();
         return $o;
     }
@@ -837,6 +859,40 @@ class ACWRequest extends Table
     public static function addEND_JULIAN_DATE_TT(FlatBufferBuilder $builder, $END_JULIAN_DATE_TT)
     {
         $builder->addDoubleX(20, $END_JULIAN_DATE_TT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOCCULTING_BODIES(FlatBufferBuilder $builder, $OCCULTING_BODIES)
+    {
+        $builder->addOffsetX(21, $OCCULTING_BODIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOCCULTING_BODIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOCCULTING_BODIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**
