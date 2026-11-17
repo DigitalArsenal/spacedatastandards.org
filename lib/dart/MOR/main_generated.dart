@@ -527,48 +527,56 @@ class MOR {
   ///  Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,
   ///  INTERNATIONAL_DESIGNATOR and ORIGINATOR.
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  The object's name; absent unless a reader copies it into what it writes.
-  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get objectName => OBJECT_NAME;
-  ///  Whether the set is real or test data.
-  morMessageStatus get MESSAGE_STATUS => morMessageStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  morMessageStatus get messageStatus => MESSAGE_STATUS;
+  ///  The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 6));
+  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
   ///  Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
   ///  (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   ///  ways without loss; an instant inside a leap second has no value here.
-  int get EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get epochUnixUs => EPOCH_UNIX_US;
-  ///  The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-  meanElementSource get MEAN_ELEMENT_THEORY => meanElementSource.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 6));
-  meanElementSource get meanElementTheory => MEAN_ELEMENT_THEORY;
+  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  bool get ROWS_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get rowsOnly => ROWS_ONLY;
+  ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+  ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+  ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  ///  A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+  List<MORWindow>? get WINDOWS => const fb.ListReader<MORWindow>(MORWindow.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+  ///  (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+  List<double>? get WINDOW_COEFF_HEADS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get windowCoeffHeads => WINDOW_COEFF_HEADS;
+  ///  The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+  ///  (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+  List<double>? get WINDOW_COEFF_TAILS => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get windowCoeffTails => WINDOW_COEFF_TAILS;
+  ///  The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  ///  publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  ///  record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  int get WINDOW_RECORD_CHECK => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get windowRecordCheck => WINDOW_RECORD_CHECK;
   ///  Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
-  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   double get meanMotion => MEAN_MOTION;
   ///  Eccentricity.
-  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   ///  Inclination, deg.
-  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   ///  Right ascension of the ascending node, deg.
-  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
   double get raOfAscNode => RA_OF_ASC_NODE;
   ///  Argument of pericenter, deg.
-  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
   double get argOfPericenter => ARG_OF_PERICENTER;
   ///  Mean anomaly, deg.
-  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   double get meanAnomaly => MEAN_ANOMALY;
   ///  Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  double get BTERM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get BTERM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
   ///  Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  double get AGOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  ///  BSTAR, 1/Earth radii. SGP4 only.
-  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  ///  MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get meanMotionDot => MEAN_MOTION_DOT;
-  ///  MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get meanMotionDdot => MEAN_MOTION_DDOT;
+  double get AGOM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
   ///  The gravity field the set flies on.
   morGravityField get GRAVITY_FIELD => morGravityField.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 40, 0));
   morGravityField get gravityField => GRAVITY_FIELD;
@@ -578,99 +586,91 @@ class MOR {
   ///  Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
   int get MAXIMUM_ZONAL_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 44, 0);
   int get maximumZonalDegree => MAXIMUM_ZONAL_DEGREE;
-  ///  The solid Earth tide the set flies with.
-  morSolidTideModel get SOLID_TIDES_MODEL => morSolidTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 46, 0));
-  morSolidTideModel get solidTidesModel => SOLID_TIDES_MODEL;
-  ///  The radiation pressure model the set states.
-  morRadiationModel get SOLAR_RAD_PRESSURE => morRadiationModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 48, 0));
-  morRadiationModel get solarRadPressure => SOLAR_RAD_PRESSURE;
   ///  The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
   ///  DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
   ///  (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
-  int get OD_PARAMETERS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get OD_PARAMETERS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 46, 0);
   int get odParameters => OD_PARAMETERS;
   ///  Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
-  int get OD_SOLVED_FOR => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  int get OD_SOLVED_FOR => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 48, 0);
   int get odSolvedFor => OD_SOLVED_FOR;
-  ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-  double get ECOM2_Y0 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get ecom2Y0 => ECOM2_Y0;
   ///  The span of the observations the orbit determination used, days; NaN when not stated.
-  double get ACTUAL_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, double.nan);
+  double get ACTUAL_OD_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, double.nan);
   double get actualOdSpan => ACTUAL_OD_SPAN;
   ///  Observations the orbit determination used; -1 when not stated ($OCM 0).
-  int get OD_OBSERVATIONS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, -1);
+  int get OD_OBSERVATIONS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 52, -1);
   int get odObservationsUsed => OD_OBSERVATIONS_USED;
-  ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
-  int get OD_TRACKS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 60, -1);
-  int get odTracksUsed => OD_TRACKS_USED;
   ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
-  double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, double.nan);
+  double get WEIGHTED_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, double.nan);
   double get weightedRms => WEIGHTED_RMS;
   ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  int get OD_EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 64, -9223372036854775808);
+  int get OD_EPOCH_UNIX_US => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 56, -9223372036854775808);
   int get odEpochUnixUs => OD_EPOCH_UNIX_US;
+  ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  int get OD_TRACKS_USED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, -1);
+  int get odTracksUsed => OD_TRACKS_USED;
   ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
-  double get DAYS_SINCE_LAST_OBS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get DAYS_SINCE_LAST_OBS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, double.nan);
   double get daysSinceLastObs => DAYS_SINCE_LAST_OBS;
   ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
   ///  DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
   ///  position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
   ///  ascending ordinal. Absent: no covariance.
-  List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 62);
   List<double>? get covarianceData => COVARIANCE_DATA;
   ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-  MORCovariancePropagation? get COV_PROPAGATION => MORCovariancePropagation.reader.vTableGetNullable(_bc, _bcOffset, 70);
+  MORCovariancePropagation? get COV_PROPAGATION => MORCovariancePropagation.reader.vTableGetNullable(_bc, _bcOffset, 64);
   MORCovariancePropagation? get covPropagation => COV_PROPAGATION;
   ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
   ///  any producer text: a record read alone flies the same covariance as its $OCM.
-  morCovarianceFloor get COV_FLOOR => morCovarianceFloor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 72, 0));
+  morCovarianceFloor get COV_FLOOR => morCovarianceFloor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0));
   morCovarianceFloor get covFloor => COV_FLOOR;
   ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
-  int get COV_REALISM_ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  int get COV_REALISM_ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 68, 0);
   int get covRealismId => COV_REALISM_ID;
-  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-  ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-  CVR? get COV_REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 76);
-  CVR? get covRealism => COV_REALISM;
   ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
-  covarianceCalibration get COV_CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 78, 0));
+  covarianceCalibration get COV_CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 70, 0));
   covarianceCalibration get covCalibration => COV_CALIBRATION;
-  ///  Identifier of that calibration evidence (a report or record).
-  String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
-  String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
-  ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-  ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-  ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-  ///  A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-  List<MORWindow>? get WINDOWS => const fb.ListReader<MORWindow>(MORWindow.reader).vTableGetNullable(_bc, _bcOffset, 82);
-  ///  The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-  ///  (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-  List<double>? get WINDOW_COEFF_HEADS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 84);
-  List<double>? get windowCoeffHeads => WINDOW_COEFF_HEADS;
-  ///  The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-  ///  (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-  List<double>? get WINDOW_COEFF_TAILS => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 86);
-  List<double>? get windowCoeffTails => WINDOW_COEFF_TAILS;
-  ///  The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-  ///  publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-  ///  record before using the rows: a mismatch voids the rows. With WINDOWS only.
-  int get WINDOW_RECORD_CHECK => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 88, 0);
-  int get windowRecordCheck => WINDOW_RECORD_CHECK;
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   ///  object is this record's. No TARGETER.
-  MPE? get FALLBACK => MPE.reader.vTableGetNullable(_bc, _bcOffset, 90);
-  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  bool get ROWS_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 92, false);
-  bool get rowsOnly => ROWS_ONLY;
+  MPE? get FALLBACK => MPE.reader.vTableGetNullable(_bc, _bcOffset, 72);
+  ///  BSTAR, 1/Earth radii. SGP4 only.
+  double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  ///  MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  double get meanMotionDot => MEAN_MOTION_DOT;
+  ///  MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  double get meanMotionDdot => MEAN_MOTION_DDOT;
+  ///  The solid Earth tide the set flies with.
+  morSolidTideModel get SOLID_TIDES_MODEL => morSolidTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 80, 0));
+  morSolidTideModel get solidTidesModel => SOLID_TIDES_MODEL;
+  ///  The radiation pressure model the set states.
+  morRadiationModel get SOLAR_RAD_PRESSURE => morRadiationModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 82, 0));
+  morRadiationModel get solarRadPressure => SOLAR_RAD_PRESSURE;
+  ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  double get ECOM2_Y0 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  double get ecom2Y0 => ECOM2_Y0;
+  ///  Whether the set is real or test data.
+  morMessageStatus get MESSAGE_STATUS => morMessageStatus.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 86, 0));
+  morMessageStatus get messageStatus => MESSAGE_STATUS;
+  ///  The object's name; absent unless a reader copies it into what it writes.
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  String? get objectName => OBJECT_NAME;
+  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+  CVR? get COV_REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 90);
+  CVR? get covRealism => COV_REALISM;
+  ///  Identifier of that calibration evidence (a report or record).
+  String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
+  String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
 
   @override
   String toString() {
-    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, messageStatus: ${messageStatus}, epochUnixUs: ${epochUnixUs}, meanElementTheory: ${meanElementTheory}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, ecom2Y0: ${ecom2Y0}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covRealism: ${covRealism}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, FALLBACK: ${FALLBACK}, rowsOnly: ${rowsOnly}}';
+    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, meanElementTheory: ${meanElementTheory}, epochUnixUs: ${epochUnixUs}, rowsOnly: ${rowsOnly}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, odTracksUsed: ${odTracksUsed}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covCalibration: ${covCalibration}, FALLBACK: ${FALLBACK}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, ecom2Y0: ${ecom2Y0}, messageStatus: ${messageStatus}, objectName: ${objectName}, covRealism: ${covRealism}, covCalibrationReference: ${covCalibrationReference}}';
   }
 }
 
@@ -703,64 +703,64 @@ class MORBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addObjectNameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addMessageStatus(morMessageStatus? MESSAGE_STATUS) {
-    fbBuilder.addUint8(4, MESSAGE_STATUS?.value);
+  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
+    fbBuilder.addInt8(3, MEAN_ELEMENT_THEORY?.value);
     return fbBuilder.offset;
   }
   int addEpochUnixUs(int? EPOCH_UNIX_US) {
-    fbBuilder.addInt64(5, EPOCH_UNIX_US);
+    fbBuilder.addInt64(4, EPOCH_UNIX_US);
     return fbBuilder.offset;
   }
-  int addMeanElementTheory(meanElementSource? MEAN_ELEMENT_THEORY) {
-    fbBuilder.addInt8(6, MEAN_ELEMENT_THEORY?.value);
+  int addRowsOnly(bool? ROWS_ONLY) {
+    fbBuilder.addBool(5, ROWS_ONLY);
+    return fbBuilder.offset;
+  }
+  int addWindowsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowCoeffHeadsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowCoeffTailsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowRecordCheck(int? WINDOW_RECORD_CHECK) {
+    fbBuilder.addUint64(9, WINDOW_RECORD_CHECK);
     return fbBuilder.offset;
   }
   int addMeanMotion(double? MEAN_MOTION) {
-    fbBuilder.addFloat64(7, MEAN_MOTION);
+    fbBuilder.addFloat64(10, MEAN_MOTION);
     return fbBuilder.offset;
   }
   int addEccentricity(double? ECCENTRICITY) {
-    fbBuilder.addFloat64(8, ECCENTRICITY);
+    fbBuilder.addFloat64(11, ECCENTRICITY);
     return fbBuilder.offset;
   }
   int addInclination(double? INCLINATION) {
-    fbBuilder.addFloat64(9, INCLINATION);
+    fbBuilder.addFloat64(12, INCLINATION);
     return fbBuilder.offset;
   }
   int addRaOfAscNode(double? RA_OF_ASC_NODE) {
-    fbBuilder.addFloat64(10, RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(13, RA_OF_ASC_NODE);
     return fbBuilder.offset;
   }
   int addArgOfPericenter(double? ARG_OF_PERICENTER) {
-    fbBuilder.addFloat64(11, ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(14, ARG_OF_PERICENTER);
     return fbBuilder.offset;
   }
   int addMeanAnomaly(double? MEAN_ANOMALY) {
-    fbBuilder.addFloat64(12, MEAN_ANOMALY);
+    fbBuilder.addFloat64(15, MEAN_ANOMALY);
     return fbBuilder.offset;
   }
   int addBterm(double? BTERM) {
-    fbBuilder.addFloat64(13, BTERM);
+    fbBuilder.addFloat64(16, BTERM);
     return fbBuilder.offset;
   }
   int addAgom(double? AGOM) {
-    fbBuilder.addFloat64(14, AGOM);
-    return fbBuilder.offset;
-  }
-  int addBstar(double? BSTAR) {
-    fbBuilder.addFloat64(15, BSTAR);
-    return fbBuilder.offset;
-  }
-  int addMeanMotionDot(double? MEAN_MOTION_DOT) {
-    fbBuilder.addFloat64(16, MEAN_MOTION_DOT);
-    return fbBuilder.offset;
-  }
-  int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
-    fbBuilder.addFloat64(17, MEAN_MOTION_DDOT);
+    fbBuilder.addFloat64(17, AGOM);
     return fbBuilder.offset;
   }
   int addGravityField(morGravityField? GRAVITY_FIELD) {
@@ -775,100 +775,100 @@ class MORBuilder {
     fbBuilder.addUint8(20, MAXIMUM_ZONAL_DEGREE);
     return fbBuilder.offset;
   }
-  int addSolidTidesModel(morSolidTideModel? SOLID_TIDES_MODEL) {
-    fbBuilder.addUint8(21, SOLID_TIDES_MODEL?.value);
-    return fbBuilder.offset;
-  }
-  int addSolarRadPressure(morRadiationModel? SOLAR_RAD_PRESSURE) {
-    fbBuilder.addUint8(22, SOLAR_RAD_PRESSURE?.value);
-    return fbBuilder.offset;
-  }
   int addOdParameters(int? OD_PARAMETERS) {
-    fbBuilder.addUint32(23, OD_PARAMETERS);
+    fbBuilder.addUint32(21, OD_PARAMETERS);
     return fbBuilder.offset;
   }
   int addOdSolvedFor(int? OD_SOLVED_FOR) {
-    fbBuilder.addUint32(24, OD_SOLVED_FOR);
-    return fbBuilder.offset;
-  }
-  int addEcom2Y0(double? ECOM2_Y0) {
-    fbBuilder.addFloat64(25, ECOM2_Y0);
+    fbBuilder.addUint32(22, OD_SOLVED_FOR);
     return fbBuilder.offset;
   }
   int addActualOdSpan(double? ACTUAL_OD_SPAN) {
-    fbBuilder.addFloat64(26, ACTUAL_OD_SPAN);
+    fbBuilder.addFloat64(23, ACTUAL_OD_SPAN);
     return fbBuilder.offset;
   }
   int addOdObservationsUsed(int? OD_OBSERVATIONS_USED) {
-    fbBuilder.addInt32(27, OD_OBSERVATIONS_USED);
-    return fbBuilder.offset;
-  }
-  int addOdTracksUsed(int? OD_TRACKS_USED) {
-    fbBuilder.addInt32(28, OD_TRACKS_USED);
+    fbBuilder.addInt32(24, OD_OBSERVATIONS_USED);
     return fbBuilder.offset;
   }
   int addWeightedRms(double? WEIGHTED_RMS) {
-    fbBuilder.addFloat64(29, WEIGHTED_RMS);
+    fbBuilder.addFloat64(25, WEIGHTED_RMS);
     return fbBuilder.offset;
   }
   int addOdEpochUnixUs(int? OD_EPOCH_UNIX_US) {
-    fbBuilder.addInt64(30, OD_EPOCH_UNIX_US);
+    fbBuilder.addInt64(26, OD_EPOCH_UNIX_US);
+    return fbBuilder.offset;
+  }
+  int addOdTracksUsed(int? OD_TRACKS_USED) {
+    fbBuilder.addInt32(27, OD_TRACKS_USED);
     return fbBuilder.offset;
   }
   int addDaysSinceLastObs(double? DAYS_SINCE_LAST_OBS) {
-    fbBuilder.addFloat64(31, DAYS_SINCE_LAST_OBS);
+    fbBuilder.addFloat64(28, DAYS_SINCE_LAST_OBS);
     return fbBuilder.offset;
   }
   int addCovarianceDataOffset(int? offset) {
-    fbBuilder.addOffset(32, offset);
+    fbBuilder.addOffset(29, offset);
     return fbBuilder.offset;
   }
   int addCovPropagation(int offset) {
-    fbBuilder.addStruct(33, offset);
+    fbBuilder.addStruct(30, offset);
     return fbBuilder.offset;
   }
   int addCovFloor(morCovarianceFloor? COV_FLOOR) {
-    fbBuilder.addUint8(34, COV_FLOOR?.value);
+    fbBuilder.addUint8(31, COV_FLOOR?.value);
     return fbBuilder.offset;
   }
   int addCovRealismId(int? COV_REALISM_ID) {
-    fbBuilder.addUint16(35, COV_REALISM_ID);
-    return fbBuilder.offset;
-  }
-  int addCovRealismOffset(int? offset) {
-    fbBuilder.addOffset(36, offset);
+    fbBuilder.addUint16(32, COV_REALISM_ID);
     return fbBuilder.offset;
   }
   int addCovCalibration(covarianceCalibration? COV_CALIBRATION) {
-    fbBuilder.addInt8(37, COV_CALIBRATION?.value);
-    return fbBuilder.offset;
-  }
-  int addCovCalibrationReferenceOffset(int? offset) {
-    fbBuilder.addOffset(38, offset);
-    return fbBuilder.offset;
-  }
-  int addWindowsOffset(int? offset) {
-    fbBuilder.addOffset(39, offset);
-    return fbBuilder.offset;
-  }
-  int addWindowCoeffHeadsOffset(int? offset) {
-    fbBuilder.addOffset(40, offset);
-    return fbBuilder.offset;
-  }
-  int addWindowCoeffTailsOffset(int? offset) {
-    fbBuilder.addOffset(41, offset);
-    return fbBuilder.offset;
-  }
-  int addWindowRecordCheck(int? WINDOW_RECORD_CHECK) {
-    fbBuilder.addUint64(42, WINDOW_RECORD_CHECK);
+    fbBuilder.addInt8(33, COV_CALIBRATION?.value);
     return fbBuilder.offset;
   }
   int addFallbackOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addBstar(double? BSTAR) {
+    fbBuilder.addFloat64(35, BSTAR);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDot(double? MEAN_MOTION_DOT) {
+    fbBuilder.addFloat64(36, MEAN_MOTION_DOT);
+    return fbBuilder.offset;
+  }
+  int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
+    fbBuilder.addFloat64(37, MEAN_MOTION_DDOT);
+    return fbBuilder.offset;
+  }
+  int addSolidTidesModel(morSolidTideModel? SOLID_TIDES_MODEL) {
+    fbBuilder.addUint8(38, SOLID_TIDES_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addSolarRadPressure(morRadiationModel? SOLAR_RAD_PRESSURE) {
+    fbBuilder.addUint8(39, SOLAR_RAD_PRESSURE?.value);
+    return fbBuilder.offset;
+  }
+  int addEcom2Y0(double? ECOM2_Y0) {
+    fbBuilder.addFloat64(40, ECOM2_Y0);
+    return fbBuilder.offset;
+  }
+  int addMessageStatus(morMessageStatus? MESSAGE_STATUS) {
+    fbBuilder.addUint8(41, MESSAGE_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addCovRealismOffset(int? offset) {
     fbBuilder.addOffset(43, offset);
     return fbBuilder.offset;
   }
-  int addRowsOnly(bool? ROWS_ONLY) {
-    fbBuilder.addBool(44, ROWS_ONLY);
+  int addCovCalibrationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
 
@@ -881,10 +881,13 @@ class MORObjectBuilder extends fb.ObjectBuilder {
   final int? _NORAD_CAT_ID;
   final String? _INTERNATIONAL_DESIGNATOR;
   final String? _ORIGINATOR;
-  final String? _OBJECT_NAME;
-  final morMessageStatus? _MESSAGE_STATUS;
-  final int? _EPOCH_UNIX_US;
   final meanElementSource? _MEAN_ELEMENT_THEORY;
+  final int? _EPOCH_UNIX_US;
+  final bool? _ROWS_ONLY;
+  final List<MORWindowObjectBuilder>? _WINDOWS;
+  final List<double>? _WINDOW_COEFF_HEADS;
+  final List<double>? _WINDOW_COEFF_TAILS;
+  final int? _WINDOW_RECORD_CHECK;
   final double? _MEAN_MOTION;
   final double? _ECCENTRICITY;
   final double? _INCLINATION;
@@ -893,36 +896,33 @@ class MORObjectBuilder extends fb.ObjectBuilder {
   final double? _MEAN_ANOMALY;
   final double? _BTERM;
   final double? _AGOM;
-  final double? _BSTAR;
-  final double? _MEAN_MOTION_DOT;
-  final double? _MEAN_MOTION_DDOT;
   final morGravityField? _GRAVITY_FIELD;
   final int? _MAXIMUM_TESSERAL_DEGREE;
   final int? _MAXIMUM_ZONAL_DEGREE;
-  final morSolidTideModel? _SOLID_TIDES_MODEL;
-  final morRadiationModel? _SOLAR_RAD_PRESSURE;
   final int? _OD_PARAMETERS;
   final int? _OD_SOLVED_FOR;
-  final double? _ECOM2_Y0;
   final double? _ACTUAL_OD_SPAN;
   final int? _OD_OBSERVATIONS_USED;
-  final int? _OD_TRACKS_USED;
   final double? _WEIGHTED_RMS;
   final int? _OD_EPOCH_UNIX_US;
+  final int? _OD_TRACKS_USED;
   final double? _DAYS_SINCE_LAST_OBS;
   final List<double>? _COVARIANCE_DATA;
   final MORCovariancePropagationObjectBuilder? _COV_PROPAGATION;
   final morCovarianceFloor? _COV_FLOOR;
   final int? _COV_REALISM_ID;
-  final CVRObjectBuilder? _COV_REALISM;
   final covarianceCalibration? _COV_CALIBRATION;
-  final String? _COV_CALIBRATION_REFERENCE;
-  final List<MORWindowObjectBuilder>? _WINDOWS;
-  final List<double>? _WINDOW_COEFF_HEADS;
-  final List<double>? _WINDOW_COEFF_TAILS;
-  final int? _WINDOW_RECORD_CHECK;
   final MPEObjectBuilder? _FALLBACK;
-  final bool? _ROWS_ONLY;
+  final double? _BSTAR;
+  final double? _MEAN_MOTION_DOT;
+  final double? _MEAN_MOTION_DDOT;
+  final morSolidTideModel? _SOLID_TIDES_MODEL;
+  final morRadiationModel? _SOLAR_RAD_PRESSURE;
+  final double? _ECOM2_Y0;
+  final morMessageStatus? _MESSAGE_STATUS;
+  final String? _OBJECT_NAME;
+  final CVRObjectBuilder? _COV_REALISM;
+  final String? _COV_CALIBRATION_REFERENCE;
 
   MORObjectBuilder({
     int? NORAD_CAT_ID,
@@ -930,14 +930,19 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     String? INTERNATIONAL_DESIGNATOR,
     String? internationalDesignator,
     String? ORIGINATOR,
-    String? OBJECT_NAME,
-    String? objectName,
-    morMessageStatus? MESSAGE_STATUS,
-    morMessageStatus? messageStatus,
-    int? EPOCH_UNIX_US,
-    int? epochUnixUs,
     meanElementSource? MEAN_ELEMENT_THEORY,
     meanElementSource? meanElementTheory,
+    int? EPOCH_UNIX_US,
+    int? epochUnixUs,
+    bool? ROWS_ONLY,
+    bool? rowsOnly,
+    List<MORWindowObjectBuilder>? WINDOWS,
+    List<double>? WINDOW_COEFF_HEADS,
+    List<double>? windowCoeffHeads,
+    List<double>? WINDOW_COEFF_TAILS,
+    List<double>? windowCoeffTails,
+    int? WINDOW_RECORD_CHECK,
+    int? windowRecordCheck,
     double? MEAN_MOTION,
     double? meanMotion,
     double? ECCENTRICITY,
@@ -950,37 +955,26 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     double? meanAnomaly,
     double? BTERM,
     double? AGOM,
-    double? BSTAR,
-    double? MEAN_MOTION_DOT,
-    double? meanMotionDot,
-    double? MEAN_MOTION_DDOT,
-    double? meanMotionDdot,
     morGravityField? GRAVITY_FIELD,
     morGravityField? gravityField,
     int? MAXIMUM_TESSERAL_DEGREE,
     int? maximumTesseralDegree,
     int? MAXIMUM_ZONAL_DEGREE,
     int? maximumZonalDegree,
-    morSolidTideModel? SOLID_TIDES_MODEL,
-    morSolidTideModel? solidTidesModel,
-    morRadiationModel? SOLAR_RAD_PRESSURE,
-    morRadiationModel? solarRadPressure,
     int? OD_PARAMETERS,
     int? odParameters,
     int? OD_SOLVED_FOR,
     int? odSolvedFor,
-    double? ECOM2_Y0,
-    double? ecom2Y0,
     double? ACTUAL_OD_SPAN,
     double? actualOdSpan,
     int? OD_OBSERVATIONS_USED,
     int? odObservationsUsed,
-    int? OD_TRACKS_USED,
-    int? odTracksUsed,
     double? WEIGHTED_RMS,
     double? weightedRms,
     int? OD_EPOCH_UNIX_US,
     int? odEpochUnixUs,
+    int? OD_TRACKS_USED,
+    int? odTracksUsed,
     double? DAYS_SINCE_LAST_OBS,
     double? daysSinceLastObs,
     List<double>? COVARIANCE_DATA,
@@ -991,30 +985,39 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     morCovarianceFloor? covFloor,
     int? COV_REALISM_ID,
     int? covRealismId,
-    CVRObjectBuilder? COV_REALISM,
-    CVRObjectBuilder? covRealism,
     covarianceCalibration? COV_CALIBRATION,
     covarianceCalibration? covCalibration,
+    MPEObjectBuilder? FALLBACK,
+    double? BSTAR,
+    double? MEAN_MOTION_DOT,
+    double? meanMotionDot,
+    double? MEAN_MOTION_DDOT,
+    double? meanMotionDdot,
+    morSolidTideModel? SOLID_TIDES_MODEL,
+    morSolidTideModel? solidTidesModel,
+    morRadiationModel? SOLAR_RAD_PRESSURE,
+    morRadiationModel? solarRadPressure,
+    double? ECOM2_Y0,
+    double? ecom2Y0,
+    morMessageStatus? MESSAGE_STATUS,
+    morMessageStatus? messageStatus,
+    String? OBJECT_NAME,
+    String? objectName,
+    CVRObjectBuilder? COV_REALISM,
+    CVRObjectBuilder? covRealism,
     String? COV_CALIBRATION_REFERENCE,
     String? covCalibrationReference,
-    List<MORWindowObjectBuilder>? WINDOWS,
-    List<double>? WINDOW_COEFF_HEADS,
-    List<double>? windowCoeffHeads,
-    List<double>? WINDOW_COEFF_TAILS,
-    List<double>? windowCoeffTails,
-    int? WINDOW_RECORD_CHECK,
-    int? windowRecordCheck,
-    MPEObjectBuilder? FALLBACK,
-    bool? ROWS_ONLY,
-    bool? rowsOnly,
   })
       : _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
         _INTERNATIONAL_DESIGNATOR = internationalDesignator ?? INTERNATIONAL_DESIGNATOR,
         _ORIGINATOR = ORIGINATOR,
-        _OBJECT_NAME = objectName ?? OBJECT_NAME,
-        _MESSAGE_STATUS = messageStatus ?? MESSAGE_STATUS,
-        _EPOCH_UNIX_US = epochUnixUs ?? EPOCH_UNIX_US,
         _MEAN_ELEMENT_THEORY = meanElementTheory ?? MEAN_ELEMENT_THEORY,
+        _EPOCH_UNIX_US = epochUnixUs ?? EPOCH_UNIX_US,
+        _ROWS_ONLY = rowsOnly ?? ROWS_ONLY,
+        _WINDOWS = WINDOWS,
+        _WINDOW_COEFF_HEADS = windowCoeffHeads ?? WINDOW_COEFF_HEADS,
+        _WINDOW_COEFF_TAILS = windowCoeffTails ?? WINDOW_COEFF_TAILS,
+        _WINDOW_RECORD_CHECK = windowRecordCheck ?? WINDOW_RECORD_CHECK,
         _MEAN_MOTION = meanMotion ?? MEAN_MOTION,
         _ECCENTRICITY = ECCENTRICITY,
         _INCLINATION = INCLINATION,
@@ -1023,36 +1026,33 @@ class MORObjectBuilder extends fb.ObjectBuilder {
         _MEAN_ANOMALY = meanAnomaly ?? MEAN_ANOMALY,
         _BTERM = BTERM,
         _AGOM = AGOM,
-        _BSTAR = BSTAR,
-        _MEAN_MOTION_DOT = meanMotionDot ?? MEAN_MOTION_DOT,
-        _MEAN_MOTION_DDOT = meanMotionDdot ?? MEAN_MOTION_DDOT,
         _GRAVITY_FIELD = gravityField ?? GRAVITY_FIELD,
         _MAXIMUM_TESSERAL_DEGREE = maximumTesseralDegree ?? MAXIMUM_TESSERAL_DEGREE,
         _MAXIMUM_ZONAL_DEGREE = maximumZonalDegree ?? MAXIMUM_ZONAL_DEGREE,
-        _SOLID_TIDES_MODEL = solidTidesModel ?? SOLID_TIDES_MODEL,
-        _SOLAR_RAD_PRESSURE = solarRadPressure ?? SOLAR_RAD_PRESSURE,
         _OD_PARAMETERS = odParameters ?? OD_PARAMETERS,
         _OD_SOLVED_FOR = odSolvedFor ?? OD_SOLVED_FOR,
-        _ECOM2_Y0 = ecom2Y0 ?? ECOM2_Y0,
         _ACTUAL_OD_SPAN = actualOdSpan ?? ACTUAL_OD_SPAN,
         _OD_OBSERVATIONS_USED = odObservationsUsed ?? OD_OBSERVATIONS_USED,
-        _OD_TRACKS_USED = odTracksUsed ?? OD_TRACKS_USED,
         _WEIGHTED_RMS = weightedRms ?? WEIGHTED_RMS,
         _OD_EPOCH_UNIX_US = odEpochUnixUs ?? OD_EPOCH_UNIX_US,
+        _OD_TRACKS_USED = odTracksUsed ?? OD_TRACKS_USED,
         _DAYS_SINCE_LAST_OBS = daysSinceLastObs ?? DAYS_SINCE_LAST_OBS,
         _COVARIANCE_DATA = covarianceData ?? COVARIANCE_DATA,
         _COV_PROPAGATION = covPropagation ?? COV_PROPAGATION,
         _COV_FLOOR = covFloor ?? COV_FLOOR,
         _COV_REALISM_ID = covRealismId ?? COV_REALISM_ID,
-        _COV_REALISM = covRealism ?? COV_REALISM,
         _COV_CALIBRATION = covCalibration ?? COV_CALIBRATION,
-        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE,
-        _WINDOWS = WINDOWS,
-        _WINDOW_COEFF_HEADS = windowCoeffHeads ?? WINDOW_COEFF_HEADS,
-        _WINDOW_COEFF_TAILS = windowCoeffTails ?? WINDOW_COEFF_TAILS,
-        _WINDOW_RECORD_CHECK = windowRecordCheck ?? WINDOW_RECORD_CHECK,
         _FALLBACK = FALLBACK,
-        _ROWS_ONLY = rowsOnly ?? ROWS_ONLY;
+        _BSTAR = BSTAR,
+        _MEAN_MOTION_DOT = meanMotionDot ?? MEAN_MOTION_DOT,
+        _MEAN_MOTION_DDOT = meanMotionDdot ?? MEAN_MOTION_DDOT,
+        _SOLID_TIDES_MODEL = solidTidesModel ?? SOLID_TIDES_MODEL,
+        _SOLAR_RAD_PRESSURE = solarRadPressure ?? SOLAR_RAD_PRESSURE,
+        _ECOM2_Y0 = ecom2Y0 ?? ECOM2_Y0,
+        _MESSAGE_STATUS = messageStatus ?? MESSAGE_STATUS,
+        _OBJECT_NAME = objectName ?? OBJECT_NAME,
+        _COV_REALISM = covRealism ?? COV_REALISM,
+        _COV_CALIBRATION_REFERENCE = covCalibrationReference ?? COV_CALIBRATION_REFERENCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1061,68 +1061,68 @@ class MORObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_INTERNATIONAL_DESIGNATOR!);
     final int? ORIGINATOROffset = _ORIGINATOR == null ? null
         : fbBuilder.writeString(_ORIGINATOR!);
-    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
-        : fbBuilder.writeString(_OBJECT_NAME!);
-    final int? COVARIANCE_DATAOffset = _COVARIANCE_DATA == null ? null
-        : fbBuilder.writeListFloat64(_COVARIANCE_DATA!);
-    final int? COV_REALISMOffset = _COV_REALISM?.getOrCreateOffset(fbBuilder);
-    final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
-        : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
     final int? WINDOWSOffset = _WINDOWS == null ? null
         : fbBuilder.writeListOfStructs(_WINDOWS!);
     final int? WINDOW_COEFF_HEADSOffset = _WINDOW_COEFF_HEADS == null ? null
         : fbBuilder.writeListFloat64(_WINDOW_COEFF_HEADS!);
     final int? WINDOW_COEFF_TAILSOffset = _WINDOW_COEFF_TAILS == null ? null
         : fbBuilder.writeListFloat32(_WINDOW_COEFF_TAILS!);
+    final int? COVARIANCE_DATAOffset = _COVARIANCE_DATA == null ? null
+        : fbBuilder.writeListFloat64(_COVARIANCE_DATA!);
     final int? FALLBACKOffset = _FALLBACK?.getOrCreateOffset(fbBuilder);
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? COV_REALISMOffset = _COV_REALISM?.getOrCreateOffset(fbBuilder);
+    final int? COV_CALIBRATION_REFERENCEOffset = _COV_CALIBRATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_COV_CALIBRATION_REFERENCE!);
     fbBuilder.startTable(45);
     fbBuilder.addUint32(0, _NORAD_CAT_ID);
     fbBuilder.addOffset(1, INTERNATIONAL_DESIGNATOROffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
-    fbBuilder.addOffset(3, OBJECT_NAMEOffset);
-    fbBuilder.addUint8(4, _MESSAGE_STATUS?.value);
-    fbBuilder.addInt64(5, _EPOCH_UNIX_US);
-    fbBuilder.addInt8(6, _MEAN_ELEMENT_THEORY?.value);
-    fbBuilder.addFloat64(7, _MEAN_MOTION);
-    fbBuilder.addFloat64(8, _ECCENTRICITY);
-    fbBuilder.addFloat64(9, _INCLINATION);
-    fbBuilder.addFloat64(10, _RA_OF_ASC_NODE);
-    fbBuilder.addFloat64(11, _ARG_OF_PERICENTER);
-    fbBuilder.addFloat64(12, _MEAN_ANOMALY);
-    fbBuilder.addFloat64(13, _BTERM);
-    fbBuilder.addFloat64(14, _AGOM);
-    fbBuilder.addFloat64(15, _BSTAR);
-    fbBuilder.addFloat64(16, _MEAN_MOTION_DOT);
-    fbBuilder.addFloat64(17, _MEAN_MOTION_DDOT);
+    fbBuilder.addInt8(3, _MEAN_ELEMENT_THEORY?.value);
+    fbBuilder.addInt64(4, _EPOCH_UNIX_US);
+    fbBuilder.addBool(5, _ROWS_ONLY);
+    fbBuilder.addOffset(6, WINDOWSOffset);
+    fbBuilder.addOffset(7, WINDOW_COEFF_HEADSOffset);
+    fbBuilder.addOffset(8, WINDOW_COEFF_TAILSOffset);
+    fbBuilder.addUint64(9, _WINDOW_RECORD_CHECK);
+    fbBuilder.addFloat64(10, _MEAN_MOTION);
+    fbBuilder.addFloat64(11, _ECCENTRICITY);
+    fbBuilder.addFloat64(12, _INCLINATION);
+    fbBuilder.addFloat64(13, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(14, _ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(15, _MEAN_ANOMALY);
+    fbBuilder.addFloat64(16, _BTERM);
+    fbBuilder.addFloat64(17, _AGOM);
     fbBuilder.addUint8(18, _GRAVITY_FIELD?.value);
     fbBuilder.addUint8(19, _MAXIMUM_TESSERAL_DEGREE);
     fbBuilder.addUint8(20, _MAXIMUM_ZONAL_DEGREE);
-    fbBuilder.addUint8(21, _SOLID_TIDES_MODEL?.value);
-    fbBuilder.addUint8(22, _SOLAR_RAD_PRESSURE?.value);
-    fbBuilder.addUint32(23, _OD_PARAMETERS);
-    fbBuilder.addUint32(24, _OD_SOLVED_FOR);
-    fbBuilder.addFloat64(25, _ECOM2_Y0);
-    fbBuilder.addFloat64(26, _ACTUAL_OD_SPAN);
-    fbBuilder.addInt32(27, _OD_OBSERVATIONS_USED);
-    fbBuilder.addInt32(28, _OD_TRACKS_USED);
-    fbBuilder.addFloat64(29, _WEIGHTED_RMS);
-    fbBuilder.addInt64(30, _OD_EPOCH_UNIX_US);
-    fbBuilder.addFloat64(31, _DAYS_SINCE_LAST_OBS);
-    fbBuilder.addOffset(32, COVARIANCE_DATAOffset);
+    fbBuilder.addUint32(21, _OD_PARAMETERS);
+    fbBuilder.addUint32(22, _OD_SOLVED_FOR);
+    fbBuilder.addFloat64(23, _ACTUAL_OD_SPAN);
+    fbBuilder.addInt32(24, _OD_OBSERVATIONS_USED);
+    fbBuilder.addFloat64(25, _WEIGHTED_RMS);
+    fbBuilder.addInt64(26, _OD_EPOCH_UNIX_US);
+    fbBuilder.addInt32(27, _OD_TRACKS_USED);
+    fbBuilder.addFloat64(28, _DAYS_SINCE_LAST_OBS);
+    fbBuilder.addOffset(29, COVARIANCE_DATAOffset);
     if (_COV_PROPAGATION != null) {
-      fbBuilder.addStruct(33, _COV_PROPAGATION!.finish(fbBuilder));
+      fbBuilder.addStruct(30, _COV_PROPAGATION!.finish(fbBuilder));
     }
-    fbBuilder.addUint8(34, _COV_FLOOR?.value);
-    fbBuilder.addUint16(35, _COV_REALISM_ID);
-    fbBuilder.addOffset(36, COV_REALISMOffset);
-    fbBuilder.addInt8(37, _COV_CALIBRATION?.value);
-    fbBuilder.addOffset(38, COV_CALIBRATION_REFERENCEOffset);
-    fbBuilder.addOffset(39, WINDOWSOffset);
-    fbBuilder.addOffset(40, WINDOW_COEFF_HEADSOffset);
-    fbBuilder.addOffset(41, WINDOW_COEFF_TAILSOffset);
-    fbBuilder.addUint64(42, _WINDOW_RECORD_CHECK);
-    fbBuilder.addOffset(43, FALLBACKOffset);
-    fbBuilder.addBool(44, _ROWS_ONLY);
+    fbBuilder.addUint8(31, _COV_FLOOR?.value);
+    fbBuilder.addUint16(32, _COV_REALISM_ID);
+    fbBuilder.addInt8(33, _COV_CALIBRATION?.value);
+    fbBuilder.addOffset(34, FALLBACKOffset);
+    fbBuilder.addFloat64(35, _BSTAR);
+    fbBuilder.addFloat64(36, _MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(37, _MEAN_MOTION_DDOT);
+    fbBuilder.addUint8(38, _SOLID_TIDES_MODEL?.value);
+    fbBuilder.addUint8(39, _SOLAR_RAD_PRESSURE?.value);
+    fbBuilder.addFloat64(40, _ECOM2_Y0);
+    fbBuilder.addUint8(41, _MESSAGE_STATUS?.value);
+    fbBuilder.addOffset(42, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(43, COV_REALISMOffset);
+    fbBuilder.addOffset(44, COV_CALIBRATION_REFERENCEOffset);
     return fbBuilder.endTable();
   }
 

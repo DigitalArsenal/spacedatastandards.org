@@ -72,21 +72,11 @@ ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * The object's name; absent unless a reader copies it into what it writes.
+ * The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
  */
-OBJECT_NAME():string|null
-OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
+MEAN_ELEMENT_THEORY():meanElementSource {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-/**
- * Whether the set is real or test data.
- */
-MESSAGE_STATUS():morMessageStatus {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morMessageStatus.UNSPECIFIED;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementSource.UNSPECIFIED;
 }
 
 /**
@@ -95,23 +85,88 @@ MESSAGE_STATUS():morMessageStatus {
  * ways without loss; an instant inside a leap second has no value here.
  */
 EPOCH_UNIX_US():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
 }
 
 /**
- * The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+ * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
  */
-MEAN_ELEMENT_THEORY():meanElementSource {
+ROWS_ONLY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+ * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+ * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+ * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+ * A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+ */
+WINDOWS(index: number, obj?:MORWindow):MORWindow|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : meanElementSource.UNSPECIFIED;
+  return offset ? (obj || new MORWindow()).__init(this.bb!.__vector(this.bb_pos + offset) + index * 24, this.bb!) : null;
+}
+
+windowsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+ * (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+ */
+WINDOW_COEFF_HEADS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+windowCoeffHeadsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+windowCoeffHeadsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+ * (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+ */
+WINDOW_COEFF_TAILS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+}
+
+windowCoeffTailsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+windowCoeffTailsArray():Float32Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? new Float32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+ * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+ * record before using the rows: a mismatch voids the rows. With WINDOWS only.
+ */
+WINDOW_RECORD_CHECK():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
 /**
  * Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
  */
 MEAN_MOTION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -119,7 +174,7 @@ MEAN_MOTION():number {
  * Eccentricity.
  */
 ECCENTRICITY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -127,7 +182,7 @@ ECCENTRICITY():number {
  * Inclination, deg.
  */
 INCLINATION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -135,7 +190,7 @@ INCLINATION():number {
  * Right ascension of the ascending node, deg.
  */
 RA_OF_ASC_NODE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -143,7 +198,7 @@ RA_OF_ASC_NODE():number {
  * Argument of pericenter, deg.
  */
 ARG_OF_PERICENTER():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -151,7 +206,7 @@ ARG_OF_PERICENTER():number {
  * Mean anomaly, deg.
  */
 MEAN_ANOMALY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -159,7 +214,7 @@ MEAN_ANOMALY():number {
  * Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
  */
 BTERM():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -167,30 +222,6 @@ BTERM():number {
  * Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
  */
 AGOM():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * BSTAR, 1/Earth radii. SGP4 only.
- */
-BSTAR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * MEAN_MOTION_DOT, rev/day**2. SGP4 only.
- */
-MEAN_MOTION_DOT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
- */
-MEAN_MOTION_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -220,28 +251,12 @@ MAXIMUM_ZONAL_DEGREE():number {
 }
 
 /**
- * The solid Earth tide the set flies with.
- */
-SOLID_TIDES_MODEL():morSolidTideModel {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morSolidTideModel.NONE;
-}
-
-/**
- * The radiation pressure model the set states.
- */
-SOLAR_RAD_PRESSURE():morRadiationModel {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morRadiationModel.UNSTATED;
-}
-
-/**
  * The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
  * DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
  * (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
  */
 OD_PARAMETERS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -249,23 +264,15 @@ OD_PARAMETERS():number {
  * Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
  */
 OD_SOLVED_FOR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
-}
-
-/**
- * The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
- */
-ECOM2_Y0():number {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
  * The span of the observations the orbit determination used, days; NaN when not stated.
  */
 ACTUAL_OD_SPAN():number {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
+  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
@@ -273,15 +280,7 @@ ACTUAL_OD_SPAN():number {
  * Observations the orbit determination used; -1 when not stated ($OCM 0).
  */
 OD_OBSERVATIONS_USED():number {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
-}
-
-/**
- * Tracks the orbit determination used; -1 when not stated ($OCM 0).
- */
-OD_TRACKS_USED():number {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
 }
 
@@ -289,7 +288,7 @@ OD_TRACKS_USED():number {
  * Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
  */
 WEIGHTED_RMS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
+  const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
@@ -297,15 +296,23 @@ WEIGHTED_RMS():number {
  * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
  */
 OD_EPOCH_UNIX_US():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
+  const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('-9223372036854775808');
+}
+
+/**
+ * Tracks the orbit determination used; -1 when not stated ($OCM 0).
+ */
+OD_TRACKS_USED():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
 }
 
 /**
  * Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
  */
 DAYS_SINCE_LAST_OBS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
 }
 
@@ -316,17 +323,17 @@ DAYS_SINCE_LAST_OBS():number {
  * ascending ordinal. Absent: no covariance.
  */
 COVARIANCE_DATA(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 covarianceDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 covarianceDataArray():Float64Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -334,7 +341,7 @@ covarianceDataArray():Float64Array|null {
  * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
  */
 COV_PROPAGATION(obj?:MORCovariancePropagation):MORCovariancePropagation|null {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? (obj || new MORCovariancePropagation()).__init(this.bb_pos + offset, this.bb!) : null;
 }
 
@@ -343,7 +350,7 @@ COV_PROPAGATION(obj?:MORCovariancePropagation):MORCovariancePropagation|null {
  * any producer text: a record read alone flies the same covariance as its $OCM.
  */
 COV_FLOOR():morCovarianceFloor {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : morCovarianceFloor.UNSTATED;
 }
 
@@ -353,100 +360,16 @@ COV_FLOOR():morCovarianceFloor {
  * ID the asset does not list leaves the figures unresolved, and a reader says so.
  */
 COV_REALISM_ID():number {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
-}
-
-/**
- * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
- * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
- */
-COV_REALISM(obj?:CVR):CVR|null {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
-  return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
  */
 COV_CALIBRATION():covarianceCalibration {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : covarianceCalibration.Unspecified;
-}
-
-/**
- * Identifier of that calibration evidence (a report or record).
- */
-COV_CALIBRATION_REFERENCE():string|null
-COV_CALIBRATION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COV_CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-/**
- * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
- * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
- * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
- * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
- * A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
- */
-WINDOWS(index: number, obj?:MORWindow):MORWindow|null {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? (obj || new MORWindow()).__init(this.bb!.__vector(this.bb_pos + offset) + index * 24, this.bb!) : null;
-}
-
-windowsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-/**
- * The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
- * (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
- */
-WINDOW_COEFF_HEADS(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
-}
-
-windowCoeffHeadsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-windowCoeffHeadsArray():Float64Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-}
-
-/**
- * The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
- * (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
- */
-WINDOW_COEFF_TAILS(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.readFloat32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
-}
-
-windowCoeffTailsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-windowCoeffTailsArray():Float32Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? new Float32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
-}
-
-/**
- * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
- * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
- * record before using the rows: a mismatch voids the rows. With WINDOWS only.
- */
-WINDOW_RECORD_CHECK():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
 /**
@@ -455,16 +378,93 @@ WINDOW_RECORD_CHECK():bigint {
  * object is this record's. No TARGETER.
  */
 FALLBACK(obj?:MPE):MPE|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? (obj || new MPE()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
- * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+ * BSTAR, 1/Earth radii. SGP4 only.
  */
-ROWS_ONLY():boolean {
+BSTAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+ */
+MEAN_MOTION_DOT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+ */
+MEAN_MOTION_DDOT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * The solid Earth tide the set flies with.
+ */
+SOLID_TIDES_MODEL():morSolidTideModel {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morSolidTideModel.NONE;
+}
+
+/**
+ * The radiation pressure model the set states.
+ */
+SOLAR_RAD_PRESSURE():morRadiationModel {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morRadiationModel.UNSTATED;
+}
+
+/**
+ * The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+ */
+ECOM2_Y0():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Whether the set is real or test data.
+ */
+MESSAGE_STATUS():morMessageStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : morMessageStatus.UNSPECIFIED;
+}
+
+/**
+ * The object's name; absent unless a reader copies it into what it writes.
+ */
+OBJECT_NAME():string|null
+OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+ * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+ */
+COV_REALISM(obj?:CVR):CVR|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? (obj || new CVR()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Identifier of that calibration evidence (a report or record).
+ */
+COV_CALIBRATION_REFERENCE():string|null
+COV_CALIBRATION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COV_CALIBRATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startMOR(builder:flatbuffers.Builder) {
@@ -483,169 +483,20 @@ static addOriginator(builder:flatbuffers.Builder, ORIGINATOROffset:flatbuffers.O
   builder.addFieldOffset(2, ORIGINATOROffset, 0);
 }
 
-static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, OBJECT_NAMEOffset, 0);
-}
-
-static addMessageStatus(builder:flatbuffers.Builder, MESSAGE_STATUS:morMessageStatus) {
-  builder.addFieldInt8(4, MESSAGE_STATUS, morMessageStatus.UNSPECIFIED);
+static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource) {
+  builder.addFieldInt8(3, MEAN_ELEMENT_THEORY, meanElementSource.UNSPECIFIED);
 }
 
 static addEpochUnixUs(builder:flatbuffers.Builder, EPOCH_UNIX_US:bigint) {
-  builder.addFieldInt64(5, EPOCH_UNIX_US, BigInt('0'));
+  builder.addFieldInt64(4, EPOCH_UNIX_US, BigInt('0'));
 }
 
-static addMeanElementTheory(builder:flatbuffers.Builder, MEAN_ELEMENT_THEORY:meanElementSource) {
-  builder.addFieldInt8(6, MEAN_ELEMENT_THEORY, meanElementSource.UNSPECIFIED);
-}
-
-static addMeanMotion(builder:flatbuffers.Builder, MEAN_MOTION:number) {
-  builder.addFieldFloat64(7, MEAN_MOTION, 0.0);
-}
-
-static addEccentricity(builder:flatbuffers.Builder, ECCENTRICITY:number) {
-  builder.addFieldFloat64(8, ECCENTRICITY, 0.0);
-}
-
-static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
-  builder.addFieldFloat64(9, INCLINATION, 0.0);
-}
-
-static addRaOfAscNode(builder:flatbuffers.Builder, RA_OF_ASC_NODE:number) {
-  builder.addFieldFloat64(10, RA_OF_ASC_NODE, 0.0);
-}
-
-static addArgOfPericenter(builder:flatbuffers.Builder, ARG_OF_PERICENTER:number) {
-  builder.addFieldFloat64(11, ARG_OF_PERICENTER, 0.0);
-}
-
-static addMeanAnomaly(builder:flatbuffers.Builder, MEAN_ANOMALY:number) {
-  builder.addFieldFloat64(12, MEAN_ANOMALY, 0.0);
-}
-
-static addBterm(builder:flatbuffers.Builder, BTERM:number) {
-  builder.addFieldFloat64(13, BTERM, 0.0);
-}
-
-static addAgom(builder:flatbuffers.Builder, AGOM:number) {
-  builder.addFieldFloat64(14, AGOM, 0.0);
-}
-
-static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
-  builder.addFieldFloat64(15, BSTAR, 0.0);
-}
-
-static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
-  builder.addFieldFloat64(16, MEAN_MOTION_DOT, 0.0);
-}
-
-static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
-  builder.addFieldFloat64(17, MEAN_MOTION_DDOT, 0.0);
-}
-
-static addGravityField(builder:flatbuffers.Builder, GRAVITY_FIELD:morGravityField) {
-  builder.addFieldInt8(18, GRAVITY_FIELD, morGravityField.THEORY);
-}
-
-static addMaximumTesseralDegree(builder:flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE:number) {
-  builder.addFieldInt8(19, MAXIMUM_TESSERAL_DEGREE, 0);
-}
-
-static addMaximumZonalDegree(builder:flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE:number) {
-  builder.addFieldInt8(20, MAXIMUM_ZONAL_DEGREE, 0);
-}
-
-static addSolidTidesModel(builder:flatbuffers.Builder, SOLID_TIDES_MODEL:morSolidTideModel) {
-  builder.addFieldInt8(21, SOLID_TIDES_MODEL, morSolidTideModel.NONE);
-}
-
-static addSolarRadPressure(builder:flatbuffers.Builder, SOLAR_RAD_PRESSURE:morRadiationModel) {
-  builder.addFieldInt8(22, SOLAR_RAD_PRESSURE, morRadiationModel.UNSTATED);
-}
-
-static addOdParameters(builder:flatbuffers.Builder, OD_PARAMETERS:number) {
-  builder.addFieldInt32(23, OD_PARAMETERS, 0);
-}
-
-static addOdSolvedFor(builder:flatbuffers.Builder, OD_SOLVED_FOR:number) {
-  builder.addFieldInt32(24, OD_SOLVED_FOR, 0);
-}
-
-static addEcom2Y0(builder:flatbuffers.Builder, ECOM2_Y0:number) {
-  builder.addFieldFloat64(25, ECOM2_Y0, 0.0);
-}
-
-static addActualOdSpan(builder:flatbuffers.Builder, ACTUAL_OD_SPAN:number) {
-  builder.addFieldFloat64(26, ACTUAL_OD_SPAN, NaN);
-}
-
-static addOdObservationsUsed(builder:flatbuffers.Builder, OD_OBSERVATIONS_USED:number) {
-  builder.addFieldInt32(27, OD_OBSERVATIONS_USED, -1);
-}
-
-static addOdTracksUsed(builder:flatbuffers.Builder, OD_TRACKS_USED:number) {
-  builder.addFieldInt32(28, OD_TRACKS_USED, -1);
-}
-
-static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
-  builder.addFieldFloat64(29, WEIGHTED_RMS, NaN);
-}
-
-static addOdEpochUnixUs(builder:flatbuffers.Builder, OD_EPOCH_UNIX_US:bigint) {
-  builder.addFieldInt64(30, OD_EPOCH_UNIX_US, BigInt('-9223372036854775808'));
-}
-
-static addDaysSinceLastObs(builder:flatbuffers.Builder, DAYS_SINCE_LAST_OBS:number) {
-  builder.addFieldFloat64(31, DAYS_SINCE_LAST_OBS, NaN);
-}
-
-static addCovarianceData(builder:flatbuffers.Builder, COVARIANCE_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(32, COVARIANCE_DATAOffset, 0);
-}
-
-static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
-/**
- * @deprecated This Uint8Array overload will be removed in the future.
- */
-static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
-static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
-  builder.startVector(8, data.length, 8);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addFloat64(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startCovarianceDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(8, numElems, 8);
-}
-
-static addCovPropagation(builder:flatbuffers.Builder, COV_PROPAGATIONOffset:flatbuffers.Offset) {
-  builder.addFieldStruct(33, COV_PROPAGATIONOffset, 0);
-}
-
-static addCovFloor(builder:flatbuffers.Builder, COV_FLOOR:morCovarianceFloor) {
-  builder.addFieldInt8(34, COV_FLOOR, morCovarianceFloor.UNSTATED);
-}
-
-static addCovRealismId(builder:flatbuffers.Builder, COV_REALISM_ID:number) {
-  builder.addFieldInt16(35, COV_REALISM_ID, 0);
-}
-
-static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(36, COV_REALISMOffset, 0);
-}
-
-static addCovCalibration(builder:flatbuffers.Builder, COV_CALIBRATION:covarianceCalibration) {
-  builder.addFieldInt8(37, COV_CALIBRATION, covarianceCalibration.Unspecified);
-}
-
-static addCovCalibrationReference(builder:flatbuffers.Builder, COV_CALIBRATION_REFERENCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(38, COV_CALIBRATION_REFERENCEOffset, 0);
+static addRowsOnly(builder:flatbuffers.Builder, ROWS_ONLY:boolean) {
+  builder.addFieldInt8(5, +ROWS_ONLY, +false);
 }
 
 static addWindows(builder:flatbuffers.Builder, WINDOWSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(39, WINDOWSOffset, 0);
+  builder.addFieldOffset(6, WINDOWSOffset, 0);
 }
 
 static startWindowsVector(builder:flatbuffers.Builder, numElems:number) {
@@ -653,7 +504,7 @@ static startWindowsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addWindowCoeffHeads(builder:flatbuffers.Builder, WINDOW_COEFF_HEADSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(40, WINDOW_COEFF_HEADSOffset, 0);
+  builder.addFieldOffset(7, WINDOW_COEFF_HEADSOffset, 0);
 }
 
 static createWindowCoeffHeadsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
@@ -674,7 +525,7 @@ static startWindowCoeffHeadsVector(builder:flatbuffers.Builder, numElems:number)
 }
 
 static addWindowCoeffTails(builder:flatbuffers.Builder, WINDOW_COEFF_TAILSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, WINDOW_COEFF_TAILSOffset, 0);
+  builder.addFieldOffset(8, WINDOW_COEFF_TAILSOffset, 0);
 }
 
 static createWindowCoeffTailsVector(builder:flatbuffers.Builder, data:number[]|Float32Array):flatbuffers.Offset;
@@ -695,15 +546,164 @@ static startWindowCoeffTailsVector(builder:flatbuffers.Builder, numElems:number)
 }
 
 static addWindowRecordCheck(builder:flatbuffers.Builder, WINDOW_RECORD_CHECK:bigint) {
-  builder.addFieldInt64(42, WINDOW_RECORD_CHECK, BigInt('0'));
+  builder.addFieldInt64(9, WINDOW_RECORD_CHECK, BigInt('0'));
+}
+
+static addMeanMotion(builder:flatbuffers.Builder, MEAN_MOTION:number) {
+  builder.addFieldFloat64(10, MEAN_MOTION, 0.0);
+}
+
+static addEccentricity(builder:flatbuffers.Builder, ECCENTRICITY:number) {
+  builder.addFieldFloat64(11, ECCENTRICITY, 0.0);
+}
+
+static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
+  builder.addFieldFloat64(12, INCLINATION, 0.0);
+}
+
+static addRaOfAscNode(builder:flatbuffers.Builder, RA_OF_ASC_NODE:number) {
+  builder.addFieldFloat64(13, RA_OF_ASC_NODE, 0.0);
+}
+
+static addArgOfPericenter(builder:flatbuffers.Builder, ARG_OF_PERICENTER:number) {
+  builder.addFieldFloat64(14, ARG_OF_PERICENTER, 0.0);
+}
+
+static addMeanAnomaly(builder:flatbuffers.Builder, MEAN_ANOMALY:number) {
+  builder.addFieldFloat64(15, MEAN_ANOMALY, 0.0);
+}
+
+static addBterm(builder:flatbuffers.Builder, BTERM:number) {
+  builder.addFieldFloat64(16, BTERM, 0.0);
+}
+
+static addAgom(builder:flatbuffers.Builder, AGOM:number) {
+  builder.addFieldFloat64(17, AGOM, 0.0);
+}
+
+static addGravityField(builder:flatbuffers.Builder, GRAVITY_FIELD:morGravityField) {
+  builder.addFieldInt8(18, GRAVITY_FIELD, morGravityField.THEORY);
+}
+
+static addMaximumTesseralDegree(builder:flatbuffers.Builder, MAXIMUM_TESSERAL_DEGREE:number) {
+  builder.addFieldInt8(19, MAXIMUM_TESSERAL_DEGREE, 0);
+}
+
+static addMaximumZonalDegree(builder:flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE:number) {
+  builder.addFieldInt8(20, MAXIMUM_ZONAL_DEGREE, 0);
+}
+
+static addOdParameters(builder:flatbuffers.Builder, OD_PARAMETERS:number) {
+  builder.addFieldInt32(21, OD_PARAMETERS, 0);
+}
+
+static addOdSolvedFor(builder:flatbuffers.Builder, OD_SOLVED_FOR:number) {
+  builder.addFieldInt32(22, OD_SOLVED_FOR, 0);
+}
+
+static addActualOdSpan(builder:flatbuffers.Builder, ACTUAL_OD_SPAN:number) {
+  builder.addFieldFloat64(23, ACTUAL_OD_SPAN, NaN);
+}
+
+static addOdObservationsUsed(builder:flatbuffers.Builder, OD_OBSERVATIONS_USED:number) {
+  builder.addFieldInt32(24, OD_OBSERVATIONS_USED, -1);
+}
+
+static addWeightedRms(builder:flatbuffers.Builder, WEIGHTED_RMS:number) {
+  builder.addFieldFloat64(25, WEIGHTED_RMS, NaN);
+}
+
+static addOdEpochUnixUs(builder:flatbuffers.Builder, OD_EPOCH_UNIX_US:bigint) {
+  builder.addFieldInt64(26, OD_EPOCH_UNIX_US, BigInt('-9223372036854775808'));
+}
+
+static addOdTracksUsed(builder:flatbuffers.Builder, OD_TRACKS_USED:number) {
+  builder.addFieldInt32(27, OD_TRACKS_USED, -1);
+}
+
+static addDaysSinceLastObs(builder:flatbuffers.Builder, DAYS_SINCE_LAST_OBS:number) {
+  builder.addFieldFloat64(28, DAYS_SINCE_LAST_OBS, NaN);
+}
+
+static addCovarianceData(builder:flatbuffers.Builder, COVARIANCE_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, COVARIANCE_DATAOffset, 0);
+}
+
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovarianceDataVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addCovPropagation(builder:flatbuffers.Builder, COV_PROPAGATIONOffset:flatbuffers.Offset) {
+  builder.addFieldStruct(30, COV_PROPAGATIONOffset, 0);
+}
+
+static addCovFloor(builder:flatbuffers.Builder, COV_FLOOR:morCovarianceFloor) {
+  builder.addFieldInt8(31, COV_FLOOR, morCovarianceFloor.UNSTATED);
+}
+
+static addCovRealismId(builder:flatbuffers.Builder, COV_REALISM_ID:number) {
+  builder.addFieldInt16(32, COV_REALISM_ID, 0);
+}
+
+static addCovCalibration(builder:flatbuffers.Builder, COV_CALIBRATION:covarianceCalibration) {
+  builder.addFieldInt8(33, COV_CALIBRATION, covarianceCalibration.Unspecified);
 }
 
 static addFallback(builder:flatbuffers.Builder, FALLBACKOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, FALLBACKOffset, 0);
+  builder.addFieldOffset(34, FALLBACKOffset, 0);
 }
 
-static addRowsOnly(builder:flatbuffers.Builder, ROWS_ONLY:boolean) {
-  builder.addFieldInt8(44, +ROWS_ONLY, +false);
+static addBstar(builder:flatbuffers.Builder, BSTAR:number) {
+  builder.addFieldFloat64(35, BSTAR, 0.0);
+}
+
+static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
+  builder.addFieldFloat64(36, MEAN_MOTION_DOT, 0.0);
+}
+
+static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
+  builder.addFieldFloat64(37, MEAN_MOTION_DDOT, 0.0);
+}
+
+static addSolidTidesModel(builder:flatbuffers.Builder, SOLID_TIDES_MODEL:morSolidTideModel) {
+  builder.addFieldInt8(38, SOLID_TIDES_MODEL, morSolidTideModel.NONE);
+}
+
+static addSolarRadPressure(builder:flatbuffers.Builder, SOLAR_RAD_PRESSURE:morRadiationModel) {
+  builder.addFieldInt8(39, SOLAR_RAD_PRESSURE, morRadiationModel.UNSTATED);
+}
+
+static addEcom2Y0(builder:flatbuffers.Builder, ECOM2_Y0:number) {
+  builder.addFieldFloat64(40, ECOM2_Y0, 0.0);
+}
+
+static addMessageStatus(builder:flatbuffers.Builder, MESSAGE_STATUS:morMessageStatus) {
+  builder.addFieldInt8(41, MESSAGE_STATUS, morMessageStatus.UNSPECIFIED);
+}
+
+static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, OBJECT_NAMEOffset, 0);
+}
+
+static addCovRealism(builder:flatbuffers.Builder, COV_REALISMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, COV_REALISMOffset, 0);
+}
+
+static addCovCalibrationReference(builder:flatbuffers.Builder, COV_CALIBRATION_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, COV_CALIBRATION_REFERENCEOffset, 0);
 }
 
 static endMOR(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -725,10 +725,13 @@ unpack(): MORT {
     this.NORAD_CAT_ID(),
     this.INTERNATIONAL_DESIGNATOR(),
     this.ORIGINATOR(),
-    this.OBJECT_NAME(),
-    this.MESSAGE_STATUS(),
-    this.EPOCH_UNIX_US(),
     this.MEAN_ELEMENT_THEORY(),
+    this.EPOCH_UNIX_US(),
+    this.ROWS_ONLY(),
+    this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength()),
+    this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength()),
+    this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength()),
+    this.WINDOW_RECORD_CHECK(),
     this.MEAN_MOTION(),
     this.ECCENTRICITY(),
     this.INCLINATION(),
@@ -737,36 +740,33 @@ unpack(): MORT {
     this.MEAN_ANOMALY(),
     this.BTERM(),
     this.AGOM(),
-    this.BSTAR(),
-    this.MEAN_MOTION_DOT(),
-    this.MEAN_MOTION_DDOT(),
     this.GRAVITY_FIELD(),
     this.MAXIMUM_TESSERAL_DEGREE(),
     this.MAXIMUM_ZONAL_DEGREE(),
-    this.SOLID_TIDES_MODEL(),
-    this.SOLAR_RAD_PRESSURE(),
     this.OD_PARAMETERS(),
     this.OD_SOLVED_FOR(),
-    this.ECOM2_Y0(),
     this.ACTUAL_OD_SPAN(),
     this.OD_OBSERVATIONS_USED(),
-    this.OD_TRACKS_USED(),
     this.WEIGHTED_RMS(),
     this.OD_EPOCH_UNIX_US(),
+    this.OD_TRACKS_USED(),
     this.DAYS_SINCE_LAST_OBS(),
     this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength()),
     (this.COV_PROPAGATION() !== null ? this.COV_PROPAGATION()!.unpack() : null),
     this.COV_FLOOR(),
     this.COV_REALISM_ID(),
-    (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null),
     this.COV_CALIBRATION(),
-    this.COV_CALIBRATION_REFERENCE(),
-    this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength()),
-    this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength()),
-    this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength()),
-    this.WINDOW_RECORD_CHECK(),
     (this.FALLBACK() !== null ? this.FALLBACK()!.unpack() : null),
-    this.ROWS_ONLY()
+    this.BSTAR(),
+    this.MEAN_MOTION_DOT(),
+    this.MEAN_MOTION_DDOT(),
+    this.SOLID_TIDES_MODEL(),
+    this.SOLAR_RAD_PRESSURE(),
+    this.ECOM2_Y0(),
+    this.MESSAGE_STATUS(),
+    this.OBJECT_NAME(),
+    (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null),
+    this.COV_CALIBRATION_REFERENCE()
   );
 }
 
@@ -775,10 +775,13 @@ unpackTo(_o: MORT): void {
   _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
   _o.INTERNATIONAL_DESIGNATOR = this.INTERNATIONAL_DESIGNATOR();
   _o.ORIGINATOR = this.ORIGINATOR();
-  _o.OBJECT_NAME = this.OBJECT_NAME();
-  _o.MESSAGE_STATUS = this.MESSAGE_STATUS();
-  _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US();
   _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY();
+  _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US();
+  _o.ROWS_ONLY = this.ROWS_ONLY();
+  _o.WINDOWS = this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength());
+  _o.WINDOW_COEFF_HEADS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength());
+  _o.WINDOW_COEFF_TAILS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength());
+  _o.WINDOW_RECORD_CHECK = this.WINDOW_RECORD_CHECK();
   _o.MEAN_MOTION = this.MEAN_MOTION();
   _o.ECCENTRICITY = this.ECCENTRICITY();
   _o.INCLINATION = this.INCLINATION();
@@ -787,36 +790,33 @@ unpackTo(_o: MORT): void {
   _o.MEAN_ANOMALY = this.MEAN_ANOMALY();
   _o.BTERM = this.BTERM();
   _o.AGOM = this.AGOM();
-  _o.BSTAR = this.BSTAR();
-  _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT();
-  _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT();
   _o.GRAVITY_FIELD = this.GRAVITY_FIELD();
   _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE();
   _o.MAXIMUM_ZONAL_DEGREE = this.MAXIMUM_ZONAL_DEGREE();
-  _o.SOLID_TIDES_MODEL = this.SOLID_TIDES_MODEL();
-  _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE();
   _o.OD_PARAMETERS = this.OD_PARAMETERS();
   _o.OD_SOLVED_FOR = this.OD_SOLVED_FOR();
-  _o.ECOM2_Y0 = this.ECOM2_Y0();
   _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN();
   _o.OD_OBSERVATIONS_USED = this.OD_OBSERVATIONS_USED();
-  _o.OD_TRACKS_USED = this.OD_TRACKS_USED();
   _o.WEIGHTED_RMS = this.WEIGHTED_RMS();
   _o.OD_EPOCH_UNIX_US = this.OD_EPOCH_UNIX_US();
+  _o.OD_TRACKS_USED = this.OD_TRACKS_USED();
   _o.DAYS_SINCE_LAST_OBS = this.DAYS_SINCE_LAST_OBS();
   _o.COVARIANCE_DATA = this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength());
   _o.COV_PROPAGATION = (this.COV_PROPAGATION() !== null ? this.COV_PROPAGATION()!.unpack() : null);
   _o.COV_FLOOR = this.COV_FLOOR();
   _o.COV_REALISM_ID = this.COV_REALISM_ID();
-  _o.COV_REALISM = (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null);
   _o.COV_CALIBRATION = this.COV_CALIBRATION();
-  _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
-  _o.WINDOWS = this.bb!.createObjList<MORWindow, MORWindowT>(this.WINDOWS.bind(this), this.windowsLength());
-  _o.WINDOW_COEFF_HEADS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_HEADS.bind(this), this.windowCoeffHeadsLength());
-  _o.WINDOW_COEFF_TAILS = this.bb!.createScalarList<number>(this.WINDOW_COEFF_TAILS.bind(this), this.windowCoeffTailsLength());
-  _o.WINDOW_RECORD_CHECK = this.WINDOW_RECORD_CHECK();
   _o.FALLBACK = (this.FALLBACK() !== null ? this.FALLBACK()!.unpack() : null);
-  _o.ROWS_ONLY = this.ROWS_ONLY();
+  _o.BSTAR = this.BSTAR();
+  _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT();
+  _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT();
+  _o.SOLID_TIDES_MODEL = this.SOLID_TIDES_MODEL();
+  _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE();
+  _o.ECOM2_Y0 = this.ECOM2_Y0();
+  _o.MESSAGE_STATUS = this.MESSAGE_STATUS();
+  _o.OBJECT_NAME = this.OBJECT_NAME();
+  _o.COV_REALISM = (this.COV_REALISM() !== null ? this.COV_REALISM()!.unpack() : null);
+  _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE();
 }
 }
 
@@ -825,10 +825,13 @@ constructor(
   public NORAD_CAT_ID: number = 0,
   public INTERNATIONAL_DESIGNATOR: string|Uint8Array|null = null,
   public ORIGINATOR: string|Uint8Array|null = null,
-  public OBJECT_NAME: string|Uint8Array|null = null,
-  public MESSAGE_STATUS: morMessageStatus = morMessageStatus.UNSPECIFIED,
-  public EPOCH_UNIX_US: bigint = BigInt('0'),
   public MEAN_ELEMENT_THEORY: meanElementSource = meanElementSource.UNSPECIFIED,
+  public EPOCH_UNIX_US: bigint = BigInt('0'),
+  public ROWS_ONLY: boolean = false,
+  public WINDOWS: (MORWindowT)[] = [],
+  public WINDOW_COEFF_HEADS: (number)[] = [],
+  public WINDOW_COEFF_TAILS: (number)[] = [],
+  public WINDOW_RECORD_CHECK: bigint = BigInt('0'),
   public MEAN_MOTION: number = 0.0,
   public ECCENTRICITY: number = 0.0,
   public INCLINATION: number = 0.0,
@@ -837,59 +840,59 @@ constructor(
   public MEAN_ANOMALY: number = 0.0,
   public BTERM: number = 0.0,
   public AGOM: number = 0.0,
-  public BSTAR: number = 0.0,
-  public MEAN_MOTION_DOT: number = 0.0,
-  public MEAN_MOTION_DDOT: number = 0.0,
   public GRAVITY_FIELD: morGravityField = morGravityField.THEORY,
   public MAXIMUM_TESSERAL_DEGREE: number = 0,
   public MAXIMUM_ZONAL_DEGREE: number = 0,
-  public SOLID_TIDES_MODEL: morSolidTideModel = morSolidTideModel.NONE,
-  public SOLAR_RAD_PRESSURE: morRadiationModel = morRadiationModel.UNSTATED,
   public OD_PARAMETERS: number = 0,
   public OD_SOLVED_FOR: number = 0,
-  public ECOM2_Y0: number = 0.0,
   public ACTUAL_OD_SPAN: number = NaN,
   public OD_OBSERVATIONS_USED: number = -1,
-  public OD_TRACKS_USED: number = -1,
   public WEIGHTED_RMS: number = NaN,
   public OD_EPOCH_UNIX_US: bigint = BigInt('-9223372036854775808'),
+  public OD_TRACKS_USED: number = -1,
   public DAYS_SINCE_LAST_OBS: number = NaN,
   public COVARIANCE_DATA: (number)[] = [],
   public COV_PROPAGATION: MORCovariancePropagationT|null = null,
   public COV_FLOOR: morCovarianceFloor = morCovarianceFloor.UNSTATED,
   public COV_REALISM_ID: number = 0,
-  public COV_REALISM: CVRT|null = null,
   public COV_CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
-  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null,
-  public WINDOWS: (MORWindowT)[] = [],
-  public WINDOW_COEFF_HEADS: (number)[] = [],
-  public WINDOW_COEFF_TAILS: (number)[] = [],
-  public WINDOW_RECORD_CHECK: bigint = BigInt('0'),
   public FALLBACK: MPET|null = null,
-  public ROWS_ONLY: boolean = false
+  public BSTAR: number = 0.0,
+  public MEAN_MOTION_DOT: number = 0.0,
+  public MEAN_MOTION_DDOT: number = 0.0,
+  public SOLID_TIDES_MODEL: morSolidTideModel = morSolidTideModel.NONE,
+  public SOLAR_RAD_PRESSURE: morRadiationModel = morRadiationModel.UNSTATED,
+  public ECOM2_Y0: number = 0.0,
+  public MESSAGE_STATUS: morMessageStatus = morMessageStatus.UNSPECIFIED,
+  public OBJECT_NAME: string|Uint8Array|null = null,
+  public COV_REALISM: CVRT|null = null,
+  public COV_CALIBRATION_REFERENCE: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const INTERNATIONAL_DESIGNATOR = (this.INTERNATIONAL_DESIGNATOR !== null ? builder.createString(this.INTERNATIONAL_DESIGNATOR!) : 0);
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
-  const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
-  const COVARIANCE_DATA = MOR.createCovarianceDataVector(builder, this.COVARIANCE_DATA);
-  const COV_REALISM = (this.COV_REALISM !== null ? this.COV_REALISM!.pack(builder) : 0);
-  const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
   const WINDOWS = builder.createStructOffsetList(this.WINDOWS, MOR.startWindowsVector);
   const WINDOW_COEFF_HEADS = MOR.createWindowCoeffHeadsVector(builder, this.WINDOW_COEFF_HEADS);
   const WINDOW_COEFF_TAILS = MOR.createWindowCoeffTailsVector(builder, this.WINDOW_COEFF_TAILS);
+  const COVARIANCE_DATA = MOR.createCovarianceDataVector(builder, this.COVARIANCE_DATA);
   const FALLBACK = (this.FALLBACK !== null ? this.FALLBACK!.pack(builder) : 0);
+  const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
+  const COV_REALISM = (this.COV_REALISM !== null ? this.COV_REALISM!.pack(builder) : 0);
+  const COV_CALIBRATION_REFERENCE = (this.COV_CALIBRATION_REFERENCE !== null ? builder.createString(this.COV_CALIBRATION_REFERENCE!) : 0);
 
   MOR.startMOR(builder);
   MOR.addNoradCatId(builder, this.NORAD_CAT_ID);
   MOR.addInternationalDesignator(builder, INTERNATIONAL_DESIGNATOR);
   MOR.addOriginator(builder, ORIGINATOR);
-  MOR.addObjectName(builder, OBJECT_NAME);
-  MOR.addMessageStatus(builder, this.MESSAGE_STATUS);
-  MOR.addEpochUnixUs(builder, this.EPOCH_UNIX_US);
   MOR.addMeanElementTheory(builder, this.MEAN_ELEMENT_THEORY);
+  MOR.addEpochUnixUs(builder, this.EPOCH_UNIX_US);
+  MOR.addRowsOnly(builder, this.ROWS_ONLY);
+  MOR.addWindows(builder, WINDOWS);
+  MOR.addWindowCoeffHeads(builder, WINDOW_COEFF_HEADS);
+  MOR.addWindowCoeffTails(builder, WINDOW_COEFF_TAILS);
+  MOR.addWindowRecordCheck(builder, this.WINDOW_RECORD_CHECK);
   MOR.addMeanMotion(builder, this.MEAN_MOTION);
   MOR.addEccentricity(builder, this.ECCENTRICITY);
   MOR.addInclination(builder, this.INCLINATION);
@@ -898,36 +901,33 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   MOR.addMeanAnomaly(builder, this.MEAN_ANOMALY);
   MOR.addBterm(builder, this.BTERM);
   MOR.addAgom(builder, this.AGOM);
-  MOR.addBstar(builder, this.BSTAR);
-  MOR.addMeanMotionDot(builder, this.MEAN_MOTION_DOT);
-  MOR.addMeanMotionDdot(builder, this.MEAN_MOTION_DDOT);
   MOR.addGravityField(builder, this.GRAVITY_FIELD);
   MOR.addMaximumTesseralDegree(builder, this.MAXIMUM_TESSERAL_DEGREE);
   MOR.addMaximumZonalDegree(builder, this.MAXIMUM_ZONAL_DEGREE);
-  MOR.addSolidTidesModel(builder, this.SOLID_TIDES_MODEL);
-  MOR.addSolarRadPressure(builder, this.SOLAR_RAD_PRESSURE);
   MOR.addOdParameters(builder, this.OD_PARAMETERS);
   MOR.addOdSolvedFor(builder, this.OD_SOLVED_FOR);
-  MOR.addEcom2Y0(builder, this.ECOM2_Y0);
   MOR.addActualOdSpan(builder, this.ACTUAL_OD_SPAN);
   MOR.addOdObservationsUsed(builder, this.OD_OBSERVATIONS_USED);
-  MOR.addOdTracksUsed(builder, this.OD_TRACKS_USED);
   MOR.addWeightedRms(builder, this.WEIGHTED_RMS);
   MOR.addOdEpochUnixUs(builder, this.OD_EPOCH_UNIX_US);
+  MOR.addOdTracksUsed(builder, this.OD_TRACKS_USED);
   MOR.addDaysSinceLastObs(builder, this.DAYS_SINCE_LAST_OBS);
   MOR.addCovarianceData(builder, COVARIANCE_DATA);
   MOR.addCovPropagation(builder, (this.COV_PROPAGATION !== null ? this.COV_PROPAGATION!.pack(builder) : 0));
   MOR.addCovFloor(builder, this.COV_FLOOR);
   MOR.addCovRealismId(builder, this.COV_REALISM_ID);
-  MOR.addCovRealism(builder, COV_REALISM);
   MOR.addCovCalibration(builder, this.COV_CALIBRATION);
-  MOR.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
-  MOR.addWindows(builder, WINDOWS);
-  MOR.addWindowCoeffHeads(builder, WINDOW_COEFF_HEADS);
-  MOR.addWindowCoeffTails(builder, WINDOW_COEFF_TAILS);
-  MOR.addWindowRecordCheck(builder, this.WINDOW_RECORD_CHECK);
   MOR.addFallback(builder, FALLBACK);
-  MOR.addRowsOnly(builder, this.ROWS_ONLY);
+  MOR.addBstar(builder, this.BSTAR);
+  MOR.addMeanMotionDot(builder, this.MEAN_MOTION_DOT);
+  MOR.addMeanMotionDdot(builder, this.MEAN_MOTION_DDOT);
+  MOR.addSolidTidesModel(builder, this.SOLID_TIDES_MODEL);
+  MOR.addSolarRadPressure(builder, this.SOLAR_RAD_PRESSURE);
+  MOR.addEcom2Y0(builder, this.ECOM2_Y0);
+  MOR.addMessageStatus(builder, this.MESSAGE_STATUS);
+  MOR.addObjectName(builder, OBJECT_NAME);
+  MOR.addCovRealism(builder, COV_REALISM);
+  MOR.addCovCalibrationReference(builder, COV_CALIBRATION_REFERENCE);
 
   return MOR.endMOR(builder);
 }

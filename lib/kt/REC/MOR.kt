@@ -67,26 +67,12 @@ class MOR : Table() {
     val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * The object's name; absent unless a reader copies it into what it writes.
+     * The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
      */
-    val objectName : String?
+    val meanElementTheory : Byte
         get() {
             val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
-    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
-    /**
-     * Whether the set is real or test data.
-     */
-    val messageStatus : UByte
-        get() {
-            val o = __offset(12)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+            return if(o != 0) bb.get(o + bb_pos) else 6
         }
     /**
      * Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
@@ -95,23 +81,89 @@ class MOR : Table() {
      */
     val epochUnixUs : Long
         get() {
-            val o = __offset(14)
+            val o = __offset(12)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     /**
-     * The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+     * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
      */
-    val meanElementTheory : Byte
+    val rowsOnly : Boolean
         get() {
-            val o = __offset(16)
-            return if(o != 0) bb.get(o + bb_pos) else 6
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+     * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+     * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+     * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+     * A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+     */
+    fun windows(j: Int) : MORWindow? = windows(MORWindow(), j)
+    fun windows(obj: MORWindow, j: Int) : MORWindow? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__vector(o) + j * 24, bb)
+        } else {
+            null
+        }
+    }
+    val windowsLength : Int
+        get() {
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+     * (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+     */
+    fun windowCoeffHeads(j: Int) : Double {
+        val o = __offset(18)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val windowCoeffHeadsLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
+    val windowCoeffHeadsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 8)
+    fun windowCoeffHeadsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 8)
+    /**
+     * The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+     * (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+     */
+    fun windowCoeffTails(j: Int) : Float {
+        val o = __offset(20)
+        return if (o != 0) {
+            bb.getFloat(__vector(o) + j * 4)
+        } else {
+            0.0f
+        }
+    }
+    val windowCoeffTailsLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    val windowCoeffTailsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 4)
+    fun windowCoeffTailsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 4)
+    /**
+     * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+     * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+     * record before using the rows: a mismatch voids the rows. With WINDOWS only.
+     */
+    val windowRecordCheck : ULong
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
      * Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
      */
     val meanMotion : Double
         get() {
-            val o = __offset(18)
+            val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -119,7 +171,7 @@ class MOR : Table() {
      */
     val eccentricity : Double
         get() {
-            val o = __offset(20)
+            val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -127,7 +179,7 @@ class MOR : Table() {
      */
     val inclination : Double
         get() {
-            val o = __offset(22)
+            val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -135,7 +187,7 @@ class MOR : Table() {
      */
     val raOfAscNode : Double
         get() {
-            val o = __offset(24)
+            val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -143,7 +195,7 @@ class MOR : Table() {
      */
     val argOfPericenter : Double
         get() {
-            val o = __offset(26)
+            val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -151,7 +203,7 @@ class MOR : Table() {
      */
     val meanAnomaly : Double
         get() {
-            val o = __offset(28)
+            val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -159,37 +211,13 @@ class MOR : Table() {
      */
     val bterm : Double
         get() {
-            val o = __offset(30)
+            val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
      * Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
      */
     val agom : Double
-        get() {
-            val o = __offset(32)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * BSTAR, 1/Earth radii. SGP4 only.
-     */
-    val bstar : Double
-        get() {
-            val o = __offset(34)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-     */
-    val meanMotionDot : Double
-        get() {
-            val o = __offset(36)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-     */
-    val meanMotionDdot : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -219,29 +247,13 @@ class MOR : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * The solid Earth tide the set flies with.
-     */
-    val solidTidesModel : UByte
-        get() {
-            val o = __offset(46)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
-    /**
-     * The radiation pressure model the set states.
-     */
-    val solarRadPressure : UByte
-        get() {
-            val o = __offset(48)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
-    /**
      * The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
      * DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
      * (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
      */
     val odParameters : UInt
         get() {
-            val o = __offset(50)
+            val o = __offset(46)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
@@ -249,23 +261,15 @@ class MOR : Table() {
      */
     val odSolvedFor : UInt
         get() {
-            val o = __offset(52)
+            val o = __offset(48)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
-        }
-    /**
-     * The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-     */
-    val ecom2Y0 : Double
-        get() {
-            val o = __offset(54)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
      * The span of the observations the orbit determination used, days; NaN when not stated.
      */
     val actualOdSpan : Double
         get() {
-            val o = __offset(56)
+            val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
@@ -273,15 +277,7 @@ class MOR : Table() {
      */
     val odObservationsUsed : Int
         get() {
-            val o = __offset(58)
-            return if(o != 0) bb.getInt(o + bb_pos) else -1
-        }
-    /**
-     * Tracks the orbit determination used; -1 when not stated ($OCM 0).
-     */
-    val odTracksUsed : Int
-        get() {
-            val o = __offset(60)
+            val o = __offset(52)
             return if(o != 0) bb.getInt(o + bb_pos) else -1
         }
     /**
@@ -289,7 +285,7 @@ class MOR : Table() {
      */
     val weightedRms : Double
         get() {
-            val o = __offset(62)
+            val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
@@ -297,15 +293,23 @@ class MOR : Table() {
      */
     val odEpochUnixUs : Long
         get() {
-            val o = __offset(64)
+            val o = __offset(56)
             return if(o != 0) bb.getLong(o + bb_pos) else Long.MIN_VALUE
+        }
+    /**
+     * Tracks the orbit determination used; -1 when not stated ($OCM 0).
+     */
+    val odTracksUsed : Int
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.getInt(o + bb_pos) else -1
         }
     /**
      * Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
      */
     val daysSinceLastObs : Double
         get() {
-            val o = __offset(66)
+            val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
@@ -315,7 +319,7 @@ class MOR : Table() {
      * ascending ordinal. Absent: no covariance.
      */
     fun covarianceData(j: Int) : Double {
-        val o = __offset(68)
+        val o = __offset(62)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
@@ -324,16 +328,16 @@ class MOR : Table() {
     }
     val covarianceDataLength : Int
         get() {
-            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(62); return if (o != 0) __vector_len(o) else 0
         }
-    val covarianceDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 8)
-    fun covarianceDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 8)
+    val covarianceDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 8)
+    fun covarianceDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 8)
     /**
      * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
      */
     val covPropagation : MORCovariancePropagation? get() = covPropagation(MORCovariancePropagation())
     fun covPropagation(obj: MORCovariancePropagation) : MORCovariancePropagation? {
-        val o = __offset(70)
+        val o = __offset(64)
         return if (o != 0) {
             obj.__assign(o + bb_pos, bb)
         } else {
@@ -346,7 +350,7 @@ class MOR : Table() {
      */
     val covFloor : UByte
         get() {
-            val o = __offset(72)
+            val o = __offset(66)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
@@ -356,109 +360,16 @@ class MOR : Table() {
      */
     val covRealismId : UShort
         get() {
-            val o = __offset(74)
+            val o = __offset(68)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    /**
-     * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-     * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-     */
-    val covRealism : CVR? get() = covRealism(CVR())
-    fun covRealism(obj: CVR) : CVR? {
-        val o = __offset(76)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
     /**
      * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
      */
     val covCalibration : Byte
         get() {
-            val o = __offset(78)
+            val o = __offset(70)
             return if(o != 0) bb.get(o + bb_pos) else 0
-        }
-    /**
-     * Identifier of that calibration evidence (a report or record).
-     */
-    val covCalibrationReference : String?
-        get() {
-            val o = __offset(80)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val covCalibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
-    fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
-    /**
-     * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-     * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-     * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-     * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-     * A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-     */
-    fun windows(j: Int) : MORWindow? = windows(MORWindow(), j)
-    fun windows(obj: MORWindow, j: Int) : MORWindow? {
-        val o = __offset(82)
-        return if (o != 0) {
-            obj.__assign(__vector(o) + j * 24, bb)
-        } else {
-            null
-        }
-    }
-    val windowsLength : Int
-        get() {
-            val o = __offset(82); return if (o != 0) __vector_len(o) else 0
-        }
-    /**
-     * The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-     * (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-     */
-    fun windowCoeffHeads(j: Int) : Double {
-        val o = __offset(84)
-        return if (o != 0) {
-            bb.getDouble(__vector(o) + j * 8)
-        } else {
-            0.0
-        }
-    }
-    val windowCoeffHeadsLength : Int
-        get() {
-            val o = __offset(84); return if (o != 0) __vector_len(o) else 0
-        }
-    val windowCoeffHeadsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 8)
-    fun windowCoeffHeadsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 8)
-    /**
-     * The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-     * (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-     */
-    fun windowCoeffTails(j: Int) : Float {
-        val o = __offset(86)
-        return if (o != 0) {
-            bb.getFloat(__vector(o) + j * 4)
-        } else {
-            0.0f
-        }
-    }
-    val windowCoeffTailsLength : Int
-        get() {
-            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
-        }
-    val windowCoeffTailsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 4)
-    fun windowCoeffTailsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 4)
-    /**
-     * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-     * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-     * record before using the rows: a mismatch voids the rows. With WINDOWS only.
-     */
-    val windowRecordCheck : ULong
-        get() {
-            val o = __offset(88)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
      * The object's own element set for times beyond what this record serves (a reader's fallback
@@ -467,6 +378,89 @@ class MOR : Table() {
      */
     val fallback : MPE? get() = fallback(MPE())
     fun fallback(obj: MPE) : MPE? {
+        val o = __offset(72)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * BSTAR, 1/Earth radii. SGP4 only.
+     */
+    val bstar : Double
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+     */
+    val meanMotionDot : Double
+        get() {
+            val o = __offset(76)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+     */
+    val meanMotionDdot : Double
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * The solid Earth tide the set flies with.
+     */
+    val solidTidesModel : UByte
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The radiation pressure model the set states.
+     */
+    val solarRadPressure : UByte
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+     */
+    val ecom2Y0 : Double
+        get() {
+            val o = __offset(84)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Whether the set is real or test data.
+     */
+    val messageStatus : UByte
+        get() {
+            val o = __offset(86)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The object's name; absent unless a reader copies it into what it writes.
+     */
+    val objectName : String?
+        get() {
+            val o = __offset(88)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+     * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+     */
+    val covRealism : CVR? get() = covRealism(CVR())
+    fun covRealism(obj: CVR) : CVR? {
         val o = __offset(90)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -475,13 +469,19 @@ class MOR : Table() {
         }
     }
     /**
-     * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+     * Identifier of that calibration evidence (a report or record).
      */
-    val rowsOnly : Boolean
+    val covCalibrationReference : String?
         get() {
             val o = __offset(92)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val covCalibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
+    fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMOR(_bb: ByteBuffer): MOR = getRootAsMOR(_bb, MOR())
@@ -494,53 +494,12 @@ class MOR : Table() {
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(0, noradCatId.toInt(), 0)
         fun addINTERNATIONALDESIGNATOR(builder: FlatBufferBuilder, internationalDesignator: Int) = builder.addOffset(1, internationalDesignator, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
-        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(3, objectName, 0)
-        fun addMESSAGESTATUS(builder: FlatBufferBuilder, messageStatus: UByte) = builder.addByte(4, messageStatus.toByte(), 0)
-        fun addEPOCHUNIXUS(builder: FlatBufferBuilder, epochUnixUs: Long) = builder.addLong(5, epochUnixUs, 0L)
-        fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(6, meanElementTheory, 6)
-        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(7, meanMotion, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(8, eccentricity, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(9, inclination, 0.0)
-        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(10, raOfAscNode, 0.0)
-        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(11, argOfPericenter, 0.0)
-        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(12, meanAnomaly, 0.0)
-        fun addBTERM(builder: FlatBufferBuilder, bterm: Double) = builder.addDouble(13, bterm, 0.0)
-        fun addAGOM(builder: FlatBufferBuilder, agom: Double) = builder.addDouble(14, agom, 0.0)
-        fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(15, bstar, 0.0)
-        fun addMEANMOTIONDOT(builder: FlatBufferBuilder, meanMotionDot: Double) = builder.addDouble(16, meanMotionDot, 0.0)
-        fun addMEANMOTIONDDOT(builder: FlatBufferBuilder, meanMotionDdot: Double) = builder.addDouble(17, meanMotionDdot, 0.0)
-        fun addGRAVITYFIELD(builder: FlatBufferBuilder, gravityField: UByte) = builder.addByte(18, gravityField.toByte(), 0)
-        fun addMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, maximumTesseralDegree: UByte) = builder.addByte(19, maximumTesseralDegree.toByte(), 0)
-        fun addMAXIMUMZONALDEGREE(builder: FlatBufferBuilder, maximumZonalDegree: UByte) = builder.addByte(20, maximumZonalDegree.toByte(), 0)
-        fun addSOLIDTIDESMODEL(builder: FlatBufferBuilder, solidTidesModel: UByte) = builder.addByte(21, solidTidesModel.toByte(), 0)
-        fun addSOLARRADPRESSURE(builder: FlatBufferBuilder, solarRadPressure: UByte) = builder.addByte(22, solarRadPressure.toByte(), 0)
-        fun addODPARAMETERS(builder: FlatBufferBuilder, odParameters: UInt) = builder.addInt(23, odParameters.toInt(), 0)
-        fun addODSOLVEDFOR(builder: FlatBufferBuilder, odSolvedFor: UInt) = builder.addInt(24, odSolvedFor.toInt(), 0)
-        fun addECOM2Y0(builder: FlatBufferBuilder, ecom2Y0: Double) = builder.addDouble(25, ecom2Y0, 0.0)
-        fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(26, actualOdSpan, Double.NaN)
-        fun addODOBSERVATIONSUSED(builder: FlatBufferBuilder, odObservationsUsed: Int) = builder.addInt(27, odObservationsUsed, -1)
-        fun addODTRACKSUSED(builder: FlatBufferBuilder, odTracksUsed: Int) = builder.addInt(28, odTracksUsed, -1)
-        fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(29, weightedRms, Double.NaN)
-        fun addODEPOCHUNIXUS(builder: FlatBufferBuilder, odEpochUnixUs: Long) = builder.addLong(30, odEpochUnixUs, Long.MIN_VALUE)
-        fun addDAYSSINCELASTOBS(builder: FlatBufferBuilder, daysSinceLastObs: Double) = builder.addDouble(31, daysSinceLastObs, Double.NaN)
-        fun addCOVARIANCEDATA(builder: FlatBufferBuilder, covarianceData: Int) = builder.addOffset(32, covarianceData, 0)
-        fun createCovarianceDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
-            builder.startVector(8, data.size, 8)
-            for (i in data.size - 1 downTo 0) {
-                builder.addDouble(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startCovarianceDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOVPROPAGATION(builder: FlatBufferBuilder, covPropagation: Int) = builder.addStruct(33, covPropagation, 0)
-        fun addCOVFLOOR(builder: FlatBufferBuilder, covFloor: UByte) = builder.addByte(34, covFloor.toByte(), 0)
-        fun addCOVREALISMID(builder: FlatBufferBuilder, covRealismId: UShort) = builder.addShort(35, covRealismId.toShort(), 0)
-        fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(36, covRealism, 0)
-        fun addCOVCALIBRATION(builder: FlatBufferBuilder, covCalibration: Byte) = builder.addByte(37, covCalibration, 0)
-        fun addCOVCALIBRATIONREFERENCE(builder: FlatBufferBuilder, covCalibrationReference: Int) = builder.addOffset(38, covCalibrationReference, 0)
-        fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(39, windows, 0)
+        fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(3, meanElementTheory, 6)
+        fun addEPOCHUNIXUS(builder: FlatBufferBuilder, epochUnixUs: Long) = builder.addLong(4, epochUnixUs, 0L)
+        fun addROWSONLY(builder: FlatBufferBuilder, rowsOnly: Boolean) = builder.addBoolean(5, rowsOnly, false)
+        fun addWINDOWS(builder: FlatBufferBuilder, windows: Int) = builder.addOffset(6, windows, 0)
         fun startWindowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(24, numElems, 8)
-        fun addWINDOWCOEFFHEADS(builder: FlatBufferBuilder, windowCoeffHeads: Int) = builder.addOffset(40, windowCoeffHeads, 0)
+        fun addWINDOWCOEFFHEADS(builder: FlatBufferBuilder, windowCoeffHeads: Int) = builder.addOffset(7, windowCoeffHeads, 0)
         fun createWindowCoeffHeadsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -549,7 +508,7 @@ class MOR : Table() {
             return builder.endVector()
         }
         fun startWindowCoeffHeadsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addWINDOWCOEFFTAILS(builder: FlatBufferBuilder, windowCoeffTails: Int) = builder.addOffset(41, windowCoeffTails, 0)
+        fun addWINDOWCOEFFTAILS(builder: FlatBufferBuilder, windowCoeffTails: Int) = builder.addOffset(8, windowCoeffTails, 0)
         fun createWindowCoeffTailsVector(builder: FlatBufferBuilder, data: FloatArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -558,9 +517,50 @@ class MOR : Table() {
             return builder.endVector()
         }
         fun startWindowCoeffTailsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addWINDOWRECORDCHECK(builder: FlatBufferBuilder, windowRecordCheck: ULong) = builder.addLong(42, windowRecordCheck.toLong(), 0)
-        fun addFALLBACK(builder: FlatBufferBuilder, fallback: Int) = builder.addOffset(43, fallback, 0)
-        fun addROWSONLY(builder: FlatBufferBuilder, rowsOnly: Boolean) = builder.addBoolean(44, rowsOnly, false)
+        fun addWINDOWRECORDCHECK(builder: FlatBufferBuilder, windowRecordCheck: ULong) = builder.addLong(9, windowRecordCheck.toLong(), 0)
+        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(10, meanMotion, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(11, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(12, inclination, 0.0)
+        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(13, raOfAscNode, 0.0)
+        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(14, argOfPericenter, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(15, meanAnomaly, 0.0)
+        fun addBTERM(builder: FlatBufferBuilder, bterm: Double) = builder.addDouble(16, bterm, 0.0)
+        fun addAGOM(builder: FlatBufferBuilder, agom: Double) = builder.addDouble(17, agom, 0.0)
+        fun addGRAVITYFIELD(builder: FlatBufferBuilder, gravityField: UByte) = builder.addByte(18, gravityField.toByte(), 0)
+        fun addMAXIMUMTESSERALDEGREE(builder: FlatBufferBuilder, maximumTesseralDegree: UByte) = builder.addByte(19, maximumTesseralDegree.toByte(), 0)
+        fun addMAXIMUMZONALDEGREE(builder: FlatBufferBuilder, maximumZonalDegree: UByte) = builder.addByte(20, maximumZonalDegree.toByte(), 0)
+        fun addODPARAMETERS(builder: FlatBufferBuilder, odParameters: UInt) = builder.addInt(21, odParameters.toInt(), 0)
+        fun addODSOLVEDFOR(builder: FlatBufferBuilder, odSolvedFor: UInt) = builder.addInt(22, odSolvedFor.toInt(), 0)
+        fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(23, actualOdSpan, Double.NaN)
+        fun addODOBSERVATIONSUSED(builder: FlatBufferBuilder, odObservationsUsed: Int) = builder.addInt(24, odObservationsUsed, -1)
+        fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(25, weightedRms, Double.NaN)
+        fun addODEPOCHUNIXUS(builder: FlatBufferBuilder, odEpochUnixUs: Long) = builder.addLong(26, odEpochUnixUs, Long.MIN_VALUE)
+        fun addODTRACKSUSED(builder: FlatBufferBuilder, odTracksUsed: Int) = builder.addInt(27, odTracksUsed, -1)
+        fun addDAYSSINCELASTOBS(builder: FlatBufferBuilder, daysSinceLastObs: Double) = builder.addDouble(28, daysSinceLastObs, Double.NaN)
+        fun addCOVARIANCEDATA(builder: FlatBufferBuilder, covarianceData: Int) = builder.addOffset(29, covarianceData, 0)
+        fun createCovarianceDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovarianceDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addCOVPROPAGATION(builder: FlatBufferBuilder, covPropagation: Int) = builder.addStruct(30, covPropagation, 0)
+        fun addCOVFLOOR(builder: FlatBufferBuilder, covFloor: UByte) = builder.addByte(31, covFloor.toByte(), 0)
+        fun addCOVREALISMID(builder: FlatBufferBuilder, covRealismId: UShort) = builder.addShort(32, covRealismId.toShort(), 0)
+        fun addCOVCALIBRATION(builder: FlatBufferBuilder, covCalibration: Byte) = builder.addByte(33, covCalibration, 0)
+        fun addFALLBACK(builder: FlatBufferBuilder, fallback: Int) = builder.addOffset(34, fallback, 0)
+        fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(35, bstar, 0.0)
+        fun addMEANMOTIONDOT(builder: FlatBufferBuilder, meanMotionDot: Double) = builder.addDouble(36, meanMotionDot, 0.0)
+        fun addMEANMOTIONDDOT(builder: FlatBufferBuilder, meanMotionDdot: Double) = builder.addDouble(37, meanMotionDdot, 0.0)
+        fun addSOLIDTIDESMODEL(builder: FlatBufferBuilder, solidTidesModel: UByte) = builder.addByte(38, solidTidesModel.toByte(), 0)
+        fun addSOLARRADPRESSURE(builder: FlatBufferBuilder, solarRadPressure: UByte) = builder.addByte(39, solarRadPressure.toByte(), 0)
+        fun addECOM2Y0(builder: FlatBufferBuilder, ecom2Y0: Double) = builder.addDouble(40, ecom2Y0, 0.0)
+        fun addMESSAGESTATUS(builder: FlatBufferBuilder, messageStatus: UByte) = builder.addByte(41, messageStatus.toByte(), 0)
+        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(42, objectName, 0)
+        fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(43, covRealism, 0)
+        fun addCOVCALIBRATIONREFERENCE(builder: FlatBufferBuilder, covCalibrationReference: Int) = builder.addOffset(44, covCalibrationReference, 0)
         fun endMOR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

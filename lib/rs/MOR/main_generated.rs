@@ -1573,48 +1573,48 @@ impl<'a> MOR<'a> {
     pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 4;
     pub const VT_INTERNATIONAL_DESIGNATOR: ::flatbuffers::VOffsetT = 6;
     pub const VT_ORIGINATOR: ::flatbuffers::VOffsetT = 8;
-    pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 10;
-    pub const VT_MESSAGE_STATUS: ::flatbuffers::VOffsetT = 12;
-    pub const VT_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 14;
-    pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 16;
-    pub const VT_MEAN_MOTION: ::flatbuffers::VOffsetT = 18;
-    pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 20;
-    pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 22;
-    pub const VT_RA_OF_ASC_NODE: ::flatbuffers::VOffsetT = 24;
-    pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 26;
-    pub const VT_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 28;
-    pub const VT_BTERM: ::flatbuffers::VOffsetT = 30;
-    pub const VT_AGOM: ::flatbuffers::VOffsetT = 32;
-    pub const VT_BSTAR: ::flatbuffers::VOffsetT = 34;
-    pub const VT_MEAN_MOTION_DOT: ::flatbuffers::VOffsetT = 36;
-    pub const VT_MEAN_MOTION_DDOT: ::flatbuffers::VOffsetT = 38;
+    pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 10;
+    pub const VT_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 12;
+    pub const VT_ROWS_ONLY: ::flatbuffers::VOffsetT = 14;
+    pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_WINDOW_COEFF_HEADS: ::flatbuffers::VOffsetT = 18;
+    pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 20;
+    pub const VT_WINDOW_RECORD_CHECK: ::flatbuffers::VOffsetT = 22;
+    pub const VT_MEAN_MOTION: ::flatbuffers::VOffsetT = 24;
+    pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 26;
+    pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 28;
+    pub const VT_RA_OF_ASC_NODE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 32;
+    pub const VT_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 34;
+    pub const VT_BTERM: ::flatbuffers::VOffsetT = 36;
+    pub const VT_AGOM: ::flatbuffers::VOffsetT = 38;
     pub const VT_GRAVITY_FIELD: ::flatbuffers::VOffsetT = 40;
     pub const VT_MAXIMUM_TESSERAL_DEGREE: ::flatbuffers::VOffsetT = 42;
     pub const VT_MAXIMUM_ZONAL_DEGREE: ::flatbuffers::VOffsetT = 44;
-    pub const VT_SOLID_TIDES_MODEL: ::flatbuffers::VOffsetT = 46;
-    pub const VT_SOLAR_RAD_PRESSURE: ::flatbuffers::VOffsetT = 48;
-    pub const VT_OD_PARAMETERS: ::flatbuffers::VOffsetT = 50;
-    pub const VT_OD_SOLVED_FOR: ::flatbuffers::VOffsetT = 52;
-    pub const VT_ECOM2_Y0: ::flatbuffers::VOffsetT = 54;
-    pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 56;
-    pub const VT_OD_OBSERVATIONS_USED: ::flatbuffers::VOffsetT = 58;
-    pub const VT_OD_TRACKS_USED: ::flatbuffers::VOffsetT = 60;
-    pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 62;
-    pub const VT_OD_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 64;
-    pub const VT_DAYS_SINCE_LAST_OBS: ::flatbuffers::VOffsetT = 66;
-    pub const VT_COVARIANCE_DATA: ::flatbuffers::VOffsetT = 68;
-    pub const VT_COV_PROPAGATION: ::flatbuffers::VOffsetT = 70;
-    pub const VT_COV_FLOOR: ::flatbuffers::VOffsetT = 72;
-    pub const VT_COV_REALISM_ID: ::flatbuffers::VOffsetT = 74;
-    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 76;
-    pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 78;
-    pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 80;
-    pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 82;
-    pub const VT_WINDOW_COEFF_HEADS: ::flatbuffers::VOffsetT = 84;
-    pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 86;
-    pub const VT_WINDOW_RECORD_CHECK: ::flatbuffers::VOffsetT = 88;
-    pub const VT_FALLBACK: ::flatbuffers::VOffsetT = 90;
-    pub const VT_ROWS_ONLY: ::flatbuffers::VOffsetT = 92;
+    pub const VT_OD_PARAMETERS: ::flatbuffers::VOffsetT = 46;
+    pub const VT_OD_SOLVED_FOR: ::flatbuffers::VOffsetT = 48;
+    pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 50;
+    pub const VT_OD_OBSERVATIONS_USED: ::flatbuffers::VOffsetT = 52;
+    pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 54;
+    pub const VT_OD_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 56;
+    pub const VT_OD_TRACKS_USED: ::flatbuffers::VOffsetT = 58;
+    pub const VT_DAYS_SINCE_LAST_OBS: ::flatbuffers::VOffsetT = 60;
+    pub const VT_COVARIANCE_DATA: ::flatbuffers::VOffsetT = 62;
+    pub const VT_COV_PROPAGATION: ::flatbuffers::VOffsetT = 64;
+    pub const VT_COV_FLOOR: ::flatbuffers::VOffsetT = 66;
+    pub const VT_COV_REALISM_ID: ::flatbuffers::VOffsetT = 68;
+    pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 70;
+    pub const VT_FALLBACK: ::flatbuffers::VOffsetT = 72;
+    pub const VT_BSTAR: ::flatbuffers::VOffsetT = 74;
+    pub const VT_MEAN_MOTION_DOT: ::flatbuffers::VOffsetT = 76;
+    pub const VT_MEAN_MOTION_DDOT: ::flatbuffers::VOffsetT = 78;
+    pub const VT_SOLID_TIDES_MODEL: ::flatbuffers::VOffsetT = 80;
+    pub const VT_SOLAR_RAD_PRESSURE: ::flatbuffers::VOffsetT = 82;
+    pub const VT_ECOM2_Y0: ::flatbuffers::VOffsetT = 84;
+    pub const VT_MESSAGE_STATUS: ::flatbuffers::VOffsetT = 86;
+    pub const VT_OBJECT_NAME: ::flatbuffers::VOffsetT = 88;
+    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 90;
+    pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 92;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1627,15 +1627,14 @@ impl<'a> MOR<'a> {
         args: &'args MORArgs<'args>
     ) -> ::flatbuffers::WIPOffset<MOR<'bldr>> {
         let mut builder = MORBuilder::new(_fbb);
-        builder.add_WINDOW_RECORD_CHECK(args.WINDOW_RECORD_CHECK);
-        builder.add_DAYS_SINCE_LAST_OBS(args.DAYS_SINCE_LAST_OBS);
-        builder.add_OD_EPOCH_UNIX_US(args.OD_EPOCH_UNIX_US);
-        builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
-        builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
         builder.add_ECOM2_Y0(args.ECOM2_Y0);
         builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
         builder.add_MEAN_MOTION_DOT(args.MEAN_MOTION_DOT);
         builder.add_BSTAR(args.BSTAR);
+        builder.add_DAYS_SINCE_LAST_OBS(args.DAYS_SINCE_LAST_OBS);
+        builder.add_OD_EPOCH_UNIX_US(args.OD_EPOCH_UNIX_US);
+        builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
+        builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
         builder.add_AGOM(args.AGOM);
         builder.add_BTERM(args.BTERM);
         builder.add_MEAN_ANOMALY(args.MEAN_ANOMALY);
@@ -1644,34 +1643,35 @@ impl<'a> MOR<'a> {
         builder.add_INCLINATION(args.INCLINATION);
         builder.add_ECCENTRICITY(args.ECCENTRICITY);
         builder.add_MEAN_MOTION(args.MEAN_MOTION);
+        builder.add_WINDOW_RECORD_CHECK(args.WINDOW_RECORD_CHECK);
         builder.add_EPOCH_UNIX_US(args.EPOCH_UNIX_US);
-        if let Some(x) = args.FALLBACK { builder.add_FALLBACK(x); }
-        if let Some(x) = args.WINDOW_COEFF_TAILS { builder.add_WINDOW_COEFF_TAILS(x); }
-        if let Some(x) = args.WINDOW_COEFF_HEADS { builder.add_WINDOW_COEFF_HEADS(x); }
-        if let Some(x) = args.WINDOWS { builder.add_WINDOWS(x); }
         if let Some(x) = args.COV_CALIBRATION_REFERENCE { builder.add_COV_CALIBRATION_REFERENCE(x); }
         if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
+        if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+        if let Some(x) = args.FALLBACK { builder.add_FALLBACK(x); }
         if let Some(x) = args.COV_PROPAGATION { builder.add_COV_PROPAGATION(x); }
         if let Some(x) = args.COVARIANCE_DATA { builder.add_COVARIANCE_DATA(x); }
         builder.add_OD_TRACKS_USED(args.OD_TRACKS_USED);
         builder.add_OD_OBSERVATIONS_USED(args.OD_OBSERVATIONS_USED);
         builder.add_OD_SOLVED_FOR(args.OD_SOLVED_FOR);
         builder.add_OD_PARAMETERS(args.OD_PARAMETERS);
-        if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+        if let Some(x) = args.WINDOW_COEFF_TAILS { builder.add_WINDOW_COEFF_TAILS(x); }
+        if let Some(x) = args.WINDOW_COEFF_HEADS { builder.add_WINDOW_COEFF_HEADS(x); }
+        if let Some(x) = args.WINDOWS { builder.add_WINDOWS(x); }
         if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
         if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         builder.add_COV_REALISM_ID(args.COV_REALISM_ID);
-        builder.add_ROWS_ONLY(args.ROWS_ONLY);
-        builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
-        builder.add_COV_FLOOR(args.COV_FLOOR);
+        builder.add_MESSAGE_STATUS(args.MESSAGE_STATUS);
         builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
         builder.add_SOLID_TIDES_MODEL(args.SOLID_TIDES_MODEL);
+        builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
+        builder.add_COV_FLOOR(args.COV_FLOOR);
         builder.add_MAXIMUM_ZONAL_DEGREE(args.MAXIMUM_ZONAL_DEGREE);
         builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
         builder.add_GRAVITY_FIELD(args.GRAVITY_FIELD);
+        builder.add_ROWS_ONLY(args.ROWS_ONLY);
         builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
-        builder.add_MESSAGE_STATUS(args.MESSAGE_STATUS);
         builder.finish()
     }
 
@@ -1683,52 +1683,9 @@ impl<'a> MOR<'a> {
         let ORIGINATOR = self.ORIGINATOR().map(|x| {
             alloc::string::ToString::to_string(x)
         });
-        let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
-            alloc::string::ToString::to_string(x)
-        });
-        let MESSAGE_STATUS = self.MESSAGE_STATUS();
-        let EPOCH_UNIX_US = self.EPOCH_UNIX_US();
         let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
-        let MEAN_MOTION = self.MEAN_MOTION();
-        let ECCENTRICITY = self.ECCENTRICITY();
-        let INCLINATION = self.INCLINATION();
-        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE();
-        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
-        let MEAN_ANOMALY = self.MEAN_ANOMALY();
-        let BTERM = self.BTERM();
-        let AGOM = self.AGOM();
-        let BSTAR = self.BSTAR();
-        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
-        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
-        let GRAVITY_FIELD = self.GRAVITY_FIELD();
-        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE();
-        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE();
-        let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL();
-        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE();
-        let OD_PARAMETERS = self.OD_PARAMETERS();
-        let OD_SOLVED_FOR = self.OD_SOLVED_FOR();
-        let ECOM2_Y0 = self.ECOM2_Y0();
-        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
-        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED();
-        let OD_TRACKS_USED = self.OD_TRACKS_USED();
-        let WEIGHTED_RMS = self.WEIGHTED_RMS();
-        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US();
-        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS();
-        let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
-            x.into_iter().collect()
-        });
-        let COV_PROPAGATION = self.COV_PROPAGATION().map(|x| {
-            x.unpack()
-        });
-        let COV_FLOOR = self.COV_FLOOR();
-        let COV_REALISM_ID = self.COV_REALISM_ID();
-        let COV_REALISM = self.COV_REALISM().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let COV_CALIBRATION = self.COV_CALIBRATION();
-        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE().map(|x| {
-            alloc::string::ToString::to_string(x)
-        });
+        let EPOCH_UNIX_US = self.EPOCH_UNIX_US();
+        let ROWS_ONLY = self.ROWS_ONLY();
         let WINDOWS = self.WINDOWS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
@@ -1739,18 +1696,64 @@ impl<'a> MOR<'a> {
             x.into_iter().collect()
         });
         let WINDOW_RECORD_CHECK = self.WINDOW_RECORD_CHECK();
+        let MEAN_MOTION = self.MEAN_MOTION();
+        let ECCENTRICITY = self.ECCENTRICITY();
+        let INCLINATION = self.INCLINATION();
+        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE();
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
+        let MEAN_ANOMALY = self.MEAN_ANOMALY();
+        let BTERM = self.BTERM();
+        let AGOM = self.AGOM();
+        let GRAVITY_FIELD = self.GRAVITY_FIELD();
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE();
+        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE();
+        let OD_PARAMETERS = self.OD_PARAMETERS();
+        let OD_SOLVED_FOR = self.OD_SOLVED_FOR();
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED();
+        let WEIGHTED_RMS = self.WEIGHTED_RMS();
+        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US();
+        let OD_TRACKS_USED = self.OD_TRACKS_USED();
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS();
+        let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
+            x.into_iter().collect()
+        });
+        let COV_PROPAGATION = self.COV_PROPAGATION().map(|x| {
+            x.unpack()
+        });
+        let COV_FLOOR = self.COV_FLOOR();
+        let COV_REALISM_ID = self.COV_REALISM_ID();
+        let COV_CALIBRATION = self.COV_CALIBRATION();
         let FALLBACK = self.FALLBACK().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
-        let ROWS_ONLY = self.ROWS_ONLY();
+        let BSTAR = self.BSTAR();
+        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT();
+        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT();
+        let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL();
+        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE();
+        let ECOM2_Y0 = self.ECOM2_Y0();
+        let MESSAGE_STATUS = self.MESSAGE_STATUS();
+        let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let COV_REALISM = self.COV_REALISM().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         MORT {
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
             ORIGINATOR,
-            OBJECT_NAME,
-            MESSAGE_STATUS,
-            EPOCH_UNIX_US,
             MEAN_ELEMENT_THEORY,
+            EPOCH_UNIX_US,
+            ROWS_ONLY,
+            WINDOWS,
+            WINDOW_COEFF_HEADS,
+            WINDOW_COEFF_TAILS,
+            WINDOW_RECORD_CHECK,
             MEAN_MOTION,
             ECCENTRICITY,
             INCLINATION,
@@ -1759,36 +1762,33 @@ impl<'a> MOR<'a> {
             MEAN_ANOMALY,
             BTERM,
             AGOM,
-            BSTAR,
-            MEAN_MOTION_DOT,
-            MEAN_MOTION_DDOT,
             GRAVITY_FIELD,
             MAXIMUM_TESSERAL_DEGREE,
             MAXIMUM_ZONAL_DEGREE,
-            SOLID_TIDES_MODEL,
-            SOLAR_RAD_PRESSURE,
             OD_PARAMETERS,
             OD_SOLVED_FOR,
-            ECOM2_Y0,
             ACTUAL_OD_SPAN,
             OD_OBSERVATIONS_USED,
-            OD_TRACKS_USED,
             WEIGHTED_RMS,
             OD_EPOCH_UNIX_US,
+            OD_TRACKS_USED,
             DAYS_SINCE_LAST_OBS,
             COVARIANCE_DATA,
             COV_PROPAGATION,
             COV_FLOOR,
             COV_REALISM_ID,
-            COV_REALISM,
             COV_CALIBRATION,
-            COV_CALIBRATION_REFERENCE,
-            WINDOWS,
-            WINDOW_COEFF_HEADS,
-            WINDOW_COEFF_TAILS,
-            WINDOW_RECORD_CHECK,
             FALLBACK,
-            ROWS_ONLY,
+            BSTAR,
+            MEAN_MOTION_DOT,
+            MEAN_MOTION_DDOT,
+            SOLID_TIDES_MODEL,
+            SOLAR_RAD_PRESSURE,
+            ECOM2_Y0,
+            MESSAGE_STATUS,
+            OBJECT_NAME,
+            COV_REALISM,
+            COV_CALIBRATION_REFERENCE,
         }
     }
 
@@ -1820,22 +1820,13 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_ORIGINATOR, None)}
     }
 
-    /// The object's name; absent unless a reader copies it into what it writes.
+    /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
     #[inline]
-    pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+    pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementSource {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_OBJECT_NAME, None)}
-    }
-
-    /// Whether the set is real or test data.
-    #[inline]
-    pub fn MESSAGE_STATUS(&self) -> morMessageStatus {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<morMessageStatus>(MOR::VT_MESSAGE_STATUS, Some(morMessageStatus::UNSPECIFIED)).unwrap()}
+        unsafe { self._tab.get::<meanElementSource>(MOR::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::UNSPECIFIED)).unwrap()}
     }
 
     /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
@@ -1849,13 +1840,57 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<i64>(MOR::VT_EPOCH_UNIX_US, Some(0)).unwrap()}
     }
 
-    /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
     #[inline]
-    pub fn MEAN_ELEMENT_THEORY(&self) -> meanElementSource {
+    pub fn ROWS_ONLY(&self) -> bool {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<meanElementSource>(MOR::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::UNSPECIFIED)).unwrap()}
+        unsafe { self._tab.get::<bool>(MOR::VT_ROWS_ONLY, Some(false)).unwrap()}
+    }
+
+    /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+    /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+    #[inline]
+    pub fn WINDOWS(&self) -> Option<::flatbuffers::Vector<'a, MORWindow>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, MORWindow>>>(MOR::VT_WINDOWS, None)}
+    }
+
+    /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+    /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+    #[inline]
+    pub fn WINDOW_COEFF_HEADS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(MOR::VT_WINDOW_COEFF_HEADS, None)}
+    }
+
+    /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+    /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+    #[inline]
+    pub fn WINDOW_COEFF_TAILS(&self) -> Option<::flatbuffers::Vector<'a, f32>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(MOR::VT_WINDOW_COEFF_TAILS, None)}
+    }
+
+    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    #[inline]
+    pub fn WINDOW_RECORD_CHECK(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(MOR::VT_WINDOW_RECORD_CHECK, Some(0)).unwrap()}
     }
 
     /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
@@ -1930,33 +1965,6 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<f64>(MOR::VT_AGOM, Some(0.0)).unwrap()}
     }
 
-    /// BSTAR, 1/Earth radii. SGP4 only.
-    #[inline]
-    pub fn BSTAR(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(MOR::VT_BSTAR, Some(0.0)).unwrap()}
-    }
-
-    /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-    #[inline]
-    pub fn MEAN_MOTION_DOT(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(MOR::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
-    }
-
-    /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-    #[inline]
-    pub fn MEAN_MOTION_DDOT(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(MOR::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
-    }
-
     /// The gravity field the set flies on.
     #[inline]
     pub fn GRAVITY_FIELD(&self) -> morGravityField {
@@ -1984,24 +1992,6 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<u8>(MOR::VT_MAXIMUM_ZONAL_DEGREE, Some(0)).unwrap()}
     }
 
-    /// The solid Earth tide the set flies with.
-    #[inline]
-    pub fn SOLID_TIDES_MODEL(&self) -> morSolidTideModel {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<morSolidTideModel>(MOR::VT_SOLID_TIDES_MODEL, Some(morSolidTideModel::NONE)).unwrap()}
-    }
-
-    /// The radiation pressure model the set states.
-    #[inline]
-    pub fn SOLAR_RAD_PRESSURE(&self) -> morRadiationModel {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<morRadiationModel>(MOR::VT_SOLAR_RAD_PRESSURE, Some(morRadiationModel::UNSTATED)).unwrap()}
-    }
-
     /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
     /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
     /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
@@ -2022,15 +2012,6 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<u32>(MOR::VT_OD_SOLVED_FOR, Some(0)).unwrap()}
     }
 
-    /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-    #[inline]
-    pub fn ECOM2_Y0(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(MOR::VT_ECOM2_Y0, Some(0.0)).unwrap()}
-    }
-
     /// The span of the observations the orbit determination used, days; NaN when not stated.
     #[inline]
     pub fn ACTUAL_OD_SPAN(&self) -> f64 {
@@ -2049,15 +2030,6 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<i32>(MOR::VT_OD_OBSERVATIONS_USED, Some(-1)).unwrap()}
     }
 
-    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-    #[inline]
-    pub fn OD_TRACKS_USED(&self) -> i32 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<i32>(MOR::VT_OD_TRACKS_USED, Some(-1)).unwrap()}
-    }
-
     /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
     #[inline]
     pub fn WEIGHTED_RMS(&self) -> f64 {
@@ -2074,6 +2046,15 @@ impl<'a> MOR<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<i64>(MOR::VT_OD_EPOCH_UNIX_US, Some(-9223372036854775808)).unwrap()}
+    }
+
+    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    #[inline]
+    pub fn OD_TRACKS_USED(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(MOR::VT_OD_TRACKS_USED, Some(-1)).unwrap()}
     }
 
     /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
@@ -2127,16 +2108,6 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<u16>(MOR::VT_COV_REALISM_ID, Some(0)).unwrap()}
     }
 
-    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-    #[inline]
-    pub fn COV_REALISM(&self) -> Option<CVR<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CVR>>(MOR::VT_COV_REALISM, None)}
-    }
-
     /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
     #[inline]
     pub fn COV_CALIBRATION(&self) -> covarianceCalibration {
@@ -2144,59 +2115,6 @@ impl<'a> MOR<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<covarianceCalibration>(MOR::VT_COV_CALIBRATION, Some(covarianceCalibration::Unspecified)).unwrap()}
-    }
-
-    /// Identifier of that calibration evidence (a report or record).
-    #[inline]
-    pub fn COV_CALIBRATION_REFERENCE(&self) -> Option<&'a str> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_COV_CALIBRATION_REFERENCE, None)}
-    }
-
-    /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-    /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-    #[inline]
-    pub fn WINDOWS(&self) -> Option<::flatbuffers::Vector<'a, MORWindow>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, MORWindow>>>(MOR::VT_WINDOWS, None)}
-    }
-
-    /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-    /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-    #[inline]
-    pub fn WINDOW_COEFF_HEADS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(MOR::VT_WINDOW_COEFF_HEADS, None)}
-    }
-
-    /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-    /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-    #[inline]
-    pub fn WINDOW_COEFF_TAILS(&self) -> Option<::flatbuffers::Vector<'a, f32>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(MOR::VT_WINDOW_COEFF_TAILS, None)}
-    }
-
-    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-    #[inline]
-    pub fn WINDOW_RECORD_CHECK(&self) -> u64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u64>(MOR::VT_WINDOW_RECORD_CHECK, Some(0)).unwrap()}
     }
 
     /// The object's own element set for times beyond what this record serves (a reader's fallback
@@ -2210,13 +2128,95 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<MPE>>(MOR::VT_FALLBACK, None)}
     }
 
-    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    /// BSTAR, 1/Earth radii. SGP4 only.
     #[inline]
-    pub fn ROWS_ONLY(&self) -> bool {
+    pub fn BSTAR(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(MOR::VT_ROWS_ONLY, Some(false)).unwrap()}
+        unsafe { self._tab.get::<f64>(MOR::VT_BSTAR, Some(0.0)).unwrap()}
+    }
+
+    /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+    #[inline]
+    pub fn MEAN_MOTION_DOT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MOR::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
+    }
+
+    /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+    #[inline]
+    pub fn MEAN_MOTION_DDOT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MOR::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
+    }
+
+    /// The solid Earth tide the set flies with.
+    #[inline]
+    pub fn SOLID_TIDES_MODEL(&self) -> morSolidTideModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<morSolidTideModel>(MOR::VT_SOLID_TIDES_MODEL, Some(morSolidTideModel::NONE)).unwrap()}
+    }
+
+    /// The radiation pressure model the set states.
+    #[inline]
+    pub fn SOLAR_RAD_PRESSURE(&self) -> morRadiationModel {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<morRadiationModel>(MOR::VT_SOLAR_RAD_PRESSURE, Some(morRadiationModel::UNSTATED)).unwrap()}
+    }
+
+    /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+    #[inline]
+    pub fn ECOM2_Y0(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MOR::VT_ECOM2_Y0, Some(0.0)).unwrap()}
+    }
+
+    /// Whether the set is real or test data.
+    #[inline]
+    pub fn MESSAGE_STATUS(&self) -> morMessageStatus {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<morMessageStatus>(MOR::VT_MESSAGE_STATUS, Some(morMessageStatus::UNSPECIFIED)).unwrap()}
+    }
+
+    /// The object's name; absent unless a reader copies it into what it writes.
+    #[inline]
+    pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_OBJECT_NAME, None)}
+    }
+
+    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+    #[inline]
+    pub fn COV_REALISM(&self) -> Option<CVR<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CVR>>(MOR::VT_COV_REALISM, None)}
+    }
+
+    /// Identifier of that calibration evidence (a report or record).
+    #[inline]
+    pub fn COV_CALIBRATION_REFERENCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MOR::VT_COV_CALIBRATION_REFERENCE, None)}
     }
 }
 
@@ -2229,10 +2229,13 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("INTERNATIONAL_DESIGNATOR", Self::VT_INTERNATIONAL_DESIGNATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
-            .visit_field::<morMessageStatus>("MESSAGE_STATUS", Self::VT_MESSAGE_STATUS, false)?
-            .visit_field::<i64>("EPOCH_UNIX_US", Self::VT_EPOCH_UNIX_US, false)?
             .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
+            .visit_field::<i64>("EPOCH_UNIX_US", Self::VT_EPOCH_UNIX_US, false)?
+            .visit_field::<bool>("ROWS_ONLY", Self::VT_ROWS_ONLY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, MORWindow>>>("WINDOWS", Self::VT_WINDOWS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WINDOW_COEFF_HEADS", Self::VT_WINDOW_COEFF_HEADS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("WINDOW_COEFF_TAILS", Self::VT_WINDOW_COEFF_TAILS, false)?
+            .visit_field::<u64>("WINDOW_RECORD_CHECK", Self::VT_WINDOW_RECORD_CHECK, false)?
             .visit_field::<f64>("MEAN_MOTION", Self::VT_MEAN_MOTION, false)?
             .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
             .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
@@ -2241,36 +2244,33 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
             .visit_field::<f64>("BTERM", Self::VT_BTERM, false)?
             .visit_field::<f64>("AGOM", Self::VT_AGOM, false)?
-            .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
-            .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
-            .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
             .visit_field::<morGravityField>("GRAVITY_FIELD", Self::VT_GRAVITY_FIELD, false)?
             .visit_field::<u8>("MAXIMUM_TESSERAL_DEGREE", Self::VT_MAXIMUM_TESSERAL_DEGREE, false)?
             .visit_field::<u8>("MAXIMUM_ZONAL_DEGREE", Self::VT_MAXIMUM_ZONAL_DEGREE, false)?
-            .visit_field::<morSolidTideModel>("SOLID_TIDES_MODEL", Self::VT_SOLID_TIDES_MODEL, false)?
-            .visit_field::<morRadiationModel>("SOLAR_RAD_PRESSURE", Self::VT_SOLAR_RAD_PRESSURE, false)?
             .visit_field::<u32>("OD_PARAMETERS", Self::VT_OD_PARAMETERS, false)?
             .visit_field::<u32>("OD_SOLVED_FOR", Self::VT_OD_SOLVED_FOR, false)?
-            .visit_field::<f64>("ECOM2_Y0", Self::VT_ECOM2_Y0, false)?
             .visit_field::<f64>("ACTUAL_OD_SPAN", Self::VT_ACTUAL_OD_SPAN, false)?
             .visit_field::<i32>("OD_OBSERVATIONS_USED", Self::VT_OD_OBSERVATIONS_USED, false)?
-            .visit_field::<i32>("OD_TRACKS_USED", Self::VT_OD_TRACKS_USED, false)?
             .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
             .visit_field::<i64>("OD_EPOCH_UNIX_US", Self::VT_OD_EPOCH_UNIX_US, false)?
+            .visit_field::<i32>("OD_TRACKS_USED", Self::VT_OD_TRACKS_USED, false)?
             .visit_field::<f64>("DAYS_SINCE_LAST_OBS", Self::VT_DAYS_SINCE_LAST_OBS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE_DATA", Self::VT_COVARIANCE_DATA, false)?
             .visit_field::<MORCovariancePropagation>("COV_PROPAGATION", Self::VT_COV_PROPAGATION, false)?
             .visit_field::<morCovarianceFloor>("COV_FLOOR", Self::VT_COV_FLOOR, false)?
             .visit_field::<u16>("COV_REALISM_ID", Self::VT_COV_REALISM_ID, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .visit_field::<covarianceCalibration>("COV_CALIBRATION", Self::VT_COV_CALIBRATION, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, MORWindow>>>("WINDOWS", Self::VT_WINDOWS, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WINDOW_COEFF_HEADS", Self::VT_WINDOW_COEFF_HEADS, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("WINDOW_COEFF_TAILS", Self::VT_WINDOW_COEFF_TAILS, false)?
-            .visit_field::<u64>("WINDOW_RECORD_CHECK", Self::VT_WINDOW_RECORD_CHECK, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<MPE>>("FALLBACK", Self::VT_FALLBACK, false)?
-            .visit_field::<bool>("ROWS_ONLY", Self::VT_ROWS_ONLY, false)?
+            .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
+            .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
+            .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
+            .visit_field::<morSolidTideModel>("SOLID_TIDES_MODEL", Self::VT_SOLID_TIDES_MODEL, false)?
+            .visit_field::<morRadiationModel>("SOLAR_RAD_PRESSURE", Self::VT_SOLAR_RAD_PRESSURE, false)?
+            .visit_field::<f64>("ECOM2_Y0", Self::VT_ECOM2_Y0, false)?
+            .visit_field::<morMessageStatus>("MESSAGE_STATUS", Self::VT_MESSAGE_STATUS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
             .finish();
         Ok(())
     }
@@ -2280,10 +2280,13 @@ pub struct MORArgs<'a> {
     pub NORAD_CAT_ID: u32,
     pub INTERNATIONAL_DESIGNATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ORIGINATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub MESSAGE_STATUS: morMessageStatus,
-    pub EPOCH_UNIX_US: i64,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub EPOCH_UNIX_US: i64,
+    pub ROWS_ONLY: bool,
+    pub WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, MORWindow>>>,
+    pub WINDOW_COEFF_HEADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub WINDOW_COEFF_TAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
+    pub WINDOW_RECORD_CHECK: u64,
     pub MEAN_MOTION: f64,
     pub ECCENTRICITY: f64,
     pub INCLINATION: f64,
@@ -2292,36 +2295,33 @@ pub struct MORArgs<'a> {
     pub MEAN_ANOMALY: f64,
     pub BTERM: f64,
     pub AGOM: f64,
-    pub BSTAR: f64,
-    pub MEAN_MOTION_DOT: f64,
-    pub MEAN_MOTION_DDOT: f64,
     pub GRAVITY_FIELD: morGravityField,
     pub MAXIMUM_TESSERAL_DEGREE: u8,
     pub MAXIMUM_ZONAL_DEGREE: u8,
-    pub SOLID_TIDES_MODEL: morSolidTideModel,
-    pub SOLAR_RAD_PRESSURE: morRadiationModel,
     pub OD_PARAMETERS: u32,
     pub OD_SOLVED_FOR: u32,
-    pub ECOM2_Y0: f64,
     pub ACTUAL_OD_SPAN: f64,
     pub OD_OBSERVATIONS_USED: i32,
-    pub OD_TRACKS_USED: i32,
     pub WEIGHTED_RMS: f64,
     pub OD_EPOCH_UNIX_US: i64,
+    pub OD_TRACKS_USED: i32,
     pub DAYS_SINCE_LAST_OBS: f64,
     pub COVARIANCE_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub COV_PROPAGATION: Option<&'a MORCovariancePropagation>,
     pub COV_FLOOR: morCovarianceFloor,
     pub COV_REALISM_ID: u16,
-    pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
     pub COV_CALIBRATION: covarianceCalibration,
-    pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, MORWindow>>>,
-    pub WINDOW_COEFF_HEADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
-    pub WINDOW_COEFF_TAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
-    pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<::flatbuffers::WIPOffset<MPE<'a>>>,
-    pub ROWS_ONLY: bool,
+    pub BSTAR: f64,
+    pub MEAN_MOTION_DOT: f64,
+    pub MEAN_MOTION_DDOT: f64,
+    pub SOLID_TIDES_MODEL: morSolidTideModel,
+    pub SOLAR_RAD_PRESSURE: morRadiationModel,
+    pub ECOM2_Y0: f64,
+    pub MESSAGE_STATUS: morMessageStatus,
+    pub OBJECT_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
+    pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for MORArgs<'a> {
@@ -2331,10 +2331,13 @@ impl<'a> Default for MORArgs<'a> {
             NORAD_CAT_ID: 0,
             INTERNATIONAL_DESIGNATOR: None,
             ORIGINATOR: None,
-            OBJECT_NAME: None,
-            MESSAGE_STATUS: morMessageStatus::UNSPECIFIED,
-            EPOCH_UNIX_US: 0,
             MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
+            EPOCH_UNIX_US: 0,
+            ROWS_ONLY: false,
+            WINDOWS: None,
+            WINDOW_COEFF_HEADS: None,
+            WINDOW_COEFF_TAILS: None,
+            WINDOW_RECORD_CHECK: 0,
             MEAN_MOTION: 0.0,
             ECCENTRICITY: 0.0,
             INCLINATION: 0.0,
@@ -2343,36 +2346,33 @@ impl<'a> Default for MORArgs<'a> {
             MEAN_ANOMALY: 0.0,
             BTERM: 0.0,
             AGOM: 0.0,
-            BSTAR: 0.0,
-            MEAN_MOTION_DOT: 0.0,
-            MEAN_MOTION_DDOT: 0.0,
             GRAVITY_FIELD: morGravityField::THEORY,
             MAXIMUM_TESSERAL_DEGREE: 0,
             MAXIMUM_ZONAL_DEGREE: 0,
-            SOLID_TIDES_MODEL: morSolidTideModel::NONE,
-            SOLAR_RAD_PRESSURE: morRadiationModel::UNSTATED,
             OD_PARAMETERS: 0,
             OD_SOLVED_FOR: 0,
-            ECOM2_Y0: 0.0,
             ACTUAL_OD_SPAN: f64::NAN,
             OD_OBSERVATIONS_USED: -1,
-            OD_TRACKS_USED: -1,
             WEIGHTED_RMS: f64::NAN,
             OD_EPOCH_UNIX_US: -9223372036854775808,
+            OD_TRACKS_USED: -1,
             DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
             COV_PROPAGATION: None,
             COV_FLOOR: morCovarianceFloor::UNSTATED,
             COV_REALISM_ID: 0,
-            COV_REALISM: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
-            COV_CALIBRATION_REFERENCE: None,
-            WINDOWS: None,
-            WINDOW_COEFF_HEADS: None,
-            WINDOW_COEFF_TAILS: None,
-            WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
-            ROWS_ONLY: false,
+            BSTAR: 0.0,
+            MEAN_MOTION_DOT: 0.0,
+            MEAN_MOTION_DDOT: 0.0,
+            SOLID_TIDES_MODEL: morSolidTideModel::NONE,
+            SOLAR_RAD_PRESSURE: morRadiationModel::UNSTATED,
+            ECOM2_Y0: 0.0,
+            MESSAGE_STATUS: morMessageStatus::UNSPECIFIED,
+            OBJECT_NAME: None,
+            COV_REALISM: None,
+            COV_CALIBRATION_REFERENCE: None,
         }
     }
 }
@@ -2399,13 +2399,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_OBJECT_NAME, OBJECT_NAME);
-    }
-
-    #[inline]
-    pub fn add_MESSAGE_STATUS(&mut self, MESSAGE_STATUS: morMessageStatus) {
-        self.fbb_.push_slot::<morMessageStatus>(MOR::VT_MESSAGE_STATUS, MESSAGE_STATUS, morMessageStatus::UNSPECIFIED);
+    pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
+        self.fbb_.push_slot::<meanElementSource>(MOR::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::UNSPECIFIED);
     }
 
     #[inline]
@@ -2414,8 +2409,28 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_MEAN_ELEMENT_THEORY(&mut self, MEAN_ELEMENT_THEORY: meanElementSource) {
-        self.fbb_.push_slot::<meanElementSource>(MOR::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::UNSPECIFIED);
+    pub fn add_ROWS_ONLY(&mut self, ROWS_ONLY: bool) {
+        self.fbb_.push_slot::<bool>(MOR::VT_ROWS_ONLY, ROWS_ONLY, false);
+    }
+
+    #[inline]
+    pub fn add_WINDOWS(&mut self, WINDOWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , MORWindow>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOWS, WINDOWS);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_COEFF_HEADS(&mut self, WINDOW_COEFF_HEADS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOW_COEFF_HEADS, WINDOW_COEFF_HEADS);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_COEFF_TAILS(&mut self, WINDOW_COEFF_TAILS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_RECORD_CHECK(&mut self, WINDOW_RECORD_CHECK: u64) {
+        self.fbb_.push_slot::<u64>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
     }
 
     #[inline]
@@ -2459,21 +2474,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_BSTAR(&mut self, BSTAR: f64) {
-        self.fbb_.push_slot::<f64>(MOR::VT_BSTAR, BSTAR, 0.0);
-    }
-
-    #[inline]
-    pub fn add_MEAN_MOTION_DOT(&mut self, MEAN_MOTION_DOT: f64) {
-        self.fbb_.push_slot::<f64>(MOR::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
-    }
-
-    #[inline]
-    pub fn add_MEAN_MOTION_DDOT(&mut self, MEAN_MOTION_DDOT: f64) {
-        self.fbb_.push_slot::<f64>(MOR::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
-    }
-
-    #[inline]
     pub fn add_GRAVITY_FIELD(&mut self, GRAVITY_FIELD: morGravityField) {
         self.fbb_.push_slot::<morGravityField>(MOR::VT_GRAVITY_FIELD, GRAVITY_FIELD, morGravityField::THEORY);
     }
@@ -2489,16 +2489,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_SOLID_TIDES_MODEL(&mut self, SOLID_TIDES_MODEL: morSolidTideModel) {
-        self.fbb_.push_slot::<morSolidTideModel>(MOR::VT_SOLID_TIDES_MODEL, SOLID_TIDES_MODEL, morSolidTideModel::NONE);
-    }
-
-    #[inline]
-    pub fn add_SOLAR_RAD_PRESSURE(&mut self, SOLAR_RAD_PRESSURE: morRadiationModel) {
-        self.fbb_.push_slot::<morRadiationModel>(MOR::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE, morRadiationModel::UNSTATED);
-    }
-
-    #[inline]
     pub fn add_OD_PARAMETERS(&mut self, OD_PARAMETERS: u32) {
         self.fbb_.push_slot::<u32>(MOR::VT_OD_PARAMETERS, OD_PARAMETERS, 0);
     }
@@ -2506,11 +2496,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_OD_SOLVED_FOR(&mut self, OD_SOLVED_FOR: u32) {
         self.fbb_.push_slot::<u32>(MOR::VT_OD_SOLVED_FOR, OD_SOLVED_FOR, 0);
-    }
-
-    #[inline]
-    pub fn add_ECOM2_Y0(&mut self, ECOM2_Y0: f64) {
-        self.fbb_.push_slot::<f64>(MOR::VT_ECOM2_Y0, ECOM2_Y0, 0.0);
     }
 
     #[inline]
@@ -2524,11 +2509,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_OD_TRACKS_USED(&mut self, OD_TRACKS_USED: i32) {
-        self.fbb_.push_slot::<i32>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
-    }
-
-    #[inline]
     pub fn add_WEIGHTED_RMS(&mut self, WEIGHTED_RMS: f64) {
         self.fbb_.push_slot::<f64>(MOR::VT_WEIGHTED_RMS, WEIGHTED_RMS, f64::NAN);
     }
@@ -2536,6 +2516,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_OD_EPOCH_UNIX_US(&mut self, OD_EPOCH_UNIX_US: i64) {
         self.fbb_.push_slot::<i64>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, -9223372036854775808);
+    }
+
+    #[inline]
+    pub fn add_OD_TRACKS_USED(&mut self, OD_TRACKS_USED: i32) {
+        self.fbb_.push_slot::<i32>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
     }
 
     #[inline]
@@ -2564,38 +2549,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_COV_REALISM(&mut self, COV_REALISM: ::flatbuffers::WIPOffset<CVR<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CVR>>(MOR::VT_COV_REALISM, COV_REALISM);
-    }
-
-    #[inline]
     pub fn add_COV_CALIBRATION(&mut self, COV_CALIBRATION: covarianceCalibration) {
         self.fbb_.push_slot::<covarianceCalibration>(MOR::VT_COV_CALIBRATION, COV_CALIBRATION, covarianceCalibration::Unspecified);
-    }
-
-    #[inline]
-    pub fn add_COV_CALIBRATION_REFERENCE(&mut self, COV_CALIBRATION_REFERENCE: ::flatbuffers::WIPOffset<&'b  str>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
-    }
-
-    #[inline]
-    pub fn add_WINDOWS(&mut self, WINDOWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , MORWindow>>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOWS, WINDOWS);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_COEFF_HEADS(&mut self, WINDOW_COEFF_HEADS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOW_COEFF_HEADS, WINDOW_COEFF_HEADS);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_COEFF_TAILS(&mut self, WINDOW_COEFF_TAILS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_RECORD_CHECK(&mut self, WINDOW_RECORD_CHECK: u64) {
-        self.fbb_.push_slot::<u64>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
     }
 
     #[inline]
@@ -2604,8 +2559,53 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_ROWS_ONLY(&mut self, ROWS_ONLY: bool) {
-        self.fbb_.push_slot::<bool>(MOR::VT_ROWS_ONLY, ROWS_ONLY, false);
+    pub fn add_BSTAR(&mut self, BSTAR: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_BSTAR, BSTAR, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MEAN_MOTION_DOT(&mut self, MEAN_MOTION_DOT: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MEAN_MOTION_DDOT(&mut self, MEAN_MOTION_DDOT: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SOLID_TIDES_MODEL(&mut self, SOLID_TIDES_MODEL: morSolidTideModel) {
+        self.fbb_.push_slot::<morSolidTideModel>(MOR::VT_SOLID_TIDES_MODEL, SOLID_TIDES_MODEL, morSolidTideModel::NONE);
+    }
+
+    #[inline]
+    pub fn add_SOLAR_RAD_PRESSURE(&mut self, SOLAR_RAD_PRESSURE: morRadiationModel) {
+        self.fbb_.push_slot::<morRadiationModel>(MOR::VT_SOLAR_RAD_PRESSURE, SOLAR_RAD_PRESSURE, morRadiationModel::UNSTATED);
+    }
+
+    #[inline]
+    pub fn add_ECOM2_Y0(&mut self, ECOM2_Y0: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_ECOM2_Y0, ECOM2_Y0, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MESSAGE_STATUS(&mut self, MESSAGE_STATUS: morMessageStatus) {
+        self.fbb_.push_slot::<morMessageStatus>(MOR::VT_MESSAGE_STATUS, MESSAGE_STATUS, morMessageStatus::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_OBJECT_NAME, OBJECT_NAME);
+    }
+
+    #[inline]
+    pub fn add_COV_REALISM(&mut self, COV_REALISM: ::flatbuffers::WIPOffset<CVR<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<CVR>>(MOR::VT_COV_REALISM, COV_REALISM);
+    }
+
+    #[inline]
+    pub fn add_COV_CALIBRATION_REFERENCE(&mut self, COV_CALIBRATION_REFERENCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
     }
 
     #[inline]
@@ -2630,10 +2630,13 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
         ds.field("INTERNATIONAL_DESIGNATOR", &self.INTERNATIONAL_DESIGNATOR());
         ds.field("ORIGINATOR", &self.ORIGINATOR());
-        ds.field("OBJECT_NAME", &self.OBJECT_NAME());
-        ds.field("MESSAGE_STATUS", &self.MESSAGE_STATUS());
-        ds.field("EPOCH_UNIX_US", &self.EPOCH_UNIX_US());
         ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
+        ds.field("EPOCH_UNIX_US", &self.EPOCH_UNIX_US());
+        ds.field("ROWS_ONLY", &self.ROWS_ONLY());
+        ds.field("WINDOWS", &self.WINDOWS());
+        ds.field("WINDOW_COEFF_HEADS", &self.WINDOW_COEFF_HEADS());
+        ds.field("WINDOW_COEFF_TAILS", &self.WINDOW_COEFF_TAILS());
+        ds.field("WINDOW_RECORD_CHECK", &self.WINDOW_RECORD_CHECK());
         ds.field("MEAN_MOTION", &self.MEAN_MOTION());
         ds.field("ECCENTRICITY", &self.ECCENTRICITY());
         ds.field("INCLINATION", &self.INCLINATION());
@@ -2642,36 +2645,33 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
         ds.field("BTERM", &self.BTERM());
         ds.field("AGOM", &self.AGOM());
-        ds.field("BSTAR", &self.BSTAR());
-        ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
-        ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
         ds.field("GRAVITY_FIELD", &self.GRAVITY_FIELD());
         ds.field("MAXIMUM_TESSERAL_DEGREE", &self.MAXIMUM_TESSERAL_DEGREE());
         ds.field("MAXIMUM_ZONAL_DEGREE", &self.MAXIMUM_ZONAL_DEGREE());
-        ds.field("SOLID_TIDES_MODEL", &self.SOLID_TIDES_MODEL());
-        ds.field("SOLAR_RAD_PRESSURE", &self.SOLAR_RAD_PRESSURE());
         ds.field("OD_PARAMETERS", &self.OD_PARAMETERS());
         ds.field("OD_SOLVED_FOR", &self.OD_SOLVED_FOR());
-        ds.field("ECOM2_Y0", &self.ECOM2_Y0());
         ds.field("ACTUAL_OD_SPAN", &self.ACTUAL_OD_SPAN());
         ds.field("OD_OBSERVATIONS_USED", &self.OD_OBSERVATIONS_USED());
-        ds.field("OD_TRACKS_USED", &self.OD_TRACKS_USED());
         ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
         ds.field("OD_EPOCH_UNIX_US", &self.OD_EPOCH_UNIX_US());
+        ds.field("OD_TRACKS_USED", &self.OD_TRACKS_USED());
         ds.field("DAYS_SINCE_LAST_OBS", &self.DAYS_SINCE_LAST_OBS());
         ds.field("COVARIANCE_DATA", &self.COVARIANCE_DATA());
         ds.field("COV_PROPAGATION", &self.COV_PROPAGATION());
         ds.field("COV_FLOOR", &self.COV_FLOOR());
         ds.field("COV_REALISM_ID", &self.COV_REALISM_ID());
-        ds.field("COV_REALISM", &self.COV_REALISM());
         ds.field("COV_CALIBRATION", &self.COV_CALIBRATION());
-        ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
-        ds.field("WINDOWS", &self.WINDOWS());
-        ds.field("WINDOW_COEFF_HEADS", &self.WINDOW_COEFF_HEADS());
-        ds.field("WINDOW_COEFF_TAILS", &self.WINDOW_COEFF_TAILS());
-        ds.field("WINDOW_RECORD_CHECK", &self.WINDOW_RECORD_CHECK());
         ds.field("FALLBACK", &self.FALLBACK());
-        ds.field("ROWS_ONLY", &self.ROWS_ONLY());
+        ds.field("BSTAR", &self.BSTAR());
+        ds.field("MEAN_MOTION_DOT", &self.MEAN_MOTION_DOT());
+        ds.field("MEAN_MOTION_DDOT", &self.MEAN_MOTION_DDOT());
+        ds.field("SOLID_TIDES_MODEL", &self.SOLID_TIDES_MODEL());
+        ds.field("SOLAR_RAD_PRESSURE", &self.SOLAR_RAD_PRESSURE());
+        ds.field("ECOM2_Y0", &self.ECOM2_Y0());
+        ds.field("MESSAGE_STATUS", &self.MESSAGE_STATUS());
+        ds.field("OBJECT_NAME", &self.OBJECT_NAME());
+        ds.field("COV_REALISM", &self.COV_REALISM());
+        ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
         ds.finish()
     }
 }
@@ -2682,10 +2682,13 @@ pub struct MORT {
     pub NORAD_CAT_ID: u32,
     pub INTERNATIONAL_DESIGNATOR: Option<alloc::string::String>,
     pub ORIGINATOR: Option<alloc::string::String>,
-    pub OBJECT_NAME: Option<alloc::string::String>,
-    pub MESSAGE_STATUS: morMessageStatus,
-    pub EPOCH_UNIX_US: i64,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub EPOCH_UNIX_US: i64,
+    pub ROWS_ONLY: bool,
+    pub WINDOWS: Option<alloc::vec::Vec<MORWindowT>>,
+    pub WINDOW_COEFF_HEADS: Option<alloc::vec::Vec<f64>>,
+    pub WINDOW_COEFF_TAILS: Option<alloc::vec::Vec<f32>>,
+    pub WINDOW_RECORD_CHECK: u64,
     pub MEAN_MOTION: f64,
     pub ECCENTRICITY: f64,
     pub INCLINATION: f64,
@@ -2694,36 +2697,33 @@ pub struct MORT {
     pub MEAN_ANOMALY: f64,
     pub BTERM: f64,
     pub AGOM: f64,
-    pub BSTAR: f64,
-    pub MEAN_MOTION_DOT: f64,
-    pub MEAN_MOTION_DDOT: f64,
     pub GRAVITY_FIELD: morGravityField,
     pub MAXIMUM_TESSERAL_DEGREE: u8,
     pub MAXIMUM_ZONAL_DEGREE: u8,
-    pub SOLID_TIDES_MODEL: morSolidTideModel,
-    pub SOLAR_RAD_PRESSURE: morRadiationModel,
     pub OD_PARAMETERS: u32,
     pub OD_SOLVED_FOR: u32,
-    pub ECOM2_Y0: f64,
     pub ACTUAL_OD_SPAN: f64,
     pub OD_OBSERVATIONS_USED: i32,
-    pub OD_TRACKS_USED: i32,
     pub WEIGHTED_RMS: f64,
     pub OD_EPOCH_UNIX_US: i64,
+    pub OD_TRACKS_USED: i32,
     pub DAYS_SINCE_LAST_OBS: f64,
     pub COVARIANCE_DATA: Option<alloc::vec::Vec<f64>>,
     pub COV_PROPAGATION: Option<MORCovariancePropagationT>,
     pub COV_FLOOR: morCovarianceFloor,
     pub COV_REALISM_ID: u16,
-    pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
     pub COV_CALIBRATION: covarianceCalibration,
-    pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
-    pub WINDOWS: Option<alloc::vec::Vec<MORWindowT>>,
-    pub WINDOW_COEFF_HEADS: Option<alloc::vec::Vec<f64>>,
-    pub WINDOW_COEFF_TAILS: Option<alloc::vec::Vec<f32>>,
-    pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<alloc::boxed::Box<MPET>>,
-    pub ROWS_ONLY: bool,
+    pub BSTAR: f64,
+    pub MEAN_MOTION_DOT: f64,
+    pub MEAN_MOTION_DDOT: f64,
+    pub SOLID_TIDES_MODEL: morSolidTideModel,
+    pub SOLAR_RAD_PRESSURE: morRadiationModel,
+    pub ECOM2_Y0: f64,
+    pub MESSAGE_STATUS: morMessageStatus,
+    pub OBJECT_NAME: Option<alloc::string::String>,
+    pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
+    pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
 }
 
 impl Default for MORT {
@@ -2732,10 +2732,13 @@ impl Default for MORT {
             NORAD_CAT_ID: 0,
             INTERNATIONAL_DESIGNATOR: None,
             ORIGINATOR: None,
-            OBJECT_NAME: None,
-            MESSAGE_STATUS: morMessageStatus::UNSPECIFIED,
-            EPOCH_UNIX_US: 0,
             MEAN_ELEMENT_THEORY: meanElementSource::UNSPECIFIED,
+            EPOCH_UNIX_US: 0,
+            ROWS_ONLY: false,
+            WINDOWS: None,
+            WINDOW_COEFF_HEADS: None,
+            WINDOW_COEFF_TAILS: None,
+            WINDOW_RECORD_CHECK: 0,
             MEAN_MOTION: 0.0,
             ECCENTRICITY: 0.0,
             INCLINATION: 0.0,
@@ -2744,36 +2747,33 @@ impl Default for MORT {
             MEAN_ANOMALY: 0.0,
             BTERM: 0.0,
             AGOM: 0.0,
-            BSTAR: 0.0,
-            MEAN_MOTION_DOT: 0.0,
-            MEAN_MOTION_DDOT: 0.0,
             GRAVITY_FIELD: morGravityField::THEORY,
             MAXIMUM_TESSERAL_DEGREE: 0,
             MAXIMUM_ZONAL_DEGREE: 0,
-            SOLID_TIDES_MODEL: morSolidTideModel::NONE,
-            SOLAR_RAD_PRESSURE: morRadiationModel::UNSTATED,
             OD_PARAMETERS: 0,
             OD_SOLVED_FOR: 0,
-            ECOM2_Y0: 0.0,
             ACTUAL_OD_SPAN: f64::NAN,
             OD_OBSERVATIONS_USED: -1,
-            OD_TRACKS_USED: -1,
             WEIGHTED_RMS: f64::NAN,
             OD_EPOCH_UNIX_US: -9223372036854775808,
+            OD_TRACKS_USED: -1,
             DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
             COV_PROPAGATION: None,
             COV_FLOOR: morCovarianceFloor::UNSTATED,
             COV_REALISM_ID: 0,
-            COV_REALISM: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
-            COV_CALIBRATION_REFERENCE: None,
-            WINDOWS: None,
-            WINDOW_COEFF_HEADS: None,
-            WINDOW_COEFF_TAILS: None,
-            WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
-            ROWS_ONLY: false,
+            BSTAR: 0.0,
+            MEAN_MOTION_DOT: 0.0,
+            MEAN_MOTION_DDOT: 0.0,
+            SOLID_TIDES_MODEL: morSolidTideModel::NONE,
+            SOLAR_RAD_PRESSURE: morRadiationModel::UNSTATED,
+            ECOM2_Y0: 0.0,
+            MESSAGE_STATUS: morMessageStatus::UNSPECIFIED,
+            OBJECT_NAME: None,
+            COV_REALISM: None,
+            COV_CALIBRATION_REFERENCE: None,
         }
     }
 }
@@ -2790,51 +2790,9 @@ impl MORT {
         let ORIGINATOR = self.ORIGINATOR.as_ref().map(|x|{
             _fbb.create_string(x)
         });
-        let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
-            _fbb.create_string(x)
-        });
-        let MESSAGE_STATUS = self.MESSAGE_STATUS;
-        let EPOCH_UNIX_US = self.EPOCH_UNIX_US;
         let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
-        let MEAN_MOTION = self.MEAN_MOTION;
-        let ECCENTRICITY = self.ECCENTRICITY;
-        let INCLINATION = self.INCLINATION;
-        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE;
-        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
-        let MEAN_ANOMALY = self.MEAN_ANOMALY;
-        let BTERM = self.BTERM;
-        let AGOM = self.AGOM;
-        let BSTAR = self.BSTAR;
-        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
-        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
-        let GRAVITY_FIELD = self.GRAVITY_FIELD;
-        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE;
-        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE;
-        let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL;
-        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE;
-        let OD_PARAMETERS = self.OD_PARAMETERS;
-        let OD_SOLVED_FOR = self.OD_SOLVED_FOR;
-        let ECOM2_Y0 = self.ECOM2_Y0;
-        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
-        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED;
-        let OD_TRACKS_USED = self.OD_TRACKS_USED;
-        let WEIGHTED_RMS = self.WEIGHTED_RMS;
-        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US;
-        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS;
-        let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
-            _fbb.create_vector(x)
-        });
-        let COV_PROPAGATION_tmp = self.COV_PROPAGATION.as_ref().map(|x| x.pack());
-        let COV_PROPAGATION = COV_PROPAGATION_tmp.as_ref();
-        let COV_FLOOR = self.COV_FLOOR;
-        let COV_REALISM_ID = self.COV_REALISM_ID;
-        let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let COV_CALIBRATION = self.COV_CALIBRATION;
-        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE.as_ref().map(|x|{
-            _fbb.create_string(x)
-        });
+        let EPOCH_UNIX_US = self.EPOCH_UNIX_US;
+        let ROWS_ONLY = self.ROWS_ONLY;
         let WINDOWS = self.WINDOWS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack()).collect();_fbb.create_vector(&w)
         });
@@ -2845,18 +2803,63 @@ impl MORT {
             _fbb.create_vector(x)
         });
         let WINDOW_RECORD_CHECK = self.WINDOW_RECORD_CHECK;
+        let MEAN_MOTION = self.MEAN_MOTION;
+        let ECCENTRICITY = self.ECCENTRICITY;
+        let INCLINATION = self.INCLINATION;
+        let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE;
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
+        let MEAN_ANOMALY = self.MEAN_ANOMALY;
+        let BTERM = self.BTERM;
+        let AGOM = self.AGOM;
+        let GRAVITY_FIELD = self.GRAVITY_FIELD;
+        let MAXIMUM_TESSERAL_DEGREE = self.MAXIMUM_TESSERAL_DEGREE;
+        let MAXIMUM_ZONAL_DEGREE = self.MAXIMUM_ZONAL_DEGREE;
+        let OD_PARAMETERS = self.OD_PARAMETERS;
+        let OD_SOLVED_FOR = self.OD_SOLVED_FOR;
+        let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED;
+        let WEIGHTED_RMS = self.WEIGHTED_RMS;
+        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US;
+        let OD_TRACKS_USED = self.OD_TRACKS_USED;
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS;
+        let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let COV_PROPAGATION_tmp = self.COV_PROPAGATION.as_ref().map(|x| x.pack());
+        let COV_PROPAGATION = COV_PROPAGATION_tmp.as_ref();
+        let COV_FLOOR = self.COV_FLOOR;
+        let COV_REALISM_ID = self.COV_REALISM_ID;
+        let COV_CALIBRATION = self.COV_CALIBRATION;
         let FALLBACK = self.FALLBACK.as_ref().map(|x|{
             x.pack(_fbb)
         });
-        let ROWS_ONLY = self.ROWS_ONLY;
+        let BSTAR = self.BSTAR;
+        let MEAN_MOTION_DOT = self.MEAN_MOTION_DOT;
+        let MEAN_MOTION_DDOT = self.MEAN_MOTION_DDOT;
+        let SOLID_TIDES_MODEL = self.SOLID_TIDES_MODEL;
+        let SOLAR_RAD_PRESSURE = self.SOLAR_RAD_PRESSURE;
+        let ECOM2_Y0 = self.ECOM2_Y0;
+        let MESSAGE_STATUS = self.MESSAGE_STATUS;
+        let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let COV_CALIBRATION_REFERENCE = self.COV_CALIBRATION_REFERENCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         MOR::create(_fbb, &MORArgs{
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
             ORIGINATOR,
-            OBJECT_NAME,
-            MESSAGE_STATUS,
-            EPOCH_UNIX_US,
             MEAN_ELEMENT_THEORY,
+            EPOCH_UNIX_US,
+            ROWS_ONLY,
+            WINDOWS,
+            WINDOW_COEFF_HEADS,
+            WINDOW_COEFF_TAILS,
+            WINDOW_RECORD_CHECK,
             MEAN_MOTION,
             ECCENTRICITY,
             INCLINATION,
@@ -2865,36 +2868,33 @@ impl MORT {
             MEAN_ANOMALY,
             BTERM,
             AGOM,
-            BSTAR,
-            MEAN_MOTION_DOT,
-            MEAN_MOTION_DDOT,
             GRAVITY_FIELD,
             MAXIMUM_TESSERAL_DEGREE,
             MAXIMUM_ZONAL_DEGREE,
-            SOLID_TIDES_MODEL,
-            SOLAR_RAD_PRESSURE,
             OD_PARAMETERS,
             OD_SOLVED_FOR,
-            ECOM2_Y0,
             ACTUAL_OD_SPAN,
             OD_OBSERVATIONS_USED,
-            OD_TRACKS_USED,
             WEIGHTED_RMS,
             OD_EPOCH_UNIX_US,
+            OD_TRACKS_USED,
             DAYS_SINCE_LAST_OBS,
             COVARIANCE_DATA,
             COV_PROPAGATION,
             COV_FLOOR,
             COV_REALISM_ID,
-            COV_REALISM,
             COV_CALIBRATION,
-            COV_CALIBRATION_REFERENCE,
-            WINDOWS,
-            WINDOW_COEFF_HEADS,
-            WINDOW_COEFF_TAILS,
-            WINDOW_RECORD_CHECK,
             FALLBACK,
-            ROWS_ONLY,
+            BSTAR,
+            MEAN_MOTION_DOT,
+            MEAN_MOTION_DDOT,
+            SOLID_TIDES_MODEL,
+            SOLAR_RAD_PRESSURE,
+            ECOM2_Y0,
+            MESSAGE_STATUS,
+            OBJECT_NAME,
+            COV_REALISM,
+            COV_CALIBRATION_REFERENCE,
         })
     }
 }

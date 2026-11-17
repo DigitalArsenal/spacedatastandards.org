@@ -38,154 +38,157 @@ public struct MOR : IFlatbufferObject
   public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
-  /// The object's name; absent unless a reader copies it into what it writes.
-  public string OBJECT_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(10); }
-  /// Whether the set is real or test data.
-  public morMessageStatus MESSAGE_STATUS { get { int o = __p.__offset(12); return o != 0 ? (morMessageStatus)__p.bb.Get(o + __p.bb_pos) : morMessageStatus.UNSPECIFIED; } }
+  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(10); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.UNSPECIFIED; } }
   /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
   /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   /// ways without loss; an instant inside a leap second has no value here.
-  public long EPOCH_UNIX_US { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-  public meanElementSource MEAN_ELEMENT_THEORY { get { int o = __p.__offset(16); return o != 0 ? (meanElementSource)__p.bb.GetSbyte(o + __p.bb_pos) : meanElementSource.UNSPECIFIED; } }
+  public long EPOCH_UNIX_US { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  public bool ROWS_ONLY { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+  public MORWindow? WINDOWS(int j) { int o = __p.__offset(16); return o != 0 ? (MORWindow?)(new MORWindow()).__assign(__p.__vector(o) + j * 24, __p.bb) : null; }
+  public int WINDOWSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+  /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+  public double WINDOW_COEFF_HEADS(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int WINDOW_COEFF_HEADSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetWINDOW_COEFF_HEADSBytes() { return __p.__vector_as_span<double>(18, 8); }
+#else
+  public ArraySegment<byte>? GetWINDOW_COEFF_HEADSBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public double[] GetWINDOW_COEFF_HEADSArray() { return __p.__vector_as_array<double>(18); }
+  /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+  /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+  public float WINDOW_COEFF_TAILS(int j) { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
+  public int WINDOW_COEFF_TAILSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<float> GetWINDOW_COEFF_TAILSBytes() { return __p.__vector_as_span<float>(20, 4); }
+#else
+  public ArraySegment<byte>? GetWINDOW_COEFF_TAILSBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public float[] GetWINDOW_COEFF_TAILSArray() { return __p.__vector_as_array<float>(20); }
+  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  public ulong WINDOW_RECORD_CHECK { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
-  public double MEAN_MOTION { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MEAN_MOTION { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Eccentricity.
-  public double ECCENTRICITY { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ECCENTRICITY { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Inclination, deg.
-  public double INCLINATION { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double INCLINATION { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Right ascension of the ascending node, deg.
-  public double RA_OF_ASC_NODE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double RA_OF_ASC_NODE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Argument of pericenter, deg.
-  public double ARG_OF_PERICENTER { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ARG_OF_PERICENTER { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Mean anomaly, deg.
-  public double MEAN_ANOMALY { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MEAN_ANOMALY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  public double BTERM { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double BTERM { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  public double AGOM { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// BSTAR, 1/Earth radii. SGP4 only.
-  public double BSTAR { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-  public double MEAN_MOTION_DOT { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double AGOM { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// The gravity field the set flies on.
   public morGravityField GRAVITY_FIELD { get { int o = __p.__offset(40); return o != 0 ? (morGravityField)__p.bb.Get(o + __p.bb_pos) : morGravityField.THEORY; } }
   /// Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
   public byte MAXIMUM_TESSERAL_DEGREE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
   public byte MAXIMUM_ZONAL_DEGREE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  /// The solid Earth tide the set flies with.
-  public morSolidTideModel SOLID_TIDES_MODEL { get { int o = __p.__offset(46); return o != 0 ? (morSolidTideModel)__p.bb.Get(o + __p.bb_pos) : morSolidTideModel.NONE; } }
-  /// The radiation pressure model the set states.
-  public morRadiationModel SOLAR_RAD_PRESSURE { get { int o = __p.__offset(48); return o != 0 ? (morRadiationModel)__p.bb.Get(o + __p.bb_pos) : morRadiationModel.UNSTATED; } }
   /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
   /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
   /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
-  public uint OD_PARAMETERS { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint OD_PARAMETERS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
-  public uint OD_SOLVED_FOR { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-  public double ECOM2_Y0 { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public uint OD_SOLVED_FOR { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// The span of the observations the orbit determination used, days; NaN when not stated.
-  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double ACTUAL_OD_SPAN { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// Observations the orbit determination used; -1 when not stated ($OCM 0).
-  public int OD_OBSERVATIONS_USED { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
-  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-  public int OD_TRACKS_USED { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
+  public int OD_OBSERVATIONS_USED { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
   /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
-  public double WEIGHTED_RMS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double WEIGHTED_RMS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  public long OD_EPOCH_UNIX_US { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)-9223372036854775808; } }
+  public long OD_EPOCH_UNIX_US { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)-9223372036854775808; } }
+  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  public int OD_TRACKS_USED { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
-  public double DAYS_SINCE_LAST_OBS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  public double DAYS_SINCE_LAST_OBS { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
   /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
   /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
   /// ascending ordinal. Absent: no covariance.
-  public double COVARIANCE_DATA(int j) { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int COVARIANCE_DATALength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double COVARIANCE_DATA(int j) { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int COVARIANCE_DATALength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<double> GetCOVARIANCE_DATABytes() { return __p.__vector_as_span<double>(68, 8); }
+  public Span<double> GetCOVARIANCE_DATABytes() { return __p.__vector_as_span<double>(62, 8); }
 #else
-  public ArraySegment<byte>? GetCOVARIANCE_DATABytes() { return __p.__vector_as_arraysegment(68); }
+  public ArraySegment<byte>? GetCOVARIANCE_DATABytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public double[] GetCOVARIANCE_DATAArray() { return __p.__vector_as_array<double>(68); }
+  public double[] GetCOVARIANCE_DATAArray() { return __p.__vector_as_array<double>(62); }
   /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-  public MORCovariancePropagation? COV_PROPAGATION { get { int o = __p.__offset(70); return o != 0 ? (MORCovariancePropagation?)(new MORCovariancePropagation()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public MORCovariancePropagation? COV_PROPAGATION { get { int o = __p.__offset(64); return o != 0 ? (MORCovariancePropagation?)(new MORCovariancePropagation()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
   /// any producer text: a record read alone flies the same covariance as its $OCM.
-  public morCovarianceFloor COV_FLOOR { get { int o = __p.__offset(72); return o != 0 ? (morCovarianceFloor)__p.bb.Get(o + __p.bb_pos) : morCovarianceFloor.UNSTATED; } }
+  public morCovarianceFloor COV_FLOOR { get { int o = __p.__offset(66); return o != 0 ? (morCovarianceFloor)__p.bb.Get(o + __p.bb_pos) : morCovarianceFloor.UNSTATED; } }
   /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
   /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
   /// ID the asset does not list leaves the figures unresolved, and a reader says so.
-  public ushort COV_REALISM_ID { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-  public CVR? COV_REALISM { get { int o = __p.__offset(76); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public ushort COV_REALISM_ID { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
-  public covarianceCalibration COV_CALIBRATION { get { int o = __p.__offset(78); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
-  /// Identifier of that calibration evidence (a report or record).
-  public string COV_CALIBRATION_REFERENCE { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_span<byte>(80, 1); }
-#else
-  public ArraySegment<byte>? GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(80); }
-#endif
-  public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(80); }
-  /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-  public MORWindow? WINDOWS(int j) { int o = __p.__offset(82); return o != 0 ? (MORWindow?)(new MORWindow()).__assign(__p.__vector(o) + j * 24, __p.bb) : null; }
-  public int WINDOWSLength { get { int o = __p.__offset(82); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-  /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-  public double WINDOW_COEFF_HEADS(int j) { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
-  public int WINDOW_COEFF_HEADSLength { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
-#if ENABLE_SPAN_T
-  public Span<double> GetWINDOW_COEFF_HEADSBytes() { return __p.__vector_as_span<double>(84, 8); }
-#else
-  public ArraySegment<byte>? GetWINDOW_COEFF_HEADSBytes() { return __p.__vector_as_arraysegment(84); }
-#endif
-  public double[] GetWINDOW_COEFF_HEADSArray() { return __p.__vector_as_array<double>(84); }
-  /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-  /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-  public float WINDOW_COEFF_TAILS(int j) { int o = __p.__offset(86); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
-  public int WINDOW_COEFF_TAILSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
-#if ENABLE_SPAN_T
-  public Span<float> GetWINDOW_COEFF_TAILSBytes() { return __p.__vector_as_span<float>(86, 4); }
-#else
-  public ArraySegment<byte>? GetWINDOW_COEFF_TAILSBytes() { return __p.__vector_as_arraysegment(86); }
-#endif
-  public float[] GetWINDOW_COEFF_TAILSArray() { return __p.__vector_as_array<float>(86); }
-  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-  public ulong WINDOW_RECORD_CHECK { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public covarianceCalibration COV_CALIBRATION { get { int o = __p.__offset(70); return o != 0 ? (covarianceCalibration)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceCalibration.Unspecified; } }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   /// object is this record's. No TARGETER.
-  public MPE? FALLBACK { get { int o = __p.__offset(90); return o != 0 ? (MPE?)(new MPE()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  public bool ROWS_ONLY { get { int o = __p.__offset(92); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public MPE? FALLBACK { get { int o = __p.__offset(72); return o != 0 ? (MPE?)(new MPE()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// BSTAR, 1/Earth radii. SGP4 only.
+  public double BSTAR { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  public double MEAN_MOTION_DOT { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// The solid Earth tide the set flies with.
+  public morSolidTideModel SOLID_TIDES_MODEL { get { int o = __p.__offset(80); return o != 0 ? (morSolidTideModel)__p.bb.Get(o + __p.bb_pos) : morSolidTideModel.NONE; } }
+  /// The radiation pressure model the set states.
+  public morRadiationModel SOLAR_RAD_PRESSURE { get { int o = __p.__offset(82); return o != 0 ? (morRadiationModel)__p.bb.Get(o + __p.bb_pos) : morRadiationModel.UNSTATED; } }
+  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  public double ECOM2_Y0 { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Whether the set is real or test data.
+  public morMessageStatus MESSAGE_STATUS { get { int o = __p.__offset(86); return o != 0 ? (morMessageStatus)__p.bb.Get(o + __p.bb_pos) : morMessageStatus.UNSPECIFIED; } }
+  /// The object's name; absent unless a reader copies it into what it writes.
+  public string OBJECT_NAME { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(88, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(88); }
+#endif
+  public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(88); }
+  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+  public CVR? COV_REALISM { get { int o = __p.__offset(90); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Identifier of that calibration evidence (a report or record).
+  public string COV_CALIBRATION_REFERENCE { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_span<byte>(92, 1); }
+#else
+  public ArraySegment<byte>? GetCOV_CALIBRATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(92); }
 
   public static Offset<MOR> CreateMOR(FlatBufferBuilder builder,
       uint NORAD_CAT_ID = 0,
       StringOffset INTERNATIONAL_DESIGNATOROffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
-      StringOffset OBJECT_NAMEOffset = default(StringOffset),
-      morMessageStatus MESSAGE_STATUS = morMessageStatus.UNSPECIFIED,
-      long EPOCH_UNIX_US = 0,
       meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.UNSPECIFIED,
+      long EPOCH_UNIX_US = 0,
+      bool ROWS_ONLY = false,
+      VectorOffset WINDOWSOffset = default(VectorOffset),
+      VectorOffset WINDOW_COEFF_HEADSOffset = default(VectorOffset),
+      VectorOffset WINDOW_COEFF_TAILSOffset = default(VectorOffset),
+      ulong WINDOW_RECORD_CHECK = 0,
       double MEAN_MOTION = 0.0,
       double ECCENTRICITY = 0.0,
       double INCLINATION = 0.0,
@@ -194,46 +197,42 @@ public struct MOR : IFlatbufferObject
       double MEAN_ANOMALY = 0.0,
       double BTERM = 0.0,
       double AGOM = 0.0,
-      double BSTAR = 0.0,
-      double MEAN_MOTION_DOT = 0.0,
-      double MEAN_MOTION_DDOT = 0.0,
       morGravityField GRAVITY_FIELD = morGravityField.THEORY,
       byte MAXIMUM_TESSERAL_DEGREE = 0,
       byte MAXIMUM_ZONAL_DEGREE = 0,
-      morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel.NONE,
-      morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel.UNSTATED,
       uint OD_PARAMETERS = 0,
       uint OD_SOLVED_FOR = 0,
-      double ECOM2_Y0 = 0.0,
       double ACTUAL_OD_SPAN = Double.NaN,
       int OD_OBSERVATIONS_USED = -1,
-      int OD_TRACKS_USED = -1,
       double WEIGHTED_RMS = Double.NaN,
       long OD_EPOCH_UNIX_US = -9223372036854775808,
+      int OD_TRACKS_USED = -1,
       double DAYS_SINCE_LAST_OBS = Double.NaN,
       VectorOffset COVARIANCE_DATAOffset = default(VectorOffset),
       MORCovariancePropagationT COV_PROPAGATION = null,
       morCovarianceFloor COV_FLOOR = morCovarianceFloor.UNSTATED,
       ushort COV_REALISM_ID = 0,
-      Offset<CVR> COV_REALISMOffset = default(Offset<CVR>),
       covarianceCalibration COV_CALIBRATION = covarianceCalibration.Unspecified,
-      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset),
-      VectorOffset WINDOWSOffset = default(VectorOffset),
-      VectorOffset WINDOW_COEFF_HEADSOffset = default(VectorOffset),
-      VectorOffset WINDOW_COEFF_TAILSOffset = default(VectorOffset),
-      ulong WINDOW_RECORD_CHECK = 0,
       Offset<MPE> FALLBACKOffset = default(Offset<MPE>),
-      bool ROWS_ONLY = false) {
+      double BSTAR = 0.0,
+      double MEAN_MOTION_DOT = 0.0,
+      double MEAN_MOTION_DDOT = 0.0,
+      morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel.NONE,
+      morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel.UNSTATED,
+      double ECOM2_Y0 = 0.0,
+      morMessageStatus MESSAGE_STATUS = morMessageStatus.UNSPECIFIED,
+      StringOffset OBJECT_NAMEOffset = default(StringOffset),
+      Offset<CVR> COV_REALISMOffset = default(Offset<CVR>),
+      StringOffset COV_CALIBRATION_REFERENCEOffset = default(StringOffset)) {
     builder.StartTable(45);
-    MOR.AddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK);
-    MOR.AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS);
-    MOR.AddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US);
-    MOR.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
-    MOR.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
     MOR.AddECOM2_Y0(builder, ECOM2_Y0);
     MOR.AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT);
     MOR.AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT);
     MOR.AddBSTAR(builder, BSTAR);
+    MOR.AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS);
+    MOR.AddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US);
+    MOR.AddWEIGHTED_RMS(builder, WEIGHTED_RMS);
+    MOR.AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN);
     MOR.AddAGOM(builder, AGOM);
     MOR.AddBTERM(builder, BTERM);
     MOR.AddMEAN_ANOMALY(builder, MEAN_ANOMALY);
@@ -242,34 +241,35 @@ public struct MOR : IFlatbufferObject
     MOR.AddINCLINATION(builder, INCLINATION);
     MOR.AddECCENTRICITY(builder, ECCENTRICITY);
     MOR.AddMEAN_MOTION(builder, MEAN_MOTION);
+    MOR.AddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK);
     MOR.AddEPOCH_UNIX_US(builder, EPOCH_UNIX_US);
-    MOR.AddFALLBACK(builder, FALLBACKOffset);
-    MOR.AddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILSOffset);
-    MOR.AddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADSOffset);
-    MOR.AddWINDOWS(builder, WINDOWSOffset);
     MOR.AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCEOffset);
     MOR.AddCOV_REALISM(builder, COV_REALISMOffset);
+    MOR.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
+    MOR.AddFALLBACK(builder, FALLBACKOffset);
     MOR.AddCOV_PROPAGATION(builder, MORCovariancePropagation.Pack(builder, COV_PROPAGATION));
     MOR.AddCOVARIANCE_DATA(builder, COVARIANCE_DATAOffset);
     MOR.AddOD_TRACKS_USED(builder, OD_TRACKS_USED);
     MOR.AddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED);
     MOR.AddOD_SOLVED_FOR(builder, OD_SOLVED_FOR);
     MOR.AddOD_PARAMETERS(builder, OD_PARAMETERS);
-    MOR.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
+    MOR.AddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILSOffset);
+    MOR.AddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADSOffset);
+    MOR.AddWINDOWS(builder, WINDOWSOffset);
     MOR.AddORIGINATOR(builder, ORIGINATOROffset);
     MOR.AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOROffset);
     MOR.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     MOR.AddCOV_REALISM_ID(builder, COV_REALISM_ID);
-    MOR.AddROWS_ONLY(builder, ROWS_ONLY);
-    MOR.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
-    MOR.AddCOV_FLOOR(builder, COV_FLOOR);
+    MOR.AddMESSAGE_STATUS(builder, MESSAGE_STATUS);
     MOR.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE);
     MOR.AddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL);
+    MOR.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
+    MOR.AddCOV_FLOOR(builder, COV_FLOOR);
     MOR.AddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE);
     MOR.AddMAXIMUM_TESSERAL_DEGREE(builder, MAXIMUM_TESSERAL_DEGREE);
     MOR.AddGRAVITY_FIELD(builder, GRAVITY_FIELD);
+    MOR.AddROWS_ONLY(builder, ROWS_ONLY);
     MOR.AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY);
-    MOR.AddMESSAGE_STATUS(builder, MESSAGE_STATUS);
     return MOR.EndMOR(builder);
   }
 
@@ -277,64 +277,64 @@ public struct MOR : IFlatbufferObject
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(0, NORAD_CAT_ID, 0); }
   public static void AddINTERNATIONAL_DESIGNATOR(FlatBufferBuilder builder, StringOffset INTERNATIONAL_DESIGNATOROffset) { builder.AddOffset(1, INTERNATIONAL_DESIGNATOROffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
-  public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
-  public static void AddMESSAGE_STATUS(FlatBufferBuilder builder, morMessageStatus MESSAGE_STATUS) { builder.AddByte(4, (byte)MESSAGE_STATUS, 0); }
-  public static void AddEPOCH_UNIX_US(FlatBufferBuilder builder, long EPOCH_UNIX_US) { builder.AddLong(5, EPOCH_UNIX_US, 0); }
-  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(6, (sbyte)MEAN_ELEMENT_THEORY, 6); }
-  public static void AddMEAN_MOTION(FlatBufferBuilder builder, double MEAN_MOTION) { builder.AddDouble(7, MEAN_MOTION, 0.0); }
-  public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(8, ECCENTRICITY, 0.0); }
-  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(9, INCLINATION, 0.0); }
-  public static void AddRA_OF_ASC_NODE(FlatBufferBuilder builder, double RA_OF_ASC_NODE) { builder.AddDouble(10, RA_OF_ASC_NODE, 0.0); }
-  public static void AddARG_OF_PERICENTER(FlatBufferBuilder builder, double ARG_OF_PERICENTER) { builder.AddDouble(11, ARG_OF_PERICENTER, 0.0); }
-  public static void AddMEAN_ANOMALY(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.AddDouble(12, MEAN_ANOMALY, 0.0); }
-  public static void AddBTERM(FlatBufferBuilder builder, double BTERM) { builder.AddDouble(13, BTERM, 0.0); }
-  public static void AddAGOM(FlatBufferBuilder builder, double AGOM) { builder.AddDouble(14, AGOM, 0.0); }
-  public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(15, BSTAR, 0.0); }
-  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(16, MEAN_MOTION_DOT, 0.0); }
-  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(17, MEAN_MOTION_DDOT, 0.0); }
-  public static void AddGRAVITY_FIELD(FlatBufferBuilder builder, morGravityField GRAVITY_FIELD) { builder.AddByte(18, (byte)GRAVITY_FIELD, 0); }
-  public static void AddMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, byte MAXIMUM_TESSERAL_DEGREE) { builder.AddByte(19, MAXIMUM_TESSERAL_DEGREE, 0); }
-  public static void AddMAXIMUM_ZONAL_DEGREE(FlatBufferBuilder builder, byte MAXIMUM_ZONAL_DEGREE) { builder.AddByte(20, MAXIMUM_ZONAL_DEGREE, 0); }
-  public static void AddSOLID_TIDES_MODEL(FlatBufferBuilder builder, morSolidTideModel SOLID_TIDES_MODEL) { builder.AddByte(21, (byte)SOLID_TIDES_MODEL, 0); }
-  public static void AddSOLAR_RAD_PRESSURE(FlatBufferBuilder builder, morRadiationModel SOLAR_RAD_PRESSURE) { builder.AddByte(22, (byte)SOLAR_RAD_PRESSURE, 0); }
-  public static void AddOD_PARAMETERS(FlatBufferBuilder builder, uint OD_PARAMETERS) { builder.AddUint(23, OD_PARAMETERS, 0); }
-  public static void AddOD_SOLVED_FOR(FlatBufferBuilder builder, uint OD_SOLVED_FOR) { builder.AddUint(24, OD_SOLVED_FOR, 0); }
-  public static void AddECOM2_Y0(FlatBufferBuilder builder, double ECOM2_Y0) { builder.AddDouble(25, ECOM2_Y0, 0.0); }
-  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(26, ACTUAL_OD_SPAN, Double.NaN); }
-  public static void AddOD_OBSERVATIONS_USED(FlatBufferBuilder builder, int OD_OBSERVATIONS_USED) { builder.AddInt(27, OD_OBSERVATIONS_USED, -1); }
-  public static void AddOD_TRACKS_USED(FlatBufferBuilder builder, int OD_TRACKS_USED) { builder.AddInt(28, OD_TRACKS_USED, -1); }
-  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(29, WEIGHTED_RMS, Double.NaN); }
-  public static void AddOD_EPOCH_UNIX_US(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.AddLong(30, OD_EPOCH_UNIX_US, -9223372036854775808); }
-  public static void AddDAYS_SINCE_LAST_OBS(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.AddDouble(31, DAYS_SINCE_LAST_OBS, Double.NaN); }
-  public static void AddCOVARIANCE_DATA(FlatBufferBuilder builder, VectorOffset COVARIANCE_DATAOffset) { builder.AddOffset(32, COVARIANCE_DATAOffset.Value, 0); }
-  public static VectorOffset CreateCOVARIANCE_DATAVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCOVARIANCE_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddCOV_PROPAGATION(FlatBufferBuilder builder, Offset<MORCovariancePropagation> COV_PROPAGATIONOffset) { builder.AddStruct(33, COV_PROPAGATIONOffset.Value, 0); }
-  public static void AddCOV_FLOOR(FlatBufferBuilder builder, morCovarianceFloor COV_FLOOR) { builder.AddByte(34, (byte)COV_FLOOR, 0); }
-  public static void AddCOV_REALISM_ID(FlatBufferBuilder builder, ushort COV_REALISM_ID) { builder.AddUshort(35, COV_REALISM_ID, 0); }
-  public static void AddCOV_REALISM(FlatBufferBuilder builder, Offset<CVR> COV_REALISMOffset) { builder.AddOffset(36, COV_REALISMOffset.Value, 0); }
-  public static void AddCOV_CALIBRATION(FlatBufferBuilder builder, covarianceCalibration COV_CALIBRATION) { builder.AddSbyte(37, (sbyte)COV_CALIBRATION, 0); }
-  public static void AddCOV_CALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset COV_CALIBRATION_REFERENCEOffset) { builder.AddOffset(38, COV_CALIBRATION_REFERENCEOffset.Value, 0); }
-  public static void AddWINDOWS(FlatBufferBuilder builder, VectorOffset WINDOWSOffset) { builder.AddOffset(39, WINDOWSOffset.Value, 0); }
+  public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(3, (sbyte)MEAN_ELEMENT_THEORY, 6); }
+  public static void AddEPOCH_UNIX_US(FlatBufferBuilder builder, long EPOCH_UNIX_US) { builder.AddLong(4, EPOCH_UNIX_US, 0); }
+  public static void AddROWS_ONLY(FlatBufferBuilder builder, bool ROWS_ONLY) { builder.AddBool(5, ROWS_ONLY, false); }
+  public static void AddWINDOWS(FlatBufferBuilder builder, VectorOffset WINDOWSOffset) { builder.AddOffset(6, WINDOWSOffset.Value, 0); }
   public static void StartWINDOWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(24, numElems, 8); }
-  public static void AddWINDOW_COEFF_HEADS(FlatBufferBuilder builder, VectorOffset WINDOW_COEFF_HEADSOffset) { builder.AddOffset(40, WINDOW_COEFF_HEADSOffset.Value, 0); }
+  public static void AddWINDOW_COEFF_HEADS(FlatBufferBuilder builder, VectorOffset WINDOW_COEFF_HEADSOffset) { builder.AddOffset(7, WINDOW_COEFF_HEADSOffset.Value, 0); }
   public static VectorOffset CreateWINDOW_COEFF_HEADSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_HEADSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_HEADSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_HEADSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartWINDOW_COEFF_HEADSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddWINDOW_COEFF_TAILS(FlatBufferBuilder builder, VectorOffset WINDOW_COEFF_TAILSOffset) { builder.AddOffset(41, WINDOW_COEFF_TAILSOffset.Value, 0); }
+  public static void AddWINDOW_COEFF_TAILS(FlatBufferBuilder builder, VectorOffset WINDOW_COEFF_TAILSOffset) { builder.AddOffset(8, WINDOW_COEFF_TAILSOffset.Value, 0); }
   public static VectorOffset CreateWINDOW_COEFF_TAILSVector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_TAILSVectorBlock(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_TAILSVectorBlock(FlatBufferBuilder builder, ArraySegment<float> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWINDOW_COEFF_TAILSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<float>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartWINDOW_COEFF_TAILSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddWINDOW_RECORD_CHECK(FlatBufferBuilder builder, ulong WINDOW_RECORD_CHECK) { builder.AddUlong(42, WINDOW_RECORD_CHECK, 0); }
-  public static void AddFALLBACK(FlatBufferBuilder builder, Offset<MPE> FALLBACKOffset) { builder.AddOffset(43, FALLBACKOffset.Value, 0); }
-  public static void AddROWS_ONLY(FlatBufferBuilder builder, bool ROWS_ONLY) { builder.AddBool(44, ROWS_ONLY, false); }
+  public static void AddWINDOW_RECORD_CHECK(FlatBufferBuilder builder, ulong WINDOW_RECORD_CHECK) { builder.AddUlong(9, WINDOW_RECORD_CHECK, 0); }
+  public static void AddMEAN_MOTION(FlatBufferBuilder builder, double MEAN_MOTION) { builder.AddDouble(10, MEAN_MOTION, 0.0); }
+  public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(11, ECCENTRICITY, 0.0); }
+  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(12, INCLINATION, 0.0); }
+  public static void AddRA_OF_ASC_NODE(FlatBufferBuilder builder, double RA_OF_ASC_NODE) { builder.AddDouble(13, RA_OF_ASC_NODE, 0.0); }
+  public static void AddARG_OF_PERICENTER(FlatBufferBuilder builder, double ARG_OF_PERICENTER) { builder.AddDouble(14, ARG_OF_PERICENTER, 0.0); }
+  public static void AddMEAN_ANOMALY(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.AddDouble(15, MEAN_ANOMALY, 0.0); }
+  public static void AddBTERM(FlatBufferBuilder builder, double BTERM) { builder.AddDouble(16, BTERM, 0.0); }
+  public static void AddAGOM(FlatBufferBuilder builder, double AGOM) { builder.AddDouble(17, AGOM, 0.0); }
+  public static void AddGRAVITY_FIELD(FlatBufferBuilder builder, morGravityField GRAVITY_FIELD) { builder.AddByte(18, (byte)GRAVITY_FIELD, 0); }
+  public static void AddMAXIMUM_TESSERAL_DEGREE(FlatBufferBuilder builder, byte MAXIMUM_TESSERAL_DEGREE) { builder.AddByte(19, MAXIMUM_TESSERAL_DEGREE, 0); }
+  public static void AddMAXIMUM_ZONAL_DEGREE(FlatBufferBuilder builder, byte MAXIMUM_ZONAL_DEGREE) { builder.AddByte(20, MAXIMUM_ZONAL_DEGREE, 0); }
+  public static void AddOD_PARAMETERS(FlatBufferBuilder builder, uint OD_PARAMETERS) { builder.AddUint(21, OD_PARAMETERS, 0); }
+  public static void AddOD_SOLVED_FOR(FlatBufferBuilder builder, uint OD_SOLVED_FOR) { builder.AddUint(22, OD_SOLVED_FOR, 0); }
+  public static void AddACTUAL_OD_SPAN(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.AddDouble(23, ACTUAL_OD_SPAN, Double.NaN); }
+  public static void AddOD_OBSERVATIONS_USED(FlatBufferBuilder builder, int OD_OBSERVATIONS_USED) { builder.AddInt(24, OD_OBSERVATIONS_USED, -1); }
+  public static void AddWEIGHTED_RMS(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.AddDouble(25, WEIGHTED_RMS, Double.NaN); }
+  public static void AddOD_EPOCH_UNIX_US(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.AddLong(26, OD_EPOCH_UNIX_US, -9223372036854775808); }
+  public static void AddOD_TRACKS_USED(FlatBufferBuilder builder, int OD_TRACKS_USED) { builder.AddInt(27, OD_TRACKS_USED, -1); }
+  public static void AddDAYS_SINCE_LAST_OBS(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.AddDouble(28, DAYS_SINCE_LAST_OBS, Double.NaN); }
+  public static void AddCOVARIANCE_DATA(FlatBufferBuilder builder, VectorOffset COVARIANCE_DATAOffset) { builder.AddOffset(29, COVARIANCE_DATAOffset.Value, 0); }
+  public static VectorOffset CreateCOVARIANCE_DATAVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOVARIANCE_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOVARIANCE_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddCOV_PROPAGATION(FlatBufferBuilder builder, Offset<MORCovariancePropagation> COV_PROPAGATIONOffset) { builder.AddStruct(30, COV_PROPAGATIONOffset.Value, 0); }
+  public static void AddCOV_FLOOR(FlatBufferBuilder builder, morCovarianceFloor COV_FLOOR) { builder.AddByte(31, (byte)COV_FLOOR, 0); }
+  public static void AddCOV_REALISM_ID(FlatBufferBuilder builder, ushort COV_REALISM_ID) { builder.AddUshort(32, COV_REALISM_ID, 0); }
+  public static void AddCOV_CALIBRATION(FlatBufferBuilder builder, covarianceCalibration COV_CALIBRATION) { builder.AddSbyte(33, (sbyte)COV_CALIBRATION, 0); }
+  public static void AddFALLBACK(FlatBufferBuilder builder, Offset<MPE> FALLBACKOffset) { builder.AddOffset(34, FALLBACKOffset.Value, 0); }
+  public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(35, BSTAR, 0.0); }
+  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(36, MEAN_MOTION_DOT, 0.0); }
+  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(37, MEAN_MOTION_DDOT, 0.0); }
+  public static void AddSOLID_TIDES_MODEL(FlatBufferBuilder builder, morSolidTideModel SOLID_TIDES_MODEL) { builder.AddByte(38, (byte)SOLID_TIDES_MODEL, 0); }
+  public static void AddSOLAR_RAD_PRESSURE(FlatBufferBuilder builder, morRadiationModel SOLAR_RAD_PRESSURE) { builder.AddByte(39, (byte)SOLAR_RAD_PRESSURE, 0); }
+  public static void AddECOM2_Y0(FlatBufferBuilder builder, double ECOM2_Y0) { builder.AddDouble(40, ECOM2_Y0, 0.0); }
+  public static void AddMESSAGE_STATUS(FlatBufferBuilder builder, morMessageStatus MESSAGE_STATUS) { builder.AddByte(41, (byte)MESSAGE_STATUS, 0); }
+  public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(42, OBJECT_NAMEOffset.Value, 0); }
+  public static void AddCOV_REALISM(FlatBufferBuilder builder, Offset<CVR> COV_REALISMOffset) { builder.AddOffset(43, COV_REALISMOffset.Value, 0); }
+  public static void AddCOV_CALIBRATION_REFERENCE(FlatBufferBuilder builder, StringOffset COV_CALIBRATION_REFERENCEOffset) { builder.AddOffset(44, COV_CALIBRATION_REFERENCEOffset.Value, 0); }
   public static Offset<MOR> EndMOR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MOR>(o);
@@ -350,10 +350,16 @@ public struct MOR : IFlatbufferObject
     _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
     _o.INTERNATIONAL_DESIGNATOR = this.INTERNATIONAL_DESIGNATOR;
     _o.ORIGINATOR = this.ORIGINATOR;
-    _o.OBJECT_NAME = this.OBJECT_NAME;
-    _o.MESSAGE_STATUS = this.MESSAGE_STATUS;
-    _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US;
     _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY;
+    _o.EPOCH_UNIX_US = this.EPOCH_UNIX_US;
+    _o.ROWS_ONLY = this.ROWS_ONLY;
+    _o.WINDOWS = new List<MORWindowT>();
+    for (var _j = 0; _j < this.WINDOWSLength; ++_j) {_o.WINDOWS.Add(this.WINDOWS(_j).HasValue ? this.WINDOWS(_j).Value.UnPack() : null);}
+    _o.WINDOW_COEFF_HEADS = new List<double>();
+    for (var _j = 0; _j < this.WINDOW_COEFF_HEADSLength; ++_j) {_o.WINDOW_COEFF_HEADS.Add(this.WINDOW_COEFF_HEADS(_j));}
+    _o.WINDOW_COEFF_TAILS = new List<float>();
+    for (var _j = 0; _j < this.WINDOW_COEFF_TAILSLength; ++_j) {_o.WINDOW_COEFF_TAILS.Add(this.WINDOW_COEFF_TAILS(_j));}
+    _o.WINDOW_RECORD_CHECK = this.WINDOW_RECORD_CHECK;
     _o.MEAN_MOTION = this.MEAN_MOTION;
     _o.ECCENTRICITY = this.ECCENTRICITY;
     _o.INCLINATION = this.INCLINATION;
@@ -362,53 +368,39 @@ public struct MOR : IFlatbufferObject
     _o.MEAN_ANOMALY = this.MEAN_ANOMALY;
     _o.BTERM = this.BTERM;
     _o.AGOM = this.AGOM;
-    _o.BSTAR = this.BSTAR;
-    _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT;
-    _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT;
     _o.GRAVITY_FIELD = this.GRAVITY_FIELD;
     _o.MAXIMUM_TESSERAL_DEGREE = this.MAXIMUM_TESSERAL_DEGREE;
     _o.MAXIMUM_ZONAL_DEGREE = this.MAXIMUM_ZONAL_DEGREE;
-    _o.SOLID_TIDES_MODEL = this.SOLID_TIDES_MODEL;
-    _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE;
     _o.OD_PARAMETERS = this.OD_PARAMETERS;
     _o.OD_SOLVED_FOR = this.OD_SOLVED_FOR;
-    _o.ECOM2_Y0 = this.ECOM2_Y0;
     _o.ACTUAL_OD_SPAN = this.ACTUAL_OD_SPAN;
     _o.OD_OBSERVATIONS_USED = this.OD_OBSERVATIONS_USED;
-    _o.OD_TRACKS_USED = this.OD_TRACKS_USED;
     _o.WEIGHTED_RMS = this.WEIGHTED_RMS;
     _o.OD_EPOCH_UNIX_US = this.OD_EPOCH_UNIX_US;
+    _o.OD_TRACKS_USED = this.OD_TRACKS_USED;
     _o.DAYS_SINCE_LAST_OBS = this.DAYS_SINCE_LAST_OBS;
     _o.COVARIANCE_DATA = new List<double>();
     for (var _j = 0; _j < this.COVARIANCE_DATALength; ++_j) {_o.COVARIANCE_DATA.Add(this.COVARIANCE_DATA(_j));}
     _o.COV_PROPAGATION = this.COV_PROPAGATION.HasValue ? this.COV_PROPAGATION.Value.UnPack() : null;
     _o.COV_FLOOR = this.COV_FLOOR;
     _o.COV_REALISM_ID = this.COV_REALISM_ID;
-    _o.COV_REALISM = this.COV_REALISM.HasValue ? this.COV_REALISM.Value.UnPack() : null;
     _o.COV_CALIBRATION = this.COV_CALIBRATION;
-    _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
-    _o.WINDOWS = new List<MORWindowT>();
-    for (var _j = 0; _j < this.WINDOWSLength; ++_j) {_o.WINDOWS.Add(this.WINDOWS(_j).HasValue ? this.WINDOWS(_j).Value.UnPack() : null);}
-    _o.WINDOW_COEFF_HEADS = new List<double>();
-    for (var _j = 0; _j < this.WINDOW_COEFF_HEADSLength; ++_j) {_o.WINDOW_COEFF_HEADS.Add(this.WINDOW_COEFF_HEADS(_j));}
-    _o.WINDOW_COEFF_TAILS = new List<float>();
-    for (var _j = 0; _j < this.WINDOW_COEFF_TAILSLength; ++_j) {_o.WINDOW_COEFF_TAILS.Add(this.WINDOW_COEFF_TAILS(_j));}
-    _o.WINDOW_RECORD_CHECK = this.WINDOW_RECORD_CHECK;
     _o.FALLBACK = this.FALLBACK.HasValue ? this.FALLBACK.Value.UnPack() : null;
-    _o.ROWS_ONLY = this.ROWS_ONLY;
+    _o.BSTAR = this.BSTAR;
+    _o.MEAN_MOTION_DOT = this.MEAN_MOTION_DOT;
+    _o.MEAN_MOTION_DDOT = this.MEAN_MOTION_DDOT;
+    _o.SOLID_TIDES_MODEL = this.SOLID_TIDES_MODEL;
+    _o.SOLAR_RAD_PRESSURE = this.SOLAR_RAD_PRESSURE;
+    _o.ECOM2_Y0 = this.ECOM2_Y0;
+    _o.MESSAGE_STATUS = this.MESSAGE_STATUS;
+    _o.OBJECT_NAME = this.OBJECT_NAME;
+    _o.COV_REALISM = this.COV_REALISM.HasValue ? this.COV_REALISM.Value.UnPack() : null;
+    _o.COV_CALIBRATION_REFERENCE = this.COV_CALIBRATION_REFERENCE;
   }
   public static Offset<MOR> Pack(FlatBufferBuilder builder, MORT _o) {
     if (_o == null) return default(Offset<MOR>);
     var _INTERNATIONAL_DESIGNATOR = _o.INTERNATIONAL_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.INTERNATIONAL_DESIGNATOR);
     var _ORIGINATOR = _o.ORIGINATOR == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR);
-    var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
-    var _COVARIANCE_DATA = default(VectorOffset);
-    if (_o.COVARIANCE_DATA != null) {
-      var __COVARIANCE_DATA = _o.COVARIANCE_DATA.ToArray();
-      _COVARIANCE_DATA = CreateCOVARIANCE_DATAVector(builder, __COVARIANCE_DATA);
-    }
-    var _COV_REALISM = _o.COV_REALISM == null ? default(Offset<CVR>) : CVR.Pack(builder, _o.COV_REALISM);
-    var _COV_CALIBRATION_REFERENCE = _o.COV_CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.COV_CALIBRATION_REFERENCE);
     var _WINDOWS = default(VectorOffset);
     if (_o.WINDOWS != null) {
       StartWINDOWSVector(builder, _o.WINDOWS.Count);
@@ -425,16 +417,27 @@ public struct MOR : IFlatbufferObject
       var __WINDOW_COEFF_TAILS = _o.WINDOW_COEFF_TAILS.ToArray();
       _WINDOW_COEFF_TAILS = CreateWINDOW_COEFF_TAILSVector(builder, __WINDOW_COEFF_TAILS);
     }
+    var _COVARIANCE_DATA = default(VectorOffset);
+    if (_o.COVARIANCE_DATA != null) {
+      var __COVARIANCE_DATA = _o.COVARIANCE_DATA.ToArray();
+      _COVARIANCE_DATA = CreateCOVARIANCE_DATAVector(builder, __COVARIANCE_DATA);
+    }
     var _FALLBACK = _o.FALLBACK == null ? default(Offset<MPE>) : MPE.Pack(builder, _o.FALLBACK);
+    var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
+    var _COV_REALISM = _o.COV_REALISM == null ? default(Offset<CVR>) : CVR.Pack(builder, _o.COV_REALISM);
+    var _COV_CALIBRATION_REFERENCE = _o.COV_CALIBRATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.COV_CALIBRATION_REFERENCE);
     return CreateMOR(
       builder,
       _o.NORAD_CAT_ID,
       _INTERNATIONAL_DESIGNATOR,
       _ORIGINATOR,
-      _OBJECT_NAME,
-      _o.MESSAGE_STATUS,
-      _o.EPOCH_UNIX_US,
       _o.MEAN_ELEMENT_THEORY,
+      _o.EPOCH_UNIX_US,
+      _o.ROWS_ONLY,
+      _WINDOWS,
+      _WINDOW_COEFF_HEADS,
+      _WINDOW_COEFF_TAILS,
+      _o.WINDOW_RECORD_CHECK,
       _o.MEAN_MOTION,
       _o.ECCENTRICITY,
       _o.INCLINATION,
@@ -443,36 +446,33 @@ public struct MOR : IFlatbufferObject
       _o.MEAN_ANOMALY,
       _o.BTERM,
       _o.AGOM,
-      _o.BSTAR,
-      _o.MEAN_MOTION_DOT,
-      _o.MEAN_MOTION_DDOT,
       _o.GRAVITY_FIELD,
       _o.MAXIMUM_TESSERAL_DEGREE,
       _o.MAXIMUM_ZONAL_DEGREE,
-      _o.SOLID_TIDES_MODEL,
-      _o.SOLAR_RAD_PRESSURE,
       _o.OD_PARAMETERS,
       _o.OD_SOLVED_FOR,
-      _o.ECOM2_Y0,
       _o.ACTUAL_OD_SPAN,
       _o.OD_OBSERVATIONS_USED,
-      _o.OD_TRACKS_USED,
       _o.WEIGHTED_RMS,
       _o.OD_EPOCH_UNIX_US,
+      _o.OD_TRACKS_USED,
       _o.DAYS_SINCE_LAST_OBS,
       _COVARIANCE_DATA,
       _o.COV_PROPAGATION,
       _o.COV_FLOOR,
       _o.COV_REALISM_ID,
-      _COV_REALISM,
       _o.COV_CALIBRATION,
-      _COV_CALIBRATION_REFERENCE,
-      _WINDOWS,
-      _WINDOW_COEFF_HEADS,
-      _WINDOW_COEFF_TAILS,
-      _o.WINDOW_RECORD_CHECK,
       _FALLBACK,
-      _o.ROWS_ONLY);
+      _o.BSTAR,
+      _o.MEAN_MOTION_DOT,
+      _o.MEAN_MOTION_DDOT,
+      _o.SOLID_TIDES_MODEL,
+      _o.SOLAR_RAD_PRESSURE,
+      _o.ECOM2_Y0,
+      _o.MESSAGE_STATUS,
+      _OBJECT_NAME,
+      _COV_REALISM,
+      _COV_CALIBRATION_REFERENCE);
   }
 }
 
@@ -481,10 +481,13 @@ public class MORT
   public uint NORAD_CAT_ID { get; set; }
   public string INTERNATIONAL_DESIGNATOR { get; set; }
   public string ORIGINATOR { get; set; }
-  public string OBJECT_NAME { get; set; }
-  public morMessageStatus MESSAGE_STATUS { get; set; }
-  public long EPOCH_UNIX_US { get; set; }
   public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
+  public long EPOCH_UNIX_US { get; set; }
+  public bool ROWS_ONLY { get; set; }
+  public List<MORWindowT> WINDOWS { get; set; }
+  public List<double> WINDOW_COEFF_HEADS { get; set; }
+  public List<float> WINDOW_COEFF_TAILS { get; set; }
+  public ulong WINDOW_RECORD_CHECK { get; set; }
   public double MEAN_MOTION { get; set; }
   public double ECCENTRICITY { get; set; }
   public double INCLINATION { get; set; }
@@ -493,45 +496,45 @@ public class MORT
   public double MEAN_ANOMALY { get; set; }
   public double BTERM { get; set; }
   public double AGOM { get; set; }
-  public double BSTAR { get; set; }
-  public double MEAN_MOTION_DOT { get; set; }
-  public double MEAN_MOTION_DDOT { get; set; }
   public morGravityField GRAVITY_FIELD { get; set; }
   public byte MAXIMUM_TESSERAL_DEGREE { get; set; }
   public byte MAXIMUM_ZONAL_DEGREE { get; set; }
-  public morSolidTideModel SOLID_TIDES_MODEL { get; set; }
-  public morRadiationModel SOLAR_RAD_PRESSURE { get; set; }
   public uint OD_PARAMETERS { get; set; }
   public uint OD_SOLVED_FOR { get; set; }
-  public double ECOM2_Y0 { get; set; }
   public double ACTUAL_OD_SPAN { get; set; }
   public int OD_OBSERVATIONS_USED { get; set; }
-  public int OD_TRACKS_USED { get; set; }
   public double WEIGHTED_RMS { get; set; }
   public long OD_EPOCH_UNIX_US { get; set; }
+  public int OD_TRACKS_USED { get; set; }
   public double DAYS_SINCE_LAST_OBS { get; set; }
   public List<double> COVARIANCE_DATA { get; set; }
   public MORCovariancePropagationT COV_PROPAGATION { get; set; }
   public morCovarianceFloor COV_FLOOR { get; set; }
   public ushort COV_REALISM_ID { get; set; }
-  public CVRT COV_REALISM { get; set; }
   public covarianceCalibration COV_CALIBRATION { get; set; }
-  public string COV_CALIBRATION_REFERENCE { get; set; }
-  public List<MORWindowT> WINDOWS { get; set; }
-  public List<double> WINDOW_COEFF_HEADS { get; set; }
-  public List<float> WINDOW_COEFF_TAILS { get; set; }
-  public ulong WINDOW_RECORD_CHECK { get; set; }
   public MPET FALLBACK { get; set; }
-  public bool ROWS_ONLY { get; set; }
+  public double BSTAR { get; set; }
+  public double MEAN_MOTION_DOT { get; set; }
+  public double MEAN_MOTION_DDOT { get; set; }
+  public morSolidTideModel SOLID_TIDES_MODEL { get; set; }
+  public morRadiationModel SOLAR_RAD_PRESSURE { get; set; }
+  public double ECOM2_Y0 { get; set; }
+  public morMessageStatus MESSAGE_STATUS { get; set; }
+  public string OBJECT_NAME { get; set; }
+  public CVRT COV_REALISM { get; set; }
+  public string COV_CALIBRATION_REFERENCE { get; set; }
 
   public MORT() {
     this.NORAD_CAT_ID = 0;
     this.INTERNATIONAL_DESIGNATOR = null;
     this.ORIGINATOR = null;
-    this.OBJECT_NAME = null;
-    this.MESSAGE_STATUS = morMessageStatus.UNSPECIFIED;
-    this.EPOCH_UNIX_US = 0;
     this.MEAN_ELEMENT_THEORY = meanElementSource.UNSPECIFIED;
+    this.EPOCH_UNIX_US = 0;
+    this.ROWS_ONLY = false;
+    this.WINDOWS = null;
+    this.WINDOW_COEFF_HEADS = null;
+    this.WINDOW_COEFF_TAILS = null;
+    this.WINDOW_RECORD_CHECK = 0;
     this.MEAN_MOTION = 0.0;
     this.ECCENTRICITY = 0.0;
     this.INCLINATION = 0.0;
@@ -540,36 +543,33 @@ public class MORT
     this.MEAN_ANOMALY = 0.0;
     this.BTERM = 0.0;
     this.AGOM = 0.0;
-    this.BSTAR = 0.0;
-    this.MEAN_MOTION_DOT = 0.0;
-    this.MEAN_MOTION_DDOT = 0.0;
     this.GRAVITY_FIELD = morGravityField.THEORY;
     this.MAXIMUM_TESSERAL_DEGREE = 0;
     this.MAXIMUM_ZONAL_DEGREE = 0;
-    this.SOLID_TIDES_MODEL = morSolidTideModel.NONE;
-    this.SOLAR_RAD_PRESSURE = morRadiationModel.UNSTATED;
     this.OD_PARAMETERS = 0;
     this.OD_SOLVED_FOR = 0;
-    this.ECOM2_Y0 = 0.0;
     this.ACTUAL_OD_SPAN = Double.NaN;
     this.OD_OBSERVATIONS_USED = -1;
-    this.OD_TRACKS_USED = -1;
     this.WEIGHTED_RMS = Double.NaN;
     this.OD_EPOCH_UNIX_US = -9223372036854775808;
+    this.OD_TRACKS_USED = -1;
     this.DAYS_SINCE_LAST_OBS = Double.NaN;
     this.COVARIANCE_DATA = null;
     this.COV_PROPAGATION = new MORCovariancePropagationT();
     this.COV_FLOOR = morCovarianceFloor.UNSTATED;
     this.COV_REALISM_ID = 0;
-    this.COV_REALISM = null;
     this.COV_CALIBRATION = covarianceCalibration.Unspecified;
-    this.COV_CALIBRATION_REFERENCE = null;
-    this.WINDOWS = null;
-    this.WINDOW_COEFF_HEADS = null;
-    this.WINDOW_COEFF_TAILS = null;
-    this.WINDOW_RECORD_CHECK = 0;
     this.FALLBACK = null;
-    this.ROWS_ONLY = false;
+    this.BSTAR = 0.0;
+    this.MEAN_MOTION_DOT = 0.0;
+    this.MEAN_MOTION_DDOT = 0.0;
+    this.SOLID_TIDES_MODEL = morSolidTideModel.NONE;
+    this.SOLAR_RAD_PRESSURE = morRadiationModel.UNSTATED;
+    this.ECOM2_Y0 = 0.0;
+    this.MESSAGE_STATUS = morMessageStatus.UNSPECIFIED;
+    this.OBJECT_NAME = null;
+    this.COV_REALISM = null;
+    this.COV_CALIBRATION_REFERENCE = null;
   }
   public static MORT DeserializeFromBinary(byte[] fbBuffer) {
     return MOR.GetRootAsMOR(new ByteBuffer(fbBuffer)).UnPack();
@@ -590,48 +590,48 @@ static public class MORVerify
       && verifier.VerifyField(tablePos, 4 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 6 /*INTERNATIONAL_DESIGNATOR*/, false)
       && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
-      && verifier.VerifyString(tablePos, 10 /*OBJECT_NAME*/, false)
-      && verifier.VerifyField(tablePos, 12 /*MESSAGE_STATUS*/, 1 /*morMessageStatus*/, 1, false)
-      && verifier.VerifyField(tablePos, 14 /*EPOCH_UNIX_US*/, 8 /*long*/, 8, false)
-      && verifier.VerifyField(tablePos, 16 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
-      && verifier.VerifyField(tablePos, 18 /*MEAN_MOTION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 20 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*INCLINATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*RA_OF_ASC_NODE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*ARG_OF_PERICENTER*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*BTERM*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*AGOM*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*BSTAR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*EPOCH_UNIX_US*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*ROWS_ONLY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 16 /*WINDOWS*/, 24 /*MORWindow*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 18 /*WINDOW_COEFF_HEADS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 20 /*WINDOW_COEFF_TAILS*/, 4 /*float*/, false)
+      && verifier.VerifyField(tablePos, 22 /*WINDOW_RECORD_CHECK*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*MEAN_MOTION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*RA_OF_ASC_NODE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*ARG_OF_PERICENTER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*BTERM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*AGOM*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*GRAVITY_FIELD*/, 1 /*morGravityField*/, 1, false)
       && verifier.VerifyField(tablePos, 42 /*MAXIMUM_TESSERAL_DEGREE*/, 1 /*byte*/, 1, false)
       && verifier.VerifyField(tablePos, 44 /*MAXIMUM_ZONAL_DEGREE*/, 1 /*byte*/, 1, false)
-      && verifier.VerifyField(tablePos, 46 /*SOLID_TIDES_MODEL*/, 1 /*morSolidTideModel*/, 1, false)
-      && verifier.VerifyField(tablePos, 48 /*SOLAR_RAD_PRESSURE*/, 1 /*morRadiationModel*/, 1, false)
-      && verifier.VerifyField(tablePos, 50 /*OD_PARAMETERS*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 52 /*OD_SOLVED_FOR*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 54 /*ECOM2_Y0*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*ACTUAL_OD_SPAN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*OD_OBSERVATIONS_USED*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 60 /*OD_TRACKS_USED*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 62 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 64 /*OD_EPOCH_UNIX_US*/, 8 /*long*/, 8, false)
-      && verifier.VerifyField(tablePos, 66 /*DAYS_SINCE_LAST_OBS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfData(tablePos, 68 /*COVARIANCE_DATA*/, 8 /*double*/, false)
-      && verifier.VerifyField(tablePos, 70 /*COV_PROPAGATION*/, 104 /*MORCovariancePropagation*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*COV_FLOOR*/, 1 /*morCovarianceFloor*/, 1, false)
-      && verifier.VerifyField(tablePos, 74 /*COV_REALISM_ID*/, 2 /*ushort*/, 2, false)
-      && verifier.VerifyTable(tablePos, 76 /*COV_REALISM*/, CVRVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 78 /*COV_CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
-      && verifier.VerifyString(tablePos, 80 /*COV_CALIBRATION_REFERENCE*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 82 /*WINDOWS*/, 24 /*MORWindow*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 84 /*WINDOW_COEFF_HEADS*/, 8 /*double*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 86 /*WINDOW_COEFF_TAILS*/, 4 /*float*/, false)
-      && verifier.VerifyField(tablePos, 88 /*WINDOW_RECORD_CHECK*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyTable(tablePos, 90 /*FALLBACK*/, MPEVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 92 /*ROWS_ONLY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 46 /*OD_PARAMETERS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 48 /*OD_SOLVED_FOR*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*ACTUAL_OD_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*OD_OBSERVATIONS_USED*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 54 /*WEIGHTED_RMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*OD_EPOCH_UNIX_US*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*OD_TRACKS_USED*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 60 /*DAYS_SINCE_LAST_OBS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 62 /*COVARIANCE_DATA*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 64 /*COV_PROPAGATION*/, 104 /*MORCovariancePropagation*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*COV_FLOOR*/, 1 /*morCovarianceFloor*/, 1, false)
+      && verifier.VerifyField(tablePos, 68 /*COV_REALISM_ID*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 70 /*COV_CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
+      && verifier.VerifyTable(tablePos, 72 /*FALLBACK*/, MPEVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 74 /*BSTAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*SOLID_TIDES_MODEL*/, 1 /*morSolidTideModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 82 /*SOLAR_RAD_PRESSURE*/, 1 /*morRadiationModel*/, 1, false)
+      && verifier.VerifyField(tablePos, 84 /*ECOM2_Y0*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 86 /*MESSAGE_STATUS*/, 1 /*morMessageStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 88 /*OBJECT_NAME*/, false)
+      && verifier.VerifyTable(tablePos, 90 /*COV_REALISM*/, CVRVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 92 /*COV_CALIBRATION_REFERENCE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -52,13 +52,14 @@ Once per asset: `DPMAsset.RECORD_PROVENANCE` (a `$PVN`, appended in this release
 
 | Record | Raw median / p95 | gzip median | Brotli median | Structure | 100,000 raw / gzip / Brotli MB |
 |---|---:|---:|---:|---:|---:|
-| Minimum, without the five orbit-determination values | 184 / 184 | 178 | 173 | 46 % | 18.4 / 7.0 / 6.5 |
-| Minimum | 216 / 216 | 199 | 192 | 45 % | 21.6 / 8.1 / 7.4 |
-| With covariance (realism model by ID) | 632 / 632 | 635 | 605 | 19 % | 63.2 / 43.2 / 41.7 |
-| With covariance (realism entry in the record) | 728 / 728 | 691 | 663 | 26 % | 72.8 / 43.3 / 41.7 |
-| With covariance and one window | 1,112 / 1,136 | 1,107 | 1,063 | 15 % | 109.6 / 84.0 / 81.5 |
-| With the fallback set | 360 / 360 | 249 | 239 | 47 % | 36.0 / 9.5 / 8.6 |
-| Display: no covariance, one window, the fallback set | 832 / 856 | 728 | 694 | 25 % | 81.6 / 50.0 / 47.7 |
-| Covariance, one window and the fallback set | 1,240 / 1,264 | 1,156 | 1,117 | 18 % | 122.4 / 85.6 / 82.7 |
+| Minimum, without the five orbit-determination values | 176 / 176 | 173 | 167 | 44 % | 17.6 / 7.0 / 6.5 |
+| Minimum | 208 / 208 | 198 | 188 | 43 % | 20.8 / 8.1 / 7.4 |
+| With covariance (realism model by ID) | 624 / 624 | 633 | 598 | 18 % | 62.4 / 43.2 / 41.7 |
+| With covariance (realism entry in the record) | 736 / 736 | 691 | 658 | 27 % | 73.6 / 43.3 / 41.7 |
+| With covariance and one window | 1,096 / 1,120 | 1,100 | 1,055 | 14 % | 108.0 / 84.0 / 81.5 |
+| With the fallback set | 344 / 344 | 249 | 235 | 44 % | 34.4 / 9.5 / 8.5 |
+| Display: no covariance, one window, the fallback set | 816 / 840 | 726 | 687 | 24 % | 80.0 / 50.0 / 47.7 |
+| Covariance, one window and the fallback set | 1,224 / 1,248 | 1,152 | 1,109 | 17 % | 120.8 / 85.6 / 82.7 |
+| Rows-only update | 536 / 560 | 550 | 521 | 16 % | 52.1 / 40.9 / 39.9 |
 
-The same catalog as `$OCM` is 2,884 bytes per record (288 MB at 100,000), and 4,584 with one window (457 MB). 53 records carry no rows (the builder excluded them). The fallback sets use each record's own elements labeled SGP4-XP, for size only. Structure is everything but numeric payload and text: the four-byte prefix, root offset and identifier (12 bytes), the root table's vtable (4 bytes plus 2 per field up to the last one present), offsets, vector lengths and alignment. FlatBuffers cannot share a vtable between records of a stream.
+The field order puts what a rows-only update carries first (identity, theory, epoch, `ROWS_ONLY`, the rows), then what every full record carries, the orbit-determination values, the covariance and the fallback set, and last the fields few records carry: a record pays 2 bytes of slot table for every field up to its last present one. The same catalog as `$OCM` is 2,884 bytes per record (288 MB at 100,000), and 4,584 with one window (457 MB). 53 records carry no rows (the builder excluded them). The fallback sets use each record's own elements labeled SGP4-XP, for size only. Structure is everything but numeric payload and text: the four-byte prefix, root offset and identifier (12 bytes), the root table's vtable (4 bytes plus 2 per field up to the last one present), offsets, vector lengths and alignment. FlatBuffers cannot share a vtable between records of a stream.

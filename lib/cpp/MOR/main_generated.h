@@ -427,48 +427,48 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NORAD_CAT_ID = 4,
     VT_INTERNATIONAL_DESIGNATOR = 6,
     VT_ORIGINATOR = 8,
-    VT_OBJECT_NAME = 10,
-    VT_MESSAGE_STATUS = 12,
-    VT_EPOCH_UNIX_US = 14,
-    VT_MEAN_ELEMENT_THEORY = 16,
-    VT_MEAN_MOTION = 18,
-    VT_ECCENTRICITY = 20,
-    VT_INCLINATION = 22,
-    VT_RA_OF_ASC_NODE = 24,
-    VT_ARG_OF_PERICENTER = 26,
-    VT_MEAN_ANOMALY = 28,
-    VT_BTERM = 30,
-    VT_AGOM = 32,
-    VT_BSTAR = 34,
-    VT_MEAN_MOTION_DOT = 36,
-    VT_MEAN_MOTION_DDOT = 38,
+    VT_MEAN_ELEMENT_THEORY = 10,
+    VT_EPOCH_UNIX_US = 12,
+    VT_ROWS_ONLY = 14,
+    VT_WINDOWS = 16,
+    VT_WINDOW_COEFF_HEADS = 18,
+    VT_WINDOW_COEFF_TAILS = 20,
+    VT_WINDOW_RECORD_CHECK = 22,
+    VT_MEAN_MOTION = 24,
+    VT_ECCENTRICITY = 26,
+    VT_INCLINATION = 28,
+    VT_RA_OF_ASC_NODE = 30,
+    VT_ARG_OF_PERICENTER = 32,
+    VT_MEAN_ANOMALY = 34,
+    VT_BTERM = 36,
+    VT_AGOM = 38,
     VT_GRAVITY_FIELD = 40,
     VT_MAXIMUM_TESSERAL_DEGREE = 42,
     VT_MAXIMUM_ZONAL_DEGREE = 44,
-    VT_SOLID_TIDES_MODEL = 46,
-    VT_SOLAR_RAD_PRESSURE = 48,
-    VT_OD_PARAMETERS = 50,
-    VT_OD_SOLVED_FOR = 52,
-    VT_ECOM2_Y0 = 54,
-    VT_ACTUAL_OD_SPAN = 56,
-    VT_OD_OBSERVATIONS_USED = 58,
-    VT_OD_TRACKS_USED = 60,
-    VT_WEIGHTED_RMS = 62,
-    VT_OD_EPOCH_UNIX_US = 64,
-    VT_DAYS_SINCE_LAST_OBS = 66,
-    VT_COVARIANCE_DATA = 68,
-    VT_COV_PROPAGATION = 70,
-    VT_COV_FLOOR = 72,
-    VT_COV_REALISM_ID = 74,
-    VT_COV_REALISM = 76,
-    VT_COV_CALIBRATION = 78,
-    VT_COV_CALIBRATION_REFERENCE = 80,
-    VT_WINDOWS = 82,
-    VT_WINDOW_COEFF_HEADS = 84,
-    VT_WINDOW_COEFF_TAILS = 86,
-    VT_WINDOW_RECORD_CHECK = 88,
-    VT_FALLBACK = 90,
-    VT_ROWS_ONLY = 92
+    VT_OD_PARAMETERS = 46,
+    VT_OD_SOLVED_FOR = 48,
+    VT_ACTUAL_OD_SPAN = 50,
+    VT_OD_OBSERVATIONS_USED = 52,
+    VT_WEIGHTED_RMS = 54,
+    VT_OD_EPOCH_UNIX_US = 56,
+    VT_OD_TRACKS_USED = 58,
+    VT_DAYS_SINCE_LAST_OBS = 60,
+    VT_COVARIANCE_DATA = 62,
+    VT_COV_PROPAGATION = 64,
+    VT_COV_FLOOR = 66,
+    VT_COV_REALISM_ID = 68,
+    VT_COV_CALIBRATION = 70,
+    VT_FALLBACK = 72,
+    VT_BSTAR = 74,
+    VT_MEAN_MOTION_DOT = 76,
+    VT_MEAN_MOTION_DDOT = 78,
+    VT_SOLID_TIDES_MODEL = 80,
+    VT_SOLAR_RAD_PRESSURE = 82,
+    VT_ECOM2_Y0 = 84,
+    VT_MESSAGE_STATUS = 86,
+    VT_OBJECT_NAME = 88,
+    VT_COV_REALISM = 90,
+    VT_COV_CALIBRATION_REFERENCE = 92
   };
   /// The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
   uint32_t NORAD_CAT_ID() const {
@@ -483,13 +483,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ORIGINATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
   }
-  /// The object's name; absent unless a reader copies it into what it writes.
-  const ::flatbuffers::String *OBJECT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
-  }
-  /// Whether the set is real or test data.
-  morMessageStatus MESSAGE_STATUS() const {
-    return static_cast<morMessageStatus>(GetField<uint8_t>(VT_MESSAGE_STATUS, 0));
+  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  meanElementSource MEAN_ELEMENT_THEORY() const {
+    return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 6));
   }
   /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
   /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
@@ -497,9 +493,33 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t EPOCH_UNIX_US() const {
     return GetField<int64_t>(VT_EPOCH_UNIX_US, 0);
   }
-  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-  meanElementSource MEAN_ELEMENT_THEORY() const {
-    return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 6));
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  bool ROWS_ONLY() const {
+    return GetField<uint8_t>(VT_ROWS_ONLY, 0) != 0;
+  }
+  /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+  const ::flatbuffers::Vector<const MORWindow *> *WINDOWS() const {
+    return GetPointer<const ::flatbuffers::Vector<const MORWindow *> *>(VT_WINDOWS);
+  }
+  /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+  /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+  const ::flatbuffers::Vector<double> *WINDOW_COEFF_HEADS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WINDOW_COEFF_HEADS);
+  }
+  /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+  /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+  const ::flatbuffers::Vector<float> *WINDOW_COEFF_TAILS() const {
+    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_WINDOW_COEFF_TAILS);
+  }
+  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  uint64_t WINDOW_RECORD_CHECK() const {
+    return GetField<uint64_t>(VT_WINDOW_RECORD_CHECK, 0);
   }
   /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
   double MEAN_MOTION() const {
@@ -533,18 +553,6 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double AGOM() const {
     return GetField<double>(VT_AGOM, 0.0);
   }
-  /// BSTAR, 1/Earth radii. SGP4 only.
-  double BSTAR() const {
-    return GetField<double>(VT_BSTAR, 0.0);
-  }
-  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-  double MEAN_MOTION_DOT() const {
-    return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
-  }
-  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-  double MEAN_MOTION_DDOT() const {
-    return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
-  }
   /// The gravity field the set flies on.
   morGravityField GRAVITY_FIELD() const {
     return static_cast<morGravityField>(GetField<uint8_t>(VT_GRAVITY_FIELD, 0));
@@ -557,14 +565,6 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint8_t MAXIMUM_ZONAL_DEGREE() const {
     return GetField<uint8_t>(VT_MAXIMUM_ZONAL_DEGREE, 0);
   }
-  /// The solid Earth tide the set flies with.
-  morSolidTideModel SOLID_TIDES_MODEL() const {
-    return static_cast<morSolidTideModel>(GetField<uint8_t>(VT_SOLID_TIDES_MODEL, 0));
-  }
-  /// The radiation pressure model the set states.
-  morRadiationModel SOLAR_RAD_PRESSURE() const {
-    return static_cast<morRadiationModel>(GetField<uint8_t>(VT_SOLAR_RAD_PRESSURE, 0));
-  }
   /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
   /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
   /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
@@ -575,10 +575,6 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t OD_SOLVED_FOR() const {
     return GetField<uint32_t>(VT_OD_SOLVED_FOR, 0);
   }
-  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-  double ECOM2_Y0() const {
-    return GetField<double>(VT_ECOM2_Y0, 0.0);
-  }
   /// The span of the observations the orbit determination used, days; NaN when not stated.
   double ACTUAL_OD_SPAN() const {
     return GetField<double>(VT_ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
@@ -587,10 +583,6 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t OD_OBSERVATIONS_USED() const {
     return GetField<int32_t>(VT_OD_OBSERVATIONS_USED, -1);
   }
-  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-  int32_t OD_TRACKS_USED() const {
-    return GetField<int32_t>(VT_OD_TRACKS_USED, -1);
-  }
   /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
   double WEIGHTED_RMS() const {
     return GetField<double>(VT_WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
@@ -598,6 +590,10 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
   int64_t OD_EPOCH_UNIX_US() const {
     return GetField<int64_t>(VT_OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+  }
+  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  int32_t OD_TRACKS_USED() const {
+    return GetField<int32_t>(VT_OD_TRACKS_USED, -1);
   }
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
   double DAYS_SINCE_LAST_OBS() const {
@@ -625,42 +621,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint16_t COV_REALISM_ID() const {
     return GetField<uint16_t>(VT_COV_REALISM_ID, 0);
   }
-  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-  const CVR *COV_REALISM() const {
-    return GetPointer<const CVR *>(VT_COV_REALISM);
-  }
   /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
   covarianceCalibration COV_CALIBRATION() const {
     return static_cast<covarianceCalibration>(GetField<int8_t>(VT_COV_CALIBRATION, 0));
-  }
-  /// Identifier of that calibration evidence (a report or record).
-  const ::flatbuffers::String *COV_CALIBRATION_REFERENCE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
-  }
-  /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-  const ::flatbuffers::Vector<const MORWindow *> *WINDOWS() const {
-    return GetPointer<const ::flatbuffers::Vector<const MORWindow *> *>(VT_WINDOWS);
-  }
-  /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-  /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-  const ::flatbuffers::Vector<double> *WINDOW_COEFF_HEADS() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WINDOW_COEFF_HEADS);
-  }
-  /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-  /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-  const ::flatbuffers::Vector<float> *WINDOW_COEFF_TAILS() const {
-    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_WINDOW_COEFF_TAILS);
-  }
-  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-  uint64_t WINDOW_RECORD_CHECK() const {
-    return GetField<uint64_t>(VT_WINDOW_RECORD_CHECK, 0);
   }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
@@ -668,9 +631,46 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const MPE *FALLBACK() const {
     return GetPointer<const MPE *>(VT_FALLBACK);
   }
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  bool ROWS_ONLY() const {
-    return GetField<uint8_t>(VT_ROWS_ONLY, 0) != 0;
+  /// BSTAR, 1/Earth radii. SGP4 only.
+  double BSTAR() const {
+    return GetField<double>(VT_BSTAR, 0.0);
+  }
+  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  double MEAN_MOTION_DOT() const {
+    return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
+  }
+  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  double MEAN_MOTION_DDOT() const {
+    return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
+  }
+  /// The solid Earth tide the set flies with.
+  morSolidTideModel SOLID_TIDES_MODEL() const {
+    return static_cast<morSolidTideModel>(GetField<uint8_t>(VT_SOLID_TIDES_MODEL, 0));
+  }
+  /// The radiation pressure model the set states.
+  morRadiationModel SOLAR_RAD_PRESSURE() const {
+    return static_cast<morRadiationModel>(GetField<uint8_t>(VT_SOLAR_RAD_PRESSURE, 0));
+  }
+  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  double ECOM2_Y0() const {
+    return GetField<double>(VT_ECOM2_Y0, 0.0);
+  }
+  /// Whether the set is real or test data.
+  morMessageStatus MESSAGE_STATUS() const {
+    return static_cast<morMessageStatus>(GetField<uint8_t>(VT_MESSAGE_STATUS, 0));
+  }
+  /// The object's name; absent unless a reader copies it into what it writes.
+  const ::flatbuffers::String *OBJECT_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
+  }
+  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+  const CVR *COV_REALISM() const {
+    return GetPointer<const CVR *>(VT_COV_REALISM);
+  }
+  /// Identifier of that calibration evidence (a report or record).
+  const ::flatbuffers::String *COV_CALIBRATION_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -680,11 +680,16 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(INTERNATIONAL_DESIGNATOR()) &&
            VerifyOffset(verifier, VT_ORIGINATOR) &&
            verifier.VerifyString(ORIGINATOR()) &&
-           VerifyOffset(verifier, VT_OBJECT_NAME) &&
-           verifier.VerifyString(OBJECT_NAME()) &&
-           VerifyField<uint8_t>(verifier, VT_MESSAGE_STATUS, 1) &&
-           VerifyField<int64_t>(verifier, VT_EPOCH_UNIX_US, 8) &&
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
+           VerifyField<int64_t>(verifier, VT_EPOCH_UNIX_US, 8) &&
+           VerifyField<uint8_t>(verifier, VT_ROWS_ONLY, 1) &&
+           VerifyOffset(verifier, VT_WINDOWS) &&
+           verifier.VerifyVector(WINDOWS()) &&
+           VerifyOffset(verifier, VT_WINDOW_COEFF_HEADS) &&
+           verifier.VerifyVector(WINDOW_COEFF_HEADS()) &&
+           VerifyOffset(verifier, VT_WINDOW_COEFF_TAILS) &&
+           verifier.VerifyVector(WINDOW_COEFF_TAILS()) &&
+           VerifyField<uint64_t>(verifier, VT_WINDOW_RECORD_CHECK, 8) &&
            VerifyField<double>(verifier, VT_MEAN_MOTION, 8) &&
            VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
            VerifyField<double>(verifier, VT_INCLINATION, 8) &&
@@ -693,43 +698,38 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MEAN_ANOMALY, 8) &&
            VerifyField<double>(verifier, VT_BTERM, 8) &&
            VerifyField<double>(verifier, VT_AGOM, 8) &&
-           VerifyField<double>(verifier, VT_BSTAR, 8) &&
-           VerifyField<double>(verifier, VT_MEAN_MOTION_DOT, 8) &&
-           VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
            VerifyField<uint8_t>(verifier, VT_GRAVITY_FIELD, 1) &&
            VerifyField<uint8_t>(verifier, VT_MAXIMUM_TESSERAL_DEGREE, 1) &&
            VerifyField<uint8_t>(verifier, VT_MAXIMUM_ZONAL_DEGREE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_SOLID_TIDES_MODEL, 1) &&
-           VerifyField<uint8_t>(verifier, VT_SOLAR_RAD_PRESSURE, 1) &&
            VerifyField<uint32_t>(verifier, VT_OD_PARAMETERS, 4) &&
            VerifyField<uint32_t>(verifier, VT_OD_SOLVED_FOR, 4) &&
-           VerifyField<double>(verifier, VT_ECOM2_Y0, 8) &&
            VerifyField<double>(verifier, VT_ACTUAL_OD_SPAN, 8) &&
            VerifyField<int32_t>(verifier, VT_OD_OBSERVATIONS_USED, 4) &&
-           VerifyField<int32_t>(verifier, VT_OD_TRACKS_USED, 4) &&
            VerifyField<double>(verifier, VT_WEIGHTED_RMS, 8) &&
            VerifyField<int64_t>(verifier, VT_OD_EPOCH_UNIX_US, 8) &&
+           VerifyField<int32_t>(verifier, VT_OD_TRACKS_USED, 4) &&
            VerifyField<double>(verifier, VT_DAYS_SINCE_LAST_OBS, 8) &&
            VerifyOffset(verifier, VT_COVARIANCE_DATA) &&
            verifier.VerifyVector(COVARIANCE_DATA()) &&
            VerifyField<MORCovariancePropagation>(verifier, VT_COV_PROPAGATION, 8) &&
            VerifyField<uint8_t>(verifier, VT_COV_FLOOR, 1) &&
            VerifyField<uint16_t>(verifier, VT_COV_REALISM_ID, 2) &&
-           VerifyOffset(verifier, VT_COV_REALISM) &&
-           verifier.VerifyTable(COV_REALISM()) &&
            VerifyField<int8_t>(verifier, VT_COV_CALIBRATION, 1) &&
-           VerifyOffset(verifier, VT_COV_CALIBRATION_REFERENCE) &&
-           verifier.VerifyString(COV_CALIBRATION_REFERENCE()) &&
-           VerifyOffset(verifier, VT_WINDOWS) &&
-           verifier.VerifyVector(WINDOWS()) &&
-           VerifyOffset(verifier, VT_WINDOW_COEFF_HEADS) &&
-           verifier.VerifyVector(WINDOW_COEFF_HEADS()) &&
-           VerifyOffset(verifier, VT_WINDOW_COEFF_TAILS) &&
-           verifier.VerifyVector(WINDOW_COEFF_TAILS()) &&
-           VerifyField<uint64_t>(verifier, VT_WINDOW_RECORD_CHECK, 8) &&
            VerifyOffset(verifier, VT_FALLBACK) &&
            verifier.VerifyTable(FALLBACK()) &&
-           VerifyField<uint8_t>(verifier, VT_ROWS_ONLY, 1) &&
+           VerifyField<double>(verifier, VT_BSTAR, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_MOTION_DOT, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_MOTION_DDOT, 8) &&
+           VerifyField<uint8_t>(verifier, VT_SOLID_TIDES_MODEL, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SOLAR_RAD_PRESSURE, 1) &&
+           VerifyField<double>(verifier, VT_ECOM2_Y0, 8) &&
+           VerifyField<uint8_t>(verifier, VT_MESSAGE_STATUS, 1) &&
+           VerifyOffset(verifier, VT_OBJECT_NAME) &&
+           verifier.VerifyString(OBJECT_NAME()) &&
+           VerifyOffset(verifier, VT_COV_REALISM) &&
+           verifier.VerifyTable(COV_REALISM()) &&
+           VerifyOffset(verifier, VT_COV_CALIBRATION_REFERENCE) &&
+           verifier.VerifyString(COV_CALIBRATION_REFERENCE()) &&
            verifier.EndTable();
   }
 };
@@ -747,17 +747,26 @@ struct MORBuilder {
   void add_ORIGINATOR(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR) {
     fbb_.AddOffset(MOR::VT_ORIGINATOR, ORIGINATOR);
   }
-  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
-    fbb_.AddOffset(MOR::VT_OBJECT_NAME, OBJECT_NAME);
-  }
-  void add_MESSAGE_STATUS(morMessageStatus MESSAGE_STATUS) {
-    fbb_.AddElement<uint8_t>(MOR::VT_MESSAGE_STATUS, static_cast<uint8_t>(MESSAGE_STATUS), 0);
+  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
+    fbb_.AddElement<int8_t>(MOR::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 6);
   }
   void add_EPOCH_UNIX_US(int64_t EPOCH_UNIX_US) {
     fbb_.AddElement<int64_t>(MOR::VT_EPOCH_UNIX_US, EPOCH_UNIX_US, 0);
   }
-  void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
-    fbb_.AddElement<int8_t>(MOR::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 6);
+  void add_ROWS_ONLY(bool ROWS_ONLY) {
+    fbb_.AddElement<uint8_t>(MOR::VT_ROWS_ONLY, static_cast<uint8_t>(ROWS_ONLY), 0);
+  }
+  void add_WINDOWS(::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS) {
+    fbb_.AddOffset(MOR::VT_WINDOWS, WINDOWS);
+  }
+  void add_WINDOW_COEFF_HEADS(::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS) {
+    fbb_.AddOffset(MOR::VT_WINDOW_COEFF_HEADS, WINDOW_COEFF_HEADS);
+  }
+  void add_WINDOW_COEFF_TAILS(::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS) {
+    fbb_.AddOffset(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
+  }
+  void add_WINDOW_RECORD_CHECK(uint64_t WINDOW_RECORD_CHECK) {
+    fbb_.AddElement<uint64_t>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
   }
   void add_MEAN_MOTION(double MEAN_MOTION) {
     fbb_.AddElement<double>(MOR::VT_MEAN_MOTION, MEAN_MOTION, 0.0);
@@ -783,15 +792,6 @@ struct MORBuilder {
   void add_AGOM(double AGOM) {
     fbb_.AddElement<double>(MOR::VT_AGOM, AGOM, 0.0);
   }
-  void add_BSTAR(double BSTAR) {
-    fbb_.AddElement<double>(MOR::VT_BSTAR, BSTAR, 0.0);
-  }
-  void add_MEAN_MOTION_DOT(double MEAN_MOTION_DOT) {
-    fbb_.AddElement<double>(MOR::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
-  }
-  void add_MEAN_MOTION_DDOT(double MEAN_MOTION_DDOT) {
-    fbb_.AddElement<double>(MOR::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
-  }
   void add_GRAVITY_FIELD(morGravityField GRAVITY_FIELD) {
     fbb_.AddElement<uint8_t>(MOR::VT_GRAVITY_FIELD, static_cast<uint8_t>(GRAVITY_FIELD), 0);
   }
@@ -801,20 +801,11 @@ struct MORBuilder {
   void add_MAXIMUM_ZONAL_DEGREE(uint8_t MAXIMUM_ZONAL_DEGREE) {
     fbb_.AddElement<uint8_t>(MOR::VT_MAXIMUM_ZONAL_DEGREE, MAXIMUM_ZONAL_DEGREE, 0);
   }
-  void add_SOLID_TIDES_MODEL(morSolidTideModel SOLID_TIDES_MODEL) {
-    fbb_.AddElement<uint8_t>(MOR::VT_SOLID_TIDES_MODEL, static_cast<uint8_t>(SOLID_TIDES_MODEL), 0);
-  }
-  void add_SOLAR_RAD_PRESSURE(morRadiationModel SOLAR_RAD_PRESSURE) {
-    fbb_.AddElement<uint8_t>(MOR::VT_SOLAR_RAD_PRESSURE, static_cast<uint8_t>(SOLAR_RAD_PRESSURE), 0);
-  }
   void add_OD_PARAMETERS(uint32_t OD_PARAMETERS) {
     fbb_.AddElement<uint32_t>(MOR::VT_OD_PARAMETERS, OD_PARAMETERS, 0);
   }
   void add_OD_SOLVED_FOR(uint32_t OD_SOLVED_FOR) {
     fbb_.AddElement<uint32_t>(MOR::VT_OD_SOLVED_FOR, OD_SOLVED_FOR, 0);
-  }
-  void add_ECOM2_Y0(double ECOM2_Y0) {
-    fbb_.AddElement<double>(MOR::VT_ECOM2_Y0, ECOM2_Y0, 0.0);
   }
   void add_ACTUAL_OD_SPAN(double ACTUAL_OD_SPAN) {
     fbb_.AddElement<double>(MOR::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
@@ -822,14 +813,14 @@ struct MORBuilder {
   void add_OD_OBSERVATIONS_USED(int32_t OD_OBSERVATIONS_USED) {
     fbb_.AddElement<int32_t>(MOR::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, -1);
   }
-  void add_OD_TRACKS_USED(int32_t OD_TRACKS_USED) {
-    fbb_.AddElement<int32_t>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
-  }
   void add_WEIGHTED_RMS(double WEIGHTED_RMS) {
     fbb_.AddElement<double>(MOR::VT_WEIGHTED_RMS, WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
   }
   void add_OD_EPOCH_UNIX_US(int64_t OD_EPOCH_UNIX_US) {
     fbb_.AddElement<int64_t>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+  }
+  void add_OD_TRACKS_USED(int32_t OD_TRACKS_USED) {
+    fbb_.AddElement<int32_t>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
   }
   void add_DAYS_SINCE_LAST_OBS(double DAYS_SINCE_LAST_OBS) {
     fbb_.AddElement<double>(MOR::VT_DAYS_SINCE_LAST_OBS, DAYS_SINCE_LAST_OBS, std::numeric_limits<double>::quiet_NaN());
@@ -846,32 +837,41 @@ struct MORBuilder {
   void add_COV_REALISM_ID(uint16_t COV_REALISM_ID) {
     fbb_.AddElement<uint16_t>(MOR::VT_COV_REALISM_ID, COV_REALISM_ID, 0);
   }
-  void add_COV_REALISM(::flatbuffers::Offset<CVR> COV_REALISM) {
-    fbb_.AddOffset(MOR::VT_COV_REALISM, COV_REALISM);
-  }
   void add_COV_CALIBRATION(covarianceCalibration COV_CALIBRATION) {
     fbb_.AddElement<int8_t>(MOR::VT_COV_CALIBRATION, static_cast<int8_t>(COV_CALIBRATION), 0);
-  }
-  void add_COV_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE) {
-    fbb_.AddOffset(MOR::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
-  }
-  void add_WINDOWS(::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS) {
-    fbb_.AddOffset(MOR::VT_WINDOWS, WINDOWS);
-  }
-  void add_WINDOW_COEFF_HEADS(::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS) {
-    fbb_.AddOffset(MOR::VT_WINDOW_COEFF_HEADS, WINDOW_COEFF_HEADS);
-  }
-  void add_WINDOW_COEFF_TAILS(::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS) {
-    fbb_.AddOffset(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
-  }
-  void add_WINDOW_RECORD_CHECK(uint64_t WINDOW_RECORD_CHECK) {
-    fbb_.AddElement<uint64_t>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
   }
   void add_FALLBACK(::flatbuffers::Offset<MPE> FALLBACK) {
     fbb_.AddOffset(MOR::VT_FALLBACK, FALLBACK);
   }
-  void add_ROWS_ONLY(bool ROWS_ONLY) {
-    fbb_.AddElement<uint8_t>(MOR::VT_ROWS_ONLY, static_cast<uint8_t>(ROWS_ONLY), 0);
+  void add_BSTAR(double BSTAR) {
+    fbb_.AddElement<double>(MOR::VT_BSTAR, BSTAR, 0.0);
+  }
+  void add_MEAN_MOTION_DOT(double MEAN_MOTION_DOT) {
+    fbb_.AddElement<double>(MOR::VT_MEAN_MOTION_DOT, MEAN_MOTION_DOT, 0.0);
+  }
+  void add_MEAN_MOTION_DDOT(double MEAN_MOTION_DDOT) {
+    fbb_.AddElement<double>(MOR::VT_MEAN_MOTION_DDOT, MEAN_MOTION_DDOT, 0.0);
+  }
+  void add_SOLID_TIDES_MODEL(morSolidTideModel SOLID_TIDES_MODEL) {
+    fbb_.AddElement<uint8_t>(MOR::VT_SOLID_TIDES_MODEL, static_cast<uint8_t>(SOLID_TIDES_MODEL), 0);
+  }
+  void add_SOLAR_RAD_PRESSURE(morRadiationModel SOLAR_RAD_PRESSURE) {
+    fbb_.AddElement<uint8_t>(MOR::VT_SOLAR_RAD_PRESSURE, static_cast<uint8_t>(SOLAR_RAD_PRESSURE), 0);
+  }
+  void add_ECOM2_Y0(double ECOM2_Y0) {
+    fbb_.AddElement<double>(MOR::VT_ECOM2_Y0, ECOM2_Y0, 0.0);
+  }
+  void add_MESSAGE_STATUS(morMessageStatus MESSAGE_STATUS) {
+    fbb_.AddElement<uint8_t>(MOR::VT_MESSAGE_STATUS, static_cast<uint8_t>(MESSAGE_STATUS), 0);
+  }
+  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
+    fbb_.AddOffset(MOR::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  void add_COV_REALISM(::flatbuffers::Offset<CVR> COV_REALISM) {
+    fbb_.AddOffset(MOR::VT_COV_REALISM, COV_REALISM);
+  }
+  void add_COV_CALIBRATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE) {
+    fbb_.AddOffset(MOR::VT_COV_CALIBRATION_REFERENCE, COV_CALIBRATION_REFERENCE);
   }
   explicit MORBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -889,10 +889,13 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     uint32_t NORAD_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> INTERNATIONAL_DESIGNATOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
-    morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
-    int64_t EPOCH_UNIX_US = 0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_UNSPECIFIED,
+    int64_t EPOCH_UNIX_US = 0,
+    bool ROWS_ONLY = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS = 0,
+    uint64_t WINDOW_RECORD_CHECK = 0,
     double MEAN_MOTION = 0.0,
     double ECCENTRICITY = 0.0,
     double INCLINATION = 0.0,
@@ -901,46 +904,42 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     double MEAN_ANOMALY = 0.0,
     double BTERM = 0.0,
     double AGOM = 0.0,
-    double BSTAR = 0.0,
-    double MEAN_MOTION_DOT = 0.0,
-    double MEAN_MOTION_DDOT = 0.0,
     morGravityField GRAVITY_FIELD = morGravityField_THEORY,
     uint8_t MAXIMUM_TESSERAL_DEGREE = 0,
     uint8_t MAXIMUM_ZONAL_DEGREE = 0,
-    morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel_NONE,
-    morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel_UNSTATED,
     uint32_t OD_PARAMETERS = 0,
     uint32_t OD_SOLVED_FOR = 0,
-    double ECOM2_Y0 = 0.0,
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
     int32_t OD_OBSERVATIONS_USED = -1,
-    int32_t OD_TRACKS_USED = -1,
     double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
     int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    int32_t OD_TRACKS_USED = -1,
     double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA = 0,
     const MORCovariancePropagation *COV_PROPAGATION = nullptr,
     morCovarianceFloor COV_FLOOR = morCovarianceFloor_UNSTATED,
     uint16_t COV_REALISM_ID = 0,
-    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
-    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS = 0,
-    uint64_t WINDOW_RECORD_CHECK = 0,
     ::flatbuffers::Offset<MPE> FALLBACK = 0,
-    bool ROWS_ONLY = false) {
+    double BSTAR = 0.0,
+    double MEAN_MOTION_DOT = 0.0,
+    double MEAN_MOTION_DDOT = 0.0,
+    morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel_NONE,
+    morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel_UNSTATED,
+    double ECOM2_Y0 = 0.0,
+    morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
+    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0) {
   MORBuilder builder_(_fbb);
-  builder_.add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK);
-  builder_.add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS);
-  builder_.add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US);
-  builder_.add_WEIGHTED_RMS(WEIGHTED_RMS);
-  builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
   builder_.add_ECOM2_Y0(ECOM2_Y0);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
   builder_.add_MEAN_MOTION_DOT(MEAN_MOTION_DOT);
   builder_.add_BSTAR(BSTAR);
+  builder_.add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS);
+  builder_.add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US);
+  builder_.add_WEIGHTED_RMS(WEIGHTED_RMS);
+  builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
   builder_.add_AGOM(AGOM);
   builder_.add_BTERM(BTERM);
   builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
@@ -949,34 +948,35 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_INCLINATION(INCLINATION);
   builder_.add_ECCENTRICITY(ECCENTRICITY);
   builder_.add_MEAN_MOTION(MEAN_MOTION);
+  builder_.add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK);
   builder_.add_EPOCH_UNIX_US(EPOCH_UNIX_US);
-  builder_.add_FALLBACK(FALLBACK);
-  builder_.add_WINDOW_COEFF_TAILS(WINDOW_COEFF_TAILS);
-  builder_.add_WINDOW_COEFF_HEADS(WINDOW_COEFF_HEADS);
-  builder_.add_WINDOWS(WINDOWS);
   builder_.add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE);
   builder_.add_COV_REALISM(COV_REALISM);
+  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_FALLBACK(FALLBACK);
   builder_.add_COV_PROPAGATION(COV_PROPAGATION);
   builder_.add_COVARIANCE_DATA(COVARIANCE_DATA);
   builder_.add_OD_TRACKS_USED(OD_TRACKS_USED);
   builder_.add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED);
   builder_.add_OD_SOLVED_FOR(OD_SOLVED_FOR);
   builder_.add_OD_PARAMETERS(OD_PARAMETERS);
-  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_WINDOW_COEFF_TAILS(WINDOW_COEFF_TAILS);
+  builder_.add_WINDOW_COEFF_HEADS(WINDOW_COEFF_HEADS);
+  builder_.add_WINDOWS(WINDOWS);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_INTERNATIONAL_DESIGNATOR(INTERNATIONAL_DESIGNATOR);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_COV_REALISM_ID(COV_REALISM_ID);
-  builder_.add_ROWS_ONLY(ROWS_ONLY);
-  builder_.add_COV_CALIBRATION(COV_CALIBRATION);
-  builder_.add_COV_FLOOR(COV_FLOOR);
+  builder_.add_MESSAGE_STATUS(MESSAGE_STATUS);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
   builder_.add_SOLID_TIDES_MODEL(SOLID_TIDES_MODEL);
+  builder_.add_COV_CALIBRATION(COV_CALIBRATION);
+  builder_.add_COV_FLOOR(COV_FLOOR);
   builder_.add_MAXIMUM_ZONAL_DEGREE(MAXIMUM_ZONAL_DEGREE);
   builder_.add_MAXIMUM_TESSERAL_DEGREE(MAXIMUM_TESSERAL_DEGREE);
   builder_.add_GRAVITY_FIELD(GRAVITY_FIELD);
+  builder_.add_ROWS_ONLY(ROWS_ONLY);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
-  builder_.add_MESSAGE_STATUS(MESSAGE_STATUS);
   return builder_.Finish();
 }
 
@@ -985,10 +985,13 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     uint32_t NORAD_CAT_ID = 0,
     const char *INTERNATIONAL_DESIGNATOR = nullptr,
     const char *ORIGINATOR = nullptr,
-    const char *OBJECT_NAME = nullptr,
-    morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
-    int64_t EPOCH_UNIX_US = 0,
     meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_UNSPECIFIED,
+    int64_t EPOCH_UNIX_US = 0,
+    bool ROWS_ONLY = false,
+    const std::vector<MORWindow> *WINDOWS = nullptr,
+    const std::vector<double> *WINDOW_COEFF_HEADS = nullptr,
+    const std::vector<float> *WINDOW_COEFF_TAILS = nullptr,
+    uint64_t WINDOW_RECORD_CHECK = 0,
     double MEAN_MOTION = 0.0,
     double ECCENTRICITY = 0.0,
     double INCLINATION = 0.0,
@@ -997,53 +1000,53 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     double MEAN_ANOMALY = 0.0,
     double BTERM = 0.0,
     double AGOM = 0.0,
-    double BSTAR = 0.0,
-    double MEAN_MOTION_DOT = 0.0,
-    double MEAN_MOTION_DDOT = 0.0,
     morGravityField GRAVITY_FIELD = morGravityField_THEORY,
     uint8_t MAXIMUM_TESSERAL_DEGREE = 0,
     uint8_t MAXIMUM_ZONAL_DEGREE = 0,
-    morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel_NONE,
-    morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel_UNSTATED,
     uint32_t OD_PARAMETERS = 0,
     uint32_t OD_SOLVED_FOR = 0,
-    double ECOM2_Y0 = 0.0,
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
     int32_t OD_OBSERVATIONS_USED = -1,
-    int32_t OD_TRACKS_USED = -1,
     double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
     int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    int32_t OD_TRACKS_USED = -1,
     double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     const std::vector<double> *COVARIANCE_DATA = nullptr,
     const MORCovariancePropagation *COV_PROPAGATION = nullptr,
     morCovarianceFloor COV_FLOOR = morCovarianceFloor_UNSTATED,
     uint16_t COV_REALISM_ID = 0,
-    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
-    const char *COV_CALIBRATION_REFERENCE = nullptr,
-    const std::vector<MORWindow> *WINDOWS = nullptr,
-    const std::vector<double> *WINDOW_COEFF_HEADS = nullptr,
-    const std::vector<float> *WINDOW_COEFF_TAILS = nullptr,
-    uint64_t WINDOW_RECORD_CHECK = 0,
     ::flatbuffers::Offset<MPE> FALLBACK = 0,
-    bool ROWS_ONLY = false) {
+    double BSTAR = 0.0,
+    double MEAN_MOTION_DOT = 0.0,
+    double MEAN_MOTION_DDOT = 0.0,
+    morSolidTideModel SOLID_TIDES_MODEL = morSolidTideModel_NONE,
+    morRadiationModel SOLAR_RAD_PRESSURE = morRadiationModel_UNSTATED,
+    double ECOM2_Y0 = 0.0,
+    morMessageStatus MESSAGE_STATUS = morMessageStatus_UNSPECIFIED,
+    const char *OBJECT_NAME = nullptr,
+    ::flatbuffers::Offset<CVR> COV_REALISM = 0,
+    const char *COV_CALIBRATION_REFERENCE = nullptr) {
   auto INTERNATIONAL_DESIGNATOR__ = INTERNATIONAL_DESIGNATOR ? _fbb.CreateString(INTERNATIONAL_DESIGNATOR) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
-  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
-  auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
-  auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
   auto WINDOWS__ = WINDOWS ? _fbb.CreateVectorOfStructs<MORWindow>(*WINDOWS) : 0;
   auto WINDOW_COEFF_HEADS__ = WINDOW_COEFF_HEADS ? _fbb.CreateVector<double>(*WINDOW_COEFF_HEADS) : 0;
   auto WINDOW_COEFF_TAILS__ = WINDOW_COEFF_TAILS ? _fbb.CreateVector<float>(*WINDOW_COEFF_TAILS) : 0;
+  auto COVARIANCE_DATA__ = COVARIANCE_DATA ? _fbb.CreateVector<double>(*COVARIANCE_DATA) : 0;
+  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
+  auto COV_CALIBRATION_REFERENCE__ = COV_CALIBRATION_REFERENCE ? _fbb.CreateString(COV_CALIBRATION_REFERENCE) : 0;
   return CreateMOR(
       _fbb,
       NORAD_CAT_ID,
       INTERNATIONAL_DESIGNATOR__,
       ORIGINATOR__,
-      OBJECT_NAME__,
-      MESSAGE_STATUS,
-      EPOCH_UNIX_US,
       MEAN_ELEMENT_THEORY,
+      EPOCH_UNIX_US,
+      ROWS_ONLY,
+      WINDOWS__,
+      WINDOW_COEFF_HEADS__,
+      WINDOW_COEFF_TAILS__,
+      WINDOW_RECORD_CHECK,
       MEAN_MOTION,
       ECCENTRICITY,
       INCLINATION,
@@ -1052,36 +1055,33 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
       MEAN_ANOMALY,
       BTERM,
       AGOM,
-      BSTAR,
-      MEAN_MOTION_DOT,
-      MEAN_MOTION_DDOT,
       GRAVITY_FIELD,
       MAXIMUM_TESSERAL_DEGREE,
       MAXIMUM_ZONAL_DEGREE,
-      SOLID_TIDES_MODEL,
-      SOLAR_RAD_PRESSURE,
       OD_PARAMETERS,
       OD_SOLVED_FOR,
-      ECOM2_Y0,
       ACTUAL_OD_SPAN,
       OD_OBSERVATIONS_USED,
-      OD_TRACKS_USED,
       WEIGHTED_RMS,
       OD_EPOCH_UNIX_US,
+      OD_TRACKS_USED,
       DAYS_SINCE_LAST_OBS,
       COVARIANCE_DATA__,
       COV_PROPAGATION,
       COV_FLOOR,
       COV_REALISM_ID,
-      COV_REALISM,
       COV_CALIBRATION,
-      COV_CALIBRATION_REFERENCE__,
-      WINDOWS__,
-      WINDOW_COEFF_HEADS__,
-      WINDOW_COEFF_TAILS__,
-      WINDOW_RECORD_CHECK,
       FALLBACK,
-      ROWS_ONLY);
+      BSTAR,
+      MEAN_MOTION_DOT,
+      MEAN_MOTION_DDOT,
+      SOLID_TIDES_MODEL,
+      SOLAR_RAD_PRESSURE,
+      ECOM2_Y0,
+      MESSAGE_STATUS,
+      OBJECT_NAME__,
+      COV_REALISM,
+      COV_CALIBRATION_REFERENCE__);
 }
 
 inline const MOR *GetMOR(const void *buf) {

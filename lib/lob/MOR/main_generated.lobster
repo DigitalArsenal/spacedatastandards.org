@@ -172,52 +172,66 @@ class MOR : flatbuffers.handle
     /// INTERNATIONAL_DESIGNATOR and ORIGINATOR.
     def ORIGINATOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// The object's name; absent unless a reader copies it into what it writes.
-    def OBJECT_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 10)
-    /// Whether the set is real or test data.
-    def MESSAGE_STATUS() -> morMessageStatus:
-        return morMessageStatus(flatbuffers.field_uint8(buf_, pos_, 12, 0))
+    /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+    def MEAN_ELEMENT_THEORY() -> meanElementSource:
+        return meanElementSource(flatbuffers.field_int8(buf_, pos_, 10, 6))
     /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
     /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
     /// ways without loss; an instant inside a leap second has no value here.
     def EPOCH_UNIX_US() -> int:
-        return flatbuffers.field_int64(buf_, pos_, 14, 0)
-    /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-    def MEAN_ELEMENT_THEORY() -> meanElementSource:
-        return meanElementSource(flatbuffers.field_int8(buf_, pos_, 16, 6))
+        return flatbuffers.field_int64(buf_, pos_, 12, 0)
+    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    def ROWS_ONLY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+    /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+    def WINDOWS(i:int) -> MORWindow:
+        return MORWindow { buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 24 }
+    def WINDOWS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+    /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+    def WINDOW_COEFF_HEADS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def WINDOW_COEFF_HEADS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+    /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+    def WINDOW_COEFF_TAILS(i:int) -> float:
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
+    def WINDOW_COEFF_TAILS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    def WINDOW_RECORD_CHECK() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 22, 0)
     /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
     def MEAN_MOTION() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Eccentricity.
     def ECCENTRICITY() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
     /// Inclination, deg.
     def INCLINATION() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
     /// Right ascension of the ascending node, deg.
     def RA_OF_ASC_NODE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
     /// Argument of pericenter, deg.
     def ARG_OF_PERICENTER() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
     /// Mean anomaly, deg.
     def MEAN_ANOMALY() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
     /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
     def BTERM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
     /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
     def AGOM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
-    /// BSTAR, 1/Earth radii. SGP4 only.
-    def BSTAR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
-    /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-    def MEAN_MOTION_DOT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
-    /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-    def MEAN_MOTION_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// The gravity field the set flies on.
     def GRAVITY_FIELD() -> morGravityField:
@@ -228,108 +242,94 @@ class MOR : flatbuffers.handle
     /// Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
     def MAXIMUM_ZONAL_DEGREE() -> int:
         return flatbuffers.field_uint8(buf_, pos_, 44, 0)
-    /// The solid Earth tide the set flies with.
-    def SOLID_TIDES_MODEL() -> morSolidTideModel:
-        return morSolidTideModel(flatbuffers.field_uint8(buf_, pos_, 46, 0))
-    /// The radiation pressure model the set states.
-    def SOLAR_RAD_PRESSURE() -> morRadiationModel:
-        return morRadiationModel(flatbuffers.field_uint8(buf_, pos_, 48, 0))
     /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
     /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
     /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
     def OD_PARAMETERS() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 50, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 46, 0)
     /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
     def OD_SOLVED_FOR() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 52, 0)
-    /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-    def ECOM2_Y0() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+        return flatbuffers.field_uint32(buf_, pos_, 48, 0)
     /// The span of the observations the orbit determination used, days; NaN when not stated.
     def ACTUAL_OD_SPAN() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 56, nan)
+        return flatbuffers.field_float64(buf_, pos_, 50, nan)
     /// Observations the orbit determination used; -1 when not stated ($OCM 0).
     def OD_OBSERVATIONS_USED() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 58, -1)
-    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-    def OD_TRACKS_USED() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 60, -1)
+        return flatbuffers.field_int32(buf_, pos_, 52, -1)
     /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
     def WEIGHTED_RMS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+        return flatbuffers.field_float64(buf_, pos_, 54, nan)
     /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; (-9223372036854775807 - 1) when not stated.
     def OD_EPOCH_UNIX_US() -> int:
-        return flatbuffers.field_int64(buf_, pos_, 64, (-9223372036854775807 - 1))
+        return flatbuffers.field_int64(buf_, pos_, 56, (-9223372036854775807 - 1))
+    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    def OD_TRACKS_USED() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 58, -1)
     /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
     def DAYS_SINCE_LAST_OBS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 66, nan)
+        return flatbuffers.field_float64(buf_, pos_, 60, nan)
     /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
     /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
     /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
     /// ascending ordinal. Absent: no covariance.
     def COVARIANCE_DATA(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 68) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 8)
     def COVARIANCE_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 68)
+        return flatbuffers.field_vector_len(buf_, pos_, 62)
     /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
     def COV_PROPAGATION() -> MORCovariancePropagation?:
-        let o = flatbuffers.field_struct(buf_, pos_, 70)
+        let o = flatbuffers.field_struct(buf_, pos_, 64)
         return if o: MORCovariancePropagation { buf_, o } else: nil
     /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
     /// any producer text: a record read alone flies the same covariance as its $OCM.
     def COV_FLOOR() -> morCovarianceFloor:
-        return morCovarianceFloor(flatbuffers.field_uint8(buf_, pos_, 72, 0))
+        return morCovarianceFloor(flatbuffers.field_uint8(buf_, pos_, 66, 0))
     /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
     /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
     /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     def COV_REALISM_ID() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 74, 0)
-    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-    def COV_REALISM() -> CVR?:
-        let o = flatbuffers.field_table(buf_, pos_, 76)
-        return if o: CVR { buf_, o } else: nil
+        return flatbuffers.field_uint16(buf_, pos_, 68, 0)
     /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
     def COV_CALIBRATION() -> covarianceCalibration:
-        return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 78, 0))
-    /// Identifier of that calibration evidence (a report or record).
-    def COV_CALIBRATION_REFERENCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 80)
-    /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-    /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-    def WINDOWS(i:int) -> MORWindow:
-        return MORWindow { buf_, flatbuffers.field_vector(buf_, pos_, 82) + i * 24 }
-    def WINDOWS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 82)
-    /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-    /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-    def WINDOW_COEFF_HEADS(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 84) + i * 8)
-    def WINDOW_COEFF_HEADS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 84)
-    /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-    /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-    def WINDOW_COEFF_TAILS(i:int) -> float:
-        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
-    def WINDOW_COEFF_TAILS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 86)
-    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-    def WINDOW_RECORD_CHECK() -> int:
-        return flatbuffers.field_uint64(buf_, pos_, 88, 0)
+        return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 70, 0))
     /// The object's own element set for times beyond what this record serves (a reader's fallback
     /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
     /// object is this record's. No TARGETER.
     def FALLBACK() -> MPE?:
-        let o = flatbuffers.field_table(buf_, pos_, 90)
+        let o = flatbuffers.field_table(buf_, pos_, 72)
         return if o: MPE { buf_, o } else: nil
-    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-    def ROWS_ONLY() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 92, 0))
+    /// BSTAR, 1/Earth radii. SGP4 only.
+    def BSTAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
+    /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+    def MEAN_MOTION_DOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
+    /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+    def MEAN_MOTION_DDOT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 78, 0.0)
+    /// The solid Earth tide the set flies with.
+    def SOLID_TIDES_MODEL() -> morSolidTideModel:
+        return morSolidTideModel(flatbuffers.field_uint8(buf_, pos_, 80, 0))
+    /// The radiation pressure model the set states.
+    def SOLAR_RAD_PRESSURE() -> morRadiationModel:
+        return morRadiationModel(flatbuffers.field_uint8(buf_, pos_, 82, 0))
+    /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+    def ECOM2_Y0() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 84, 0.0)
+    /// Whether the set is real or test data.
+    def MESSAGE_STATUS() -> morMessageStatus:
+        return morMessageStatus(flatbuffers.field_uint8(buf_, pos_, 86, 0))
+    /// The object's name; absent unless a reader copies it into what it writes.
+    def OBJECT_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 88)
+    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+    def COV_REALISM() -> CVR?:
+        let o = flatbuffers.field_table(buf_, pos_, 90)
+        return if o: CVR { buf_, o } else: nil
+    /// Identifier of that calibration evidence (a report or record).
+    def COV_CALIBRATION_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 92)
 
 def GetRootAsMOR(buf:string): return MOR { buf, flatbuffers.indirect(buf, 0) }
 
@@ -347,50 +347,50 @@ struct MORBuilder:
     def add_ORIGINATOR(ORIGINATOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, ORIGINATOR)
         return this
-    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, OBJECT_NAME)
-        return this
-    def add_MESSAGE_STATUS(MESSAGE_STATUS:morMessageStatus):
-        b_.PrependUint8Slot(4, MESSAGE_STATUS, 0)
+    def add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY:meanElementSource):
+        b_.PrependInt8Slot(3, MEAN_ELEMENT_THEORY, 6)
         return this
     def add_EPOCH_UNIX_US(EPOCH_UNIX_US:int):
-        b_.PrependInt64Slot(5, EPOCH_UNIX_US, 0)
+        b_.PrependInt64Slot(4, EPOCH_UNIX_US, 0)
         return this
-    def add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY:meanElementSource):
-        b_.PrependInt8Slot(6, MEAN_ELEMENT_THEORY, 6)
+    def add_ROWS_ONLY(ROWS_ONLY:bool):
+        b_.PrependBoolSlot(5, ROWS_ONLY, 0)
+        return this
+    def add_WINDOWS(WINDOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, WINDOWS)
+        return this
+    def add_WINDOW_COEFF_HEADS(WINDOW_COEFF_HEADS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, WINDOW_COEFF_HEADS)
+        return this
+    def add_WINDOW_COEFF_TAILS(WINDOW_COEFF_TAILS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, WINDOW_COEFF_TAILS)
+        return this
+    def add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK:int):
+        b_.PrependUint64Slot(9, WINDOW_RECORD_CHECK, 0)
         return this
     def add_MEAN_MOTION(MEAN_MOTION:float):
-        b_.PrependFloat64Slot(7, MEAN_MOTION, 0.0)
+        b_.PrependFloat64Slot(10, MEAN_MOTION, 0.0)
         return this
     def add_ECCENTRICITY(ECCENTRICITY:float):
-        b_.PrependFloat64Slot(8, ECCENTRICITY, 0.0)
+        b_.PrependFloat64Slot(11, ECCENTRICITY, 0.0)
         return this
     def add_INCLINATION(INCLINATION:float):
-        b_.PrependFloat64Slot(9, INCLINATION, 0.0)
+        b_.PrependFloat64Slot(12, INCLINATION, 0.0)
         return this
     def add_RA_OF_ASC_NODE(RA_OF_ASC_NODE:float):
-        b_.PrependFloat64Slot(10, RA_OF_ASC_NODE, 0.0)
+        b_.PrependFloat64Slot(13, RA_OF_ASC_NODE, 0.0)
         return this
     def add_ARG_OF_PERICENTER(ARG_OF_PERICENTER:float):
-        b_.PrependFloat64Slot(11, ARG_OF_PERICENTER, 0.0)
+        b_.PrependFloat64Slot(14, ARG_OF_PERICENTER, 0.0)
         return this
     def add_MEAN_ANOMALY(MEAN_ANOMALY:float):
-        b_.PrependFloat64Slot(12, MEAN_ANOMALY, 0.0)
+        b_.PrependFloat64Slot(15, MEAN_ANOMALY, 0.0)
         return this
     def add_BTERM(BTERM:float):
-        b_.PrependFloat64Slot(13, BTERM, 0.0)
+        b_.PrependFloat64Slot(16, BTERM, 0.0)
         return this
     def add_AGOM(AGOM:float):
-        b_.PrependFloat64Slot(14, AGOM, 0.0)
-        return this
-    def add_BSTAR(BSTAR:float):
-        b_.PrependFloat64Slot(15, BSTAR, 0.0)
-        return this
-    def add_MEAN_MOTION_DOT(MEAN_MOTION_DOT:float):
-        b_.PrependFloat64Slot(16, MEAN_MOTION_DOT, 0.0)
-        return this
-    def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
-        b_.PrependFloat64Slot(17, MEAN_MOTION_DDOT, 0.0)
+        b_.PrependFloat64Slot(17, AGOM, 0.0)
         return this
     def add_GRAVITY_FIELD(GRAVITY_FIELD:morGravityField):
         b_.PrependUint8Slot(18, GRAVITY_FIELD, 0)
@@ -401,87 +401,80 @@ struct MORBuilder:
     def add_MAXIMUM_ZONAL_DEGREE(MAXIMUM_ZONAL_DEGREE:int):
         b_.PrependUint8Slot(20, MAXIMUM_ZONAL_DEGREE, 0)
         return this
-    def add_SOLID_TIDES_MODEL(SOLID_TIDES_MODEL:morSolidTideModel):
-        b_.PrependUint8Slot(21, SOLID_TIDES_MODEL, 0)
-        return this
-    def add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE:morRadiationModel):
-        b_.PrependUint8Slot(22, SOLAR_RAD_PRESSURE, 0)
-        return this
     def add_OD_PARAMETERS(OD_PARAMETERS:int):
-        b_.PrependUint32Slot(23, OD_PARAMETERS, 0)
+        b_.PrependUint32Slot(21, OD_PARAMETERS, 0)
         return this
     def add_OD_SOLVED_FOR(OD_SOLVED_FOR:int):
-        b_.PrependUint32Slot(24, OD_SOLVED_FOR, 0)
-        return this
-    def add_ECOM2_Y0(ECOM2_Y0:float):
-        b_.PrependFloat64Slot(25, ECOM2_Y0, 0.0)
+        b_.PrependUint32Slot(22, OD_SOLVED_FOR, 0)
         return this
     def add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN:float):
-        b_.PrependFloat64Slot(26, ACTUAL_OD_SPAN, nan)
+        b_.PrependFloat64Slot(23, ACTUAL_OD_SPAN, nan)
         return this
     def add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED:int):
-        b_.PrependInt32Slot(27, OD_OBSERVATIONS_USED, -1)
-        return this
-    def add_OD_TRACKS_USED(OD_TRACKS_USED:int):
-        b_.PrependInt32Slot(28, OD_TRACKS_USED, -1)
+        b_.PrependInt32Slot(24, OD_OBSERVATIONS_USED, -1)
         return this
     def add_WEIGHTED_RMS(WEIGHTED_RMS:float):
-        b_.PrependFloat64Slot(29, WEIGHTED_RMS, nan)
+        b_.PrependFloat64Slot(25, WEIGHTED_RMS, nan)
         return this
     def add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US:int):
-        b_.PrependInt64Slot(30, OD_EPOCH_UNIX_US, (-9223372036854775807 - 1))
+        b_.PrependInt64Slot(26, OD_EPOCH_UNIX_US, (-9223372036854775807 - 1))
+        return this
+    def add_OD_TRACKS_USED(OD_TRACKS_USED:int):
+        b_.PrependInt32Slot(27, OD_TRACKS_USED, -1)
         return this
     def add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS:float):
-        b_.PrependFloat64Slot(31, DAYS_SINCE_LAST_OBS, nan)
+        b_.PrependFloat64Slot(28, DAYS_SINCE_LAST_OBS, nan)
         return this
     def add_COVARIANCE_DATA(COVARIANCE_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(32, COVARIANCE_DATA)
+        b_.PrependUOffsetTRelativeSlot(29, COVARIANCE_DATA)
         return this
     def add_COV_PROPAGATION(COV_PROPAGATION:flatbuffers.offset):
-        b_.PrependStructSlot(33, COV_PROPAGATION)
+        b_.PrependStructSlot(30, COV_PROPAGATION)
         return this
     def add_COV_FLOOR(COV_FLOOR:morCovarianceFloor):
-        b_.PrependUint8Slot(34, COV_FLOOR, 0)
+        b_.PrependUint8Slot(31, COV_FLOOR, 0)
         return this
     def add_COV_REALISM_ID(COV_REALISM_ID:int):
-        b_.PrependUint16Slot(35, COV_REALISM_ID, 0)
-        return this
-    def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(36, COV_REALISM)
+        b_.PrependUint16Slot(32, COV_REALISM_ID, 0)
         return this
     def add_COV_CALIBRATION(COV_CALIBRATION:covarianceCalibration):
-        b_.PrependInt8Slot(37, COV_CALIBRATION, 0)
-        return this
-    def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(38, COV_CALIBRATION_REFERENCE)
-        return this
-    def add_WINDOWS(WINDOWS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(39, WINDOWS)
-        return this
-    def add_WINDOW_COEFF_HEADS(WINDOW_COEFF_HEADS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(40, WINDOW_COEFF_HEADS)
-        return this
-    def add_WINDOW_COEFF_TAILS(WINDOW_COEFF_TAILS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(41, WINDOW_COEFF_TAILS)
-        return this
-    def add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK:int):
-        b_.PrependUint64Slot(42, WINDOW_RECORD_CHECK, 0)
+        b_.PrependInt8Slot(33, COV_CALIBRATION, 0)
         return this
     def add_FALLBACK(FALLBACK:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(43, FALLBACK)
+        b_.PrependUOffsetTRelativeSlot(34, FALLBACK)
         return this
-    def add_ROWS_ONLY(ROWS_ONLY:bool):
-        b_.PrependBoolSlot(44, ROWS_ONLY, 0)
+    def add_BSTAR(BSTAR:float):
+        b_.PrependFloat64Slot(35, BSTAR, 0.0)
+        return this
+    def add_MEAN_MOTION_DOT(MEAN_MOTION_DOT:float):
+        b_.PrependFloat64Slot(36, MEAN_MOTION_DOT, 0.0)
+        return this
+    def add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT:float):
+        b_.PrependFloat64Slot(37, MEAN_MOTION_DDOT, 0.0)
+        return this
+    def add_SOLID_TIDES_MODEL(SOLID_TIDES_MODEL:morSolidTideModel):
+        b_.PrependUint8Slot(38, SOLID_TIDES_MODEL, 0)
+        return this
+    def add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE:morRadiationModel):
+        b_.PrependUint8Slot(39, SOLAR_RAD_PRESSURE, 0)
+        return this
+    def add_ECOM2_Y0(ECOM2_Y0:float):
+        b_.PrependFloat64Slot(40, ECOM2_Y0, 0.0)
+        return this
+    def add_MESSAGE_STATUS(MESSAGE_STATUS:morMessageStatus):
+        b_.PrependUint8Slot(41, MESSAGE_STATUS, 0)
+        return this
+    def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, OBJECT_NAME)
+        return this
+    def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, COV_REALISM)
+        return this
+    def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(44, COV_CALIBRATION_REFERENCE)
         return this
     def end():
         return b_.EndObject()
-
-def MORStartCOVARIANCEDATAVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(8, n_, 8)
-def MORCreateCOVARIANCEDATAVector(b_:flatbuffers.builder, v_:[float]):
-    b_.StartVector(8, v_.length, 8)
-    reverse(v_) e_: b_.PrependFloat64(e_)
-    return b_.EndVector(v_.length)
 
 def MORStartWINDOWSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(24, n_, 8)
@@ -498,4 +491,11 @@ def MORStartWINDOWCOEFFTAILSVector(b_:flatbuffers.builder, n_:int):
 def MORCreateWINDOWCOEFFTAILSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependFloat32(e_)
+    return b_.EndVector(v_.length)
+
+def MORStartCOVARIANCEDATAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def MORCreateCOVARIANCEDATAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

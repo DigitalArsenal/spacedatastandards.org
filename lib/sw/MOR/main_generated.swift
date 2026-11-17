@@ -328,48 +328,48 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let NORAD_CAT_ID: VOffset = 4
     static let INTERNATIONAL_DESIGNATOR: VOffset = 6
     static let ORIGINATOR: VOffset = 8
-    static let OBJECT_NAME: VOffset = 10
-    static let MESSAGE_STATUS: VOffset = 12
-    static let EPOCH_UNIX_US: VOffset = 14
-    static let MEAN_ELEMENT_THEORY: VOffset = 16
-    static let MEAN_MOTION: VOffset = 18
-    static let ECCENTRICITY: VOffset = 20
-    static let INCLINATION: VOffset = 22
-    static let RA_OF_ASC_NODE: VOffset = 24
-    static let ARG_OF_PERICENTER: VOffset = 26
-    static let MEAN_ANOMALY: VOffset = 28
-    static let BTERM: VOffset = 30
-    static let AGOM: VOffset = 32
-    static let BSTAR: VOffset = 34
-    static let MEAN_MOTION_DOT: VOffset = 36
-    static let MEAN_MOTION_DDOT: VOffset = 38
+    static let MEAN_ELEMENT_THEORY: VOffset = 10
+    static let EPOCH_UNIX_US: VOffset = 12
+    static let ROWS_ONLY: VOffset = 14
+    static let WINDOWS: VOffset = 16
+    static let WINDOW_COEFF_HEADS: VOffset = 18
+    static let WINDOW_COEFF_TAILS: VOffset = 20
+    static let WINDOW_RECORD_CHECK: VOffset = 22
+    static let MEAN_MOTION: VOffset = 24
+    static let ECCENTRICITY: VOffset = 26
+    static let INCLINATION: VOffset = 28
+    static let RA_OF_ASC_NODE: VOffset = 30
+    static let ARG_OF_PERICENTER: VOffset = 32
+    static let MEAN_ANOMALY: VOffset = 34
+    static let BTERM: VOffset = 36
+    static let AGOM: VOffset = 38
     static let GRAVITY_FIELD: VOffset = 40
     static let MAXIMUM_TESSERAL_DEGREE: VOffset = 42
     static let MAXIMUM_ZONAL_DEGREE: VOffset = 44
-    static let SOLID_TIDES_MODEL: VOffset = 46
-    static let SOLAR_RAD_PRESSURE: VOffset = 48
-    static let OD_PARAMETERS: VOffset = 50
-    static let OD_SOLVED_FOR: VOffset = 52
-    static let ECOM2_Y0: VOffset = 54
-    static let ACTUAL_OD_SPAN: VOffset = 56
-    static let OD_OBSERVATIONS_USED: VOffset = 58
-    static let OD_TRACKS_USED: VOffset = 60
-    static let WEIGHTED_RMS: VOffset = 62
-    static let OD_EPOCH_UNIX_US: VOffset = 64
-    static let DAYS_SINCE_LAST_OBS: VOffset = 66
-    static let COVARIANCE_DATA: VOffset = 68
-    static let COV_PROPAGATION: VOffset = 70
-    static let COV_FLOOR: VOffset = 72
-    static let COV_REALISM_ID: VOffset = 74
-    static let COV_REALISM: VOffset = 76
-    static let COV_CALIBRATION: VOffset = 78
-    static let COV_CALIBRATION_REFERENCE: VOffset = 80
-    static let WINDOWS: VOffset = 82
-    static let WINDOW_COEFF_HEADS: VOffset = 84
-    static let WINDOW_COEFF_TAILS: VOffset = 86
-    static let WINDOW_RECORD_CHECK: VOffset = 88
-    static let FALLBACK: VOffset = 90
-    static let ROWS_ONLY: VOffset = 92
+    static let OD_PARAMETERS: VOffset = 46
+    static let OD_SOLVED_FOR: VOffset = 48
+    static let ACTUAL_OD_SPAN: VOffset = 50
+    static let OD_OBSERVATIONS_USED: VOffset = 52
+    static let WEIGHTED_RMS: VOffset = 54
+    static let OD_EPOCH_UNIX_US: VOffset = 56
+    static let OD_TRACKS_USED: VOffset = 58
+    static let DAYS_SINCE_LAST_OBS: VOffset = 60
+    static let COVARIANCE_DATA: VOffset = 62
+    static let COV_PROPAGATION: VOffset = 64
+    static let COV_FLOOR: VOffset = 66
+    static let COV_REALISM_ID: VOffset = 68
+    static let COV_CALIBRATION: VOffset = 70
+    static let FALLBACK: VOffset = 72
+    static let BSTAR: VOffset = 74
+    static let MEAN_MOTION_DOT: VOffset = 76
+    static let MEAN_MOTION_DDOT: VOffset = 78
+    static let SOLID_TIDES_MODEL: VOffset = 80
+    static let SOLAR_RAD_PRESSURE: VOffset = 82
+    static let ECOM2_Y0: VOffset = 84
+    static let MESSAGE_STATUS: VOffset = 86
+    static let OBJECT_NAME: VOffset = 88
+    static let COV_REALISM: VOffset = 90
+    static let COV_CALIBRATION_REFERENCE: VOffset = 92
   }
 
   ///  The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
@@ -381,93 +381,14 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  INTERNATIONAL_DESIGNATOR and ORIGINATOR.
   public var ORIGINATOR: String? { let o = _accessor.offset(VT.ORIGINATOR); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ORIGINATOR) }
-  ///  The object's name; absent unless a reader copies it into what it writes.
-  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
-  ///  Whether the set is real or test data.
-  public var MESSAGE_STATUS: morMessageStatus { let o = _accessor.offset(VT.MESSAGE_STATUS); return o == 0 ? .unspecified : morMessageStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .unspecified : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
   ///  Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
   ///  (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   ///  ways without loss; an instant inside a leap second has no value here.
   public var EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.EPOCH_UNIX_US); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  ///  The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-  public var MEAN_ELEMENT_THEORY: meanElementSource { let o = _accessor.offset(VT.MEAN_ELEMENT_THEORY); return o == 0 ? .unspecified : meanElementSource(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
-  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentricity.
-  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Inclination, deg.
-  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Right ascension of the ascending node, deg.
-  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Argument of pericenter, deg.
-  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Mean anomaly, deg.
-  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  public var BTERM: Double { let o = _accessor.offset(VT.BTERM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  public var AGOM: Double { let o = _accessor.offset(VT.AGOM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  BSTAR, 1/Earth radii. SGP4 only.
-  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The gravity field the set flies on.
-  public var GRAVITY_FIELD: morGravityField { let o = _accessor.offset(VT.GRAVITY_FIELD); return o == 0 ? .theory : morGravityField(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .theory }
-  ///  Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
-  public var MAXIMUM_TESSERAL_DEGREE: UInt8 { let o = _accessor.offset(VT.MAXIMUM_TESSERAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
-  public var MAXIMUM_ZONAL_DEGREE: UInt8 { let o = _accessor.offset(VT.MAXIMUM_ZONAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  The solid Earth tide the set flies with.
-  public var SOLID_TIDES_MODEL: morSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES_MODEL); return o == 0 ? .none_ : morSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  ///  The radiation pressure model the set states.
-  public var SOLAR_RAD_PRESSURE: morRadiationModel { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? .unstated : morRadiationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
-  ///  The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
-  ///  DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
-  ///  (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
-  public var OD_PARAMETERS: UInt32 { let o = _accessor.offset(VT.OD_PARAMETERS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
-  public var OD_SOLVED_FOR: UInt32 { let o = _accessor.offset(VT.OD_SOLVED_FOR); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-  public var ECOM2_Y0: Double { let o = _accessor.offset(VT.ECOM2_Y0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The span of the observations the orbit determination used, days; NaN when not stated.
-  public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Observations the orbit determination used; -1 when not stated ($OCM 0).
-  public var OD_OBSERVATIONS_USED: Int32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
-  public var OD_TRACKS_USED: Int32 { let o = _accessor.offset(VT.OD_TRACKS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
-  ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
-  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775808 : _accessor.readBuffer(of: Int64.self, at: o) }
-  ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
-  public var DAYS_SINCE_LAST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_LAST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
-  ///  DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
-  ///  position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
-  ///  ascending ordinal. Absent: no covariance.
-  public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
-  public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
-  ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-  public var COV_PROPAGATION: MORCovariancePropagation? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : _accessor.readBuffer(of: MORCovariancePropagation.self, at: o) }
-  public var mutableCovPropagation: MORCovariancePropagation_Mutable? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : MORCovariancePropagation_Mutable(_accessor.bb, o: o + _accessor.position) }
-  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
-  ///  any producer text: a record read alone flies the same covariance as its $OCM.
-  public var COV_FLOOR: morCovarianceFloor { let o = _accessor.offset(VT.COV_FLOOR); return o == 0 ? .unstated : morCovarianceFloor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
-  ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
-  ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
-  public var COV_REALISM_ID: UInt16 { let o = _accessor.offset(VT.COV_REALISM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-  ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-  public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
-  public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Identifier of that calibration evidence (a report or record).
-  public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
+  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  public var ROWS_ONLY: Bool { let o = _accessor.offset(VT.ROWS_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -488,20 +409,106 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
   ///  record before using the rows: a mismatch voids the rows. With WINDOWS only.
   public var WINDOW_RECORD_CHECK: UInt64 { let o = _accessor.offset(VT.WINDOW_RECORD_CHECK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
+  public var MEAN_MOTION: Double { let o = _accessor.offset(VT.MEAN_MOTION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity.
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination, deg.
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the ascending node, deg.
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of pericenter, deg.
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean anomaly, deg.
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VT.MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  public var BTERM: Double { let o = _accessor.offset(VT.BTERM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  public var AGOM: Double { let o = _accessor.offset(VT.AGOM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The gravity field the set flies on.
+  public var GRAVITY_FIELD: morGravityField { let o = _accessor.offset(VT.GRAVITY_FIELD); return o == 0 ? .theory : morGravityField(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .theory }
+  ///  Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
+  public var MAXIMUM_TESSERAL_DEGREE: UInt8 { let o = _accessor.offset(VT.MAXIMUM_TESSERAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
+  public var MAXIMUM_ZONAL_DEGREE: UInt8 { let o = _accessor.offset(VT.MAXIMUM_ZONAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
+  ///  DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
+  ///  (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
+  public var OD_PARAMETERS: UInt32 { let o = _accessor.offset(VT.OD_PARAMETERS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
+  public var OD_SOLVED_FOR: UInt32 { let o = _accessor.offset(VT.OD_SOLVED_FOR); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The span of the observations the orbit determination used, days; NaN when not stated.
+  public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observations the orbit determination used; -1 when not stated ($OCM 0).
+  public var OD_OBSERVATIONS_USED: Int32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775808 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  public var OD_TRACKS_USED: Int32 { let o = _accessor.offset(VT.OD_TRACKS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+  public var DAYS_SINCE_LAST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_LAST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  ///  DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  ///  position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  ///  ascending ordinal. Absent: no covariance.
+  public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
+  public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
+  ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  public var COV_PROPAGATION: MORCovariancePropagation? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : _accessor.readBuffer(of: MORCovariancePropagation.self, at: o) }
+  public var mutableCovPropagation: MORCovariancePropagation_Mutable? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : MORCovariancePropagation_Mutable(_accessor.bb, o: o + _accessor.position) }
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  ///  any producer text: a record read alone flies the same covariance as its $OCM.
+  public var COV_FLOOR: morCovarianceFloor { let o = _accessor.offset(VT.COV_FLOOR); return o == 0 ? .unstated : morCovarianceFloor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
+  ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
+  public var COV_REALISM_ID: UInt16 { let o = _accessor.offset(VT.COV_REALISM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   ///  object is this record's. No TARGETER.
   public var FALLBACK: MPE? { let o = _accessor.offset(VT.FALLBACK); return o == 0 ? nil : MPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  public var ROWS_ONLY: Bool { let o = _accessor.offset(VT.ROWS_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  BSTAR, 1/Earth radii. SGP4 only.
+  public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The solid Earth tide the set flies with.
+  public var SOLID_TIDES_MODEL: morSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES_MODEL); return o == 0 ? .none_ : morSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  The radiation pressure model the set states.
+  public var SOLAR_RAD_PRESSURE: morRadiationModel { let o = _accessor.offset(VT.SOLAR_RAD_PRESSURE); return o == 0 ? .unstated : morRadiationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
+  ///  The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  public var ECOM2_Y0: Double { let o = _accessor.offset(VT.ECOM2_Y0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Whether the set is real or test data.
+  public var MESSAGE_STATUS: morMessageStatus { let o = _accessor.offset(VT.MESSAGE_STATUS); return o == 0 ? .unspecified : morMessageStatus(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  The object's name; absent unless a reader copies it into what it writes.
+  public var OBJECT_NAME: String? { let o = _accessor.offset(VT.OBJECT_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_NAME) }
+  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+  public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Identifier of that calibration evidence (a report or record).
+  public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
   public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VT.INTERNATIONAL_DESIGNATOR) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
-  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
-  public static func add(MESSAGE_STATUS: morMessageStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_STATUS.rawValue, def: 0, at: VT.MESSAGE_STATUS) }
-  public static func add(EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_UNIX_US, def: 0, at: VT.EPOCH_UNIX_US) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 6, at: VT.MEAN_ELEMENT_THEORY) }
+  public static func add(EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_UNIX_US, def: 0, at: VT.EPOCH_UNIX_US) }
+  public static func add(ROWS_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROWS_ONLY, def: false,
+   at: VT.ROWS_ONLY) }
+  public static func addVectorOf(WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOWS, at: VT.WINDOWS) }
+  public static func startVectorOfWindows(_ size: Int, in builder: inout FlatBufferBuilder) {
+    builder.startVector(size * MemoryLayout<MORWindow>.size, elementSize: MemoryLayout<MORWindow>.alignment)
+  }
+  public static func addVectorOf(WINDOW_COEFF_HEADS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_HEADS, at: VT.WINDOW_COEFF_HEADS) }
+  public static func addVectorOf(WINDOW_COEFF_TAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_TAILS, at: VT.WINDOW_COEFF_TAILS) }
+  public static func add(WINDOW_RECORD_CHECK: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_RECORD_CHECK, def: 0, at: VT.WINDOW_RECORD_CHECK) }
   public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
   public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
   public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
@@ -510,50 +517,46 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VT.MEAN_ANOMALY) }
   public static func add(BTERM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BTERM, def: 0.0, at: VT.BTERM) }
   public static func add(AGOM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGOM, def: 0.0, at: VT.AGOM) }
-  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
-  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VT.MEAN_MOTION_DOT) }
-  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VT.MEAN_MOTION_DDOT) }
   public static func add(GRAVITY_FIELD: morGravityField, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_FIELD.rawValue, def: 0, at: VT.GRAVITY_FIELD) }
   public static func add(MAXIMUM_TESSERAL_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_TESSERAL_DEGREE, def: 0, at: VT.MAXIMUM_TESSERAL_DEGREE) }
   public static func add(MAXIMUM_ZONAL_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ZONAL_DEGREE, def: 0, at: VT.MAXIMUM_ZONAL_DEGREE) }
-  public static func add(SOLID_TIDES_MODEL: morSolidTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLID_TIDES_MODEL.rawValue, def: 0, at: VT.SOLID_TIDES_MODEL) }
-  public static func add(SOLAR_RAD_PRESSURE: morRadiationModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_PRESSURE.rawValue, def: 0, at: VT.SOLAR_RAD_PRESSURE) }
   public static func add(OD_PARAMETERS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_PARAMETERS, def: 0, at: VT.OD_PARAMETERS) }
   public static func add(OD_SOLVED_FOR: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_SOLVED_FOR, def: 0, at: VT.OD_SOLVED_FOR) }
-  public static func add(ECOM2_Y0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECOM2_Y0, def: 0.0, at: VT.ECOM2_Y0) }
   public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: .nan, at: VT.ACTUAL_OD_SPAN) }
   public static func add(OD_OBSERVATIONS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_OBSERVATIONS_USED, def: -1, at: VT.OD_OBSERVATIONS_USED) }
-  public static func add(OD_TRACKS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_TRACKS_USED, def: -1, at: VT.OD_TRACKS_USED) }
   public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: .nan, at: VT.WEIGHTED_RMS) }
   public static func add(OD_EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_UNIX_US, def: -9223372036854775808, at: VT.OD_EPOCH_UNIX_US) }
+  public static func add(OD_TRACKS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_TRACKS_USED, def: -1, at: VT.OD_TRACKS_USED) }
   public static func add(DAYS_SINCE_LAST_OBS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DAYS_SINCE_LAST_OBS, def: .nan, at: VT.DAYS_SINCE_LAST_OBS) }
   public static func addVectorOf(COVARIANCE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_DATA, at: VT.COVARIANCE_DATA) }
   public static func add(COV_PROPAGATION: MORCovariancePropagation?, _ fbb: inout FlatBufferBuilder) { guard let COV_PROPAGATION = COV_PROPAGATION else { return }; fbb.create(struct: COV_PROPAGATION, position: VT.COV_PROPAGATION) }
   public static func add(COV_FLOOR: morCovarianceFloor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_FLOOR.rawValue, def: 0, at: VT.COV_FLOOR) }
   public static func add(COV_REALISM_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REALISM_ID, def: 0, at: VT.COV_REALISM_ID) }
-  public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
   public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
-  public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
-  public static func addVectorOf(WINDOWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOWS, at: VT.WINDOWS) }
-  public static func startVectorOfWindows(_ size: Int, in builder: inout FlatBufferBuilder) {
-    builder.startVector(size * MemoryLayout<MORWindow>.size, elementSize: MemoryLayout<MORWindow>.alignment)
-  }
-  public static func addVectorOf(WINDOW_COEFF_HEADS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_HEADS, at: VT.WINDOW_COEFF_HEADS) }
-  public static func addVectorOf(WINDOW_COEFF_TAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_TAILS, at: VT.WINDOW_COEFF_TAILS) }
-  public static func add(WINDOW_RECORD_CHECK: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_RECORD_CHECK, def: 0, at: VT.WINDOW_RECORD_CHECK) }
   public static func add(FALLBACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FALLBACK, at: VT.FALLBACK) }
-  public static func add(ROWS_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROWS_ONLY, def: false,
-   at: VT.ROWS_ONLY) }
+  public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
+  public static func add(MEAN_MOTION_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DOT, def: 0.0, at: VT.MEAN_MOTION_DOT) }
+  public static func add(MEAN_MOTION_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION_DDOT, def: 0.0, at: VT.MEAN_MOTION_DDOT) }
+  public static func add(SOLID_TIDES_MODEL: morSolidTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLID_TIDES_MODEL.rawValue, def: 0, at: VT.SOLID_TIDES_MODEL) }
+  public static func add(SOLAR_RAD_PRESSURE: morRadiationModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_PRESSURE.rawValue, def: 0, at: VT.SOLAR_RAD_PRESSURE) }
+  public static func add(ECOM2_Y0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECOM2_Y0, def: 0.0, at: VT.ECOM2_Y0) }
+  public static func add(MESSAGE_STATUS: morMessageStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_STATUS.rawValue, def: 0, at: VT.MESSAGE_STATUS) }
+  public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
+  public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
   public static func endMOR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMOR(
     _ fbb: inout FlatBufferBuilder,
     NORAD_CAT_ID: UInt32 = 0,
     INTERNATIONAL_DESIGNATOROffset INTERNATIONAL_DESIGNATOR: Offset = Offset(),
     ORIGINATOROffset ORIGINATOR: Offset = Offset(),
-    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
-    MESSAGE_STATUS: morMessageStatus = .unspecified,
-    EPOCH_UNIX_US: Int64 = 0,
     MEAN_ELEMENT_THEORY: meanElementSource = .unspecified,
+    EPOCH_UNIX_US: Int64 = 0,
+    ROWS_ONLY: Bool = false,
+    WINDOWSVectorOffset WINDOWS: Offset = Offset(),
+    WINDOW_COEFF_HEADSVectorOffset WINDOW_COEFF_HEADS: Offset = Offset(),
+    WINDOW_COEFF_TAILSVectorOffset WINDOW_COEFF_TAILS: Offset = Offset(),
+    WINDOW_RECORD_CHECK: UInt64 = 0,
     MEAN_MOTION: Double = 0.0,
     ECCENTRICITY: Double = 0.0,
     INCLINATION: Double = 0.0,
@@ -562,45 +565,45 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MEAN_ANOMALY: Double = 0.0,
     BTERM: Double = 0.0,
     AGOM: Double = 0.0,
-    BSTAR: Double = 0.0,
-    MEAN_MOTION_DOT: Double = 0.0,
-    MEAN_MOTION_DDOT: Double = 0.0,
     GRAVITY_FIELD: morGravityField = .theory,
     MAXIMUM_TESSERAL_DEGREE: UInt8 = 0,
     MAXIMUM_ZONAL_DEGREE: UInt8 = 0,
-    SOLID_TIDES_MODEL: morSolidTideModel = .none_,
-    SOLAR_RAD_PRESSURE: morRadiationModel = .unstated,
     OD_PARAMETERS: UInt32 = 0,
     OD_SOLVED_FOR: UInt32 = 0,
-    ECOM2_Y0: Double = 0.0,
     ACTUAL_OD_SPAN: Double = .nan,
     OD_OBSERVATIONS_USED: Int32 = -1,
-    OD_TRACKS_USED: Int32 = -1,
     WEIGHTED_RMS: Double = .nan,
     OD_EPOCH_UNIX_US: Int64 = -9223372036854775808,
+    OD_TRACKS_USED: Int32 = -1,
     DAYS_SINCE_LAST_OBS: Double = .nan,
     COVARIANCE_DATAVectorOffset COVARIANCE_DATA: Offset = Offset(),
     COV_PROPAGATION: MORCovariancePropagation? = nil,
     COV_FLOOR: morCovarianceFloor = .unstated,
     COV_REALISM_ID: UInt16 = 0,
-    COV_REALISMOffset COV_REALISM: Offset = Offset(),
     COV_CALIBRATION: covarianceCalibration = .unspecified,
-    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
-    WINDOWSVectorOffset WINDOWS: Offset = Offset(),
-    WINDOW_COEFF_HEADSVectorOffset WINDOW_COEFF_HEADS: Offset = Offset(),
-    WINDOW_COEFF_TAILSVectorOffset WINDOW_COEFF_TAILS: Offset = Offset(),
-    WINDOW_RECORD_CHECK: UInt64 = 0,
     FALLBACKOffset FALLBACK: Offset = Offset(),
-    ROWS_ONLY: Bool = false
+    BSTAR: Double = 0.0,
+    MEAN_MOTION_DOT: Double = 0.0,
+    MEAN_MOTION_DDOT: Double = 0.0,
+    SOLID_TIDES_MODEL: morSolidTideModel = .none_,
+    SOLAR_RAD_PRESSURE: morRadiationModel = .unstated,
+    ECOM2_Y0: Double = 0.0,
+    MESSAGE_STATUS: morMessageStatus = .unspecified,
+    OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
+    COV_REALISMOffset COV_REALISM: Offset = Offset(),
+    COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset()
   ) -> Offset {
     let __start = MOR.startMOR(&fbb)
     MOR.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
     MOR.add(INTERNATIONAL_DESIGNATOR: INTERNATIONAL_DESIGNATOR, &fbb)
     MOR.add(ORIGINATOR: ORIGINATOR, &fbb)
-    MOR.add(OBJECT_NAME: OBJECT_NAME, &fbb)
-    MOR.add(MESSAGE_STATUS: MESSAGE_STATUS, &fbb)
-    MOR.add(EPOCH_UNIX_US: EPOCH_UNIX_US, &fbb)
     MOR.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
+    MOR.add(EPOCH_UNIX_US: EPOCH_UNIX_US, &fbb)
+    MOR.add(ROWS_ONLY: ROWS_ONLY, &fbb)
+    MOR.addVectorOf(WINDOWS: WINDOWS, &fbb)
+    MOR.addVectorOf(WINDOW_COEFF_HEADS: WINDOW_COEFF_HEADS, &fbb)
+    MOR.addVectorOf(WINDOW_COEFF_TAILS: WINDOW_COEFF_TAILS, &fbb)
+    MOR.add(WINDOW_RECORD_CHECK: WINDOW_RECORD_CHECK, &fbb)
     MOR.add(MEAN_MOTION: MEAN_MOTION, &fbb)
     MOR.add(ECCENTRICITY: ECCENTRICITY, &fbb)
     MOR.add(INCLINATION: INCLINATION, &fbb)
@@ -609,36 +612,33 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MOR.add(MEAN_ANOMALY: MEAN_ANOMALY, &fbb)
     MOR.add(BTERM: BTERM, &fbb)
     MOR.add(AGOM: AGOM, &fbb)
-    MOR.add(BSTAR: BSTAR, &fbb)
-    MOR.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
-    MOR.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
     MOR.add(GRAVITY_FIELD: GRAVITY_FIELD, &fbb)
     MOR.add(MAXIMUM_TESSERAL_DEGREE: MAXIMUM_TESSERAL_DEGREE, &fbb)
     MOR.add(MAXIMUM_ZONAL_DEGREE: MAXIMUM_ZONAL_DEGREE, &fbb)
-    MOR.add(SOLID_TIDES_MODEL: SOLID_TIDES_MODEL, &fbb)
-    MOR.add(SOLAR_RAD_PRESSURE: SOLAR_RAD_PRESSURE, &fbb)
     MOR.add(OD_PARAMETERS: OD_PARAMETERS, &fbb)
     MOR.add(OD_SOLVED_FOR: OD_SOLVED_FOR, &fbb)
-    MOR.add(ECOM2_Y0: ECOM2_Y0, &fbb)
     MOR.add(ACTUAL_OD_SPAN: ACTUAL_OD_SPAN, &fbb)
     MOR.add(OD_OBSERVATIONS_USED: OD_OBSERVATIONS_USED, &fbb)
-    MOR.add(OD_TRACKS_USED: OD_TRACKS_USED, &fbb)
     MOR.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
     MOR.add(OD_EPOCH_UNIX_US: OD_EPOCH_UNIX_US, &fbb)
+    MOR.add(OD_TRACKS_USED: OD_TRACKS_USED, &fbb)
     MOR.add(DAYS_SINCE_LAST_OBS: DAYS_SINCE_LAST_OBS, &fbb)
     MOR.addVectorOf(COVARIANCE_DATA: COVARIANCE_DATA, &fbb)
     MOR.add(COV_PROPAGATION: COV_PROPAGATION, &fbb)
     MOR.add(COV_FLOOR: COV_FLOOR, &fbb)
     MOR.add(COV_REALISM_ID: COV_REALISM_ID, &fbb)
-    MOR.add(COV_REALISM: COV_REALISM, &fbb)
     MOR.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
-    MOR.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
-    MOR.addVectorOf(WINDOWS: WINDOWS, &fbb)
-    MOR.addVectorOf(WINDOW_COEFF_HEADS: WINDOW_COEFF_HEADS, &fbb)
-    MOR.addVectorOf(WINDOW_COEFF_TAILS: WINDOW_COEFF_TAILS, &fbb)
-    MOR.add(WINDOW_RECORD_CHECK: WINDOW_RECORD_CHECK, &fbb)
     MOR.add(FALLBACK: FALLBACK, &fbb)
-    MOR.add(ROWS_ONLY: ROWS_ONLY, &fbb)
+    MOR.add(BSTAR: BSTAR, &fbb)
+    MOR.add(MEAN_MOTION_DOT: MEAN_MOTION_DOT, &fbb)
+    MOR.add(MEAN_MOTION_DDOT: MEAN_MOTION_DDOT, &fbb)
+    MOR.add(SOLID_TIDES_MODEL: SOLID_TIDES_MODEL, &fbb)
+    MOR.add(SOLAR_RAD_PRESSURE: SOLAR_RAD_PRESSURE, &fbb)
+    MOR.add(ECOM2_Y0: ECOM2_Y0, &fbb)
+    MOR.add(MESSAGE_STATUS: MESSAGE_STATUS, &fbb)
+    MOR.add(OBJECT_NAME: OBJECT_NAME, &fbb)
+    MOR.add(COV_REALISM: COV_REALISM, &fbb)
+    MOR.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
     return MOR.endMOR(&fbb, start: __start)
   }
 
@@ -647,10 +647,13 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
     try _v.visit(field: VT.INTERNATIONAL_DESIGNATOR, fieldName: "INTERNATIONAL_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ORIGINATOR, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.MESSAGE_STATUS, fieldName: "MESSAGE_STATUS", required: false, type: morMessageStatus.self)
-    try _v.visit(field: VT.EPOCH_UNIX_US, fieldName: "EPOCH_UNIX_US", required: false, type: Int64.self)
     try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
+    try _v.visit(field: VT.EPOCH_UNIX_US, fieldName: "EPOCH_UNIX_US", required: false, type: Int64.self)
+    try _v.visit(field: VT.ROWS_ONLY, fieldName: "ROWS_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.WINDOWS, fieldName: "WINDOWS", required: false, type: ForwardOffset<Vector<MORWindow, MORWindow>>.self)
+    try _v.visit(field: VT.WINDOW_COEFF_HEADS, fieldName: "WINDOW_COEFF_HEADS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.WINDOW_COEFF_TAILS, fieldName: "WINDOW_COEFF_TAILS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.WINDOW_RECORD_CHECK, fieldName: "WINDOW_RECORD_CHECK", required: false, type: UInt64.self)
     try _v.visit(field: VT.MEAN_MOTION, fieldName: "MEAN_MOTION", required: false, type: Double.self)
     try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
     try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
@@ -659,36 +662,33 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.MEAN_ANOMALY, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
     try _v.visit(field: VT.BTERM, fieldName: "BTERM", required: false, type: Double.self)
     try _v.visit(field: VT.AGOM, fieldName: "AGOM", required: false, type: Double.self)
-    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
-    try _v.visit(field: VT.MEAN_MOTION_DOT, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
-    try _v.visit(field: VT.MEAN_MOTION_DDOT, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
     try _v.visit(field: VT.GRAVITY_FIELD, fieldName: "GRAVITY_FIELD", required: false, type: morGravityField.self)
     try _v.visit(field: VT.MAXIMUM_TESSERAL_DEGREE, fieldName: "MAXIMUM_TESSERAL_DEGREE", required: false, type: UInt8.self)
     try _v.visit(field: VT.MAXIMUM_ZONAL_DEGREE, fieldName: "MAXIMUM_ZONAL_DEGREE", required: false, type: UInt8.self)
-    try _v.visit(field: VT.SOLID_TIDES_MODEL, fieldName: "SOLID_TIDES_MODEL", required: false, type: morSolidTideModel.self)
-    try _v.visit(field: VT.SOLAR_RAD_PRESSURE, fieldName: "SOLAR_RAD_PRESSURE", required: false, type: morRadiationModel.self)
     try _v.visit(field: VT.OD_PARAMETERS, fieldName: "OD_PARAMETERS", required: false, type: UInt32.self)
     try _v.visit(field: VT.OD_SOLVED_FOR, fieldName: "OD_SOLVED_FOR", required: false, type: UInt32.self)
-    try _v.visit(field: VT.ECOM2_Y0, fieldName: "ECOM2_Y0", required: false, type: Double.self)
     try _v.visit(field: VT.ACTUAL_OD_SPAN, fieldName: "ACTUAL_OD_SPAN", required: false, type: Double.self)
     try _v.visit(field: VT.OD_OBSERVATIONS_USED, fieldName: "OD_OBSERVATIONS_USED", required: false, type: Int32.self)
-    try _v.visit(field: VT.OD_TRACKS_USED, fieldName: "OD_TRACKS_USED", required: false, type: Int32.self)
     try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
     try _v.visit(field: VT.OD_EPOCH_UNIX_US, fieldName: "OD_EPOCH_UNIX_US", required: false, type: Int64.self)
+    try _v.visit(field: VT.OD_TRACKS_USED, fieldName: "OD_TRACKS_USED", required: false, type: Int32.self)
     try _v.visit(field: VT.DAYS_SINCE_LAST_OBS, fieldName: "DAYS_SINCE_LAST_OBS", required: false, type: Double.self)
     try _v.visit(field: VT.COVARIANCE_DATA, fieldName: "COVARIANCE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.COV_PROPAGATION, fieldName: "COV_PROPAGATION", required: false, type: MORCovariancePropagation.self)
     try _v.visit(field: VT.COV_FLOOR, fieldName: "COV_FLOOR", required: false, type: morCovarianceFloor.self)
     try _v.visit(field: VT.COV_REALISM_ID, fieldName: "COV_REALISM_ID", required: false, type: UInt16.self)
-    try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
     try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
-    try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.WINDOWS, fieldName: "WINDOWS", required: false, type: ForwardOffset<Vector<MORWindow, MORWindow>>.self)
-    try _v.visit(field: VT.WINDOW_COEFF_HEADS, fieldName: "WINDOW_COEFF_HEADS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VT.WINDOW_COEFF_TAILS, fieldName: "WINDOW_COEFF_TAILS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
-    try _v.visit(field: VT.WINDOW_RECORD_CHECK, fieldName: "WINDOW_RECORD_CHECK", required: false, type: UInt64.self)
     try _v.visit(field: VT.FALLBACK, fieldName: "FALLBACK", required: false, type: ForwardOffset<MPE>.self)
-    try _v.visit(field: VT.ROWS_ONLY, fieldName: "ROWS_ONLY", required: false, type: Bool.self)
+    try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DOT, fieldName: "MEAN_MOTION_DOT", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_MOTION_DDOT, fieldName: "MEAN_MOTION_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VT.SOLID_TIDES_MODEL, fieldName: "SOLID_TIDES_MODEL", required: false, type: morSolidTideModel.self)
+    try _v.visit(field: VT.SOLAR_RAD_PRESSURE, fieldName: "SOLAR_RAD_PRESSURE", required: false, type: morRadiationModel.self)
+    try _v.visit(field: VT.ECOM2_Y0, fieldName: "ECOM2_Y0", required: false, type: Double.self)
+    try _v.visit(field: VT.MESSAGE_STATUS, fieldName: "MESSAGE_STATUS", required: false, type: morMessageStatus.self)
+    try _v.visit(field: VT.OBJECT_NAME, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
+    try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

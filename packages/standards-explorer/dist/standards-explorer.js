@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.286.0+1794884268310",
+  version: "1.286.0+1794885336787",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -14599,7 +14599,7 @@ file_identifier "$SRG";`,
       ]
     },
     MOR: {
-      IDL: `// Hash: bf10f1ffca7ef7fcd841a0b03b65999b60f895e472dba6893dc193328f3299d3
+      IDL: `// Hash: 481845b5912765667c99240519cd474716e29ba1889fca8bdb1f2da2666e0539
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -14810,89 +14810,14 @@ table MOR {
   /// Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,
   /// INTERNATIONAL_DESIGNATOR and ORIGINATOR.
   ORIGINATOR: string;
-  /// The object's name; absent unless a reader copies it into what it writes.
-  OBJECT_NAME: string;
-  /// Whether the set is real or test data.
-  MESSAGE_STATUS: morMessageStatus = UNSPECIFIED;
+  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  MEAN_ELEMENT_THEORY: meanElementSource = UNSPECIFIED;
   /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
   /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
   /// ways without loss; an instant inside a leap second has no value here.
   EPOCH_UNIX_US: int64;
-  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-  MEAN_ELEMENT_THEORY: meanElementSource = UNSPECIFIED;
-  /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
-  MEAN_MOTION: double;
-  /// Eccentricity.
-  ECCENTRICITY: double;
-  /// Inclination, deg.
-  INCLINATION: double;
-  /// Right ascension of the ascending node, deg.
-  RA_OF_ASC_NODE: double;
-  /// Argument of pericenter, deg.
-  ARG_OF_PERICENTER: double;
-  /// Mean anomaly, deg.
-  MEAN_ANOMALY: double;
-  /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  BTERM: double;
-  /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
-  AGOM: double;
-  /// BSTAR, 1/Earth radii. SGP4 only.
-  BSTAR: double;
-  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-  MEAN_MOTION_DOT: double;
-  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-  MEAN_MOTION_DDOT: double;
-  /// The gravity field the set flies on.
-  GRAVITY_FIELD: morGravityField = THEORY;
-  /// Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
-  MAXIMUM_TESSERAL_DEGREE: ubyte;
-  /// Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
-  MAXIMUM_ZONAL_DEGREE: ubyte;
-  /// The solid Earth tide the set flies with.
-  SOLID_TIDES_MODEL: morSolidTideModel = NONE;
-  /// The radiation pressure model the set states.
-  SOLAR_RAD_PRESSURE: morRadiationModel = UNSTATED;
-  /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
-  /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
-  /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
-  OD_PARAMETERS: uint32;
-  /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
-  OD_SOLVED_FOR: uint32;
-  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-  ECOM2_Y0: double;
-  /// The span of the observations the orbit determination used, days; NaN when not stated.
-  ACTUAL_OD_SPAN: double = nan;
-  /// Observations the orbit determination used; -1 when not stated ($OCM 0).
-  OD_OBSERVATIONS_USED: int32 = -1;
-  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-  OD_TRACKS_USED: int32 = -1;
-  /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
-  WEIGHTED_RMS: double = nan;
-  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
-  OD_EPOCH_UNIX_US: int64 = -9223372036854775808;
-  /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
-  DAYS_SINCE_LAST_OBS: double = nan;
-  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
-  /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
-  /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
-  /// ascending ordinal. Absent: no covariance.
-  COVARIANCE_DATA: [double];
-  /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-  COV_PROPAGATION: MORCovariancePropagation;
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
-  /// any producer text: a record read alone flies the same covariance as its $OCM.
-  COV_FLOOR: morCovarianceFloor = UNSTATED;
-  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
-  /// ID the asset does not list leaves the figures unresolved, and a reader says so.
-  COV_REALISM_ID: uint16;
-  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-  COV_REALISM: CVR;
-  /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
-  COV_CALIBRATION: covarianceCalibration = Unspecified;
-  /// Identifier of that calibration evidence (a report or record).
-  COV_CALIBRATION_REFERENCE: string;
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  ROWS_ONLY: bool = false;
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
   /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
@@ -14909,12 +14834,87 @@ table MOR {
   /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
   /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
   WINDOW_RECORD_CHECK: uint64;
+  /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
+  MEAN_MOTION: double;
+  /// Eccentricity.
+  ECCENTRICITY: double;
+  /// Inclination, deg.
+  INCLINATION: double;
+  /// Right ascension of the ascending node, deg.
+  RA_OF_ASC_NODE: double;
+  /// Argument of pericenter, deg.
+  ARG_OF_PERICENTER: double;
+  /// Mean anomaly, deg.
+  MEAN_ANOMALY: double;
+  /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  BTERM: double;
+  /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  AGOM: double;
+  /// The gravity field the set flies on.
+  GRAVITY_FIELD: morGravityField = THEORY;
+  /// Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
+  MAXIMUM_TESSERAL_DEGREE: ubyte;
+  /// Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
+  MAXIMUM_ZONAL_DEGREE: ubyte;
+  /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
+  /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
+  /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
+  OD_PARAMETERS: uint32;
+  /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
+  OD_SOLVED_FOR: uint32;
+  /// The span of the observations the orbit determination used, days; NaN when not stated.
+  ACTUAL_OD_SPAN: double = nan;
+  /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+  OD_OBSERVATIONS_USED: int32 = -1;
+  /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+  WEIGHTED_RMS: double = nan;
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  OD_EPOCH_UNIX_US: int64 = -9223372036854775808;
+  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  OD_TRACKS_USED: int32 = -1;
+  /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+  DAYS_SINCE_LAST_OBS: double = nan;
+  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  /// ascending ordinal. Absent: no covariance.
+  COVARIANCE_DATA: [double];
+  /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  COV_PROPAGATION: MORCovariancePropagation;
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// any producer text: a record read alone flies the same covariance as its $OCM.
+  COV_FLOOR: morCovarianceFloor = UNSTATED;
+  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  /// ID the asset does not list leaves the figures unresolved, and a reader says so.
+  COV_REALISM_ID: uint16;
+  /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  COV_CALIBRATION: covarianceCalibration = Unspecified;
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   /// object is this record's. No TARGETER.
   FALLBACK: MPE;
-  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-  ROWS_ONLY: bool = false;
+  /// BSTAR, 1/Earth radii. SGP4 only.
+  BSTAR: double;
+  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  MEAN_MOTION_DOT: double;
+  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  MEAN_MOTION_DDOT: double;
+  /// The solid Earth tide the set flies with.
+  SOLID_TIDES_MODEL: morSolidTideModel = NONE;
+  /// The radiation pressure model the set states.
+  SOLAR_RAD_PRESSURE: morRadiationModel = UNSTATED;
+  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  ECOM2_Y0: double;
+  /// Whether the set is real or test data.
+  MESSAGE_STATUS: morMessageStatus = UNSPECIFIED;
+  /// The object's name; absent unless a reader copies it into what it writes.
+  OBJECT_NAME: string;
+  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+  COV_REALISM: CVR;
+  /// Identifier of that calibration evidence (a report or record).
+  COV_CALIBRATION_REFERENCE: string;
 }
 
 root_type MOR;
@@ -146856,13 +146856,9 @@ format class are named by $NCD's container format.`
               type: "string",
               description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR."
             },
-            OBJECT_NAME: {
-              type: "string",
-              description: "The object's name; absent unless a reader copies it into what it writes."
-            },
-            MESSAGE_STATUS: {
-              $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data."
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
             },
             EPOCH_UNIX_US: {
               type: "integer",
@@ -146870,9 +146866,36 @@ format class are named by $NCD's container format.`
               maximum: 9223372036854776e3,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
             },
-            MEAN_ELEMENT_THEORY: {
-              $ref: "#/definitions/meanElementSource",
-              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+            },
+            WINDOW_RECORD_CHECK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
             },
             MEAN_MOTION: {
               type: "number",
@@ -146906,18 +146929,6 @@ format class are named by $NCD's container format.`
               type: "number",
               description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
             },
-            BSTAR: {
-              type: "number",
-              description: "BSTAR, 1/Earth radii. SGP4 only."
-            },
-            MEAN_MOTION_DOT: {
-              type: "number",
-              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
-            },
-            MEAN_MOTION_DDOT: {
-              type: "number",
-              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
-            },
             GRAVITY_FIELD: {
               $ref: "#/definitions/morGravityField",
               description: "The gravity field the set flies on."
@@ -146934,14 +146945,6 @@ format class are named by $NCD's container format.`
               maximum: 255,
               description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP."
             },
-            SOLID_TIDES_MODEL: {
-              $ref: "#/definitions/morSolidTideModel",
-              description: "The solid Earth tide the set flies with."
-            },
-            SOLAR_RAD_PRESSURE: {
-              $ref: "#/definitions/morRadiationModel",
-              description: "The radiation pressure model the set states."
-            },
             OD_PARAMETERS: {
               type: "integer",
               minimum: 0,
@@ -146954,10 +146957,6 @@ format class are named by $NCD's container format.`
               maximum: 4294967295,
               description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held)."
             },
-            ECOM2_Y0: {
-              type: "number",
-              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
-            },
             ACTUAL_OD_SPAN: {
               type: "number",
               description: "The span of the observations the orbit determination used, days; NaN when not stated."
@@ -146968,12 +146967,6 @@ format class are named by $NCD's container format.`
               maximum: 2147483647,
               description: "Observations the orbit determination used; -1 when not stated ($OCM 0)."
             },
-            OD_TRACKS_USED: {
-              type: "integer",
-              minimum: -2147483648,
-              maximum: 2147483647,
-              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
-            },
             WEIGHTED_RMS: {
               type: "number",
               description: "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
@@ -146983,6 +146976,12 @@ format class are named by $NCD's container format.`
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
               description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+            },
+            OD_TRACKS_USED: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
             },
             DAYS_SINCE_LAST_OBS: {
               type: "number",
@@ -147009,52 +147008,53 @@ format class are named by $NCD's container format.`
               maximum: 65535,
               description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so."
             },
-            COV_REALISM: {
-              $ref: "#/definitions/CVR",
-              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
-            },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
               description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states."
-            },
-            COV_CALIBRATION_REFERENCE: {
-              type: "string",
-              description: "Identifier of that calibration evidence (a report or record)."
-            },
-            WINDOWS: {
-              type: "array",
-              items: {
-                $ref: "#/definitions/MORWindow"
-              },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
-            },
-            WINDOW_COEFF_HEADS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
-            },
-            WINDOW_COEFF_TAILS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
-            },
-            WINDOW_RECORD_CHECK: {
-              type: "integer",
-              minimum: 0,
-              maximum: 18446744073709552e3,
-              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
               description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER."
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only."
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with."
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states."
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record)."
             }
           },
           additionalProperties: false
@@ -218346,13 +218346,9 @@ provider's reviewed register). Never free text.`
               type: "string",
               description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR."
             },
-            OBJECT_NAME: {
-              type: "string",
-              description: "The object's name; absent unless a reader copies it into what it writes."
-            },
-            MESSAGE_STATUS: {
-              $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data."
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
             },
             EPOCH_UNIX_US: {
               type: "integer",
@@ -218360,9 +218356,36 @@ provider's reviewed register). Never free text.`
               maximum: 9223372036854776e3,
               description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
             },
-            MEAN_ELEMENT_THEORY: {
-              $ref: "#/definitions/meanElementSource",
-              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+            },
+            WINDOW_RECORD_CHECK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
             },
             MEAN_MOTION: {
               type: "number",
@@ -218396,18 +218419,6 @@ provider's reviewed register). Never free text.`
               type: "number",
               description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
             },
-            BSTAR: {
-              type: "number",
-              description: "BSTAR, 1/Earth radii. SGP4 only."
-            },
-            MEAN_MOTION_DOT: {
-              type: "number",
-              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
-            },
-            MEAN_MOTION_DDOT: {
-              type: "number",
-              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
-            },
             GRAVITY_FIELD: {
               $ref: "#/definitions/morGravityField",
               description: "The gravity field the set flies on."
@@ -218424,14 +218435,6 @@ provider's reviewed register). Never free text.`
               maximum: 255,
               description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP."
             },
-            SOLID_TIDES_MODEL: {
-              $ref: "#/definitions/morSolidTideModel",
-              description: "The solid Earth tide the set flies with."
-            },
-            SOLAR_RAD_PRESSURE: {
-              $ref: "#/definitions/morRadiationModel",
-              description: "The radiation pressure model the set states."
-            },
             OD_PARAMETERS: {
               type: "integer",
               minimum: 0,
@@ -218444,10 +218447,6 @@ provider's reviewed register). Never free text.`
               maximum: 4294967295,
               description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held)."
             },
-            ECOM2_Y0: {
-              type: "number",
-              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
-            },
             ACTUAL_OD_SPAN: {
               type: "number",
               description: "The span of the observations the orbit determination used, days; NaN when not stated."
@@ -218458,12 +218457,6 @@ provider's reviewed register). Never free text.`
               maximum: 2147483647,
               description: "Observations the orbit determination used; -1 when not stated ($OCM 0)."
             },
-            OD_TRACKS_USED: {
-              type: "integer",
-              minimum: -2147483648,
-              maximum: 2147483647,
-              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
-            },
             WEIGHTED_RMS: {
               type: "number",
               description: "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
@@ -218473,6 +218466,12 @@ provider's reviewed register). Never free text.`
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
               description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+            },
+            OD_TRACKS_USED: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
             },
             DAYS_SINCE_LAST_OBS: {
               type: "number",
@@ -218499,52 +218498,53 @@ provider's reviewed register). Never free text.`
               maximum: 65535,
               description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so."
             },
-            COV_REALISM: {
-              $ref: "#/definitions/CVR",
-              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
-            },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
               description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states."
-            },
-            COV_CALIBRATION_REFERENCE: {
-              type: "string",
-              description: "Identifier of that calibration evidence (a report or record)."
-            },
-            WINDOWS: {
-              type: "array",
-              items: {
-                $ref: "#/definitions/MORWindow"
-              },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
-            },
-            WINDOW_COEFF_HEADS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
-            },
-            WINDOW_COEFF_TAILS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
-            },
-            WINDOW_RECORD_CHECK: {
-              type: "integer",
-              minimum: 0,
-              maximum: 18446744073709552e3,
-              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
               description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER."
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only."
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with."
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states."
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record)."
             }
           },
           additionalProperties: false
@@ -644609,39 +644609,6 @@ format class are named by $NCD's container format.`,
               description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR.",
               "x-flatbuffer-type": "string"
             },
-            OBJECT_NAME: {
-              type: "string",
-              description: "The object's name; absent unless a reader copies it into what it writes.",
-              "x-flatbuffer-type": "string"
-            },
-            MESSAGE_STATUS: {
-              $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0,
-                  description: "Not stated."
-                },
-                REAL: {
-                  value: 1,
-                  description: "Real data."
-                },
-                TEST: {
-                  value: 2,
-                  description: "Test data."
-                }
-              },
-              "x-flatbuffer-default": "UNSPECIFIED"
-            },
-            EPOCH_UNIX_US: {
-              type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
-              "x-flatbuffer-type": "int64"
-            },
             MEAN_ELEMENT_THEORY: {
               $ref: "#/definitions/meanElementSource",
               description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.",
@@ -644674,6 +644641,50 @@ format class are named by $NCD's container format.`,
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
+              "x-flatbuffer-type": "int64"
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
+              "x-flatbuffer-type": "[MORWindow]"
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
+              "x-flatbuffer-type": "[double]"
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
+              "x-flatbuffer-type": "[float]"
+            },
+            WINDOW_RECORD_CHECK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
+              "x-flatbuffer-type": "uint64"
             },
             MEAN_MOTION: {
               type: "number",
@@ -644715,21 +644726,6 @@ format class are named by $NCD's container format.`,
               description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
               "x-flatbuffer-type": "double"
             },
-            BSTAR: {
-              type: "number",
-              description: "BSTAR, 1/Earth radii. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
-            MEAN_MOTION_DOT: {
-              type: "number",
-              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
-            MEAN_MOTION_DDOT: {
-              type: "number",
-              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
             GRAVITY_FIELD: {
               $ref: "#/definitions/morGravityField",
               description: "The gravity field the set flies on.",
@@ -644765,46 +644761,6 @@ format class are named by $NCD's container format.`,
               description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.",
               "x-flatbuffer-type": "ubyte"
             },
-            SOLID_TIDES_MODEL: {
-              $ref: "#/definitions/morSolidTideModel",
-              description: "The solid Earth tide the set flies with.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                NONE: {
-                  value: 0
-                },
-                IERS_2010: {
-                  value: 1
-                }
-              },
-              "x-flatbuffer-default": "NONE"
-            },
-            SOLAR_RAD_PRESSURE: {
-              $ref: "#/definitions/morRadiationModel",
-              description: "The radiation pressure model the set states.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSTATED: {
-                  value: 0,
-                  description: "No text: the theory's own radiation pressure on AGOM."
-                },
-                SPHERE_ECOM2_Y0: {
-                  value: 1,
-                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
-                },
-                SPHERE_OUTPUT_MAP: {
-                  value: 2,
-                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
-                },
-                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
-                  value: 3,
-                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
-                }
-              },
-              "x-flatbuffer-default": "UNSTATED"
-            },
             OD_PARAMETERS: {
               type: "integer",
               minimum: 0,
@@ -644819,11 +644775,6 @@ format class are named by $NCD's container format.`,
               description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).",
               "x-flatbuffer-type": "uint32"
             },
-            ECOM2_Y0: {
-              type: "number",
-              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
-              "x-flatbuffer-type": "double"
-            },
             ACTUAL_OD_SPAN: {
               type: "number",
               description: "The span of the observations the orbit determination used, days; NaN when not stated.",
@@ -644835,14 +644786,6 @@ format class are named by $NCD's container format.`,
               minimum: -2147483648,
               maximum: 2147483647,
               description: "Observations the orbit determination used; -1 when not stated ($OCM 0).",
-              "x-flatbuffer-type": "int32",
-              "x-flatbuffer-default": "-1"
-            },
-            OD_TRACKS_USED: {
-              type: "integer",
-              minimum: -2147483648,
-              maximum: 2147483647,
-              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
               "x-flatbuffer-type": "int32",
               "x-flatbuffer-default": "-1"
             },
@@ -644859,6 +644802,14 @@ format class are named by $NCD's container format.`,
               description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
               "x-flatbuffer-type": "int64",
               "x-flatbuffer-default": "-9223372036854775808"
+            },
+            OD_TRACKS_USED: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
+              "x-flatbuffer-type": "int32",
+              "x-flatbuffer-default": "-1"
             },
             DAYS_SINCE_LAST_OBS: {
               type: "number",
@@ -644907,11 +644858,6 @@ format class are named by $NCD's container format.`,
               description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
               "x-flatbuffer-type": "uint16"
             },
-            COV_REALISM: {
-              $ref: "#/definitions/CVR",
-              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
-              "x-flatbuffer-type": "CVR"
-            },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
               description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
@@ -644933,52 +644879,106 @@ format class are named by $NCD's container format.`,
               },
               "x-flatbuffer-default": "Unspecified"
             },
-            COV_CALIBRATION_REFERENCE: {
-              type: "string",
-              description: "Identifier of that calibration evidence (a report or record).",
-              "x-flatbuffer-type": "string"
-            },
-            WINDOWS: {
-              type: "array",
-              items: {
-                $ref: "#/definitions/MORWindow"
-              },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
-              "x-flatbuffer-type": "[MORWindow]"
-            },
-            WINDOW_COEFF_HEADS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
-              "x-flatbuffer-type": "[double]"
-            },
-            WINDOW_COEFF_TAILS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
-              "x-flatbuffer-type": "[float]"
-            },
-            WINDOW_RECORD_CHECK: {
-              type: "integer",
-              minimum: 0,
-              maximum: 18446744073709552e3,
-              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
-              "x-flatbuffer-type": "uint64"
-            },
             FALLBACK: {
               $ref: "#/definitions/MPE",
               description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER.",
               "x-flatbuffer-type": "MPE"
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                IERS_2010: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSTATED: {
+                  value: 0,
+                  description: "No text: the theory's own radiation pressure on AGOM."
+                },
+                SPHERE_ECOM2_Y0: {
+                  value: 1,
+                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+                },
+                SPHERE_OUTPUT_MAP: {
+                  value: 2,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+                },
+                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+                  value: 3,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+                }
+              },
+              "x-flatbuffer-default": "UNSTATED"
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
+              "x-flatbuffer-type": "double"
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                REAL: {
+                  value: 1,
+                  description: "Real data."
+                },
+                TEST: {
+                  value: 2,
+                  description: "Test data."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
+              "x-flatbuffer-type": "CVR"
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record).",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -789778,39 +789778,6 @@ provider's reviewed register). Never free text.`,
               description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR.",
               "x-flatbuffer-type": "string"
             },
-            OBJECT_NAME: {
-              type: "string",
-              description: "The object's name; absent unless a reader copies it into what it writes.",
-              "x-flatbuffer-type": "string"
-            },
-            MESSAGE_STATUS: {
-              $ref: "#/definitions/morMessageStatus",
-              description: "Whether the set is real or test data.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0,
-                  description: "Not stated."
-                },
-                REAL: {
-                  value: 1,
-                  description: "Real data."
-                },
-                TEST: {
-                  value: 2,
-                  description: "Test data."
-                }
-              },
-              "x-flatbuffer-default": "UNSPECIFIED"
-            },
-            EPOCH_UNIX_US: {
-              type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
-              "x-flatbuffer-type": "int64"
-            },
             MEAN_ELEMENT_THEORY: {
               $ref: "#/definitions/meanElementSource",
               description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.",
@@ -789843,6 +789810,50 @@ provider's reviewed register). Never free text.`,
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
+              "x-flatbuffer-type": "int64"
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
+              "x-flatbuffer-type": "[MORWindow]"
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
+              "x-flatbuffer-type": "[double]"
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
+              "x-flatbuffer-type": "[float]"
+            },
+            WINDOW_RECORD_CHECK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
+              "x-flatbuffer-type": "uint64"
             },
             MEAN_MOTION: {
               type: "number",
@@ -789884,21 +789895,6 @@ provider's reviewed register). Never free text.`,
               description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
               "x-flatbuffer-type": "double"
             },
-            BSTAR: {
-              type: "number",
-              description: "BSTAR, 1/Earth radii. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
-            MEAN_MOTION_DOT: {
-              type: "number",
-              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
-            MEAN_MOTION_DDOT: {
-              type: "number",
-              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
-              "x-flatbuffer-type": "double"
-            },
             GRAVITY_FIELD: {
               $ref: "#/definitions/morGravityField",
               description: "The gravity field the set flies on.",
@@ -789934,46 +789930,6 @@ provider's reviewed register). Never free text.`,
               description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.",
               "x-flatbuffer-type": "ubyte"
             },
-            SOLID_TIDES_MODEL: {
-              $ref: "#/definitions/morSolidTideModel",
-              description: "The solid Earth tide the set flies with.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                NONE: {
-                  value: 0
-                },
-                IERS_2010: {
-                  value: 1
-                }
-              },
-              "x-flatbuffer-default": "NONE"
-            },
-            SOLAR_RAD_PRESSURE: {
-              $ref: "#/definitions/morRadiationModel",
-              description: "The radiation pressure model the set states.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSTATED: {
-                  value: 0,
-                  description: "No text: the theory's own radiation pressure on AGOM."
-                },
-                SPHERE_ECOM2_Y0: {
-                  value: 1,
-                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
-                },
-                SPHERE_OUTPUT_MAP: {
-                  value: 2,
-                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
-                },
-                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
-                  value: 3,
-                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
-                }
-              },
-              "x-flatbuffer-default": "UNSTATED"
-            },
             OD_PARAMETERS: {
               type: "integer",
               minimum: 0,
@@ -789988,11 +789944,6 @@ provider's reviewed register). Never free text.`,
               description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).",
               "x-flatbuffer-type": "uint32"
             },
-            ECOM2_Y0: {
-              type: "number",
-              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
-              "x-flatbuffer-type": "double"
-            },
             ACTUAL_OD_SPAN: {
               type: "number",
               description: "The span of the observations the orbit determination used, days; NaN when not stated.",
@@ -790004,14 +789955,6 @@ provider's reviewed register). Never free text.`,
               minimum: -2147483648,
               maximum: 2147483647,
               description: "Observations the orbit determination used; -1 when not stated ($OCM 0).",
-              "x-flatbuffer-type": "int32",
-              "x-flatbuffer-default": "-1"
-            },
-            OD_TRACKS_USED: {
-              type: "integer",
-              minimum: -2147483648,
-              maximum: 2147483647,
-              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
               "x-flatbuffer-type": "int32",
               "x-flatbuffer-default": "-1"
             },
@@ -790028,6 +789971,14 @@ provider's reviewed register). Never free text.`,
               description: "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
               "x-flatbuffer-type": "int64",
               "x-flatbuffer-default": "-9223372036854775808"
+            },
+            OD_TRACKS_USED: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
+              "x-flatbuffer-type": "int32",
+              "x-flatbuffer-default": "-1"
             },
             DAYS_SINCE_LAST_OBS: {
               type: "number",
@@ -790076,11 +790027,6 @@ provider's reviewed register). Never free text.`,
               description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
               "x-flatbuffer-type": "uint16"
             },
-            COV_REALISM: {
-              $ref: "#/definitions/CVR",
-              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
-              "x-flatbuffer-type": "CVR"
-            },
             COV_CALIBRATION: {
               $ref: "#/definitions/covarianceCalibration",
               description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
@@ -790102,52 +790048,106 @@ provider's reviewed register). Never free text.`,
               },
               "x-flatbuffer-default": "Unspecified"
             },
-            COV_CALIBRATION_REFERENCE: {
-              type: "string",
-              description: "Identifier of that calibration evidence (a report or record).",
-              "x-flatbuffer-type": "string"
-            },
-            WINDOWS: {
-              type: "array",
-              items: {
-                $ref: "#/definitions/MORWindow"
-              },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
-              "x-flatbuffer-type": "[MORWindow]"
-            },
-            WINDOW_COEFF_HEADS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
-              "x-flatbuffer-type": "[double]"
-            },
-            WINDOW_COEFF_TAILS: {
-              type: "array",
-              items: {
-                type: "number"
-              },
-              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
-              "x-flatbuffer-type": "[float]"
-            },
-            WINDOW_RECORD_CHECK: {
-              type: "integer",
-              minimum: 0,
-              maximum: 18446744073709552e3,
-              description: "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
-              "x-flatbuffer-type": "uint64"
-            },
             FALLBACK: {
               $ref: "#/definitions/MPE",
               description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER.",
               "x-flatbuffer-type": "MPE"
             },
-            ROWS_ONLY: {
-              type: "boolean",
-              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                IERS_2010: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSTATED: {
+                  value: 0,
+                  description: "No text: the theory's own radiation pressure on AGOM."
+                },
+                SPHERE_ECOM2_Y0: {
+                  value: 1,
+                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+                },
+                SPHERE_OUTPUT_MAP: {
+                  value: 2,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+                },
+                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+                  value: 3,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+                }
+              },
+              "x-flatbuffer-default": "UNSTATED"
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
+              "x-flatbuffer-type": "double"
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                REAL: {
+                  value: 1,
+                  description: "Real data."
+                },
+                TEST: {
+                  value: 2,
+                  description: "Test data."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes.",
+              "x-flatbuffer-type": "string"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
+              "x-flatbuffer-type": "CVR"
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record).",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

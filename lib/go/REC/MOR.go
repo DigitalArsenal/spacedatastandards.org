@@ -107,47 +107,33 @@ func (rcv *MOR) Originator() []byte {
 
 /// Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,
 /// INTERNATIONAL_DESIGNATOR and ORIGINATOR.
-/// The object's name; absent unless a reader copies it into what it writes.
-func (rcv *MOR) OBJECT_NAME() []byte {
+/// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+func (rcv *MOR) MEAN_ELEMENT_THEORY() meanElementSource {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return meanElementSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 6
 }
 
-func (rcv *MOR) ObjectName() []byte {
-	return rcv.OBJECT_NAME()
+func (rcv *MOR) MeanElementTheory() meanElementSource {
+	return rcv.MEAN_ELEMENT_THEORY()
 }
 
-/// The object's name; absent unless a reader copies it into what it writes.
-/// Whether the set is real or test data.
-func (rcv *MOR) MESSAGE_STATUS() morMessageStatus {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return morMessageStatus(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
+/// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+func (rcv *MOR) MutateMEAN_ELEMENT_THEORY(n meanElementSource) bool {
+	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *MOR) MessageStatus() morMessageStatus {
-	return rcv.MESSAGE_STATUS()
-}
-
-/// Whether the set is real or test data.
-func (rcv *MOR) MutateMESSAGE_STATUS(n morMessageStatus) bool {
-	return rcv._tab.MutateByteSlot(12, byte(n))
-}
-
-func (rcv *MOR) MutateMessageStatus(n morMessageStatus) bool {
-	return rcv.MutateMESSAGE_STATUS(n)
+func (rcv *MOR) MutateMeanElementTheory(n meanElementSource) bool {
+	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
 /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
 /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
 /// ways without loss; an instant inside a leap second has no value here.
 func (rcv *MOR) EPOCH_UNIX_US() int64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetInt64(o + rcv._tab.Pos)
 	}
@@ -162,38 +148,188 @@ func (rcv *MOR) EpochUnixUs() int64 {
 /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
 /// ways without loss; an instant inside a leap second has no value here.
 func (rcv *MOR) MutateEPOCH_UNIX_US(n int64) bool {
-	return rcv._tab.MutateInt64Slot(14, n)
+	return rcv._tab.MutateInt64Slot(12, n)
 }
 
 func (rcv *MOR) MutateEpochUnixUs(n int64) bool {
 	return rcv.MutateEPOCH_UNIX_US(n)
 }
 
-/// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-func (rcv *MOR) MEAN_ELEMENT_THEORY() meanElementSource {
+/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+func (rcv *MOR) ROWS_ONLY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *MOR) RowsOnly() bool {
+	return rcv.ROWS_ONLY()
+}
+
+/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+func (rcv *MOR) MutateROWS_ONLY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *MOR) MutateRowsOnly(n bool) bool {
+	return rcv.MutateROWS_ONLY(n)
+}
+
+/// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+/// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+/// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+func (rcv *MOR) WINDOWS(obj *MORWindow, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return meanElementSource(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 24
+		if obj == nil {
+			obj = new(MORWindow)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
 	}
-	return 6
+	return false
 }
 
-func (rcv *MOR) MeanElementTheory() meanElementSource {
-	return rcv.MEAN_ELEMENT_THEORY()
+func (rcv *MOR) Windows(obj *MORWindow, j int) bool {
+	return rcv.WINDOWS(obj, j)
 }
 
-/// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
-func (rcv *MOR) MutateMEAN_ELEMENT_THEORY(n meanElementSource) bool {
-	return rcv._tab.MutateInt8Slot(16, int8(n))
+func (rcv *MOR) WINDOWSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *MOR) MutateMeanElementTheory(n meanElementSource) bool {
-	return rcv.MutateMEAN_ELEMENT_THEORY(n)
+func (rcv *MOR) WindowsLength() int {
+	return rcv.WINDOWSLength()
+}
+
+/// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
+/// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+/// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
+/// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+/// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+func (rcv *MOR) WINDOW_COEFF_HEADS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *MOR) WindowCoeffHeads(j int) float64 {
+	return rcv.WINDOW_COEFF_HEADS(j)
+}
+
+func (rcv *MOR) WINDOW_COEFF_HEADSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *MOR) WindowCoeffHeadsLength() int {
+	return rcv.WINDOW_COEFF_HEADSLength()
+}
+
+/// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+/// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+func (rcv *MOR) MutateWINDOW_COEFF_HEADS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *MOR) MutateWindowCoeffHeads(j int, n float64) bool {
+	return rcv.MutateWINDOW_COEFF_HEADS(j, n)
+}
+
+/// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+/// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+func (rcv *MOR) WINDOW_COEFF_TAILS(j int) float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat32(a + flatbuffers.UOffsetT(j*4))
+	}
+	return 0
+}
+
+func (rcv *MOR) WindowCoeffTails(j int) float32 {
+	return rcv.WINDOW_COEFF_TAILS(j)
+}
+
+func (rcv *MOR) WINDOW_COEFF_TAILSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *MOR) WindowCoeffTailsLength() int {
+	return rcv.WINDOW_COEFF_TAILSLength()
+}
+
+/// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+/// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+func (rcv *MOR) MutateWINDOW_COEFF_TAILS(j int, n float32) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat32(a+flatbuffers.UOffsetT(j*4), n)
+	}
+	return false
+}
+
+func (rcv *MOR) MutateWindowCoeffTails(j int, n float32) bool {
+	return rcv.MutateWINDOW_COEFF_TAILS(j, n)
+}
+
+/// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+/// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+/// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+func (rcv *MOR) WINDOW_RECORD_CHECK() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *MOR) WindowRecordCheck() uint64 {
+	return rcv.WINDOW_RECORD_CHECK()
+}
+
+/// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+/// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+/// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+func (rcv *MOR) MutateWINDOW_RECORD_CHECK(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(22, n)
+}
+
+func (rcv *MOR) MutateWindowRecordCheck(n uint64) bool {
+	return rcv.MutateWINDOW_RECORD_CHECK(n)
 }
 
 /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
 func (rcv *MOR) MEAN_MOTION() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -206,7 +342,7 @@ func (rcv *MOR) MeanMotion() float64 {
 
 /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
 func (rcv *MOR) MutateMEAN_MOTION(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(18, n)
+	return rcv._tab.MutateFloat64Slot(24, n)
 }
 
 func (rcv *MOR) MutateMeanMotion(n float64) bool {
@@ -215,7 +351,7 @@ func (rcv *MOR) MutateMeanMotion(n float64) bool {
 
 /// Eccentricity.
 func (rcv *MOR) ECCENTRICITY() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -228,7 +364,7 @@ func (rcv *MOR) Eccentricity() float64 {
 
 /// Eccentricity.
 func (rcv *MOR) MutateECCENTRICITY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(20, n)
+	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
 func (rcv *MOR) MutateEccentricity(n float64) bool {
@@ -237,7 +373,7 @@ func (rcv *MOR) MutateEccentricity(n float64) bool {
 
 /// Inclination, deg.
 func (rcv *MOR) INCLINATION() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -250,7 +386,7 @@ func (rcv *MOR) Inclination() float64 {
 
 /// Inclination, deg.
 func (rcv *MOR) MutateINCLINATION(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(22, n)
+	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
 func (rcv *MOR) MutateInclination(n float64) bool {
@@ -259,7 +395,7 @@ func (rcv *MOR) MutateInclination(n float64) bool {
 
 /// Right ascension of the ascending node, deg.
 func (rcv *MOR) RA_OF_ASC_NODE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -272,7 +408,7 @@ func (rcv *MOR) RaOfAscNode() float64 {
 
 /// Right ascension of the ascending node, deg.
 func (rcv *MOR) MutateRA_OF_ASC_NODE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
+	return rcv._tab.MutateFloat64Slot(30, n)
 }
 
 func (rcv *MOR) MutateRaOfAscNode(n float64) bool {
@@ -281,7 +417,7 @@ func (rcv *MOR) MutateRaOfAscNode(n float64) bool {
 
 /// Argument of pericenter, deg.
 func (rcv *MOR) ARG_OF_PERICENTER() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -294,7 +430,7 @@ func (rcv *MOR) ArgOfPericenter() float64 {
 
 /// Argument of pericenter, deg.
 func (rcv *MOR) MutateARG_OF_PERICENTER(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(26, n)
+	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
 func (rcv *MOR) MutateArgOfPericenter(n float64) bool {
@@ -303,7 +439,7 @@ func (rcv *MOR) MutateArgOfPericenter(n float64) bool {
 
 /// Mean anomaly, deg.
 func (rcv *MOR) MEAN_ANOMALY() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -316,7 +452,7 @@ func (rcv *MOR) MeanAnomaly() float64 {
 
 /// Mean anomaly, deg.
 func (rcv *MOR) MutateMEAN_ANOMALY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
+	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
 func (rcv *MOR) MutateMeanAnomaly(n float64) bool {
@@ -325,7 +461,7 @@ func (rcv *MOR) MutateMeanAnomaly(n float64) bool {
 
 /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
 func (rcv *MOR) BTERM() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -338,7 +474,7 @@ func (rcv *MOR) Bterm() float64 {
 
 /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
 func (rcv *MOR) MutateBTERM(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
+	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
 func (rcv *MOR) MutateBterm(n float64) bool {
@@ -347,7 +483,7 @@ func (rcv *MOR) MutateBterm(n float64) bool {
 
 /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
 func (rcv *MOR) AGOM() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -360,77 +496,11 @@ func (rcv *MOR) Agom() float64 {
 
 /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
 func (rcv *MOR) MutateAGOM(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(32, n)
+	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
 func (rcv *MOR) MutateAgom(n float64) bool {
 	return rcv.MutateAGOM(n)
-}
-
-/// BSTAR, 1/Earth radii. SGP4 only.
-func (rcv *MOR) BSTAR() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MOR) Bstar() float64 {
-	return rcv.BSTAR()
-}
-
-/// BSTAR, 1/Earth radii. SGP4 only.
-func (rcv *MOR) MutateBSTAR(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(34, n)
-}
-
-func (rcv *MOR) MutateBstar(n float64) bool {
-	return rcv.MutateBSTAR(n)
-}
-
-/// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-func (rcv *MOR) MEAN_MOTION_DOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MOR) MeanMotionDot() float64 {
-	return rcv.MEAN_MOTION_DOT()
-}
-
-/// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
-func (rcv *MOR) MutateMEAN_MOTION_DOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
-}
-
-func (rcv *MOR) MutateMeanMotionDot(n float64) bool {
-	return rcv.MutateMEAN_MOTION_DOT(n)
-}
-
-/// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-func (rcv *MOR) MEAN_MOTION_DDOT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MOR) MeanMotionDdot() float64 {
-	return rcv.MEAN_MOTION_DDOT()
-}
-
-/// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
-func (rcv *MOR) MutateMEAN_MOTION_DDOT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(38, n)
-}
-
-func (rcv *MOR) MutateMeanMotionDdot(n float64) bool {
-	return rcv.MutateMEAN_MOTION_DDOT(n)
 }
 
 /// The gravity field the set flies on.
@@ -499,55 +569,11 @@ func (rcv *MOR) MutateMaximumZonalDegree(n byte) bool {
 	return rcv.MutateMAXIMUM_ZONAL_DEGREE(n)
 }
 
-/// The solid Earth tide the set flies with.
-func (rcv *MOR) SOLID_TIDES_MODEL() morSolidTideModel {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
-	if o != 0 {
-		return morSolidTideModel(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *MOR) SolidTidesModel() morSolidTideModel {
-	return rcv.SOLID_TIDES_MODEL()
-}
-
-/// The solid Earth tide the set flies with.
-func (rcv *MOR) MutateSOLID_TIDES_MODEL(n morSolidTideModel) bool {
-	return rcv._tab.MutateByteSlot(46, byte(n))
-}
-
-func (rcv *MOR) MutateSolidTidesModel(n morSolidTideModel) bool {
-	return rcv.MutateSOLID_TIDES_MODEL(n)
-}
-
-/// The radiation pressure model the set states.
-func (rcv *MOR) SOLAR_RAD_PRESSURE() morRadiationModel {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
-	if o != 0 {
-		return morRadiationModel(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *MOR) SolarRadPressure() morRadiationModel {
-	return rcv.SOLAR_RAD_PRESSURE()
-}
-
-/// The radiation pressure model the set states.
-func (rcv *MOR) MutateSOLAR_RAD_PRESSURE(n morRadiationModel) bool {
-	return rcv._tab.MutateByteSlot(48, byte(n))
-}
-
-func (rcv *MOR) MutateSolarRadPressure(n morRadiationModel) bool {
-	return rcv.MutateSOLAR_RAD_PRESSURE(n)
-}
-
 /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
 /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
 /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
 func (rcv *MOR) OD_PARAMETERS() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -562,7 +588,7 @@ func (rcv *MOR) OdParameters() uint32 {
 /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
 /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
 func (rcv *MOR) MutateOD_PARAMETERS(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(50, n)
+	return rcv._tab.MutateUint32Slot(46, n)
 }
 
 func (rcv *MOR) MutateOdParameters(n uint32) bool {
@@ -571,7 +597,7 @@ func (rcv *MOR) MutateOdParameters(n uint32) bool {
 
 /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
 func (rcv *MOR) OD_SOLVED_FOR() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -584,38 +610,16 @@ func (rcv *MOR) OdSolvedFor() uint32 {
 
 /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
 func (rcv *MOR) MutateOD_SOLVED_FOR(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(52, n)
+	return rcv._tab.MutateUint32Slot(48, n)
 }
 
 func (rcv *MOR) MutateOdSolvedFor(n uint32) bool {
 	return rcv.MutateOD_SOLVED_FOR(n)
 }
 
-/// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-func (rcv *MOR) ECOM2_Y0() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MOR) Ecom2Y0() float64 {
-	return rcv.ECOM2_Y0()
-}
-
-/// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
-func (rcv *MOR) MutateECOM2_Y0(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(54, n)
-}
-
-func (rcv *MOR) MutateEcom2Y0(n float64) bool {
-	return rcv.MutateECOM2_Y0(n)
-}
-
 /// The span of the observations the orbit determination used, days; NaN when not stated.
 func (rcv *MOR) ACTUAL_OD_SPAN() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -628,7 +632,7 @@ func (rcv *MOR) ActualOdSpan() float64 {
 
 /// The span of the observations the orbit determination used, days; NaN when not stated.
 func (rcv *MOR) MutateACTUAL_OD_SPAN(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(56, n)
+	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
 func (rcv *MOR) MutateActualOdSpan(n float64) bool {
@@ -637,7 +641,7 @@ func (rcv *MOR) MutateActualOdSpan(n float64) bool {
 
 /// Observations the orbit determination used; -1 when not stated ($OCM 0).
 func (rcv *MOR) OD_OBSERVATIONS_USED() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetInt32(o + rcv._tab.Pos)
 	}
@@ -650,38 +654,16 @@ func (rcv *MOR) OdObservationsUsed() int32 {
 
 /// Observations the orbit determination used; -1 when not stated ($OCM 0).
 func (rcv *MOR) MutateOD_OBSERVATIONS_USED(n int32) bool {
-	return rcv._tab.MutateInt32Slot(58, n)
+	return rcv._tab.MutateInt32Slot(52, n)
 }
 
 func (rcv *MOR) MutateOdObservationsUsed(n int32) bool {
 	return rcv.MutateOD_OBSERVATIONS_USED(n)
 }
 
-/// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-func (rcv *MOR) OD_TRACKS_USED() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return -1
-}
-
-func (rcv *MOR) OdTracksUsed() int32 {
-	return rcv.OD_TRACKS_USED()
-}
-
-/// Tracks the orbit determination used; -1 when not stated ($OCM 0).
-func (rcv *MOR) MutateOD_TRACKS_USED(n int32) bool {
-	return rcv._tab.MutateInt32Slot(60, n)
-}
-
-func (rcv *MOR) MutateOdTracksUsed(n int32) bool {
-	return rcv.MutateOD_TRACKS_USED(n)
-}
-
 /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
 func (rcv *MOR) WEIGHTED_RMS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -694,7 +676,7 @@ func (rcv *MOR) WeightedRms() float64 {
 
 /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
 func (rcv *MOR) MutateWEIGHTED_RMS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(62, n)
+	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
 func (rcv *MOR) MutateWeightedRms(n float64) bool {
@@ -703,7 +685,7 @@ func (rcv *MOR) MutateWeightedRms(n float64) bool {
 
 /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
 func (rcv *MOR) OD_EPOCH_UNIX_US() int64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetInt64(o + rcv._tab.Pos)
 	}
@@ -716,16 +698,38 @@ func (rcv *MOR) OdEpochUnixUs() int64 {
 
 /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
 func (rcv *MOR) MutateOD_EPOCH_UNIX_US(n int64) bool {
-	return rcv._tab.MutateInt64Slot(64, n)
+	return rcv._tab.MutateInt64Slot(56, n)
 }
 
 func (rcv *MOR) MutateOdEpochUnixUs(n int64) bool {
 	return rcv.MutateOD_EPOCH_UNIX_US(n)
 }
 
+/// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+func (rcv *MOR) OD_TRACKS_USED() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return -1
+}
+
+func (rcv *MOR) OdTracksUsed() int32 {
+	return rcv.OD_TRACKS_USED()
+}
+
+/// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+func (rcv *MOR) MutateOD_TRACKS_USED(n int32) bool {
+	return rcv._tab.MutateInt32Slot(58, n)
+}
+
+func (rcv *MOR) MutateOdTracksUsed(n int32) bool {
+	return rcv.MutateOD_TRACKS_USED(n)
+}
+
 /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
 func (rcv *MOR) DAYS_SINCE_LAST_OBS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
@@ -738,7 +742,7 @@ func (rcv *MOR) DaysSinceLastObs() float64 {
 
 /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
 func (rcv *MOR) MutateDAYS_SINCE_LAST_OBS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(66, n)
+	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
 func (rcv *MOR) MutateDaysSinceLastObs(n float64) bool {
@@ -750,7 +754,7 @@ func (rcv *MOR) MutateDaysSinceLastObs(n float64) bool {
 /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
 /// ascending ordinal. Absent: no covariance.
 func (rcv *MOR) COVARIANCE_DATA(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
@@ -763,7 +767,7 @@ func (rcv *MOR) CovarianceData(j int) float64 {
 }
 
 func (rcv *MOR) COVARIANCE_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -779,7 +783,7 @@ func (rcv *MOR) CovarianceDataLength() int {
 /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
 /// ascending ordinal. Absent: no covariance.
 func (rcv *MOR) MutateCOVARIANCE_DATA(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
@@ -793,7 +797,7 @@ func (rcv *MOR) MutateCovarianceData(j int, n float64) bool {
 
 /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
 func (rcv *MOR) COV_PROPAGATION(obj *MORCovariancePropagation) *MORCovariancePropagation {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -813,7 +817,7 @@ func (rcv *MOR) CovPropagation(obj *MORCovariancePropagation) *MORCovarianceProp
 /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
 /// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) COV_FLOOR() morCovarianceFloor {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return morCovarianceFloor(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -827,7 +831,7 @@ func (rcv *MOR) CovFloor() morCovarianceFloor {
 /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
 /// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) MutateCOV_FLOOR(n morCovarianceFloor) bool {
-	return rcv._tab.MutateByteSlot(72, byte(n))
+	return rcv._tab.MutateByteSlot(66, byte(n))
 }
 
 func (rcv *MOR) MutateCovFloor(n morCovarianceFloor) bool {
@@ -838,7 +842,7 @@ func (rcv *MOR) MutateCovFloor(n morCovarianceFloor) bool {
 /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
 /// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) COV_REALISM_ID() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -853,37 +857,16 @@ func (rcv *MOR) CovRealismId() uint16 {
 /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
 /// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) MutateCOV_REALISM_ID(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(74, n)
+	return rcv._tab.MutateUint16Slot(68, n)
 }
 
 func (rcv *MOR) MutateCovRealismId(n uint16) bool {
 	return rcv.MutateCOV_REALISM_ID(n)
 }
 
-/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-/// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
-func (rcv *MOR) COV_REALISM(obj *CVR) *CVR {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(CVR)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *MOR) CovRealism(obj *CVR) *CVR {
-	return rcv.COV_REALISM(obj)
-}
-
-/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
-/// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
 /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
 func (rcv *MOR) COV_CALIBRATION() covarianceCalibration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return covarianceCalibration(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
@@ -896,182 +879,18 @@ func (rcv *MOR) CovCalibration() covarianceCalibration {
 
 /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
 func (rcv *MOR) MutateCOV_CALIBRATION(n covarianceCalibration) bool {
-	return rcv._tab.MutateInt8Slot(78, int8(n))
+	return rcv._tab.MutateInt8Slot(70, int8(n))
 }
 
 func (rcv *MOR) MutateCovCalibration(n covarianceCalibration) bool {
 	return rcv.MutateCOV_CALIBRATION(n)
 }
 
-/// Identifier of that calibration evidence (a report or record).
-func (rcv *MOR) COV_CALIBRATION_REFERENCE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *MOR) CovCalibrationReference() []byte {
-	return rcv.COV_CALIBRATION_REFERENCE()
-}
-
-/// Identifier of that calibration evidence (a report or record).
-/// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-/// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-/// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-func (rcv *MOR) WINDOWS(obj *MORWindow, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 24
-		if obj == nil {
-			obj = new(MORWindow)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *MOR) Windows(obj *MORWindow, j int) bool {
-	return rcv.WINDOWS(obj, j)
-}
-
-func (rcv *MOR) WINDOWSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowsLength() int {
-	return rcv.WINDOWSLength()
-}
-
-/// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
-/// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
-/// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
-/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
-/// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-/// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-func (rcv *MOR) WINDOW_COEFF_HEADS(j int) float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowCoeffHeads(j int) float64 {
-	return rcv.WINDOW_COEFF_HEADS(j)
-}
-
-func (rcv *MOR) WINDOW_COEFF_HEADSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowCoeffHeadsLength() int {
-	return rcv.WINDOW_COEFF_HEADSLength()
-}
-
-/// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
-/// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
-func (rcv *MOR) MutateWINDOW_COEFF_HEADS(j int, n float64) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
-	}
-	return false
-}
-
-func (rcv *MOR) MutateWindowCoeffHeads(j int, n float64) bool {
-	return rcv.MutateWINDOW_COEFF_HEADS(j, n)
-}
-
-/// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-/// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-func (rcv *MOR) WINDOW_COEFF_TAILS(j int) float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetFloat32(a + flatbuffers.UOffsetT(j*4))
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowCoeffTails(j int) float32 {
-	return rcv.WINDOW_COEFF_TAILS(j)
-}
-
-func (rcv *MOR) WINDOW_COEFF_TAILSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowCoeffTailsLength() int {
-	return rcv.WINDOW_COEFF_TAILSLength()
-}
-
-/// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
-/// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
-func (rcv *MOR) MutateWINDOW_COEFF_TAILS(j int, n float32) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.MutateFloat32(a+flatbuffers.UOffsetT(j*4), n)
-	}
-	return false
-}
-
-func (rcv *MOR) MutateWindowCoeffTails(j int, n float32) bool {
-	return rcv.MutateWINDOW_COEFF_TAILS(j, n)
-}
-
-/// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-/// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-/// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-func (rcv *MOR) WINDOW_RECORD_CHECK() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
-	if o != 0 {
-		return rcv._tab.GetUint64(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *MOR) WindowRecordCheck() uint64 {
-	return rcv.WINDOW_RECORD_CHECK()
-}
-
-/// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
-/// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
-/// record before using the rows: a mismatch voids the rows. With WINDOWS only.
-func (rcv *MOR) MutateWINDOW_RECORD_CHECK(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(88, n)
-}
-
-func (rcv *MOR) MutateWindowRecordCheck(n uint64) bool {
-	return rcv.MutateWINDOW_RECORD_CHECK(n)
-}
-
 /// The object's own element set for times beyond what this record serves (a reader's fallback
 /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
 /// object is this record's. No TARGETER.
 func (rcv *MOR) FALLBACK(obj *MPE) *MPE {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -1090,28 +909,209 @@ func (rcv *MOR) Fallback(obj *MPE) *MPE {
 /// The object's own element set for times beyond what this record serves (a reader's fallback
 /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
 /// object is this record's. No TARGETER.
-/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-func (rcv *MOR) ROWS_ONLY() bool {
+/// BSTAR, 1/Earth radii. SGP4 only.
+func (rcv *MOR) BSTAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MOR) Bstar() float64 {
+	return rcv.BSTAR()
+}
+
+/// BSTAR, 1/Earth radii. SGP4 only.
+func (rcv *MOR) MutateBSTAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *MOR) MutateBstar(n float64) bool {
+	return rcv.MutateBSTAR(n)
+}
+
+/// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+func (rcv *MOR) MEAN_MOTION_DOT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MOR) MeanMotionDot() float64 {
+	return rcv.MEAN_MOTION_DOT()
+}
+
+/// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+func (rcv *MOR) MutateMEAN_MOTION_DOT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *MOR) MutateMeanMotionDot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DOT(n)
+}
+
+/// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+func (rcv *MOR) MEAN_MOTION_DDOT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MOR) MeanMotionDdot() float64 {
+	return rcv.MEAN_MOTION_DDOT()
+}
+
+/// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+func (rcv *MOR) MutateMEAN_MOTION_DDOT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *MOR) MutateMeanMotionDdot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DDOT(n)
+}
+
+/// The solid Earth tide the set flies with.
+func (rcv *MOR) SOLID_TIDES_MODEL() morSolidTideModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return morSolidTideModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MOR) SolidTidesModel() morSolidTideModel {
+	return rcv.SOLID_TIDES_MODEL()
+}
+
+/// The solid Earth tide the set flies with.
+func (rcv *MOR) MutateSOLID_TIDES_MODEL(n morSolidTideModel) bool {
+	return rcv._tab.MutateByteSlot(80, byte(n))
+}
+
+func (rcv *MOR) MutateSolidTidesModel(n morSolidTideModel) bool {
+	return rcv.MutateSOLID_TIDES_MODEL(n)
+}
+
+/// The radiation pressure model the set states.
+func (rcv *MOR) SOLAR_RAD_PRESSURE() morRadiationModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return morRadiationModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MOR) SolarRadPressure() morRadiationModel {
+	return rcv.SOLAR_RAD_PRESSURE()
+}
+
+/// The radiation pressure model the set states.
+func (rcv *MOR) MutateSOLAR_RAD_PRESSURE(n morRadiationModel) bool {
+	return rcv._tab.MutateByteSlot(82, byte(n))
+}
+
+func (rcv *MOR) MutateSolarRadPressure(n morRadiationModel) bool {
+	return rcv.MutateSOLAR_RAD_PRESSURE(n)
+}
+
+/// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+func (rcv *MOR) ECOM2_Y0() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MOR) Ecom2Y0() float64 {
+	return rcv.ECOM2_Y0()
+}
+
+/// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+func (rcv *MOR) MutateECOM2_Y0(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *MOR) MutateEcom2Y0(n float64) bool {
+	return rcv.MutateECOM2_Y0(n)
+}
+
+/// Whether the set is real or test data.
+func (rcv *MOR) MESSAGE_STATUS() morMessageStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return morMessageStatus(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *MOR) MessageStatus() morMessageStatus {
+	return rcv.MESSAGE_STATUS()
+}
+
+/// Whether the set is real or test data.
+func (rcv *MOR) MutateMESSAGE_STATUS(n morMessageStatus) bool {
+	return rcv._tab.MutateByteSlot(86, byte(n))
+}
+
+func (rcv *MOR) MutateMessageStatus(n morMessageStatus) bool {
+	return rcv.MutateMESSAGE_STATUS(n)
+}
+
+/// The object's name; absent unless a reader copies it into what it writes.
+func (rcv *MOR) OBJECT_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *MOR) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
+}
+
+/// The object's name; absent unless a reader copies it into what it writes.
+/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+/// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+func (rcv *MOR) COV_REALISM(obj *CVR) *CVR {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CVR)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *MOR) CovRealism(obj *CVR) *CVR {
+	return rcv.COV_REALISM(obj)
+}
+
+/// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+/// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
+/// Identifier of that calibration evidence (a report or record).
+func (rcv *MOR) COV_CALIBRATION_REFERENCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *MOR) RowsOnly() bool {
-	return rcv.ROWS_ONLY()
+func (rcv *MOR) CovCalibrationReference() []byte {
+	return rcv.COV_CALIBRATION_REFERENCE()
 }
 
-/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
-func (rcv *MOR) MutateROWS_ONLY(n bool) bool {
-	return rcv._tab.MutateBoolSlot(92, n)
-}
-
-func (rcv *MOR) MutateRowsOnly(n bool) bool {
-	return rcv.MutateROWS_ONLY(n)
-}
-
+/// Identifier of that calibration evidence (a report or record).
 func MORStart(builder *flatbuffers.Builder) {
 	builder.StartObject(45)
 }
@@ -1133,95 +1133,113 @@ func MORAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffs
 func MORAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	MORAddORIGINATOR(builder, ORIGINATOR)
 }
-func MORAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
-}
-func MORAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
-	MORAddOBJECT_NAME(builder, OBJECT_NAME)
-}
-func MORAddMESSAGE_STATUS(builder *flatbuffers.Builder, MESSAGE_STATUS morMessageStatus) {
-	builder.PrependByteSlot(4, byte(MESSAGE_STATUS), 0)
-}
-func MORAddMessageStatus(builder *flatbuffers.Builder, MESSAGE_STATUS morMessageStatus) {
-	MORAddMESSAGE_STATUS(builder, MESSAGE_STATUS)
-}
-func MORAddEPOCH_UNIX_US(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
-	builder.PrependInt64Slot(5, EPOCH_UNIX_US, 0)
-}
-func MORAddEpochUnixUs(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
-	MORAddEPOCH_UNIX_US(builder, EPOCH_UNIX_US)
-}
 func MORAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
-	builder.PrependInt8Slot(6, int8(MEAN_ELEMENT_THEORY), 6)
+	builder.PrependInt8Slot(3, int8(MEAN_ELEMENT_THEORY), 6)
 }
 func MORAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	MORAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
+func MORAddEPOCH_UNIX_US(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
+	builder.PrependInt64Slot(4, EPOCH_UNIX_US, 0)
+}
+func MORAddEpochUnixUs(builder *flatbuffers.Builder, EPOCH_UNIX_US int64) {
+	MORAddEPOCH_UNIX_US(builder, EPOCH_UNIX_US)
+}
+func MORAddROWS_ONLY(builder *flatbuffers.Builder, ROWS_ONLY bool) {
+	builder.PrependBoolSlot(5, ROWS_ONLY, false)
+}
+func MORAddRowsOnly(builder *flatbuffers.Builder, ROWS_ONLY bool) {
+	MORAddROWS_ONLY(builder, ROWS_ONLY)
+}
+func MORAddWINDOWS(builder *flatbuffers.Builder, WINDOWS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(WINDOWS), 0)
+}
+func MORAddWindows(builder *flatbuffers.Builder, WINDOWS flatbuffers.UOffsetT) {
+	MORAddWINDOWS(builder, WINDOWS)
+}
+func MORStartWINDOWSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(24, numElems, 8)
+}
+func MORStartWindowsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MORStartWINDOWSVector(builder, numElems)
+}
+func MORAddWINDOW_COEFF_HEADS(builder *flatbuffers.Builder, WINDOW_COEFF_HEADS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(WINDOW_COEFF_HEADS), 0)
+}
+func MORAddWindowCoeffHeads(builder *flatbuffers.Builder, WINDOW_COEFF_HEADS flatbuffers.UOffsetT) {
+	MORAddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS)
+}
+func MORStartWINDOW_COEFF_HEADSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func MORStartWindowCoeffHeadsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MORStartWINDOW_COEFF_HEADSVector(builder, numElems)
+}
+func MORAddWINDOW_COEFF_TAILS(builder *flatbuffers.Builder, WINDOW_COEFF_TAILS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(WINDOW_COEFF_TAILS), 0)
+}
+func MORAddWindowCoeffTails(builder *flatbuffers.Builder, WINDOW_COEFF_TAILS flatbuffers.UOffsetT) {
+	MORAddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS)
+}
+func MORStartWINDOW_COEFF_TAILSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func MORStartWindowCoeffTailsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MORStartWINDOW_COEFF_TAILSVector(builder, numElems)
+}
+func MORAddWINDOW_RECORD_CHECK(builder *flatbuffers.Builder, WINDOW_RECORD_CHECK uint64) {
+	builder.PrependUint64Slot(9, WINDOW_RECORD_CHECK, 0)
+}
+func MORAddWindowRecordCheck(builder *flatbuffers.Builder, WINDOW_RECORD_CHECK uint64) {
+	MORAddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK)
+}
 func MORAddMEAN_MOTION(builder *flatbuffers.Builder, MEAN_MOTION float64) {
-	builder.PrependFloat64Slot(7, MEAN_MOTION, 0.0)
+	builder.PrependFloat64Slot(10, MEAN_MOTION, 0.0)
 }
 func MORAddMeanMotion(builder *flatbuffers.Builder, MEAN_MOTION float64) {
 	MORAddMEAN_MOTION(builder, MEAN_MOTION)
 }
 func MORAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
-	builder.PrependFloat64Slot(8, ECCENTRICITY, 0.0)
+	builder.PrependFloat64Slot(11, ECCENTRICITY, 0.0)
 }
 func MORAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	MORAddECCENTRICITY(builder, ECCENTRICITY)
 }
 func MORAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
-	builder.PrependFloat64Slot(9, INCLINATION, 0.0)
+	builder.PrependFloat64Slot(12, INCLINATION, 0.0)
 }
 func MORAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
 	MORAddINCLINATION(builder, INCLINATION)
 }
 func MORAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
-	builder.PrependFloat64Slot(10, RA_OF_ASC_NODE, 0.0)
+	builder.PrependFloat64Slot(13, RA_OF_ASC_NODE, 0.0)
 }
 func MORAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	MORAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
 }
 func MORAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
-	builder.PrependFloat64Slot(11, ARG_OF_PERICENTER, 0.0)
+	builder.PrependFloat64Slot(14, ARG_OF_PERICENTER, 0.0)
 }
 func MORAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	MORAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
 }
 func MORAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
-	builder.PrependFloat64Slot(12, MEAN_ANOMALY, 0.0)
+	builder.PrependFloat64Slot(15, MEAN_ANOMALY, 0.0)
 }
 func MORAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	MORAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
 }
 func MORAddBTERM(builder *flatbuffers.Builder, BTERM float64) {
-	builder.PrependFloat64Slot(13, BTERM, 0.0)
+	builder.PrependFloat64Slot(16, BTERM, 0.0)
 }
 func MORAddBterm(builder *flatbuffers.Builder, BTERM float64) {
 	MORAddBTERM(builder, BTERM)
 }
 func MORAddAGOM(builder *flatbuffers.Builder, AGOM float64) {
-	builder.PrependFloat64Slot(14, AGOM, 0.0)
+	builder.PrependFloat64Slot(17, AGOM, 0.0)
 }
 func MORAddAgom(builder *flatbuffers.Builder, AGOM float64) {
 	MORAddAGOM(builder, AGOM)
-}
-func MORAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
-	builder.PrependFloat64Slot(15, BSTAR, 0.0)
-}
-func MORAddBstar(builder *flatbuffers.Builder, BSTAR float64) {
-	MORAddBSTAR(builder, BSTAR)
-}
-func MORAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
-	builder.PrependFloat64Slot(16, MEAN_MOTION_DOT, 0.0)
-}
-func MORAddMeanMotionDot(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
-	MORAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
-}
-func MORAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
-	builder.PrependFloat64Slot(17, MEAN_MOTION_DDOT, 0.0)
-}
-func MORAddMeanMotionDdot(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
-	MORAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
 }
 func MORAddGRAVITY_FIELD(builder *flatbuffers.Builder, GRAVITY_FIELD morGravityField) {
 	builder.PrependByteSlot(18, byte(GRAVITY_FIELD), 0)
@@ -1241,74 +1259,56 @@ func MORAddMAXIMUM_ZONAL_DEGREE(builder *flatbuffers.Builder, MAXIMUM_ZONAL_DEGR
 func MORAddMaximumZonalDegree(builder *flatbuffers.Builder, MAXIMUM_ZONAL_DEGREE byte) {
 	MORAddMAXIMUM_ZONAL_DEGREE(builder, MAXIMUM_ZONAL_DEGREE)
 }
-func MORAddSOLID_TIDES_MODEL(builder *flatbuffers.Builder, SOLID_TIDES_MODEL morSolidTideModel) {
-	builder.PrependByteSlot(21, byte(SOLID_TIDES_MODEL), 0)
-}
-func MORAddSolidTidesModel(builder *flatbuffers.Builder, SOLID_TIDES_MODEL morSolidTideModel) {
-	MORAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL)
-}
-func MORAddSOLAR_RAD_PRESSURE(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE morRadiationModel) {
-	builder.PrependByteSlot(22, byte(SOLAR_RAD_PRESSURE), 0)
-}
-func MORAddSolarRadPressure(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE morRadiationModel) {
-	MORAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
-}
 func MORAddOD_PARAMETERS(builder *flatbuffers.Builder, OD_PARAMETERS uint32) {
-	builder.PrependUint32Slot(23, OD_PARAMETERS, 0)
+	builder.PrependUint32Slot(21, OD_PARAMETERS, 0)
 }
 func MORAddOdParameters(builder *flatbuffers.Builder, OD_PARAMETERS uint32) {
 	MORAddOD_PARAMETERS(builder, OD_PARAMETERS)
 }
 func MORAddOD_SOLVED_FOR(builder *flatbuffers.Builder, OD_SOLVED_FOR uint32) {
-	builder.PrependUint32Slot(24, OD_SOLVED_FOR, 0)
+	builder.PrependUint32Slot(22, OD_SOLVED_FOR, 0)
 }
 func MORAddOdSolvedFor(builder *flatbuffers.Builder, OD_SOLVED_FOR uint32) {
 	MORAddOD_SOLVED_FOR(builder, OD_SOLVED_FOR)
 }
-func MORAddECOM2_Y0(builder *flatbuffers.Builder, ECOM2_Y0 float64) {
-	builder.PrependFloat64Slot(25, ECOM2_Y0, 0.0)
-}
-func MORAddEcom2Y0(builder *flatbuffers.Builder, ECOM2_Y0 float64) {
-	MORAddECOM2_Y0(builder, ECOM2_Y0)
-}
 func MORAddACTUAL_OD_SPAN(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
-	builder.PrependFloat64Slot(26, ACTUAL_OD_SPAN, float64(math.NaN()))
+	builder.PrependFloat64Slot(23, ACTUAL_OD_SPAN, float64(math.NaN()))
 }
 func MORAddActualOdSpan(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
 	MORAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
 }
 func MORAddOD_OBSERVATIONS_USED(builder *flatbuffers.Builder, OD_OBSERVATIONS_USED int32) {
-	builder.PrependInt32Slot(27, OD_OBSERVATIONS_USED, -1)
+	builder.PrependInt32Slot(24, OD_OBSERVATIONS_USED, -1)
 }
 func MORAddOdObservationsUsed(builder *flatbuffers.Builder, OD_OBSERVATIONS_USED int32) {
 	MORAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED)
 }
-func MORAddOD_TRACKS_USED(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
-	builder.PrependInt32Slot(28, OD_TRACKS_USED, -1)
-}
-func MORAddOdTracksUsed(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
-	MORAddOD_TRACKS_USED(builder, OD_TRACKS_USED)
-}
 func MORAddWEIGHTED_RMS(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
-	builder.PrependFloat64Slot(29, WEIGHTED_RMS, float64(math.NaN()))
+	builder.PrependFloat64Slot(25, WEIGHTED_RMS, float64(math.NaN()))
 }
 func MORAddWeightedRms(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
 	MORAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 }
 func MORAddOD_EPOCH_UNIX_US(builder *flatbuffers.Builder, OD_EPOCH_UNIX_US int64) {
-	builder.PrependInt64Slot(30, OD_EPOCH_UNIX_US, -9223372036854775808)
+	builder.PrependInt64Slot(26, OD_EPOCH_UNIX_US, -9223372036854775808)
 }
 func MORAddOdEpochUnixUs(builder *flatbuffers.Builder, OD_EPOCH_UNIX_US int64) {
 	MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US)
 }
+func MORAddOD_TRACKS_USED(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
+	builder.PrependInt32Slot(27, OD_TRACKS_USED, -1)
+}
+func MORAddOdTracksUsed(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
+	MORAddOD_TRACKS_USED(builder, OD_TRACKS_USED)
+}
 func MORAddDAYS_SINCE_LAST_OBS(builder *flatbuffers.Builder, DAYS_SINCE_LAST_OBS float64) {
-	builder.PrependFloat64Slot(31, DAYS_SINCE_LAST_OBS, float64(math.NaN()))
+	builder.PrependFloat64Slot(28, DAYS_SINCE_LAST_OBS, float64(math.NaN()))
 }
 func MORAddDaysSinceLastObs(builder *flatbuffers.Builder, DAYS_SINCE_LAST_OBS float64) {
 	MORAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS)
 }
 func MORAddCOVARIANCE_DATA(builder *flatbuffers.Builder, COVARIANCE_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(COVARIANCE_DATA), 0)
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(COVARIANCE_DATA), 0)
 }
 func MORAddCovarianceData(builder *flatbuffers.Builder, COVARIANCE_DATA flatbuffers.UOffsetT) {
 	MORAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
@@ -1320,94 +1320,94 @@ func MORStartCovarianceDataVector(builder *flatbuffers.Builder, numElems int) fl
 	return MORStartCOVARIANCE_DATAVector(builder, numElems)
 }
 func MORAddCOV_PROPAGATION(builder *flatbuffers.Builder, COV_PROPAGATION flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(33, flatbuffers.UOffsetT(COV_PROPAGATION), 0)
+	builder.PrependStructSlot(30, flatbuffers.UOffsetT(COV_PROPAGATION), 0)
 }
 func MORAddCovPropagation(builder *flatbuffers.Builder, COV_PROPAGATION flatbuffers.UOffsetT) {
 	MORAddCOV_PROPAGATION(builder, COV_PROPAGATION)
 }
 func MORAddCOV_FLOOR(builder *flatbuffers.Builder, COV_FLOOR morCovarianceFloor) {
-	builder.PrependByteSlot(34, byte(COV_FLOOR), 0)
+	builder.PrependByteSlot(31, byte(COV_FLOOR), 0)
 }
 func MORAddCovFloor(builder *flatbuffers.Builder, COV_FLOOR morCovarianceFloor) {
 	MORAddCOV_FLOOR(builder, COV_FLOOR)
 }
 func MORAddCOV_REALISM_ID(builder *flatbuffers.Builder, COV_REALISM_ID uint16) {
-	builder.PrependUint16Slot(35, COV_REALISM_ID, 0)
+	builder.PrependUint16Slot(32, COV_REALISM_ID, 0)
 }
 func MORAddCovRealismId(builder *flatbuffers.Builder, COV_REALISM_ID uint16) {
 	MORAddCOV_REALISM_ID(builder, COV_REALISM_ID)
 }
-func MORAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(COV_REALISM), 0)
-}
-func MORAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
-	MORAddCOV_REALISM(builder, COV_REALISM)
-}
 func MORAddCOV_CALIBRATION(builder *flatbuffers.Builder, COV_CALIBRATION covarianceCalibration) {
-	builder.PrependInt8Slot(37, int8(COV_CALIBRATION), 0)
+	builder.PrependInt8Slot(33, int8(COV_CALIBRATION), 0)
 }
 func MORAddCovCalibration(builder *flatbuffers.Builder, COV_CALIBRATION covarianceCalibration) {
 	MORAddCOV_CALIBRATION(builder, COV_CALIBRATION)
 }
-func MORAddCOV_CALIBRATION_REFERENCE(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(COV_CALIBRATION_REFERENCE), 0)
-}
-func MORAddCovCalibrationReference(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
-	MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
-}
-func MORAddWINDOWS(builder *flatbuffers.Builder, WINDOWS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(WINDOWS), 0)
-}
-func MORAddWindows(builder *flatbuffers.Builder, WINDOWS flatbuffers.UOffsetT) {
-	MORAddWINDOWS(builder, WINDOWS)
-}
-func MORStartWINDOWSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(24, numElems, 8)
-}
-func MORStartWindowsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return MORStartWINDOWSVector(builder, numElems)
-}
-func MORAddWINDOW_COEFF_HEADS(builder *flatbuffers.Builder, WINDOW_COEFF_HEADS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(WINDOW_COEFF_HEADS), 0)
-}
-func MORAddWindowCoeffHeads(builder *flatbuffers.Builder, WINDOW_COEFF_HEADS flatbuffers.UOffsetT) {
-	MORAddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS)
-}
-func MORStartWINDOW_COEFF_HEADSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(8, numElems, 8)
-}
-func MORStartWindowCoeffHeadsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return MORStartWINDOW_COEFF_HEADSVector(builder, numElems)
-}
-func MORAddWINDOW_COEFF_TAILS(builder *flatbuffers.Builder, WINDOW_COEFF_TAILS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(WINDOW_COEFF_TAILS), 0)
-}
-func MORAddWindowCoeffTails(builder *flatbuffers.Builder, WINDOW_COEFF_TAILS flatbuffers.UOffsetT) {
-	MORAddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS)
-}
-func MORStartWINDOW_COEFF_TAILSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func MORStartWindowCoeffTailsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return MORStartWINDOW_COEFF_TAILSVector(builder, numElems)
-}
-func MORAddWINDOW_RECORD_CHECK(builder *flatbuffers.Builder, WINDOW_RECORD_CHECK uint64) {
-	builder.PrependUint64Slot(42, WINDOW_RECORD_CHECK, 0)
-}
-func MORAddWindowRecordCheck(builder *flatbuffers.Builder, WINDOW_RECORD_CHECK uint64) {
-	MORAddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK)
-}
 func MORAddFALLBACK(builder *flatbuffers.Builder, FALLBACK flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(FALLBACK), 0)
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(FALLBACK), 0)
 }
 func MORAddFallback(builder *flatbuffers.Builder, FALLBACK flatbuffers.UOffsetT) {
 	MORAddFALLBACK(builder, FALLBACK)
 }
-func MORAddROWS_ONLY(builder *flatbuffers.Builder, ROWS_ONLY bool) {
-	builder.PrependBoolSlot(44, ROWS_ONLY, false)
+func MORAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
+	builder.PrependFloat64Slot(35, BSTAR, 0.0)
 }
-func MORAddRowsOnly(builder *flatbuffers.Builder, ROWS_ONLY bool) {
-	MORAddROWS_ONLY(builder, ROWS_ONLY)
+func MORAddBstar(builder *flatbuffers.Builder, BSTAR float64) {
+	MORAddBSTAR(builder, BSTAR)
+}
+func MORAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
+	builder.PrependFloat64Slot(36, MEAN_MOTION_DOT, 0.0)
+}
+func MORAddMeanMotionDot(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
+	MORAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
+}
+func MORAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
+	builder.PrependFloat64Slot(37, MEAN_MOTION_DDOT, 0.0)
+}
+func MORAddMeanMotionDdot(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
+	MORAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
+}
+func MORAddSOLID_TIDES_MODEL(builder *flatbuffers.Builder, SOLID_TIDES_MODEL morSolidTideModel) {
+	builder.PrependByteSlot(38, byte(SOLID_TIDES_MODEL), 0)
+}
+func MORAddSolidTidesModel(builder *flatbuffers.Builder, SOLID_TIDES_MODEL morSolidTideModel) {
+	MORAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL)
+}
+func MORAddSOLAR_RAD_PRESSURE(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE morRadiationModel) {
+	builder.PrependByteSlot(39, byte(SOLAR_RAD_PRESSURE), 0)
+}
+func MORAddSolarRadPressure(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE morRadiationModel) {
+	MORAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+}
+func MORAddECOM2_Y0(builder *flatbuffers.Builder, ECOM2_Y0 float64) {
+	builder.PrependFloat64Slot(40, ECOM2_Y0, 0.0)
+}
+func MORAddEcom2Y0(builder *flatbuffers.Builder, ECOM2_Y0 float64) {
+	MORAddECOM2_Y0(builder, ECOM2_Y0)
+}
+func MORAddMESSAGE_STATUS(builder *flatbuffers.Builder, MESSAGE_STATUS morMessageStatus) {
+	builder.PrependByteSlot(41, byte(MESSAGE_STATUS), 0)
+}
+func MORAddMessageStatus(builder *flatbuffers.Builder, MESSAGE_STATUS morMessageStatus) {
+	MORAddMESSAGE_STATUS(builder, MESSAGE_STATUS)
+}
+func MORAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func MORAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	MORAddOBJECT_NAME(builder, OBJECT_NAME)
+}
+func MORAddCOV_REALISM(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(COV_REALISM), 0)
+}
+func MORAddCovRealism(builder *flatbuffers.Builder, COV_REALISM flatbuffers.UOffsetT) {
+	MORAddCOV_REALISM(builder, COV_REALISM)
+}
+func MORAddCOV_CALIBRATION_REFERENCE(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(COV_CALIBRATION_REFERENCE), 0)
+}
+func MORAddCovCalibrationReference(builder *flatbuffers.Builder, COV_CALIBRATION_REFERENCE flatbuffers.UOffsetT) {
+	MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
 }
 func MOREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
