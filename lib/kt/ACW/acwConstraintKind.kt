@@ -39,7 +39,8 @@ class acwConstraintKind private constructor() {
         const val TARGET_LIGHTING: Byte = 7
         /**
          * Straight-line visibility between observer and target not occulted by the
-         * central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+         * central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+         * ACWRequest.OCCULTING_BODIES entry.
          */
         const val LINE_OF_SIGHT: Byte = 8
         /**

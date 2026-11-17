@@ -82,7 +82,8 @@ public enum acwConstraintKind: Int8, FlatbuffersVectorInitializable, Enum, Verif
   ///  Target illumination state matches LIGHTING.
   case targetLighting = 7
   ///  Straight-line visibility between observer and target not occulted by the
-  ///  central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  ///  central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+  ///  ACWRequest.OCCULTING_BODIES entry.
   case lineOfSight = 8
   ///  Outside every observer blackout window.
   case blackout = 9
@@ -236,6 +237,143 @@ public struct ACWStateSample: FlatBufferVerifiableTable, FlatbuffersVectorInitia
     try _v.visit(field: VT.VELOCITY_X_MPS, fieldName: "VELOCITY_X_MPS", required: false, type: Double.self)
     try _v.visit(field: VT.VELOCITY_Y_MPS, fieldName: "VELOCITY_Y_MPS", required: false, type: Double.self)
     try _v.visit(field: VT.VELOCITY_Z_MPS, fieldName: "VELOCITY_Z_MPS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Body-fixed to STATES-frame rotation at one epoch.
+public struct ACWOrientationSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACWOrientationSample.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let JULIAN_DATE_TT: VOffset = 4
+    static let Q1: VOffset = 6
+    static let Q2: VOffset = 8
+    static let Q3: VOffset = 10
+    static let QC: VOffset = 12
+  }
+
+  ///  Sample epoch as Julian Date in TT.
+  public var JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion rotating body-fixed axes into the STATES frame
+  ///  (Earth-fixed); vector part Q1..Q3, scalar QC.
+  public var Q1: Double { let o = _accessor.offset(VT.Q1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Q2: Double { let o = _accessor.offset(VT.Q2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Q3: Double { let o = _accessor.offset(VT.Q3); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var QC: Double { let o = _accessor.offset(VT.QC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startACWOrientationSample(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE_TT, def: 0.0, at: VT.JULIAN_DATE_TT) }
+  public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VT.Q1) }
+  public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VT.Q2) }
+  public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VT.Q3) }
+  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VT.QC) }
+  public static func endACWOrientationSample(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACWOrientationSample(
+    _ fbb: inout FlatBufferBuilder,
+    JULIAN_DATE_TT: Double = 0.0,
+    Q1: Double = 0.0,
+    Q2: Double = 0.0,
+    Q3: Double = 0.0,
+    QC: Double = 0.0
+  ) -> Offset {
+    let __start = ACWOrientationSample.startACWOrientationSample(&fbb)
+    ACWOrientationSample.add(JULIAN_DATE_TT: JULIAN_DATE_TT, &fbb)
+    ACWOrientationSample.add(Q1: Q1, &fbb)
+    ACWOrientationSample.add(Q2: Q2, &fbb)
+    ACWOrientationSample.add(Q3: Q3, &fbb)
+    ACWOrientationSample.add(QC: QC, &fbb)
+    return ACWOrientationSample.endACWOrientationSample(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.JULIAN_DATE_TT, fieldName: "JULIAN_DATE_TT", required: false, type: Double.self)
+    try _v.visit(field: VT.Q1, fieldName: "Q1", required: false, type: Double.self)
+    try _v.visit(field: VT.Q2, fieldName: "Q2", required: false, type: Double.self)
+    try _v.visit(field: VT.Q3, fieldName: "Q3", required: false, type: Double.self)
+    try _v.visit(field: VT.QC, fieldName: "QC", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  A body other than the central body that may block a line of sight.
+public struct ACWOccultingBody: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$ACW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ACWOccultingBody.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let BODY_NAIF_ID: VOffset = 4
+    static let SEMI_MAJOR_M: VOffset = 6
+    static let SEMI_INTERMEDIATE_M: VOffset = 8
+    static let SEMI_MINOR_M: VOffset = 10
+    static let STATES: VOffset = 12
+    static let ORIENTATION: VOffset = 14
+  }
+
+  ///  NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+  ///  body (399) are invalid here.
+  public var BODY_NAIF_ID: Int32 { let o = _accessor.offset(VT.BODY_NAIF_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Radii along the body-fixed x, y, z axes, meters. All > 0.
+  public var SEMI_MAJOR_M: Double { let o = _accessor.offset(VT.SEMI_MAJOR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_INTERMEDIATE_M: Double { let o = _accessor.offset(VT.SEMI_INTERMEDIATE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SEMI_MINOR_M: Double { let o = _accessor.offset(VT.SEMI_MINOR_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Body-center states in the STATES frame and time scale, interpolated
+  ///  to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+  ///  or MOON_STATES; required for every other body.
+  public var STATES: FlatbufferVector<ACWStateSample> { return _accessor.vector(at: VT.STATES, byteSize: 4) }
+  ///  Orientation samples, interpolated to sample epochs. Absent only when
+  ///  the three radii are equal (a sphere).
+  public var ORIENTATION: FlatbufferVector<ACWOrientationSample> { return _accessor.vector(at: VT.ORIENTATION, byteSize: 4) }
+  public static func startACWOccultingBody(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(BODY_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_NAIF_ID, def: 0, at: VT.BODY_NAIF_ID) }
+  public static func add(SEMI_MAJOR_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_M, def: 0.0, at: VT.SEMI_MAJOR_M) }
+  public static func add(SEMI_INTERMEDIATE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_INTERMEDIATE_M, def: 0.0, at: VT.SEMI_INTERMEDIATE_M) }
+  public static func add(SEMI_MINOR_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MINOR_M, def: 0.0, at: VT.SEMI_MINOR_M) }
+  public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
+  public static func addVectorOf(ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIENTATION, at: VT.ORIENTATION) }
+  public static func endACWOccultingBody(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createACWOccultingBody(
+    _ fbb: inout FlatBufferBuilder,
+    BODY_NAIF_ID: Int32 = 0,
+    SEMI_MAJOR_M: Double = 0.0,
+    SEMI_INTERMEDIATE_M: Double = 0.0,
+    SEMI_MINOR_M: Double = 0.0,
+    STATESVectorOffset STATES: Offset = Offset(),
+    ORIENTATIONVectorOffset ORIENTATION: Offset = Offset()
+  ) -> Offset {
+    let __start = ACWOccultingBody.startACWOccultingBody(&fbb)
+    ACWOccultingBody.add(BODY_NAIF_ID: BODY_NAIF_ID, &fbb)
+    ACWOccultingBody.add(SEMI_MAJOR_M: SEMI_MAJOR_M, &fbb)
+    ACWOccultingBody.add(SEMI_INTERMEDIATE_M: SEMI_INTERMEDIATE_M, &fbb)
+    ACWOccultingBody.add(SEMI_MINOR_M: SEMI_MINOR_M, &fbb)
+    ACWOccultingBody.addVectorOf(STATES: STATES, &fbb)
+    ACWOccultingBody.addVectorOf(ORIENTATION: ORIENTATION, &fbb)
+    return ACWOccultingBody.endACWOccultingBody(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.BODY_NAIF_ID, fieldName: "BODY_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.SEMI_MAJOR_M, fieldName: "SEMI_MAJOR_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_INTERMEDIATE_M, fieldName: "SEMI_INTERMEDIATE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MINOR_M, fieldName: "SEMI_MINOR_M", required: false, type: Double.self)
+    try _v.visit(field: VT.STATES, fieldName: "STATES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWStateSample>, ACWStateSample>>.self)
+    try _v.visit(field: VT.ORIENTATION, fieldName: "ORIENTATION", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWOrientationSample>, ACWOrientationSample>>.self)
     _v.finish()
   }
 }
@@ -1128,6 +1266,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let RANDOM_SEED: VOffset = 40
     static let START_JULIAN_DATE_TT: VOffset = 42
     static let END_JULIAN_DATE_TT: VOffset = 44
+    static let OCCULTING_BODIES: VOffset = 46
   }
 
   public var OPERATION: acwOperationCode { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .unknown : acwOperationCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
@@ -1181,7 +1320,10 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   ///  states.
   public var START_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.START_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var END_JULIAN_DATE_TT: Double { let o = _accessor.offset(VT.END_JULIAN_DATE_TT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  ///  tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  public var OCCULTING_BODIES: FlatbufferVector<ACWOccultingBody> { return _accessor.vector(at: VT.OCCULTING_BODIES, byteSize: 4) }
+  public static func startACWRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
   public static func add(OPERATION: acwOperationCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
   public static func addVectorOf(GROUND_STATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUND_STATIONS, at: VT.GROUND_STATIONS) }
   public static func addVectorOf(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
@@ -1203,6 +1345,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(RANDOM_SEED: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANDOM_SEED, def: 0, at: VT.RANDOM_SEED) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
+  public static func addVectorOf(OCCULTING_BODIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTING_BODIES, at: VT.OCCULTING_BODIES) }
   public static func endACWRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -1226,7 +1369,8 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     EARTH_ORIENTATIONVectorOffset EARTH_ORIENTATION: Offset = Offset(),
     RANDOM_SEED: UInt64 = 0,
     START_JULIAN_DATE_TT: Double = 0.0,
-    END_JULIAN_DATE_TT: Double = 0.0
+    END_JULIAN_DATE_TT: Double = 0.0,
+    OCCULTING_BODIESVectorOffset OCCULTING_BODIES: Offset = Offset()
   ) -> Offset {
     let __start = ACWRequest.startACWRequest(&fbb)
     ACWRequest.add(OPERATION: OPERATION, &fbb)
@@ -1250,6 +1394,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     ACWRequest.add(RANDOM_SEED: RANDOM_SEED, &fbb)
     ACWRequest.add(START_JULIAN_DATE_TT: START_JULIAN_DATE_TT, &fbb)
     ACWRequest.add(END_JULIAN_DATE_TT: END_JULIAN_DATE_TT, &fbb)
+    ACWRequest.addVectorOf(OCCULTING_BODIES: OCCULTING_BODIES, &fbb)
     return ACWRequest.endACWRequest(&fbb, start: __start)
   }
 
@@ -1276,6 +1421,7 @@ public struct ACWRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.RANDOM_SEED, fieldName: "RANDOM_SEED", required: false, type: UInt64.self)
     try _v.visit(field: VT.START_JULIAN_DATE_TT, fieldName: "START_JULIAN_DATE_TT", required: false, type: Double.self)
     try _v.visit(field: VT.END_JULIAN_DATE_TT, fieldName: "END_JULIAN_DATE_TT", required: false, type: Double.self)
+    try _v.visit(field: VT.OCCULTING_BODIES, fieldName: "OCCULTING_BODIES", required: false, type: ForwardOffset<Vector<ForwardOffset<ACWOccultingBody>, ACWOccultingBody>>.self)
     _v.finish()
   }
 }
@@ -1306,6 +1452,8 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     static let MIN_RANGE_M: VOffset = 24
     static let MAX_RANGE_M: VOffset = 26
     static let EDGES_REFINED: VOffset = 28
+    static let START_OCCULTING_BODY_ID: VOffset = 30
+    static let END_OCCULTING_BODY_ID: VOffset = 32
   }
 
   public var STATION_ID: String? { let o = _accessor.offset(VT.STATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -1339,7 +1487,12 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True when edges were root-refined (CONTINUOUS); false when they are samples.
   public var EDGES_REFINED: Bool { let o = _accessor.offset(VT.EDGES_REFINED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  NAIF code of the body whose occultation opens the window (399 for the
+  ///  central body); 0 when the opening edge is not an occultation.
+  public var START_OCCULTING_BODY_ID: Int32 { let o = _accessor.offset(VT.START_OCCULTING_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Same, for the closing edge.
+  public var END_OCCULTING_BODY_ID: Int32 { let o = _accessor.offset(VT.END_OCCULTING_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public static func startACWAccessWindow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(STATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_ID, at: VT.STATION_ID) }
   public static func add(START_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_JULIAN_DATE_TT, def: 0.0, at: VT.START_JULIAN_DATE_TT) }
   public static func add(END_JULIAN_DATE_TT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_JULIAN_DATE_TT, def: 0.0, at: VT.END_JULIAN_DATE_TT) }
@@ -1354,6 +1507,8 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
   public static func add(EDGES_REFINED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDGES_REFINED, def: false,
    at: VT.EDGES_REFINED) }
+  public static func add(START_OCCULTING_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: START_OCCULTING_BODY_ID, def: 0, at: VT.START_OCCULTING_BODY_ID) }
+  public static func add(END_OCCULTING_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_OCCULTING_BODY_ID, def: 0, at: VT.END_OCCULTING_BODY_ID) }
   public static func endACWAccessWindow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createACWAccessWindow(
     _ fbb: inout FlatBufferBuilder,
@@ -1369,7 +1524,9 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     END_LIMITING_CONSTRAINT_LABELOffset END_LIMITING_CONSTRAINT_LABEL: Offset = Offset(),
     MIN_RANGE_M: Double = 0.0,
     MAX_RANGE_M: Double = 0.0,
-    EDGES_REFINED: Bool = false
+    EDGES_REFINED: Bool = false,
+    START_OCCULTING_BODY_ID: Int32 = 0,
+    END_OCCULTING_BODY_ID: Int32 = 0
   ) -> Offset {
     let __start = ACWAccessWindow.startACWAccessWindow(&fbb)
     ACWAccessWindow.add(STATION_ID: STATION_ID, &fbb)
@@ -1385,6 +1542,8 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     ACWAccessWindow.add(MIN_RANGE_M: MIN_RANGE_M, &fbb)
     ACWAccessWindow.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
     ACWAccessWindow.add(EDGES_REFINED: EDGES_REFINED, &fbb)
+    ACWAccessWindow.add(START_OCCULTING_BODY_ID: START_OCCULTING_BODY_ID, &fbb)
+    ACWAccessWindow.add(END_OCCULTING_BODY_ID: END_OCCULTING_BODY_ID, &fbb)
     return ACWAccessWindow.endACWAccessWindow(&fbb, start: __start)
   }
 
@@ -1403,6 +1562,8 @@ public struct ACWAccessWindow: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     try _v.visit(field: VT.MIN_RANGE_M, fieldName: "MIN_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.EDGES_REFINED, fieldName: "EDGES_REFINED", required: false, type: Bool.self)
+    try _v.visit(field: VT.START_OCCULTING_BODY_ID, fieldName: "START_OCCULTING_BODY_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.END_OCCULTING_BODY_ID, fieldName: "END_OCCULTING_BODY_ID", required: false, type: Int32.self)
     _v.finish()
   }
 }

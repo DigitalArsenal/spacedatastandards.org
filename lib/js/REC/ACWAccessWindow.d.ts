@@ -59,6 +59,15 @@ export declare class ACWAccessWindow implements flatbuffers.IUnpackableObject<AC
      * True when edges were root-refined (CONTINUOUS); false when they are samples.
      */
     EDGES_REFINED(): boolean;
+    /**
+     * NAIF code of the body whose occultation opens the window (399 for the
+     * central body); 0 when the opening edge is not an occultation.
+     */
+    START_OCCULTING_BODY_ID(): number;
+    /**
+     * Same, for the closing edge.
+     */
+    END_OCCULTING_BODY_ID(): number;
     static startACWAccessWindow(builder: flatbuffers.Builder): void;
     static addStationId(builder: flatbuffers.Builder, STATION_IDOffset: flatbuffers.Offset): void;
     static addStartJulianDateTt(builder: flatbuffers.Builder, START_JULIAN_DATE_TT: number): void;
@@ -73,8 +82,10 @@ export declare class ACWAccessWindow implements flatbuffers.IUnpackableObject<AC
     static addMinRangeM(builder: flatbuffers.Builder, MIN_RANGE_M: number): void;
     static addMaxRangeM(builder: flatbuffers.Builder, MAX_RANGE_M: number): void;
     static addEdgesRefined(builder: flatbuffers.Builder, EDGES_REFINED: boolean): void;
+    static addStartOccultingBodyId(builder: flatbuffers.Builder, START_OCCULTING_BODY_ID: number): void;
+    static addEndOccultingBodyId(builder: flatbuffers.Builder, END_OCCULTING_BODY_ID: number): void;
     static endACWAccessWindow(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createACWAccessWindow(builder: flatbuffers.Builder, STATION_IDOffset: flatbuffers.Offset, START_JULIAN_DATE_TT: number, END_JULIAN_DATE_TT: number, MAX_ELEVATION_RAD: number, SAMPLE_COUNT: number, OBSERVER_IDOffset: flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX: number, END_LIMITING_CONSTRAINT_INDEX: number, START_LIMITING_CONSTRAINT_LABELOffset: flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset: flatbuffers.Offset, MIN_RANGE_M: number, MAX_RANGE_M: number, EDGES_REFINED: boolean): flatbuffers.Offset;
+    static createACWAccessWindow(builder: flatbuffers.Builder, STATION_IDOffset: flatbuffers.Offset, START_JULIAN_DATE_TT: number, END_JULIAN_DATE_TT: number, MAX_ELEVATION_RAD: number, SAMPLE_COUNT: number, OBSERVER_IDOffset: flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX: number, END_LIMITING_CONSTRAINT_INDEX: number, START_LIMITING_CONSTRAINT_LABELOffset: flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset: flatbuffers.Offset, MIN_RANGE_M: number, MAX_RANGE_M: number, EDGES_REFINED: boolean, START_OCCULTING_BODY_ID: number, END_OCCULTING_BODY_ID: number): flatbuffers.Offset;
     unpack(): ACWAccessWindowT;
     unpackTo(_o: ACWAccessWindowT): void;
 }
@@ -92,7 +103,9 @@ export declare class ACWAccessWindowT implements flatbuffers.IGeneratedObject {
     MIN_RANGE_M: number;
     MAX_RANGE_M: number;
     EDGES_REFINED: boolean;
-    constructor(STATION_ID?: string | Uint8Array | null, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, MAX_ELEVATION_RAD?: number, SAMPLE_COUNT?: number, OBSERVER_ID?: string | Uint8Array | null, START_LIMITING_CONSTRAINT_INDEX?: number, END_LIMITING_CONSTRAINT_INDEX?: number, START_LIMITING_CONSTRAINT_LABEL?: string | Uint8Array | null, END_LIMITING_CONSTRAINT_LABEL?: string | Uint8Array | null, MIN_RANGE_M?: number, MAX_RANGE_M?: number, EDGES_REFINED?: boolean);
+    START_OCCULTING_BODY_ID: number;
+    END_OCCULTING_BODY_ID: number;
+    constructor(STATION_ID?: string | Uint8Array | null, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, MAX_ELEVATION_RAD?: number, SAMPLE_COUNT?: number, OBSERVER_ID?: string | Uint8Array | null, START_LIMITING_CONSTRAINT_INDEX?: number, END_LIMITING_CONSTRAINT_INDEX?: number, START_LIMITING_CONSTRAINT_LABEL?: string | Uint8Array | null, END_LIMITING_CONSTRAINT_LABEL?: string | Uint8Array | null, MIN_RANGE_M?: number, MAX_RANGE_M?: number, EDGES_REFINED?: boolean, START_OCCULTING_BODY_ID?: number, END_OCCULTING_BODY_ID?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWAccessWindow.d.ts.map

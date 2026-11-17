@@ -298,8 +298,54 @@ func (rcv *ACWAccessWindow) MutateEdgesRefined(n bool) bool {
 	return rcv.MutateEDGES_REFINED(n)
 }
 
+/// NAIF code of the body whose occultation opens the window (399 for the
+/// central body); 0 when the opening edge is not an occultation.
+func (rcv *ACWAccessWindow) START_OCCULTING_BODY_ID() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACWAccessWindow) StartOccultingBodyId() int32 {
+	return rcv.START_OCCULTING_BODY_ID()
+}
+
+/// NAIF code of the body whose occultation opens the window (399 for the
+/// central body); 0 when the opening edge is not an occultation.
+func (rcv *ACWAccessWindow) MutateSTART_OCCULTING_BODY_ID(n int32) bool {
+	return rcv._tab.MutateInt32Slot(30, n)
+}
+
+func (rcv *ACWAccessWindow) MutateStartOccultingBodyId(n int32) bool {
+	return rcv.MutateSTART_OCCULTING_BODY_ID(n)
+}
+
+/// Same, for the closing edge.
+func (rcv *ACWAccessWindow) END_OCCULTING_BODY_ID() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACWAccessWindow) EndOccultingBodyId() int32 {
+	return rcv.END_OCCULTING_BODY_ID()
+}
+
+/// Same, for the closing edge.
+func (rcv *ACWAccessWindow) MutateEND_OCCULTING_BODY_ID(n int32) bool {
+	return rcv._tab.MutateInt32Slot(32, n)
+}
+
+func (rcv *ACWAccessWindow) MutateEndOccultingBodyId(n int32) bool {
+	return rcv.MutateEND_OCCULTING_BODY_ID(n)
+}
+
 func ACWAccessWindowStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(15)
 }
 func ACWAccessWindowAddSTATION_ID(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATION_ID), 0)
@@ -378,6 +424,18 @@ func ACWAccessWindowAddEDGES_REFINED(builder *flatbuffers.Builder, EDGES_REFINED
 }
 func ACWAccessWindowAddEdgesRefined(builder *flatbuffers.Builder, EDGES_REFINED bool) {
 	ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED)
+}
+func ACWAccessWindowAddSTART_OCCULTING_BODY_ID(builder *flatbuffers.Builder, START_OCCULTING_BODY_ID int32) {
+	builder.PrependInt32Slot(13, START_OCCULTING_BODY_ID, 0)
+}
+func ACWAccessWindowAddStartOccultingBodyId(builder *flatbuffers.Builder, START_OCCULTING_BODY_ID int32) {
+	ACWAccessWindowAddSTART_OCCULTING_BODY_ID(builder, START_OCCULTING_BODY_ID)
+}
+func ACWAccessWindowAddEND_OCCULTING_BODY_ID(builder *flatbuffers.Builder, END_OCCULTING_BODY_ID int32) {
+	builder.PrependInt32Slot(14, END_OCCULTING_BODY_ID, 0)
+}
+func ACWAccessWindowAddEndOccultingBodyId(builder *flatbuffers.Builder, END_OCCULTING_BODY_ID int32) {
+	ACWAccessWindowAddEND_OCCULTING_BODY_ID(builder, END_OCCULTING_BODY_ID)
 }
 func ACWAccessWindowEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

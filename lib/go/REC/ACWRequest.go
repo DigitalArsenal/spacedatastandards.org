@@ -606,8 +606,43 @@ func (rcv *ACWRequest) MutateEndJulianDateTt(n float64) bool {
 	return rcv.MutateEND_JULIAN_DATE_TT(n)
 }
 
+/// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+/// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+func (rcv *ACWRequest) OCCULTING_BODIES(obj *ACWOccultingBody, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ACWOccultingBody)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ACWRequest) OccultingBodies(obj *ACWOccultingBody, j int) bool {
+	return rcv.OCCULTING_BODIES(obj, j)
+}
+
+func (rcv *ACWRequest) OCCULTING_BODIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *ACWRequest) OccultingBodiesLength() int {
+	return rcv.OCCULTING_BODIESLength()
+}
+
+/// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+/// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
 func ACWRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(22)
 }
 func ACWRequestAddOPERATION(builder *flatbuffers.Builder, OPERATION acwOperationCode) {
 	builder.PrependInt8Slot(0, int8(OPERATION), 0)
@@ -794,6 +829,18 @@ func ACWRequestAddEND_JULIAN_DATE_TT(builder *flatbuffers.Builder, END_JULIAN_DA
 }
 func ACWRequestAddEndJulianDateTt(builder *flatbuffers.Builder, END_JULIAN_DATE_TT float64) {
 	ACWRequestAddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT)
+}
+func ACWRequestAddOCCULTING_BODIES(builder *flatbuffers.Builder, OCCULTING_BODIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(OCCULTING_BODIES), 0)
+}
+func ACWRequestAddOccultingBodies(builder *flatbuffers.Builder, OCCULTING_BODIES flatbuffers.UOffsetT) {
+	ACWRequestAddOCCULTING_BODIES(builder, OCCULTING_BODIES)
+}
+func ACWRequestStartOCCULTING_BODIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ACWRequestStartOccultingBodiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACWRequestStartOCCULTING_BODIESVector(builder, numElems)
 }
 func ACWRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

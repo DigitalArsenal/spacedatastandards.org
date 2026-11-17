@@ -3,6 +3,7 @@ import { ACWConstraintSet, ACWConstraintSetT } from './ACWConstraintSet.js';
 import { ACWElevationMaskPoint, ACWElevationMaskPointT } from './ACWElevationMaskPoint.js';
 import { ACWGroundStation, ACWGroundStationT } from './ACWGroundStation.js';
 import { ACWObserverTrajectory, ACWObserverTrajectoryT } from './ACWObserverTrajectory.js';
+import { ACWOccultingBody, ACWOccultingBodyT } from './ACWOccultingBody.js';
 import { ACWRefractionModel, ACWRefractionModelT } from './ACWRefractionModel.js';
 import { ACWSensor, ACWSensorT } from './ACWSensor.js';
 import { ACWSensorAccess, ACWSensorAccessT } from './ACWSensorAccess.js';
@@ -119,6 +120,12 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
      */
     START_JULIAN_DATE_TT(): number;
     END_JULIAN_DATE_TT(): number;
+    /**
+     * Bodies besides the central body that a LINE_OF_SIGHT constraint also
+     * tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+     */
+    OCCULTING_BODIES(index: number, obj?: ACWOccultingBody): ACWOccultingBody | null;
+    occultingBodiesLength(): number;
     static startACWRequest(builder: flatbuffers.Builder): void;
     static addOperation(builder: flatbuffers.Builder, OPERATION: acwOperationCode): void;
     static addGroundStations(builder: flatbuffers.Builder, GROUND_STATIONSOffset: flatbuffers.Offset): void;
@@ -161,6 +168,9 @@ export declare class ACWRequest implements flatbuffers.IUnpackableObject<ACWRequ
     static addRandomSeed(builder: flatbuffers.Builder, RANDOM_SEED: bigint): void;
     static addStartJulianDateTt(builder: flatbuffers.Builder, START_JULIAN_DATE_TT: number): void;
     static addEndJulianDateTt(builder: flatbuffers.Builder, END_JULIAN_DATE_TT: number): void;
+    static addOccultingBodies(builder: flatbuffers.Builder, OCCULTING_BODIESOffset: flatbuffers.Offset): void;
+    static createOccultingBodiesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startOccultingBodiesVector(builder: flatbuffers.Builder, numElems: number): void;
     static endACWRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ACWRequestT;
     unpackTo(_o: ACWRequestT): void;
@@ -187,7 +197,8 @@ export declare class ACWRequestT implements flatbuffers.IGeneratedObject {
     RANDOM_SEED: bigint;
     START_JULIAN_DATE_TT: number;
     END_JULIAN_DATE_TT: number;
-    constructor(OPERATION?: acwOperationCode, GROUND_STATIONS?: (ACWGroundStationT)[], STATES?: (ACWStateSampleT)[], TARGET_STATION_ID?: string | Uint8Array | null, MIN_ELEVATION_OVERRIDE_RAD?: number, TRACE_ID?: string | Uint8Array | null, ELEVATION_MASK?: (ACWElevationMaskPointT)[], REFRACTION_MODEL?: ACWRefractionModelT | null, CONSTRAINTS?: ACWConstraintSetT | null, OBSERVERS?: (ACWObserverTrajectoryT)[], EVALUATION_MODE?: acwEvaluationMode, ROOT_TOLERANCE_S?: number, SUN_STATES?: (ACWStateSampleT)[], MOON_STATES?: (ACWStateSampleT)[], TARGETS?: (ACWTargetT)[], SENSORS?: (ACWSensorT)[], ACCESS?: (ACWSensorAccessT)[], EARTH_ORIENTATION?: (EOPT)[], RANDOM_SEED?: bigint, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number);
+    OCCULTING_BODIES: (ACWOccultingBodyT)[];
+    constructor(OPERATION?: acwOperationCode, GROUND_STATIONS?: (ACWGroundStationT)[], STATES?: (ACWStateSampleT)[], TARGET_STATION_ID?: string | Uint8Array | null, MIN_ELEVATION_OVERRIDE_RAD?: number, TRACE_ID?: string | Uint8Array | null, ELEVATION_MASK?: (ACWElevationMaskPointT)[], REFRACTION_MODEL?: ACWRefractionModelT | null, CONSTRAINTS?: ACWConstraintSetT | null, OBSERVERS?: (ACWObserverTrajectoryT)[], EVALUATION_MODE?: acwEvaluationMode, ROOT_TOLERANCE_S?: number, SUN_STATES?: (ACWStateSampleT)[], MOON_STATES?: (ACWStateSampleT)[], TARGETS?: (ACWTargetT)[], SENSORS?: (ACWSensorT)[], ACCESS?: (ACWSensorAccessT)[], EARTH_ORIENTATION?: (EOPT)[], RANDOM_SEED?: bigint, START_JULIAN_DATE_TT?: number, END_JULIAN_DATE_TT?: number, OCCULTING_BODIES?: (ACWOccultingBodyT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ACWRequest.d.ts.map

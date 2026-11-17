@@ -300,6 +300,23 @@ class ACWRequest : Table() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Bodies besides the central body that a LINE_OF_SIGHT constraint also
+     * tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+     */
+    fun occultingBodies(j: Int) : ACWOccultingBody? = occultingBodies(ACWOccultingBody(), j)
+    fun occultingBodies(obj: ACWOccultingBody, j: Int) : ACWOccultingBody? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val occultingBodiesLength : Int
+        get() {
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWRequest(_bb: ByteBuffer): ACWRequest = getRootAsACWRequest(_bb, ACWRequest())
@@ -307,13 +324,14 @@ class ACWRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int, targetsOffset: Int, sensorsOffset: Int, accessOffset: Int, earthOrientationOffset: Int, randomSeed: ULong, startJulianDateTt: Double, endJulianDateTt: Double) : Int {
-            builder.startTable(21)
+        fun createACWRequest(builder: FlatBufferBuilder, operation: Byte, groundStationsOffset: Int, statesOffset: Int, targetStationIdOffset: Int, minElevationOverrideRad: Double, traceIdOffset: Int, elevationMaskOffset: Int, refractionModelOffset: Int, constraintsOffset: Int, observersOffset: Int, evaluationMode: Byte, rootToleranceS: Double, sunStatesOffset: Int, moonStatesOffset: Int, targetsOffset: Int, sensorsOffset: Int, accessOffset: Int, earthOrientationOffset: Int, randomSeed: ULong, startJulianDateTt: Double, endJulianDateTt: Double, occultingBodiesOffset: Int) : Int {
+            builder.startTable(22)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
             addRANDOMSEED(builder, randomSeed)
             addROOTTOLERANCES(builder, rootToleranceS)
             addMINELEVATIONOVERRIDERAD(builder, minElevationOverrideRad)
+            addOCCULTINGBODIES(builder, occultingBodiesOffset)
             addEARTHORIENTATION(builder, earthOrientationOffset)
             addACCESS(builder, accessOffset)
             addSENSORS(builder, sensorsOffset)
@@ -332,7 +350,7 @@ class ACWRequest : Table() {
             addOPERATION(builder, operation)
             return endACWRequest(builder)
         }
-        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startACWRequest(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addOPERATION(builder: FlatBufferBuilder, operation: Byte) = builder.addByte(0, operation, 0)
         fun addGROUNDSTATIONS(builder: FlatBufferBuilder, groundStations: Int) = builder.addOffset(1, groundStations, 0)
         fun createGroundStationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -434,6 +452,15 @@ class ACWRequest : Table() {
         fun addRANDOMSEED(builder: FlatBufferBuilder, randomSeed: ULong) = builder.addLong(18, randomSeed.toLong(), 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(19, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(20, endJulianDateTt, 0.0)
+        fun addOCCULTINGBODIES(builder: FlatBufferBuilder, occultingBodies: Int) = builder.addOffset(21, occultingBodies, 0)
+        fun createOccultingBodiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startOccultingBodiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endACWRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -160,6 +160,15 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
    */
   public double START_JULIAN_DATE_TT() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double END_JULIAN_DATE_TT() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Bodies besides the central body that a LINE_OF_SIGHT constraint also
+   * tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+   */
+  public ACWOccultingBody OCCULTING_BODIES(int j) { return OCCULTING_BODIES(new ACWOccultingBody(), j); }
+  public ACWOccultingBody OCCULTING_BODIES(ACWOccultingBody obj, int j) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int OCCULTING_BODIESLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public ACWOccultingBody.Vector occultingBodiesVector() { return occultingBodiesVector(new ACWOccultingBody.Vector()); }
+  public ACWOccultingBody.Vector occultingBodiesVector(ACWOccultingBody.Vector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createACWRequest(FlatBufferBuilder builder,
       byte OPERATION,
@@ -182,13 +191,15 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
       int EARTH_ORIENTATIONOffset,
       long RANDOM_SEED,
       double START_JULIAN_DATE_TT,
-      double END_JULIAN_DATE_TT) {
-    builder.startTable(21);
+      double END_JULIAN_DATE_TT,
+      int OCCULTING_BODIESOffset) {
+    builder.startTable(22);
     ACWRequest.addEndJulianDateTt(builder, END_JULIAN_DATE_TT);
     ACWRequest.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
     ACWRequest.addRandomSeed(builder, RANDOM_SEED);
     ACWRequest.addRootToleranceS(builder, ROOT_TOLERANCE_S);
     ACWRequest.addMinElevationOverrideRad(builder, MIN_ELEVATION_OVERRIDE_RAD);
+    ACWRequest.addOccultingBodies(builder, OCCULTING_BODIESOffset);
     ACWRequest.addEarthOrientation(builder, EARTH_ORIENTATIONOffset);
     ACWRequest.addAccess(builder, ACCESSOffset);
     ACWRequest.addSensors(builder, SENSORSOffset);
@@ -208,7 +219,7 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
     return ACWRequest.endACWRequest(builder);
   }
 
-  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(21); }
+  public static void startACWRequest(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addOperation(FlatBufferBuilder builder, byte OPERATION) { builder.addByte(0, OPERATION, 0); }
   public static void addGroundStations(FlatBufferBuilder builder, int GROUND_STATIONSOffset) { builder.addOffset(1, GROUND_STATIONSOffset, 0); }
   public static int createGroundStationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -250,6 +261,9 @@ public final class ACWRequest extends com.google.flatbuffers.Table {
   public static void addRandomSeed(FlatBufferBuilder builder, long RANDOM_SEED) { builder.addLong(18, RANDOM_SEED, 0L); }
   public static void addStartJulianDateTt(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.addDouble(19, START_JULIAN_DATE_TT, 0.0); }
   public static void addEndJulianDateTt(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.addDouble(20, END_JULIAN_DATE_TT, 0.0); }
+  public static void addOccultingBodies(FlatBufferBuilder builder, int OCCULTING_BODIESOffset) { builder.addOffset(21, OCCULTING_BODIESOffset, 0); }
+  public static int createOccultingBodiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startOccultingBodiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endACWRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

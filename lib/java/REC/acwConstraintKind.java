@@ -39,7 +39,8 @@ public final class acwConstraintKind {
   public static final byte TARGET_LIGHTING = 7;
   /**
    * Straight-line visibility between observer and target not occulted by the
-   * central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+   * central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+   * ACWRequest.OCCULTING_BODIES entry.
    */
   public static final byte LINE_OF_SIGHT = 8;
   /**

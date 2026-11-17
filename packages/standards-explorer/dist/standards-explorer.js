@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.286.0+1794886112626",
+  version: "1.287.0+1794907361879",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -31019,8 +31019,8 @@ file_identifier "$OCM";`,
       ]
     },
     ACW: {
-      IDL: `// Hash: 29e529f09e927164c78b97475a9452ae9ca741c7551769b87ce32dc2f8632c5a
-// Version: 0.0.5
+      IDL: `// Hash: 0218c6892a6094c2e8840cbe5faceebbfe1b54f2d4d66ed971dc6049f83cc85b
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
@@ -31072,6 +31072,36 @@ table ACWStateSample {
   VELOCITY_X_MPS:double;
   VELOCITY_Y_MPS:double;
   VELOCITY_Z_MPS:double;
+}
+
+/// Body-fixed to STATES-frame rotation at one epoch.
+table ACWOrientationSample {
+  /// Sample epoch as Julian Date in TT.
+  JULIAN_DATE_TT:double;
+  /// Quaternion rotating body-fixed axes into the STATES frame
+  /// (Earth-fixed); vector part Q1..Q3, scalar QC.
+  Q1:double;
+  Q2:double;
+  Q3:double;
+  QC:double;
+}
+
+/// A body other than the central body that may block a line of sight.
+table ACWOccultingBody {
+  /// NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+  /// body (399) are invalid here.
+  BODY_NAIF_ID:int;
+  /// Radii along the body-fixed x, y, z axes, meters. All > 0.
+  SEMI_MAJOR_M:double;
+  SEMI_INTERMEDIATE_M:double;
+  SEMI_MINOR_M:double;
+  /// Body-center states in the STATES frame and time scale, interpolated
+  /// to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+  /// or MOON_STATES; required for every other body.
+  STATES:[ACWStateSample];
+  /// Orientation samples, interpolated to sample epochs. Absent only when
+  /// the three radii are equal (a sphere).
+  ORIENTATION:[ACWOrientationSample];
 }
 
 /// Azimuth-dependent minimum elevation mask point.
@@ -31137,7 +31167,8 @@ enum acwConstraintKind : byte {
   /// Target illumination state matches LIGHTING.
   TARGET_LIGHTING = 7,
   /// Straight-line visibility between observer and target not occulted by the
-  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+  /// ACWRequest.OCCULTING_BODIES entry.
   LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
   BLACKOUT = 9
@@ -31364,6 +31395,9 @@ table ACWRequest {
   /// states.
   START_JULIAN_DATE_TT:double;
   END_JULIAN_DATE_TT:double;
+  /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  OCCULTING_BODIES:[ACWOccultingBody];
 }
 
 /// One computed access interval.
@@ -31395,6 +31429,11 @@ table ACWAccessWindow {
   MAX_RANGE_M:double;
   /// True when edges were root-refined (CONTINUOUS); false when they are samples.
   EDGES_REFINED:bool;
+  /// NAIF code of the body whose occultation opens the window (399 for the
+  /// central body); 0 when the opening edge is not an occultation.
+  START_OCCULTING_BODY_ID:int;
+  /// Same, for the closing edge.
+  END_OCCULTING_BODY_ID:int;
 }
 
 /// Result for one access-window compute request.
@@ -176155,6 +176194,67 @@ stated.`
           },
           additionalProperties: false
         },
+        ACWOrientationSample: {
+          type: "object",
+          description: "Body-fixed to STATES-frame rotation at one epoch.",
+          properties: {
+            JULIAN_DATE_TT: {
+              type: "number",
+              description: "Sample epoch as Julian Date in TT."
+            },
+            Q1: {
+              type: "number",
+              description: "Quaternion rotating body-fixed axes into the STATES frame\n(Earth-fixed); vector part Q1..Q3, scalar QC."
+            },
+            Q2: {
+              type: "number"
+            },
+            Q3: {
+              type: "number"
+            },
+            QC: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        ACWOccultingBody: {
+          type: "object",
+          description: "A body other than the central body that may block a line of sight.",
+          properties: {
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central\nbody (399) are invalid here."
+            },
+            SEMI_MAJOR_M: {
+              type: "number",
+              description: "Radii along the body-fixed x, y, z axes, meters. All > 0."
+            },
+            SEMI_INTERMEDIATE_M: {
+              type: "number"
+            },
+            SEMI_MINOR_M: {
+              type: "number"
+            },
+            STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWStateSample"
+              },
+              description: "Body-center states in the STATES frame and time scale, interpolated\nto sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES\nor MOON_STATES; required for every other body."
+            },
+            ORIENTATION: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOrientationSample"
+              },
+              description: "Orientation samples, interpolated to sample epochs. Absent only when\nthe three radii are equal (a sphere)."
+            }
+          },
+          additionalProperties: false
+        },
         ACWElevationMaskPoint: {
           type: "object",
           description: "Azimuth-dependent minimum elevation mask point.",
@@ -176645,6 +176745,13 @@ stated.`
             },
             END_JULIAN_DATE_TT: {
               type: "number"
+            },
+            OCCULTING_BODIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOccultingBody"
+              },
+              description: "Bodies besides the central body that a LINE_OF_SIGHT constraint also\ntests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS."
             }
           },
           additionalProperties: false
@@ -176707,6 +176814,18 @@ stated.`
             EDGES_REFINED: {
               type: "boolean",
               description: "True when edges were root-refined (CONTINUOUS); false when they are samples."
+            },
+            START_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF code of the body whose occultation opens the window (399 for the\ncentral body); 0 when the opening edge is not an occultation."
+            },
+            END_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Same, for the closing edge."
             }
           },
           additionalProperties: false
@@ -342370,6 +342489,67 @@ stated.`
           },
           additionalProperties: false
         },
+        ACWOrientationSample: {
+          type: "object",
+          description: "Body-fixed to STATES-frame rotation at one epoch.",
+          properties: {
+            JULIAN_DATE_TT: {
+              type: "number",
+              description: "Sample epoch as Julian Date in TT."
+            },
+            Q1: {
+              type: "number",
+              description: "Quaternion rotating body-fixed axes into the STATES frame\n(Earth-fixed); vector part Q1..Q3, scalar QC."
+            },
+            Q2: {
+              type: "number"
+            },
+            Q3: {
+              type: "number"
+            },
+            QC: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        ACWOccultingBody: {
+          type: "object",
+          description: "A body other than the central body that may block a line of sight.",
+          properties: {
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central\nbody (399) are invalid here."
+            },
+            SEMI_MAJOR_M: {
+              type: "number",
+              description: "Radii along the body-fixed x, y, z axes, meters. All > 0."
+            },
+            SEMI_INTERMEDIATE_M: {
+              type: "number"
+            },
+            SEMI_MINOR_M: {
+              type: "number"
+            },
+            STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWStateSample"
+              },
+              description: "Body-center states in the STATES frame and time scale, interpolated\nto sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES\nor MOON_STATES; required for every other body."
+            },
+            ORIENTATION: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOrientationSample"
+              },
+              description: "Orientation samples, interpolated to sample epochs. Absent only when\nthe three radii are equal (a sphere)."
+            }
+          },
+          additionalProperties: false
+        },
         ACWElevationMaskPoint: {
           type: "object",
           description: "Azimuth-dependent minimum elevation mask point.",
@@ -342860,6 +343040,13 @@ stated.`
             },
             END_JULIAN_DATE_TT: {
               type: "number"
+            },
+            OCCULTING_BODIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOccultingBody"
+              },
+              description: "Bodies besides the central body that a LINE_OF_SIGHT constraint also\ntests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS."
             }
           },
           additionalProperties: false
@@ -342922,6 +343109,18 @@ stated.`
             EDGES_REFINED: {
               type: "boolean",
               description: "True when edges were root-refined (CONTINUOUS); false when they are samples."
+            },
+            START_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF code of the body whose occultation opens the window (399 for the\ncentral body); 0 when the opening edge is not an occultation."
+            },
+            END_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Same, for the closing edge."
             }
           },
           additionalProperties: false
@@ -683062,7 +683261,7 @@ stated.`,
             },
             LINE_OF_SIGHT: {
               value: 8,
-              description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+              description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any ACWRequest.OCCULTING_BODIES entry."
             },
             BLACKOUT: {
               value: 9,
@@ -720101,6 +720300,78 @@ stated.`,
           },
           additionalProperties: false
         },
+        ACWOrientationSample: {
+          type: "object",
+          description: "Body-fixed to STATES-frame rotation at one epoch.",
+          properties: {
+            JULIAN_DATE_TT: {
+              type: "number",
+              description: "Sample epoch as Julian Date in TT.",
+              "x-flatbuffer-type": "double"
+            },
+            Q1: {
+              type: "number",
+              description: "Quaternion rotating body-fixed axes into the STATES frame\n(Earth-fixed); vector part Q1..Q3, scalar QC.",
+              "x-flatbuffer-type": "double"
+            },
+            Q2: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            Q3: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        ACWOccultingBody: {
+          type: "object",
+          description: "A body other than the central body that may block a line of sight.",
+          properties: {
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central\nbody (399) are invalid here.",
+              "x-flatbuffer-type": "int"
+            },
+            SEMI_MAJOR_M: {
+              type: "number",
+              description: "Radii along the body-fixed x, y, z axes, meters. All > 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SEMI_INTERMEDIATE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            SEMI_MINOR_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWStateSample"
+              },
+              description: "Body-center states in the STATES frame and time scale, interpolated\nto sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES\nor MOON_STATES; required for every other body.",
+              "x-flatbuffer-type": "[ACWStateSample]"
+            },
+            ORIENTATION: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOrientationSample"
+              },
+              description: "Orientation samples, interpolated to sample epochs. Absent only when\nthe three radii are equal (a sphere).",
+              "x-flatbuffer-type": "[ACWOrientationSample]"
+            }
+          },
+          additionalProperties: false
+        },
         ACWElevationMaskPoint: {
           type: "object",
           description: "Azimuth-dependent minimum elevation mask point.",
@@ -720260,7 +720531,7 @@ stated.`,
                 },
                 LINE_OF_SIGHT: {
                   value: 8,
-                  description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+                  description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any ACWRequest.OCCULTING_BODIES entry."
                 },
                 BLACKOUT: {
                   value: 9,
@@ -720816,6 +721087,14 @@ stated.`,
             END_JULIAN_DATE_TT: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            OCCULTING_BODIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOccultingBody"
+              },
+              description: "Bodies besides the central body that a LINE_OF_SIGHT constraint also\ntests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.",
+              "x-flatbuffer-type": "[ACWOccultingBody]"
             }
           },
           additionalProperties: false
@@ -720893,6 +721172,20 @@ stated.`,
               type: "boolean",
               description: "True when edges were root-refined (CONTINUOUS); false when they are samples.",
               "x-flatbuffer-type": "bool"
+            },
+            START_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF code of the body whose occultation opens the window (399 for the\ncentral body); 0 when the opening edge is not an occultation.",
+              "x-flatbuffer-type": "int"
+            },
+            END_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Same, for the closing edge.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -1058324,7 +1058617,7 @@ stated.`,
             },
             LINE_OF_SIGHT: {
               value: 8,
-              description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+              description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any ACWRequest.OCCULTING_BODIES entry."
             },
             BLACKOUT: {
               value: 9,
@@ -1059157,6 +1059450,78 @@ stated.`,
           },
           additionalProperties: false
         },
+        ACWOrientationSample: {
+          type: "object",
+          description: "Body-fixed to STATES-frame rotation at one epoch.",
+          properties: {
+            JULIAN_DATE_TT: {
+              type: "number",
+              description: "Sample epoch as Julian Date in TT.",
+              "x-flatbuffer-type": "double"
+            },
+            Q1: {
+              type: "number",
+              description: "Quaternion rotating body-fixed axes into the STATES frame\n(Earth-fixed); vector part Q1..Q3, scalar QC.",
+              "x-flatbuffer-type": "double"
+            },
+            Q2: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            Q3: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            QC: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        ACWOccultingBody: {
+          type: "object",
+          description: "A body other than the central body that may block a line of sight.",
+          properties: {
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central\nbody (399) are invalid here.",
+              "x-flatbuffer-type": "int"
+            },
+            SEMI_MAJOR_M: {
+              type: "number",
+              description: "Radii along the body-fixed x, y, z axes, meters. All > 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SEMI_INTERMEDIATE_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            SEMI_MINOR_M: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            STATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWStateSample"
+              },
+              description: "Body-center states in the STATES frame and time scale, interpolated\nto sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES\nor MOON_STATES; required for every other body.",
+              "x-flatbuffer-type": "[ACWStateSample]"
+            },
+            ORIENTATION: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOrientationSample"
+              },
+              description: "Orientation samples, interpolated to sample epochs. Absent only when\nthe three radii are equal (a sphere).",
+              "x-flatbuffer-type": "[ACWOrientationSample]"
+            }
+          },
+          additionalProperties: false
+        },
         ACWElevationMaskPoint: {
           type: "object",
           description: "Azimuth-dependent minimum elevation mask point.",
@@ -1059316,7 +1059681,7 @@ stated.`,
                 },
                 LINE_OF_SIGHT: {
                   value: 8,
-                  description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite)."
+                  description: "Straight-line visibility between observer and target not occulted by the central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any ACWRequest.OCCULTING_BODIES entry."
                 },
                 BLACKOUT: {
                   value: 9,
@@ -1059872,6 +1060237,14 @@ stated.`,
             END_JULIAN_DATE_TT: {
               type: "number",
               "x-flatbuffer-type": "double"
+            },
+            OCCULTING_BODIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ACWOccultingBody"
+              },
+              description: "Bodies besides the central body that a LINE_OF_SIGHT constraint also\ntests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.",
+              "x-flatbuffer-type": "[ACWOccultingBody]"
             }
           },
           additionalProperties: false
@@ -1059949,6 +1060322,20 @@ stated.`,
               type: "boolean",
               description: "True when edges were root-refined (CONTINUOUS); false when they are samples.",
               "x-flatbuffer-type": "bool"
+            },
+            START_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "NAIF code of the body whose occultation opens the window (399 for the\ncentral body); 0 when the opening edge is not an occultation.",
+              "x-flatbuffer-type": "int"
+            },
+            END_OCCULTING_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Same, for the closing edge.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -1110479,7 +1110866,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

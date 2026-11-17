@@ -134,8 +134,25 @@ EDGES_REFINED():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * NAIF code of the body whose occultation opens the window (399 for the
+ * central body); 0 when the opening edge is not an occultation.
+ */
+START_OCCULTING_BODY_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Same, for the closing edge.
+ */
+END_OCCULTING_BODY_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startACWAccessWindow(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(15);
 }
 
 static addStationId(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset) {
@@ -190,12 +207,20 @@ static addEdgesRefined(builder:flatbuffers.Builder, EDGES_REFINED:boolean) {
   builder.addFieldInt8(12, +EDGES_REFINED, +false);
 }
 
+static addStartOccultingBodyId(builder:flatbuffers.Builder, START_OCCULTING_BODY_ID:number) {
+  builder.addFieldInt32(13, START_OCCULTING_BODY_ID, 0);
+}
+
+static addEndOccultingBodyId(builder:flatbuffers.Builder, END_OCCULTING_BODY_ID:number) {
+  builder.addFieldInt32(14, END_OCCULTING_BODY_ID, 0);
+}
+
 static endACWAccessWindow(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number, OBSERVER_IDOffset:flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX:number, END_LIMITING_CONSTRAINT_INDEX:number, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, MIN_RANGE_M:number, MAX_RANGE_M:number, EDGES_REFINED:boolean):flatbuffers.Offset {
+static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatbuffers.Offset, START_JULIAN_DATE_TT:number, END_JULIAN_DATE_TT:number, MAX_ELEVATION_RAD:number, SAMPLE_COUNT:number, OBSERVER_IDOffset:flatbuffers.Offset, START_LIMITING_CONSTRAINT_INDEX:number, END_LIMITING_CONSTRAINT_INDEX:number, START_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, END_LIMITING_CONSTRAINT_LABELOffset:flatbuffers.Offset, MIN_RANGE_M:number, MAX_RANGE_M:number, EDGES_REFINED:boolean, START_OCCULTING_BODY_ID:number, END_OCCULTING_BODY_ID:number):flatbuffers.Offset {
   ACWAccessWindow.startACWAccessWindow(builder);
   ACWAccessWindow.addStationId(builder, STATION_IDOffset);
   ACWAccessWindow.addStartJulianDateTt(builder, START_JULIAN_DATE_TT);
@@ -210,6 +235,8 @@ static createACWAccessWindow(builder:flatbuffers.Builder, STATION_IDOffset:flatb
   ACWAccessWindow.addMinRangeM(builder, MIN_RANGE_M);
   ACWAccessWindow.addMaxRangeM(builder, MAX_RANGE_M);
   ACWAccessWindow.addEdgesRefined(builder, EDGES_REFINED);
+  ACWAccessWindow.addStartOccultingBodyId(builder, START_OCCULTING_BODY_ID);
+  ACWAccessWindow.addEndOccultingBodyId(builder, END_OCCULTING_BODY_ID);
   return ACWAccessWindow.endACWAccessWindow(builder);
 }
 
@@ -227,7 +254,9 @@ unpack(): ACWAccessWindowT {
     this.END_LIMITING_CONSTRAINT_LABEL(),
     this.MIN_RANGE_M(),
     this.MAX_RANGE_M(),
-    this.EDGES_REFINED()
+    this.EDGES_REFINED(),
+    this.START_OCCULTING_BODY_ID(),
+    this.END_OCCULTING_BODY_ID()
   );
 }
 
@@ -246,6 +275,8 @@ unpackTo(_o: ACWAccessWindowT): void {
   _o.MIN_RANGE_M = this.MIN_RANGE_M();
   _o.MAX_RANGE_M = this.MAX_RANGE_M();
   _o.EDGES_REFINED = this.EDGES_REFINED();
+  _o.START_OCCULTING_BODY_ID = this.START_OCCULTING_BODY_ID();
+  _o.END_OCCULTING_BODY_ID = this.END_OCCULTING_BODY_ID();
 }
 }
 
@@ -263,7 +294,9 @@ constructor(
   public END_LIMITING_CONSTRAINT_LABEL: string|Uint8Array|null = null,
   public MIN_RANGE_M: number = 0.0,
   public MAX_RANGE_M: number = 0.0,
-  public EDGES_REFINED: boolean = false
+  public EDGES_REFINED: boolean = false,
+  public START_OCCULTING_BODY_ID: number = 0,
+  public END_OCCULTING_BODY_ID: number = 0
 ){}
 
 
@@ -286,7 +319,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     END_LIMITING_CONSTRAINT_LABEL,
     this.MIN_RANGE_M,
     this.MAX_RANGE_M,
-    this.EDGES_REFINED
+    this.EDGES_REFINED,
+    this.START_OCCULTING_BODY_ID,
+    this.END_OCCULTING_BODY_ID
   );
 }
 }

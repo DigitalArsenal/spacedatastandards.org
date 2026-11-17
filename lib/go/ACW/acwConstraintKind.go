@@ -26,7 +26,8 @@ const (
 	/// Target illumination state matches LIGHTING.
 	acwConstraintKindTARGET_LIGHTING acwConstraintKind = 7
 	/// Straight-line visibility between observer and target not occulted by the
-	/// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+	/// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+	/// ACWRequest.OCCULTING_BODIES entry.
 	acwConstraintKindLINE_OF_SIGHT   acwConstraintKind = 8
 	/// Outside every observer blackout window.
 	acwConstraintKindBLACKOUT        acwConstraintKind = 9

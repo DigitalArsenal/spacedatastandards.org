@@ -152,6 +152,23 @@ class ACWAccessWindow : Table() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * NAIF code of the body whose occultation opens the window (399 for the
+     * central body); 0 when the opening edge is not an occultation.
+     */
+    val startOccultingBodyId : Int
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Same, for the closing edge.
+     */
+    val endOccultingBodyId : Int
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACWAccessWindow(_bb: ByteBuffer): ACWAccessWindow = getRootAsACWAccessWindow(_bb, ACWAccessWindow())
@@ -159,13 +176,15 @@ class ACWAccessWindow : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt, observerIdOffset: Int, startLimitingConstraintIndex: Int, endLimitingConstraintIndex: Int, startLimitingConstraintLabelOffset: Int, endLimitingConstraintLabelOffset: Int, minRangeM: Double, maxRangeM: Double, edgesRefined: Boolean) : Int {
-            builder.startTable(13)
+        fun createACWAccessWindow(builder: FlatBufferBuilder, stationIdOffset: Int, startJulianDateTt: Double, endJulianDateTt: Double, maxElevationRad: Double, sampleCount: UInt, observerIdOffset: Int, startLimitingConstraintIndex: Int, endLimitingConstraintIndex: Int, startLimitingConstraintLabelOffset: Int, endLimitingConstraintLabelOffset: Int, minRangeM: Double, maxRangeM: Double, edgesRefined: Boolean, startOccultingBodyId: Int, endOccultingBodyId: Int) : Int {
+            builder.startTable(15)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
             addMAXELEVATIONRAD(builder, maxElevationRad)
             addENDJULIANDATETT(builder, endJulianDateTt)
             addSTARTJULIANDATETT(builder, startJulianDateTt)
+            addENDOCCULTINGBODYID(builder, endOccultingBodyId)
+            addSTARTOCCULTINGBODYID(builder, startOccultingBodyId)
             addENDLIMITINGCONSTRAINTLABEL(builder, endLimitingConstraintLabelOffset)
             addSTARTLIMITINGCONSTRAINTLABEL(builder, startLimitingConstraintLabelOffset)
             addENDLIMITINGCONSTRAINTINDEX(builder, endLimitingConstraintIndex)
@@ -176,7 +195,7 @@ class ACWAccessWindow : Table() {
             addEDGESREFINED(builder, edgesRefined)
             return endACWAccessWindow(builder)
         }
-        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startACWAccessWindow(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addSTATIONID(builder: FlatBufferBuilder, stationId: Int) = builder.addOffset(0, stationId, 0)
         fun addSTARTJULIANDATETT(builder: FlatBufferBuilder, startJulianDateTt: Double) = builder.addDouble(1, startJulianDateTt, 0.0)
         fun addENDJULIANDATETT(builder: FlatBufferBuilder, endJulianDateTt: Double) = builder.addDouble(2, endJulianDateTt, 0.0)
@@ -190,6 +209,8 @@ class ACWAccessWindow : Table() {
         fun addMINRANGEM(builder: FlatBufferBuilder, minRangeM: Double) = builder.addDouble(10, minRangeM, 0.0)
         fun addMAXRANGEM(builder: FlatBufferBuilder, maxRangeM: Double) = builder.addDouble(11, maxRangeM, 0.0)
         fun addEDGESREFINED(builder: FlatBufferBuilder, edgesRefined: Boolean) = builder.addBoolean(12, edgesRefined, false)
+        fun addSTARTOCCULTINGBODYID(builder: FlatBufferBuilder, startOccultingBodyId: Int) = builder.addInt(13, startOccultingBodyId, 0)
+        fun addENDOCCULTINGBODYID(builder: FlatBufferBuilder, endOccultingBodyId: Int) = builder.addInt(14, endOccultingBodyId, 0)
         fun endACWAccessWindow(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

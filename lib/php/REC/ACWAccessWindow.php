@@ -160,22 +160,43 @@ class ACWAccessWindow extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// NAIF code of the body whose occultation opens the window (399 for the
+    /// central body); 0 when the opening edge is not an occultation.
+    /**
+     * @return int
+     */
+    public function getSTART_OCCULTING_BODY_ID()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Same, for the closing edge.
+    /**
+     * @return int
+     */
+    public function getEND_OCCULTING_BODY_ID()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACWAccessWindow(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACWAccessWindow
      */
-    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT, $OBSERVER_ID, $START_LIMITING_CONSTRAINT_INDEX, $END_LIMITING_CONSTRAINT_INDEX, $START_LIMITING_CONSTRAINT_LABEL, $END_LIMITING_CONSTRAINT_LABEL, $MIN_RANGE_M, $MAX_RANGE_M, $EDGES_REFINED)
+    public static function createACWAccessWindow(FlatBufferBuilder $builder, $STATION_ID, $START_JULIAN_DATE_TT, $END_JULIAN_DATE_TT, $MAX_ELEVATION_RAD, $SAMPLE_COUNT, $OBSERVER_ID, $START_LIMITING_CONSTRAINT_INDEX, $END_LIMITING_CONSTRAINT_INDEX, $START_LIMITING_CONSTRAINT_LABEL, $END_LIMITING_CONSTRAINT_LABEL, $MIN_RANGE_M, $MAX_RANGE_M, $EDGES_REFINED, $START_OCCULTING_BODY_ID, $END_OCCULTING_BODY_ID)
     {
-        $builder->startObject(13);
+        $builder->startObject(15);
         self::addSTATION_ID($builder, $STATION_ID);
         self::addSTART_JULIAN_DATE_TT($builder, $START_JULIAN_DATE_TT);
         self::addEND_JULIAN_DATE_TT($builder, $END_JULIAN_DATE_TT);
@@ -189,6 +210,8 @@ class ACWAccessWindow extends Table
         self::addMIN_RANGE_M($builder, $MIN_RANGE_M);
         self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
         self::addEDGES_REFINED($builder, $EDGES_REFINED);
+        self::addSTART_OCCULTING_BODY_ID($builder, $START_OCCULTING_BODY_ID);
+        self::addEND_OCCULTING_BODY_ID($builder, $END_OCCULTING_BODY_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -321,6 +344,26 @@ class ACWAccessWindow extends Table
     public static function addEDGES_REFINED(FlatBufferBuilder $builder, $EDGES_REFINED)
     {
         $builder->addBoolX(12, $EDGES_REFINED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addSTART_OCCULTING_BODY_ID(FlatBufferBuilder $builder, $START_OCCULTING_BODY_ID)
+    {
+        $builder->addIntX(13, $START_OCCULTING_BODY_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addEND_OCCULTING_BODY_ID(FlatBufferBuilder $builder, $END_OCCULTING_BODY_ID)
+    {
+        $builder->addIntX(14, $END_OCCULTING_BODY_ID, 0);
     }
 
     /**

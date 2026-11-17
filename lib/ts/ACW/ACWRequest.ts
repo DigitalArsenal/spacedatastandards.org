@@ -8,6 +8,7 @@ import { ACWConstraintSet, ACWConstraintSetT } from './ACWConstraintSet.js';
 import { ACWElevationMaskPoint, ACWElevationMaskPointT } from './ACWElevationMaskPoint.js';
 import { ACWGroundStation, ACWGroundStationT } from './ACWGroundStation.js';
 import { ACWObserverTrajectory, ACWObserverTrajectoryT } from './ACWObserverTrajectory.js';
+import { ACWOccultingBody, ACWOccultingBodyT } from './ACWOccultingBody.js';
 import { ACWRefractionModel, ACWRefractionModelT } from './ACWRefractionModel.js';
 import { ACWSensor, ACWSensorT } from './ACWSensor.js';
 import { ACWSensorAccess, ACWSensorAccessT } from './ACWSensorAccess.js';
@@ -264,8 +265,22 @@ END_JULIAN_DATE_TT():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Bodies besides the central body that a LINE_OF_SIGHT constraint also
+ * tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+ */
+OCCULTING_BODIES(index: number, obj?:ACWOccultingBody):ACWOccultingBody|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new ACWOccultingBody()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+occultingBodiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startACWRequest(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(22);
 }
 
 static addOperation(builder:flatbuffers.Builder, OPERATION:acwOperationCode) {
@@ -472,6 +487,22 @@ static addEndJulianDateTt(builder:flatbuffers.Builder, END_JULIAN_DATE_TT:number
   builder.addFieldFloat64(20, END_JULIAN_DATE_TT, 0.0);
 }
 
+static addOccultingBodies(builder:flatbuffers.Builder, OCCULTING_BODIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, OCCULTING_BODIESOffset, 0);
+}
+
+static createOccultingBodiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOccultingBodiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endACWRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -500,7 +531,8 @@ unpack(): ACWRequestT {
     this.bb!.createObjList<EOP, EOPT>(this.EARTH_ORIENTATION.bind(this), this.earthOrientationLength()),
     this.RANDOM_SEED(),
     this.START_JULIAN_DATE_TT(),
-    this.END_JULIAN_DATE_TT()
+    this.END_JULIAN_DATE_TT(),
+    this.bb!.createObjList<ACWOccultingBody, ACWOccultingBodyT>(this.OCCULTING_BODIES.bind(this), this.occultingBodiesLength())
   );
 }
 
@@ -527,6 +559,7 @@ unpackTo(_o: ACWRequestT): void {
   _o.RANDOM_SEED = this.RANDOM_SEED();
   _o.START_JULIAN_DATE_TT = this.START_JULIAN_DATE_TT();
   _o.END_JULIAN_DATE_TT = this.END_JULIAN_DATE_TT();
+  _o.OCCULTING_BODIES = this.bb!.createObjList<ACWOccultingBody, ACWOccultingBodyT>(this.OCCULTING_BODIES.bind(this), this.occultingBodiesLength());
 }
 }
 
@@ -552,7 +585,8 @@ constructor(
   public EARTH_ORIENTATION: (EOPT)[] = [],
   public RANDOM_SEED: bigint = BigInt('0'),
   public START_JULIAN_DATE_TT: number = 0.0,
-  public END_JULIAN_DATE_TT: number = 0.0
+  public END_JULIAN_DATE_TT: number = 0.0,
+  public OCCULTING_BODIES: (ACWOccultingBodyT)[] = []
 ){}
 
 
@@ -571,6 +605,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SENSORS = ACWRequest.createSensorsVector(builder, builder.createObjectOffsetList(this.SENSORS));
   const ACCESS = ACWRequest.createAccessVector(builder, builder.createObjectOffsetList(this.ACCESS));
   const EARTH_ORIENTATION = ACWRequest.createEarthOrientationVector(builder, builder.createObjectOffsetList(this.EARTH_ORIENTATION));
+  const OCCULTING_BODIES = ACWRequest.createOccultingBodiesVector(builder, builder.createObjectOffsetList(this.OCCULTING_BODIES));
 
   ACWRequest.startACWRequest(builder);
   ACWRequest.addOperation(builder, this.OPERATION);
@@ -594,6 +629,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ACWRequest.addRandomSeed(builder, this.RANDOM_SEED);
   ACWRequest.addStartJulianDateTt(builder, this.START_JULIAN_DATE_TT);
   ACWRequest.addEndJulianDateTt(builder, this.END_JULIAN_DATE_TT);
+  ACWRequest.addOccultingBodies(builder, OCCULTING_BODIES);
 
   return ACWRequest.endACWRequest(builder);
 }

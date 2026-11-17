@@ -19,6 +19,12 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct ACWStateSample;
 struct ACWStateSampleBuilder;
 
+struct ACWOrientationSample;
+struct ACWOrientationSampleBuilder;
+
+struct ACWOccultingBody;
+struct ACWOccultingBodyBuilder;
+
 struct ACWElevationMaskPoint;
 struct ACWElevationMaskPointBuilder;
 
@@ -196,7 +202,8 @@ enum acwConstraintKind : int8_t {
   /// Target illumination state matches LIGHTING.
   acwConstraintKind_TARGET_LIGHTING = 7,
   /// Straight-line visibility between observer and target not occulted by the
-  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M (satellite-to-satellite).
+  /// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
+  /// ACWRequest.OCCULTING_BODIES entry.
   acwConstraintKind_LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
   acwConstraintKind_BLACKOUT = 9,
@@ -504,6 +511,217 @@ inline ::flatbuffers::Offset<ACWStateSample> CreateACWStateSample(
   builder_.add_POSITION_X_M(POSITION_X_M);
   builder_.add_JULIAN_DATE_TT(JULIAN_DATE_TT);
   return builder_.Finish();
+}
+
+/// Body-fixed to STATES-frame rotation at one epoch.
+struct ACWOrientationSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACWOrientationSampleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_JULIAN_DATE_TT = 4,
+    VT_Q1 = 6,
+    VT_Q2 = 8,
+    VT_Q3 = 10,
+    VT_QC = 12
+  };
+  /// Sample epoch as Julian Date in TT.
+  double JULIAN_DATE_TT() const {
+    return GetField<double>(VT_JULIAN_DATE_TT, 0.0);
+  }
+  /// Quaternion rotating body-fixed axes into the STATES frame
+  /// (Earth-fixed); vector part Q1..Q3, scalar QC.
+  double Q1() const {
+    return GetField<double>(VT_Q1, 0.0);
+  }
+  double Q2() const {
+    return GetField<double>(VT_Q2, 0.0);
+  }
+  double Q3() const {
+    return GetField<double>(VT_Q3, 0.0);
+  }
+  double QC() const {
+    return GetField<double>(VT_QC, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_JULIAN_DATE_TT, 8) &&
+           VerifyField<double>(verifier, VT_Q1, 8) &&
+           VerifyField<double>(verifier, VT_Q2, 8) &&
+           VerifyField<double>(verifier, VT_Q3, 8) &&
+           VerifyField<double>(verifier, VT_QC, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACWOrientationSampleBuilder {
+  typedef ACWOrientationSample Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_JULIAN_DATE_TT(double JULIAN_DATE_TT) {
+    fbb_.AddElement<double>(ACWOrientationSample::VT_JULIAN_DATE_TT, JULIAN_DATE_TT, 0.0);
+  }
+  void add_Q1(double Q1) {
+    fbb_.AddElement<double>(ACWOrientationSample::VT_Q1, Q1, 0.0);
+  }
+  void add_Q2(double Q2) {
+    fbb_.AddElement<double>(ACWOrientationSample::VT_Q2, Q2, 0.0);
+  }
+  void add_Q3(double Q3) {
+    fbb_.AddElement<double>(ACWOrientationSample::VT_Q3, Q3, 0.0);
+  }
+  void add_QC(double QC) {
+    fbb_.AddElement<double>(ACWOrientationSample::VT_QC, QC, 0.0);
+  }
+  explicit ACWOrientationSampleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACWOrientationSample> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACWOrientationSample>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACWOrientationSample> CreateACWOrientationSample(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double JULIAN_DATE_TT = 0.0,
+    double Q1 = 0.0,
+    double Q2 = 0.0,
+    double Q3 = 0.0,
+    double QC = 0.0) {
+  ACWOrientationSampleBuilder builder_(_fbb);
+  builder_.add_QC(QC);
+  builder_.add_Q3(Q3);
+  builder_.add_Q2(Q2);
+  builder_.add_Q1(Q1);
+  builder_.add_JULIAN_DATE_TT(JULIAN_DATE_TT);
+  return builder_.Finish();
+}
+
+/// A body other than the central body that may block a line of sight.
+struct ACWOccultingBody FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ACWOccultingBodyBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_BODY_NAIF_ID = 4,
+    VT_SEMI_MAJOR_M = 6,
+    VT_SEMI_INTERMEDIATE_M = 8,
+    VT_SEMI_MINOR_M = 10,
+    VT_STATES = 12,
+    VT_ORIENTATION = 14
+  };
+  /// NAIF integer code (10 Sun, 301 Moon, 499 Mars). 0 and the central
+  /// body (399) are invalid here.
+  int32_t BODY_NAIF_ID() const {
+    return GetField<int32_t>(VT_BODY_NAIF_ID, 0);
+  }
+  /// Radii along the body-fixed x, y, z axes, meters. All > 0.
+  double SEMI_MAJOR_M() const {
+    return GetField<double>(VT_SEMI_MAJOR_M, 0.0);
+  }
+  double SEMI_INTERMEDIATE_M() const {
+    return GetField<double>(VT_SEMI_INTERMEDIATE_M, 0.0);
+  }
+  double SEMI_MINOR_M() const {
+    return GetField<double>(VT_SEMI_MINOR_M, 0.0);
+  }
+  /// Body-center states in the STATES frame and time scale, interpolated
+  /// to sample epochs. Absent for BODY_NAIF_ID 10 or 301 means SUN_STATES
+  /// or MOON_STATES; required for every other body.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>> *>(VT_STATES);
+  }
+  /// Orientation samples, interpolated to sample epochs. Absent only when
+  /// the three radii are equal (a sphere).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWOrientationSample>> *ORIENTATION() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWOrientationSample>> *>(VT_ORIENTATION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_BODY_NAIF_ID, 4) &&
+           VerifyField<double>(verifier, VT_SEMI_MAJOR_M, 8) &&
+           VerifyField<double>(verifier, VT_SEMI_INTERMEDIATE_M, 8) &&
+           VerifyField<double>(verifier, VT_SEMI_MINOR_M, 8) &&
+           VerifyOffset(verifier, VT_STATES) &&
+           verifier.VerifyVector(STATES()) &&
+           verifier.VerifyVectorOfTables(STATES()) &&
+           VerifyOffset(verifier, VT_ORIENTATION) &&
+           verifier.VerifyVector(ORIENTATION()) &&
+           verifier.VerifyVectorOfTables(ORIENTATION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ACWOccultingBodyBuilder {
+  typedef ACWOccultingBody Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_BODY_NAIF_ID(int32_t BODY_NAIF_ID) {
+    fbb_.AddElement<int32_t>(ACWOccultingBody::VT_BODY_NAIF_ID, BODY_NAIF_ID, 0);
+  }
+  void add_SEMI_MAJOR_M(double SEMI_MAJOR_M) {
+    fbb_.AddElement<double>(ACWOccultingBody::VT_SEMI_MAJOR_M, SEMI_MAJOR_M, 0.0);
+  }
+  void add_SEMI_INTERMEDIATE_M(double SEMI_INTERMEDIATE_M) {
+    fbb_.AddElement<double>(ACWOccultingBody::VT_SEMI_INTERMEDIATE_M, SEMI_INTERMEDIATE_M, 0.0);
+  }
+  void add_SEMI_MINOR_M(double SEMI_MINOR_M) {
+    fbb_.AddElement<double>(ACWOccultingBody::VT_SEMI_MINOR_M, SEMI_MINOR_M, 0.0);
+  }
+  void add_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> STATES) {
+    fbb_.AddOffset(ACWOccultingBody::VT_STATES, STATES);
+  }
+  void add_ORIENTATION(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWOrientationSample>>> ORIENTATION) {
+    fbb_.AddOffset(ACWOccultingBody::VT_ORIENTATION, ORIENTATION);
+  }
+  explicit ACWOccultingBodyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ACWOccultingBody> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ACWOccultingBody>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ACWOccultingBody> CreateACWOccultingBody(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t BODY_NAIF_ID = 0,
+    double SEMI_MAJOR_M = 0.0,
+    double SEMI_INTERMEDIATE_M = 0.0,
+    double SEMI_MINOR_M = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWStateSample>>> STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWOrientationSample>>> ORIENTATION = 0) {
+  ACWOccultingBodyBuilder builder_(_fbb);
+  builder_.add_SEMI_MINOR_M(SEMI_MINOR_M);
+  builder_.add_SEMI_INTERMEDIATE_M(SEMI_INTERMEDIATE_M);
+  builder_.add_SEMI_MAJOR_M(SEMI_MAJOR_M);
+  builder_.add_ORIENTATION(ORIENTATION);
+  builder_.add_STATES(STATES);
+  builder_.add_BODY_NAIF_ID(BODY_NAIF_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ACWOccultingBody> CreateACWOccultingBodyDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t BODY_NAIF_ID = 0,
+    double SEMI_MAJOR_M = 0.0,
+    double SEMI_INTERMEDIATE_M = 0.0,
+    double SEMI_MINOR_M = 0.0,
+    const std::vector<::flatbuffers::Offset<ACWStateSample>> *STATES = nullptr,
+    const std::vector<::flatbuffers::Offset<ACWOrientationSample>> *ORIENTATION = nullptr) {
+  auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
+  auto ORIENTATION__ = ORIENTATION ? _fbb.CreateVector<::flatbuffers::Offset<ACWOrientationSample>>(*ORIENTATION) : 0;
+  return CreateACWOccultingBody(
+      _fbb,
+      BODY_NAIF_ID,
+      SEMI_MAJOR_M,
+      SEMI_INTERMEDIATE_M,
+      SEMI_MINOR_M,
+      STATES__,
+      ORIENTATION__);
 }
 
 /// Azimuth-dependent minimum elevation mask point.
@@ -1908,7 +2126,8 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EARTH_ORIENTATION = 38,
     VT_RANDOM_SEED = 40,
     VT_START_JULIAN_DATE_TT = 42,
-    VT_END_JULIAN_DATE_TT = 44
+    VT_END_JULIAN_DATE_TT = 44,
+    VT_OCCULTING_BODIES = 46
   };
   acwOperationCode OPERATION() const {
     return static_cast<acwOperationCode>(GetField<int8_t>(VT_OPERATION, 0));
@@ -2001,6 +2220,11 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double END_JULIAN_DATE_TT() const {
     return GetField<double>(VT_END_JULIAN_DATE_TT, 0.0);
   }
+  /// Bodies besides the central body that a LINE_OF_SIGHT constraint also
+  /// tests (no atmosphere raise). Codes follow EVL OCCULTING_BODY_IDS.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ACWOccultingBody>> *OCCULTING_BODIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ACWOccultingBody>> *>(VT_OCCULTING_BODIES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2049,6 +2273,9 @@ struct ACWRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_RANDOM_SEED, 8) &&
            VerifyField<double>(verifier, VT_START_JULIAN_DATE_TT, 8) &&
            VerifyField<double>(verifier, VT_END_JULIAN_DATE_TT, 8) &&
+           VerifyOffset(verifier, VT_OCCULTING_BODIES) &&
+           verifier.VerifyVector(OCCULTING_BODIES()) &&
+           verifier.VerifyVectorOfTables(OCCULTING_BODIES()) &&
            verifier.EndTable();
   }
 };
@@ -2120,6 +2347,9 @@ struct ACWRequestBuilder {
   void add_END_JULIAN_DATE_TT(double END_JULIAN_DATE_TT) {
     fbb_.AddElement<double>(ACWRequest::VT_END_JULIAN_DATE_TT, END_JULIAN_DATE_TT, 0.0);
   }
+  void add_OCCULTING_BODIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWOccultingBody>>> OCCULTING_BODIES) {
+    fbb_.AddOffset(ACWRequest::VT_OCCULTING_BODIES, OCCULTING_BODIES);
+  }
   explicit ACWRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2153,13 +2383,15 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequest(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOP>>> EARTH_ORIENTATION = 0,
     uint64_t RANDOM_SEED = 0,
     double START_JULIAN_DATE_TT = 0.0,
-    double END_JULIAN_DATE_TT = 0.0) {
+    double END_JULIAN_DATE_TT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ACWOccultingBody>>> OCCULTING_BODIES = 0) {
   ACWRequestBuilder builder_(_fbb);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
   builder_.add_RANDOM_SEED(RANDOM_SEED);
   builder_.add_ROOT_TOLERANCE_S(ROOT_TOLERANCE_S);
   builder_.add_MIN_ELEVATION_OVERRIDE_RAD(MIN_ELEVATION_OVERRIDE_RAD);
+  builder_.add_OCCULTING_BODIES(OCCULTING_BODIES);
   builder_.add_EARTH_ORIENTATION(EARTH_ORIENTATION);
   builder_.add_ACCESS(ACCESS);
   builder_.add_SENSORS(SENSORS);
@@ -2201,7 +2433,8 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
     const std::vector<::flatbuffers::Offset<EOP>> *EARTH_ORIENTATION = nullptr,
     uint64_t RANDOM_SEED = 0,
     double START_JULIAN_DATE_TT = 0.0,
-    double END_JULIAN_DATE_TT = 0.0) {
+    double END_JULIAN_DATE_TT = 0.0,
+    const std::vector<::flatbuffers::Offset<ACWOccultingBody>> *OCCULTING_BODIES = nullptr) {
   auto GROUND_STATIONS__ = GROUND_STATIONS ? _fbb.CreateVector<::flatbuffers::Offset<ACWGroundStation>>(*GROUND_STATIONS) : 0;
   auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<ACWStateSample>>(*STATES) : 0;
   auto TARGET_STATION_ID__ = TARGET_STATION_ID ? _fbb.CreateString(TARGET_STATION_ID) : 0;
@@ -2214,6 +2447,7 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
   auto SENSORS__ = SENSORS ? _fbb.CreateVector<::flatbuffers::Offset<ACWSensor>>(*SENSORS) : 0;
   auto ACCESS__ = ACCESS ? _fbb.CreateVector<::flatbuffers::Offset<ACWSensorAccess>>(*ACCESS) : 0;
   auto EARTH_ORIENTATION__ = EARTH_ORIENTATION ? _fbb.CreateVector<::flatbuffers::Offset<EOP>>(*EARTH_ORIENTATION) : 0;
+  auto OCCULTING_BODIES__ = OCCULTING_BODIES ? _fbb.CreateVector<::flatbuffers::Offset<ACWOccultingBody>>(*OCCULTING_BODIES) : 0;
   return CreateACWRequest(
       _fbb,
       OPERATION,
@@ -2236,7 +2470,8 @@ inline ::flatbuffers::Offset<ACWRequest> CreateACWRequestDirect(
       EARTH_ORIENTATION__,
       RANDOM_SEED,
       START_JULIAN_DATE_TT,
-      END_JULIAN_DATE_TT);
+      END_JULIAN_DATE_TT,
+      OCCULTING_BODIES__);
 }
 
 /// One computed access interval.
@@ -2255,7 +2490,9 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_END_LIMITING_CONSTRAINT_LABEL = 22,
     VT_MIN_RANGE_M = 24,
     VT_MAX_RANGE_M = 26,
-    VT_EDGES_REFINED = 28
+    VT_EDGES_REFINED = 28,
+    VT_START_OCCULTING_BODY_ID = 30,
+    VT_END_OCCULTING_BODY_ID = 32
   };
   const ::flatbuffers::String *STATION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STATION_ID);
@@ -2310,6 +2547,15 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool EDGES_REFINED() const {
     return GetField<uint8_t>(VT_EDGES_REFINED, 0) != 0;
   }
+  /// NAIF code of the body whose occultation opens the window (399 for the
+  /// central body); 0 when the opening edge is not an occultation.
+  int32_t START_OCCULTING_BODY_ID() const {
+    return GetField<int32_t>(VT_START_OCCULTING_BODY_ID, 0);
+  }
+  /// Same, for the closing edge.
+  int32_t END_OCCULTING_BODY_ID() const {
+    return GetField<int32_t>(VT_END_OCCULTING_BODY_ID, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2330,6 +2576,8 @@ struct ACWAccessWindow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MIN_RANGE_M, 8) &&
            VerifyField<double>(verifier, VT_MAX_RANGE_M, 8) &&
            VerifyField<uint8_t>(verifier, VT_EDGES_REFINED, 1) &&
+           VerifyField<int32_t>(verifier, VT_START_OCCULTING_BODY_ID, 4) &&
+           VerifyField<int32_t>(verifier, VT_END_OCCULTING_BODY_ID, 4) &&
            verifier.EndTable();
   }
 };
@@ -2377,6 +2625,12 @@ struct ACWAccessWindowBuilder {
   void add_EDGES_REFINED(bool EDGES_REFINED) {
     fbb_.AddElement<uint8_t>(ACWAccessWindow::VT_EDGES_REFINED, static_cast<uint8_t>(EDGES_REFINED), 0);
   }
+  void add_START_OCCULTING_BODY_ID(int32_t START_OCCULTING_BODY_ID) {
+    fbb_.AddElement<int32_t>(ACWAccessWindow::VT_START_OCCULTING_BODY_ID, START_OCCULTING_BODY_ID, 0);
+  }
+  void add_END_OCCULTING_BODY_ID(int32_t END_OCCULTING_BODY_ID) {
+    fbb_.AddElement<int32_t>(ACWAccessWindow::VT_END_OCCULTING_BODY_ID, END_OCCULTING_BODY_ID, 0);
+  }
   explicit ACWAccessWindowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2402,13 +2656,17 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindow(
     ::flatbuffers::Offset<::flatbuffers::String> END_LIMITING_CONSTRAINT_LABEL = 0,
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
-    bool EDGES_REFINED = false) {
+    bool EDGES_REFINED = false,
+    int32_t START_OCCULTING_BODY_ID = 0,
+    int32_t END_OCCULTING_BODY_ID = 0) {
   ACWAccessWindowBuilder builder_(_fbb);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
   builder_.add_MIN_RANGE_M(MIN_RANGE_M);
   builder_.add_MAX_ELEVATION_RAD(MAX_ELEVATION_RAD);
   builder_.add_END_JULIAN_DATE_TT(END_JULIAN_DATE_TT);
   builder_.add_START_JULIAN_DATE_TT(START_JULIAN_DATE_TT);
+  builder_.add_END_OCCULTING_BODY_ID(END_OCCULTING_BODY_ID);
+  builder_.add_START_OCCULTING_BODY_ID(START_OCCULTING_BODY_ID);
   builder_.add_END_LIMITING_CONSTRAINT_LABEL(END_LIMITING_CONSTRAINT_LABEL);
   builder_.add_START_LIMITING_CONSTRAINT_LABEL(START_LIMITING_CONSTRAINT_LABEL);
   builder_.add_END_LIMITING_CONSTRAINT_INDEX(END_LIMITING_CONSTRAINT_INDEX);
@@ -2434,7 +2692,9 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindowDirect(
     const char *END_LIMITING_CONSTRAINT_LABEL = nullptr,
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
-    bool EDGES_REFINED = false) {
+    bool EDGES_REFINED = false,
+    int32_t START_OCCULTING_BODY_ID = 0,
+    int32_t END_OCCULTING_BODY_ID = 0) {
   auto STATION_ID__ = STATION_ID ? _fbb.CreateString(STATION_ID) : 0;
   auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
   auto START_LIMITING_CONSTRAINT_LABEL__ = START_LIMITING_CONSTRAINT_LABEL ? _fbb.CreateString(START_LIMITING_CONSTRAINT_LABEL) : 0;
@@ -2453,7 +2713,9 @@ inline ::flatbuffers::Offset<ACWAccessWindow> CreateACWAccessWindowDirect(
       END_LIMITING_CONSTRAINT_LABEL__,
       MIN_RANGE_M,
       MAX_RANGE_M,
-      EDGES_REFINED);
+      EDGES_REFINED,
+      START_OCCULTING_BODY_ID,
+      END_OCCULTING_BODY_ID);
 }
 
 /// Result for one access-window compute request.

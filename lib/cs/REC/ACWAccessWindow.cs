@@ -68,6 +68,11 @@ public struct ACWAccessWindow : IFlatbufferObject
   public double MAX_RANGE_M { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True when edges were root-refined (CONTINUOUS); false when they are samples.
   public bool EDGES_REFINED { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// NAIF code of the body whose occultation opens the window (399 for the
+  /// central body); 0 when the opening edge is not an occultation.
+  public int START_OCCULTING_BODY_ID { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Same, for the closing edge.
+  public int END_OCCULTING_BODY_ID { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<ACWAccessWindow> CreateACWAccessWindow(FlatBufferBuilder builder,
       StringOffset STATION_IDOffset = default(StringOffset),
@@ -82,13 +87,17 @@ public struct ACWAccessWindow : IFlatbufferObject
       StringOffset END_LIMITING_CONSTRAINT_LABELOffset = default(StringOffset),
       double MIN_RANGE_M = 0.0,
       double MAX_RANGE_M = 0.0,
-      bool EDGES_REFINED = false) {
-    builder.StartTable(13);
+      bool EDGES_REFINED = false,
+      int START_OCCULTING_BODY_ID = 0,
+      int END_OCCULTING_BODY_ID = 0) {
+    builder.StartTable(15);
     ACWAccessWindow.AddMAX_RANGE_M(builder, MAX_RANGE_M);
     ACWAccessWindow.AddMIN_RANGE_M(builder, MIN_RANGE_M);
     ACWAccessWindow.AddMAX_ELEVATION_RAD(builder, MAX_ELEVATION_RAD);
     ACWAccessWindow.AddEND_JULIAN_DATE_TT(builder, END_JULIAN_DATE_TT);
     ACWAccessWindow.AddSTART_JULIAN_DATE_TT(builder, START_JULIAN_DATE_TT);
+    ACWAccessWindow.AddEND_OCCULTING_BODY_ID(builder, END_OCCULTING_BODY_ID);
+    ACWAccessWindow.AddSTART_OCCULTING_BODY_ID(builder, START_OCCULTING_BODY_ID);
     ACWAccessWindow.AddEND_LIMITING_CONSTRAINT_LABEL(builder, END_LIMITING_CONSTRAINT_LABELOffset);
     ACWAccessWindow.AddSTART_LIMITING_CONSTRAINT_LABEL(builder, START_LIMITING_CONSTRAINT_LABELOffset);
     ACWAccessWindow.AddEND_LIMITING_CONSTRAINT_INDEX(builder, END_LIMITING_CONSTRAINT_INDEX);
@@ -100,7 +109,7 @@ public struct ACWAccessWindow : IFlatbufferObject
     return ACWAccessWindow.EndACWAccessWindow(builder);
   }
 
-  public static void StartACWAccessWindow(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartACWAccessWindow(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddSTATION_ID(FlatBufferBuilder builder, StringOffset STATION_IDOffset) { builder.AddOffset(0, STATION_IDOffset.Value, 0); }
   public static void AddSTART_JULIAN_DATE_TT(FlatBufferBuilder builder, double START_JULIAN_DATE_TT) { builder.AddDouble(1, START_JULIAN_DATE_TT, 0.0); }
   public static void AddEND_JULIAN_DATE_TT(FlatBufferBuilder builder, double END_JULIAN_DATE_TT) { builder.AddDouble(2, END_JULIAN_DATE_TT, 0.0); }
@@ -114,6 +123,8 @@ public struct ACWAccessWindow : IFlatbufferObject
   public static void AddMIN_RANGE_M(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.AddDouble(10, MIN_RANGE_M, 0.0); }
   public static void AddMAX_RANGE_M(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.AddDouble(11, MAX_RANGE_M, 0.0); }
   public static void AddEDGES_REFINED(FlatBufferBuilder builder, bool EDGES_REFINED) { builder.AddBool(12, EDGES_REFINED, false); }
+  public static void AddSTART_OCCULTING_BODY_ID(FlatBufferBuilder builder, int START_OCCULTING_BODY_ID) { builder.AddInt(13, START_OCCULTING_BODY_ID, 0); }
+  public static void AddEND_OCCULTING_BODY_ID(FlatBufferBuilder builder, int END_OCCULTING_BODY_ID) { builder.AddInt(14, END_OCCULTING_BODY_ID, 0); }
   public static Offset<ACWAccessWindow> EndACWAccessWindow(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACWAccessWindow>(o);
@@ -137,6 +148,8 @@ public struct ACWAccessWindow : IFlatbufferObject
     _o.MIN_RANGE_M = this.MIN_RANGE_M;
     _o.MAX_RANGE_M = this.MAX_RANGE_M;
     _o.EDGES_REFINED = this.EDGES_REFINED;
+    _o.START_OCCULTING_BODY_ID = this.START_OCCULTING_BODY_ID;
+    _o.END_OCCULTING_BODY_ID = this.END_OCCULTING_BODY_ID;
   }
   public static Offset<ACWAccessWindow> Pack(FlatBufferBuilder builder, ACWAccessWindowT _o) {
     if (_o == null) return default(Offset<ACWAccessWindow>);
@@ -158,7 +171,9 @@ public struct ACWAccessWindow : IFlatbufferObject
       _END_LIMITING_CONSTRAINT_LABEL,
       _o.MIN_RANGE_M,
       _o.MAX_RANGE_M,
-      _o.EDGES_REFINED);
+      _o.EDGES_REFINED,
+      _o.START_OCCULTING_BODY_ID,
+      _o.END_OCCULTING_BODY_ID);
   }
 }
 
@@ -177,6 +192,8 @@ public class ACWAccessWindowT
   public double MIN_RANGE_M { get; set; }
   public double MAX_RANGE_M { get; set; }
   public bool EDGES_REFINED { get; set; }
+  public int START_OCCULTING_BODY_ID { get; set; }
+  public int END_OCCULTING_BODY_ID { get; set; }
 
   public ACWAccessWindowT() {
     this.STATION_ID = null;
@@ -192,6 +209,8 @@ public class ACWAccessWindowT
     this.MIN_RANGE_M = 0.0;
     this.MAX_RANGE_M = 0.0;
     this.EDGES_REFINED = false;
+    this.START_OCCULTING_BODY_ID = 0;
+    this.END_OCCULTING_BODY_ID = 0;
   }
 }
 
@@ -214,6 +233,8 @@ static public class ACWAccessWindowVerify
       && verifier.VerifyField(tablePos, 24 /*MIN_RANGE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 26 /*MAX_RANGE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*EDGES_REFINED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*START_OCCULTING_BODY_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 32 /*END_OCCULTING_BODY_ID*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

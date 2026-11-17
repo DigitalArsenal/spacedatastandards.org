@@ -134,8 +134,25 @@ class ACWAccessWindow(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # NAIF code of the body whose occultation opens the window (399 for the
+    # central body); 0 when the opening edge is not an occultation.
+    # ACWAccessWindow
+    def START_OCCULTING_BODY_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Same, for the closing edge.
+    # ACWAccessWindow
+    def END_OCCULTING_BODY_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
 def ACWAccessWindowStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(15)
 
 def Start(builder):
     ACWAccessWindowStart(builder)
@@ -218,6 +235,18 @@ def ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED):
 def AddEDGES_REFINED(builder, EDGES_REFINED):
     ACWAccessWindowAddEDGES_REFINED(builder, EDGES_REFINED)
 
+def ACWAccessWindowAddSTART_OCCULTING_BODY_ID(builder, START_OCCULTING_BODY_ID):
+    builder.PrependInt32Slot(13, START_OCCULTING_BODY_ID, 0)
+
+def AddSTART_OCCULTING_BODY_ID(builder, START_OCCULTING_BODY_ID):
+    ACWAccessWindowAddSTART_OCCULTING_BODY_ID(builder, START_OCCULTING_BODY_ID)
+
+def ACWAccessWindowAddEND_OCCULTING_BODY_ID(builder, END_OCCULTING_BODY_ID):
+    builder.PrependInt32Slot(14, END_OCCULTING_BODY_ID, 0)
+
+def AddEND_OCCULTING_BODY_ID(builder, END_OCCULTING_BODY_ID):
+    ACWAccessWindowAddEND_OCCULTING_BODY_ID(builder, END_OCCULTING_BODY_ID)
+
 def ACWAccessWindowEnd(builder):
     return builder.EndObject()
 
@@ -243,6 +272,8 @@ class ACWAccessWindowT(object):
         MIN_RANGE_M = 0.0,
         MAX_RANGE_M = 0.0,
         EDGES_REFINED = False,
+        START_OCCULTING_BODY_ID = 0,
+        END_OCCULTING_BODY_ID = 0,
     ):
         self.STATION_ID = STATION_ID  # type: Optional[str]
         self.START_JULIAN_DATE_TT = START_JULIAN_DATE_TT  # type: float
@@ -257,6 +288,8 @@ class ACWAccessWindowT(object):
         self.MIN_RANGE_M = MIN_RANGE_M  # type: float
         self.MAX_RANGE_M = MAX_RANGE_M  # type: float
         self.EDGES_REFINED = EDGES_REFINED  # type: bool
+        self.START_OCCULTING_BODY_ID = START_OCCULTING_BODY_ID  # type: int
+        self.END_OCCULTING_BODY_ID = END_OCCULTING_BODY_ID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -292,6 +325,8 @@ class ACWAccessWindowT(object):
         self.MIN_RANGE_M = ACWAccessWindow.MIN_RANGE_M()
         self.MAX_RANGE_M = ACWAccessWindow.MAX_RANGE_M()
         self.EDGES_REFINED = ACWAccessWindow.EDGES_REFINED()
+        self.START_OCCULTING_BODY_ID = ACWAccessWindow.START_OCCULTING_BODY_ID()
+        self.END_OCCULTING_BODY_ID = ACWAccessWindow.END_OCCULTING_BODY_ID()
 
     # ACWAccessWindowT
     def Pack(self, builder):
@@ -321,5 +356,7 @@ class ACWAccessWindowT(object):
         ACWAccessWindowAddMIN_RANGE_M(builder, self.MIN_RANGE_M)
         ACWAccessWindowAddMAX_RANGE_M(builder, self.MAX_RANGE_M)
         ACWAccessWindowAddEDGES_REFINED(builder, self.EDGES_REFINED)
+        ACWAccessWindowAddSTART_OCCULTING_BODY_ID(builder, self.START_OCCULTING_BODY_ID)
+        ACWAccessWindowAddEND_OCCULTING_BODY_ID(builder, self.END_OCCULTING_BODY_ID)
         ACWAccessWindow = ACWAccessWindowEnd(builder)
         return ACWAccessWindow
