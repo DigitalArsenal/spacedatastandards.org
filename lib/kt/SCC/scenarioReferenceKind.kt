@@ -17,5 +17,16 @@ class scenarioReferenceKind private constructor() {
         const val POINT_OF_INTEREST: Byte = 6
         const val EXCLUSION_ZONE: Byte = 7
         const val OBSERVATION: Byte = 8
+        /**
+         * A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+         * REFERENCE_ID.
+         */
+        const val GROUP: Byte = 9
+        /**
+         * An area of interest: the $GJN feature of the enclosing $REC whose ID
+         * equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+         * alpha-2 code when the area is a country.
+         */
+        const val AREA_OF_INTEREST: Byte = 10
     }
 }

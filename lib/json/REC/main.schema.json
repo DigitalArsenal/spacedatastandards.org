@@ -191,11 +191,11 @@
     },
     "acwRefractionModelKind" : {
       "type" : "string",
-      "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE"]
+      "enum": ["NONE", "EARTH_STANDARD_ATMOSPHERE", "ITU_R_P834"]
     },
     "acwConstraintKind" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "MIN_ELEVATION", "ELEVATION_MASK", "MAX_RANGE", "MIN_RANGE", "SUN_EXCLUSION", "MOON_EXCLUSION", "TARGET_LIGHTING", "LINE_OF_SIGHT", "BLACKOUT"]
+      "enum": ["UNSPECIFIED", "MIN_ELEVATION", "ELEVATION_MASK", "MAX_RANGE", "MIN_RANGE", "SUN_EXCLUSION", "MOON_EXCLUSION", "TARGET_LIGHTING", "LINE_OF_SIGHT", "BLACKOUT", "TERRAIN_LINE_OF_SIGHT"]
     },
     "acwConstraintOperator" : {
       "type" : "string",
@@ -632,6 +632,10 @@
     "cnpMethod" : {
       "type" : "string",
       "enum": ["NDT7", "SPEED_TEST", "PING", "TRACEROUTE", "TERMINAL_TELEMETRY", "HTTP_DOWNLOAD", "PASSIVE", "MODELED", "OTHER"]
+    },
+    "coaKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY"]
     },
     "ComModulationType" : {
       "type" : "string",
@@ -1215,7 +1219,11 @@
     },
     "egpMembershipMode" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE"]
+      "enum": ["UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE", "GENERATED"]
+    },
+    "egpWalkerPattern" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DELTA", "STAR", "CUSTOM"]
     },
     "rfsMaterialClass" : {
       "type" : "string",
@@ -2423,7 +2431,7 @@
     },
     "scenarioReferenceKind" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION"]
+      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST"]
     },
     "scenarioActionCode" : {
       "type" : "string",
@@ -2655,7 +2663,7 @@
     },
     "snrAntennaPattern" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID"]
+      "enum": ["UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID", "PHASED_ARRAY"]
     },
     "snwErrorCode" : {
       "type" : "string",
@@ -3195,7 +3203,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS", "SSY", "MOR", "DRB"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT", "GNM", "CME", "SWA", "SWS", "SSY", "MOR", "DRB", "COA"]
     },
     "ABA" : {
       "type" : "object",
@@ -4083,6 +4091,58 @@
       "required" : ["SOURCE"],
       "additionalProperties" : false
     },
+    "RFLJamming" : {
+      "type" : "object",
+      "description" : "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+      "properties" : {
+        "LINK_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index in LINKS of the link assessed."
+              },
+        "JAMMER_ENDPOINT" : {
+                "$ref" : "#/definitions/RFLEndpoint",
+                "description" : "The jammer's end: its site (SIT_ID) or its platform."
+              },
+        "PASS_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+              },
+        "TERMINAL_GAIN_TOWARD_JAMMER_DBI" : {
+                "type" : "number",
+                "description" : "The ground terminal antenna's stated gain toward the jammer, dBi."
+              },
+        "HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI" : {
+                "type" : "boolean",
+                "description" : "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+              },
+        "POWER_STEP_DB" : {
+                "type" : "number",
+                "description" : "Countermeasure: the link's EIRP raised by this many dB."
+              },
+        "PROCESSING_GAIN_DB" : {
+                "type" : "number",
+                "description" : "Countermeasure: processing gain, dB, as the operator states it."
+              },
+        "HAS_PROCESSING_GAIN_DB" : {
+                "type" : "boolean",
+                "description" : "True when PROCESSING_GAIN_DB is stated; it has no default."
+              },
+        "ARRAY_PAP_ID" : {
+                "type" : "string",
+                "description" : "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+              },
+        "AREA_RADIUS_KM" : {
+                "type" : "number",
+                "description" : "Denial area about the link's ground end: radius, km."
+              },
+        "AREA_RESOLUTION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Denial area: number of cells across the radius."
+              }
+      },
+      "required" : ["JAMMER_ENDPOINT"],
+      "additionalProperties" : false
+    },
     "RFL" : {
       "type" : "object",
       "description" : "RF Link Sample",
@@ -4321,6 +4381,10 @@
         "BLOCK_ERROR_RATE" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Decoded block error probability [0-1]."
+              },
+        "JAMMING" : {
+                "$ref" : "#/definitions/RFLJamming",
+                "description" : "The jamming assessment this record answers, when it answers one."
               }
       },
       "required" : ["RFL_ID", "LINKS", "SAMPLE_LINK_INDEXES", "SAMPLE_EPOCHS", "PROVENANCE"],
@@ -13383,6 +13447,89 @@
                 "description" : "CID of the $CNP this record replaces when a source restates a window."
               }
       },
+      "additionalProperties" : false
+    },
+    "COAStep" : {
+      "type" : "object",
+      "description" : "One step of a course of action.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "The step, in the operator's words."
+              },
+        "DURATION_SECONDS" : {
+                "type" : "number",
+                "description" : "How long the step takes, s."
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "COA" : {
+      "type" : "object",
+      "description" : "Course of Action",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Identifier of the course of action, unique within its record set."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name, for example \"Plan A\"."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/coaKind"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Catalog number of the object acted on; 0 when GROUP_ID names a group."
+              },
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "GROUP_ID of the $EGP acted on, when the course of action is for a group."
+              },
+        "EVENT_STANDARD" : {
+                "type" : "string",
+                "description" : "Four-character standard code of the event answered, \"$\" included; never a union ordinal."
+              },
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "ID of the event's record; empty for an event that is computed again rather than stored."
+              },
+        "EVENT_EPOCH" : {
+                "type" : "string",
+                "description" : "Time of the event, ISO 8601 UTC."
+              },
+        "LEAD_SECONDS" : {
+                "type" : "number",
+                "description" : "MANEUVER: made this long before EVENT_EPOCH, s."
+              },
+        "RETURN_WITHIN_SECONDS" : {
+                "type" : "number",
+                "description" : "MANEUVER: back in place within this long after the maneuver, s."
+              },
+        "PREPARATION_SECONDS" : {
+                "type" : "number",
+                "description" : "Time out of service before a maneuver, s."
+              },
+        "CHECKOUT_SECONDS" : {
+                "type" : "number",
+                "description" : "Time out of service after a maneuver, s."
+              },
+        "DELTA_V_BUDGET_M_S_PER_YEAR" : {
+                "type" : "number",
+                "description" : "Delta-v the operator allows the object each year, m/s per year; 0 = not stated."
+              },
+        "STEPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/COAStep"},
+                "description" : "RECOVERY: the steps, in order."
+              },
+        "PLAN_ID" : {
+                "type" : "string",
+                "description" : "ID of the $MPL plan request that carries the maneuver, when one is stored."
+              }
+      },
+      "required" : ["ID"],
       "additionalProperties" : false
     },
     "COM" : {
@@ -25850,6 +25997,61 @@
       "required" : ["TILESET_ID", "PAYLOAD", "PROVENANCE"],
       "additionalProperties" : false
     },
+    "EGPWalker" : {
+      "type" : "object",
+      "description" : "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+      "properties" : {
+        "PATTERN" : {
+                "$ref" : "#/definitions/egpWalkerPattern"
+              },
+        "TOTAL_SATELLITES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "T: number of satellites."
+              },
+        "PLANES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "P: number of planes."
+              },
+        "PHASING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "F: relative phasing, 0 to PLANES - 1."
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Circular height above the WGS 84 equatorial radius, km."
+              },
+        "RA_OF_ASC_NODE_SPREAD" : {
+                "type" : "number",
+                "description" : "CUSTOM only: the right ascension the ascending nodes are spread over."
+              },
+        "FIRST_RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of the ascending node of the first plane."
+              },
+        "FIRST_MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly of the first satellite of the first plane."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the generated elements, ISO 8601 UTC."
+              },
+        "FIRST_NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Catalog number of the first satellite; the others follow it in order."
+              }
+      },
+      "additionalProperties" : false
+    },
     "EGPProvenance" : {
       "type" : "object",
       "description" : "Provenance of the assertions behind a group. Field-for-field the\n`$CMR` provenance shape, so one consumer parses both.",
@@ -26005,6 +26207,10 @@
         "DATASET_CID" : {
                 "type" : "string",
                 "description" : "Optional content identifier of the dataset the group was drawn from."
+              },
+        "WALKER" : {
+                "$ref" : "#/definitions/EGPWalker",
+                "description" : "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED."
               }
       },
       "required" : ["GROUP_ID", "NAME", "UPDATED_AT"],
@@ -53121,9 +53327,36 @@
       },
       "additionalProperties" : false
     },
+    "SCNPinnedRow" : {
+      "type" : "object",
+      "description" : "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+      "properties" : {
+        "ROW_ID" : {
+                "type" : "string",
+                "description" : "Row identifier, unique in the scenario."
+              },
+        "MODE_ID" : {
+                "type" : "string",
+                "description" : "The application's identifier of the mode the row belongs to."
+              },
+        "VERB_ID" : {
+                "type" : "string",
+                "description" : "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run."
+              },
+        "REFERENCE_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "REFERENCE_IDs of the scenario references the row was run on."
+              },
+        "RECORD_CID" : {
+                "type" : "string",
+                "description" : "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCN" : {
       "type" : "object",
-      "description" : "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+      "description" : "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
       "properties" : {
         "SCENARIO_ID" : {
                 "type" : "string",
@@ -53172,6 +53405,38 @@
         "ASSETS_CHANGED" : {
                 "$ref" : "#/definitions/SCNAssetsChanged",
                 "description" : "Asset-change notification payload for the scenario."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Clock interval stop as an ISO-8601 UTC timestamp."
+              },
+        "ANIMATING" : {
+                "type" : "boolean",
+                "description" : "True when the clock was running."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp."
+              },
+        "WINDOW_STOP" : {
+                "type" : "string",
+                "description" : "Stop of the analysis window as an ISO-8601 UTC timestamp."
+              },
+        "PROPAGATOR_MODULE_ID" : {
+                "type" : "string",
+                "description" : "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with."
+              },
+        "PINNED_ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCNPinnedRow"},
+                "description" : "Timeline rows kept with the scenario."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the\nenclosing $REC, over the five bytes \"$SCN\" and 0x00, followed by the\nenclosing $REC's bytes (without a size prefix) with these 64 bytes set to\nzero. The record's CID is computed over the signed bytes."
               }
       },
       "additionalProperties" : false

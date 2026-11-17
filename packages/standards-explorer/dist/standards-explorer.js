@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.287.0+1794907361879",
+  version: "1.288.0+1794912704107",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -8029,8 +8029,8 @@ file_identifier "$DCL";`,
       ]
     },
     SNR: {
-      IDL: `// Hash: 27620fd7dca9079faf5500ba9bd51aaf2882cfc17d8dc7f4fe002b9721d45798
-// Version: 0.0.3
+      IDL: `// Hash: 9117ec8500fc3dcf8f9eb4c6d03a7c01860aff49192c564240b471010f677f7b
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 include "../OPP/main.fbs";
 include "../RFB/main.fbs";
@@ -8131,7 +8131,9 @@ enum snrAntennaPattern : byte {
   /// The earth-coverage (teardrop) beam of a geostationary antenna.
   TEARDROP,
   TOROIDAL,
-  CARDIOID
+  CARDIOID,
+  /// An electronically steered array; its pattern is a $PAP synthesis.
+  PHASED_ARRAY
 }
 
 /// One spectral band of a sensor, in Hz. Hz is the unit for every band, optical
@@ -10524,7 +10526,277 @@ file_identifier "$PUR";`,
       ]
     },
     SCN: {
-      IDL: '// Hash: 5af79839265d0a4bf968d0fd83b2467f4689d2834ffb81dfb8fcd70ada15d444\n// Version: 1.136.5\n// -----------------------------------END_HEADER\ninclude "../EOO/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../VST/main.fbs";\n\n/// Scenario reference category. This is intentionally broader than the\n/// underlying domain schemas because a scene reference can point at an SDS\n/// record, a variable placeholder, or a visual annotation.\nenum scenarioReferenceKind : byte {\n  UNKNOWN,\n  SATELLITE,\n  GROUND_SITE,\n  SENSOR,\n  VARIABLE_SATELLITE,\n  VARIABLE_SITE,\n  POINT_OF_INTEREST,\n  EXCLUSION_ZONE,\n  OBSERVATION\n}\n\n/// Scenario command action.\nenum scenarioActionCode : byte {\n  NONE,\n  CLEAR,\n  RESET\n}\n\n/// Time-tagged point or annotation shown in a scenario.\ntable SCNPointOfInterest {\n  /// Display name for the point of interest.\n  NAME:string;\n  /// Optional detail text shown with the point of interest.\n  DESCRIPTION:string;\n  /// UTC epoch associated with the point of interest.\n  EPOCH:string;\n  /// Seconds before the epoch when highlighting begins.\n  HIGHLIGHT_BEFORE:double;\n  /// Seconds after the epoch when highlighting remains active.\n  HIGHLIGHT_AFTER:double;\n  /// Display color token for the point of interest.\n  COLOR:string;\n  /// WGS84 geodetic position for the point of interest.\n  POSITION:GJNPosition;\n}\n\n/// Sensor or site view-cone overlay used by scenario tools.\ntable SCNViewCone {\n  /// Minimum elevation angle in degrees.\n  MIN_ELEVATION:double;\n  /// Maximum elevation angle in degrees.\n  MAX_ELEVATION:double;\n  /// Minimum azimuth angle in degrees.\n  MIN_AZIMUTH:double;\n  /// Maximum azimuth angle in degrees.\n  MAX_AZIMUTH:double;\n  /// Maximum view-cone range in kilometers.\n  MAX_RANGE:double;\n  /// Half angle in degrees for cone-style overlays.\n  HALF_ANGLE:double;\n  /// Dynamic range mode or expression used by the viewer.\n  DYNAMIC_RANGE:string;\n}\n\n/// Target pairing for sun-advantage visualization.\ntable SCNSunAdvantageTarget {\n  /// Target identifier for the paired object.\n  TARGET_ID:string;\n  /// NORAD catalog id of the target satellite when available.\n  NORAD_CAT_ID:uint32;\n  /// Site id associated with the target pairing.\n  SITE_ID:string;\n}\n\n/// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape\n/// when available; POINTS preserves simple WGS84 polygon imports.\ntable SCNExclusionZone {\n  /// Display label for the exclusion zone.\n  LABEL:string;\n  /// Fill color token for the exclusion zone.\n  FILL_COLOR:string;\n  /// Label color token for the exclusion zone.\n  LABEL_COLOR:string;\n  /// True when the exclusion-zone polygon should be filled.\n  IS_FILLED:bool;\n  /// Simple WGS84 polygon points for imported zones.\n  POINTS:[GJNPosition];\n  /// Canonical GeoJSON geometry for the exclusion zone.\n  BOUNDARY:GJNGeometry;\n}\n\n/// Scene reference that binds viewer-scene state to existing SDS domain\n/// records without duplicating those records.\ntable SCNReference {\n  /// Stable scenario-local id for this reference.\n  REFERENCE_ID:string;\n  /// Human-readable name for the reference.\n  NAME:string;\n  /// Category of object or annotation represented by this reference.\n  REFERENCE_KIND:scenarioReferenceKind;\n  /// True when this reference represents a removal request.\n  REMOVE:bool;\n  /// NORAD catalog id for satellite references when available.\n  NORAD_CAT_ID:uint32;\n  /// International designator or provider object id when available.\n  OBJECT_ID:string;\n  /// Country associated with the reference.\n  COUNTRY:string;\n  /// Owner or operator label associated with the reference.\n  OWNER:string;\n  /// Source labels or URIs that produced this reference.\n  SOURCES:[string];\n  /// Data-mode labels associated with this reference.\n  DATA_MODES:[string];\n  /// Mean orbital elements associated with this reference.\n  MEAN_ELEMENTS:[OMM];\n  /// State vectors associated with this reference.\n  STATE_VECTORS:[STV];\n  /// Maneuver records associated with this reference.\n  MANEUVERS:[MNV];\n  /// Ground-site record associated with this reference.\n  SITE:SIT;\n  /// Sensor record associated with this reference.\n  SENSOR:SEN;\n  /// Sensor system id for references that identify a sensor by id.\n  SENSOR_SYSTEM_ID:string;\n  /// Sensor id for references that identify a sensor by id.\n  SENSOR_ID:string;\n  /// WGS84 site position when no SIT or SEN record is available.\n  SITE_POSITION:GJNPosition;\n  /// Scenario variable id for variable satellite references.\n  VARIABLE_SATELLITE_ID:string;\n  /// Scenario variable id for variable site references.\n  VARIABLE_SITE_ID:string;\n  /// Points of interest associated with this reference.\n  POINTS:[SCNPointOfInterest];\n  /// View-cone overlay associated with this reference.\n  VIEW_CONE:SCNViewCone;\n  /// Sun-advantage target pairing for this reference.\n  SUN_ADVANTAGE_TARGET:SCNSunAdvantageTarget;\n  /// Exclusion-zone geometry associated with this reference.\n  EXCLUSION_ZONE:SCNExclusionZone;\n  /// Electro-optical observation record associated with this reference.\n  OBSERVATION_EO:EOO;\n  /// Radar observation record associated with this reference.\n  OBSERVATION_RADAR:RDO;\n}\n\n/// Imported scenario event payload composed from existing SDS records.\ntable SCNEvent {\n  /// Stable id for the imported scenario event.\n  EVENT_ID:string;\n  /// Mean orbital elements associated with the event.\n  MEAN_ELEMENTS:[OMM];\n  /// State vectors associated with the event.\n  STATE_VECTORS:[STV];\n  /// Electro-optical observations associated with the event.\n  EO_OBSERVATIONS:[EOO];\n  /// Radar observations associated with the event.\n  RADAR_OBSERVATIONS:[RDO];\n}\n\n/// Scenario asset-change notification payload.\ntable SCNAssetsChanged {\n  /// Satellite references added by the asset-change event.\n  ADDED_SATELLITES:[SCNReference];\n  /// Ground-site references added by the asset-change event.\n  ADDED_GROUND_SITES:[SCNReference];\n  /// Satellite references removed by the asset-change event.\n  REMOVED_SATELLITES:[SCNReference];\n  /// Ground-site references removed by the asset-change event.\n  REMOVED_GROUND_SITES:[SCNReference];\n  /// Current satellite references after the asset-change event.\n  SATELLITES:[SCNReference];\n  /// Current ground-site references after the asset-change event.\n  GROUND_SITES:[SCNReference];\n  /// Current full reference set after the asset-change event.\n  REFERENCES:[SCNReference];\n}\n\n/// Scenario - canonical scene composition and simulation state for external\n/// scenario controls integrations. Domain records remain in their native SDS\n/// schemas and are referenced or embedded here only as scenario content.\ntable SCN {\n  /// Stable id for the scenario.\n  SCENARIO_ID:string;\n  /// Objects, annotations, and variables included in the scenario.\n  REFERENCES:[SCNReference];\n  /// Imported event payload associated with the scenario.\n  EVENT:SCNEvent;\n  /// Zero-based focused reference index, or -1 when no index is focused.\n  FOCUSED_REFERENCE_INDEX:int = -1;\n  /// Reference id of the currently focused scenario object.\n  FOCUSED_REFERENCE_ID:string;\n  /// Current scenario epoch as an ISO-8601 UTC timestamp.\n  EPOCH:string;\n  /// Simulation time-rate multiplier.\n  SIM_SPEED:double;\n  /// True when the viewer should use a body-fixed display frame.\n  USE_BODY_FIXED_FRAME:bool;\n  /// Authoritative reference frame used for scenario propagation and display.\n  REFERENCE_FRAME:RFM;\n  /// Command action requested for the scenario.\n  ACTION:scenarioActionCode;\n  /// Viewer camera and display state for the scenario.\n  VIEW_STATE:VST;\n  /// Asset-change notification payload for the scenario.\n  ASSETS_CHANGED:SCNAssetsChanged;\n}\n\nroot_type SCN;\nfile_identifier "$SCN";',
+      IDL: `// Hash: 091ef0a1caaed12241e4d895843693dfe6fba10886f18bc073bd6abcb3a9d57a
+// Version: 1.136.6
+// -----------------------------------END_HEADER
+include "../EOO/main.fbs";
+include "../RDO/main.fbs";
+include "../OMM/main.fbs";
+include "../STV/main.fbs";
+include "../MNV/main.fbs";
+include "../SIT/main.fbs";
+include "../SEN/main.fbs";
+include "../GJN/main.fbs";
+include "../RFM/main.fbs";
+include "../VST/main.fbs";
+
+/// Scenario reference category. This is intentionally broader than the
+/// underlying domain schemas because a scene reference can point at an SDS
+/// record, a variable placeholder, or a visual annotation.
+enum scenarioReferenceKind : byte {
+  UNKNOWN,
+  SATELLITE,
+  GROUND_SITE,
+  SENSOR,
+  VARIABLE_SATELLITE,
+  VARIABLE_SITE,
+  POINT_OF_INTEREST,
+  EXCLUSION_ZONE,
+  OBSERVATION,
+  /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+  /// REFERENCE_ID.
+  GROUP,
+  /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+  /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+  /// alpha-2 code when the area is a country.
+  AREA_OF_INTEREST
+}
+
+/// Scenario command action.
+enum scenarioActionCode : byte {
+  NONE,
+  CLEAR,
+  RESET
+}
+
+/// Time-tagged point or annotation shown in a scenario.
+table SCNPointOfInterest {
+  /// Display name for the point of interest.
+  NAME:string;
+  /// Optional detail text shown with the point of interest.
+  DESCRIPTION:string;
+  /// UTC epoch associated with the point of interest.
+  EPOCH:string;
+  /// Seconds before the epoch when highlighting begins.
+  HIGHLIGHT_BEFORE:double;
+  /// Seconds after the epoch when highlighting remains active.
+  HIGHLIGHT_AFTER:double;
+  /// Display color token for the point of interest.
+  COLOR:string;
+  /// WGS84 geodetic position for the point of interest.
+  POSITION:GJNPosition;
+}
+
+/// Sensor or site view-cone overlay used by scenario tools.
+table SCNViewCone {
+  /// Minimum elevation angle in degrees.
+  MIN_ELEVATION:double;
+  /// Maximum elevation angle in degrees.
+  MAX_ELEVATION:double;
+  /// Minimum azimuth angle in degrees.
+  MIN_AZIMUTH:double;
+  /// Maximum azimuth angle in degrees.
+  MAX_AZIMUTH:double;
+  /// Maximum view-cone range in kilometers.
+  MAX_RANGE:double;
+  /// Half angle in degrees for cone-style overlays.
+  HALF_ANGLE:double;
+  /// Dynamic range mode or expression used by the viewer.
+  DYNAMIC_RANGE:string;
+}
+
+/// Target pairing for sun-advantage visualization.
+table SCNSunAdvantageTarget {
+  /// Target identifier for the paired object.
+  TARGET_ID:string;
+  /// NORAD catalog id of the target satellite when available.
+  NORAD_CAT_ID:uint32;
+  /// Site id associated with the target pairing.
+  SITE_ID:string;
+}
+
+/// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
+/// when available; POINTS preserves simple WGS84 polygon imports.
+table SCNExclusionZone {
+  /// Display label for the exclusion zone.
+  LABEL:string;
+  /// Fill color token for the exclusion zone.
+  FILL_COLOR:string;
+  /// Label color token for the exclusion zone.
+  LABEL_COLOR:string;
+  /// True when the exclusion-zone polygon should be filled.
+  IS_FILLED:bool;
+  /// Simple WGS84 polygon points for imported zones.
+  POINTS:[GJNPosition];
+  /// Canonical GeoJSON geometry for the exclusion zone.
+  BOUNDARY:GJNGeometry;
+}
+
+/// Scene reference that binds viewer-scene state to existing SDS domain
+/// records without duplicating those records.
+table SCNReference {
+  /// Stable scenario-local id for this reference.
+  REFERENCE_ID:string;
+  /// Human-readable name for the reference.
+  NAME:string;
+  /// Category of object or annotation represented by this reference.
+  REFERENCE_KIND:scenarioReferenceKind;
+  /// True when this reference represents a removal request.
+  REMOVE:bool;
+  /// NORAD catalog id for satellite references when available.
+  NORAD_CAT_ID:uint32;
+  /// International designator or provider object id when available.
+  OBJECT_ID:string;
+  /// Country associated with the reference.
+  COUNTRY:string;
+  /// Owner or operator label associated with the reference.
+  OWNER:string;
+  /// Source labels or URIs that produced this reference.
+  SOURCES:[string];
+  /// Data-mode labels associated with this reference.
+  DATA_MODES:[string];
+  /// Mean orbital elements associated with this reference.
+  MEAN_ELEMENTS:[OMM];
+  /// State vectors associated with this reference.
+  STATE_VECTORS:[STV];
+  /// Maneuver records associated with this reference.
+  MANEUVERS:[MNV];
+  /// Ground-site record associated with this reference.
+  SITE:SIT;
+  /// Sensor record associated with this reference.
+  SENSOR:SEN;
+  /// Sensor system id for references that identify a sensor by id.
+  SENSOR_SYSTEM_ID:string;
+  /// Sensor id for references that identify a sensor by id.
+  SENSOR_ID:string;
+  /// WGS84 site position when no SIT or SEN record is available.
+  SITE_POSITION:GJNPosition;
+  /// Scenario variable id for variable satellite references.
+  VARIABLE_SATELLITE_ID:string;
+  /// Scenario variable id for variable site references.
+  VARIABLE_SITE_ID:string;
+  /// Points of interest associated with this reference.
+  POINTS:[SCNPointOfInterest];
+  /// View-cone overlay associated with this reference.
+  VIEW_CONE:SCNViewCone;
+  /// Sun-advantage target pairing for this reference.
+  SUN_ADVANTAGE_TARGET:SCNSunAdvantageTarget;
+  /// Exclusion-zone geometry associated with this reference.
+  EXCLUSION_ZONE:SCNExclusionZone;
+  /// Electro-optical observation record associated with this reference.
+  OBSERVATION_EO:EOO;
+  /// Radar observation record associated with this reference.
+  OBSERVATION_RADAR:RDO;
+}
+
+/// Imported scenario event payload composed from existing SDS records.
+table SCNEvent {
+  /// Stable id for the imported scenario event.
+  EVENT_ID:string;
+  /// Mean orbital elements associated with the event.
+  MEAN_ELEMENTS:[OMM];
+  /// State vectors associated with the event.
+  STATE_VECTORS:[STV];
+  /// Electro-optical observations associated with the event.
+  EO_OBSERVATIONS:[EOO];
+  /// Radar observations associated with the event.
+  RADAR_OBSERVATIONS:[RDO];
+}
+
+/// Scenario asset-change notification payload.
+table SCNAssetsChanged {
+  /// Satellite references added by the asset-change event.
+  ADDED_SATELLITES:[SCNReference];
+  /// Ground-site references added by the asset-change event.
+  ADDED_GROUND_SITES:[SCNReference];
+  /// Satellite references removed by the asset-change event.
+  REMOVED_SATELLITES:[SCNReference];
+  /// Ground-site references removed by the asset-change event.
+  REMOVED_GROUND_SITES:[SCNReference];
+  /// Current satellite references after the asset-change event.
+  SATELLITES:[SCNReference];
+  /// Current ground-site references after the asset-change event.
+  GROUND_SITES:[SCNReference];
+  /// Current full reference set after the asset-change event.
+  REFERENCES:[SCNReference];
+}
+
+/// A timeline row a scenario keeps: what was run, and on what. Never its bars;
+/// the inputs of the run are the request records of the enclosing $REC.
+table SCNPinnedRow {
+  /// Row identifier, unique in the scenario.
+  ROW_ID:string;
+  /// The application's identifier of the mode the row belongs to.
+  MODE_ID:string;
+  /// The application's identifier of the verb that produced the row; empty
+  /// when the row came without a run.
+  VERB_ID:string;
+  /// REFERENCE_IDs of the scenario references the row was run on.
+  REFERENCE_IDS:[string];
+  /// CID of the stored record the row shows, when it shows one (for example
+  /// an event's descriptor $SCN); empty otherwise.
+  RECORD_CID:string;
+}
+
+/// Scenario - canonical scene composition and simulation state for external
+/// scenario controls integrations. Domain records remain in their native SDS
+/// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
+table SCN {
+  /// Stable id for the scenario.
+  SCENARIO_ID:string;
+  /// Objects, annotations, and variables included in the scenario.
+  REFERENCES:[SCNReference];
+  /// Imported event payload associated with the scenario.
+  EVENT:SCNEvent;
+  /// Zero-based focused reference index, or -1 when no index is focused.
+  FOCUSED_REFERENCE_INDEX:int = -1;
+  /// Reference id of the currently focused scenario object.
+  FOCUSED_REFERENCE_ID:string;
+  /// Current scenario epoch as an ISO-8601 UTC timestamp.
+  EPOCH:string;
+  /// Simulation time-rate multiplier.
+  SIM_SPEED:double;
+  /// True when the viewer should use a body-fixed display frame.
+  USE_BODY_FIXED_FRAME:bool;
+  /// Authoritative reference frame used for scenario propagation and display.
+  REFERENCE_FRAME:RFM;
+  /// Command action requested for the scenario.
+  ACTION:scenarioActionCode;
+  /// Viewer camera and display state for the scenario.
+  VIEW_STATE:VST;
+  /// Asset-change notification payload for the scenario.
+  ASSETS_CHANGED:SCNAssetsChanged;
+  /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  /// time.
+  START_EPOCH:string;
+  /// Clock interval stop as an ISO-8601 UTC timestamp.
+  STOP_EPOCH:string;
+  /// True when the clock was running.
+  ANIMATING:bool;
+  /// Start of the analysis window, the span the timeline showed, as an
+  /// ISO-8601 UTC timestamp.
+  WINDOW_START:string;
+  /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+  WINDOW_STOP:string;
+  /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  /// the catalog objects were flown with.
+  PROPAGATOR_MODULE_ID:string;
+  /// Timeline rows kept with the scenario.
+  PINNED_ROWS:[SCNPinnedRow];
+  /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  /// zero. The record's CID is computed over the signed bytes.
+  SIGNATURE:[ubyte];
+}
+
+root_type SCN;
+file_identifier "$SCN";`,
       files: [
         "./dist/SCN/SCN.sw.tar.gz",
         "./dist/SCN/SCN.py.tar.gz",
@@ -14579,6 +14851,96 @@ file_identifier "$SRG";`,
         "./dist/SRG/SRG.ts.tar.gz"
       ]
     },
+    COA: {
+      IDL: `// Hash: fe48fdac3de91079d2899f8027fb5ea42a6b1a874fb955a4b63d0b4eb5aa0780
+// Version: 1.287.0
+// -----------------------------------END_HEADER
+// Course of Action (COA)
+// Description
+// One stated course of action for an object or a group: a maneuver (made at a lead before an event and
+// back in place within a stated time when it answers one), riding the event out, or the ordered steps
+// that restore service after an off-nominal event. Inputs only: what a course of action costs or yields
+// (delta-v, propellant, time out of service, risk) is computed from it and never stored here.
+//
+// Joins. NORAD_CAT_ID joins to $CAT and $OMM; GROUP_ID to $EGP GROUP_ID. EVENT_STANDARD and EVENT_ID name
+// the record of the event answered (for example "$OOE" and its ID). An event that is computed again
+// rather than stored (a close approach) is named by EVENT_STANDARD "$CDM" and EVENT_EPOCH, its time of
+// closest approach. PLAN_ID is the $MPL ID of the plan request that carries the maneuver, when one is
+// stored.
+
+/// What a course of action does. Append new values only.
+enum coaKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in
+  /// place within RETURN_WITHIN_SECONDS after it.
+  MANEUVER = 1,
+  /// No action: the event is accepted.
+  RIDE_OUT = 2,
+  /// STEPS, in order, restore service after the event.
+  RECOVERY = 3
+}
+
+/// One step of a course of action.
+table COAStep {
+  /// The step, in the operator's words.
+  NAME:string (required);
+  /// How long the step takes, s.
+  DURATION_SECONDS:double;
+}
+
+/// Course of Action
+table COA {
+  /// Identifier of the course of action, unique within its record set.
+  ID:string (required);
+  /// Display name, for example "Plan A".
+  NAME:string;
+  KIND:coaKind = UNSPECIFIED;
+  /// Catalog number of the object acted on; 0 when GROUP_ID names a group.
+  NORAD_CAT_ID:uint;
+  /// GROUP_ID of the $EGP acted on, when the course of action is for a group.
+  GROUP_ID:string;
+  /// Four-character standard code of the event answered, "$" included; never a union ordinal.
+  EVENT_STANDARD:string;
+  /// ID of the event's record; empty for an event that is computed again rather than stored.
+  EVENT_ID:string;
+  /// Time of the event, ISO 8601 UTC.
+  EVENT_EPOCH:string;
+  /// MANEUVER: made this long before EVENT_EPOCH, s.
+  LEAD_SECONDS:double;
+  /// MANEUVER: back in place within this long after the maneuver, s.
+  RETURN_WITHIN_SECONDS:double;
+  /// Time out of service before a maneuver, s.
+  PREPARATION_SECONDS:double;
+  /// Time out of service after a maneuver, s.
+  CHECKOUT_SECONDS:double;
+  /// Delta-v the operator allows the object each year, m/s per year; 0 = not stated.
+  DELTA_V_BUDGET_M_S_PER_YEAR:double;
+  /// RECOVERY: the steps, in order.
+  STEPS:[COAStep];
+  /// ID of the $MPL plan request that carries the maneuver, when one is stored.
+  PLAN_ID:string;
+}
+
+root_type COA;
+file_identifier "$COA";`,
+      files: [
+        "./dist/COA/COA.sw.tar.gz",
+        "./dist/COA/COA.py.tar.gz",
+        "./dist/COA/COA.lob.tar.gz",
+        "./dist/COA/COA.go.tar.gz",
+        "./dist/COA/COA.js.tar.gz",
+        "./dist/COA/COA.dart.tar.gz",
+        "./dist/COA/COA.cs.tar.gz",
+        "./dist/COA/COA.java.tar.gz",
+        "./dist/COA/COA.rs.tar.gz",
+        "./dist/COA/COA.php.tar.gz",
+        "./dist/COA/COA.json.tar.gz",
+        "./dist/COA/COA.cpp.tar.gz",
+        "./dist/COA/COA.kt.tar.gz",
+        "./dist/COA/COA.ts.tar.gz"
+      ]
+    },
     TAB: {
       IDL: '// Hash: 126e277db5ca4feb3857f58b5295275abed97ebeb69989fab1e5ad64ee61fd7f\n// Version: 0.0.4\n// -----------------------------------END_HEADER\n/// Typed Arena Buffer \u2014 descriptor for a schema-tagged payload frame moving\n/// through an arena-backed plugin stream. Carries enough identity for a\n/// receiver to dispatch on schema without inspecting the payload bytes.\n\n/// Logical payload wire format for a stream frame or an accepted port type.\nenum payloadWireFormat : ubyte {\n  /// Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.\n  FLATBUFFER,\n  /// Body is a raw aligned binary chunk (for example zero-copy structs).\n  ALIGNED_BINARY\n}\n\n/// Buffer mutability contract advertised by a stream port.\nenum bufferMutability : ubyte {\n  /// Buffer is immutable after produce.\n  IMMUTABLE,\n  /// Buffer may be written in place by the owner (single writer).\n  SINGLE_WRITER_MUTABLE,\n  /// Buffer is append-only (rings / logs).\n  APPEND_ONLY\n}\n\n/// Buffer ownership contract advertised by a stream port.\nenum bufferOwnership : ubyte {\n  /// Arena / host owns the backing bytes; receiver must not free.\n  HOST_OWNED,\n  /// Plugin owns the backing bytes; host must not free.\n  PLUGIN_OWNED,\n  /// Ownership transfers with the frame (hand-off semantics).\n  TRANSFERRED\n}\n\n/// Payload-schema identity for a stream frame or an accepted port type.\ntable FlatBufferTypeRef {\n  /// Logical schema name (for example `OMM.fbs` or `OCM.fbs`).\n  SCHEMA_NAME:string;\n  /// Optional 4-byte FlatBuffer file identifier.\n  FILE_IDENTIFIER:string;\n  /// Optional semver or schema revision string.\n  SCHEMA_VERSION:string;\n  /// Optional root type name within the schema.\n  ROOT_TYPE:string;\n  /// Optional schema hash bytes for stronger compatibility checks.\n  SCHEMA_HASH:[ubyte];\n  /// True when this port/type set accepts any FlatBuffer frame.\n  ACCEPTS_ANY_FLATBUFFER:bool = false;\n  /// Logical wire format for this accepted type.\n  WIRE_FORMAT:payloadWireFormat = FLATBUFFER;\n  /// Fixed string length for aligned-binary string fields, when applicable.\n  FIXED_STRING_LENGTH:uint16;\n  /// Byte length for fixed-size aligned-binary records, when applicable.\n  BYTE_LENGTH:uint;\n  /// Required start alignment for aligned-binary records, when applicable.\n  REQUIRED_ALIGNMENT:uint16;\n}\n\n/// Typed Arena Buffer \u2014 one descriptor for a payload slot in a shared arena.\ntable TAB {\n  /// Byte offset of the payload body within the arena.\n  OFFSET:uint;\n  /// Byte length of the payload body.\n  SIZE:uint;\n  /// Required start alignment of the payload body (in bytes).\n  ALIGNMENT:uint;\n  /// Wire format for the body.\n  WIRE_FORMAT:payloadWireFormat;\n  /// Optional payload schema identity.\n  TYPE_REF:FlatBufferTypeRef;\n  /// Mutability contract for the slot.\n  MUTABILITY:bufferMutability;\n  /// Ownership contract for the slot.\n  OWNERSHIP:bufferOwnership;\n  /// Optional opaque frame identifier for stream bookkeeping.\n  FRAME_ID:ulong;\n  /// Optional port identifier for frames that route to/from a named\n  /// input or output port on a method (maps to\n  /// `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\n  /// no port routing hint.\n  PORT_ID:string;\n}\n\nroot_type TAB;\nfile_identifier "$TAB";',
       files: [
@@ -15379,7 +15741,7 @@ file_identifier "$RND";`,
       ]
     },
     RFL: {
-      IDL: '// Hash: 9de4dfc933f9cd58cf185dff7812713cc78d607aad4126ff2ee5a61010136ac4\n// Version: 1.186.3\n// -----------------------------------END_HEADER\ninclude "../RFB/main.fbs";\ninclude "../TIM/main.fbs";\n\n// RF Link Sample (RFL)\n// Description\n// The durable per-link, per-epoch RF link-budget vector: geometry, every gain\n// and loss term that produced the received power, the noise and interference\n// terms that produced the carrier-to-noise ratios, the resulting margin and\n// capacity, and the single constraint that bound the link at that instant.\n//\n// Division of labour: `$RFB` is an emitter\'s STATIC band capability (EIRP,\n// peak gain, bandwidth) and carries no epoch; `$LKS` is the INSTANTANEOUS\n// operational state of one named link (established/degraded, current data\n// rate) and carries no budget terms; `$RFO` is a sensor\'s astrometric\n// observation of an object; `$IQC` is the archived baseband recording. `$RFL`\n// is the computed or measured BUDGET TIME SERIES that none of them can hold.\n// Intervals derived from these samples are `$ACI`; geometry contoured from\n// them is `$CVP`; the electromagnetic properties of any 3D obstacle on the\n// path are `$RFS`.\n//\n// OBSTACLES ARE MATERIALS, NOT BOOLEANS. A blocked path is not a fact about\n// geometry alone. OBSTRUCTIONS names, per interaction, the `$RFS` material\n// that was hit, the geometry inside it, the incidence angle and the distance\n// travelled through it, so an obstruction loss can be reproduced rather than\n// taken on faith.\n//\n// COMPACT FORMAT: samples are parallel arrays aligned index-for-index (the\n// same columnar philosophy as `$CVG` and the OCM v2 state layout) so a matrix\n// of many links across many epochs stays cheap to store, shard and stream.\n// `SAMPLE_LINK_INDEXES[i]` selects the link definition in `LINKS`, so one\n// record carries a full link matrix without repeating link identity per\n// sample.\n//\n// ABSENT IS NOT ZERO. A metric array that is not published is ABSENT \u2014 never\n// a zero-filled array. 0 dBW of EIRP, 0 dB of margin and 0 K of noise\n// temperature are all real, meaningful values that a consumer must be able to\n// distinguish from "not computed". Every array that IS present MUST have\n// exactly `SAMPLE_COUNT` entries, and a per-sample unknown inside a present\n// array is encoded NaN, never 0 and never a sentinel like -999. The same rule\n// governs the scalar numeric fields of this record: NaN is a non-default value\n// and survives serialization, where an omitted field silently reads back as 0.\n// Readers MUST treat NaN as "not published" and 0 as a real value.\n\n/// Whether the link existed at a sample epoch, and how far the evaluation got.\n///\n/// `NOT_EVALUATED` holds ordinal 0 so an unset field can never decode as a\n/// claim that the link was up or down.\nenum rflAccessState : byte {\n  /// The sample epoch was not evaluated for this link.\n  NOT_EVALUATED = 0,\n  /// Geometry denies the link (below the elevation mask, occulted, out of\n  /// range, outside the beam).\n  NO_ACCESS,\n  /// Geometry permits the link; the budget was not evaluated at this sample.\n  GEOMETRIC_ACCESS,\n  /// Geometry permits the link, the budget was evaluated, and the stated\n  /// threshold is NOT met.\n  BELOW_THRESHOLD,\n  /// Geometry permits the link and the budget meets the stated threshold.\n  THRESHOLD_SATISFIED,\n  /// The link had access and lost it to the stated LIMITING_CONSTRAINT (rain\n  /// fade, sun outage, blockage) rather than to geometry.\n  OUTAGE,\n  /// The emitter was deliberately not radiating (scheduled off, regulatory\n  /// keep-out, power-safe mode). Distinct from NO_ACCESS: the geometry may be\n  /// perfectly good.\n  SUPPRESSED\n}\n\n/// A named term of the link budget. Used to declare which quantity a\n/// threshold, a contour or a best-server selection is stated against, so a\n/// consumer never has to infer it from a units string.\n///\n/// ORDINALS ARE WIRE VALUES. New terms are APPENDED ONLY.\nenum rflBudgetTerm : byte {\n  UNSPECIFIED = 0,\n  RANGE,\n  RANGE_RATE,\n  AZIMUTH,\n  ELEVATION,\n  DOPPLER_SHIFT,\n  EIRP,\n  TRANSMIT_ANTENNA_GAIN,\n  RECEIVE_ANTENNA_GAIN,\n  FREE_SPACE_PATH_LOSS,\n  GASEOUS_ABSORPTION_LOSS,\n  RAIN_LOSS,\n  CLOUD_FOG_LOSS,\n  SCINTILLATION_LOSS,\n  TERRAIN_DIFFRACTION_LOSS,\n  /// Loss caused by an obstacle with stated `$RFS` material properties.\n  OBSTRUCTION_LOSS,\n  POLARIZATION_LOSS,\n  POINTING_LOSS,\n  IMPLEMENTATION_LOSS,\n  RECEIVED_POWER,\n  SYSTEM_NOISE_TEMPERATURE,\n  GAIN_TO_NOISE_TEMPERATURE,\n  CARRIER_TO_NOISE_DENSITY,\n  CARRIER_TO_NOISE,\n  ENERGY_PER_BIT_TO_NOISE_DENSITY,\n  BIT_ERROR_RATE,\n  LINK_MARGIN,\n  CHANNEL_CAPACITY,\n  INTERFERENCE_POWER,\n  CARRIER_TO_NOISE_PLUS_INTERFERENCE,\n  SIGNAL_TO_INTERFERENCE_PLUS_NOISE,\n  /// Energy per transmitted symbol divided by noise spectral density.\n  SYMBOL_ENERGY_TO_NOISE_DENSITY,\n  /// Error probability for a decoded transport block or frame.\n  BLOCK_ERROR_RATE,\n  /// Delivered information bits per second per hertz.\n  SPECTRAL_EFFICIENCY,\n  /// Data rate delivered by the selected modulation and coding entry.\n  ACHIEVED_DATA_RATE,\n  /// Margin above the threshold of the selected adaptive entry.\n  ACM_MARGIN\n}\n\n/// The single condition that bound the link at a sample epoch \u2014 the answer to\n/// "why is this link not better than it is". Shared by `$ACI` intervals and\n/// `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.\n///\n/// ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.\nenum rflConstraint : byte {\n  UNSPECIFIED = 0,\n  ELEVATION_MASK,\n  TERRAIN_BLOCKAGE,\n  /// A 3D obstacle intersected the path. The material that did it is named in\n  /// RFLObstruction.MATERIAL_ID (`$RFS`).\n  OBSTACLE_BLOCKAGE,\n  /// The path passed THROUGH an obstacle and paid its penetration loss.\n  MATERIAL_PENETRATION,\n  RANGE_LIMIT,\n  BEAM_EDGE,\n  SLEW_RATE,\n  ANTENNA_KEYHOLE,\n  TRANSMIT_POWER_LIMIT,\n  REGULATORY_POWER_LIMIT,\n  GASEOUS_ABSORPTION,\n  RAIN_ATTENUATION,\n  CLOUD_FOG_ATTENUATION,\n  SCINTILLATION,\n  POLARIZATION_MISMATCH,\n  POINTING_ERROR,\n  RECEIVER_SENSITIVITY,\n  NOISE_TEMPERATURE,\n  INTERFERENCE,\n  SUN_OUTAGE,\n  BANDWIDTH_LIMIT,\n  MODULATION_THRESHOLD,\n  CODING_THRESHOLD,\n  SCHEDULE_CONFLICT,\n  CHANNEL_CAPACITY_LIMIT,\n  EMITTER_UNAVAILABLE,\n  /// The producer states a binding condition this enum cannot express. The\n  /// verbatim description MUST be preserved in LIMITING_CONSTRAINT_NOTE.\n  OTHER\n}\n\n/// How a stated threshold is compared against the metric it is stated for.\n///\n/// `UNSPECIFIED` holds ordinal 0: a threshold whose sense is unstated is\n/// unusable, and MUST NOT be silently read as "greater than or equal".\nenum rflComparison : byte {\n  UNSPECIFIED = 0,\n  GREATER_THAN_OR_EQUAL,\n  GREATER_THAN,\n  LESS_THAN_OR_EQUAL,\n  LESS_THAN\n}\n\n/// What kind of thing an endpoint is, which selects the standard it joins to.\nenum rflEndpointKind : byte {\n  UNSPECIFIED = 0,\n  /// On-orbit object; joins `$CAT` by NORAD_CAT_ID / OBJECT_ID.\n  SPACECRAFT,\n  /// Geodetic tracking station; joins `$GST` by STATION_ID.\n  GEODETIC_TRACKING_STATION,\n  /// Satellite ground station / teleport; joins `$SIT`.\n  SATELLITE_GROUND_STATION,\n  /// Terrestrial base-station site; joins `$TBS`.\n  TERRESTRIAL_SITE,\n  /// User terminal, fixed or mobile.\n  USER_TERMINAL,\n  AIRBORNE,\n  MARITIME,\n  /// A relay payload acting as an intermediate endpoint of a multi-hop chain.\n  RELAY_PAYLOAD\n}\n\n/// Direction of a link relative to its endpoints.\n///\n/// This enum deliberately mirrors `$LKS.linkCategory` member-for-member with\n/// an added `UNSPECIFIED` at ordinal 0. `linkCategory` places `UPLINK` at\n/// ordinal 0, so an unset field there silently decodes as a real direction;\n/// a durable analytical record may not carry that hazard.\nenum rflLinkKind : byte {\n  UNSPECIFIED = 0,\n  UPLINK,\n  DOWNLINK,\n  CROSSLINK,\n  INTER_SATELLITE,\n  GROUND_TO_GROUND,\n  RELAY,\n  /// Service link to an end-user terminal.\n  USER_BEAM,\n  /// Gateway link carrying aggregated traffic to the network core.\n  FEEDER\n}\n\n/// How the values in this record came to exist.\n///\n/// `MODELED` exists so a modelled number can be REFUSED where a measurement\n/// is required.\nenum rflMethod : byte {\n  UNSPECIFIED = 0,\n  /// Values recorded by instrumentation on a real link.\n  MEASURED,\n  /// Values produced by propagation and RF models.\n  MODELED,\n  /// Modelled geometry reconciled against measured RF terms, or vice versa.\n  HYBRID\n}\n\n/// How the path interacted with an obstacle. A solver that only ever reports\n/// blockage cannot express a reflected multipath component or a wall the\n/// signal went through, so the interaction is named per contribution.\nenum rflObstacleInteraction : byte {\n  UNSPECIFIED = 0,\n  /// The obstacle blocked line of sight; no energy was propagated through it.\n  LINE_OF_SIGHT_BLOCKAGE,\n  /// Energy passed through the obstacle and paid its penetration loss.\n  TRANSMISSION,\n  /// Energy reached the receiver by reflecting off the obstacle.\n  REFLECTION,\n  /// Energy reached the receiver by diffracting around an edge.\n  DIFFRACTION,\n  /// Energy reached the receiver by rough-surface scattering.\n  SCATTERING,\n  /// The obstacle intruded into the Fresnel zone without blocking the direct\n  /// ray.\n  FRESNEL_INTRUSION\n}\n\n/// One obstacle interaction on one sample\'s path. SPARSE: entries exist only\n/// where an interaction was computed, so a clear path is never encoded as a\n/// row of zeroes.\n///\n/// This is the join that makes an arbitrary 3D object a first-class part of\n/// the link budget: MATERIAL_ID names the `$RFS` record whose permittivity,\n/// conductivity, penetration loss and roughness produced LOSS_DB, and\n/// GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape\n/// inside it that was hit.\ntable RFLObstruction {\n  /// Index into the sample arrays this interaction applies to.\n  SAMPLE_INDEX: uint32;\n  /// Producer\'s identifier for the obstacle instance.\n  OBSTACLE_ID: string;\n  /// `$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with\n  /// no material is an unattributed number: a metal panel and a plasterboard\n  /// wall of the same size do entirely different things to a link.\n  MATERIAL_ID: string;\n  /// `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit.\n  GEOMETRY_REF_ID: string;\n  /// `$VAM` asset identity of the obstacle mesh, when the obstacle is a\n  /// reviewed 3D asset.\n  VAM_ID: string;\n  VARIANT_ID: string;\n  /// `$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an\n  /// occulting spacecraft, a structure on another vehicle). 0 when unbound.\n  NORAD_CAT_ID: uint;\n  INTERACTION: rflObstacleInteraction = UNSPECIFIED;\n  /// Angle between the incident ray and the surface normal, degrees [0-90).\n  INCIDENCE_ANGLE_DEG: double;\n  /// Path length travelled INSIDE the material, metres. With\n  /// `$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss\n  /// reproducible instead of a stated constant.\n  PATH_LENGTH_IN_MATERIAL_M: double;\n  /// Loss this interaction contributed, dB (positive).\n  LOSS_DB: double;\n  /// Extra propagation delay of a reflected or scattered component, seconds.\n  EXCESS_DELAY_S: double;\n  /// Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is\n  /// untouched.\n  FRESNEL_CLEARANCE_FRACTION: double;\n  /// Distance from the transmitter to the interaction point, metres.\n  DISTANCE_FROM_TRANSMITTER_M: double;\n}\n\n/// One endpoint of a link. Identity ONLY \u2014 position, antenna geometry and band\n/// capability are NOT copied here; they are joined from the standard named by\n/// ENDPOINT_KIND. A copied position silently goes stale against its source.\ntable RFLEndpoint {\n  /// Producer-stable identifier for this endpoint within the record.\n  ENDPOINT_ID: string (required);\n  ENDPOINT_KIND: rflEndpointKind = UNSPECIFIED;\n  /// Human-readable name.\n  NAME: string;\n  /// `$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION.\n  GST_STATION_ID: string;\n  /// `$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION.\n  SIT_ID: string;\n  /// `$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE.\n  TBS_SITE_ID: string;\n  /// `$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when\n  /// unbound \u2014 never a placeholder catalogue number.\n  NORAD_CAT_ID: uint;\n  /// International designator, `$CAT.OBJECT_ID`.\n  OBJECT_ID: string;\n  /// `$RFB.ID` \u2014 the band specification (frequency, bandwidth, EIRP, gains,\n  /// polarization) this endpoint transmits or receives on.\n  RFB_ID: string;\n  /// `$RFE.ID` \u2014 the parametric emitter description, when one exists.\n  RFE_ID: string;\n  /// `$IQC` capture identifier, when the samples were derived from a recording.\n  IQC_ID: string;\n  /// Beam identifier within the emitter.\n  ID_BEAM: string;\n  /// Channel or carrier identifier within the beam.\n  CHANNEL_ID: string;\n  /// Polarization actually used on this link. Defaults to UNKNOWN explicitly:\n  /// `rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise\n  /// decode as a real polarization.\n  POLARIZATION: rfPolarization = UNKNOWN;\n}\n\n/// One modulation-and-coding choice available to a link. The table carries\n/// engineering capability only; catalogue or recommendation names belong in\n/// ID / NAME and provenance data, never in the schema vocabulary.\ntable RFLModCod {\n  /// Stable identifier within the containing link\'s MODCOD_SET.\n  MODCOD_ID: string (required);\n  /// Producer-supplied display name.\n  NAME: string;\n  MODULATION: string;\n  CODING: string;\n  /// Information bits divided by coded bits, in (0,1].\n  CODE_RATE: double;\n  BITS_PER_SYMBOL: double;\n  SPECTRAL_EFFICIENCY_BPS_HZ: double;\n  REQUIRED_ES_N0_DB: double;\n  REQUIRED_EB_N0_DB: double;\n  TARGET_BIT_ERROR_RATE: double;\n  TARGET_BLOCK_ERROR_RATE: double;\n  /// Additional implementation margin required before this entry is selected.\n  REQUIRED_MARGIN_DB: double;\n  /// Optional ceiling imposed by framing or implementation, bits per second.\n  MAXIMUM_DATA_RATE_BPS: double;\n}\n\n/// One link whose budget is sampled by this record.\ntable RFLLink {\n  /// Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and\n  /// `$LKS.ID` when the same link also has an operational-state record.\n  LINK_ID: string (required);\n  /// Human-readable link name.\n  LINK_NAME: string;\n  LINK_KIND: rflLinkKind = UNSPECIFIED;\n  /// Transmitting endpoint.\n  TRANSMIT_ENDPOINT: RFLEndpoint (required);\n  /// Receiving endpoint.\n  RECEIVE_ENDPOINT: RFLEndpoint (required);\n  /// Carrier centre frequency actually used, megahertz \u2014 the `$RFB` MHz\n  /// convention, NOT the `$IQC` hertz convention. A consumer joining the two\n  /// converts explicitly at the join. Band designation is NOT duplicated here:\n  /// it is joined from `$RFB.BAND`.\n  CENTER_FREQUENCY_MHZ: double;\n  /// Occupied bandwidth, megahertz.\n  BANDWIDTH_MHZ: double;\n  /// Modulation as the producer states it (e.g. "QPSK", "8PSK", "16APSK").\n  MODULATION: string;\n  /// Forward error correction scheme as the producer states it.\n  CODING: string;\n  /// Code rate as a fraction (0-1].\n  CODE_RATE: double;\n  /// Symbol rate in baud (symbols per second), NOT kilobaud \u2014 the `$RFB.BAUD`\n  /// convention.\n  SYMBOL_RATE_BAUD: double;\n  /// Information bit rate the budget is stated for, bits per second.\n  DATA_RATE_BPS: double;\n  /// Required threshold this link is evaluated against. THRESHOLD_TERM,\n  /// THRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful\n  /// only together; a LINK_MARGIN_DB column without them states a margin\n  /// against an unstated requirement and MUST be refused.\n  THRESHOLD_TERM: rflBudgetTerm = UNSPECIFIED;\n  THRESHOLD_VALUE: double;\n  THRESHOLD_UNITS: string;\n  THRESHOLD_COMPARISON: rflComparison = UNSPECIFIED;\n  /// Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID\n  /// and CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated\n  /// together; a producer that shards a link matrix MUST keep a group intact\n  /// within one shard.\n  RECEIVER_GROUP_ID: string;\n  CHANNEL_GROUP_ID: string;\n  /// Constellation or network this link belongs to.\n  CONSTELLATION: string;\n  /// Operator-facing service or mission designation.\n  SERVICE: string;\n  /// Ordered adaptive modulation-and-coding choices. Per-sample\n  /// SELECTED_MODCOD_INDEX indexes this vector for the sample\'s selected link.\n  MODCOD_SET: [RFLModCod];\n  /// Whether the producer evaluated adaptive selection for this link.\n  ACM_ENABLED: bool;\n}\n\n/// One interfering contribution to one sample. SPARSE: entries exist only\n/// where a contribution was computed, so a dense matrix is never forced into\n/// existence to say "no interference computed".\ntable RFLInterferenceContribution {\n  /// Index into the sample arrays this contribution applies to.\n  SAMPLE_INDEX: uint32;\n  /// Endpoint identifier of the interfering emitter, when it is an endpoint of\n  /// this record.\n  SOURCE_ENDPOINT_ID: string;\n  /// `$RFE.ID` of the interfering emitter.\n  RFE_ID: string;\n  /// `$RFB.ID` of the interfering emission.\n  RFB_ID: string;\n  /// Interfering object\'s catalogue number, 0 when unbound.\n  NORAD_CAT_ID: uint;\n  /// Received interfering power at the victim receiver, dBW.\n  INTERFERENCE_POWER_DBW: double;\n  /// Angular separation between the wanted and interfering paths at the\n  /// victim receiver, degrees.\n  TOPOCENTRIC_SEPARATION_DEG: double;\n  /// Fraction of the victim\'s bandwidth overlapped by this emission [0-1].\n  SPECTRAL_OVERLAP_FRACTION: double;\n  /// Polarization isolation applied to this contribution, dB.\n  POLARIZATION_ISOLATION_DB: double;\n  /// Discrimination applied from the victim antenna pattern, dB.\n  ANTENNA_DISCRIMINATION_DB: double;\n}\n\n/// A named parameter of a model binding, with its unit stated. There is no\n/// encoding for a parameter value without a unit.\ntable RFLModelParameter {\n  NAME: string (required);\n  VALUE: double;\n  UNITS: string (required);\n  /// Non-numeric parameter value, when the parameter is categorical.\n  TEXT_VALUE: string;\n}\n\n/// Which model produced one term of the budget. A loss term without a model\n/// binding is an unattributed number: rain attenuation from two different\n/// recommendations differs by decibels, and a consumer must be able to tell\n/// which one it is holding.\ntable RFLModelBinding {\n  /// The budget term this binding produced.\n  TERM: rflBudgetTerm = UNSPECIFIED;\n  /// Model or recommendation identifier as its publisher states it (e.g. an\n  /// ITU-R recommendation number with its revision).\n  MODEL_NAME: string (required);\n  MODEL_VERSION: string;\n  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it.\n  MODULE_ID: string;\n  MODULE_VERSION: string;\n  /// Content hash of the exact artifact that produced the values.\n  MODULE_CONTENT_HASH: string;\n  PARAMETERS: [RFLModelParameter];\n}\n\n/// Where this sample set came from, stated once for the record.\ntable RFLProvenance {\n  METHOD: rflMethod = UNSPECIFIED;\n  /// The producing system, dataset or measurement campaign. Required: a\n  /// budget time series with no stated source is not publishable.\n  SOURCE: string (required);\n  /// Replayable query or scenario reference that regenerates this set.\n  SOURCE_QUERY: string;\n  /// Identifier of the propagator that produced the geometry columns. A record\n  /// whose METHOD is MODELED or HYBRID and which carries geometry columns MUST\n  /// name it: geometry is only as good as the propagator, and the propagator is\n  /// a pluggable choice, never an assumed default.\n  PROPAGATOR_ID: string;\n  PROPAGATOR_VERSION: string;\n  /// Force model or configuration identifier handed to the propagator.\n  PROPAGATOR_CONFIGURATION: string;\n  /// Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular.\n  SAMPLING_STEP_S: double;\n  /// Per-term model bindings.\n  MODELS: [RFLModelBinding];\n  /// Weather or environment dataset the atmospheric terms were evaluated\n  /// against, when they were not evaluated against a statistical model.\n  ENVIRONMENT_DATASET: string;\n  /// Terrain or surface dataset the blockage terms were evaluated against.\n  TERRAIN_DATASET: string;\n  /// Unix ms this set was computed or recorded.\n  COMPUTED_AT: uint64;\n  /// Unix ms the upstream inputs were retrieved.\n  RETRIEVED_AT: uint64;\n  /// Licence the source imposes on redistribution. An empty LICENSE means\n  /// UNKNOWN TERMS \u2014 never public domain, never a grant to redistribute.\n  LICENSE: string;\n  /// True when the licence forbids commercial use of this set.\n  NON_COMMERCIAL_ONLY: bool;\n  /// Attribution the licence requires this record to carry downstream.\n  CITATION: string;\n  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.\n  /// MODELS remains the per-budget-term attribution surface.\n  MODULE_ID: string;\n  MODULE_VERSION: string;\n  /// Content hash of the exact producing WASM artifact.\n  MODULE_CONTENT_HASH: string;\n}\n\n/// RF Link Sample\ntable RFL {\n  /// Stable identifier of this sample set.\n  RFL_ID: string (required);\n  /// Display name.\n  NAME: string;\n  /// Analysis or scenario grouping identifier shared with the `$ACI` and\n  /// `$CVP` products derived from this set.\n  SCENARIO_ID: string;\n  /// Link definitions. SAMPLE_LINK_INDEXES index into this vector.\n  LINKS: [RFLLink] (required);\n  /// Number of samples. Every present metric array MUST have exactly this\n  /// many entries.\n  SAMPLE_COUNT: uint32;\n  /// Index into LINKS for each sample.\n  SAMPLE_LINK_INDEXES: [uint32] (required);\n  /// Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples\n  /// need not be uniformly spaced and need not be grouped by link, but MUST be\n  /// non-decreasing within each link.\n  SAMPLE_EPOCHS: [double] (required);\n  /// Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:\n  /// `timingStandard` ordinal 0 is GMST, so an unset field would otherwise\n  /// decode as sidereal time.\n  TIME_SYSTEM: timingStandard = UTC;\n\n  /// Access state per sample.\n  ACCESS_STATES: [rflAccessState];\n\n  // ---- Geometry ----\n  /// Slant range, metres.\n  RANGE_M: [double];\n  /// Range rate, metres per second; positive is opening.\n  RANGE_RATE_M_S: [double];\n  /// Azimuth at the receiving endpoint, degrees east of north [0-360).\n  AZIMUTH_DEG: [double];\n  /// Elevation at the receiving endpoint, degrees above the local horizon.\n  ELEVATION_DEG: [double];\n  /// Azimuth at the transmitting endpoint, degrees east of north [0-360).\n  TRANSMIT_AZIMUTH_DEG: [double];\n  /// Elevation at the transmitting endpoint, degrees.\n  TRANSMIT_ELEVATION_DEG: [double];\n  /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;\n  /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in\n  /// this record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\n  /// MHz encoding.\n  DOPPLER_SHIFT_HZ: [double];\n  /// Doppler rate, hertz per second.\n  DOPPLER_RATE_HZ_S: [double];\n\n  // ---- Transmit side ----\n  /// Effective isotropic radiated power toward the receiver, dBW.\n  EIRP_DBW: [double];\n  /// Transmit antenna gain in the direction of the receiver, dBi.\n  TRANSMIT_ANTENNA_GAIN_DBI: [double];\n  /// Receive antenna gain in the direction of the transmitter, dBi.\n  RECEIVE_ANTENNA_GAIN_DBI: [double];\n\n  // ---- Path terms (each a positive loss in dB) ----\n  /// Free-space path loss, dB.\n  FREE_SPACE_PATH_LOSS_DB: [double];\n  /// Gaseous (oxygen and water vapour) absorption, dB.\n  GASEOUS_ABSORPTION_LOSS_DB: [double];\n  /// Rain attenuation, dB.\n  RAIN_LOSS_DB: [double];\n  /// Cloud and fog attenuation, dB.\n  CLOUD_FOG_LOSS_DB: [double];\n  /// Tropospheric or ionospheric scintillation, dB.\n  SCINTILLATION_LOSS_DB: [double];\n  /// Terrain diffraction and blockage, dB.\n  TERRAIN_DIFFRACTION_LOSS_DB: [double];\n  /// Total loss from 3D obstacles on the path, dB. The per-obstacle detail \u2014\n  /// which object, which material, at what angle, through how much of it \u2014 is\n  /// in OBSTRUCTIONS.\n  OBSTRUCTION_LOSS_DB: [double];\n  /// Polarization mismatch, dB.\n  POLARIZATION_LOSS_DB: [double];\n  /// Antenna pointing error, dB.\n  POINTING_LOSS_DB: [double];\n  /// Implementation and hardware losses, dB.\n  IMPLEMENTATION_LOSS_DB: [double];\n  /// Total of all path terms actually applied, dB. Published as its own column\n  /// rather than left to the consumer to sum: a producer that applied a term\n  /// this schema has no column for MUST still report an honest total, and the\n  /// discrepancy against the itemised columns is then visible.\n  TOTAL_PATH_LOSS_DB: [double];\n\n  // ---- Receive side ----\n  /// Received carrier power at the receiver input, dBW.\n  RECEIVED_POWER_DBW: [double];\n  /// Receiving system noise temperature, kelvin.\n  SYSTEM_NOISE_TEMPERATURE_K: [double];\n  /// Receiving system figure of merit G/T, dB/K.\n  GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: [double];\n  /// Carrier-to-noise-density ratio C/N0, dB-Hz.\n  CARRIER_TO_NOISE_DENSITY_DBHZ: [double];\n  /// Carrier-to-noise ratio C/N in the occupied bandwidth, dB.\n  CARRIER_TO_NOISE_DB: [double];\n  /// Energy per bit to noise density Eb/N0, dB.\n  ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: [double];\n  /// Bit error rate as a probability [0-1], NOT an exponent and NOT a\n  /// percentage. 1e-6 is encoded 1e-6.\n  BIT_ERROR_RATE: [double];\n  /// Link margin against the link\'s stated threshold, dB. Meaningless without\n  /// RFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON.\n  LINK_MARGIN_DB: [double];\n  /// Achievable channel capacity, bits per second.\n  CHANNEL_CAPACITY_BPS: [double];\n\n  // ---- Interference ----\n  /// Aggregate received interfering power, dBW.\n  INTERFERENCE_POWER_DBW: [double];\n  /// Carrier to noise-plus-interference ratio C/(N+I), dB.\n  CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: [double];\n  /// Signal to interference-plus-noise ratio, dB.\n  SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: [double];\n  /// Per-contribution interference detail, sparse.\n  INTERFERENCE_CONTRIBUTIONS: [RFLInterferenceContribution];\n\n  // ---- Obstacles ----\n  /// Per-interaction obstacle detail, sparse. Each entry names the `$RFS`\n  /// material it went through, reflected off or was blocked by.\n  OBSTRUCTIONS: [RFLObstruction];\n\n  // ---- Verdict ----\n  /// The single condition that bound the link at each sample.\n  LIMITING_CONSTRAINTS: [rflConstraint];\n  /// Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.\n  LIMITING_CONSTRAINT_NOTE: string;\n\n  /// Provenance of the whole set. Required: an unattributed budget is not\n  /// publishable.\n  PROVENANCE: RFLProvenance (required);\n  /// Unix ms this record was serialized.\n  COMPUTED_AT: uint64;\n  /// `$EPM` identifier of the producing node.\n  PRODUCER_ID: string;\n  /// Ed25519 signature by the producing `$EPM` over the size-prefixed\n  /// FlatBuffer projection with both 64-byte signature payloads zeroed while\n  /// preserving their vectors and offsets.\n  SIGNATURE: [ubyte];\n  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\n  /// field order, IDL capitalization, no insignificant whitespace, and both\n  /// signature fields omitted.\n  CANONICAL_JSON_SIGNATURE: [ubyte];\n\n  // ---- Adaptive modulation and coding ----\n  /// Index into the selected link\'s RFLLink.MODCOD_SET for each sample.\n  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.\n  SELECTED_MODCOD_INDEX: [uint32];\n  SELECTED_MODCOD_VALID: [bool];\n  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.\n  SPECTRAL_EFFICIENCY_BPS_HZ: [double];\n  /// Delivered information rate after adaptive selection, bits per second.\n  ACHIEVED_DATA_RATE_BPS: [double];\n  /// Margin above the selected entry\'s threshold, dB.\n  ACM_MARGIN_DB: [double];\n  /// Symbol energy to noise spectral density, dB.\n  ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: [double];\n  /// Decoded block error probability [0-1].\n  BLOCK_ERROR_RATE: [double];\n}\n\nroot_type RFL;\nfile_identifier "$RFL";',
+      IDL: '// Hash: 4e018a4ad958ddb0e630ce22eccceec64a1769cf016b0a415124eda76efb9184\n// Version: 1.186.4\n// -----------------------------------END_HEADER\ninclude "../RFB/main.fbs";\ninclude "../TIM/main.fbs";\n\n// RF Link Sample (RFL)\n// Description\n// The durable per-link, per-epoch RF link-budget vector: geometry, every gain\n// and loss term that produced the received power, the noise and interference\n// terms that produced the carrier-to-noise ratios, the resulting margin and\n// capacity, and the single constraint that bound the link at that instant.\n//\n// Division of labour: `$RFB` is an emitter\'s STATIC band capability (EIRP,\n// peak gain, bandwidth) and carries no epoch; `$LKS` is the INSTANTANEOUS\n// operational state of one named link (established/degraded, current data\n// rate) and carries no budget terms; `$RFO` is a sensor\'s astrometric\n// observation of an object; `$IQC` is the archived baseband recording. `$RFL`\n// is the computed or measured BUDGET TIME SERIES that none of them can hold.\n// Intervals derived from these samples are `$ACI`; geometry contoured from\n// them is `$CVP`; the electromagnetic properties of any 3D obstacle on the\n// path are `$RFS`.\n//\n// OBSTACLES ARE MATERIALS, NOT BOOLEANS. A blocked path is not a fact about\n// geometry alone. OBSTRUCTIONS names, per interaction, the `$RFS` material\n// that was hit, the geometry inside it, the incidence angle and the distance\n// travelled through it, so an obstruction loss can be reproduced rather than\n// taken on faith.\n//\n// COMPACT FORMAT: samples are parallel arrays aligned index-for-index (the\n// same columnar philosophy as `$CVG` and the OCM v2 state layout) so a matrix\n// of many links across many epochs stays cheap to store, shard and stream.\n// `SAMPLE_LINK_INDEXES[i]` selects the link definition in `LINKS`, so one\n// record carries a full link matrix without repeating link identity per\n// sample.\n//\n// ABSENT IS NOT ZERO. A metric array that is not published is ABSENT \u2014 never\n// a zero-filled array. 0 dBW of EIRP, 0 dB of margin and 0 K of noise\n// temperature are all real, meaningful values that a consumer must be able to\n// distinguish from "not computed". Every array that IS present MUST have\n// exactly `SAMPLE_COUNT` entries, and a per-sample unknown inside a present\n// array is encoded NaN, never 0 and never a sentinel like -999. The same rule\n// governs the scalar numeric fields of this record: NaN is a non-default value\n// and survives serialization, where an omitted field silently reads back as 0.\n// Readers MUST treat NaN as "not published" and 0 as a real value.\n\n/// Whether the link existed at a sample epoch, and how far the evaluation got.\n///\n/// `NOT_EVALUATED` holds ordinal 0 so an unset field can never decode as a\n/// claim that the link was up or down.\nenum rflAccessState : byte {\n  /// The sample epoch was not evaluated for this link.\n  NOT_EVALUATED = 0,\n  /// Geometry denies the link (below the elevation mask, occulted, out of\n  /// range, outside the beam).\n  NO_ACCESS,\n  /// Geometry permits the link; the budget was not evaluated at this sample.\n  GEOMETRIC_ACCESS,\n  /// Geometry permits the link, the budget was evaluated, and the stated\n  /// threshold is NOT met.\n  BELOW_THRESHOLD,\n  /// Geometry permits the link and the budget meets the stated threshold.\n  THRESHOLD_SATISFIED,\n  /// The link had access and lost it to the stated LIMITING_CONSTRAINT (rain\n  /// fade, sun outage, blockage) rather than to geometry.\n  OUTAGE,\n  /// The emitter was deliberately not radiating (scheduled off, regulatory\n  /// keep-out, power-safe mode). Distinct from NO_ACCESS: the geometry may be\n  /// perfectly good.\n  SUPPRESSED\n}\n\n/// A named term of the link budget. Used to declare which quantity a\n/// threshold, a contour or a best-server selection is stated against, so a\n/// consumer never has to infer it from a units string.\n///\n/// ORDINALS ARE WIRE VALUES. New terms are APPENDED ONLY.\nenum rflBudgetTerm : byte {\n  UNSPECIFIED = 0,\n  RANGE,\n  RANGE_RATE,\n  AZIMUTH,\n  ELEVATION,\n  DOPPLER_SHIFT,\n  EIRP,\n  TRANSMIT_ANTENNA_GAIN,\n  RECEIVE_ANTENNA_GAIN,\n  FREE_SPACE_PATH_LOSS,\n  GASEOUS_ABSORPTION_LOSS,\n  RAIN_LOSS,\n  CLOUD_FOG_LOSS,\n  SCINTILLATION_LOSS,\n  TERRAIN_DIFFRACTION_LOSS,\n  /// Loss caused by an obstacle with stated `$RFS` material properties.\n  OBSTRUCTION_LOSS,\n  POLARIZATION_LOSS,\n  POINTING_LOSS,\n  IMPLEMENTATION_LOSS,\n  RECEIVED_POWER,\n  SYSTEM_NOISE_TEMPERATURE,\n  GAIN_TO_NOISE_TEMPERATURE,\n  CARRIER_TO_NOISE_DENSITY,\n  CARRIER_TO_NOISE,\n  ENERGY_PER_BIT_TO_NOISE_DENSITY,\n  BIT_ERROR_RATE,\n  LINK_MARGIN,\n  CHANNEL_CAPACITY,\n  INTERFERENCE_POWER,\n  CARRIER_TO_NOISE_PLUS_INTERFERENCE,\n  SIGNAL_TO_INTERFERENCE_PLUS_NOISE,\n  /// Energy per transmitted symbol divided by noise spectral density.\n  SYMBOL_ENERGY_TO_NOISE_DENSITY,\n  /// Error probability for a decoded transport block or frame.\n  BLOCK_ERROR_RATE,\n  /// Delivered information bits per second per hertz.\n  SPECTRAL_EFFICIENCY,\n  /// Data rate delivered by the selected modulation and coding entry.\n  ACHIEVED_DATA_RATE,\n  /// Margin above the threshold of the selected adaptive entry.\n  ACM_MARGIN\n}\n\n/// The single condition that bound the link at a sample epoch \u2014 the answer to\n/// "why is this link not better than it is". Shared by `$ACI` intervals and\n/// `$CVP` contours so one vocabulary explains a sample, a pass and a footprint.\n///\n/// ORDINALS ARE WIRE VALUES. New constraints are APPENDED ONLY.\nenum rflConstraint : byte {\n  UNSPECIFIED = 0,\n  ELEVATION_MASK,\n  TERRAIN_BLOCKAGE,\n  /// A 3D obstacle intersected the path. The material that did it is named in\n  /// RFLObstruction.MATERIAL_ID (`$RFS`).\n  OBSTACLE_BLOCKAGE,\n  /// The path passed THROUGH an obstacle and paid its penetration loss.\n  MATERIAL_PENETRATION,\n  RANGE_LIMIT,\n  BEAM_EDGE,\n  SLEW_RATE,\n  ANTENNA_KEYHOLE,\n  TRANSMIT_POWER_LIMIT,\n  REGULATORY_POWER_LIMIT,\n  GASEOUS_ABSORPTION,\n  RAIN_ATTENUATION,\n  CLOUD_FOG_ATTENUATION,\n  SCINTILLATION,\n  POLARIZATION_MISMATCH,\n  POINTING_ERROR,\n  RECEIVER_SENSITIVITY,\n  NOISE_TEMPERATURE,\n  INTERFERENCE,\n  SUN_OUTAGE,\n  BANDWIDTH_LIMIT,\n  MODULATION_THRESHOLD,\n  CODING_THRESHOLD,\n  SCHEDULE_CONFLICT,\n  CHANNEL_CAPACITY_LIMIT,\n  EMITTER_UNAVAILABLE,\n  /// The producer states a binding condition this enum cannot express. The\n  /// verbatim description MUST be preserved in LIMITING_CONSTRAINT_NOTE.\n  OTHER\n}\n\n/// How a stated threshold is compared against the metric it is stated for.\n///\n/// `UNSPECIFIED` holds ordinal 0: a threshold whose sense is unstated is\n/// unusable, and MUST NOT be silently read as "greater than or equal".\nenum rflComparison : byte {\n  UNSPECIFIED = 0,\n  GREATER_THAN_OR_EQUAL,\n  GREATER_THAN,\n  LESS_THAN_OR_EQUAL,\n  LESS_THAN\n}\n\n/// What kind of thing an endpoint is, which selects the standard it joins to.\nenum rflEndpointKind : byte {\n  UNSPECIFIED = 0,\n  /// On-orbit object; joins `$CAT` by NORAD_CAT_ID / OBJECT_ID.\n  SPACECRAFT,\n  /// Geodetic tracking station; joins `$GST` by STATION_ID.\n  GEODETIC_TRACKING_STATION,\n  /// Satellite ground station / teleport; joins `$SIT`.\n  SATELLITE_GROUND_STATION,\n  /// Terrestrial base-station site; joins `$TBS`.\n  TERRESTRIAL_SITE,\n  /// User terminal, fixed or mobile.\n  USER_TERMINAL,\n  AIRBORNE,\n  MARITIME,\n  /// A relay payload acting as an intermediate endpoint of a multi-hop chain.\n  RELAY_PAYLOAD\n}\n\n/// Direction of a link relative to its endpoints.\n///\n/// This enum deliberately mirrors `$LKS.linkCategory` member-for-member with\n/// an added `UNSPECIFIED` at ordinal 0. `linkCategory` places `UPLINK` at\n/// ordinal 0, so an unset field there silently decodes as a real direction;\n/// a durable analytical record may not carry that hazard.\nenum rflLinkKind : byte {\n  UNSPECIFIED = 0,\n  UPLINK,\n  DOWNLINK,\n  CROSSLINK,\n  INTER_SATELLITE,\n  GROUND_TO_GROUND,\n  RELAY,\n  /// Service link to an end-user terminal.\n  USER_BEAM,\n  /// Gateway link carrying aggregated traffic to the network core.\n  FEEDER\n}\n\n/// How the values in this record came to exist.\n///\n/// `MODELED` exists so a modelled number can be REFUSED where a measurement\n/// is required.\nenum rflMethod : byte {\n  UNSPECIFIED = 0,\n  /// Values recorded by instrumentation on a real link.\n  MEASURED,\n  /// Values produced by propagation and RF models.\n  MODELED,\n  /// Modelled geometry reconciled against measured RF terms, or vice versa.\n  HYBRID\n}\n\n/// How the path interacted with an obstacle. A solver that only ever reports\n/// blockage cannot express a reflected multipath component or a wall the\n/// signal went through, so the interaction is named per contribution.\nenum rflObstacleInteraction : byte {\n  UNSPECIFIED = 0,\n  /// The obstacle blocked line of sight; no energy was propagated through it.\n  LINE_OF_SIGHT_BLOCKAGE,\n  /// Energy passed through the obstacle and paid its penetration loss.\n  TRANSMISSION,\n  /// Energy reached the receiver by reflecting off the obstacle.\n  REFLECTION,\n  /// Energy reached the receiver by diffracting around an edge.\n  DIFFRACTION,\n  /// Energy reached the receiver by rough-surface scattering.\n  SCATTERING,\n  /// The obstacle intruded into the Fresnel zone without blocking the direct\n  /// ray.\n  FRESNEL_INTRUSION\n}\n\n/// One obstacle interaction on one sample\'s path. SPARSE: entries exist only\n/// where an interaction was computed, so a clear path is never encoded as a\n/// row of zeroes.\n///\n/// This is the join that makes an arbitrary 3D object a first-class part of\n/// the link budget: MATERIAL_ID names the `$RFS` record whose permittivity,\n/// conductivity, penetration loss and roughness produced LOSS_DB, and\n/// GEOMETRY_REF_ID names the exact mesh, face set, panel or analytic shape\n/// inside it that was hit.\ntable RFLObstruction {\n  /// Index into the sample arrays this interaction applies to.\n  SAMPLE_INDEX: uint32;\n  /// Producer\'s identifier for the obstacle instance.\n  OBSTACLE_ID: string;\n  /// `$RFS.MATERIAL_ID` of the surface that was hit. An obstruction loss with\n  /// no material is an unattributed number: a metal panel and a plasterboard\n  /// wall of the same size do entirely different things to a link.\n  MATERIAL_ID: string;\n  /// `$RFS.RFSGeometryRef.GEOMETRY_REF_ID` of the exact geometry hit.\n  GEOMETRY_REF_ID: string;\n  /// `$VAM` asset identity of the obstacle mesh, when the obstacle is a\n  /// reviewed 3D asset.\n  VAM_ID: string;\n  VARIANT_ID: string;\n  /// `$CAT.NORAD_CAT_ID` when the obstacle is a catalogued object (an\n  /// occulting spacecraft, a structure on another vehicle). 0 when unbound.\n  NORAD_CAT_ID: uint;\n  INTERACTION: rflObstacleInteraction = UNSPECIFIED;\n  /// Angle between the incident ray and the surface normal, degrees [0-90).\n  INCIDENCE_ANGLE_DEG: double;\n  /// Path length travelled INSIDE the material, metres. With\n  /// `$RFS.ATTENUATION_DB_PER_M` this is what makes penetration loss\n  /// reproducible instead of a stated constant.\n  PATH_LENGTH_IN_MATERIAL_M: double;\n  /// Loss this interaction contributed, dB (positive).\n  LOSS_DB: double;\n  /// Extra propagation delay of a reflected or scattered component, seconds.\n  EXCESS_DELAY_S: double;\n  /// Fraction of the first Fresnel zone still clear [0-1]. 1 means the zone is\n  /// untouched.\n  FRESNEL_CLEARANCE_FRACTION: double;\n  /// Distance from the transmitter to the interaction point, metres.\n  DISTANCE_FROM_TRANSMITTER_M: double;\n}\n\n/// One endpoint of a link. Identity ONLY \u2014 position, antenna geometry and band\n/// capability are NOT copied here; they are joined from the standard named by\n/// ENDPOINT_KIND. A copied position silently goes stale against its source.\ntable RFLEndpoint {\n  /// Producer-stable identifier for this endpoint within the record.\n  ENDPOINT_ID: string (required);\n  ENDPOINT_KIND: rflEndpointKind = UNSPECIFIED;\n  /// Human-readable name.\n  NAME: string;\n  /// `$GST.STATION_ID` when ENDPOINT_KIND is GEODETIC_TRACKING_STATION.\n  GST_STATION_ID: string;\n  /// `$SIT` identifier when ENDPOINT_KIND is SATELLITE_GROUND_STATION.\n  SIT_ID: string;\n  /// `$TBS.SITE_ID` when ENDPOINT_KIND is TERRESTRIAL_SITE.\n  TBS_SITE_ID: string;\n  /// `$CAT.NORAD_CAT_ID` when the endpoint is an on-orbit object. 0 when\n  /// unbound \u2014 never a placeholder catalogue number.\n  NORAD_CAT_ID: uint;\n  /// International designator, `$CAT.OBJECT_ID`.\n  OBJECT_ID: string;\n  /// `$RFB.ID` \u2014 the band specification (frequency, bandwidth, EIRP, gains,\n  /// polarization) this endpoint transmits or receives on.\n  RFB_ID: string;\n  /// `$RFE.ID` \u2014 the parametric emitter description, when one exists.\n  RFE_ID: string;\n  /// `$IQC` capture identifier, when the samples were derived from a recording.\n  IQC_ID: string;\n  /// Beam identifier within the emitter.\n  ID_BEAM: string;\n  /// Channel or carrier identifier within the beam.\n  CHANNEL_ID: string;\n  /// Polarization actually used on this link. Defaults to UNKNOWN explicitly:\n  /// `rfPolarization` ordinal 0 is LHCP, so an unset field would otherwise\n  /// decode as a real polarization.\n  POLARIZATION: rfPolarization = UNKNOWN;\n}\n\n/// One modulation-and-coding choice available to a link. The table carries\n/// engineering capability only; catalogue or recommendation names belong in\n/// ID / NAME and provenance data, never in the schema vocabulary.\ntable RFLModCod {\n  /// Stable identifier within the containing link\'s MODCOD_SET.\n  MODCOD_ID: string (required);\n  /// Producer-supplied display name.\n  NAME: string;\n  MODULATION: string;\n  CODING: string;\n  /// Information bits divided by coded bits, in (0,1].\n  CODE_RATE: double;\n  BITS_PER_SYMBOL: double;\n  SPECTRAL_EFFICIENCY_BPS_HZ: double;\n  REQUIRED_ES_N0_DB: double;\n  REQUIRED_EB_N0_DB: double;\n  TARGET_BIT_ERROR_RATE: double;\n  TARGET_BLOCK_ERROR_RATE: double;\n  /// Additional implementation margin required before this entry is selected.\n  REQUIRED_MARGIN_DB: double;\n  /// Optional ceiling imposed by framing or implementation, bits per second.\n  MAXIMUM_DATA_RATE_BPS: double;\n}\n\n/// One link whose budget is sampled by this record.\ntable RFLLink {\n  /// Producer-stable link identifier. Joins `$ACI.ACIInterval.LINK_ID` and\n  /// `$LKS.ID` when the same link also has an operational-state record.\n  LINK_ID: string (required);\n  /// Human-readable link name.\n  LINK_NAME: string;\n  LINK_KIND: rflLinkKind = UNSPECIFIED;\n  /// Transmitting endpoint.\n  TRANSMIT_ENDPOINT: RFLEndpoint (required);\n  /// Receiving endpoint.\n  RECEIVE_ENDPOINT: RFLEndpoint (required);\n  /// Carrier centre frequency actually used, megahertz \u2014 the `$RFB` MHz\n  /// convention, NOT the `$IQC` hertz convention. A consumer joining the two\n  /// converts explicitly at the join. Band designation is NOT duplicated here:\n  /// it is joined from `$RFB.BAND`.\n  CENTER_FREQUENCY_MHZ: double;\n  /// Occupied bandwidth, megahertz.\n  BANDWIDTH_MHZ: double;\n  /// Modulation as the producer states it (e.g. "QPSK", "8PSK", "16APSK").\n  MODULATION: string;\n  /// Forward error correction scheme as the producer states it.\n  CODING: string;\n  /// Code rate as a fraction (0-1].\n  CODE_RATE: double;\n  /// Symbol rate in baud (symbols per second), NOT kilobaud \u2014 the `$RFB.BAUD`\n  /// convention.\n  SYMBOL_RATE_BAUD: double;\n  /// Information bit rate the budget is stated for, bits per second.\n  DATA_RATE_BPS: double;\n  /// Required threshold this link is evaluated against. THRESHOLD_TERM,\n  /// THRESHOLD_VALUE, THRESHOLD_UNITS and THRESHOLD_COMPARISON are meaningful\n  /// only together; a LINK_MARGIN_DB column without them states a margin\n  /// against an unstated requirement and MUST be refused.\n  THRESHOLD_TERM: rflBudgetTerm = UNSPECIFIED;\n  THRESHOLD_VALUE: double;\n  THRESHOLD_UNITS: string;\n  THRESHOLD_COMPARISON: rflComparison = UNSPECIFIED;\n  /// Receiver group this link belongs to. Links sharing a RECEIVER_GROUP_ID\n  /// and CHANNEL_GROUP_ID are mutually interfering and MUST be evaluated\n  /// together; a producer that shards a link matrix MUST keep a group intact\n  /// within one shard.\n  RECEIVER_GROUP_ID: string;\n  CHANNEL_GROUP_ID: string;\n  /// Constellation or network this link belongs to.\n  CONSTELLATION: string;\n  /// Operator-facing service or mission designation.\n  SERVICE: string;\n  /// Ordered adaptive modulation-and-coding choices. Per-sample\n  /// SELECTED_MODCOD_INDEX indexes this vector for the sample\'s selected link.\n  MODCOD_SET: [RFLModCod];\n  /// Whether the producer evaluated adaptive selection for this link.\n  ACM_ENABLED: bool;\n}\n\n/// One interfering contribution to one sample. SPARSE: entries exist only\n/// where a contribution was computed, so a dense matrix is never forced into\n/// existence to say "no interference computed".\ntable RFLInterferenceContribution {\n  /// Index into the sample arrays this contribution applies to.\n  SAMPLE_INDEX: uint32;\n  /// Endpoint identifier of the interfering emitter, when it is an endpoint of\n  /// this record.\n  SOURCE_ENDPOINT_ID: string;\n  /// `$RFE.ID` of the interfering emitter.\n  RFE_ID: string;\n  /// `$RFB.ID` of the interfering emission.\n  RFB_ID: string;\n  /// Interfering object\'s catalogue number, 0 when unbound.\n  NORAD_CAT_ID: uint;\n  /// Received interfering power at the victim receiver, dBW.\n  INTERFERENCE_POWER_DBW: double;\n  /// Angular separation between the wanted and interfering paths at the\n  /// victim receiver, degrees.\n  TOPOCENTRIC_SEPARATION_DEG: double;\n  /// Fraction of the victim\'s bandwidth overlapped by this emission [0-1].\n  SPECTRAL_OVERLAP_FRACTION: double;\n  /// Polarization isolation applied to this contribution, dB.\n  POLARIZATION_ISOLATION_DB: double;\n  /// Discrimination applied from the victim antenna pattern, dB.\n  ANTENNA_DISCRIMINATION_DB: double;\n}\n\n/// A named parameter of a model binding, with its unit stated. There is no\n/// encoding for a parameter value without a unit.\ntable RFLModelParameter {\n  NAME: string (required);\n  VALUE: double;\n  UNITS: string (required);\n  /// Non-numeric parameter value, when the parameter is categorical.\n  TEXT_VALUE: string;\n}\n\n/// Which model produced one term of the budget. A loss term without a model\n/// binding is an unattributed number: rain attenuation from two different\n/// recommendations differs by decibels, and a consumer must be able to tell\n/// which one it is holding.\ntable RFLModelBinding {\n  /// The budget term this binding produced.\n  TERM: rflBudgetTerm = UNSPECIFIED;\n  /// Model or recommendation identifier as its publisher states it (e.g. an\n  /// ITU-R recommendation number with its revision).\n  MODEL_NAME: string (required);\n  MODEL_VERSION: string;\n  /// `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` of the module that evaluated it.\n  MODULE_ID: string;\n  MODULE_VERSION: string;\n  /// Content hash of the exact artifact that produced the values.\n  MODULE_CONTENT_HASH: string;\n  PARAMETERS: [RFLModelParameter];\n}\n\n/// Where this sample set came from, stated once for the record.\ntable RFLProvenance {\n  METHOD: rflMethod = UNSPECIFIED;\n  /// The producing system, dataset or measurement campaign. Required: a\n  /// budget time series with no stated source is not publishable.\n  SOURCE: string (required);\n  /// Replayable query or scenario reference that regenerates this set.\n  SOURCE_QUERY: string;\n  /// Identifier of the propagator that produced the geometry columns. A record\n  /// whose METHOD is MODELED or HYBRID and which carries geometry columns MUST\n  /// name it: geometry is only as good as the propagator, and the propagator is\n  /// a pluggable choice, never an assumed default.\n  PROPAGATOR_ID: string;\n  PROPAGATOR_VERSION: string;\n  /// Force model or configuration identifier handed to the propagator.\n  PROPAGATOR_CONFIGURATION: string;\n  /// Uniform sampling step, seconds. Absent when SAMPLE_EPOCHS are irregular.\n  SAMPLING_STEP_S: double;\n  /// Per-term model bindings.\n  MODELS: [RFLModelBinding];\n  /// Weather or environment dataset the atmospheric terms were evaluated\n  /// against, when they were not evaluated against a statistical model.\n  ENVIRONMENT_DATASET: string;\n  /// Terrain or surface dataset the blockage terms were evaluated against.\n  TERRAIN_DATASET: string;\n  /// Unix ms this set was computed or recorded.\n  COMPUTED_AT: uint64;\n  /// Unix ms the upstream inputs were retrieved.\n  RETRIEVED_AT: uint64;\n  /// Licence the source imposes on redistribution. An empty LICENSE means\n  /// UNKNOWN TERMS \u2014 never public domain, never a grant to redistribute.\n  LICENSE: string;\n  /// True when the licence forbids commercial use of this set.\n  NON_COMMERCIAL_ONLY: bool;\n  /// Attribution the licence requires this record to carry downstream.\n  CITATION: string;\n  /// Primary `$PLG.PLUGIN_ID` / `$PMM.MODULE_ID` that produced this record.\n  /// MODELS remains the per-budget-term attribution surface.\n  MODULE_ID: string;\n  MODULE_VERSION: string;\n  /// Content hash of the exact producing WASM artifact.\n  MODULE_CONTENT_HASH: string;\n}\n\n/// A jamming assessment of one link: the jammer and the stated values the\n/// assessment and its countermeasures use. Inputs only; what it yields is this\n/// record\'s samples. A record that carries it with no samples is the\n/// assessment\'s definition, to be sampled.\ntable RFLJamming {\n  /// Index in LINKS of the link assessed.\n  LINK_INDEX: uint32;\n  /// The jammer\'s end: its site (SIT_ID) or its platform.\n  JAMMER_ENDPOINT: RFLEndpoint (required);\n  /// Zero-based index, in the analysis window, of the spacecraft\'s pass over\n  /// the link\'s ground end that is assessed.\n  PASS_INDEX: uint32;\n  /// The ground terminal antenna\'s stated gain toward the jammer, dBi.\n  TERMINAL_GAIN_TOWARD_JAMMER_DBI: double;\n  /// True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.\n  HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: bool = false;\n  /// Countermeasure: the link\'s EIRP raised by this many dB.\n  POWER_STEP_DB: double;\n  /// Countermeasure: processing gain, dB, as the operator states it.\n  PROCESSING_GAIN_DB: double;\n  /// True when PROCESSING_GAIN_DB is stated; it has no default.\n  HAS_PROCESSING_GAIN_DB: bool = false;\n  /// PAP_ID of the $PAP of the receiving array used by the narrower-beam and\n  /// null countermeasures.\n  ARRAY_PAP_ID: string;\n  /// Denial area about the link\'s ground end: radius, km.\n  AREA_RADIUS_KM: double;\n  /// Denial area: number of cells across the radius.\n  AREA_RESOLUTION: uint32;\n}\n\n/// RF Link Sample\ntable RFL {\n  /// Stable identifier of this sample set.\n  RFL_ID: string (required);\n  /// Display name.\n  NAME: string;\n  /// Analysis or scenario grouping identifier shared with the `$ACI` and\n  /// `$CVP` products derived from this set.\n  SCENARIO_ID: string;\n  /// Link definitions. SAMPLE_LINK_INDEXES index into this vector.\n  LINKS: [RFLLink] (required);\n  /// Number of samples. Every present metric array MUST have exactly this\n  /// many entries.\n  SAMPLE_COUNT: uint32;\n  /// Index into LINKS for each sample.\n  SAMPLE_LINK_INDEXES: [uint32] (required);\n  /// Sample epochs, seconds since 1970-01-01T00:00:00 in TIME_SYSTEM. Samples\n  /// need not be uniformly spaced and need not be grouped by link, but MUST be\n  /// non-decreasing within each link.\n  SAMPLE_EPOCHS: [double] (required);\n  /// Time scale SAMPLE_EPOCHS are expressed in. Defaults to UTC explicitly:\n  /// `timingStandard` ordinal 0 is GMST, so an unset field would otherwise\n  /// decode as sidereal time.\n  TIME_SYSTEM: timingStandard = UTC;\n\n  /// Access state per sample.\n  ACCESS_STATES: [rflAccessState];\n\n  // ---- Geometry ----\n  /// Slant range, metres.\n  RANGE_M: [double];\n  /// Range rate, metres per second; positive is opening.\n  RANGE_RATE_M_S: [double];\n  /// Azimuth at the receiving endpoint, degrees east of north [0-360).\n  AZIMUTH_DEG: [double];\n  /// Elevation at the receiving endpoint, degrees above the local horizon.\n  ELEVATION_DEG: [double];\n  /// Azimuth at the transmitting endpoint, degrees east of north [0-360).\n  TRANSMIT_AZIMUTH_DEG: [double];\n  /// Elevation at the transmitting endpoint, degrees.\n  TRANSMIT_ELEVATION_DEG: [double];\n  /// One-way Doppler shift of the carrier at the receiving endpoint, hertz;\n  /// positive is closing. Hertz, not the MHz used for frequencies elsewhere in\n  /// this record \u2014 a shift of a few kHz on a GHz carrier is destroyed by an\n  /// MHz encoding.\n  DOPPLER_SHIFT_HZ: [double];\n  /// Doppler rate, hertz per second.\n  DOPPLER_RATE_HZ_S: [double];\n\n  // ---- Transmit side ----\n  /// Effective isotropic radiated power toward the receiver, dBW.\n  EIRP_DBW: [double];\n  /// Transmit antenna gain in the direction of the receiver, dBi.\n  TRANSMIT_ANTENNA_GAIN_DBI: [double];\n  /// Receive antenna gain in the direction of the transmitter, dBi.\n  RECEIVE_ANTENNA_GAIN_DBI: [double];\n\n  // ---- Path terms (each a positive loss in dB) ----\n  /// Free-space path loss, dB.\n  FREE_SPACE_PATH_LOSS_DB: [double];\n  /// Gaseous (oxygen and water vapour) absorption, dB.\n  GASEOUS_ABSORPTION_LOSS_DB: [double];\n  /// Rain attenuation, dB.\n  RAIN_LOSS_DB: [double];\n  /// Cloud and fog attenuation, dB.\n  CLOUD_FOG_LOSS_DB: [double];\n  /// Tropospheric or ionospheric scintillation, dB.\n  SCINTILLATION_LOSS_DB: [double];\n  /// Terrain diffraction and blockage, dB.\n  TERRAIN_DIFFRACTION_LOSS_DB: [double];\n  /// Total loss from 3D obstacles on the path, dB. The per-obstacle detail \u2014\n  /// which object, which material, at what angle, through how much of it \u2014 is\n  /// in OBSTRUCTIONS.\n  OBSTRUCTION_LOSS_DB: [double];\n  /// Polarization mismatch, dB.\n  POLARIZATION_LOSS_DB: [double];\n  /// Antenna pointing error, dB.\n  POINTING_LOSS_DB: [double];\n  /// Implementation and hardware losses, dB.\n  IMPLEMENTATION_LOSS_DB: [double];\n  /// Total of all path terms actually applied, dB. Published as its own column\n  /// rather than left to the consumer to sum: a producer that applied a term\n  /// this schema has no column for MUST still report an honest total, and the\n  /// discrepancy against the itemised columns is then visible.\n  TOTAL_PATH_LOSS_DB: [double];\n\n  // ---- Receive side ----\n  /// Received carrier power at the receiver input, dBW.\n  RECEIVED_POWER_DBW: [double];\n  /// Receiving system noise temperature, kelvin.\n  SYSTEM_NOISE_TEMPERATURE_K: [double];\n  /// Receiving system figure of merit G/T, dB/K.\n  GAIN_TO_NOISE_TEMPERATURE_DB_PER_K: [double];\n  /// Carrier-to-noise-density ratio C/N0, dB-Hz.\n  CARRIER_TO_NOISE_DENSITY_DBHZ: [double];\n  /// Carrier-to-noise ratio C/N in the occupied bandwidth, dB.\n  CARRIER_TO_NOISE_DB: [double];\n  /// Energy per bit to noise density Eb/N0, dB.\n  ENERGY_PER_BIT_TO_NOISE_DENSITY_DB: [double];\n  /// Bit error rate as a probability [0-1], NOT an exponent and NOT a\n  /// percentage. 1e-6 is encoded 1e-6.\n  BIT_ERROR_RATE: [double];\n  /// Link margin against the link\'s stated threshold, dB. Meaningless without\n  /// RFLLink.THRESHOLD_TERM / THRESHOLD_VALUE / THRESHOLD_COMPARISON.\n  LINK_MARGIN_DB: [double];\n  /// Achievable channel capacity, bits per second.\n  CHANNEL_CAPACITY_BPS: [double];\n\n  // ---- Interference ----\n  /// Aggregate received interfering power, dBW.\n  INTERFERENCE_POWER_DBW: [double];\n  /// Carrier to noise-plus-interference ratio C/(N+I), dB.\n  CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB: [double];\n  /// Signal to interference-plus-noise ratio, dB.\n  SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB: [double];\n  /// Per-contribution interference detail, sparse.\n  INTERFERENCE_CONTRIBUTIONS: [RFLInterferenceContribution];\n\n  // ---- Obstacles ----\n  /// Per-interaction obstacle detail, sparse. Each entry names the `$RFS`\n  /// material it went through, reflected off or was blocked by.\n  OBSTRUCTIONS: [RFLObstruction];\n\n  // ---- Verdict ----\n  /// The single condition that bound the link at each sample.\n  LIMITING_CONSTRAINTS: [rflConstraint];\n  /// Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.\n  LIMITING_CONSTRAINT_NOTE: string;\n\n  /// Provenance of the whole set. Required: an unattributed budget is not\n  /// publishable.\n  PROVENANCE: RFLProvenance (required);\n  /// Unix ms this record was serialized.\n  COMPUTED_AT: uint64;\n  /// `$EPM` identifier of the producing node.\n  PRODUCER_ID: string;\n  /// Ed25519 signature by the producing `$EPM` over the size-prefixed\n  /// FlatBuffer projection with both 64-byte signature payloads zeroed while\n  /// preserving their vectors and offsets.\n  SIGNATURE: [ubyte];\n  /// Ed25519 signature by the producing `$EPM` over canonical JSON with IDL\n  /// field order, IDL capitalization, no insignificant whitespace, and both\n  /// signature fields omitted.\n  CANONICAL_JSON_SIGNATURE: [ubyte];\n\n  // ---- Adaptive modulation and coding ----\n  /// Index into the selected link\'s RFLLink.MODCOD_SET for each sample.\n  /// SELECTED_MODCOD_VALID distinguishes index 0 from no selection.\n  SELECTED_MODCOD_INDEX: [uint32];\n  SELECTED_MODCOD_VALID: [bool];\n  /// Spectral efficiency delivered by the selected entry, bit/s/Hz.\n  SPECTRAL_EFFICIENCY_BPS_HZ: [double];\n  /// Delivered information rate after adaptive selection, bits per second.\n  ACHIEVED_DATA_RATE_BPS: [double];\n  /// Margin above the selected entry\'s threshold, dB.\n  ACM_MARGIN_DB: [double];\n  /// Symbol energy to noise spectral density, dB.\n  ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: [double];\n  /// Decoded block error probability [0-1].\n  BLOCK_ERROR_RATE: [double];\n  /// The jamming assessment this record answers, when it answers one.\n  JAMMING: RFLJamming;\n}\n\nroot_type RFL;\nfile_identifier "$RFL";',
       files: [
         "./dist/RFL/RFL.sw.tar.gz",
         "./dist/RFL/RFL.py.tar.gz",
@@ -15398,8 +15760,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 11a21ef8ba1b48adf5ae381f5e53b7099f8d3fb4fd8b88f49d47790435ee0130
-// Version: 1.44.90
+      IDL: `// Hash: a903a2ed45a253616e4772f388b2d58ac98f403ace0d8788dfb83979dd7a3240
+// Version: 1.44.91
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -15443,6 +15805,7 @@ include "../CMR/main.fbs";
 include "../CMS/main.fbs";
 include "../CMT/main.fbs";
 include "../CNP/main.fbs";
+include "../COA/main.fbs";
 include "../COM/main.fbs";
 include "../COT/main.fbs";
 include "../CPS/main.fbs";
@@ -15830,7 +16193,8 @@ enum RecordTypeExtended : ushort {
   SWS = 294,
   SSY = 295,
   MOR = 296,
-  DRB = 297
+  DRB = 297,
+  COA = 298
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -17202,7 +17566,7 @@ file_identifier "$PCE";`,
       ]
     },
     EGP: {
-      IDL: "// Hash: d7c38fac314fab6f5f3cc5b072ad7dfd1b613bc987cea8718a5e8a26e41e6843\n// Version: 0.0.1\n// -----------------------------------END_HEADER\n// Entity Group (EGP)\n// Description\n// One named, publishable set of entity references \u2014 the wire form of a saved\n// selection. A group asserts membership only: it never republishes the members'\n// own data. Each member is named by the `(STANDARD, RECORD_ID)` pair, so a\n// group may mix object catalogue entries, ground places, tracks, sensors, and\n// any other standard in one set. The union ordinal is NEVER stored in a group;\n// `STANDARD` is the discriminator that has never shifted.\n//\n// A member reference is an ASSERTION, not a foreign key. Dangling references\n// are expected and acceptable: a consumer that cannot resolve a member drops\n// that row, never the group.\n//\n// MUTABILITY. A named group is mutable state on an append-only wire. Groups are\n// therefore VERSIONED, never edited in place: each publication is a full record\n// keyed `GROUP_ID` + `UPDATED_AT`, and the highest `UPDATED_AT` from a given\n// publisher wins. Consumers reconcile per publisher; two publishers asserting\n// the same GROUP_ID are two groups, not a conflict.\n//\n// CLASSIFICATION IS TAGS, NEVER FOLDERS. This standard has no parent/child\n// group field and will not gain one: a hierarchy field would force every\n// consumer to build a tree UI and would make a group's meaning depend on where\n// it sits rather than what it says. Grouping-by-grouping is expressed as\n// TAGS and recovered by filtering.\n//\n// TAG GRAMMAR (normative). Every entry in `TAGS` is a single\n// `namespace:value` pair: lowercase ASCII `[a-z0-9._-]` in each part, exactly\n// one colon separator, no whitespace, no empty part. The list is sorted and\n// deduplicated on publication so two publishers describing the same facets emit\n// identical bytes. An entry without a colon is malformed and a conforming\n// consumer ignores that entry, never the record.\n//\n// Ratified namespaces \u2014 a publisher may mint others, and consumers ignore\n// namespaces they do not model:\n//   `provisioner:` \u2014 the publishing programme that curates the group.\n//   `class:`       \u2014 what kind of grouping this is: `manufacturer`, `operator`,\n//                    `government`, `country`, `constellation`, `mission`,\n//                    `regime`, `query`, `user`.\n//   `operator:`, `manufacturer:`, `constellation:`, `agency:` \u2014 the named\n//                    party or programme the group is about.\n//   `country:`     \u2014 ISO 3166-1 alpha-2, lowercase.\n//   `regime:`      \u2014 orbital regime, e.g. `leo`, `meo`, `geo`, `heo`, `xgeo`.\n//   `environment:` \u2014 `space`, `air`, `maritime`, `land`.\n//   `status:`      \u2014 lifecycle of the grouping itself, e.g. `active`,\n//                    `historical`, `draft`.\n//\n// TAG VALUES ARE DATA. The no-vendor-names rule binds this DESCRIPTION and\n// every enum member in this file \u2014 the standard never names a company. A tag\n// VALUE is publisher data and may name any real operator, manufacturer, or\n// constellation verbatim.\n//\n// OWNERSHIP IS THE SIGNATURE, NEVER A TAG. The authoritative provisioner of a\n// group is the publishing key on the envelope that carries it \u2014 the `$EPM`\n// identity whose signature covers the record bytes. A `provisioner:` tag is a\n// DENORMALIZED FILTER FACET only: convenient for querying, never evidence. A\n// consumer that finds a `provisioner:` tag disagreeing with the signing key\n// trusts the key and treats the tag as unverified display text.\n\n/// How a group's membership was established.\nenum egpMembershipMode : byte {\n  UNSPECIFIED = 0,\n  /// Members were chosen one by one; MEMBERS is the whole truth.\n  ENUMERATED,\n  /// Members were produced by evaluating QUERY; MEMBERS is that evaluation\n  /// frozen at QUERY.EVALUATED_AT.\n  QUERY_SNAPSHOT,\n  /// QUERY is the definition and MEMBERS is an advisory cache a consumer may\n  /// recompute; the query wins on disagreement.\n  QUERY_LIVE\n}\n\n/// Provenance of the assertions behind a group. Field-for-field the\n/// `$CMR` provenance shape, so one consumer parses both.\ntable EGPProvenance {\n  /// Publisher name verbatim as that publisher states it.\n  SOURCE:string (required);\n  /// Source dataset or product name verbatim.\n  SOURCE_DATASET:string (required);\n  /// Source-native row, group, object, or catalogue identifier.\n  SOURCE_RECORD_ID:string;\n  /// Replayable URL or provider query identifying the source material.\n  SOURCE_URL:string;\n  /// Source revision, edition, or upstream update marker verbatim.\n  SOURCE_VERSION:string;\n  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.\n  RETRIEVED_AT:string (required);\n  /// SHA-256 of the exact source payload bytes, as 64 lowercase hexadecimal\n  /// characters. Empty only when the source cannot expose replayable bytes.\n  SOURCE_SHA256:string;\n  /// Redistribution terms verbatim. Empty means unknown terms, never public\n  /// domain and never an implied grant.\n  LICENSE:string;\n  /// Attribution text required by the source.\n  ATTRIBUTION:string;\n  /// Source caveats or reconciliation notes; never a substitute for a field.\n  NOTES:string;\n}\n\n/// The query that generated this group \u2014 the wire form of save-search-as-group.\n/// This is generating provenance, not source lineage, so it is a field of its\n/// own and never overloaded onto EGPProvenance.\ntable EGPQuery {\n  /// Query language the TEXT is written in, verbatim and lowercase, e.g.\n  /// `flatsql`. A consumer that does not implement the dialect keeps MEMBERS\n  /// and never guesses at the text.\n  DIALECT:string (required);\n  /// The query text verbatim, exactly as evaluated.\n  TEXT:string (required);\n  /// RFC 3339 UTC fixed-millisecond timestamp at which TEXT was evaluated to\n  /// produce MEMBERS.\n  EVALUATED_AT:string;\n  /// Row count the evaluation returned. A consumer whose re-evaluation differs\n  /// reports drift; it never silently rewrites the record.\n  RESULT_COUNT:uint;\n  /// Dataset or collection epoch the evaluation ran against, when the publisher\n  /// can name one.\n  DATASET_EPOCH:string;\n}\n\n/// One membership assertion.\ntable EGPMember {\n  /// Four-character standard code of the referenced record, `$` included,\n  /// e.g. `$CAT`. Never the union ordinal.\n  STANDARD:string (required);\n  /// The referenced record's publisher-stable identifier, verbatim.\n  RECORD_ID:string (required);\n  /// Denormalized fast key for catalogued space objects. 0 means absent, which\n  /// is the normal case for every non-catalogue member.\n  NORAD_CAT_ID:uint;\n  /// Optional content identifier pinning the exact referenced record bytes.\n  CID:string;\n  /// RFC 3339 UTC fixed-millisecond timestamp the member was added.\n  ADDED_AT:string;\n  /// Publisher note about this membership; never a substitute for a field.\n  NOTES:string;\n}\n\n/// Entity Group\ntable EGP {\n  /// Publisher-stable identifier of the group. Together with the publishing\n  /// key it is the group's identity across versions.\n  GROUP_ID:string (required);\n  /// Human-readable group name.\n  NAME:string (required);\n  /// Human-readable description of what the group collects.\n  DESCRIPTION:string;\n  /// `namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.\n  /// This is the ONLY classification surface: there are no folders.\n  TAGS:[string];\n  /// How membership was established.\n  MEMBERSHIP_MODE:egpMembershipMode = UNSPECIFIED;\n  /// The membership assertions.\n  MEMBERS:[EGPMember];\n  /// The generating query, when the group was saved from a search.\n  QUERY:EGPQuery;\n  /// RFC 3339 UTC fixed-millisecond creation timestamp.\n  CREATED_AT:string;\n  /// RFC 3339 UTC fixed-millisecond update timestamp. With GROUP_ID and the\n  /// publishing key this is the version key: latest-wins per publisher.\n  UPDATED_AT:string (required);\n  /// Dataset lineage and licence for the assertions in this group.\n  PROVENANCE:[EGPProvenance];\n  /// Optional content identifier of the dataset the group was drawn from.\n  DATASET_CID:string;\n}\n\nroot_type EGP;\nfile_identifier \"$EGP\";",
+      IDL: "// Hash: 2c95c5988d0dc4422e80f3a4eb064a3de6e6e33c44221942cb6eca46a711a148\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n// Entity Group (EGP)\n// Description\n// One named, publishable set of entity references \u2014 the wire form of a saved\n// selection. A group asserts membership only: it never republishes the members'\n// own data. Each member is named by the `(STANDARD, RECORD_ID)` pair, so a\n// group may mix object catalogue entries, ground places, tracks, sensors, and\n// any other standard in one set. The union ordinal is NEVER stored in a group;\n// `STANDARD` is the discriminator that has never shifted.\n//\n// A member reference is an ASSERTION, not a foreign key. Dangling references\n// are expected and acceptable: a consumer that cannot resolve a member drops\n// that row, never the group.\n//\n// MUTABILITY. A named group is mutable state on an append-only wire. Groups are\n// therefore VERSIONED, never edited in place: each publication is a full record\n// keyed `GROUP_ID` + `UPDATED_AT`, and the highest `UPDATED_AT` from a given\n// publisher wins. Consumers reconcile per publisher; two publishers asserting\n// the same GROUP_ID are two groups, not a conflict.\n//\n// CLASSIFICATION IS TAGS, NEVER FOLDERS. This standard has no parent/child\n// group field and will not gain one: a hierarchy field would force every\n// consumer to build a tree UI and would make a group's meaning depend on where\n// it sits rather than what it says. Grouping-by-grouping is expressed as\n// TAGS and recovered by filtering.\n//\n// TAG GRAMMAR (normative). Every entry in `TAGS` is a single\n// `namespace:value` pair: lowercase ASCII `[a-z0-9._-]` in each part, exactly\n// one colon separator, no whitespace, no empty part. The list is sorted and\n// deduplicated on publication so two publishers describing the same facets emit\n// identical bytes. An entry without a colon is malformed and a conforming\n// consumer ignores that entry, never the record.\n//\n// Ratified namespaces \u2014 a publisher may mint others, and consumers ignore\n// namespaces they do not model:\n//   `provisioner:` \u2014 the publishing programme that curates the group.\n//   `class:`       \u2014 what kind of grouping this is: `manufacturer`, `operator`,\n//                    `government`, `country`, `constellation`, `mission`,\n//                    `regime`, `query`, `user`.\n//   `operator:`, `manufacturer:`, `constellation:`, `agency:` \u2014 the named\n//                    party or programme the group is about.\n//   `country:`     \u2014 ISO 3166-1 alpha-2, lowercase.\n//   `regime:`      \u2014 orbital regime, e.g. `leo`, `meo`, `geo`, `heo`, `xgeo`.\n//   `environment:` \u2014 `space`, `air`, `maritime`, `land`.\n//   `status:`      \u2014 lifecycle of the grouping itself, e.g. `active`,\n//                    `historical`, `draft`.\n//\n// TAG VALUES ARE DATA. The no-vendor-names rule binds this DESCRIPTION and\n// every enum member in this file \u2014 the standard never names a company. A tag\n// VALUE is publisher data and may name any real operator, manufacturer, or\n// constellation verbatim.\n//\n// OWNERSHIP IS THE SIGNATURE, NEVER A TAG. The authoritative provisioner of a\n// group is the publishing key on the envelope that carries it \u2014 the `$EPM`\n// identity whose signature covers the record bytes. A `provisioner:` tag is a\n// DENORMALIZED FILTER FACET only: convenient for querying, never evidence. A\n// consumer that finds a `provisioner:` tag disagreeing with the signing key\n// trusts the key and treats the tag as unverified display text.\n\n/// How a group's membership was established.\nenum egpMembershipMode : byte {\n  UNSPECIFIED = 0,\n  /// Members were chosen one by one; MEMBERS is the whole truth.\n  ENUMERATED,\n  /// Members were produced by evaluating QUERY; MEMBERS is that evaluation\n  /// frozen at QUERY.EVALUATED_AT.\n  QUERY_SNAPSHOT,\n  /// QUERY is the definition and MEMBERS is an advisory cache a consumer may\n  /// recompute; the query wins on disagreement.\n  QUERY_LIVE,\n  /// Members were generated from WALKER; MEMBERS is that generation, and each\n  /// member's elements are its own $OMM.\n  GENERATED\n}\n\n/// Walker pattern of a generated constellation. Append new values only.\nenum egpWalkerPattern : byte {\n  UNSPECIFIED = 0,\n  /// Planes spread over 360 degrees of right ascension.\n  DELTA,\n  /// Planes spread over 180 degrees of right ascension.\n  STAR,\n  /// Planes spread over RA_OF_ASC_NODE_SPREAD.\n  CUSTOM\n}\n\n/// The Walker definition a constellation group's members are generated from.\n/// Angles are in degrees, as an $OMM states them.\ntable EGPWalker {\n  PATTERN:egpWalkerPattern = UNSPECIFIED;\n  /// T: number of satellites.\n  TOTAL_SATELLITES:uint;\n  /// P: number of planes.\n  PLANES:uint;\n  /// F: relative phasing, 0 to PLANES - 1.\n  PHASING:uint;\n  INCLINATION:double;\n  /// Circular height above the WGS 84 equatorial radius, km.\n  ALTITUDE_KM:double;\n  /// CUSTOM only: the right ascension the ascending nodes are spread over.\n  RA_OF_ASC_NODE_SPREAD:double;\n  /// Right ascension of the ascending node of the first plane.\n  FIRST_RA_OF_ASC_NODE:double;\n  /// Mean anomaly of the first satellite of the first plane.\n  FIRST_MEAN_ANOMALY:double;\n  ECCENTRICITY:double;\n  ARG_OF_PERICENTER:double;\n  /// Epoch of the generated elements, ISO 8601 UTC.\n  EPOCH:string;\n  /// Catalog number of the first satellite; the others follow it in order.\n  FIRST_NORAD_CAT_ID:uint;\n}\n\n/// Provenance of the assertions behind a group. Field-for-field the\n/// `$CMR` provenance shape, so one consumer parses both.\ntable EGPProvenance {\n  /// Publisher name verbatim as that publisher states it.\n  SOURCE:string (required);\n  /// Source dataset or product name verbatim.\n  SOURCE_DATASET:string (required);\n  /// Source-native row, group, object, or catalogue identifier.\n  SOURCE_RECORD_ID:string;\n  /// Replayable URL or provider query identifying the source material.\n  SOURCE_URL:string;\n  /// Source revision, edition, or upstream update marker verbatim.\n  SOURCE_VERSION:string;\n  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.\n  RETRIEVED_AT:string (required);\n  /// SHA-256 of the exact source payload bytes, as 64 lowercase hexadecimal\n  /// characters. Empty only when the source cannot expose replayable bytes.\n  SOURCE_SHA256:string;\n  /// Redistribution terms verbatim. Empty means unknown terms, never public\n  /// domain and never an implied grant.\n  LICENSE:string;\n  /// Attribution text required by the source.\n  ATTRIBUTION:string;\n  /// Source caveats or reconciliation notes; never a substitute for a field.\n  NOTES:string;\n}\n\n/// The query that generated this group \u2014 the wire form of save-search-as-group.\n/// This is generating provenance, not source lineage, so it is a field of its\n/// own and never overloaded onto EGPProvenance.\ntable EGPQuery {\n  /// Query language the TEXT is written in, verbatim and lowercase, e.g.\n  /// `flatsql`. A consumer that does not implement the dialect keeps MEMBERS\n  /// and never guesses at the text.\n  DIALECT:string (required);\n  /// The query text verbatim, exactly as evaluated.\n  TEXT:string (required);\n  /// RFC 3339 UTC fixed-millisecond timestamp at which TEXT was evaluated to\n  /// produce MEMBERS.\n  EVALUATED_AT:string;\n  /// Row count the evaluation returned. A consumer whose re-evaluation differs\n  /// reports drift; it never silently rewrites the record.\n  RESULT_COUNT:uint;\n  /// Dataset or collection epoch the evaluation ran against, when the publisher\n  /// can name one.\n  DATASET_EPOCH:string;\n}\n\n/// One membership assertion.\ntable EGPMember {\n  /// Four-character standard code of the referenced record, `$` included,\n  /// e.g. `$CAT`. Never the union ordinal.\n  STANDARD:string (required);\n  /// The referenced record's publisher-stable identifier, verbatim.\n  RECORD_ID:string (required);\n  /// Denormalized fast key for catalogued space objects. 0 means absent, which\n  /// is the normal case for every non-catalogue member.\n  NORAD_CAT_ID:uint;\n  /// Optional content identifier pinning the exact referenced record bytes.\n  CID:string;\n  /// RFC 3339 UTC fixed-millisecond timestamp the member was added.\n  ADDED_AT:string;\n  /// Publisher note about this membership; never a substitute for a field.\n  NOTES:string;\n}\n\n/// Entity Group\ntable EGP {\n  /// Publisher-stable identifier of the group. Together with the publishing\n  /// key it is the group's identity across versions.\n  GROUP_ID:string (required);\n  /// Human-readable group name.\n  NAME:string (required);\n  /// Human-readable description of what the group collects.\n  DESCRIPTION:string;\n  /// `namespace:value` facets, sorted and deduplicated. See TAG GRAMMAR above.\n  /// This is the ONLY classification surface: there are no folders.\n  TAGS:[string];\n  /// How membership was established.\n  MEMBERSHIP_MODE:egpMembershipMode = UNSPECIFIED;\n  /// The membership assertions.\n  MEMBERS:[EGPMember];\n  /// The generating query, when the group was saved from a search.\n  QUERY:EGPQuery;\n  /// RFC 3339 UTC fixed-millisecond creation timestamp.\n  CREATED_AT:string;\n  /// RFC 3339 UTC fixed-millisecond update timestamp. With GROUP_ID and the\n  /// publishing key this is the version key: latest-wins per publisher.\n  UPDATED_AT:string (required);\n  /// Dataset lineage and licence for the assertions in this group.\n  PROVENANCE:[EGPProvenance];\n  /// Optional content identifier of the dataset the group was drawn from.\n  DATASET_CID:string;\n  /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\n  /// GENERATED.\n  WALKER:EGPWalker;\n}\n\nroot_type EGP;\nfile_identifier \"$EGP\";",
       files: [
         "./dist/EGP/EGP.sw.tar.gz",
         "./dist/EGP/EGP.py.tar.gz",
@@ -31019,8 +31383,8 @@ file_identifier "$OCM";`,
       ]
     },
     ACW: {
-      IDL: `// Hash: 0218c6892a6094c2e8840cbe5faceebbfe1b54f2d4d66ed971dc6049f83cc85b
-// Version: 0.0.6
+      IDL: `// Hash: 73acf86ec2ed567442110b099ef74d2dcc4c5c56ce9d9d4b0052ca4927e9ac88
+// Version: 0.0.7
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
@@ -31054,7 +31418,9 @@ enum acwResultStatus : byte {
 enum acwRefractionModelKind : byte {
   NONE = 0,
   /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
-  EARTH_STANDARD_ATMOSPHERE = 1
+  EARTH_STANDARD_ATMOSPHERE = 1,
+  /// ITU-R P.834 tropospheric refraction.
+  ITU_R_P834 = 2
 }
 
 /// Target Cartesian state sample in an Earth-fixed frame.
@@ -31171,7 +31537,10 @@ enum acwConstraintKind : byte {
   /// ACWRequest.OCCULTING_BODIES entry.
   LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
-  BLACKOUT = 9
+  BLACKOUT = 9,
+  /// Straight-line visibility between a ground observer and the target not
+  /// blocked by terrain.
+  TERRAIN_LINE_OF_SIGHT = 10
 }
 
 /// How the members of a constraint set combine.
@@ -67865,6 +68234,66 @@ stated.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -68265,6 +68694,10 @@ stated.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -85018,6 +85451,66 @@ verbatim what that source states about itself.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -85418,6 +85911,10 @@ verbatim what that source states about itself.`,
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -95443,7 +95940,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "RINGED",
             "TEARDROP",
             "TOROIDAL",
-            "CARDIOID"
+            "CARDIOID",
+            "PHASED_ARRAY"
           ]
         },
         OPPProvenance: {
@@ -119784,7 +120282,9 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ]
         },
         scenarioActionCode: {
@@ -123313,9 +123813,39 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario."
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to."
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run."
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise."
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -123369,6 +123899,49 @@ provider's reviewed register). Never free text.`
             ASSETS_CHANGED: {
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario."
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime."
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp."
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running."
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp."
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp."
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with."
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`
             }
           },
           additionalProperties: false
@@ -129126,6 +129699,66 @@ verbatim what that source states about itself.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -129526,6 +130159,10 @@ verbatim what that source states about itself.`,
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -141690,6 +142327,66 @@ Decoding applies the inverses from the last back.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -142090,6 +142787,10 @@ Decoding applies the inverses from the last back.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -146309,6 +147010,113 @@ format class are named by $NCD's container format.`
         }
       },
       $ref: "#/definitions/SRG"
+    },
+    COA: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        coaKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MANEUVER",
+            "RIDE_OUT",
+            "RECOVERY"
+          ]
+        },
+        COAStep: {
+          type: "object",
+          description: "One step of a course of action.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "The step, in the operator's words."
+            },
+            DURATION_SECONDS: {
+              type: "number",
+              description: "How long the step takes, s."
+            }
+          },
+          required: [
+            "NAME"
+          ],
+          additionalProperties: false
+        },
+        COA: {
+          type: "object",
+          description: "Course of Action",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Identifier of the course of action, unique within its record set."
+            },
+            NAME: {
+              type: "string",
+              description: 'Display name, for example "Plan A".'
+            },
+            KIND: {
+              $ref: "#/definitions/coaKind"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the object acted on; 0 when GROUP_ID names a group."
+            },
+            GROUP_ID: {
+              type: "string",
+              description: "GROUP_ID of the $EGP acted on, when the course of action is for a group."
+            },
+            EVENT_STANDARD: {
+              type: "string",
+              description: 'Four-character standard code of the event answered, "$" included; never a union ordinal.'
+            },
+            EVENT_ID: {
+              type: "string",
+              description: "ID of the event's record; empty for an event that is computed again rather than stored."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "Time of the event, ISO 8601 UTC."
+            },
+            LEAD_SECONDS: {
+              type: "number",
+              description: "MANEUVER: made this long before EVENT_EPOCH, s."
+            },
+            RETURN_WITHIN_SECONDS: {
+              type: "number",
+              description: "MANEUVER: back in place within this long after the maneuver, s."
+            },
+            PREPARATION_SECONDS: {
+              type: "number",
+              description: "Time out of service before a maneuver, s."
+            },
+            CHECKOUT_SECONDS: {
+              type: "number",
+              description: "Time out of service after a maneuver, s."
+            },
+            DELTA_V_BUDGET_M_S_PER_YEAR: {
+              type: "number",
+              description: "Delta-v the operator allows the object each year, m/s per year; 0 = not stated."
+            },
+            STEPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/COAStep"
+              },
+              description: "RECOVERY: the steps, in order."
+            },
+            PLAN_ID: {
+              type: "string",
+              description: "ID of the $MPL plan request that carries the maneuver, when one is stored."
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/COA"
     },
     TAB: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -161896,6 +162704,66 @@ stated.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -162296,6 +163164,10 @@ stated.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -162927,7 +163799,8 @@ stated.`
           type: "string",
           enum: [
             "NONE",
-            "EARTH_STANDARD_ATMOSPHERE"
+            "EARTH_STANDARD_ATMOSPHERE",
+            "ITU_R_P834"
           ]
         },
         acwConstraintKind: {
@@ -162942,7 +163815,8 @@ stated.`
             "MOON_EXCLUSION",
             "TARGET_LIGHTING",
             "LINE_OF_SIGHT",
-            "BLACKOUT"
+            "BLACKOUT",
+            "TERRAIN_LINE_OF_SIGHT"
           ]
         },
         acwConstraintOperator: {
@@ -164407,6 +165281,15 @@ stated.`
             "PASSIVE",
             "MODELED",
             "OTHER"
+          ]
+        },
+        coaKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MANEUVER",
+            "RIDE_OUT",
+            "RECOVERY"
           ]
         },
         ComModulationType: {
@@ -166288,7 +167171,17 @@ stated.`
             "UNSPECIFIED",
             "ENUMERATED",
             "QUERY_SNAPSHOT",
-            "QUERY_LIVE"
+            "QUERY_LIVE",
+            "GENERATED"
+          ]
+        },
+        egpWalkerPattern: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DELTA",
+            "STAR",
+            "CUSTOM"
           ]
         },
         rfsMaterialClass: {
@@ -169687,7 +170580,9 @@ stated.`
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ]
         },
         scenarioActionCode: {
@@ -170321,7 +171216,8 @@ stated.`
             "RINGED",
             "TEARDROP",
             "TOROIDAL",
-            "CARDIOID"
+            "CARDIOID",
+            "PHASED_ARRAY"
           ]
         },
         snwErrorCode: {
@@ -172178,7 +173074,8 @@ stated.`
             "SWS",
             "SSY",
             "MOR",
-            "DRB"
+            "DRB",
+            "COA"
           ]
         },
         ABA: {
@@ -173155,6 +174052,66 @@ stated.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -173555,6 +174512,10 @@ stated.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -184131,6 +185092,98 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               description: "CID of the $CNP this record replaces when a source restates a window."
             }
           },
+          additionalProperties: false
+        },
+        COAStep: {
+          type: "object",
+          description: "One step of a course of action.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "The step, in the operator's words."
+            },
+            DURATION_SECONDS: {
+              type: "number",
+              description: "How long the step takes, s."
+            }
+          },
+          required: [
+            "NAME"
+          ],
+          additionalProperties: false
+        },
+        COA: {
+          type: "object",
+          description: "Course of Action",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Identifier of the course of action, unique within its record set."
+            },
+            NAME: {
+              type: "string",
+              description: 'Display name, for example "Plan A".'
+            },
+            KIND: {
+              $ref: "#/definitions/coaKind"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the object acted on; 0 when GROUP_ID names a group."
+            },
+            GROUP_ID: {
+              type: "string",
+              description: "GROUP_ID of the $EGP acted on, when the course of action is for a group."
+            },
+            EVENT_STANDARD: {
+              type: "string",
+              description: 'Four-character standard code of the event answered, "$" included; never a union ordinal.'
+            },
+            EVENT_ID: {
+              type: "string",
+              description: "ID of the event's record; empty for an event that is computed again rather than stored."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "Time of the event, ISO 8601 UTC."
+            },
+            LEAD_SECONDS: {
+              type: "number",
+              description: "MANEUVER: made this long before EVENT_EPOCH, s."
+            },
+            RETURN_WITHIN_SECONDS: {
+              type: "number",
+              description: "MANEUVER: back in place within this long after the maneuver, s."
+            },
+            PREPARATION_SECONDS: {
+              type: "number",
+              description: "Time out of service before a maneuver, s."
+            },
+            CHECKOUT_SECONDS: {
+              type: "number",
+              description: "Time out of service after a maneuver, s."
+            },
+            DELTA_V_BUDGET_M_S_PER_YEAR: {
+              type: "number",
+              description: "Delta-v the operator allows the object each year, m/s per year; 0 = not stated."
+            },
+            STEPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/COAStep"
+              },
+              description: "RECOVERY: the steps, in order."
+            },
+            PLAN_ID: {
+              type: "string",
+              description: "ID of the $MPL plan request that carries the maneuver, when one is stored."
+            }
+          },
+          required: [
+            "ID"
+          ],
           additionalProperties: false
         },
         COM: {
@@ -198561,6 +199614,69 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           ],
           additionalProperties: false
         },
+        EGPWalker: {
+          type: "object",
+          description: "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+          properties: {
+            PATTERN: {
+              $ref: "#/definitions/egpWalkerPattern"
+            },
+            TOTAL_SATELLITES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "T: number of satellites."
+            },
+            PLANES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "P: number of planes."
+            },
+            PHASING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "F: relative phasing, 0 to PLANES - 1."
+            },
+            INCLINATION: {
+              type: "number"
+            },
+            ALTITUDE_KM: {
+              type: "number",
+              description: "Circular height above the WGS 84 equatorial radius, km."
+            },
+            RA_OF_ASC_NODE_SPREAD: {
+              type: "number",
+              description: "CUSTOM only: the right ascension the ascending nodes are spread over."
+            },
+            FIRST_RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node of the first plane."
+            },
+            FIRST_MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly of the first satellite of the first plane."
+            },
+            ECCENTRICITY: {
+              type: "number"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the generated elements, ISO 8601 UTC."
+            },
+            FIRST_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the first satellite; the others follow it in order."
+            }
+          },
+          additionalProperties: false
+        },
         EGPProvenance: {
           type: "object",
           description: "Provenance of the assertions behind a group. Field-for-field the\n`$CMR` provenance shape, so one consumer parses both.",
@@ -198739,6 +199855,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             DATASET_CID: {
               type: "string",
               description: "Optional content identifier of the dataset the group was drawn from."
+            },
+            WALKER: {
+              $ref: "#/definitions/EGPWalker",
+              description: "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED."
             }
           },
           required: [
@@ -230732,9 +231852,39 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario."
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to."
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run."
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise."
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -230788,6 +231938,49 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             ASSETS_CHANGED: {
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario."
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime."
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp."
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running."
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp."
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp."
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with."
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`
             }
           },
           additionalProperties: false
@@ -252531,8 +253724,81 @@ balance service's own rate.`
             "UNSPECIFIED",
             "ENUMERATED",
             "QUERY_SNAPSHOT",
-            "QUERY_LIVE"
+            "QUERY_LIVE",
+            "GENERATED"
           ]
+        },
+        egpWalkerPattern: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DELTA",
+            "STAR",
+            "CUSTOM"
+          ]
+        },
+        EGPWalker: {
+          type: "object",
+          description: "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+          properties: {
+            PATTERN: {
+              $ref: "#/definitions/egpWalkerPattern"
+            },
+            TOTAL_SATELLITES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "T: number of satellites."
+            },
+            PLANES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "P: number of planes."
+            },
+            PHASING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "F: relative phasing, 0 to PLANES - 1."
+            },
+            INCLINATION: {
+              type: "number"
+            },
+            ALTITUDE_KM: {
+              type: "number",
+              description: "Circular height above the WGS 84 equatorial radius, km."
+            },
+            RA_OF_ASC_NODE_SPREAD: {
+              type: "number",
+              description: "CUSTOM only: the right ascension the ascending nodes are spread over."
+            },
+            FIRST_RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node of the first plane."
+            },
+            FIRST_MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly of the first satellite of the first plane."
+            },
+            ECCENTRICITY: {
+              type: "number"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the generated elements, ISO 8601 UTC."
+            },
+            FIRST_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the first satellite; the others follow it in order."
+            }
+          },
+          additionalProperties: false
         },
         EGPProvenance: {
           type: "object",
@@ -252712,6 +253978,10 @@ balance service's own rate.`
             DATASET_CID: {
               type: "string",
               description: "Optional content identifier of the dataset the group was drawn from."
+            },
+            WALKER: {
+              $ref: "#/definitions/EGPWalker",
+              description: "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED."
             }
           },
           required: [
@@ -258665,6 +259935,66 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -259065,6 +260395,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -290119,6 +291453,66 @@ compressed). Nothing hashes the payload before the protocol hash.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -290519,6 +291913,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -298948,6 +300346,66 @@ compressed). Nothing hashes the payload before the protocol hash.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -299348,6 +300806,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -320188,7 +321650,9 @@ assumptions".`
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ]
         },
         scenarioActionCode: {
@@ -323746,9 +325210,39 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario."
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to."
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run."
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on."
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise."
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -323802,6 +325296,49 @@ provider's reviewed register). Never free text.`
             ASSETS_CHANGED: {
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario."
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime."
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp."
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running."
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp."
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp."
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with."
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario."
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`
             }
           },
           additionalProperties: false
@@ -342055,7 +343592,8 @@ stated.`
           type: "string",
           enum: [
             "NONE",
-            "EARTH_STANDARD_ATMOSPHERE"
+            "EARTH_STANDARD_ATMOSPHERE",
+            "ITU_R_P834"
           ]
         },
         acwConstraintKind: {
@@ -342070,7 +343608,8 @@ stated.`
             "MOON_EXCLUSION",
             "TARGET_LIGHTING",
             "LINE_OF_SIGHT",
-            "BLACKOUT"
+            "BLACKOUT",
+            "TERRAIN_LINE_OF_SIGHT"
           ]
         },
         acwConstraintOperator: {
@@ -347252,6 +348791,66 @@ stated.`
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed."
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform."
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed."
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi."
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated."
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB."
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it."
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default."
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures."
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km."
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius."
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -347652,6 +349251,10 @@ stated.`
                 type: "number"
               },
               description: "Decoded block error probability [0-1]."
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one."
             }
           },
           required: [
@@ -453775,6 +455378,80 @@ stated.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -454319,6 +455996,11 @@ stated.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -494743,6 +496425,80 @@ verbatim what that source states about itself.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -495287,6 +497043,11 @@ verbatim what that source states about itself.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -522355,7 +524116,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             "RINGED",
             "TEARDROP",
             "TOROIDAL",
-            "CARDIOID"
+            "CARDIOID",
+            "PHASED_ARRAY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -522396,6 +524158,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             CARDIOID: {
               value: 11
+            },
+            PHASED_ARRAY: {
+              value: 12,
+              description: "An electronically steered array; its pattern is a $PAP synthesis."
             }
           }
         },
@@ -525764,6 +527530,10 @@ turned into a number.`,
                 },
                 CARDIOID: {
                   value: 11
+                },
+                PHASED_ARRAY: {
+                  value: 12,
+                  description: "An electronically steered array; its pattern is a $PAP synthesis."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -587746,7 +589516,9 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -587777,6 +589549,14 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             OBSERVATION: {
               value: 8
+            },
+            GROUP: {
+              value: 9,
+              description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+            },
+            AREA_OF_INTEREST: {
+              value: 10,
+              description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
             }
           }
         },
@@ -593956,6 +595736,14 @@ provider's reviewed register). Never free text.`,
                 },
                 OBSERVATION: {
                   value: 8
+                },
+                GROUP: {
+                  value: 9,
+                  description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+                },
+                AREA_OF_INTEREST: {
+                  value: 10,
+                  description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
                 }
               }
             },
@@ -594204,9 +595992,44 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario.",
+              "x-flatbuffer-type": "string"
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on.",
+              "x-flatbuffer-type": "[string]"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -594285,6 +596108,57 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario.",
               "x-flatbuffer-type": "SCNAssetsChanged"
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running.",
+              "x-flatbuffer-type": "bool"
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with.",
+              "x-flatbuffer-type": "string"
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario.",
+              "x-flatbuffer-type": "[SCNPinnedRow]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`,
+              "x-flatbuffer-type": "[ubyte]"
             }
           },
           additionalProperties: false
@@ -606133,6 +608007,80 @@ verbatim what that source states about itself.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -606677,6 +608625,11 @@ verbatim what that source states about itself.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -631906,6 +633859,80 @@ Decoding applies the inverses from the last back.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -632450,6 +634477,11 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -643781,6 +645813,174 @@ format class are named by $NCD's container format.`,
       $ref: "#/definitions/SRG",
       "x-flatbuffer-root-type": "SRG",
       "x-flatbuffer-file-identifier": "$SRG"
+    },
+    COA: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        coaKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MANEUVER",
+            "RIDE_OUT",
+            "RECOVERY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            MANEUVER: {
+              value: 1,
+              description: "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+            },
+            RIDE_OUT: {
+              value: 2,
+              description: "No action: the event is accepted."
+            },
+            RECOVERY: {
+              value: 3,
+              description: "STEPS, in order, restore service after the event."
+            }
+          }
+        },
+        COAStep: {
+          type: "object",
+          description: "One step of a course of action.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "The step, in the operator's words.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DURATION_SECONDS: {
+              type: "number",
+              description: "How long the step takes, s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          required: [
+            "NAME"
+          ],
+          additionalProperties: false
+        },
+        COA: {
+          type: "object",
+          description: "Course of Action",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Identifier of the course of action, unique within its record set.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: 'Display name, for example "Plan A".',
+              "x-flatbuffer-type": "string"
+            },
+            KIND: {
+              $ref: "#/definitions/coaKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                MANEUVER: {
+                  value: 1,
+                  description: "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+                },
+                RIDE_OUT: {
+                  value: 2,
+                  description: "No action: the event is accepted."
+                },
+                RECOVERY: {
+                  value: 3,
+                  description: "STEPS, in order, restore service after the event."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the object acted on; 0 when GROUP_ID names a group.",
+              "x-flatbuffer-type": "uint"
+            },
+            GROUP_ID: {
+              type: "string",
+              description: "GROUP_ID of the $EGP acted on, when the course of action is for a group.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_STANDARD: {
+              type: "string",
+              description: 'Four-character standard code of the event answered, "$" included; never a union ordinal.',
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_ID: {
+              type: "string",
+              description: "ID of the event's record; empty for an event that is computed again rather than stored.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "Time of the event, ISO 8601 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            LEAD_SECONDS: {
+              type: "number",
+              description: "MANEUVER: made this long before EVENT_EPOCH, s.",
+              "x-flatbuffer-type": "double"
+            },
+            RETURN_WITHIN_SECONDS: {
+              type: "number",
+              description: "MANEUVER: back in place within this long after the maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            PREPARATION_SECONDS: {
+              type: "number",
+              description: "Time out of service before a maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            CHECKOUT_SECONDS: {
+              type: "number",
+              description: "Time out of service after a maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_BUDGET_M_S_PER_YEAR: {
+              type: "number",
+              description: "Delta-v the operator allows the object each year, m/s per year; 0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            STEPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/COAStep"
+              },
+              description: "RECOVERY: the steps, in order.",
+              "x-flatbuffer-type": "[COAStep]"
+            },
+            PLAN_ID: {
+              type: "string",
+              description: "ID of the $MPL plan request that carries the maneuver, when one is stored.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/COA",
+      "x-flatbuffer-root-type": "COA",
+      "x-flatbuffer-file-identifier": "$COA"
     },
     TAB: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -680556,6 +682756,80 @@ stated.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -681100,6 +683374,11 @@ stated.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -683197,7 +685476,8 @@ stated.`,
           type: "string",
           enum: [
             "NONE",
-            "EARTH_STANDARD_ATMOSPHERE"
+            "EARTH_STANDARD_ATMOSPHERE",
+            "ITU_R_P834"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -683208,6 +685488,10 @@ stated.`,
             EARTH_STANDARD_ATMOSPHERE: {
               value: 1,
               description: "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            },
+            ITU_R_P834: {
+              value: 2,
+              description: "ITU-R P.834 tropospheric refraction."
             }
           }
         },
@@ -683223,7 +685507,8 @@ stated.`,
             "MOON_EXCLUSION",
             "TARGET_LIGHTING",
             "LINE_OF_SIGHT",
-            "BLACKOUT"
+            "BLACKOUT",
+            "TERRAIN_LINE_OF_SIGHT"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -683266,6 +685551,10 @@ stated.`,
             BLACKOUT: {
               value: 9,
               description: "Outside every observer blackout window."
+            },
+            TERRAIN_LINE_OF_SIGHT: {
+              value: 10,
+              description: "Straight-line visibility between a ground observer and the target not blocked by terrain."
             }
           }
         },
@@ -688463,6 +690752,35 @@ stated.`,
             OTHER: {
               value: 8,
               description: "The source states a method none of the above names."
+            }
+          }
+        },
+        coaKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MANEUVER",
+            "RIDE_OUT",
+            "RECOVERY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            MANEUVER: {
+              value: 1,
+              description: "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+            },
+            RIDE_OUT: {
+              value: 2,
+              description: "No action: the event is accepted."
+            },
+            RECOVERY: {
+              value: 3,
+              description: "STEPS, in order, restore service after the event."
             }
           }
         },
@@ -694686,7 +697004,8 @@ stated.`,
             "UNSPECIFIED",
             "ENUMERATED",
             "QUERY_SNAPSHOT",
-            "QUERY_LIVE"
+            "QUERY_LIVE",
+            "GENERATED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -694705,6 +697024,38 @@ stated.`,
             QUERY_LIVE: {
               value: 3,
               description: "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+            },
+            GENERATED: {
+              value: 4,
+              description: "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
+            }
+          }
+        },
+        egpWalkerPattern: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DELTA",
+            "STAR",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            DELTA: {
+              value: 1,
+              description: "Planes spread over 360 degrees of right ascension."
+            },
+            STAR: {
+              value: 2,
+              description: "Planes spread over 180 degrees of right ascension."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "Planes spread over RA_OF_ASC_NODE_SPREAD."
             }
           }
         },
@@ -705532,7 +707883,9 @@ stated.`,
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -705563,6 +707916,14 @@ stated.`,
             },
             OBSERVATION: {
               value: 8
+            },
+            GROUP: {
+              value: 9,
+              description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+            },
+            AREA_OF_INTEREST: {
+              value: 10,
+              description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
             }
           }
         },
@@ -707446,7 +709807,8 @@ stated.`,
             "RINGED",
             "TEARDROP",
             "TOROIDAL",
-            "CARDIOID"
+            "CARDIOID",
+            "PHASED_ARRAY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -707487,6 +709849,10 @@ stated.`,
             },
             CARDIOID: {
               value: 11
+            },
+            PHASED_ARRAY: {
+              value: 12,
+              description: "An electronically steered array; its pattern is a $PAP synthesis."
             }
           }
         },
@@ -712819,7 +715185,8 @@ stated.`,
             "SWS",
             "SSY",
             "MOR",
-            "DRB"
+            "DRB",
+            "COA"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -712952,6 +715319,9 @@ stated.`,
             },
             DRB: {
               value: 297
+            },
+            COA: {
+              value: 298
             }
           }
         },
@@ -715077,6 +717447,80 @@ stated.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -715621,6 +718065,11 @@ stated.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -720404,6 +722853,10 @@ stated.`,
                 EARTH_STANDARD_ATMOSPHERE: {
                   value: 1,
                   description: "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+                },
+                ITU_R_P834: {
+                  value: 2,
+                  description: "ITU-R P.834 tropospheric refraction."
                 }
               }
             },
@@ -720536,6 +722989,10 @@ stated.`,
                 BLACKOUT: {
                   value: 9,
                   description: "Outside every observer blackout window."
+                },
+                TERRAIN_LINE_OF_SIGHT: {
+                  value: 10,
+                  description: "Straight-line visibility between a ground observer and the target not blocked by terrain."
                 }
               }
             },
@@ -734236,6 +736693,137 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               "x-flatbuffer-type": "string"
             }
           },
+          additionalProperties: false
+        },
+        COAStep: {
+          type: "object",
+          description: "One step of a course of action.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "The step, in the operator's words.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DURATION_SECONDS: {
+              type: "number",
+              description: "How long the step takes, s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          required: [
+            "NAME"
+          ],
+          additionalProperties: false
+        },
+        COA: {
+          type: "object",
+          description: "Course of Action",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Identifier of the course of action, unique within its record set.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: 'Display name, for example "Plan A".',
+              "x-flatbuffer-type": "string"
+            },
+            KIND: {
+              $ref: "#/definitions/coaKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                MANEUVER: {
+                  value: 1,
+                  description: "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+                },
+                RIDE_OUT: {
+                  value: 2,
+                  description: "No action: the event is accepted."
+                },
+                RECOVERY: {
+                  value: 3,
+                  description: "STEPS, in order, restore service after the event."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the object acted on; 0 when GROUP_ID names a group.",
+              "x-flatbuffer-type": "uint"
+            },
+            GROUP_ID: {
+              type: "string",
+              description: "GROUP_ID of the $EGP acted on, when the course of action is for a group.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_STANDARD: {
+              type: "string",
+              description: 'Four-character standard code of the event answered, "$" included; never a union ordinal.',
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_ID: {
+              type: "string",
+              description: "ID of the event's record; empty for an event that is computed again rather than stored.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "Time of the event, ISO 8601 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            LEAD_SECONDS: {
+              type: "number",
+              description: "MANEUVER: made this long before EVENT_EPOCH, s.",
+              "x-flatbuffer-type": "double"
+            },
+            RETURN_WITHIN_SECONDS: {
+              type: "number",
+              description: "MANEUVER: back in place within this long after the maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            PREPARATION_SECONDS: {
+              type: "number",
+              description: "Time out of service before a maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            CHECKOUT_SECONDS: {
+              type: "number",
+              description: "Time out of service after a maneuver, s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_BUDGET_M_S_PER_YEAR: {
+              type: "number",
+              description: "Delta-v the operator allows the object each year, m/s per year; 0 = not stated.",
+              "x-flatbuffer-type": "double"
+            },
+            STEPS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/COAStep"
+              },
+              description: "RECOVERY: the steps, in order.",
+              "x-flatbuffer-type": "[COAStep]"
+            },
+            PLAN_ID: {
+              type: "string",
+              description: "ID of the $MPL plan request that carries the maneuver, when one is stored.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
           additionalProperties: false
         },
         COM: {
@@ -761211,6 +763799,101 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           ],
           additionalProperties: false
         },
+        EGPWalker: {
+          type: "object",
+          description: "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+          properties: {
+            PATTERN: {
+              $ref: "#/definitions/egpWalkerPattern",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                DELTA: {
+                  value: 1,
+                  description: "Planes spread over 360 degrees of right ascension."
+                },
+                STAR: {
+                  value: 2,
+                  description: "Planes spread over 180 degrees of right ascension."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "Planes spread over RA_OF_ASC_NODE_SPREAD."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            TOTAL_SATELLITES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "T: number of satellites.",
+              "x-flatbuffer-type": "uint"
+            },
+            PLANES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "P: number of planes.",
+              "x-flatbuffer-type": "uint"
+            },
+            PHASING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "F: relative phasing, 0 to PLANES - 1.",
+              "x-flatbuffer-type": "uint"
+            },
+            INCLINATION: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_KM: {
+              type: "number",
+              description: "Circular height above the WGS 84 equatorial radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            RA_OF_ASC_NODE_SPREAD: {
+              type: "number",
+              description: "CUSTOM only: the right ascension the ascending nodes are spread over.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node of the first plane.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly of the first satellite of the first plane.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the generated elements, ISO 8601 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            FIRST_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the first satellite; the others follow it in order.",
+              "x-flatbuffer-type": "uint"
+            }
+          },
+          additionalProperties: false
+        },
         EGPProvenance: {
           type: "object",
           description: "Provenance of the assertions behind a group. Field-for-field the\n`$CMR` provenance shape, so one consumer parses both.",
@@ -761410,6 +764093,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 QUERY_LIVE: {
                   value: 3,
                   description: "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+                },
+                GENERATED: {
+                  value: 4,
+                  description: "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -761450,6 +764137,11 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               type: "string",
               description: "Optional content identifier of the dataset the group was drawn from.",
               "x-flatbuffer-type": "string"
+            },
+            WALKER: {
+              $ref: "#/definitions/EGPWalker",
+              description: "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED.",
+              "x-flatbuffer-type": "EGPWalker"
             }
           },
           required: [
@@ -808453,6 +811145,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 OBSERVATION: {
                   value: 8
+                },
+                GROUP: {
+                  value: 9,
+                  description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+                },
+                AREA_OF_INTEREST: {
+                  value: 10,
+                  description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
                 }
               }
             },
@@ -808701,9 +811401,44 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario.",
+              "x-flatbuffer-type": "string"
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on.",
+              "x-flatbuffer-type": "[string]"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -808782,6 +811517,57 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario.",
               "x-flatbuffer-type": "SCNAssetsChanged"
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running.",
+              "x-flatbuffer-type": "bool"
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with.",
+              "x-flatbuffer-type": "string"
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario.",
+              "x-flatbuffer-type": "[SCNPinnedRow]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`,
+              "x-flatbuffer-type": "[ubyte]"
             }
           },
           additionalProperties: false
@@ -819219,6 +822005,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 CARDIOID: {
                   value: 11
+                },
+                PHASED_ARRAY: {
+                  value: 12,
+                  description: "An electronically steered array; its pattern is a $PAP synthesis."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -838756,6 +841546,9 @@ balance service's own rate.`,
                 },
                 DRB: {
                   value: 297
+                },
+                COA: {
+                  value: 298
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -851871,7 +854664,8 @@ balance service's own rate.`,
             "UNSPECIFIED",
             "ENUMERATED",
             "QUERY_SNAPSHOT",
-            "QUERY_LIVE"
+            "QUERY_LIVE",
+            "GENERATED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -851890,8 +854684,135 @@ balance service's own rate.`,
             QUERY_LIVE: {
               value: 3,
               description: "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+            },
+            GENERATED: {
+              value: 4,
+              description: "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
             }
           }
+        },
+        egpWalkerPattern: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DELTA",
+            "STAR",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            DELTA: {
+              value: 1,
+              description: "Planes spread over 360 degrees of right ascension."
+            },
+            STAR: {
+              value: 2,
+              description: "Planes spread over 180 degrees of right ascension."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "Planes spread over RA_OF_ASC_NODE_SPREAD."
+            }
+          }
+        },
+        EGPWalker: {
+          type: "object",
+          description: "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+          properties: {
+            PATTERN: {
+              $ref: "#/definitions/egpWalkerPattern",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                DELTA: {
+                  value: 1,
+                  description: "Planes spread over 360 degrees of right ascension."
+                },
+                STAR: {
+                  value: 2,
+                  description: "Planes spread over 180 degrees of right ascension."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "Planes spread over RA_OF_ASC_NODE_SPREAD."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            TOTAL_SATELLITES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "T: number of satellites.",
+              "x-flatbuffer-type": "uint"
+            },
+            PLANES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "P: number of planes.",
+              "x-flatbuffer-type": "uint"
+            },
+            PHASING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "F: relative phasing, 0 to PLANES - 1.",
+              "x-flatbuffer-type": "uint"
+            },
+            INCLINATION: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_KM: {
+              type: "number",
+              description: "Circular height above the WGS 84 equatorial radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            RA_OF_ASC_NODE_SPREAD: {
+              type: "number",
+              description: "CUSTOM only: the right ascension the ascending nodes are spread over.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node of the first plane.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly of the first satellite of the first plane.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch of the generated elements, ISO 8601 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            FIRST_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Catalog number of the first satellite; the others follow it in order.",
+              "x-flatbuffer-type": "uint"
+            }
+          },
+          additionalProperties: false
         },
         EGPProvenance: {
           type: "object",
@@ -852092,6 +855013,10 @@ balance service's own rate.`,
                 QUERY_LIVE: {
                   value: 3,
                   description: "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+                },
+                GENERATED: {
+                  value: 4,
+                  description: "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -852132,6 +855057,11 @@ balance service's own rate.`,
               type: "string",
               description: "Optional content identifier of the dataset the group was drawn from.",
               "x-flatbuffer-type": "string"
+            },
+            WALKER: {
+              $ref: "#/definitions/EGPWalker",
+              description: "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED.",
+              "x-flatbuffer-type": "EGPWalker"
             }
           },
           required: [
@@ -865531,6 +868461,80 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -866075,6 +869079,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -941128,6 +944137,80 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -941672,6 +944755,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -960204,6 +963292,80 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -960748,6 +963910,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [
@@ -1008082,7 +1011249,9 @@ assumptions".`,
             "VARIABLE_SITE",
             "POINT_OF_INTEREST",
             "EXCLUSION_ZONE",
-            "OBSERVATION"
+            "OBSERVATION",
+            "GROUP",
+            "AREA_OF_INTEREST"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -1008113,6 +1011282,14 @@ assumptions".`,
             },
             OBSERVATION: {
               value: 8
+            },
+            GROUP: {
+              value: 9,
+              description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+            },
+            AREA_OF_INTEREST: {
+              value: 10,
+              description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
             }
           }
         },
@@ -1014375,6 +1017552,14 @@ provider's reviewed register). Never free text.`,
                 },
                 OBSERVATION: {
                   value: 8
+                },
+                GROUP: {
+                  value: 9,
+                  description: "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+                },
+                AREA_OF_INTEREST: {
+                  value: 10,
+                  description: "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
                 }
               }
             },
@@ -1014623,9 +1017808,44 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        SCNPinnedRow: {
+          type: "object",
+          description: "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+          properties: {
+            ROW_ID: {
+              type: "string",
+              description: "Row identifier, unique in the scenario.",
+              "x-flatbuffer-type": "string"
+            },
+            MODE_ID: {
+              type: "string",
+              description: "The application's identifier of the mode the row belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            VERB_ID: {
+              type: "string",
+              description: "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "REFERENCE_IDs of the scenario references the row was run on.",
+              "x-flatbuffer-type": "[string]"
+            },
+            RECORD_CID: {
+              type: "string",
+              description: "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SCN: {
           type: "object",
-          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+          description: "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
           properties: {
             SCENARIO_ID: {
               type: "string",
@@ -1014704,6 +1017924,57 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/SCNAssetsChanged",
               description: "Asset-change notification payload for the scenario.",
               "x-flatbuffer-type": "SCNAssetsChanged"
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "Clock interval stop as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            ANIMATING: {
+              type: "boolean",
+              description: "True when the clock was running.",
+              "x-flatbuffer-type": "bool"
+            },
+            WINDOW_START: {
+              type: "string",
+              description: "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            WINDOW_STOP: {
+              type: "string",
+              description: "Stop of the analysis window as an ISO-8601 UTC timestamp.",
+              "x-flatbuffer-type": "string"
+            },
+            PROPAGATOR_MODULE_ID: {
+              type: "string",
+              description: "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with.",
+              "x-flatbuffer-type": "string"
+            },
+            PINNED_ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SCNPinnedRow"
+              },
+              description: "Timeline rows kept with the scenario.",
+              "x-flatbuffer-type": "[SCNPinnedRow]"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: `Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+zero. The record's CID is computed over the signed bytes.`,
+              "x-flatbuffer-type": "[ubyte]"
             }
           },
           additionalProperties: false
@@ -1058553,7 +1061824,8 @@ stated.`,
           type: "string",
           enum: [
             "NONE",
-            "EARTH_STANDARD_ATMOSPHERE"
+            "EARTH_STANDARD_ATMOSPHERE",
+            "ITU_R_P834"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -1058564,6 +1061836,10 @@ stated.`,
             EARTH_STANDARD_ATMOSPHERE: {
               value: 1,
               description: "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            },
+            ITU_R_P834: {
+              value: 2,
+              description: "ITU-R P.834 tropospheric refraction."
             }
           }
         },
@@ -1058579,7 +1061855,8 @@ stated.`,
             "MOON_EXCLUSION",
             "TARGET_LIGHTING",
             "LINE_OF_SIGHT",
-            "BLACKOUT"
+            "BLACKOUT",
+            "TERRAIN_LINE_OF_SIGHT"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -1058622,6 +1061899,10 @@ stated.`,
             BLACKOUT: {
               value: 9,
               description: "Outside every observer blackout window."
+            },
+            TERRAIN_LINE_OF_SIGHT: {
+              value: 10,
+              description: "Straight-line visibility between a ground observer and the target not blocked by terrain."
             }
           }
         },
@@ -1059554,6 +1062835,10 @@ stated.`,
                 EARTH_STANDARD_ATMOSPHERE: {
                   value: 1,
                   description: "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+                },
+                ITU_R_P834: {
+                  value: 2,
+                  description: "ITU-R P.834 tropospheric refraction."
                 }
               }
             },
@@ -1059686,6 +1062971,10 @@ stated.`,
                 BLACKOUT: {
                   value: 9,
                   description: "Outside every observer blackout window."
+                },
+                TERRAIN_LINE_OF_SIGHT: {
+                  value: 10,
+                  description: "Straight-line visibility between a ground observer and the target not blocked by terrain."
                 }
               }
             },
@@ -1069839,6 +1073128,80 @@ stated.`,
           ],
           additionalProperties: false
         },
+        RFLJamming: {
+          type: "object",
+          description: "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+          properties: {
+            LINK_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index in LINKS of the link assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            JAMMER_ENDPOINT: {
+              $ref: "#/definitions/RFLEndpoint",
+              description: "The jammer's end: its site (SIT_ID) or its platform.",
+              "x-flatbuffer-type": "RFLEndpoint",
+              "x-flatbuffer-required": true
+            },
+            PASS_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "number",
+              description: "The ground terminal antenna's stated gain toward the jammer, dBi.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: {
+              type: "boolean",
+              description: "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            POWER_STEP_DB: {
+              type: "number",
+              description: "Countermeasure: the link's EIRP raised by this many dB.",
+              "x-flatbuffer-type": "double"
+            },
+            PROCESSING_GAIN_DB: {
+              type: "number",
+              description: "Countermeasure: processing gain, dB, as the operator states it.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_PROCESSING_GAIN_DB: {
+              type: "boolean",
+              description: "True when PROCESSING_GAIN_DB is stated; it has no default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ARRAY_PAP_ID: {
+              type: "string",
+              description: "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_RADIUS_KM: {
+              type: "number",
+              description: "Denial area about the link's ground end: radius, km.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_RESOLUTION: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Denial area: number of cells across the radius.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "JAMMER_ENDPOINT"
+          ],
+          additionalProperties: false
+        },
         RFL: {
           type: "object",
           description: "RF Link Sample",
@@ -1070383,6 +1073746,11 @@ stated.`,
               },
               description: "Decoded block error probability [0-1].",
               "x-flatbuffer-type": "[double]"
+            },
+            JAMMING: {
+              $ref: "#/definitions/RFLJamming",
+              description: "The jamming assessment this record answers, when it answers one.",
+              "x-flatbuffer-type": "RFLJamming"
             }
           },
           required: [

@@ -21,8 +21,13 @@ public final class egpMembershipMode {
    * recompute; the query wins on disagreement.
    */
   public static final byte QUERY_LIVE = 3;
+  /**
+   * Members were generated from WALKER; MEMBERS is that generation, and each
+   * member's elements are its own $OMM.
+   */
+  public static final byte GENERATED = 4;
 
-  public static final String[] names = { "UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE", };
+  public static final String[] names = { "UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE", "GENERATED", };
 
   public static String name(int e) { return names[e]; }
 }

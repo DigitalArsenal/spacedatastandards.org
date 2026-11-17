@@ -155,29 +155,33 @@ enum acwRefractionModelKind : int8_t {
   acwRefractionModelKind_NONE = 0,
   /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
   acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE = 1,
+  /// ITU-R P.834 tropospheric refraction.
+  acwRefractionModelKind_ITU_R_P834 = 2,
   acwRefractionModelKind_MIN = acwRefractionModelKind_NONE,
-  acwRefractionModelKind_MAX = acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE
+  acwRefractionModelKind_MAX = acwRefractionModelKind_ITU_R_P834
 };
 
-inline const acwRefractionModelKind (&EnumValuesacwRefractionModelKind())[2] {
+inline const acwRefractionModelKind (&EnumValuesacwRefractionModelKind())[3] {
   static const acwRefractionModelKind values[] = {
     acwRefractionModelKind_NONE,
-    acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE
+    acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE,
+    acwRefractionModelKind_ITU_R_P834
   };
   return values;
 }
 
 inline const char * const *EnumNamesacwRefractionModelKind() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "NONE",
     "EARTH_STANDARD_ATMOSPHERE",
+    "ITU_R_P834",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameacwRefractionModelKind(acwRefractionModelKind e) {
-  if (::flatbuffers::IsOutRange(e, acwRefractionModelKind_NONE, acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE)) return "";
+  if (::flatbuffers::IsOutRange(e, acwRefractionModelKind_NONE, acwRefractionModelKind_ITU_R_P834)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesacwRefractionModelKind()[index];
 }
@@ -207,11 +211,14 @@ enum acwConstraintKind : int8_t {
   acwConstraintKind_LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
   acwConstraintKind_BLACKOUT = 9,
+  /// Straight-line visibility between a ground observer and the target not
+  /// blocked by terrain.
+  acwConstraintKind_TERRAIN_LINE_OF_SIGHT = 10,
   acwConstraintKind_MIN = acwConstraintKind_UNSPECIFIED,
-  acwConstraintKind_MAX = acwConstraintKind_BLACKOUT
+  acwConstraintKind_MAX = acwConstraintKind_TERRAIN_LINE_OF_SIGHT
 };
 
-inline const acwConstraintKind (&EnumValuesacwConstraintKind())[10] {
+inline const acwConstraintKind (&EnumValuesacwConstraintKind())[11] {
   static const acwConstraintKind values[] = {
     acwConstraintKind_UNSPECIFIED,
     acwConstraintKind_MIN_ELEVATION,
@@ -222,13 +229,14 @@ inline const acwConstraintKind (&EnumValuesacwConstraintKind())[10] {
     acwConstraintKind_MOON_EXCLUSION,
     acwConstraintKind_TARGET_LIGHTING,
     acwConstraintKind_LINE_OF_SIGHT,
-    acwConstraintKind_BLACKOUT
+    acwConstraintKind_BLACKOUT,
+    acwConstraintKind_TERRAIN_LINE_OF_SIGHT
   };
   return values;
 }
 
 inline const char * const *EnumNamesacwConstraintKind() {
-  static const char * const names[11] = {
+  static const char * const names[12] = {
     "UNSPECIFIED",
     "MIN_ELEVATION",
     "ELEVATION_MASK",
@@ -239,13 +247,14 @@ inline const char * const *EnumNamesacwConstraintKind() {
     "TARGET_LIGHTING",
     "LINE_OF_SIGHT",
     "BLACKOUT",
+    "TERRAIN_LINE_OF_SIGHT",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameacwConstraintKind(acwConstraintKind e) {
-  if (::flatbuffers::IsOutRange(e, acwConstraintKind_UNSPECIFIED, acwConstraintKind_BLACKOUT)) return "";
+  if (::flatbuffers::IsOutRange(e, acwConstraintKind_UNSPECIFIED, acwConstraintKind_TERRAIN_LINE_OF_SIGHT)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesacwConstraintKind()[index];
 }

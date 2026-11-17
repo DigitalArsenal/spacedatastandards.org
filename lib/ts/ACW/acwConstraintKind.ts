@@ -55,5 +55,11 @@ export enum acwConstraintKind {
   /**
    * Outside every observer blackout window.
    */
-  BLACKOUT = 9
+  BLACKOUT = 9,
+
+  /**
+   * Straight-line visibility between a ground observer and the target not
+   * blocked by terrain.
+   */
+  TERRAIN_LINE_OF_SIGHT = 10
 }

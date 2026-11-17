@@ -164,22 +164,31 @@ class EGP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+    /// GENERATED.
+    public function getWALKER()
+    {
+        $obj = new EGPWalker();
+        $o = $this->__offset(26);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEGP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EGP
      */
-    public static function createEGP(FlatBufferBuilder $builder, $GROUP_ID, $NAME, $DESCRIPTION, $TAGS, $MEMBERSHIP_MODE, $MEMBERS, $QUERY, $CREATED_AT, $UPDATED_AT, $PROVENANCE, $DATASET_CID)
+    public static function createEGP(FlatBufferBuilder $builder, $GROUP_ID, $NAME, $DESCRIPTION, $TAGS, $MEMBERSHIP_MODE, $MEMBERS, $QUERY, $CREATED_AT, $UPDATED_AT, $PROVENANCE, $DATASET_CID, $WALKER)
     {
-        $builder->startObject(11);
+        $builder->startObject(12);
         self::addGROUP_ID($builder, $GROUP_ID);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
@@ -191,6 +200,7 @@ class EGP extends Table
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addPROVENANCE($builder, $PROVENANCE);
         self::addDATASET_CID($builder, $DATASET_CID);
+        self::addWALKER($builder, $WALKER);
         $o = $builder->endObject();
         $builder->required($o, 4);  // GROUP_ID
         $builder->required($o, 6);  // NAME
@@ -378,6 +388,16 @@ class EGP extends Table
     public static function addDATASET_CID(FlatBufferBuilder $builder, $DATASET_CID)
     {
         $builder->addOffsetX(10, $DATASET_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWALKER(FlatBufferBuilder $builder, $WALKER)
+    {
+        $builder->addOffsetX(11, $WALKER, 0);
     }
 
     /**

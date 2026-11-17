@@ -3009,6 +3009,80 @@
       ],
       "additionalProperties": false
     },
+    "RFLJamming": {
+      "type": "object",
+      "description": "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+      "properties": {
+        "LINK_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index in LINKS of the link assessed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "JAMMER_ENDPOINT": {
+          "$ref": "#/definitions/RFLEndpoint",
+          "description": "The jammer's end: its site (SIT_ID) or its platform.",
+          "x-flatbuffer-type": "RFLEndpoint",
+          "x-flatbuffer-required": true
+        },
+        "PASS_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TERMINAL_GAIN_TOWARD_JAMMER_DBI": {
+          "type": "number",
+          "description": "The ground terminal antenna's stated gain toward the jammer, dBi.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI": {
+          "type": "boolean",
+          "description": "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "POWER_STEP_DB": {
+          "type": "number",
+          "description": "Countermeasure: the link's EIRP raised by this many dB.",
+          "x-flatbuffer-type": "double"
+        },
+        "PROCESSING_GAIN_DB": {
+          "type": "number",
+          "description": "Countermeasure: processing gain, dB, as the operator states it.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_PROCESSING_GAIN_DB": {
+          "type": "boolean",
+          "description": "True when PROCESSING_GAIN_DB is stated; it has no default.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ARRAY_PAP_ID": {
+          "type": "string",
+          "description": "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+          "x-flatbuffer-type": "string"
+        },
+        "AREA_RADIUS_KM": {
+          "type": "number",
+          "description": "Denial area about the link's ground end: radius, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "AREA_RESOLUTION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Denial area: number of cells across the radius.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "JAMMER_ENDPOINT"
+      ],
+      "additionalProperties": false
+    },
     "RFL": {
       "type": "object",
       "description": "RF Link Sample",
@@ -3553,6 +3627,11 @@
           },
           "description": "Decoded block error probability [0-1].",
           "x-flatbuffer-type": "[double]"
+        },
+        "JAMMING": {
+          "$ref": "#/definitions/RFLJamming",
+          "description": "The jamming assessment this record answers, when it answers one.",
+          "x-flatbuffer-type": "RFLJamming"
         }
       },
       "required": [

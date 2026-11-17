@@ -21,5 +21,10 @@ class egpMembershipMode private constructor() {
          * recompute; the query wins on disagreement.
          */
         const val QUERY_LIVE: Byte = 3
+        /**
+         * Members were generated from WALKER; MEMBERS is that generation, and each
+         * member's elements are its own $OMM.
+         */
+        const val GENERATED: Byte = 4
     }
 }

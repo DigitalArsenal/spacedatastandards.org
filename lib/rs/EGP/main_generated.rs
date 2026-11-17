@@ -6,15 +6,16 @@ extern crate alloc;
 pub const ENUM_MIN_EGP_MEMBERSHIP_MODE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_EGP_MEMBERSHIP_MODE: i8 = 3;
+pub const ENUM_MAX_EGP_MEMBERSHIP_MODE: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_EGP_MEMBERSHIP_MODE: [egpMembershipMode; 4] = [
+pub const ENUM_VALUES_EGP_MEMBERSHIP_MODE: [egpMembershipMode; 5] = [
     egpMembershipMode::UNSPECIFIED,
     egpMembershipMode::ENUMERATED,
     egpMembershipMode::QUERY_SNAPSHOT,
     egpMembershipMode::QUERY_LIVE,
+    egpMembershipMode::GENERATED,
 ];
 
 /// How a group's membership was established.
@@ -33,14 +34,18 @@ impl egpMembershipMode {
     /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
     /// recompute; the query wins on disagreement.
     pub const QUERY_LIVE: Self = Self(3);
+    /// Members were generated from WALKER; MEMBERS is that generation, and each
+    /// member's elements are its own $OMM.
+    pub const GENERATED: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::ENUMERATED,
         Self::QUERY_SNAPSHOT,
         Self::QUERY_LIVE,
+        Self::GENERATED,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -50,6 +55,7 @@ impl egpMembershipMode {
             Self::ENUMERATED => Some("ENUMERATED"),
             Self::QUERY_SNAPSHOT => Some("QUERY_SNAPSHOT"),
             Self::QUERY_LIVE => Some("QUERY_LIVE"),
+            Self::GENERATED => Some("GENERATED"),
             _ => None,
         }
     }
@@ -110,6 +116,564 @@ impl<'a> ::flatbuffers::Verifiable for egpMembershipMode {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for egpMembershipMode {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_EGP_WALKER_PATTERN: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_EGP_WALKER_PATTERN: i8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_EGP_WALKER_PATTERN: [egpWalkerPattern; 4] = [
+    egpWalkerPattern::UNSPECIFIED,
+    egpWalkerPattern::DELTA,
+    egpWalkerPattern::STAR,
+    egpWalkerPattern::CUSTOM,
+];
+
+/// Walker pattern of a generated constellation. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct egpWalkerPattern(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl egpWalkerPattern {
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Planes spread over 360 degrees of right ascension.
+    pub const DELTA: Self = Self(1);
+    /// Planes spread over 180 degrees of right ascension.
+    pub const STAR: Self = Self(2);
+    /// Planes spread over RA_OF_ASC_NODE_SPREAD.
+    pub const CUSTOM: Self = Self(3);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::DELTA,
+        Self::STAR,
+        Self::CUSTOM,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::DELTA => Some("DELTA"),
+            Self::STAR => Some("STAR"),
+            Self::CUSTOM => Some("CUSTOM"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for egpWalkerPattern {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for egpWalkerPattern {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for egpWalkerPattern {
+    type Output = egpWalkerPattern;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for egpWalkerPattern {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for egpWalkerPattern {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for egpWalkerPattern {}
+
+pub enum EGPWalkerOffset {}
+
+/// The Walker definition a constellation group's members are generated from.
+/// Angles are in degrees, as an $OMM states them.
+#[derive(Copy, Clone, PartialEq)]
+pub struct EGPWalker<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for EGPWalker<'a> {
+    type Inner = EGPWalker<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> EGPWalker<'a> {
+    pub const VT_PATTERN: ::flatbuffers::VOffsetT = 4;
+    pub const VT_TOTAL_SATELLITES: ::flatbuffers::VOffsetT = 6;
+    pub const VT_PLANES: ::flatbuffers::VOffsetT = 8;
+    pub const VT_PHASING: ::flatbuffers::VOffsetT = 10;
+    pub const VT_INCLINATION: ::flatbuffers::VOffsetT = 12;
+    pub const VT_ALTITUDE_KM: ::flatbuffers::VOffsetT = 14;
+    pub const VT_RA_OF_ASC_NODE_SPREAD: ::flatbuffers::VOffsetT = 16;
+    pub const VT_FIRST_RA_OF_ASC_NODE: ::flatbuffers::VOffsetT = 18;
+    pub const VT_FIRST_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 20;
+    pub const VT_ECCENTRICITY: ::flatbuffers::VOffsetT = 22;
+    pub const VT_ARG_OF_PERICENTER: ::flatbuffers::VOffsetT = 24;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 26;
+    pub const VT_FIRST_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 28;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        EGPWalker { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args EGPWalkerArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<EGPWalker<'bldr>> {
+        let mut builder = EGPWalkerBuilder::new(_fbb);
+        builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
+        builder.add_ECCENTRICITY(args.ECCENTRICITY);
+        builder.add_FIRST_MEAN_ANOMALY(args.FIRST_MEAN_ANOMALY);
+        builder.add_FIRST_RA_OF_ASC_NODE(args.FIRST_RA_OF_ASC_NODE);
+        builder.add_RA_OF_ASC_NODE_SPREAD(args.RA_OF_ASC_NODE_SPREAD);
+        builder.add_ALTITUDE_KM(args.ALTITUDE_KM);
+        builder.add_INCLINATION(args.INCLINATION);
+        builder.add_FIRST_NORAD_CAT_ID(args.FIRST_NORAD_CAT_ID);
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        builder.add_PHASING(args.PHASING);
+        builder.add_PLANES(args.PLANES);
+        builder.add_TOTAL_SATELLITES(args.TOTAL_SATELLITES);
+        builder.add_PATTERN(args.PATTERN);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> EGPWalkerT {
+        let PATTERN = self.PATTERN();
+        let TOTAL_SATELLITES = self.TOTAL_SATELLITES();
+        let PLANES = self.PLANES();
+        let PHASING = self.PHASING();
+        let INCLINATION = self.INCLINATION();
+        let ALTITUDE_KM = self.ALTITUDE_KM();
+        let RA_OF_ASC_NODE_SPREAD = self.RA_OF_ASC_NODE_SPREAD();
+        let FIRST_RA_OF_ASC_NODE = self.FIRST_RA_OF_ASC_NODE();
+        let FIRST_MEAN_ANOMALY = self.FIRST_MEAN_ANOMALY();
+        let ECCENTRICITY = self.ECCENTRICITY();
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
+        let EPOCH = self.EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let FIRST_NORAD_CAT_ID = self.FIRST_NORAD_CAT_ID();
+        EGPWalkerT {
+            PATTERN,
+            TOTAL_SATELLITES,
+            PLANES,
+            PHASING,
+            INCLINATION,
+            ALTITUDE_KM,
+            RA_OF_ASC_NODE_SPREAD,
+            FIRST_RA_OF_ASC_NODE,
+            FIRST_MEAN_ANOMALY,
+            ECCENTRICITY,
+            ARG_OF_PERICENTER,
+            EPOCH,
+            FIRST_NORAD_CAT_ID,
+        }
+    }
+
+    #[inline]
+    pub fn PATTERN(&self) -> egpWalkerPattern {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<egpWalkerPattern>(EGPWalker::VT_PATTERN, Some(egpWalkerPattern::UNSPECIFIED)).unwrap()}
+    }
+
+    /// T: number of satellites.
+    #[inline]
+    pub fn TOTAL_SATELLITES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(EGPWalker::VT_TOTAL_SATELLITES, Some(0)).unwrap()}
+    }
+
+    /// P: number of planes.
+    #[inline]
+    pub fn PLANES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(EGPWalker::VT_PLANES, Some(0)).unwrap()}
+    }
+
+    /// F: relative phasing, 0 to PLANES - 1.
+    #[inline]
+    pub fn PHASING(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(EGPWalker::VT_PHASING, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn INCLINATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_INCLINATION, Some(0.0)).unwrap()}
+    }
+
+    /// Circular height above the WGS 84 equatorial radius, km.
+    #[inline]
+    pub fn ALTITUDE_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_ALTITUDE_KM, Some(0.0)).unwrap()}
+    }
+
+    /// CUSTOM only: the right ascension the ascending nodes are spread over.
+    #[inline]
+    pub fn RA_OF_ASC_NODE_SPREAD(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_RA_OF_ASC_NODE_SPREAD, Some(0.0)).unwrap()}
+    }
+
+    /// Right ascension of the ascending node of the first plane.
+    #[inline]
+    pub fn FIRST_RA_OF_ASC_NODE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_FIRST_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
+    }
+
+    /// Mean anomaly of the first satellite of the first plane.
+    #[inline]
+    pub fn FIRST_MEAN_ANOMALY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_FIRST_MEAN_ANOMALY, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn ECCENTRICITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn ARG_OF_PERICENTER(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(EGPWalker::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
+    }
+
+    /// Epoch of the generated elements, ISO 8601 UTC.
+    #[inline]
+    pub fn EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EGPWalker::VT_EPOCH, None)}
+    }
+
+    /// Catalog number of the first satellite; the others follow it in order.
+    #[inline]
+    pub fn FIRST_NORAD_CAT_ID(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(EGPWalker::VT_FIRST_NORAD_CAT_ID, Some(0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for EGPWalker<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<egpWalkerPattern>("PATTERN", Self::VT_PATTERN, false)?
+            .visit_field::<u32>("TOTAL_SATELLITES", Self::VT_TOTAL_SATELLITES, false)?
+            .visit_field::<u32>("PLANES", Self::VT_PLANES, false)?
+            .visit_field::<u32>("PHASING", Self::VT_PHASING, false)?
+            .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+            .visit_field::<f64>("ALTITUDE_KM", Self::VT_ALTITUDE_KM, false)?
+            .visit_field::<f64>("RA_OF_ASC_NODE_SPREAD", Self::VT_RA_OF_ASC_NODE_SPREAD, false)?
+            .visit_field::<f64>("FIRST_RA_OF_ASC_NODE", Self::VT_FIRST_RA_OF_ASC_NODE, false)?
+            .visit_field::<f64>("FIRST_MEAN_ANOMALY", Self::VT_FIRST_MEAN_ANOMALY, false)?
+            .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+            .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+            .visit_field::<u32>("FIRST_NORAD_CAT_ID", Self::VT_FIRST_NORAD_CAT_ID, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct EGPWalkerArgs<'a> {
+    pub PATTERN: egpWalkerPattern,
+    pub TOTAL_SATELLITES: u32,
+    pub PLANES: u32,
+    pub PHASING: u32,
+    pub INCLINATION: f64,
+    pub ALTITUDE_KM: f64,
+    pub RA_OF_ASC_NODE_SPREAD: f64,
+    pub FIRST_RA_OF_ASC_NODE: f64,
+    pub FIRST_MEAN_ANOMALY: f64,
+    pub ECCENTRICITY: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIRST_NORAD_CAT_ID: u32,
+}
+
+impl<'a> Default for EGPWalkerArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        EGPWalkerArgs {
+            PATTERN: egpWalkerPattern::UNSPECIFIED,
+            TOTAL_SATELLITES: 0,
+            PLANES: 0,
+            PHASING: 0,
+            INCLINATION: 0.0,
+            ALTITUDE_KM: 0.0,
+            RA_OF_ASC_NODE_SPREAD: 0.0,
+            FIRST_RA_OF_ASC_NODE: 0.0,
+            FIRST_MEAN_ANOMALY: 0.0,
+            ECCENTRICITY: 0.0,
+            ARG_OF_PERICENTER: 0.0,
+            EPOCH: None,
+            FIRST_NORAD_CAT_ID: 0,
+        }
+    }
+}
+
+pub struct EGPWalkerBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EGPWalkerBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_PATTERN(&mut self, PATTERN: egpWalkerPattern) {
+        self.fbb_.push_slot::<egpWalkerPattern>(EGPWalker::VT_PATTERN, PATTERN, egpWalkerPattern::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_TOTAL_SATELLITES(&mut self, TOTAL_SATELLITES: u32) {
+        self.fbb_.push_slot::<u32>(EGPWalker::VT_TOTAL_SATELLITES, TOTAL_SATELLITES, 0);
+    }
+
+    #[inline]
+    pub fn add_PLANES(&mut self, PLANES: u32) {
+        self.fbb_.push_slot::<u32>(EGPWalker::VT_PLANES, PLANES, 0);
+    }
+
+    #[inline]
+    pub fn add_PHASING(&mut self, PHASING: u32) {
+        self.fbb_.push_slot::<u32>(EGPWalker::VT_PHASING, PHASING, 0);
+    }
+
+    #[inline]
+    pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_INCLINATION, INCLINATION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ALTITUDE_KM(&mut self, ALTITUDE_KM: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_ALTITUDE_KM, ALTITUDE_KM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_RA_OF_ASC_NODE_SPREAD(&mut self, RA_OF_ASC_NODE_SPREAD: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_RA_OF_ASC_NODE_SPREAD, RA_OF_ASC_NODE_SPREAD, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FIRST_RA_OF_ASC_NODE(&mut self, FIRST_RA_OF_ASC_NODE: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_FIRST_RA_OF_ASC_NODE, FIRST_RA_OF_ASC_NODE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FIRST_MEAN_ANOMALY(&mut self, FIRST_MEAN_ANOMALY: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_FIRST_MEAN_ANOMALY, FIRST_MEAN_ANOMALY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ARG_OF_PERICENTER(&mut self, ARG_OF_PERICENTER: f64) {
+        self.fbb_.push_slot::<f64>(EGPWalker::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+    }
+
+    #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EGPWalker::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_FIRST_NORAD_CAT_ID(&mut self, FIRST_NORAD_CAT_ID: u32) {
+        self.fbb_.push_slot::<u32>(EGPWalker::VT_FIRST_NORAD_CAT_ID, FIRST_NORAD_CAT_ID, 0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EGPWalkerBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        EGPWalkerBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<EGPWalker<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for EGPWalker<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("EGPWalker");
+        ds.field("PATTERN", &self.PATTERN());
+        ds.field("TOTAL_SATELLITES", &self.TOTAL_SATELLITES());
+        ds.field("PLANES", &self.PLANES());
+        ds.field("PHASING", &self.PHASING());
+        ds.field("INCLINATION", &self.INCLINATION());
+        ds.field("ALTITUDE_KM", &self.ALTITUDE_KM());
+        ds.field("RA_OF_ASC_NODE_SPREAD", &self.RA_OF_ASC_NODE_SPREAD());
+        ds.field("FIRST_RA_OF_ASC_NODE", &self.FIRST_RA_OF_ASC_NODE());
+        ds.field("FIRST_MEAN_ANOMALY", &self.FIRST_MEAN_ANOMALY());
+        ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+        ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("FIRST_NORAD_CAT_ID", &self.FIRST_NORAD_CAT_ID());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct EGPWalkerT {
+    pub PATTERN: egpWalkerPattern,
+    pub TOTAL_SATELLITES: u32,
+    pub PLANES: u32,
+    pub PHASING: u32,
+    pub INCLINATION: f64,
+    pub ALTITUDE_KM: f64,
+    pub RA_OF_ASC_NODE_SPREAD: f64,
+    pub FIRST_RA_OF_ASC_NODE: f64,
+    pub FIRST_MEAN_ANOMALY: f64,
+    pub ECCENTRICITY: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub EPOCH: Option<alloc::string::String>,
+    pub FIRST_NORAD_CAT_ID: u32,
+}
+
+impl Default for EGPWalkerT {
+    fn default() -> Self {
+        Self {
+            PATTERN: egpWalkerPattern::UNSPECIFIED,
+            TOTAL_SATELLITES: 0,
+            PLANES: 0,
+            PHASING: 0,
+            INCLINATION: 0.0,
+            ALTITUDE_KM: 0.0,
+            RA_OF_ASC_NODE_SPREAD: 0.0,
+            FIRST_RA_OF_ASC_NODE: 0.0,
+            FIRST_MEAN_ANOMALY: 0.0,
+            ECCENTRICITY: 0.0,
+            ARG_OF_PERICENTER: 0.0,
+            EPOCH: None,
+            FIRST_NORAD_CAT_ID: 0,
+        }
+    }
+}
+
+impl EGPWalkerT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<EGPWalker<'b>> {
+        let PATTERN = self.PATTERN;
+        let TOTAL_SATELLITES = self.TOTAL_SATELLITES;
+        let PLANES = self.PLANES;
+        let PHASING = self.PHASING;
+        let INCLINATION = self.INCLINATION;
+        let ALTITUDE_KM = self.ALTITUDE_KM;
+        let RA_OF_ASC_NODE_SPREAD = self.RA_OF_ASC_NODE_SPREAD;
+        let FIRST_RA_OF_ASC_NODE = self.FIRST_RA_OF_ASC_NODE;
+        let FIRST_MEAN_ANOMALY = self.FIRST_MEAN_ANOMALY;
+        let ECCENTRICITY = self.ECCENTRICITY;
+        let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
+        let EPOCH = self.EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let FIRST_NORAD_CAT_ID = self.FIRST_NORAD_CAT_ID;
+        EGPWalker::create(_fbb, &EGPWalkerArgs{
+            PATTERN,
+            TOTAL_SATELLITES,
+            PLANES,
+            PHASING,
+            INCLINATION,
+            ALTITUDE_KM,
+            RA_OF_ASC_NODE_SPREAD,
+            FIRST_RA_OF_ASC_NODE,
+            FIRST_MEAN_ANOMALY,
+            ECCENTRICITY,
+            ARG_OF_PERICENTER,
+            EPOCH,
+            FIRST_NORAD_CAT_ID,
+        })
+    }
+}
 
 pub enum EGPProvenanceOffset {}
 
@@ -1131,6 +1695,7 @@ impl<'a> EGP<'a> {
     pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 20;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 22;
     pub const VT_DATASET_CID: ::flatbuffers::VOffsetT = 24;
+    pub const VT_WALKER: ::flatbuffers::VOffsetT = 26;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1143,6 +1708,7 @@ impl<'a> EGP<'a> {
         args: &'args EGPArgs<'args>
     ) -> ::flatbuffers::WIPOffset<EGP<'bldr>> {
         let mut builder = EGPBuilder::new(_fbb);
+        if let Some(x) = args.WALKER { builder.add_WALKER(x); }
         if let Some(x) = args.DATASET_CID { builder.add_DATASET_CID(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.UPDATED_AT { builder.add_UPDATED_AT(x); }
@@ -1192,6 +1758,9 @@ impl<'a> EGP<'a> {
         let DATASET_CID = self.DATASET_CID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let WALKER = self.WALKER().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         EGPT {
             GROUP_ID,
             NAME,
@@ -1204,6 +1773,7 @@ impl<'a> EGP<'a> {
             UPDATED_AT,
             PROVENANCE,
             DATASET_CID,
+            WALKER,
         }
     }
 
@@ -1308,6 +1878,16 @@ impl<'a> EGP<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EGP::VT_DATASET_CID, None)}
     }
+
+    /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+    /// GENERATED.
+    #[inline]
+    pub fn WALKER(&self) -> Option<EGPWalker<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EGPWalker>>(EGP::VT_WALKER, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for EGP<'_> {
@@ -1327,6 +1907,7 @@ impl ::flatbuffers::Verifiable for EGP<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, true)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EGPProvenance>>>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DATASET_CID", Self::VT_DATASET_CID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<EGPWalker>>("WALKER", Self::VT_WALKER, false)?
             .finish();
         Ok(())
     }
@@ -1344,6 +1925,7 @@ pub struct EGPArgs<'a> {
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EGPProvenance<'a>>>>>,
     pub DATASET_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WALKER: Option<::flatbuffers::WIPOffset<EGPWalker<'a>>>,
 }
 
 impl<'a> Default for EGPArgs<'a> {
@@ -1361,6 +1943,7 @@ impl<'a> Default for EGPArgs<'a> {
             UPDATED_AT: None, // required field
             PROVENANCE: None,
             DATASET_CID: None,
+            WALKER: None,
         }
     }
 }
@@ -1427,6 +2010,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EGPBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_WALKER(&mut self, WALKER: ::flatbuffers::WIPOffset<EGPWalker<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EGPWalker>>(EGP::VT_WALKER, WALKER);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EGPBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         EGPBuilder {
@@ -1459,6 +2047,7 @@ impl ::core::fmt::Debug for EGP<'_> {
         ds.field("UPDATED_AT", &self.UPDATED_AT());
         ds.field("PROVENANCE", &self.PROVENANCE());
         ds.field("DATASET_CID", &self.DATASET_CID());
+        ds.field("WALKER", &self.WALKER());
         ds.finish()
     }
 }
@@ -1477,6 +2066,7 @@ pub struct EGPT {
     pub UPDATED_AT: alloc::string::String,
     pub PROVENANCE: Option<alloc::vec::Vec<EGPProvenanceT>>,
     pub DATASET_CID: Option<alloc::string::String>,
+    pub WALKER: Option<alloc::boxed::Box<EGPWalkerT>>,
 }
 
 impl Default for EGPT {
@@ -1493,6 +2083,7 @@ impl Default for EGPT {
             UPDATED_AT: alloc::string::ToString::to_string(""),
             PROVENANCE: None,
             DATASET_CID: None,
+            WALKER: None,
         }
     }
 }
@@ -1536,6 +2127,9 @@ impl EGPT {
         let DATASET_CID = self.DATASET_CID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let WALKER = self.WALKER.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         EGP::create(_fbb, &EGPArgs{
             GROUP_ID,
             NAME,
@@ -1548,6 +2142,7 @@ impl EGPT {
             UPDATED_AT,
             PROVENANCE,
             DATASET_CID,
+            WALKER,
         })
     }
 }

@@ -6,10 +6,13 @@ class acwRefractionModelKind
     const NONE = 0;
     /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
     const EARTH_STANDARD_ATMOSPHERE = 1;
+    /// ITU-R P.834 tropospheric refraction.
+    const ITU_R_P834 = 2;
 
     private static $names = array(
         acwRefractionModelKind::NONE=>"NONE",
         acwRefractionModelKind::EARTH_STANDARD_ATMOSPHERE=>"EARTH_STANDARD_ATMOSPHERE",
+        acwRefractionModelKind::ITU_R_P834=>"ITU_R_P834",
     );
 
     public static function Name($e)

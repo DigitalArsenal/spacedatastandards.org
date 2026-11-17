@@ -9,6 +9,11 @@ np = import_numpy()
 # Scenario - canonical scene composition and simulation state for external
 # scenario controls integrations. Domain records remain in their native SDS
 # schemas and are referenced or embedded here only as scenario content.
+#
+# A scenario that carries other records is one $REC whose first record is
+# this $SCN; the other records follow under their own standards. A stored
+# request carries only its request arm, with derived fields left empty to be
+# computed again.
 class SCN(object):
     __slots__ = ['_tab']
 
@@ -161,8 +166,116 @@ class SCN(object):
             return obj
         return None
 
+    # Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+    # time.
+    # SCN
+    def START_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock interval stop as an ISO-8601 UTC timestamp.
+    # SCN
+    def STOP_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True when the clock was running.
+    # SCN
+    def ANIMATING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Start of the analysis window, the span the timeline showed, as an
+    # ISO-8601 UTC timestamp.
+    # SCN
+    def WINDOW_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Stop of the analysis window as an ISO-8601 UTC timestamp.
+    # SCN
+    def WINDOW_STOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+    # the catalog objects were flown with.
+    # SCN
+    def PROPAGATOR_MODULE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Timeline rows kept with the scenario.
+    # SCN
+    def PINNED_ROWS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SCNPinnedRow import SCNPinnedRow
+            obj = SCNPinnedRow()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SCN
+    def PINNED_ROWSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SCN
+    def PINNED_ROWSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
+    # Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+    # enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+    # enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+    # zero. The record's CID is computed over the signed bytes.
+    # SCN
+    def SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # SCN
+    def SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # SCN
+    def SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SCN
+    def SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        return o == 0
+
 def SCNStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(20)
 
 def Start(builder):
     SCNStart(builder)
@@ -251,6 +364,82 @@ def SCNAddASSETS_CHANGED(builder, ASSETS_CHANGED):
 def AddASSETS_CHANGED(builder, ASSETS_CHANGED):
     SCNAddASSETS_CHANGED(builder, ASSETS_CHANGED)
 
+def SCNAddSTART_EPOCH(builder, START_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(START_EPOCH), 0)
+
+def AddSTART_EPOCH(builder, START_EPOCH):
+    SCNAddSTART_EPOCH(builder, START_EPOCH)
+
+def SCNAddSTOP_EPOCH(builder, STOP_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_EPOCH), 0)
+
+def AddSTOP_EPOCH(builder, STOP_EPOCH):
+    SCNAddSTOP_EPOCH(builder, STOP_EPOCH)
+
+def SCNAddANIMATING(builder, ANIMATING):
+    builder.PrependBoolSlot(14, ANIMATING, 0)
+
+def AddANIMATING(builder, ANIMATING):
+    SCNAddANIMATING(builder, ANIMATING)
+
+def SCNAddWINDOW_START(builder, WINDOW_START):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_START), 0)
+
+def AddWINDOW_START(builder, WINDOW_START):
+    SCNAddWINDOW_START(builder, WINDOW_START)
+
+def SCNAddWINDOW_STOP(builder, WINDOW_STOP):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_STOP), 0)
+
+def AddWINDOW_STOP(builder, WINDOW_STOP):
+    SCNAddWINDOW_STOP(builder, WINDOW_STOP)
+
+def SCNAddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_ID):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PROPAGATOR_MODULE_ID), 0)
+
+def AddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_ID):
+    SCNAddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_ID)
+
+def SCNAddPINNED_ROWS(builder, PINNED_ROWS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PINNED_ROWS), 0)
+
+def AddPINNED_ROWS(builder, PINNED_ROWS):
+    SCNAddPINNED_ROWS(builder, PINNED_ROWS)
+
+def SCNStartPINNED_ROWSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPINNED_ROWSVector(builder, numElems):
+    return SCNStartPINNED_ROWSVector(builder, numElems)
+
+def SCNCreatePINNED_ROWSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePINNED_ROWSVector(builder, data):
+    return SCNCreatePINNED_ROWSVector(builder, data)
+
+def SCNAddSIGNATURE(builder, SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+
+def AddSIGNATURE(builder, SIGNATURE):
+    SCNAddSIGNATURE(builder, SIGNATURE)
+
+def SCNStartSIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartSIGNATUREVector(builder, numElems):
+    return SCNStartSIGNATUREVector(builder, numElems)
+
+def SCNCreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    return SCNCreateSIGNATUREVector(builder, data)
+
 def SCNEnd(builder):
     return builder.EndObject()
 
@@ -260,6 +449,7 @@ def End(builder):
 import RFM
 import SCNAssetsChanged
 import SCNEvent
+import SCNPinnedRow
 import SCNReference
 import VST
 try:
@@ -284,6 +474,14 @@ class SCNT(object):
         ACTION = 0,
         VIEW_STATE = None,
         ASSETS_CHANGED = None,
+        START_EPOCH = None,
+        STOP_EPOCH = None,
+        ANIMATING = False,
+        WINDOW_START = None,
+        WINDOW_STOP = None,
+        PROPAGATOR_MODULE_ID = None,
+        PINNED_ROWS = None,
+        SIGNATURE = None,
     ):
         self.SCENARIO_ID = SCENARIO_ID  # type: Optional[str]
         self.REFERENCES = REFERENCES  # type: Optional[List[SCNReference.SCNReferenceT]]
@@ -297,6 +495,14 @@ class SCNT(object):
         self.ACTION = ACTION  # type: int
         self.VIEW_STATE = VIEW_STATE  # type: Optional[VST.VSTT]
         self.ASSETS_CHANGED = ASSETS_CHANGED  # type: Optional[SCNAssetsChanged.SCNAssetsChangedT]
+        self.START_EPOCH = START_EPOCH  # type: Optional[str]
+        self.STOP_EPOCH = STOP_EPOCH  # type: Optional[str]
+        self.ANIMATING = ANIMATING  # type: bool
+        self.WINDOW_START = WINDOW_START  # type: Optional[str]
+        self.WINDOW_STOP = WINDOW_STOP  # type: Optional[str]
+        self.PROPAGATOR_MODULE_ID = PROPAGATOR_MODULE_ID  # type: Optional[str]
+        self.PINNED_ROWS = PINNED_ROWS  # type: Optional[List[SCNPinnedRow.SCNPinnedRowT]]
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -342,6 +548,27 @@ class SCNT(object):
             self.VIEW_STATE = VST.VSTT.InitFromObj(SCN.VIEW_STATE())
         if SCN.ASSETS_CHANGED() is not None:
             self.ASSETS_CHANGED = SCNAssetsChanged.SCNAssetsChangedT.InitFromObj(SCN.ASSETS_CHANGED())
+        self.START_EPOCH = SCN.START_EPOCH()
+        self.STOP_EPOCH = SCN.STOP_EPOCH()
+        self.ANIMATING = SCN.ANIMATING()
+        self.WINDOW_START = SCN.WINDOW_START()
+        self.WINDOW_STOP = SCN.WINDOW_STOP()
+        self.PROPAGATOR_MODULE_ID = SCN.PROPAGATOR_MODULE_ID()
+        if not SCN.PINNED_ROWSIsNone():
+            self.PINNED_ROWS = []
+            for i in range(SCN.PINNED_ROWSLength()):
+                if SCN.PINNED_ROWS(i) is None:
+                    self.PINNED_ROWS.append(None)
+                else:
+                    sCNPinnedRow_ = SCNPinnedRow.SCNPinnedRowT.InitFromObj(SCN.PINNED_ROWS(i))
+                    self.PINNED_ROWS.append(sCNPinnedRow_)
+        if not SCN.SIGNATUREIsNone():
+            if np is None:
+                self.SIGNATURE = []
+                for i in range(SCN.SIGNATURELength()):
+                    self.SIGNATURE.append(SCN.SIGNATURE(i))
+            else:
+                self.SIGNATURE = SCN.SIGNATUREAsNumpy()
 
     # SCNT
     def Pack(self, builder):
@@ -367,6 +594,32 @@ class SCNT(object):
             VIEW_STATE = self.VIEW_STATE.Pack(builder)
         if self.ASSETS_CHANGED is not None:
             ASSETS_CHANGED = self.ASSETS_CHANGED.Pack(builder)
+        if self.START_EPOCH is not None:
+            START_EPOCH = builder.CreateString(self.START_EPOCH)
+        if self.STOP_EPOCH is not None:
+            STOP_EPOCH = builder.CreateString(self.STOP_EPOCH)
+        if self.WINDOW_START is not None:
+            WINDOW_START = builder.CreateString(self.WINDOW_START)
+        if self.WINDOW_STOP is not None:
+            WINDOW_STOP = builder.CreateString(self.WINDOW_STOP)
+        if self.PROPAGATOR_MODULE_ID is not None:
+            PROPAGATOR_MODULE_ID = builder.CreateString(self.PROPAGATOR_MODULE_ID)
+        if self.PINNED_ROWS is not None:
+            PINNED_ROWSlist = []
+            for i in range(len(self.PINNED_ROWS)):
+                PINNED_ROWSlist.append(self.PINNED_ROWS[i].Pack(builder))
+            SCNStartPINNED_ROWSVector(builder, len(self.PINNED_ROWS))
+            for i in reversed(range(len(self.PINNED_ROWS))):
+                builder.PrependUOffsetTRelative(PINNED_ROWSlist[i])
+            PINNED_ROWS = builder.EndVector()
+        if self.SIGNATURE is not None:
+            if np is not None and type(self.SIGNATURE) is np.ndarray:
+                SIGNATURE = builder.CreateNumpyVector(self.SIGNATURE)
+            else:
+                SCNStartSIGNATUREVector(builder, len(self.SIGNATURE))
+                for i in reversed(range(len(self.SIGNATURE))):
+                    builder.PrependUint8(self.SIGNATURE[i])
+                SIGNATURE = builder.EndVector()
         SCNStart(builder)
         if self.SCENARIO_ID is not None:
             SCNAddSCENARIO_ID(builder, SCENARIO_ID)
@@ -388,5 +641,20 @@ class SCNT(object):
             SCNAddVIEW_STATE(builder, VIEW_STATE)
         if self.ASSETS_CHANGED is not None:
             SCNAddASSETS_CHANGED(builder, ASSETS_CHANGED)
+        if self.START_EPOCH is not None:
+            SCNAddSTART_EPOCH(builder, START_EPOCH)
+        if self.STOP_EPOCH is not None:
+            SCNAddSTOP_EPOCH(builder, STOP_EPOCH)
+        SCNAddANIMATING(builder, self.ANIMATING)
+        if self.WINDOW_START is not None:
+            SCNAddWINDOW_START(builder, WINDOW_START)
+        if self.WINDOW_STOP is not None:
+            SCNAddWINDOW_STOP(builder, WINDOW_STOP)
+        if self.PROPAGATOR_MODULE_ID is not None:
+            SCNAddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_ID)
+        if self.PINNED_ROWS is not None:
+            SCNAddPINNED_ROWS(builder, PINNED_ROWS)
+        if self.SIGNATURE is not None:
+            SCNAddSIGNATURE(builder, SIGNATURE)
         SCN = SCNEnd(builder)
         return SCN

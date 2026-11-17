@@ -1,5 +1,5 @@
-// Hash: 0218c6892a6094c2e8840cbe5faceebbfe1b54f2d4d66ed971dc6049f83cc85b
-// Version: 0.0.6
+// Hash: 73acf86ec2ed567442110b099ef74d2dcc4c5c56ce9d9d4b0052ca4927e9ac88
+// Version: 0.0.7
 // -----------------------------------END_HEADER
 include "../MEM/main.fbs";
 include "../EOP/main.fbs";
@@ -33,7 +33,9 @@ enum acwResultStatus : byte {
 enum acwRefractionModelKind : byte {
   NONE = 0,
   /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
-  EARTH_STANDARD_ATMOSPHERE = 1
+  EARTH_STANDARD_ATMOSPHERE = 1,
+  /// ITU-R P.834 tropospheric refraction.
+  ITU_R_P834 = 2
 }
 
 /// Target Cartesian state sample in an Earth-fixed frame.
@@ -150,7 +152,10 @@ enum acwConstraintKind : byte {
   /// ACWRequest.OCCULTING_BODIES entry.
   LINE_OF_SIGHT = 8,
   /// Outside every observer blackout window.
-  BLACKOUT = 9
+  BLACKOUT = 9,
+  /// Straight-line visibility between a ground observer and the target not
+  /// blocked by terrain.
+  TERRAIN_LINE_OF_SIGHT = 10
 }
 
 /// How the members of a constraint set combine.

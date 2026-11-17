@@ -21,8 +21,12 @@ public final class snrAntennaPattern {
   public static final byte TEARDROP = 9;
   public static final byte TOROIDAL = 10;
   public static final byte CARDIOID = 11;
+  /**
+   * An electronically steered array; its pattern is a $PAP synthesis.
+   */
+  public static final byte PHASED_ARRAY = 12;
 
-  public static final String[] names = { "UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID", };
+  public static final String[] names = { "UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID", "PHASED_ARRAY", };
 
   public static String name(int e) { return names[e]; }
 }

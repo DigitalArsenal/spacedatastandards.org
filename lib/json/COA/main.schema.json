@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "coaKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY"]
+    },
+    "COAStep" : {
+      "type" : "object",
+      "description" : "One step of a course of action.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "The step, in the operator's words."
+              },
+        "DURATION_SECONDS" : {
+                "type" : "number",
+                "description" : "How long the step takes, s."
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "COA" : {
+      "type" : "object",
+      "description" : "Course of Action",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Identifier of the course of action, unique within its record set."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name, for example \"Plan A\"."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/coaKind"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Catalog number of the object acted on; 0 when GROUP_ID names a group."
+              },
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "GROUP_ID of the $EGP acted on, when the course of action is for a group."
+              },
+        "EVENT_STANDARD" : {
+                "type" : "string",
+                "description" : "Four-character standard code of the event answered, \"$\" included; never a union ordinal."
+              },
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "ID of the event's record; empty for an event that is computed again rather than stored."
+              },
+        "EVENT_EPOCH" : {
+                "type" : "string",
+                "description" : "Time of the event, ISO 8601 UTC."
+              },
+        "LEAD_SECONDS" : {
+                "type" : "number",
+                "description" : "MANEUVER: made this long before EVENT_EPOCH, s."
+              },
+        "RETURN_WITHIN_SECONDS" : {
+                "type" : "number",
+                "description" : "MANEUVER: back in place within this long after the maneuver, s."
+              },
+        "PREPARATION_SECONDS" : {
+                "type" : "number",
+                "description" : "Time out of service before a maneuver, s."
+              },
+        "CHECKOUT_SECONDS" : {
+                "type" : "number",
+                "description" : "Time out of service after a maneuver, s."
+              },
+        "DELTA_V_BUDGET_M_S_PER_YEAR" : {
+                "type" : "number",
+                "description" : "Delta-v the operator allows the object each year, m/s per year; 0 = not stated."
+              },
+        "STEPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/COAStep"},
+                "description" : "RECOVERY: the steps, in order."
+              },
+        "PLAN_ID" : {
+                "type" : "string",
+                "description" : "ID of the $MPL plan request that carries the maneuver, when one is stored."
+              }
+      },
+      "required" : ["ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/COA"
+}

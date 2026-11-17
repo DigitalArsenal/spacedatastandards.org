@@ -2256,8 +2256,27 @@ func (rcv *RFL) MutateBlockErrorRate(j int, n float64) bool {
 	return rcv.MutateBLOCK_ERROR_RATE(j, n)
 }
 
+/// The jamming assessment this record answers, when it answers one.
+func (rcv *RFL) JAMMING(obj *RFLJamming) *RFLJamming {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFLJamming)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *RFL) Jamming(obj *RFLJamming) *RFLJamming {
+	return rcv.JAMMING(obj)
+}
+
+/// The jamming assessment this record answers, when it answers one.
 func RFLStart(builder *flatbuffers.Builder) {
-	builder.StartObject(59)
+	builder.StartObject(60)
 }
 func RFLAddRFL_ID(builder *flatbuffers.Builder, RFL_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RFL_ID), 0)
@@ -2912,6 +2931,12 @@ func RFLStartBLOCK_ERROR_RATEVector(builder *flatbuffers.Builder, numElems int) 
 }
 func RFLStartBlockErrorRateVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return RFLStartBLOCK_ERROR_RATEVector(builder, numElems)
+}
+func RFLAddJAMMING(builder *flatbuffers.Builder, JAMMING flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(JAMMING), 0)
+}
+func RFLAddJamming(builder *flatbuffers.Builder, JAMMING flatbuffers.UOffsetT) {
+	RFLAddJAMMING(builder, JAMMING)
 }
 func RFLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

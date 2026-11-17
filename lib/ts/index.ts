@@ -40,6 +40,7 @@ export * as CMR from './CMR/main.js';
 export * as CMS from './CMS/main.js';
 export * as CMT from './CMT/main.js';
 export * as CNP from './CNP/main.js';
+export * as COA from './COA/main.js';
 export * as COM from './COM/main.js';
 export * as COT from './COT/main.js';
 export * as CPS from './CPS/main.js';

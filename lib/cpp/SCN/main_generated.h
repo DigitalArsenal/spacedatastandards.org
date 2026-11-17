@@ -45,6 +45,9 @@ struct SCNEventBuilder;
 struct SCNAssetsChanged;
 struct SCNAssetsChangedBuilder;
 
+struct SCNPinnedRow;
+struct SCNPinnedRowBuilder;
+
 struct SCN;
 struct SCNBuilder;
 
@@ -61,11 +64,18 @@ enum scenarioReferenceKind : int8_t {
   scenarioReferenceKind_POINT_OF_INTEREST = 6,
   scenarioReferenceKind_EXCLUSION_ZONE = 7,
   scenarioReferenceKind_OBSERVATION = 8,
+  /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+  /// REFERENCE_ID.
+  scenarioReferenceKind_GROUP = 9,
+  /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+  /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+  /// alpha-2 code when the area is a country.
+  scenarioReferenceKind_AREA_OF_INTEREST = 10,
   scenarioReferenceKind_MIN = scenarioReferenceKind_UNKNOWN,
-  scenarioReferenceKind_MAX = scenarioReferenceKind_OBSERVATION
+  scenarioReferenceKind_MAX = scenarioReferenceKind_AREA_OF_INTEREST
 };
 
-inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[9] {
+inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[11] {
   static const scenarioReferenceKind values[] = {
     scenarioReferenceKind_UNKNOWN,
     scenarioReferenceKind_SATELLITE,
@@ -75,13 +85,15 @@ inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[9] {
     scenarioReferenceKind_VARIABLE_SITE,
     scenarioReferenceKind_POINT_OF_INTEREST,
     scenarioReferenceKind_EXCLUSION_ZONE,
-    scenarioReferenceKind_OBSERVATION
+    scenarioReferenceKind_OBSERVATION,
+    scenarioReferenceKind_GROUP,
+    scenarioReferenceKind_AREA_OF_INTEREST
   };
   return values;
 }
 
 inline const char * const *EnumNamesscenarioReferenceKind() {
-  static const char * const names[10] = {
+  static const char * const names[12] = {
     "UNKNOWN",
     "SATELLITE",
     "GROUND_SITE",
@@ -91,13 +103,15 @@ inline const char * const *EnumNamesscenarioReferenceKind() {
     "POINT_OF_INTEREST",
     "EXCLUSION_ZONE",
     "OBSERVATION",
+    "GROUP",
+    "AREA_OF_INTEREST",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescenarioReferenceKind(scenarioReferenceKind e) {
-  if (::flatbuffers::IsOutRange(e, scenarioReferenceKind_UNKNOWN, scenarioReferenceKind_OBSERVATION)) return "";
+  if (::flatbuffers::IsOutRange(e, scenarioReferenceKind_UNKNOWN, scenarioReferenceKind_AREA_OF_INTEREST)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscenarioReferenceKind()[index];
 }
@@ -1308,9 +1322,132 @@ inline ::flatbuffers::Offset<SCNAssetsChanged> CreateSCNAssetsChangedDirect(
       REFERENCES__);
 }
 
+/// A timeline row a scenario keeps: what was run, and on what. Never its bars;
+/// the inputs of the run are the request records of the enclosing $REC.
+struct SCNPinnedRow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCNPinnedRowBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ROW_ID = 4,
+    VT_MODE_ID = 6,
+    VT_VERB_ID = 8,
+    VT_REFERENCE_IDS = 10,
+    VT_RECORD_CID = 12
+  };
+  /// Row identifier, unique in the scenario.
+  const ::flatbuffers::String *ROW_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ROW_ID);
+  }
+  /// The application's identifier of the mode the row belongs to.
+  const ::flatbuffers::String *MODE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODE_ID);
+  }
+  /// The application's identifier of the verb that produced the row; empty
+  /// when the row came without a run.
+  const ::flatbuffers::String *VERB_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VERB_ID);
+  }
+  /// REFERENCE_IDs of the scenario references the row was run on.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *REFERENCE_IDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_REFERENCE_IDS);
+  }
+  /// CID of the stored record the row shows, when it shows one (for example
+  /// an event's descriptor $SCN); empty otherwise.
+  const ::flatbuffers::String *RECORD_CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECORD_CID);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ROW_ID) &&
+           verifier.VerifyString(ROW_ID()) &&
+           VerifyOffset(verifier, VT_MODE_ID) &&
+           verifier.VerifyString(MODE_ID()) &&
+           VerifyOffset(verifier, VT_VERB_ID) &&
+           verifier.VerifyString(VERB_ID()) &&
+           VerifyOffset(verifier, VT_REFERENCE_IDS) &&
+           verifier.VerifyVector(REFERENCE_IDS()) &&
+           verifier.VerifyVectorOfStrings(REFERENCE_IDS()) &&
+           VerifyOffset(verifier, VT_RECORD_CID) &&
+           verifier.VerifyString(RECORD_CID()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCNPinnedRowBuilder {
+  typedef SCNPinnedRow Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ROW_ID(::flatbuffers::Offset<::flatbuffers::String> ROW_ID) {
+    fbb_.AddOffset(SCNPinnedRow::VT_ROW_ID, ROW_ID);
+  }
+  void add_MODE_ID(::flatbuffers::Offset<::flatbuffers::String> MODE_ID) {
+    fbb_.AddOffset(SCNPinnedRow::VT_MODE_ID, MODE_ID);
+  }
+  void add_VERB_ID(::flatbuffers::Offset<::flatbuffers::String> VERB_ID) {
+    fbb_.AddOffset(SCNPinnedRow::VT_VERB_ID, VERB_ID);
+  }
+  void add_REFERENCE_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REFERENCE_IDS) {
+    fbb_.AddOffset(SCNPinnedRow::VT_REFERENCE_IDS, REFERENCE_IDS);
+  }
+  void add_RECORD_CID(::flatbuffers::Offset<::flatbuffers::String> RECORD_CID) {
+    fbb_.AddOffset(SCNPinnedRow::VT_RECORD_CID, RECORD_CID);
+  }
+  explicit SCNPinnedRowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCNPinnedRow> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCNPinnedRow>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCNPinnedRow> CreateSCNPinnedRow(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ROW_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VERB_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REFERENCE_IDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RECORD_CID = 0) {
+  SCNPinnedRowBuilder builder_(_fbb);
+  builder_.add_RECORD_CID(RECORD_CID);
+  builder_.add_REFERENCE_IDS(REFERENCE_IDS);
+  builder_.add_VERB_ID(VERB_ID);
+  builder_.add_MODE_ID(MODE_ID);
+  builder_.add_ROW_ID(ROW_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCNPinnedRow> CreateSCNPinnedRowDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ROW_ID = nullptr,
+    const char *MODE_ID = nullptr,
+    const char *VERB_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REFERENCE_IDS = nullptr,
+    const char *RECORD_CID = nullptr) {
+  auto ROW_ID__ = ROW_ID ? _fbb.CreateString(ROW_ID) : 0;
+  auto MODE_ID__ = MODE_ID ? _fbb.CreateString(MODE_ID) : 0;
+  auto VERB_ID__ = VERB_ID ? _fbb.CreateString(VERB_ID) : 0;
+  auto REFERENCE_IDS__ = REFERENCE_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REFERENCE_IDS) : 0;
+  auto RECORD_CID__ = RECORD_CID ? _fbb.CreateString(RECORD_CID) : 0;
+  return CreateSCNPinnedRow(
+      _fbb,
+      ROW_ID__,
+      MODE_ID__,
+      VERB_ID__,
+      REFERENCE_IDS__,
+      RECORD_CID__);
+}
+
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1325,7 +1462,15 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_REFERENCE_FRAME = 20,
     VT_ACTION = 22,
     VT_VIEW_STATE = 24,
-    VT_ASSETS_CHANGED = 26
+    VT_ASSETS_CHANGED = 26,
+    VT_START_EPOCH = 28,
+    VT_STOP_EPOCH = 30,
+    VT_ANIMATING = 32,
+    VT_WINDOW_START = 34,
+    VT_WINDOW_STOP = 36,
+    VT_PROPAGATOR_MODULE_ID = 38,
+    VT_PINNED_ROWS = 40,
+    VT_SIGNATURE = 42
   };
   /// Stable id for the scenario.
   const ::flatbuffers::String *SCENARIO_ID() const {
@@ -1375,6 +1520,44 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const SCNAssetsChanged *ASSETS_CHANGED() const {
     return GetPointer<const SCNAssetsChanged *>(VT_ASSETS_CHANGED);
   }
+  /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  /// time.
+  const ::flatbuffers::String *START_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_EPOCH);
+  }
+  /// Clock interval stop as an ISO-8601 UTC timestamp.
+  const ::flatbuffers::String *STOP_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STOP_EPOCH);
+  }
+  /// True when the clock was running.
+  bool ANIMATING() const {
+    return GetField<uint8_t>(VT_ANIMATING, 0) != 0;
+  }
+  /// Start of the analysis window, the span the timeline showed, as an
+  /// ISO-8601 UTC timestamp.
+  const ::flatbuffers::String *WINDOW_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_WINDOW_START);
+  }
+  /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+  const ::flatbuffers::String *WINDOW_STOP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_WINDOW_STOP);
+  }
+  /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  /// the catalog objects were flown with.
+  const ::flatbuffers::String *PROPAGATOR_MODULE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PROPAGATOR_MODULE_ID);
+  }
+  /// Timeline rows kept with the scenario.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCNPinnedRow>> *PINNED_ROWS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNPinnedRow>> *>(VT_PINNED_ROWS);
+  }
+  /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  /// zero. The record's CID is computed over the signed bytes.
+  const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1399,6 +1582,22 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(VIEW_STATE()) &&
            VerifyOffset(verifier, VT_ASSETS_CHANGED) &&
            verifier.VerifyTable(ASSETS_CHANGED()) &&
+           VerifyOffset(verifier, VT_START_EPOCH) &&
+           verifier.VerifyString(START_EPOCH()) &&
+           VerifyOffset(verifier, VT_STOP_EPOCH) &&
+           verifier.VerifyString(STOP_EPOCH()) &&
+           VerifyField<uint8_t>(verifier, VT_ANIMATING, 1) &&
+           VerifyOffset(verifier, VT_WINDOW_START) &&
+           verifier.VerifyString(WINDOW_START()) &&
+           VerifyOffset(verifier, VT_WINDOW_STOP) &&
+           verifier.VerifyString(WINDOW_STOP()) &&
+           VerifyOffset(verifier, VT_PROPAGATOR_MODULE_ID) &&
+           verifier.VerifyString(PROPAGATOR_MODULE_ID()) &&
+           VerifyOffset(verifier, VT_PINNED_ROWS) &&
+           verifier.VerifyVector(PINNED_ROWS()) &&
+           verifier.VerifyVectorOfTables(PINNED_ROWS()) &&
+           VerifyOffset(verifier, VT_SIGNATURE) &&
+           verifier.VerifyVector(SIGNATURE()) &&
            verifier.EndTable();
   }
 };
@@ -1443,6 +1642,30 @@ struct SCNBuilder {
   void add_ASSETS_CHANGED(::flatbuffers::Offset<SCNAssetsChanged> ASSETS_CHANGED) {
     fbb_.AddOffset(SCN::VT_ASSETS_CHANGED, ASSETS_CHANGED);
   }
+  void add_START_EPOCH(::flatbuffers::Offset<::flatbuffers::String> START_EPOCH) {
+    fbb_.AddOffset(SCN::VT_START_EPOCH, START_EPOCH);
+  }
+  void add_STOP_EPOCH(::flatbuffers::Offset<::flatbuffers::String> STOP_EPOCH) {
+    fbb_.AddOffset(SCN::VT_STOP_EPOCH, STOP_EPOCH);
+  }
+  void add_ANIMATING(bool ANIMATING) {
+    fbb_.AddElement<uint8_t>(SCN::VT_ANIMATING, static_cast<uint8_t>(ANIMATING), 0);
+  }
+  void add_WINDOW_START(::flatbuffers::Offset<::flatbuffers::String> WINDOW_START) {
+    fbb_.AddOffset(SCN::VT_WINDOW_START, WINDOW_START);
+  }
+  void add_WINDOW_STOP(::flatbuffers::Offset<::flatbuffers::String> WINDOW_STOP) {
+    fbb_.AddOffset(SCN::VT_WINDOW_STOP, WINDOW_STOP);
+  }
+  void add_PROPAGATOR_MODULE_ID(::flatbuffers::Offset<::flatbuffers::String> PROPAGATOR_MODULE_ID) {
+    fbb_.AddOffset(SCN::VT_PROPAGATOR_MODULE_ID, PROPAGATOR_MODULE_ID);
+  }
+  void add_PINNED_ROWS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNPinnedRow>>> PINNED_ROWS) {
+    fbb_.AddOffset(SCN::VT_PINNED_ROWS, PINNED_ROWS);
+  }
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
+    fbb_.AddOffset(SCN::VT_SIGNATURE, SIGNATURE);
+  }
   explicit SCNBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1467,9 +1690,24 @@ inline ::flatbuffers::Offset<SCN> CreateSCN(
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     scenarioActionCode ACTION = scenarioActionCode_NONE,
     ::flatbuffers::Offset<VST> VIEW_STATE = 0,
-    ::flatbuffers::Offset<SCNAssetsChanged> ASSETS_CHANGED = 0) {
+    ::flatbuffers::Offset<SCNAssetsChanged> ASSETS_CHANGED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> START_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STOP_EPOCH = 0,
+    bool ANIMATING = false,
+    ::flatbuffers::Offset<::flatbuffers::String> WINDOW_START = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> WINDOW_STOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PROPAGATOR_MODULE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNPinnedRow>>> PINNED_ROWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
   SCNBuilder builder_(_fbb);
   builder_.add_SIM_SPEED(SIM_SPEED);
+  builder_.add_SIGNATURE(SIGNATURE);
+  builder_.add_PINNED_ROWS(PINNED_ROWS);
+  builder_.add_PROPAGATOR_MODULE_ID(PROPAGATOR_MODULE_ID);
+  builder_.add_WINDOW_STOP(WINDOW_STOP);
+  builder_.add_WINDOW_START(WINDOW_START);
+  builder_.add_STOP_EPOCH(STOP_EPOCH);
+  builder_.add_START_EPOCH(START_EPOCH);
   builder_.add_ASSETS_CHANGED(ASSETS_CHANGED);
   builder_.add_VIEW_STATE(VIEW_STATE);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
@@ -1479,6 +1717,7 @@ inline ::flatbuffers::Offset<SCN> CreateSCN(
   builder_.add_EVENT(EVENT);
   builder_.add_REFERENCES(REFERENCES);
   builder_.add_SCENARIO_ID(SCENARIO_ID);
+  builder_.add_ANIMATING(ANIMATING);
   builder_.add_ACTION(ACTION);
   builder_.add_USE_BODY_FIXED_FRAME(USE_BODY_FIXED_FRAME);
   return builder_.Finish();
@@ -1497,11 +1736,26 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     scenarioActionCode ACTION = scenarioActionCode_NONE,
     ::flatbuffers::Offset<VST> VIEW_STATE = 0,
-    ::flatbuffers::Offset<SCNAssetsChanged> ASSETS_CHANGED = 0) {
+    ::flatbuffers::Offset<SCNAssetsChanged> ASSETS_CHANGED = 0,
+    const char *START_EPOCH = nullptr,
+    const char *STOP_EPOCH = nullptr,
+    bool ANIMATING = false,
+    const char *WINDOW_START = nullptr,
+    const char *WINDOW_STOP = nullptr,
+    const char *PROPAGATOR_MODULE_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<SCNPinnedRow>> *PINNED_ROWS = nullptr,
+    const std::vector<uint8_t> *SIGNATURE = nullptr) {
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
   auto REFERENCES__ = REFERENCES ? _fbb.CreateVector<::flatbuffers::Offset<SCNReference>>(*REFERENCES) : 0;
   auto FOCUSED_REFERENCE_ID__ = FOCUSED_REFERENCE_ID ? _fbb.CreateString(FOCUSED_REFERENCE_ID) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto START_EPOCH__ = START_EPOCH ? _fbb.CreateString(START_EPOCH) : 0;
+  auto STOP_EPOCH__ = STOP_EPOCH ? _fbb.CreateString(STOP_EPOCH) : 0;
+  auto WINDOW_START__ = WINDOW_START ? _fbb.CreateString(WINDOW_START) : 0;
+  auto WINDOW_STOP__ = WINDOW_STOP ? _fbb.CreateString(WINDOW_STOP) : 0;
+  auto PROPAGATOR_MODULE_ID__ = PROPAGATOR_MODULE_ID ? _fbb.CreateString(PROPAGATOR_MODULE_ID) : 0;
+  auto PINNED_ROWS__ = PINNED_ROWS ? _fbb.CreateVector<::flatbuffers::Offset<SCNPinnedRow>>(*PINNED_ROWS) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
   return CreateSCN(
       _fbb,
       SCENARIO_ID__,
@@ -1515,7 +1769,15 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
       REFERENCE_FRAME,
       ACTION,
       VIEW_STATE,
-      ASSETS_CHANGED);
+      ASSETS_CHANGED,
+      START_EPOCH__,
+      STOP_EPOCH__,
+      ANIMATING,
+      WINDOW_START__,
+      WINDOW_STOP__,
+      PROPAGATOR_MODULE_ID__,
+      PINNED_ROWS__,
+      SIGNATURE__);
 }
 
 inline const SCN *GetSCN(const void *buf) {

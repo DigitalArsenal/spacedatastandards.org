@@ -83,7 +83,8 @@ class _acwResultStatusReader extends fb.Reader<acwResultStatus> {
 
 enum acwRefractionModelKind {
   NONE(0),
-  EARTH_STANDARD_ATMOSPHERE(1);
+  EARTH_STANDARD_ATMOSPHERE(1),
+  ITU_R_P834(2);
 
   final int value;
   const acwRefractionModelKind(this.value);
@@ -92,6 +93,7 @@ enum acwRefractionModelKind {
     switch (value) {
       case 0: return acwRefractionModelKind.NONE;
       case 1: return acwRefractionModelKind.EARTH_STANDARD_ATMOSPHERE;
+      case 2: return acwRefractionModelKind.ITU_R_P834;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -100,7 +102,7 @@ enum acwRefractionModelKind {
       value == null ? null : acwRefractionModelKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 2;
   static const fb.Reader<acwRefractionModelKind> reader = _acwRefractionModelKindReader();
 }
 
@@ -126,7 +128,8 @@ enum acwConstraintKind {
   MOON_EXCLUSION(6),
   TARGET_LIGHTING(7),
   LINE_OF_SIGHT(8),
-  BLACKOUT(9);
+  BLACKOUT(9),
+  TERRAIN_LINE_OF_SIGHT(10);
 
   final int value;
   const acwConstraintKind(this.value);
@@ -143,6 +146,7 @@ enum acwConstraintKind {
       case 7: return acwConstraintKind.TARGET_LIGHTING;
       case 8: return acwConstraintKind.LINE_OF_SIGHT;
       case 9: return acwConstraintKind.BLACKOUT;
+      case 10: return acwConstraintKind.TERRAIN_LINE_OF_SIGHT;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -151,7 +155,7 @@ enum acwConstraintKind {
       value == null ? null : acwConstraintKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 9;
+  static const int maxValue = 10;
   static const fb.Reader<acwConstraintKind> reader = _acwConstraintKindReader();
 }
 

@@ -42,6 +42,7 @@ import CMR.main_generated
 import CMS.main_generated
 import CMT.main_generated
 import CNP.main_generated
+import COA.main_generated
 import COM.main_generated
 import COT.main_generated
 import CPS.main_generated
@@ -1000,6 +1001,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_SSY = 295
     RecordTypeExtended_MOR = 296
     RecordTypeExtended_DRB = 297
+    RecordTypeExtended_COA = 298
 
 class Record
 

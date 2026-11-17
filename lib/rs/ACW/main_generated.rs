@@ -219,13 +219,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for acwResultStatus {}
 pub const ENUM_MIN_ACW_REFRACTION_MODEL_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ACW_REFRACTION_MODEL_KIND: i8 = 1;
+pub const ENUM_MAX_ACW_REFRACTION_MODEL_KIND: i8 = 2;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ACW_REFRACTION_MODEL_KIND: [acwRefractionModelKind; 2] = [
+pub const ENUM_VALUES_ACW_REFRACTION_MODEL_KIND: [acwRefractionModelKind; 3] = [
     acwRefractionModelKind::NONE,
     acwRefractionModelKind::EARTH_STANDARD_ATMOSPHERE,
+    acwRefractionModelKind::ITU_R_P834,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -237,12 +238,15 @@ impl acwRefractionModelKind {
     pub const NONE: Self = Self(0);
     /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
     pub const EARTH_STANDARD_ATMOSPHERE: Self = Self(1);
+    /// ITU-R P.834 tropospheric refraction.
+    pub const ITU_R_P834: Self = Self(2);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 1;
+    pub const ENUM_MAX: i8 = 2;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::EARTH_STANDARD_ATMOSPHERE,
+        Self::ITU_R_P834,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -250,6 +254,7 @@ impl acwRefractionModelKind {
         match self {
             Self::NONE => Some("NONE"),
             Self::EARTH_STANDARD_ATMOSPHERE => Some("EARTH_STANDARD_ATMOSPHERE"),
+            Self::ITU_R_P834 => Some("ITU_R_P834"),
             _ => None,
         }
     }
@@ -315,11 +320,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for acwRefractionModelKind {}
 pub const ENUM_MIN_ACW_CONSTRAINT_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_ACW_CONSTRAINT_KIND: i8 = 9;
+pub const ENUM_MAX_ACW_CONSTRAINT_KIND: i8 = 10;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_ACW_CONSTRAINT_KIND: [acwConstraintKind; 10] = [
+pub const ENUM_VALUES_ACW_CONSTRAINT_KIND: [acwConstraintKind; 11] = [
     acwConstraintKind::UNSPECIFIED,
     acwConstraintKind::MIN_ELEVATION,
     acwConstraintKind::ELEVATION_MASK,
@@ -330,6 +335,7 @@ pub const ENUM_VALUES_ACW_CONSTRAINT_KIND: [acwConstraintKind; 10] = [
     acwConstraintKind::TARGET_LIGHTING,
     acwConstraintKind::LINE_OF_SIGHT,
     acwConstraintKind::BLACKOUT,
+    acwConstraintKind::TERRAIN_LINE_OF_SIGHT,
 ];
 
 /// Kind of access constraint. Append only.
@@ -362,9 +368,12 @@ impl acwConstraintKind {
     pub const LINE_OF_SIGHT: Self = Self(8);
     /// Outside every observer blackout window.
     pub const BLACKOUT: Self = Self(9);
+    /// Straight-line visibility between a ground observer and the target not
+    /// blocked by terrain.
+    pub const TERRAIN_LINE_OF_SIGHT: Self = Self(10);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 9;
+    pub const ENUM_MAX: i8 = 10;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::MIN_ELEVATION,
@@ -376,6 +385,7 @@ impl acwConstraintKind {
         Self::TARGET_LIGHTING,
         Self::LINE_OF_SIGHT,
         Self::BLACKOUT,
+        Self::TERRAIN_LINE_OF_SIGHT,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -391,6 +401,7 @@ impl acwConstraintKind {
             Self::TARGET_LIGHTING => Some("TARGET_LIGHTING"),
             Self::LINE_OF_SIGHT => Some("LINE_OF_SIGHT"),
             Self::BLACKOUT => Some("BLACKOUT"),
+            Self::TERRAIN_LINE_OF_SIGHT => Some("TERRAIN_LINE_OF_SIGHT"),
             _ => None,
         }
     }

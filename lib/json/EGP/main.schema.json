@@ -3,7 +3,66 @@
   "definitions": {
     "egpMembershipMode" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE"]
+      "enum": ["UNSPECIFIED", "ENUMERATED", "QUERY_SNAPSHOT", "QUERY_LIVE", "GENERATED"]
+    },
+    "egpWalkerPattern" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "DELTA", "STAR", "CUSTOM"]
+    },
+    "EGPWalker" : {
+      "type" : "object",
+      "description" : "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+      "properties" : {
+        "PATTERN" : {
+                "$ref" : "#/definitions/egpWalkerPattern"
+              },
+        "TOTAL_SATELLITES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "T: number of satellites."
+              },
+        "PLANES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "P: number of planes."
+              },
+        "PHASING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "F: relative phasing, 0 to PLANES - 1."
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Circular height above the WGS 84 equatorial radius, km."
+              },
+        "RA_OF_ASC_NODE_SPREAD" : {
+                "type" : "number",
+                "description" : "CUSTOM only: the right ascension the ascending nodes are spread over."
+              },
+        "FIRST_RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of the ascending node of the first plane."
+              },
+        "FIRST_MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly of the first satellite of the first plane."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the generated elements, ISO 8601 UTC."
+              },
+        "FIRST_NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Catalog number of the first satellite; the others follow it in order."
+              }
+      },
+      "additionalProperties" : false
     },
     "EGPProvenance" : {
       "type" : "object",
@@ -160,6 +219,10 @@
         "DATASET_CID" : {
                 "type" : "string",
                 "description" : "Optional content identifier of the dataset the group was drawn from."
+              },
+        "WALKER" : {
+                "$ref" : "#/definitions/EGPWalker",
+                "description" : "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED."
               }
       },
       "required" : ["GROUP_ID", "NAME", "UPDATED_AT"],

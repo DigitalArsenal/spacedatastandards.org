@@ -278,8 +278,29 @@ func (rcv *EGP) DatasetCid() []byte {
 }
 
 /// Optional content identifier of the dataset the group was drawn from.
+/// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+/// GENERATED.
+func (rcv *EGP) WALKER(obj *EGPWalker) *EGPWalker {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(EGPWalker)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *EGP) Walker(obj *EGPWalker) *EGPWalker {
+	return rcv.WALKER(obj)
+}
+
+/// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+/// GENERATED.
 func EGPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(12)
 }
 func EGPAddGROUP_ID(builder *flatbuffers.Builder, GROUP_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GROUP_ID), 0)
@@ -364,6 +385,12 @@ func EGPAddDATASET_CID(builder *flatbuffers.Builder, DATASET_CID flatbuffers.UOf
 }
 func EGPAddDatasetCid(builder *flatbuffers.Builder, DATASET_CID flatbuffers.UOffsetT) {
 	EGPAddDATASET_CID(builder, DATASET_CID)
+}
+func EGPAddWALKER(builder *flatbuffers.Builder, WALKER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(WALKER), 0)
+}
+func EGPAddWalker(builder *flatbuffers.Builder, WALKER flatbuffers.UOffsetT) {
+	EGPAddWALKER(builder, WALKER)
 }
 func EGPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

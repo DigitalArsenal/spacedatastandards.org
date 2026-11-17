@@ -422,7 +422,8 @@
       "type": "string",
       "enum": [
         "NONE",
-        "EARTH_STANDARD_ATMOSPHERE"
+        "EARTH_STANDARD_ATMOSPHERE",
+        "ITU_R_P834"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -433,6 +434,10 @@
         "EARTH_STANDARD_ATMOSPHERE": {
           "value": 1,
           "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+        },
+        "ITU_R_P834": {
+          "value": 2,
+          "description": "ITU-R P.834 tropospheric refraction."
         }
       }
     },
@@ -448,7 +453,8 @@
         "MOON_EXCLUSION",
         "TARGET_LIGHTING",
         "LINE_OF_SIGHT",
-        "BLACKOUT"
+        "BLACKOUT",
+        "TERRAIN_LINE_OF_SIGHT"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -491,6 +497,10 @@
         "BLACKOUT": {
           "value": 9,
           "description": "Outside every observer blackout window."
+        },
+        "TERRAIN_LINE_OF_SIGHT": {
+          "value": 10,
+          "description": "Straight-line visibility between a ground observer and the target not blocked by terrain."
         }
       }
     },
@@ -1423,6 +1433,10 @@
             "EARTH_STANDARD_ATMOSPHERE": {
               "value": 1,
               "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            },
+            "ITU_R_P834": {
+              "value": 2,
+              "description": "ITU-R P.834 tropospheric refraction."
             }
           }
         },
@@ -1555,6 +1569,10 @@
             "BLACKOUT": {
               "value": 9,
               "description": "Outside every observer blackout window."
+            },
+            "TERRAIN_LINE_OF_SIGHT": {
+              "value": 10,
+              "description": "Straight-line visibility between a ground observer and the target not blocked by terrain."
             }
           }
         },

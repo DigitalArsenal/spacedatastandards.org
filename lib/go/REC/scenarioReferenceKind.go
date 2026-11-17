@@ -19,6 +19,13 @@ const (
 	scenarioReferenceKindPOINT_OF_INTEREST  scenarioReferenceKind = 6
 	scenarioReferenceKindEXCLUSION_ZONE     scenarioReferenceKind = 7
 	scenarioReferenceKindOBSERVATION        scenarioReferenceKind = 8
+	/// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+	/// REFERENCE_ID.
+	scenarioReferenceKindGROUP              scenarioReferenceKind = 9
+	/// An area of interest: the $GJN feature of the enclosing $REC whose ID
+	/// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+	/// alpha-2 code when the area is a country.
+	scenarioReferenceKindAREA_OF_INTEREST   scenarioReferenceKind = 10
 )
 
 var EnumNamesscenarioReferenceKind = map[scenarioReferenceKind]string{
@@ -31,6 +38,8 @@ var EnumNamesscenarioReferenceKind = map[scenarioReferenceKind]string{
 	scenarioReferenceKindPOINT_OF_INTEREST:  "POINT_OF_INTEREST",
 	scenarioReferenceKindEXCLUSION_ZONE:     "EXCLUSION_ZONE",
 	scenarioReferenceKindOBSERVATION:        "OBSERVATION",
+	scenarioReferenceKindGROUP:              "GROUP",
+	scenarioReferenceKindAREA_OF_INTEREST:   "AREA_OF_INTEREST",
 }
 
 var EnumValuesscenarioReferenceKind = map[string]scenarioReferenceKind{
@@ -43,6 +52,8 @@ var EnumValuesscenarioReferenceKind = map[string]scenarioReferenceKind{
 	"POINT_OF_INTEREST":  scenarioReferenceKindPOINT_OF_INTEREST,
 	"EXCLUSION_ZONE":     scenarioReferenceKindEXCLUSION_ZONE,
 	"OBSERVATION":        scenarioReferenceKindOBSERVATION,
+	"GROUP":              scenarioReferenceKindGROUP,
+	"AREA_OF_INTEREST":   scenarioReferenceKindAREA_OF_INTEREST,
 }
 
 func (v scenarioReferenceKind) String() string {

@@ -40,6 +40,9 @@ struct RFLModelBindingBuilder;
 struct RFLProvenance;
 struct RFLProvenanceBuilder;
 
+struct RFLJamming;
+struct RFLJammingBuilder;
+
 struct RFL;
 struct RFLBuilder;
 
@@ -2411,6 +2414,197 @@ inline ::flatbuffers::Offset<RFLProvenance> CreateRFLProvenanceDirect(
       MODULE_CONTENT_HASH__);
 }
 
+/// A jamming assessment of one link: the jammer and the stated values the
+/// assessment and its countermeasures use. Inputs only; what it yields is this
+/// record's samples. A record that carries it with no samples is the
+/// assessment's definition, to be sampled.
+struct RFLJamming FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFLJammingBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LINK_INDEX = 4,
+    VT_JAMMER_ENDPOINT = 6,
+    VT_PASS_INDEX = 8,
+    VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI = 10,
+    VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = 12,
+    VT_POWER_STEP_DB = 14,
+    VT_PROCESSING_GAIN_DB = 16,
+    VT_HAS_PROCESSING_GAIN_DB = 18,
+    VT_ARRAY_PAP_ID = 20,
+    VT_AREA_RADIUS_KM = 22,
+    VT_AREA_RESOLUTION = 24
+  };
+  /// Index in LINKS of the link assessed.
+  uint32_t LINK_INDEX() const {
+    return GetField<uint32_t>(VT_LINK_INDEX, 0);
+  }
+  /// The jammer's end: its site (SIT_ID) or its platform.
+  const RFLEndpoint *JAMMER_ENDPOINT() const {
+    return GetPointer<const RFLEndpoint *>(VT_JAMMER_ENDPOINT);
+  }
+  /// Zero-based index, in the analysis window, of the spacecraft's pass over
+  /// the link's ground end that is assessed.
+  uint32_t PASS_INDEX() const {
+    return GetField<uint32_t>(VT_PASS_INDEX, 0);
+  }
+  /// The ground terminal antenna's stated gain toward the jammer, dBi.
+  double TERMINAL_GAIN_TOWARD_JAMMER_DBI() const {
+    return GetField<double>(VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0.0);
+  }
+  /// True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+  bool HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI() const {
+    return GetField<uint8_t>(VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0) != 0;
+  }
+  /// Countermeasure: the link's EIRP raised by this many dB.
+  double POWER_STEP_DB() const {
+    return GetField<double>(VT_POWER_STEP_DB, 0.0);
+  }
+  /// Countermeasure: processing gain, dB, as the operator states it.
+  double PROCESSING_GAIN_DB() const {
+    return GetField<double>(VT_PROCESSING_GAIN_DB, 0.0);
+  }
+  /// True when PROCESSING_GAIN_DB is stated; it has no default.
+  bool HAS_PROCESSING_GAIN_DB() const {
+    return GetField<uint8_t>(VT_HAS_PROCESSING_GAIN_DB, 0) != 0;
+  }
+  /// PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+  /// null countermeasures.
+  const ::flatbuffers::String *ARRAY_PAP_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ARRAY_PAP_ID);
+  }
+  /// Denial area about the link's ground end: radius, km.
+  double AREA_RADIUS_KM() const {
+    return GetField<double>(VT_AREA_RADIUS_KM, 0.0);
+  }
+  /// Denial area: number of cells across the radius.
+  uint32_t AREA_RESOLUTION() const {
+    return GetField<uint32_t>(VT_AREA_RESOLUTION, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_LINK_INDEX, 4) &&
+           VerifyOffsetRequired(verifier, VT_JAMMER_ENDPOINT) &&
+           verifier.VerifyTable(JAMMER_ENDPOINT()) &&
+           VerifyField<uint32_t>(verifier, VT_PASS_INDEX, 4) &&
+           VerifyField<double>(verifier, VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, 1) &&
+           VerifyField<double>(verifier, VT_POWER_STEP_DB, 8) &&
+           VerifyField<double>(verifier, VT_PROCESSING_GAIN_DB, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_PROCESSING_GAIN_DB, 1) &&
+           VerifyOffset(verifier, VT_ARRAY_PAP_ID) &&
+           verifier.VerifyString(ARRAY_PAP_ID()) &&
+           VerifyField<double>(verifier, VT_AREA_RADIUS_KM, 8) &&
+           VerifyField<uint32_t>(verifier, VT_AREA_RESOLUTION, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct RFLJammingBuilder {
+  typedef RFLJamming Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LINK_INDEX(uint32_t LINK_INDEX) {
+    fbb_.AddElement<uint32_t>(RFLJamming::VT_LINK_INDEX, LINK_INDEX, 0);
+  }
+  void add_JAMMER_ENDPOINT(::flatbuffers::Offset<RFLEndpoint> JAMMER_ENDPOINT) {
+    fbb_.AddOffset(RFLJamming::VT_JAMMER_ENDPOINT, JAMMER_ENDPOINT);
+  }
+  void add_PASS_INDEX(uint32_t PASS_INDEX) {
+    fbb_.AddElement<uint32_t>(RFLJamming::VT_PASS_INDEX, PASS_INDEX, 0);
+  }
+  void add_TERMINAL_GAIN_TOWARD_JAMMER_DBI(double TERMINAL_GAIN_TOWARD_JAMMER_DBI) {
+    fbb_.AddElement<double>(RFLJamming::VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0.0);
+  }
+  void add_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(bool HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI) {
+    fbb_.AddElement<uint8_t>(RFLJamming::VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, static_cast<uint8_t>(HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI), 0);
+  }
+  void add_POWER_STEP_DB(double POWER_STEP_DB) {
+    fbb_.AddElement<double>(RFLJamming::VT_POWER_STEP_DB, POWER_STEP_DB, 0.0);
+  }
+  void add_PROCESSING_GAIN_DB(double PROCESSING_GAIN_DB) {
+    fbb_.AddElement<double>(RFLJamming::VT_PROCESSING_GAIN_DB, PROCESSING_GAIN_DB, 0.0);
+  }
+  void add_HAS_PROCESSING_GAIN_DB(bool HAS_PROCESSING_GAIN_DB) {
+    fbb_.AddElement<uint8_t>(RFLJamming::VT_HAS_PROCESSING_GAIN_DB, static_cast<uint8_t>(HAS_PROCESSING_GAIN_DB), 0);
+  }
+  void add_ARRAY_PAP_ID(::flatbuffers::Offset<::flatbuffers::String> ARRAY_PAP_ID) {
+    fbb_.AddOffset(RFLJamming::VT_ARRAY_PAP_ID, ARRAY_PAP_ID);
+  }
+  void add_AREA_RADIUS_KM(double AREA_RADIUS_KM) {
+    fbb_.AddElement<double>(RFLJamming::VT_AREA_RADIUS_KM, AREA_RADIUS_KM, 0.0);
+  }
+  void add_AREA_RESOLUTION(uint32_t AREA_RESOLUTION) {
+    fbb_.AddElement<uint32_t>(RFLJamming::VT_AREA_RESOLUTION, AREA_RESOLUTION, 0);
+  }
+  explicit RFLJammingBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFLJamming> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFLJamming>(end);
+    fbb_.Required(o, RFLJamming::VT_JAMMER_ENDPOINT);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFLJamming> CreateRFLJamming(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t LINK_INDEX = 0,
+    ::flatbuffers::Offset<RFLEndpoint> JAMMER_ENDPOINT = 0,
+    uint32_t PASS_INDEX = 0,
+    double TERMINAL_GAIN_TOWARD_JAMMER_DBI = 0.0,
+    bool HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = false,
+    double POWER_STEP_DB = 0.0,
+    double PROCESSING_GAIN_DB = 0.0,
+    bool HAS_PROCESSING_GAIN_DB = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ARRAY_PAP_ID = 0,
+    double AREA_RADIUS_KM = 0.0,
+    uint32_t AREA_RESOLUTION = 0) {
+  RFLJammingBuilder builder_(_fbb);
+  builder_.add_AREA_RADIUS_KM(AREA_RADIUS_KM);
+  builder_.add_PROCESSING_GAIN_DB(PROCESSING_GAIN_DB);
+  builder_.add_POWER_STEP_DB(POWER_STEP_DB);
+  builder_.add_TERMINAL_GAIN_TOWARD_JAMMER_DBI(TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+  builder_.add_AREA_RESOLUTION(AREA_RESOLUTION);
+  builder_.add_ARRAY_PAP_ID(ARRAY_PAP_ID);
+  builder_.add_PASS_INDEX(PASS_INDEX);
+  builder_.add_JAMMER_ENDPOINT(JAMMER_ENDPOINT);
+  builder_.add_LINK_INDEX(LINK_INDEX);
+  builder_.add_HAS_PROCESSING_GAIN_DB(HAS_PROCESSING_GAIN_DB);
+  builder_.add_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFLJamming> CreateRFLJammingDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t LINK_INDEX = 0,
+    ::flatbuffers::Offset<RFLEndpoint> JAMMER_ENDPOINT = 0,
+    uint32_t PASS_INDEX = 0,
+    double TERMINAL_GAIN_TOWARD_JAMMER_DBI = 0.0,
+    bool HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = false,
+    double POWER_STEP_DB = 0.0,
+    double PROCESSING_GAIN_DB = 0.0,
+    bool HAS_PROCESSING_GAIN_DB = false,
+    const char *ARRAY_PAP_ID = nullptr,
+    double AREA_RADIUS_KM = 0.0,
+    uint32_t AREA_RESOLUTION = 0) {
+  auto ARRAY_PAP_ID__ = ARRAY_PAP_ID ? _fbb.CreateString(ARRAY_PAP_ID) : 0;
+  return CreateRFLJamming(
+      _fbb,
+      LINK_INDEX,
+      JAMMER_ENDPOINT,
+      PASS_INDEX,
+      TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+      HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+      POWER_STEP_DB,
+      PROCESSING_GAIN_DB,
+      HAS_PROCESSING_GAIN_DB,
+      ARRAY_PAP_ID__,
+      AREA_RADIUS_KM,
+      AREA_RESOLUTION);
+}
+
 /// RF Link Sample
 struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFLBuilder Builder;
@@ -2473,7 +2667,8 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ACHIEVED_DATA_RATE_BPS = 114,
     VT_ACM_MARGIN_DB = 116,
     VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = 118,
-    VT_BLOCK_ERROR_RATE = 120
+    VT_BLOCK_ERROR_RATE = 120,
+    VT_JAMMING = 122
   };
   /// Stable identifier of this sample set.
   const ::flatbuffers::String *RFL_ID() const {
@@ -2733,6 +2928,10 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *BLOCK_ERROR_RATE() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_BLOCK_ERROR_RATE);
   }
+  /// The jamming assessment this record answers, when it answers one.
+  const RFLJamming *JAMMING() const {
+    return GetPointer<const RFLJamming *>(VT_JAMMING);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2854,6 +3053,8 @@ struct RFL FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB()) &&
            VerifyOffset(verifier, VT_BLOCK_ERROR_RATE) &&
            verifier.VerifyVector(BLOCK_ERROR_RATE()) &&
+           VerifyOffset(verifier, VT_JAMMING) &&
+           verifier.VerifyTable(JAMMING()) &&
            verifier.EndTable();
   }
 };
@@ -3039,6 +3240,9 @@ struct RFLBuilder {
   void add_BLOCK_ERROR_RATE(::flatbuffers::Offset<::flatbuffers::Vector<double>> BLOCK_ERROR_RATE) {
     fbb_.AddOffset(RFL::VT_BLOCK_ERROR_RATE, BLOCK_ERROR_RATE);
   }
+  void add_JAMMING(::flatbuffers::Offset<RFLJamming> JAMMING) {
+    fbb_.AddOffset(RFL::VT_JAMMING, JAMMING);
+  }
   explicit RFLBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3115,9 +3319,11 @@ inline ::flatbuffers::Offset<RFL> CreateRFL(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> ACHIEVED_DATA_RATE_BPS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> ACM_MARGIN_DB = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> BLOCK_ERROR_RATE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> BLOCK_ERROR_RATE = 0,
+    ::flatbuffers::Offset<RFLJamming> JAMMING = 0) {
   RFLBuilder builder_(_fbb);
   builder_.add_COMPUTED_AT(COMPUTED_AT);
+  builder_.add_JAMMING(JAMMING);
   builder_.add_BLOCK_ERROR_RATE(BLOCK_ERROR_RATE);
   builder_.add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
   builder_.add_ACM_MARGIN_DB(ACM_MARGIN_DB);
@@ -3239,7 +3445,8 @@ inline ::flatbuffers::Offset<RFL> CreateRFLDirect(
     const std::vector<double> *ACHIEVED_DATA_RATE_BPS = nullptr,
     const std::vector<double> *ACM_MARGIN_DB = nullptr,
     const std::vector<double> *ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = nullptr,
-    const std::vector<double> *BLOCK_ERROR_RATE = nullptr) {
+    const std::vector<double> *BLOCK_ERROR_RATE = nullptr,
+    ::flatbuffers::Offset<RFLJamming> JAMMING = 0) {
   auto RFL_ID__ = RFL_ID ? _fbb.CreateString(RFL_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
@@ -3355,7 +3562,8 @@ inline ::flatbuffers::Offset<RFL> CreateRFLDirect(
       ACHIEVED_DATA_RATE_BPS__,
       ACM_MARGIN_DB__,
       ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB__,
-      BLOCK_ERROR_RATE__);
+      BLOCK_ERROR_RATE__,
+      JAMMING);
 }
 
 inline const RFL *GetRFL(const void *buf) {

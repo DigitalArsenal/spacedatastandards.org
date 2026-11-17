@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { RFLInterferenceContribution, RFLInterferenceContributionT } from './RFLInterferenceContribution.js';
+import { RFLJamming, RFLJammingT } from './RFLJamming.js';
 import { RFLLink, RFLLinkT } from './RFLLink.js';
 import { RFLObstruction, RFLObstructionT } from './RFLObstruction.js';
 import { RFLProvenance, RFLProvenanceT } from './RFLProvenance.js';
@@ -374,6 +375,10 @@ export declare class RFL implements flatbuffers.IUnpackableObject<RFLT> {
     BLOCK_ERROR_RATE(index: number): number | null;
     blockErrorRateLength(): number;
     blockErrorRateArray(): Float64Array | null;
+    /**
+     * The jamming assessment this record answers, when it answers one.
+     */
+    JAMMING(obj?: RFLJamming): RFLJamming | null;
     static startRFL(builder: flatbuffers.Builder): void;
     static addRflId(builder: flatbuffers.Builder, RFL_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -702,6 +707,7 @@ export declare class RFL implements flatbuffers.IUnpackableObject<RFLT> {
      */
     static createBlockErrorRateVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startBlockErrorRateVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addJamming(builder: flatbuffers.Builder, JAMMINGOffset: flatbuffers.Offset): void;
     static endRFL(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishRFLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedRFLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -768,7 +774,8 @@ export declare class RFLT implements flatbuffers.IGeneratedObject {
     ACM_MARGIN_DB: (number)[];
     ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: (number)[];
     BLOCK_ERROR_RATE: (number)[];
-    constructor(RFL_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, LINKS?: (RFLLinkT)[], SAMPLE_COUNT?: number, SAMPLE_LINK_INDEXES?: (number)[], SAMPLE_EPOCHS?: (number)[], TIME_SYSTEM?: timingStandard, ACCESS_STATES?: (rflAccessState)[], RANGE_M?: (number)[], RANGE_RATE_M_S?: (number)[], AZIMUTH_DEG?: (number)[], ELEVATION_DEG?: (number)[], TRANSMIT_AZIMUTH_DEG?: (number)[], TRANSMIT_ELEVATION_DEG?: (number)[], DOPPLER_SHIFT_HZ?: (number)[], DOPPLER_RATE_HZ_S?: (number)[], EIRP_DBW?: (number)[], TRANSMIT_ANTENNA_GAIN_DBI?: (number)[], RECEIVE_ANTENNA_GAIN_DBI?: (number)[], FREE_SPACE_PATH_LOSS_DB?: (number)[], GASEOUS_ABSORPTION_LOSS_DB?: (number)[], RAIN_LOSS_DB?: (number)[], CLOUD_FOG_LOSS_DB?: (number)[], SCINTILLATION_LOSS_DB?: (number)[], TERRAIN_DIFFRACTION_LOSS_DB?: (number)[], OBSTRUCTION_LOSS_DB?: (number)[], POLARIZATION_LOSS_DB?: (number)[], POINTING_LOSS_DB?: (number)[], IMPLEMENTATION_LOSS_DB?: (number)[], TOTAL_PATH_LOSS_DB?: (number)[], RECEIVED_POWER_DBW?: (number)[], SYSTEM_NOISE_TEMPERATURE_K?: (number)[], GAIN_TO_NOISE_TEMPERATURE_DB_PER_K?: (number)[], CARRIER_TO_NOISE_DENSITY_DBHZ?: (number)[], CARRIER_TO_NOISE_DB?: (number)[], ENERGY_PER_BIT_TO_NOISE_DENSITY_DB?: (number)[], BIT_ERROR_RATE?: (number)[], LINK_MARGIN_DB?: (number)[], CHANNEL_CAPACITY_BPS?: (number)[], INTERFERENCE_POWER_DBW?: (number)[], CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB?: (number)[], SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB?: (number)[], INTERFERENCE_CONTRIBUTIONS?: (RFLInterferenceContributionT)[], OBSTRUCTIONS?: (RFLObstructionT)[], LIMITING_CONSTRAINTS?: (rflConstraint)[], LIMITING_CONSTRAINT_NOTE?: string | Uint8Array | null, PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[], SELECTED_MODCOD_INDEX?: (number)[], SELECTED_MODCOD_VALID?: (boolean)[], SPECTRAL_EFFICIENCY_BPS_HZ?: (number)[], ACHIEVED_DATA_RATE_BPS?: (number)[], ACM_MARGIN_DB?: (number)[], ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB?: (number)[], BLOCK_ERROR_RATE?: (number)[]);
+    JAMMING: RFLJammingT | null;
+    constructor(RFL_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SCENARIO_ID?: string | Uint8Array | null, LINKS?: (RFLLinkT)[], SAMPLE_COUNT?: number, SAMPLE_LINK_INDEXES?: (number)[], SAMPLE_EPOCHS?: (number)[], TIME_SYSTEM?: timingStandard, ACCESS_STATES?: (rflAccessState)[], RANGE_M?: (number)[], RANGE_RATE_M_S?: (number)[], AZIMUTH_DEG?: (number)[], ELEVATION_DEG?: (number)[], TRANSMIT_AZIMUTH_DEG?: (number)[], TRANSMIT_ELEVATION_DEG?: (number)[], DOPPLER_SHIFT_HZ?: (number)[], DOPPLER_RATE_HZ_S?: (number)[], EIRP_DBW?: (number)[], TRANSMIT_ANTENNA_GAIN_DBI?: (number)[], RECEIVE_ANTENNA_GAIN_DBI?: (number)[], FREE_SPACE_PATH_LOSS_DB?: (number)[], GASEOUS_ABSORPTION_LOSS_DB?: (number)[], RAIN_LOSS_DB?: (number)[], CLOUD_FOG_LOSS_DB?: (number)[], SCINTILLATION_LOSS_DB?: (number)[], TERRAIN_DIFFRACTION_LOSS_DB?: (number)[], OBSTRUCTION_LOSS_DB?: (number)[], POLARIZATION_LOSS_DB?: (number)[], POINTING_LOSS_DB?: (number)[], IMPLEMENTATION_LOSS_DB?: (number)[], TOTAL_PATH_LOSS_DB?: (number)[], RECEIVED_POWER_DBW?: (number)[], SYSTEM_NOISE_TEMPERATURE_K?: (number)[], GAIN_TO_NOISE_TEMPERATURE_DB_PER_K?: (number)[], CARRIER_TO_NOISE_DENSITY_DBHZ?: (number)[], CARRIER_TO_NOISE_DB?: (number)[], ENERGY_PER_BIT_TO_NOISE_DENSITY_DB?: (number)[], BIT_ERROR_RATE?: (number)[], LINK_MARGIN_DB?: (number)[], CHANNEL_CAPACITY_BPS?: (number)[], INTERFERENCE_POWER_DBW?: (number)[], CARRIER_TO_NOISE_PLUS_INTERFERENCE_DB?: (number)[], SIGNAL_TO_INTERFERENCE_PLUS_NOISE_DB?: (number)[], INTERFERENCE_CONTRIBUTIONS?: (RFLInterferenceContributionT)[], OBSTRUCTIONS?: (RFLObstructionT)[], LIMITING_CONSTRAINTS?: (rflConstraint)[], LIMITING_CONSTRAINT_NOTE?: string | Uint8Array | null, PROVENANCE?: RFLProvenanceT | null, COMPUTED_AT?: bigint, PRODUCER_ID?: string | Uint8Array | null, SIGNATURE?: (number)[], CANONICAL_JSON_SIGNATURE?: (number)[], SELECTED_MODCOD_INDEX?: (number)[], SELECTED_MODCOD_VALID?: (boolean)[], SPECTRAL_EFFICIENCY_BPS_HZ?: (number)[], ACHIEVED_DATA_RATE_BPS?: (number)[], ACM_MARGIN_DB?: (number)[], ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB?: (number)[], BLOCK_ERROR_RATE?: (number)[], JAMMING?: RFLJammingT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFL.d.ts.map

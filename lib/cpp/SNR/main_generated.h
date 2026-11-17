@@ -325,11 +325,13 @@ enum snrAntennaPattern : int8_t {
   snrAntennaPattern_TEARDROP = 9,
   snrAntennaPattern_TOROIDAL = 10,
   snrAntennaPattern_CARDIOID = 11,
+  /// An electronically steered array; its pattern is a $PAP synthesis.
+  snrAntennaPattern_PHASED_ARRAY = 12,
   snrAntennaPattern_MIN = snrAntennaPattern_UNSPECIFIED,
-  snrAntennaPattern_MAX = snrAntennaPattern_CARDIOID
+  snrAntennaPattern_MAX = snrAntennaPattern_PHASED_ARRAY
 };
 
-inline const snrAntennaPattern (&EnumValuessnrAntennaPattern())[12] {
+inline const snrAntennaPattern (&EnumValuessnrAntennaPattern())[13] {
   static const snrAntennaPattern values[] = {
     snrAntennaPattern_UNSPECIFIED,
     snrAntennaPattern_ISOTROPIC,
@@ -342,13 +344,14 @@ inline const snrAntennaPattern (&EnumValuessnrAntennaPattern())[12] {
     snrAntennaPattern_RINGED,
     snrAntennaPattern_TEARDROP,
     snrAntennaPattern_TOROIDAL,
-    snrAntennaPattern_CARDIOID
+    snrAntennaPattern_CARDIOID,
+    snrAntennaPattern_PHASED_ARRAY
   };
   return values;
 }
 
 inline const char * const *EnumNamessnrAntennaPattern() {
-  static const char * const names[13] = {
+  static const char * const names[14] = {
     "UNSPECIFIED",
     "ISOTROPIC",
     "HEMISPHERIC",
@@ -361,13 +364,14 @@ inline const char * const *EnumNamessnrAntennaPattern() {
     "TEARDROP",
     "TOROIDAL",
     "CARDIOID",
+    "PHASED_ARRAY",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamesnrAntennaPattern(snrAntennaPattern e) {
-  if (::flatbuffers::IsOutRange(e, snrAntennaPattern_UNSPECIFIED, snrAntennaPattern_CARDIOID)) return "";
+  if (::flatbuffers::IsOutRange(e, snrAntennaPattern_UNSPECIFIED, snrAntennaPattern_PHASED_ARRAY)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamessnrAntennaPattern()[index];
 }

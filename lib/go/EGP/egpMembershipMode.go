@@ -17,6 +17,9 @@ const (
 	/// QUERY is the definition and MEMBERS is an advisory cache a consumer may
 	/// recompute; the query wins on disagreement.
 	egpMembershipModeQUERY_LIVE     egpMembershipMode = 3
+	/// Members were generated from WALKER; MEMBERS is that generation, and each
+	/// member's elements are its own $OMM.
+	egpMembershipModeGENERATED      egpMembershipMode = 4
 )
 
 var EnumNamesegpMembershipMode = map[egpMembershipMode]string{
@@ -24,6 +27,7 @@ var EnumNamesegpMembershipMode = map[egpMembershipMode]string{
 	egpMembershipModeENUMERATED:     "ENUMERATED",
 	egpMembershipModeQUERY_SNAPSHOT: "QUERY_SNAPSHOT",
 	egpMembershipModeQUERY_LIVE:     "QUERY_LIVE",
+	egpMembershipModeGENERATED:      "GENERATED",
 }
 
 var EnumValuesegpMembershipMode = map[string]egpMembershipMode{
@@ -31,6 +35,7 @@ var EnumValuesegpMembershipMode = map[string]egpMembershipMode{
 	"ENUMERATED":     egpMembershipModeENUMERATED,
 	"QUERY_SNAPSHOT": egpMembershipModeQUERY_SNAPSHOT,
 	"QUERY_LIVE":     egpMembershipModeQUERY_LIVE,
+	"GENERATED":      egpMembershipModeGENERATED,
 }
 
 func (v egpMembershipMode) String() string {

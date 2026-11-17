@@ -163,7 +163,7 @@
     },
     "scenarioReferenceKind" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION"]
+      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST"]
     },
     "scenarioActionCode" : {
       "type" : "string",
@@ -3405,9 +3405,36 @@
       },
       "additionalProperties" : false
     },
+    "SCNPinnedRow" : {
+      "type" : "object",
+      "description" : "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+      "properties" : {
+        "ROW_ID" : {
+                "type" : "string",
+                "description" : "Row identifier, unique in the scenario."
+              },
+        "MODE_ID" : {
+                "type" : "string",
+                "description" : "The application's identifier of the mode the row belongs to."
+              },
+        "VERB_ID" : {
+                "type" : "string",
+                "description" : "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run."
+              },
+        "REFERENCE_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "REFERENCE_IDs of the scenario references the row was run on."
+              },
+        "RECORD_CID" : {
+                "type" : "string",
+                "description" : "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCN" : {
       "type" : "object",
-      "description" : "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+      "description" : "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
       "properties" : {
         "SCENARIO_ID" : {
                 "type" : "string",
@@ -3456,6 +3483,38 @@
         "ASSETS_CHANGED" : {
                 "$ref" : "#/definitions/SCNAssetsChanged",
                 "description" : "Asset-change notification payload for the scenario."
+              },
+        "START_EPOCH" : {
+                "type" : "string",
+                "description" : "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime."
+              },
+        "STOP_EPOCH" : {
+                "type" : "string",
+                "description" : "Clock interval stop as an ISO-8601 UTC timestamp."
+              },
+        "ANIMATING" : {
+                "type" : "boolean",
+                "description" : "True when the clock was running."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp."
+              },
+        "WINDOW_STOP" : {
+                "type" : "string",
+                "description" : "Stop of the analysis window as an ISO-8601 UTC timestamp."
+              },
+        "PROPAGATOR_MODULE_ID" : {
+                "type" : "string",
+                "description" : "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with."
+              },
+        "PINNED_ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCNPinnedRow"},
+                "description" : "Timeline rows kept with the scenario."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the\nenclosing $REC, over the five bytes \"$SCN\" and 0x00, followed by the\nenclosing $REC's bytes (without a size prefix) with these 64 bytes set to\nzero. The record's CID is computed over the signed bytes."
               }
       },
       "additionalProperties" : false

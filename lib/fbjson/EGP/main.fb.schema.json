@@ -7,7 +7,8 @@
         "UNSPECIFIED",
         "ENUMERATED",
         "QUERY_SNAPSHOT",
-        "QUERY_LIVE"
+        "QUERY_LIVE",
+        "GENERATED"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -26,8 +27,135 @@
         "QUERY_LIVE": {
           "value": 3,
           "description": "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+        },
+        "GENERATED": {
+          "value": 4,
+          "description": "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
         }
       }
+    },
+    "egpWalkerPattern": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "DELTA",
+        "STAR",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "DELTA": {
+          "value": 1,
+          "description": "Planes spread over 360 degrees of right ascension."
+        },
+        "STAR": {
+          "value": 2,
+          "description": "Planes spread over 180 degrees of right ascension."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "Planes spread over RA_OF_ASC_NODE_SPREAD."
+        }
+      }
+    },
+    "EGPWalker": {
+      "type": "object",
+      "description": "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+      "properties": {
+        "PATTERN": {
+          "$ref": "#/definitions/egpWalkerPattern",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "DELTA": {
+              "value": 1,
+              "description": "Planes spread over 360 degrees of right ascension."
+            },
+            "STAR": {
+              "value": 2,
+              "description": "Planes spread over 180 degrees of right ascension."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "Planes spread over RA_OF_ASC_NODE_SPREAD."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TOTAL_SATELLITES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "T: number of satellites.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PLANES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "P: number of planes.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PHASING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "F: relative phasing, 0 to PLANES - 1.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_KM": {
+          "type": "number",
+          "description": "Circular height above the WGS 84 equatorial radius, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE_SPREAD": {
+          "type": "number",
+          "description": "CUSTOM only: the right ascension the ascending nodes are spread over.",
+          "x-flatbuffer-type": "double"
+        },
+        "FIRST_RA_OF_ASC_NODE": {
+          "type": "number",
+          "description": "Right ascension of the ascending node of the first plane.",
+          "x-flatbuffer-type": "double"
+        },
+        "FIRST_MEAN_ANOMALY": {
+          "type": "number",
+          "description": "Mean anomaly of the first satellite of the first plane.",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of the generated elements, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRST_NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Catalog number of the first satellite; the others follow it in order.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
     },
     "EGPProvenance": {
       "type": "object",
@@ -228,6 +356,10 @@
             "QUERY_LIVE": {
               "value": 3,
               "description": "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+            },
+            "GENERATED": {
+              "value": 4,
+              "description": "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -268,6 +400,11 @@
           "type": "string",
           "description": "Optional content identifier of the dataset the group was drawn from.",
           "x-flatbuffer-type": "string"
+        },
+        "WALKER": {
+          "$ref": "#/definitions/EGPWalker",
+          "description": "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED.",
+          "x-flatbuffer-type": "EGPWalker"
         }
       },
       "required": [

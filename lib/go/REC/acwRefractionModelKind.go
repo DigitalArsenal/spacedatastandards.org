@@ -10,16 +10,20 @@ const (
 	acwRefractionModelKindNONE                      acwRefractionModelKind = 0
 	/// Orekit-compatible EarthStandardAtmosphereRefraction correction.
 	acwRefractionModelKindEARTH_STANDARD_ATMOSPHERE acwRefractionModelKind = 1
+	/// ITU-R P.834 tropospheric refraction.
+	acwRefractionModelKindITU_R_P834                acwRefractionModelKind = 2
 )
 
 var EnumNamesacwRefractionModelKind = map[acwRefractionModelKind]string{
 	acwRefractionModelKindNONE:                      "NONE",
 	acwRefractionModelKindEARTH_STANDARD_ATMOSPHERE: "EARTH_STANDARD_ATMOSPHERE",
+	acwRefractionModelKindITU_R_P834:                "ITU_R_P834",
 }
 
 var EnumValuesacwRefractionModelKind = map[string]acwRefractionModelKind{
 	"NONE":                      acwRefractionModelKindNONE,
 	"EARTH_STANDARD_ATMOSPHERE": acwRefractionModelKindEARTH_STANDARD_ATMOSPHERE,
+	"ITU_R_P834":                acwRefractionModelKindITU_R_P834,
 }
 
 func (v acwRefractionModelKind) String() string {

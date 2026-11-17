@@ -47,8 +47,13 @@ public final class acwConstraintKind {
    * Outside every observer blackout window.
    */
   public static final byte BLACKOUT = 9;
+  /**
+   * Straight-line visibility between a ground observer and the target not
+   * blocked by terrain.
+   */
+  public static final byte TERRAIN_LINE_OF_SIGHT = 10;
 
-  public static final String[] names = { "UNSPECIFIED", "MIN_ELEVATION", "ELEVATION_MASK", "MAX_RANGE", "MIN_RANGE", "SUN_EXCLUSION", "MOON_EXCLUSION", "TARGET_LIGHTING", "LINE_OF_SIGHT", "BLACKOUT", };
+  public static final String[] names = { "UNSPECIFIED", "MIN_ELEVATION", "ELEVATION_MASK", "MAX_RANGE", "MIN_RANGE", "SUN_EXCLUSION", "MOON_EXCLUSION", "TARGET_LIGHTING", "LINE_OF_SIGHT", "BLACKOUT", "TERRAIN_LINE_OF_SIGHT", };
 
   public static String name(int e) { return names[e]; }
 }

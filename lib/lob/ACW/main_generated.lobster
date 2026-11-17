@@ -30,6 +30,8 @@ enum acwRefractionModelKind:
     acwRefractionModelKind_NONE = 0
     /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
     acwRefractionModelKind_EARTH_STANDARD_ATMOSPHERE = 1
+    /// ITU-R P.834 tropospheric refraction.
+    acwRefractionModelKind_ITU_R_P834 = 2
 
 /// Kind of access constraint. Append only.
 enum acwConstraintKind:
@@ -56,6 +58,9 @@ enum acwConstraintKind:
     acwConstraintKind_LINE_OF_SIGHT = 8
     /// Outside every observer blackout window.
     acwConstraintKind_BLACKOUT = 9
+    /// Straight-line visibility between a ground observer and the target not
+    /// blocked by terrain.
+    acwConstraintKind_TERRAIN_LINE_OF_SIGHT = 10
 
 /// How the members of a constraint set combine.
 enum acwConstraintOperator:

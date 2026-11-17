@@ -11,7 +11,8 @@ enum egpMembershipMode {
   UNSPECIFIED(0),
   ENUMERATED(1),
   QUERY_SNAPSHOT(2),
-  QUERY_LIVE(3);
+  QUERY_LIVE(3),
+  GENERATED(4);
 
   final int value;
   const egpMembershipMode(this.value);
@@ -22,6 +23,7 @@ enum egpMembershipMode {
       case 1: return egpMembershipMode.ENUMERATED;
       case 2: return egpMembershipMode.QUERY_SNAPSHOT;
       case 3: return egpMembershipMode.QUERY_LIVE;
+      case 4: return egpMembershipMode.GENERATED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -30,7 +32,7 @@ enum egpMembershipMode {
       value == null ? null : egpMembershipMode.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 4;
   static const fb.Reader<egpMembershipMode> reader = _egpMembershipModeReader();
 }
 
@@ -45,6 +47,251 @@ class _egpMembershipModeReader extends fb.Reader<egpMembershipMode> {
       egpMembershipMode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Walker pattern of a generated constellation. Append new values only.
+enum egpWalkerPattern {
+  UNSPECIFIED(0),
+  DELTA(1),
+  STAR(2),
+  CUSTOM(3);
+
+  final int value;
+  const egpWalkerPattern(this.value);
+
+  factory egpWalkerPattern.fromValue(int value) {
+    switch (value) {
+      case 0: return egpWalkerPattern.UNSPECIFIED;
+      case 1: return egpWalkerPattern.DELTA;
+      case 2: return egpWalkerPattern.STAR;
+      case 3: return egpWalkerPattern.CUSTOM;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static egpWalkerPattern? _createOrNull(int? value) =>
+      value == null ? null : egpWalkerPattern.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<egpWalkerPattern> reader = _egpWalkerPatternReader();
+}
+
+class _egpWalkerPatternReader extends fb.Reader<egpWalkerPattern> {
+  const _egpWalkerPatternReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  egpWalkerPattern read(fb.BufferContext bc, int offset) =>
+      egpWalkerPattern.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  The Walker definition a constellation group's members are generated from.
+///  Angles are in degrees, as an $OMM states them.
+class EGPWalker {
+  EGPWalker._(this._bc, this._bcOffset);
+  factory EGPWalker(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EGPWalker> reader = _EGPWalkerReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  egpWalkerPattern get PATTERN => egpWalkerPattern.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  T: number of satellites.
+  int get TOTAL_SATELLITES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get totalSatellites => TOTAL_SATELLITES;
+  ///  P: number of planes.
+  int get PLANES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  F: relative phasing, 0 to PLANES - 1.
+  int get PHASING => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Circular height above the WGS 84 equatorial radius, km.
+  double get ALTITUDE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get altitudeKm => ALTITUDE_KM;
+  ///  CUSTOM only: the right ascension the ascending nodes are spread over.
+  double get RA_OF_ASC_NODE_SPREAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get raOfAscNodeSpread => RA_OF_ASC_NODE_SPREAD;
+  ///  Right ascension of the ascending node of the first plane.
+  double get FIRST_RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get firstRaOfAscNode => FIRST_RA_OF_ASC_NODE;
+  ///  Mean anomaly of the first satellite of the first plane.
+  double get FIRST_MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get firstMeanAnomaly => FIRST_MEAN_ANOMALY;
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get argOfPericenter => ARG_OF_PERICENTER;
+  ///  Epoch of the generated elements, ISO 8601 UTC.
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Catalog number of the first satellite; the others follow it in order.
+  int get FIRST_NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  int get firstNoradCatId => FIRST_NORAD_CAT_ID;
+
+  @override
+  String toString() {
+    return 'EGPWalker{PATTERN: ${PATTERN}, totalSatellites: ${totalSatellites}, PLANES: ${PLANES}, PHASING: ${PHASING}, INCLINATION: ${INCLINATION}, altitudeKm: ${altitudeKm}, raOfAscNodeSpread: ${raOfAscNodeSpread}, firstRaOfAscNode: ${firstRaOfAscNode}, firstMeanAnomaly: ${firstMeanAnomaly}, ECCENTRICITY: ${ECCENTRICITY}, argOfPericenter: ${argOfPericenter}, EPOCH: ${EPOCH}, firstNoradCatId: ${firstNoradCatId}}';
+  }
+}
+
+class _EGPWalkerReader extends fb.TableReader<EGPWalker> {
+  const _EGPWalkerReader();
+
+  @override
+  EGPWalker createObject(fb.BufferContext bc, int offset) =>
+    EGPWalker._(bc, offset);
+}
+
+class EGPWalkerBuilder {
+  EGPWalkerBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addPattern(egpWalkerPattern? PATTERN) {
+    fbBuilder.addInt8(0, PATTERN?.value);
+    return fbBuilder.offset;
+  }
+  int addTotalSatellites(int? TOTAL_SATELLITES) {
+    fbBuilder.addUint32(1, TOTAL_SATELLITES);
+    return fbBuilder.offset;
+  }
+  int addPlanes(int? PLANES) {
+    fbBuilder.addUint32(2, PLANES);
+    return fbBuilder.offset;
+  }
+  int addPhasing(int? PHASING) {
+    fbBuilder.addUint32(3, PHASING);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(4, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addAltitudeKm(double? ALTITUDE_KM) {
+    fbBuilder.addFloat64(5, ALTITUDE_KM);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNodeSpread(double? RA_OF_ASC_NODE_SPREAD) {
+    fbBuilder.addFloat64(6, RA_OF_ASC_NODE_SPREAD);
+    return fbBuilder.offset;
+  }
+  int addFirstRaOfAscNode(double? FIRST_RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(7, FIRST_RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addFirstMeanAnomaly(double? FIRST_MEAN_ANOMALY) {
+    fbBuilder.addFloat64(8, FIRST_MEAN_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(9, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(10, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addFirstNoradCatId(int? FIRST_NORAD_CAT_ID) {
+    fbBuilder.addUint32(12, FIRST_NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EGPWalkerObjectBuilder extends fb.ObjectBuilder {
+  final egpWalkerPattern? _PATTERN;
+  final int? _TOTAL_SATELLITES;
+  final int? _PLANES;
+  final int? _PHASING;
+  final double? _INCLINATION;
+  final double? _ALTITUDE_KM;
+  final double? _RA_OF_ASC_NODE_SPREAD;
+  final double? _FIRST_RA_OF_ASC_NODE;
+  final double? _FIRST_MEAN_ANOMALY;
+  final double? _ECCENTRICITY;
+  final double? _ARG_OF_PERICENTER;
+  final String? _EPOCH;
+  final int? _FIRST_NORAD_CAT_ID;
+
+  EGPWalkerObjectBuilder({
+    egpWalkerPattern? PATTERN,
+    int? TOTAL_SATELLITES,
+    int? totalSatellites,
+    int? PLANES,
+    int? PHASING,
+    double? INCLINATION,
+    double? ALTITUDE_KM,
+    double? altitudeKm,
+    double? RA_OF_ASC_NODE_SPREAD,
+    double? raOfAscNodeSpread,
+    double? FIRST_RA_OF_ASC_NODE,
+    double? firstRaOfAscNode,
+    double? FIRST_MEAN_ANOMALY,
+    double? firstMeanAnomaly,
+    double? ECCENTRICITY,
+    double? ARG_OF_PERICENTER,
+    double? argOfPericenter,
+    String? EPOCH,
+    int? FIRST_NORAD_CAT_ID,
+    int? firstNoradCatId,
+  })
+      : _PATTERN = PATTERN,
+        _TOTAL_SATELLITES = totalSatellites ?? TOTAL_SATELLITES,
+        _PLANES = PLANES,
+        _PHASING = PHASING,
+        _INCLINATION = INCLINATION,
+        _ALTITUDE_KM = altitudeKm ?? ALTITUDE_KM,
+        _RA_OF_ASC_NODE_SPREAD = raOfAscNodeSpread ?? RA_OF_ASC_NODE_SPREAD,
+        _FIRST_RA_OF_ASC_NODE = firstRaOfAscNode ?? FIRST_RA_OF_ASC_NODE,
+        _FIRST_MEAN_ANOMALY = firstMeanAnomaly ?? FIRST_MEAN_ANOMALY,
+        _ECCENTRICITY = ECCENTRICITY,
+        _ARG_OF_PERICENTER = argOfPericenter ?? ARG_OF_PERICENTER,
+        _EPOCH = EPOCH,
+        _FIRST_NORAD_CAT_ID = firstNoradCatId ?? FIRST_NORAD_CAT_ID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(13);
+    fbBuilder.addInt8(0, _PATTERN?.value);
+    fbBuilder.addUint32(1, _TOTAL_SATELLITES);
+    fbBuilder.addUint32(2, _PLANES);
+    fbBuilder.addUint32(3, _PHASING);
+    fbBuilder.addFloat64(4, _INCLINATION);
+    fbBuilder.addFloat64(5, _ALTITUDE_KM);
+    fbBuilder.addFloat64(6, _RA_OF_ASC_NODE_SPREAD);
+    fbBuilder.addFloat64(7, _FIRST_RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(8, _FIRST_MEAN_ANOMALY);
+    fbBuilder.addFloat64(9, _ECCENTRICITY);
+    fbBuilder.addFloat64(10, _ARG_OF_PERICENTER);
+    fbBuilder.addOffset(11, EPOCHOffset);
+    fbBuilder.addUint32(12, _FIRST_NORAD_CAT_ID);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Provenance of the assertions behind a group. Field-for-field the
 ///  `$CMR` provenance shape, so one consumer parses both.
 class EGPProvenance {
@@ -561,10 +808,13 @@ class EGP {
   ///  Optional content identifier of the dataset the group was drawn from.
   String? get DATASET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get datasetCid => DATASET_CID;
+  ///  The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+  ///  GENERATED.
+  EGPWalker? get WALKER => EGPWalker.reader.vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'EGP{groupId: ${groupId}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, TAGS: ${TAGS}, membershipMode: ${membershipMode}, MEMBERS: ${MEMBERS}, QUERY: ${QUERY}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, PROVENANCE: ${PROVENANCE}, datasetCid: ${datasetCid}}';
+    return 'EGP{groupId: ${groupId}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, TAGS: ${TAGS}, membershipMode: ${membershipMode}, MEMBERS: ${MEMBERS}, QUERY: ${QUERY}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, PROVENANCE: ${PROVENANCE}, datasetCid: ${datasetCid}, WALKER: ${WALKER}}';
   }
 }
 
@@ -582,7 +832,7 @@ class EGPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(12);
   }
 
   int addGroupIdOffset(int? offset) {
@@ -629,6 +879,10 @@ class EGPBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
+  int addWalkerOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -647,6 +901,7 @@ class EGPObjectBuilder extends fb.ObjectBuilder {
   final String? _UPDATED_AT;
   final List<EGPProvenanceObjectBuilder>? _PROVENANCE;
   final String? _DATASET_CID;
+  final EGPWalkerObjectBuilder? _WALKER;
 
   EGPObjectBuilder({
     String? GROUP_ID,
@@ -665,6 +920,7 @@ class EGPObjectBuilder extends fb.ObjectBuilder {
     List<EGPProvenanceObjectBuilder>? PROVENANCE,
     String? DATASET_CID,
     String? datasetCid,
+    EGPWalkerObjectBuilder? WALKER,
   })
       : _GROUP_ID = groupId ?? GROUP_ID,
         _NAME = NAME,
@@ -676,7 +932,8 @@ class EGPObjectBuilder extends fb.ObjectBuilder {
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _PROVENANCE = PROVENANCE,
-        _DATASET_CID = datasetCid ?? DATASET_CID;
+        _DATASET_CID = datasetCid ?? DATASET_CID,
+        _WALKER = WALKER;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -700,7 +957,8 @@ class EGPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_PROVENANCE!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? DATASET_CIDOffset = _DATASET_CID == null ? null
         : fbBuilder.writeString(_DATASET_CID!);
-    fbBuilder.startTable(11);
+    final int? WALKEROffset = _WALKER?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, GROUP_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, DESCRIPTIONOffset);
@@ -712,6 +970,7 @@ class EGPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, UPDATED_ATOffset);
     fbBuilder.addOffset(9, PROVENANCEOffset);
     fbBuilder.addOffset(10, DATASET_CIDOffset);
+    fbBuilder.addOffset(11, WALKEROffset);
     return fbBuilder.endTable();
   }
 

@@ -47,5 +47,10 @@ class acwConstraintKind private constructor() {
          * Outside every observer blackout window.
          */
         const val BLACKOUT: Byte = 9
+        /**
+         * Straight-line visibility between a ground observer and the target not
+         * blocked by terrain.
+         */
+        const val TERRAIN_LINE_OF_SIGHT: Byte = 10
     }
 }

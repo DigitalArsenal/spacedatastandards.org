@@ -83,6 +83,9 @@ public struct EGP : IFlatbufferObject
   public ArraySegment<byte>? GetDATASET_CIDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetDATASET_CIDArray() { return __p.__vector_as_array<byte>(24); }
+  /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+  /// GENERATED.
+  public EGPWalker? WALKER { get { int o = __p.__offset(26); return o != 0 ? (EGPWalker?)(new EGPWalker()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<EGP> CreateEGP(FlatBufferBuilder builder,
       StringOffset GROUP_IDOffset = default(StringOffset),
@@ -95,8 +98,10 @@ public struct EGP : IFlatbufferObject
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset UPDATED_ATOffset = default(StringOffset),
       VectorOffset PROVENANCEOffset = default(VectorOffset),
-      StringOffset DATASET_CIDOffset = default(StringOffset)) {
-    builder.StartTable(11);
+      StringOffset DATASET_CIDOffset = default(StringOffset),
+      Offset<EGPWalker> WALKEROffset = default(Offset<EGPWalker>)) {
+    builder.StartTable(12);
+    EGP.AddWALKER(builder, WALKEROffset);
     EGP.AddDATASET_CID(builder, DATASET_CIDOffset);
     EGP.AddPROVENANCE(builder, PROVENANCEOffset);
     EGP.AddUPDATED_AT(builder, UPDATED_ATOffset);
@@ -111,7 +116,7 @@ public struct EGP : IFlatbufferObject
     return EGP.EndEGP(builder);
   }
 
-  public static void StartEGP(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartEGP(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddGROUP_ID(FlatBufferBuilder builder, StringOffset GROUP_IDOffset) { builder.AddOffset(0, GROUP_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(2, DESCRIPTIONOffset.Value, 0); }
@@ -138,6 +143,7 @@ public struct EGP : IFlatbufferObject
   public static VectorOffset CreatePROVENANCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<EGPProvenance>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROVENANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddDATASET_CID(FlatBufferBuilder builder, StringOffset DATASET_CIDOffset) { builder.AddOffset(10, DATASET_CIDOffset.Value, 0); }
+  public static void AddWALKER(FlatBufferBuilder builder, Offset<EGPWalker> WALKEROffset) { builder.AddOffset(11, WALKEROffset.Value, 0); }
   public static Offset<EGP> EndEGP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // GROUP_ID
@@ -167,6 +173,7 @@ public struct EGP : IFlatbufferObject
     _o.PROVENANCE = new List<EGPProvenanceT>();
     for (var _j = 0; _j < this.PROVENANCELength; ++_j) {_o.PROVENANCE.Add(this.PROVENANCE(_j).HasValue ? this.PROVENANCE(_j).Value.UnPack() : null);}
     _o.DATASET_CID = this.DATASET_CID;
+    _o.WALKER = this.WALKER.HasValue ? this.WALKER.Value.UnPack() : null;
   }
   public static Offset<EGP> Pack(FlatBufferBuilder builder, EGPT _o) {
     if (_o == null) return default(Offset<EGP>);
@@ -195,6 +202,7 @@ public struct EGP : IFlatbufferObject
       _PROVENANCE = CreatePROVENANCEVector(builder, __PROVENANCE);
     }
     var _DATASET_CID = _o.DATASET_CID == null ? default(StringOffset) : builder.CreateString(_o.DATASET_CID);
+    var _WALKER = _o.WALKER == null ? default(Offset<EGPWalker>) : EGPWalker.Pack(builder, _o.WALKER);
     return CreateEGP(
       builder,
       _GROUP_ID,
@@ -207,7 +215,8 @@ public struct EGP : IFlatbufferObject
       _CREATED_AT,
       _UPDATED_AT,
       _PROVENANCE,
-      _DATASET_CID);
+      _DATASET_CID,
+      _WALKER);
   }
 }
 
@@ -224,6 +233,7 @@ public class EGPT
   public string UPDATED_AT { get; set; }
   public List<EGPProvenanceT> PROVENANCE { get; set; }
   public string DATASET_CID { get; set; }
+  public EGPWalkerT WALKER { get; set; }
 
   public EGPT() {
     this.GROUP_ID = null;
@@ -237,6 +247,7 @@ public class EGPT
     this.UPDATED_AT = null;
     this.PROVENANCE = null;
     this.DATASET_CID = null;
+    this.WALKER = null;
   }
   public static EGPT DeserializeFromBinary(byte[] fbBuffer) {
     return EGP.GetRootAsEGP(new ByteBuffer(fbBuffer)).UnPack();
@@ -265,6 +276,7 @@ static public class EGPVerify
       && verifier.VerifyString(tablePos, 20 /*UPDATED_AT*/, true)
       && verifier.VerifyVectorOfTables(tablePos, 22 /*PROVENANCE*/, EGPProvenanceVerify.Verify, false)
       && verifier.VerifyString(tablePos, 24 /*DATASET_CID*/, false)
+      && verifier.VerifyTable(tablePos, 26 /*WALKER*/, EGPWalkerVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

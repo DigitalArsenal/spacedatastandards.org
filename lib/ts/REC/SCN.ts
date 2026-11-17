@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { RFM, RFMT } from './RFM.js';
 import { SCNAssetsChanged, SCNAssetsChangedT } from './SCNAssetsChanged.js';
 import { SCNEvent, SCNEventT } from './SCNEvent.js';
+import { SCNPinnedRow, SCNPinnedRowT } from './SCNPinnedRow.js';
 import { SCNReference, SCNReferenceT } from './SCNReference.js';
 import { VST, VSTT } from './VST.js';
 import { scenarioActionCode } from './scenarioActionCode.js';
@@ -16,6 +17,11 @@ import { scenarioActionCode } from './scenarioActionCode.js';
  * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
+ *
+ * A scenario that carries other records is one $REC whose first record is
+ * this $SCN; the other records follow under their own standards. A stored
+ * request carries only its request arm, with derived fields left empty to be
+ * computed again.
  */
 export class SCN implements flatbuffers.IUnpackableObject<SCNT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -146,8 +152,103 @@ ASSETS_CHANGED(obj?:SCNAssetsChanged):SCNAssetsChanged|null {
   return offset ? (obj || new SCNAssetsChanged()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+ * time.
+ */
+START_EPOCH():string|null
+START_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+START_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Clock interval stop as an ISO-8601 UTC timestamp.
+ */
+STOP_EPOCH():string|null
+STOP_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STOP_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True when the clock was running.
+ */
+ANIMATING():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Start of the analysis window, the span the timeline showed, as an
+ * ISO-8601 UTC timestamp.
+ */
+WINDOW_START():string|null
+WINDOW_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+WINDOW_START(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Stop of the analysis window as an ISO-8601 UTC timestamp.
+ */
+WINDOW_STOP():string|null
+WINDOW_STOP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+WINDOW_STOP(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+ * the catalog objects were flown with.
+ */
+PROPAGATOR_MODULE_ID():string|null
+PROPAGATOR_MODULE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROPAGATOR_MODULE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Timeline rows kept with the scenario.
+ */
+PINNED_ROWS(index: number, obj?:SCNPinnedRow):SCNPinnedRow|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new SCNPinnedRow()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+pinnedRowsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+ * enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+ * enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+ * zero. The record's CID is computed over the signed bytes.
+ */
+SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+signatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+signatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startSCN(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(20);
 }
 
 static addScenarioId(builder:flatbuffers.Builder, SCENARIO_IDOffset:flatbuffers.Offset) {
@@ -210,6 +311,62 @@ static addAssetsChanged(builder:flatbuffers.Builder, ASSETS_CHANGEDOffset:flatbu
   builder.addFieldOffset(11, ASSETS_CHANGEDOffset, 0);
 }
 
+static addStartEpoch(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, START_EPOCHOffset, 0);
+}
+
+static addStopEpoch(builder:flatbuffers.Builder, STOP_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, STOP_EPOCHOffset, 0);
+}
+
+static addAnimating(builder:flatbuffers.Builder, ANIMATING:boolean) {
+  builder.addFieldInt8(14, +ANIMATING, +false);
+}
+
+static addWindowStart(builder:flatbuffers.Builder, WINDOW_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, WINDOW_STARTOffset, 0);
+}
+
+static addWindowStop(builder:flatbuffers.Builder, WINDOW_STOPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, WINDOW_STOPOffset, 0);
+}
+
+static addPropagatorModuleId(builder:flatbuffers.Builder, PROPAGATOR_MODULE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, PROPAGATOR_MODULE_IDOffset, 0);
+}
+
+static addPinnedRows(builder:flatbuffers.Builder, PINNED_ROWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, PINNED_ROWSOffset, 0);
+}
+
+static createPinnedRowsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPinnedRowsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, SIGNATUREOffset, 0);
+}
+
+static createSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endSCN(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -237,7 +394,15 @@ unpack(): SCNT {
     (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
     this.ACTION(),
     (this.VIEW_STATE() !== null ? this.VIEW_STATE()!.unpack() : null),
-    (this.ASSETS_CHANGED() !== null ? this.ASSETS_CHANGED()!.unpack() : null)
+    (this.ASSETS_CHANGED() !== null ? this.ASSETS_CHANGED()!.unpack() : null),
+    this.START_EPOCH(),
+    this.STOP_EPOCH(),
+    this.ANIMATING(),
+    this.WINDOW_START(),
+    this.WINDOW_STOP(),
+    this.PROPAGATOR_MODULE_ID(),
+    this.bb!.createObjList<SCNPinnedRow, SCNPinnedRowT>(this.PINNED_ROWS.bind(this), this.pinnedRowsLength()),
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
   );
 }
 
@@ -255,6 +420,14 @@ unpackTo(_o: SCNT): void {
   _o.ACTION = this.ACTION();
   _o.VIEW_STATE = (this.VIEW_STATE() !== null ? this.VIEW_STATE()!.unpack() : null);
   _o.ASSETS_CHANGED = (this.ASSETS_CHANGED() !== null ? this.ASSETS_CHANGED()!.unpack() : null);
+  _o.START_EPOCH = this.START_EPOCH();
+  _o.STOP_EPOCH = this.STOP_EPOCH();
+  _o.ANIMATING = this.ANIMATING();
+  _o.WINDOW_START = this.WINDOW_START();
+  _o.WINDOW_STOP = this.WINDOW_STOP();
+  _o.PROPAGATOR_MODULE_ID = this.PROPAGATOR_MODULE_ID();
+  _o.PINNED_ROWS = this.bb!.createObjList<SCNPinnedRow, SCNPinnedRowT>(this.PINNED_ROWS.bind(this), this.pinnedRowsLength());
+  _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
 }
 }
 
@@ -271,7 +444,15 @@ constructor(
   public REFERENCE_FRAME: RFMT|null = null,
   public ACTION: scenarioActionCode = scenarioActionCode.NONE,
   public VIEW_STATE: VSTT|null = null,
-  public ASSETS_CHANGED: SCNAssetsChangedT|null = null
+  public ASSETS_CHANGED: SCNAssetsChangedT|null = null,
+  public START_EPOCH: string|Uint8Array|null = null,
+  public STOP_EPOCH: string|Uint8Array|null = null,
+  public ANIMATING: boolean = false,
+  public WINDOW_START: string|Uint8Array|null = null,
+  public WINDOW_STOP: string|Uint8Array|null = null,
+  public PROPAGATOR_MODULE_ID: string|Uint8Array|null = null,
+  public PINNED_ROWS: (SCNPinnedRowT)[] = [],
+  public SIGNATURE: (number)[] = []
 ){}
 
 
@@ -284,6 +465,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
   const VIEW_STATE = (this.VIEW_STATE !== null ? this.VIEW_STATE!.pack(builder) : 0);
   const ASSETS_CHANGED = (this.ASSETS_CHANGED !== null ? this.ASSETS_CHANGED!.pack(builder) : 0);
+  const START_EPOCH = (this.START_EPOCH !== null ? builder.createString(this.START_EPOCH!) : 0);
+  const STOP_EPOCH = (this.STOP_EPOCH !== null ? builder.createString(this.STOP_EPOCH!) : 0);
+  const WINDOW_START = (this.WINDOW_START !== null ? builder.createString(this.WINDOW_START!) : 0);
+  const WINDOW_STOP = (this.WINDOW_STOP !== null ? builder.createString(this.WINDOW_STOP!) : 0);
+  const PROPAGATOR_MODULE_ID = (this.PROPAGATOR_MODULE_ID !== null ? builder.createString(this.PROPAGATOR_MODULE_ID!) : 0);
+  const PINNED_ROWS = SCN.createPinnedRowsVector(builder, builder.createObjectOffsetList(this.PINNED_ROWS));
+  const SIGNATURE = SCN.createSignatureVector(builder, this.SIGNATURE);
 
   SCN.startSCN(builder);
   SCN.addScenarioId(builder, SCENARIO_ID);
@@ -298,6 +486,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCN.addAction(builder, this.ACTION);
   SCN.addViewState(builder, VIEW_STATE);
   SCN.addAssetsChanged(builder, ASSETS_CHANGED);
+  SCN.addStartEpoch(builder, START_EPOCH);
+  SCN.addStopEpoch(builder, STOP_EPOCH);
+  SCN.addAnimating(builder, this.ANIMATING);
+  SCN.addWindowStart(builder, WINDOW_START);
+  SCN.addWindowStop(builder, WINDOW_STOP);
+  SCN.addPropagatorModuleId(builder, PROPAGATOR_MODULE_ID);
+  SCN.addPinnedRows(builder, PINNED_ROWS);
+  SCN.addSignature(builder, SIGNATURE);
 
   return SCN.endSCN(builder);
 }

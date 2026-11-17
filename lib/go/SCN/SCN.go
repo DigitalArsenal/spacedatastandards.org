@@ -9,6 +9,11 @@ import (
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 type SCN struct {
 	_tab flatbuffers.Table
 }
@@ -295,8 +300,197 @@ func (rcv *SCN) AssetsChanged(obj *SCNAssetsChanged) *SCNAssetsChanged {
 }
 
 /// Asset-change notification payload for the scenario.
+/// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+/// time.
+func (rcv *SCN) START_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) StartEpoch() []byte {
+	return rcv.START_EPOCH()
+}
+
+/// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+/// time.
+/// Clock interval stop as an ISO-8601 UTC timestamp.
+func (rcv *SCN) STOP_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) StopEpoch() []byte {
+	return rcv.STOP_EPOCH()
+}
+
+/// Clock interval stop as an ISO-8601 UTC timestamp.
+/// True when the clock was running.
+func (rcv *SCN) ANIMATING() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *SCN) Animating() bool {
+	return rcv.ANIMATING()
+}
+
+/// True when the clock was running.
+func (rcv *SCN) MutateANIMATING(n bool) bool {
+	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *SCN) MutateAnimating(n bool) bool {
+	return rcv.MutateANIMATING(n)
+}
+
+/// Start of the analysis window, the span the timeline showed, as an
+/// ISO-8601 UTC timestamp.
+func (rcv *SCN) WINDOW_START() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) WindowStart() []byte {
+	return rcv.WINDOW_START()
+}
+
+/// Start of the analysis window, the span the timeline showed, as an
+/// ISO-8601 UTC timestamp.
+/// Stop of the analysis window as an ISO-8601 UTC timestamp.
+func (rcv *SCN) WINDOW_STOP() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) WindowStop() []byte {
+	return rcv.WINDOW_STOP()
+}
+
+/// Stop of the analysis window as an ISO-8601 UTC timestamp.
+/// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+/// the catalog objects were flown with.
+func (rcv *SCN) PROPAGATOR_MODULE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) PropagatorModuleId() []byte {
+	return rcv.PROPAGATOR_MODULE_ID()
+}
+
+/// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+/// the catalog objects were flown with.
+/// Timeline rows kept with the scenario.
+func (rcv *SCN) PINNED_ROWS(obj *SCNPinnedRow, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SCNPinnedRow)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SCN) PinnedRows(obj *SCNPinnedRow, j int) bool {
+	return rcv.PINNED_ROWS(obj, j)
+}
+
+func (rcv *SCN) PINNED_ROWSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SCN) PinnedRowsLength() int {
+	return rcv.PINNED_ROWSLength()
+}
+
+/// Timeline rows kept with the scenario.
+/// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+/// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+/// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+/// zero. The record's CID is computed over the signed bytes.
+func (rcv *SCN) SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *SCN) Signature(j int) byte {
+	return rcv.SIGNATURE(j)
+}
+
+func (rcv *SCN) SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SCN) SignatureLength() int {
+	return rcv.SIGNATURELength()
+}
+
+func (rcv *SCN) SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCN) SignatureBytes() []byte {
+	return rcv.SIGNATUREBytes()
+}
+
+/// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+/// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+/// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+/// zero. The record's CID is computed over the signed bytes.
+func (rcv *SCN) MutateSIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *SCN) MutateSignature(j int, n byte) bool {
+	return rcv.MutateSIGNATURE(j, n)
+}
+
 func SCNStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(20)
 }
 func SCNAddSCENARIO_ID(builder *flatbuffers.Builder, SCENARIO_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SCENARIO_ID), 0)
@@ -375,6 +569,66 @@ func SCNAddASSETS_CHANGED(builder *flatbuffers.Builder, ASSETS_CHANGED flatbuffe
 }
 func SCNAddAssetsChanged(builder *flatbuffers.Builder, ASSETS_CHANGED flatbuffers.UOffsetT) {
 	SCNAddASSETS_CHANGED(builder, ASSETS_CHANGED)
+}
+func SCNAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(START_EPOCH), 0)
+}
+func SCNAddStartEpoch(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
+	SCNAddSTART_EPOCH(builder, START_EPOCH)
+}
+func SCNAddSTOP_EPOCH(builder *flatbuffers.Builder, STOP_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(STOP_EPOCH), 0)
+}
+func SCNAddStopEpoch(builder *flatbuffers.Builder, STOP_EPOCH flatbuffers.UOffsetT) {
+	SCNAddSTOP_EPOCH(builder, STOP_EPOCH)
+}
+func SCNAddANIMATING(builder *flatbuffers.Builder, ANIMATING bool) {
+	builder.PrependBoolSlot(14, ANIMATING, false)
+}
+func SCNAddAnimating(builder *flatbuffers.Builder, ANIMATING bool) {
+	SCNAddANIMATING(builder, ANIMATING)
+}
+func SCNAddWINDOW_START(builder *flatbuffers.Builder, WINDOW_START flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(WINDOW_START), 0)
+}
+func SCNAddWindowStart(builder *flatbuffers.Builder, WINDOW_START flatbuffers.UOffsetT) {
+	SCNAddWINDOW_START(builder, WINDOW_START)
+}
+func SCNAddWINDOW_STOP(builder *flatbuffers.Builder, WINDOW_STOP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(WINDOW_STOP), 0)
+}
+func SCNAddWindowStop(builder *flatbuffers.Builder, WINDOW_STOP flatbuffers.UOffsetT) {
+	SCNAddWINDOW_STOP(builder, WINDOW_STOP)
+}
+func SCNAddPROPAGATOR_MODULE_ID(builder *flatbuffers.Builder, PROPAGATOR_MODULE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PROPAGATOR_MODULE_ID), 0)
+}
+func SCNAddPropagatorModuleId(builder *flatbuffers.Builder, PROPAGATOR_MODULE_ID flatbuffers.UOffsetT) {
+	SCNAddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_ID)
+}
+func SCNAddPINNED_ROWS(builder *flatbuffers.Builder, PINNED_ROWS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(PINNED_ROWS), 0)
+}
+func SCNAddPinnedRows(builder *flatbuffers.Builder, PINNED_ROWS flatbuffers.UOffsetT) {
+	SCNAddPINNED_ROWS(builder, PINNED_ROWS)
+}
+func SCNStartPINNED_ROWSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func SCNStartPinnedRowsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCNStartPINNED_ROWSVector(builder, numElems)
+}
+func SCNAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(SIGNATURE), 0)
+}
+func SCNAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	SCNAddSIGNATURE(builder, SIGNATURE)
+}
+func SCNStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func SCNStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCNStartSIGNATUREVector(builder, numElems)
 }
 func SCNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

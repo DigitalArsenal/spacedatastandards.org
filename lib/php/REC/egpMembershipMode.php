@@ -13,12 +13,16 @@ class egpMembershipMode
     /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
     /// recompute; the query wins on disagreement.
     const QUERY_LIVE = 3;
+    /// Members were generated from WALKER; MEMBERS is that generation, and each
+    /// member's elements are its own $OMM.
+    const GENERATED = 4;
 
     private static $names = array(
         egpMembershipMode::UNSPECIFIED=>"UNSPECIFIED",
         egpMembershipMode::ENUMERATED=>"ENUMERATED",
         egpMembershipMode::QUERY_SNAPSHOT=>"QUERY_SNAPSHOT",
         egpMembershipMode::QUERY_LIVE=>"QUERY_LIVE",
+        egpMembershipMode::GENERATED=>"GENERATED",
     );
 
     public static function Name($e)

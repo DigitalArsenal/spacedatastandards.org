@@ -33,7 +33,9 @@ enum scenarioReferenceKind {
   VARIABLE_SITE(5),
   POINT_OF_INTEREST(6),
   EXCLUSION_ZONE(7),
-  OBSERVATION(8);
+  OBSERVATION(8),
+  GROUP(9),
+  AREA_OF_INTEREST(10);
 
   final int value;
   const scenarioReferenceKind(this.value);
@@ -49,6 +51,8 @@ enum scenarioReferenceKind {
       case 6: return scenarioReferenceKind.POINT_OF_INTEREST;
       case 7: return scenarioReferenceKind.EXCLUSION_ZONE;
       case 8: return scenarioReferenceKind.OBSERVATION;
+      case 9: return scenarioReferenceKind.GROUP;
+      case 10: return scenarioReferenceKind.AREA_OF_INTEREST;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -57,7 +61,7 @@ enum scenarioReferenceKind {
       value == null ? null : scenarioReferenceKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 8;
+  static const int maxValue = 10;
   static const fb.Reader<scenarioReferenceKind> reader = _scenarioReferenceKindReader();
 }
 
@@ -1332,9 +1336,150 @@ class SCNAssetsChangedObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  A timeline row a scenario keeps: what was run, and on what. Never its bars;
+///  the inputs of the run are the request records of the enclosing $REC.
+class SCNPinnedRow {
+  SCNPinnedRow._(this._bc, this._bcOffset);
+  factory SCNPinnedRow(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNPinnedRow> reader = _SCNPinnedRowReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Row identifier, unique in the scenario.
+  String? get ROW_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get rowId => ROW_ID;
+  ///  The application's identifier of the mode the row belongs to.
+  String? get MODE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get modeId => MODE_ID;
+  ///  The application's identifier of the verb that produced the row; empty
+  ///  when the row came without a run.
+  String? get VERB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get verbId => VERB_ID;
+  ///  REFERENCE_IDs of the scenario references the row was run on.
+  List<String>? get REFERENCE_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<String>? get referenceIds => REFERENCE_IDS;
+  ///  CID of the stored record the row shows, when it shows one (for example
+  ///  an event's descriptor $SCN); empty otherwise.
+  String? get RECORD_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get recordCid => RECORD_CID;
+
+  @override
+  String toString() {
+    return 'SCNPinnedRow{rowId: ${rowId}, modeId: ${modeId}, verbId: ${verbId}, referenceIds: ${referenceIds}, recordCid: ${recordCid}}';
+  }
+}
+
+class _SCNPinnedRowReader extends fb.TableReader<SCNPinnedRow> {
+  const _SCNPinnedRowReader();
+
+  @override
+  SCNPinnedRow createObject(fb.BufferContext bc, int offset) =>
+    SCNPinnedRow._(bc, offset);
+}
+
+class SCNPinnedRowBuilder {
+  SCNPinnedRowBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addRowIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addModeIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVerbIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceIdsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRecordCidOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNPinnedRowObjectBuilder extends fb.ObjectBuilder {
+  final String? _ROW_ID;
+  final String? _MODE_ID;
+  final String? _VERB_ID;
+  final List<String>? _REFERENCE_IDS;
+  final String? _RECORD_CID;
+
+  SCNPinnedRowObjectBuilder({
+    String? ROW_ID,
+    String? rowId,
+    String? MODE_ID,
+    String? modeId,
+    String? VERB_ID,
+    String? verbId,
+    List<String>? REFERENCE_IDS,
+    List<String>? referenceIds,
+    String? RECORD_CID,
+    String? recordCid,
+  })
+      : _ROW_ID = rowId ?? ROW_ID,
+        _MODE_ID = modeId ?? MODE_ID,
+        _VERB_ID = verbId ?? VERB_ID,
+        _REFERENCE_IDS = referenceIds ?? REFERENCE_IDS,
+        _RECORD_CID = recordCid ?? RECORD_CID;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ROW_IDOffset = _ROW_ID == null ? null
+        : fbBuilder.writeString(_ROW_ID!);
+    final int? MODE_IDOffset = _MODE_ID == null ? null
+        : fbBuilder.writeString(_MODE_ID!);
+    final int? VERB_IDOffset = _VERB_ID == null ? null
+        : fbBuilder.writeString(_VERB_ID!);
+    final int? REFERENCE_IDSOffset = _REFERENCE_IDS == null ? null
+        : fbBuilder.writeList(_REFERENCE_IDS!.map(fbBuilder.writeString).toList());
+    final int? RECORD_CIDOffset = _RECORD_CID == null ? null
+        : fbBuilder.writeString(_RECORD_CID!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, ROW_IDOffset);
+    fbBuilder.addOffset(1, MODE_IDOffset);
+    fbBuilder.addOffset(2, VERB_IDOffset);
+    fbBuilder.addOffset(3, REFERENCE_IDSOffset);
+    fbBuilder.addOffset(4, RECORD_CIDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Scenario - canonical scene composition and simulation state for external
 ///  scenario controls integrations. Domain records remain in their native SDS
 ///  schemas and are referenced or embedded here only as scenario content.
+///
+///  A scenario that carries other records is one $REC whose first record is
+///  this $SCN; the other records follow under their own standards. A stored
+///  request carries only its request arm, with derived fields left empty to be
+///  computed again.
 class SCN {
   SCN._(this._bc, this._bcOffset);
   factory SCN(List<int> bytes) {
@@ -1379,10 +1524,38 @@ class SCN {
   ///  Asset-change notification payload for the scenario.
   SCNAssetsChanged? get ASSETS_CHANGED => SCNAssetsChanged.reader.vTableGetNullable(_bc, _bcOffset, 26);
   SCNAssetsChanged? get assetsChanged => ASSETS_CHANGED;
+  ///  Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  ///  time.
+  String? get START_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get startEpoch => START_EPOCH;
+  ///  Clock interval stop as an ISO-8601 UTC timestamp.
+  String? get STOP_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get stopEpoch => STOP_EPOCH;
+  ///  True when the clock was running.
+  bool get ANIMATING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  ///  Start of the analysis window, the span the timeline showed, as an
+  ///  ISO-8601 UTC timestamp.
+  String? get WINDOW_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get windowStart => WINDOW_START;
+  ///  Stop of the analysis window as an ISO-8601 UTC timestamp.
+  String? get WINDOW_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get windowStop => WINDOW_STOP;
+  ///  Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  ///  the catalog objects were flown with.
+  String? get PROPAGATOR_MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get propagatorModuleId => PROPAGATOR_MODULE_ID;
+  ///  Timeline rows kept with the scenario.
+  List<SCNPinnedRow>? get PINNED_ROWS => const fb.ListReader<SCNPinnedRow>(SCNPinnedRow.reader).vTableGetNullable(_bc, _bcOffset, 40);
+  List<SCNPinnedRow>? get pinnedRows => PINNED_ROWS;
+  ///  Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  ///  enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  ///  enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  ///  zero. The record's CID is computed over the signed bytes.
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 42);
 
   @override
   String toString() {
-    return 'SCN{scenarioId: ${scenarioId}, REFERENCES: ${REFERENCES}, EVENT: ${EVENT}, focusedReferenceIndex: ${focusedReferenceIndex}, focusedReferenceId: ${focusedReferenceId}, EPOCH: ${EPOCH}, simSpeed: ${simSpeed}, useBodyFixedFrame: ${useBodyFixedFrame}, referenceFrame: ${referenceFrame}, ACTION: ${ACTION}, viewState: ${viewState}, assetsChanged: ${assetsChanged}}';
+    return 'SCN{scenarioId: ${scenarioId}, REFERENCES: ${REFERENCES}, EVENT: ${EVENT}, focusedReferenceIndex: ${focusedReferenceIndex}, focusedReferenceId: ${focusedReferenceId}, EPOCH: ${EPOCH}, simSpeed: ${simSpeed}, useBodyFixedFrame: ${useBodyFixedFrame}, referenceFrame: ${referenceFrame}, ACTION: ${ACTION}, viewState: ${viewState}, assetsChanged: ${assetsChanged}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, ANIMATING: ${ANIMATING}, windowStart: ${windowStart}, windowStop: ${windowStop}, propagatorModuleId: ${propagatorModuleId}, pinnedRows: ${pinnedRows}, SIGNATURE: ${SIGNATURE}}';
   }
 }
 
@@ -1400,7 +1573,7 @@ class SCNBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(20);
   }
 
   int addScenarioIdOffset(int? offset) {
@@ -1451,6 +1624,38 @@ class SCNBuilder {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
+  int addStartEpochOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addStopEpochOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addAnimating(bool? ANIMATING) {
+    fbBuilder.addBool(14, ANIMATING);
+    return fbBuilder.offset;
+  }
+  int addWindowStartOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowStopOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addPinnedRowsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1470,6 +1675,14 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
   final scenarioActionCode? _ACTION;
   final VSTObjectBuilder? _VIEW_STATE;
   final SCNAssetsChangedObjectBuilder? _ASSETS_CHANGED;
+  final String? _START_EPOCH;
+  final String? _STOP_EPOCH;
+  final bool? _ANIMATING;
+  final String? _WINDOW_START;
+  final String? _WINDOW_STOP;
+  final String? _PROPAGATOR_MODULE_ID;
+  final List<SCNPinnedRowObjectBuilder>? _PINNED_ROWS;
+  final List<int>? _SIGNATURE;
 
   SCNObjectBuilder({
     String? SCENARIO_ID,
@@ -1492,6 +1705,20 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
     VSTObjectBuilder? viewState,
     SCNAssetsChangedObjectBuilder? ASSETS_CHANGED,
     SCNAssetsChangedObjectBuilder? assetsChanged,
+    String? START_EPOCH,
+    String? startEpoch,
+    String? STOP_EPOCH,
+    String? stopEpoch,
+    bool? ANIMATING,
+    String? WINDOW_START,
+    String? windowStart,
+    String? WINDOW_STOP,
+    String? windowStop,
+    String? PROPAGATOR_MODULE_ID,
+    String? propagatorModuleId,
+    List<SCNPinnedRowObjectBuilder>? PINNED_ROWS,
+    List<SCNPinnedRowObjectBuilder>? pinnedRows,
+    List<int>? SIGNATURE,
   })
       : _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
         _REFERENCES = REFERENCES,
@@ -1504,7 +1731,15 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
         _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
         _ACTION = ACTION,
         _VIEW_STATE = viewState ?? VIEW_STATE,
-        _ASSETS_CHANGED = assetsChanged ?? ASSETS_CHANGED;
+        _ASSETS_CHANGED = assetsChanged ?? ASSETS_CHANGED,
+        _START_EPOCH = startEpoch ?? START_EPOCH,
+        _STOP_EPOCH = stopEpoch ?? STOP_EPOCH,
+        _ANIMATING = ANIMATING,
+        _WINDOW_START = windowStart ?? WINDOW_START,
+        _WINDOW_STOP = windowStop ?? WINDOW_STOP,
+        _PROPAGATOR_MODULE_ID = propagatorModuleId ?? PROPAGATOR_MODULE_ID,
+        _PINNED_ROWS = pinnedRows ?? PINNED_ROWS,
+        _SIGNATURE = SIGNATURE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1521,7 +1756,21 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
     final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
     final int? VIEW_STATEOffset = _VIEW_STATE?.getOrCreateOffset(fbBuilder);
     final int? ASSETS_CHANGEDOffset = _ASSETS_CHANGED?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(12);
+    final int? START_EPOCHOffset = _START_EPOCH == null ? null
+        : fbBuilder.writeString(_START_EPOCH!);
+    final int? STOP_EPOCHOffset = _STOP_EPOCH == null ? null
+        : fbBuilder.writeString(_STOP_EPOCH!);
+    final int? WINDOW_STARTOffset = _WINDOW_START == null ? null
+        : fbBuilder.writeString(_WINDOW_START!);
+    final int? WINDOW_STOPOffset = _WINDOW_STOP == null ? null
+        : fbBuilder.writeString(_WINDOW_STOP!);
+    final int? PROPAGATOR_MODULE_IDOffset = _PROPAGATOR_MODULE_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_MODULE_ID!);
+    final int? PINNED_ROWSOffset = _PINNED_ROWS == null ? null
+        : fbBuilder.writeList(_PINNED_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, SCENARIO_IDOffset);
     fbBuilder.addOffset(1, REFERENCESOffset);
     fbBuilder.addOffset(2, EVENTOffset);
@@ -1534,6 +1783,14 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(9, _ACTION?.value);
     fbBuilder.addOffset(10, VIEW_STATEOffset);
     fbBuilder.addOffset(11, ASSETS_CHANGEDOffset);
+    fbBuilder.addOffset(12, START_EPOCHOffset);
+    fbBuilder.addOffset(13, STOP_EPOCHOffset);
+    fbBuilder.addBool(14, _ANIMATING);
+    fbBuilder.addOffset(15, WINDOW_STARTOffset);
+    fbBuilder.addOffset(16, WINDOW_STOPOffset);
+    fbBuilder.addOffset(17, PROPAGATOR_MODULE_IDOffset);
+    fbBuilder.addOffset(18, PINNED_ROWSOffset);
+    fbBuilder.addOffset(19, SIGNATUREOffset);
     return fbBuilder.endTable();
   }
 

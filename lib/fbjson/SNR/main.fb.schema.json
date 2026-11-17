@@ -1143,7 +1143,8 @@
         "RINGED",
         "TEARDROP",
         "TOROIDAL",
-        "CARDIOID"
+        "CARDIOID",
+        "PHASED_ARRAY"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -1184,6 +1185,10 @@
         },
         "CARDIOID": {
           "value": 11
+        },
+        "PHASED_ARRAY": {
+          "value": 12,
+          "description": "An electronically steered array; its pattern is a $PAP synthesis."
         }
       }
     },
@@ -4550,6 +4555,10 @@
             },
             "CARDIOID": {
               "value": 11
+            },
+            "PHASED_ARRAY": {
+              "value": 12,
+              "description": "An electronically steered array; its pattern is a $PAP synthesis."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { EGPMember, EGPMemberT } from './EGPMember.js';
 import { EGPProvenance, EGPProvenanceT } from './EGPProvenance.js';
 import { EGPQuery, EGPQueryT } from './EGPQuery.js';
+import { EGPWalker, EGPWalkerT } from './EGPWalker.js';
 import { egpMembershipMode } from './egpMembershipMode.js';
 /**
  * Entity Group
@@ -70,6 +71,11 @@ export declare class EGP implements flatbuffers.IUnpackableObject<EGPT> {
      */
     DATASET_CID(): string | null;
     DATASET_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+     * GENERATED.
+     */
+    WALKER(obj?: EGPWalker): EGPWalker | null;
     static startEGP(builder: flatbuffers.Builder): void;
     static addGroupId(builder: flatbuffers.Builder, GROUP_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -88,6 +94,7 @@ export declare class EGP implements flatbuffers.IUnpackableObject<EGPT> {
     static createProvenanceVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startProvenanceVector(builder: flatbuffers.Builder, numElems: number): void;
     static addDatasetCid(builder: flatbuffers.Builder, DATASET_CIDOffset: flatbuffers.Offset): void;
+    static addWalker(builder: flatbuffers.Builder, WALKEROffset: flatbuffers.Offset): void;
     static endEGP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEGPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEGPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -106,7 +113,8 @@ export declare class EGPT implements flatbuffers.IGeneratedObject {
     UPDATED_AT: string | Uint8Array | null;
     PROVENANCE: (EGPProvenanceT)[];
     DATASET_CID: string | Uint8Array | null;
-    constructor(GROUP_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, TAGS?: (string)[], MEMBERSHIP_MODE?: egpMembershipMode, MEMBERS?: (EGPMemberT)[], QUERY?: EGPQueryT | null, CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, PROVENANCE?: (EGPProvenanceT)[], DATASET_CID?: string | Uint8Array | null);
+    WALKER: EGPWalkerT | null;
+    constructor(GROUP_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, TAGS?: (string)[], MEMBERSHIP_MODE?: egpMembershipMode, MEMBERS?: (EGPMemberT)[], QUERY?: EGPQueryT | null, CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, PROVENANCE?: (EGPProvenanceT)[], DATASET_CID?: string | Uint8Array | null, WALKER?: EGPWalkerT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EGP.d.ts.map

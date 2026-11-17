@@ -649,11 +649,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for snrPointingMode {}
 pub const ENUM_MIN_SNR_ANTENNA_PATTERN: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SNR_ANTENNA_PATTERN: i8 = 11;
+pub const ENUM_MAX_SNR_ANTENNA_PATTERN: i8 = 12;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SNR_ANTENNA_PATTERN: [snrAntennaPattern; 12] = [
+pub const ENUM_VALUES_SNR_ANTENNA_PATTERN: [snrAntennaPattern; 13] = [
     snrAntennaPattern::UNSPECIFIED,
     snrAntennaPattern::ISOTROPIC,
     snrAntennaPattern::HEMISPHERIC,
@@ -666,6 +666,7 @@ pub const ENUM_VALUES_SNR_ANTENNA_PATTERN: [snrAntennaPattern; 12] = [
     snrAntennaPattern::TEARDROP,
     snrAntennaPattern::TOROIDAL,
     snrAntennaPattern::CARDIOID,
+    snrAntennaPattern::PHASED_ARRAY,
 ];
 
 /// Radiation pattern of an RF antenna. Names follow OrbPro's antenna patterns.
@@ -688,9 +689,11 @@ impl snrAntennaPattern {
     pub const TEARDROP: Self = Self(9);
     pub const TOROIDAL: Self = Self(10);
     pub const CARDIOID: Self = Self(11);
+    /// An electronically steered array; its pattern is a $PAP synthesis.
+    pub const PHASED_ARRAY: Self = Self(12);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 11;
+    pub const ENUM_MAX: i8 = 12;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::ISOTROPIC,
@@ -704,6 +707,7 @@ impl snrAntennaPattern {
         Self::TEARDROP,
         Self::TOROIDAL,
         Self::CARDIOID,
+        Self::PHASED_ARRAY,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -721,6 +725,7 @@ impl snrAntennaPattern {
             Self::TEARDROP => Some("TEARDROP"),
             Self::TOROIDAL => Some("TOROIDAL"),
             Self::CARDIOID => Some("CARDIOID"),
+            Self::PHASED_ARRAY => Some("PHASED_ARRAY"),
             _ => None,
         }
     }

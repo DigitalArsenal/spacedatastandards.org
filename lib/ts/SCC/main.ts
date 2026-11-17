@@ -69,6 +69,7 @@ export * from './SCN.js';
 export * from './SCNAssetsChanged.js';
 export * from './SCNEvent.js';
 export * from './SCNExclusionZone.js';
+export * from './SCNPinnedRow.js';
 export * from './SCNPointOfInterest.js';
 export * from './SCNReference.js';
 export * from './SCNSunAdvantageTarget.js';
