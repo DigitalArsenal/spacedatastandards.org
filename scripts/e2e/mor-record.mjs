@@ -19,6 +19,7 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -28,11 +29,25 @@ import * as C from './lib/mor-convert.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const baseline = '1946b6f1b'; // 1.285.0
-const tmp = fs.mkdtempSync(path.join(root, '.mor-record-'));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mor-record-'));
+const cleanup = () => {
+  try {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  } catch {}
+};
+process.once('exit', cleanup);
 const run = (cmd, args, cwd = root) => execFileSync(cmd, args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const bundle = async (base, code, tag) => {
   const out = path.join(tmp, `${tag}-${code}.mjs`);
-  await build({ entryPoints: [path.join(base, `lib/ts/${code}/main.ts`)], bundle: true, platform: 'node', format: 'esm', outfile: out, logLevel: 'silent' });
+  await build({
+    entryPoints: [path.join(base, `lib/ts/${code}/main.ts`)],
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    outfile: out,
+    nodePaths: [path.join(root, 'node_modules')],
+    logLevel: 'silent',
+  });
   return import(pathToFileURL(out));
 };
 const finish = (value, id, prefixed = false) => { const b = new fb.Builder(4096); const off = value.pack(b); prefixed ? b.finishSizePrefixed(off, id) : b.finish(off, id); return b.asUint8Array(); };
@@ -309,5 +324,5 @@ try {
   console.log(`PASS f: AP record ${base} bytes; with covariance ${withCov}; one window +${withRows - base}; fallback set +${withFallback - base}`);
   console.log('PASS mor-record');
 } finally {
-  fs.rmSync(tmp, { recursive: true, force: true });
+  cleanup();
 }
