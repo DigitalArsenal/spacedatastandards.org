@@ -440,6 +440,7 @@ class MOR extends Table
     /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
     /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
     /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+    /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
     /**
      * @returnVectorOffset
      */

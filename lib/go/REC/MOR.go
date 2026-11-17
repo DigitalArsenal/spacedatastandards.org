@@ -919,6 +919,7 @@ func (rcv *MOR) CovCalibrationReference() []byte {
 /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
 /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
 /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
 func (rcv *MOR) WINDOWS(obj *MORWindow, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -953,6 +954,7 @@ func (rcv *MOR) WindowsLength() int {
 /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
 /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
 /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+/// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
 /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
 /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
 func (rcv *MOR) WINDOW_COEFF_HEADS(j int) float64 {

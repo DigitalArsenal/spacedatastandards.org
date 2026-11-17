@@ -534,7 +534,7 @@
               },
         "WINDOWS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/MORWindow"},
-                "description" : "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
+                "description" : "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
               },
         "WINDOW_COEFF_HEADS" : {
                 "type" : "array", "items" : {"type" : "number"},

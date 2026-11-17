@@ -9,7 +9,7 @@
 // identifier where the binding has one, and reads a string back. Java, Kotlin,
 // C#, PHP, Python and Go compile every standard (the umbrella $REC includes all
 // 292). Swift typechecks every standard; Dart analyzes every standard; C++
-// includes the umbrella header; Lobster compiles OMM, PCF, PIV, OEM and MOR with the
+// includes the umbrella header; Lobster compiles OMM, PCF, PIV, OEM, MOR and DRB with the
 // standards they include (KMF and REC use an encryption walk the Lobster
 // compiler does not finish, see docs/name-collisions.md).
 //
@@ -466,7 +466,7 @@ endif()
     }
     check(fs.existsSync(bin), "lobster binary was not built");
     const dir = work("lobster");
-    const closure = ["OMM", "PCF", "PIV", "OEM", "MOR"];
+    const closure = ["OMM", "PCF", "PIV", "OEM", "MOR", "DRB"];
     const imports = new Set(closure);
     for (const s of closure) for (const i of includes(s)) imports.add(i);
     fs.writeFileSync(`${dir}/main.lobster`, `import std
@@ -491,7 +491,7 @@ print "ok"
 `);
     const { out } = await run(bin, ["--import", `${src}/modules`, "--import", `${fb}/lobster`, `${dir}/main.lobster`], { cwd: dir, timeout: 300 });
     check(out.trim().endsWith("ok"), `lobster: ${out}`);
-    return `compiled ${imports.size} standards (OMM, PCF, PIV, OEM, MOR and their includes), OMM and PCF round trip`;
+    return `compiled ${imports.size} standards (OMM, PCF, PIV, OEM, MOR, DRB and their includes), OMM and PCF round trip`;
   },
 };
 

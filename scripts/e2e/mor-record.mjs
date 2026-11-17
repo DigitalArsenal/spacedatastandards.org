@@ -241,7 +241,17 @@ try {
   assert.equal(newDpm.ASSETS[0].COV_REALISM_MODELS[0].REALISM.MODEL_ID, sharedRealism.MODEL_ID);
   const newPlain = plain(newDpm); for (const a of newPlain.ASSETS) { delete a.RECORD_PROVENANCE; delete a.DERIVED_BUILD; delete a.COV_REALISM_MODELS; }
   assert.deepEqual(plain(OD.DPM.getRootAsDPM(new fb.ByteBuffer(dpmBytes)).unpack()), newPlain, 'e: 1.285.0 reads the new $DPM');
-  console.log('PASS e: 1.285.0 TypeScript reads the new $MPE and $DPM with every existing field unchanged');
+  // the build request and its outcomes ($DRB)
+  const R = await bundle(root, 'DRB', 'new');
+  const req = Object.assign(new R.DRBT(), { RECEIVER_ARTIFACT_SHA256: buildStatement.BUILDER_DIGEST, START_UNIX_US: EPOCH, WINDOW_COUNT: 2, POSITION_ONLY: true, WIDE_RECORDS: false });
+  req.OUTCOMES = [new R.DRBOutcomeT(1, R.drbRecordOutcome.UNSUPPORTED), new R.DRBOutcomeT(3, R.drbRecordOutcome.EXCLUDED)];
+  const reqBytes = finish(req, '$DRB');
+  assert.ok(R.DRB.bufferHasIdentifier(new fb.ByteBuffer(reqBytes)), 'e: $DRB carries its identifier');
+  const reqBack = R.DRB.getRootAsDRB(new fb.ByteBuffer(reqBytes)).unpack();
+  assert.deepEqual(plain(reqBack), plain(req), 'e: the request and its outcomes read back equal');
+  const flags = (reqBack.POSITION_ONLY ? 1 : 0) | (reqBack.WIDE_RECORDS ? 2 : 0);
+  assert.equal(flags, 1, 'e: the flags byte of the environment digest');
+  console.log('PASS e: 1.285.0 TypeScript reads the new $MPE and $DPM with every existing field unchanged; a $DRB request with outcomes reads back');
 
   // ---- f: sizes of the AP record -----------------------------------------------------------------------------------
   const size = (fn) => { const m = Object.assign(Object.create(Object.getPrototypeOf(ap)), ap); fn(m); return C.encode(fb, M, m).length; };

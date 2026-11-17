@@ -643,6 +643,7 @@ class MOR {
   ///  in time order, without overlap. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  ///  A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
   List<MORWindow>? get WINDOWS => const fb.ListReader<MORWindow>(MORWindow.reader).vTableGetNullable(_bc, _bcOffset, 82);
   ///  The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
   ///  (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).

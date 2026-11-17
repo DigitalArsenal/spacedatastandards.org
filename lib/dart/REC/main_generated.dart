@@ -66,6 +66,7 @@ import '../DFH/main_generated.dart';
 import '../DMG/main_generated.dart';
 import '../DOA/main_generated.dart';
 import '../DPM/main_generated.dart';
+import '../DRB/main_generated.dart';
 import '../DSS/main_generated.dart';
 import '../DTT/main_generated.dart';
 import '../EGP/main_generated.dart';
@@ -907,7 +908,8 @@ enum RecordTypeExtended {
   SWA(293),
   SWS(294),
   SSY(295),
-  MOR(296);
+  MOR(296),
+  DRB(297);
 
   final int value;
   const RecordTypeExtended(this.value);
@@ -956,6 +958,7 @@ enum RecordTypeExtended {
       case 294: return RecordTypeExtended.SWS;
       case 295: return RecordTypeExtended.SSY;
       case 296: return RecordTypeExtended.MOR;
+      case 297: return RecordTypeExtended.DRB;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -964,7 +967,7 @@ enum RecordTypeExtended {
       value == null ? null : RecordTypeExtended.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 296;
+  static const int maxValue = 297;
   static const fb.Reader<RecordTypeExtended> reader = _RecordTypeExtendedReader();
 }
 

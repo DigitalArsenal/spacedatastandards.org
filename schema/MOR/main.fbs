@@ -1,4 +1,4 @@
-// Hash: 3b656552894adcadd20e160bbf7b6de9356e8c55eea005efa98e7d2a7982615c
+// Hash: 47e5c2e4fe012fa9fb34ade7cad9a45f73c5c73f75365281adaf708db118d377
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -271,6 +271,7 @@ table MOR {
   /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
   WINDOWS: [MORWindow];
   /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
   /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).

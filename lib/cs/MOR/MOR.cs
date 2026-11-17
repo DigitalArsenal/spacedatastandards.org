@@ -143,6 +143,7 @@ public struct MOR : IFlatbufferObject
   /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
   public MORWindow? WINDOWS(int j) { int o = __p.__offset(82); return o != 0 ? (MORWindow?)(new MORWindow()).__assign(__p.__vector(o) + j * 24, __p.bb) : null; }
   public int WINDOWSLength { get { int o = __p.__offset(82); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position

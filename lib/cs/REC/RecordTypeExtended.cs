@@ -53,4 +53,5 @@ public enum RecordTypeExtended : ushort
   SWS = 294,
   SSY = 295,
   MOR = 296,
+  DRB = 297,
 };

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.286.0+1794879234439",
+  version: "1.286.0+1794880110617",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -3734,6 +3734,85 @@ file_identifier "$MDE";`,
         "./dist/MDE/MDE.cpp.tar.gz",
         "./dist/MDE/MDE.kt.tar.gz",
         "./dist/MDE/MDE.ts.tar.gz"
+      ]
+    },
+    DRB: {
+      IDL: `// Hash: 1d674a4d180475f5fbf34d52acdd0bc36f97f370e2928112db6c2456ea99ce6e
+// Version: 1.285.0
+// -----------------------------------END_HEADER
+// Derived Row Build (DRB)
+// Description
+// A request to build the derived polynomial rows (the preseed) of a stream of element-set records, and the
+// outcome of each record. The rows land in the records themselves ($MOR WINDOWS, $OCM DERIVED_EPHEMERIS); the
+// builder's statement lands once per asset in $DPM DPMAsset.DERIVED_BUILD.
+//
+// A builder takes three inputs on three ports: the records; this request; and the RECEIVER's configuration,
+// the exact $PCF the receiving module will load, passed untouched (absent when the receiver loads none). The
+// request is never inside those $PCF bytes: the environment digest hashes them exactly, followed by one flags
+// byte made from this request (bit 0 POSITION_ONLY, bit 1 WIDE_RECORDS). The builder returns every record, in
+// input order, with its rows or without, and this request again with OUTCOMES filled.
+
+/// Why a record carries no rows. A record with rows has no outcome entry; a window no record serves is
+/// stated inside the rows ($MOR morWindowStatus, $PPE ppeWindowStatus). Append new values only.
+enum drbRecordOutcome : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// The receiver serves this record without rows by its own rule (for example a record it never serves
+  /// from rows: several sets, another theory, a wide record without WIDE_RECORDS).
+  EXCLUDED = 1,
+  /// The theory refuses the record as a whole: no window can be made.
+  SOURCE_REFUSED = 2,
+  /// The record carries what rows cannot stand for: a forecast or a hand-over.
+  UNSUPPORTED = 3,
+  /// No rows were asked for this record.
+  NOT_REQUESTED = 4
+}
+
+/// The outcome of one input record that carries no rows.
+struct DRBOutcome {
+  /// Position of the record in the input stream, from 0.
+  RECORD_INDEX: uint32;
+  /// Why it carries no rows.
+  OUTCOME: drbRecordOutcome;
+}
+
+/// Derived Row Build.
+table DRB {
+  /// SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the
+  /// builder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use
+  /// the rows.
+  RECEIVER_ARTIFACT_SHA256: [ubyte];
+  /// Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR
+  /// EPOCH_UNIX_US).
+  START_UNIX_US: int64;
+  /// Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2.
+  WINDOW_COUNT: ubyte = 1;
+  /// Position series only, no velocity series (flags bit 0).
+  POSITION_ONLY: bool = false;
+  /// Rows also for the receiver's wide records (flags bit 1).
+  WIDE_RECORDS: bool = false;
+  /// In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in
+  /// the request a builder receives.
+  OUTCOMES: [DRBOutcome];
+}
+
+root_type DRB;
+file_identifier "$DRB";`,
+      files: [
+        "./dist/DRB/DRB.sw.tar.gz",
+        "./dist/DRB/DRB.py.tar.gz",
+        "./dist/DRB/DRB.lob.tar.gz",
+        "./dist/DRB/DRB.go.tar.gz",
+        "./dist/DRB/DRB.js.tar.gz",
+        "./dist/DRB/DRB.dart.tar.gz",
+        "./dist/DRB/DRB.cs.tar.gz",
+        "./dist/DRB/DRB.java.tar.gz",
+        "./dist/DRB/DRB.rs.tar.gz",
+        "./dist/DRB/DRB.php.tar.gz",
+        "./dist/DRB/DRB.json.tar.gz",
+        "./dist/DRB/DRB.cpp.tar.gz",
+        "./dist/DRB/DRB.kt.tar.gz",
+        "./dist/DRB/DRB.ts.tar.gz"
       ]
     },
     KMF: {
@@ -14520,7 +14599,7 @@ file_identifier "$SRG";`,
       ]
     },
     MOR: {
-      IDL: `// Hash: 3b656552894adcadd20e160bbf7b6de9356e8c55eea005efa98e7d2a7982615c
+      IDL: `// Hash: 47e5c2e4fe012fa9fb34ade7cad9a45f73c5c73f75365281adaf708db118d377
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -14793,6 +14872,7 @@ table MOR {
   /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
+  /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
   WINDOWS: [MORWindow];
   /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
   /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
@@ -15276,7 +15356,7 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 2cbcf1241ce82adef13092e87c0e3992d2c1481321cb4d380b05a9470c445ecc
+      IDL: `// Hash: 11a21ef8ba1b48adf5ae381f5e53b7099f8d3fb4fd8b88f49d47790435ee0130
 // Version: 1.44.90
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
@@ -15340,6 +15420,7 @@ include "../DFH/main.fbs";
 include "../DMG/main.fbs";
 include "../DOA/main.fbs";
 include "../DPM/main.fbs";
+include "../DRB/main.fbs";
 include "../DSS/main.fbs";
 include "../DTT/main.fbs";
 include "../EGP/main.fbs";
@@ -15706,7 +15787,8 @@ enum RecordTypeExtended : ushort {
   SWA = 293,
   SWS = 294,
   SSY = 295,
-  MOR = 296
+  MOR = 296,
+  DRB = 297
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -52254,6 +52336,82 @@ Decoding applies the inverses from the last back.`
         }
       },
       $ref: "#/definitions/MDE"
+    },
+    DRB: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        drbRecordOutcome: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "EXCLUDED",
+            "SOURCE_REFUSED",
+            "UNSUPPORTED",
+            "NOT_REQUESTED"
+          ]
+        },
+        DRBOutcome: {
+          type: "object",
+          description: "The outcome of one input record that carries no rows.",
+          properties: {
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Position of the record in the input stream, from 0."
+            },
+            OUTCOME: {
+              $ref: "#/definitions/drbRecordOutcome",
+              description: "Why it carries no rows."
+            }
+          },
+          additionalProperties: false
+        },
+        DRB: {
+          type: "object",
+          description: "Derived Row Build.",
+          properties: {
+            RECEIVER_ARTIFACT_SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the\nbuilder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use\nthe rows."
+            },
+            START_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR\nEPOCH_UNIX_US)."
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2."
+            },
+            POSITION_ONLY: {
+              type: "boolean",
+              description: "Position series only, no velocity series (flags bit 0)."
+            },
+            WIDE_RECORDS: {
+              type: "boolean",
+              description: "Rows also for the receiver's wide records (flags bit 1)."
+            },
+            OUTCOMES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/DRBOutcome"
+              },
+              description: "In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in\nthe request a builder receives."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/DRB"
     },
     KMF: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -146837,7 +146995,7 @@ format class are named by $NCD's container format.`
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
             },
             WINDOW_COEFF_HEADS: {
               type: "array",
@@ -165917,6 +166075,16 @@ stated.`
             "OTHER"
           ]
         },
+        drbRecordOutcome: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "EXCLUDED",
+            "SOURCE_REFUSED",
+            "UNSUPPORTED",
+            "NOT_REQUESTED"
+          ]
+        },
         dssSyncState: {
           type: "string",
           enum: [
@@ -171906,7 +172074,8 @@ stated.`
             "SWA",
             "SWS",
             "SSY",
-            "MOR"
+            "MOR",
+            "DRB"
           ]
         },
         ABA: {
@@ -197574,6 +197743,66 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           ],
           additionalProperties: false
         },
+        DRBOutcome: {
+          type: "object",
+          description: "The outcome of one input record that carries no rows.",
+          properties: {
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Position of the record in the input stream, from 0."
+            },
+            OUTCOME: {
+              $ref: "#/definitions/drbRecordOutcome",
+              description: "Why it carries no rows."
+            }
+          },
+          additionalProperties: false
+        },
+        DRB: {
+          type: "object",
+          description: "Derived Row Build.",
+          properties: {
+            RECEIVER_ARTIFACT_SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the\nbuilder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use\nthe rows."
+            },
+            START_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR\nEPOCH_UNIX_US)."
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2."
+            },
+            POSITION_ONLY: {
+              type: "boolean",
+              description: "Position series only, no velocity series (flags bit 0)."
+            },
+            WIDE_RECORDS: {
+              type: "boolean",
+              description: "Rows also for the receiver's wide records (flags bit 1)."
+            },
+            OUTCOMES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/DRBOutcome"
+              },
+              description: "In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in\nthe request a builder receives."
+            }
+          },
+          additionalProperties: false
+        },
         DSS: {
           type: "object",
           properties: {
@@ -218252,7 +218481,7 @@ provider's reviewed register). Never free text.`
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
             },
             WINDOW_COEFF_HEADS: {
               type: "array",
@@ -415047,6 +415276,117 @@ Decoding applies the inverses from the last back.`,
       $ref: "#/definitions/MDE",
       "x-flatbuffer-root-type": "MDE",
       "x-flatbuffer-file-identifier": "$MDE"
+    },
+    DRB: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        drbRecordOutcome: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "EXCLUDED",
+            "SOURCE_REFUSED",
+            "UNSUPPORTED",
+            "NOT_REQUESTED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            EXCLUDED: {
+              value: 1,
+              description: "The receiver serves this record without rows by its own rule (for example a record it never serves from rows: several sets, another theory, a wide record without WIDE_RECORDS)."
+            },
+            SOURCE_REFUSED: {
+              value: 2,
+              description: "The theory refuses the record as a whole: no window can be made."
+            },
+            UNSUPPORTED: {
+              value: 3,
+              description: "The record carries what rows cannot stand for: a forecast or a hand-over."
+            },
+            NOT_REQUESTED: {
+              value: 4,
+              description: "No rows were asked for this record."
+            }
+          }
+        },
+        DRBOutcome: {
+          type: "object",
+          description: "The outcome of one input record that carries no rows.",
+          properties: {
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Position of the record in the input stream, from 0."
+            },
+            OUTCOME: {
+              $ref: "#/definitions/drbRecordOutcome",
+              description: "Why it carries no rows."
+            }
+          },
+          additionalProperties: false
+        },
+        DRB: {
+          type: "object",
+          description: "Derived Row Build.",
+          properties: {
+            RECEIVER_ARTIFACT_SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the\nbuilder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use\nthe rows.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            START_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR\nEPOCH_UNIX_US).",
+              "x-flatbuffer-type": "int64"
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2.",
+              "x-flatbuffer-type": "ubyte",
+              "x-flatbuffer-default": "1"
+            },
+            POSITION_ONLY: {
+              type: "boolean",
+              description: "Position series only, no velocity series (flags bit 0).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            WIDE_RECORDS: {
+              type: "boolean",
+              description: "Rows also for the receiver's wide records (flags bit 1).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            OUTCOMES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/DRBOutcome"
+              },
+              description: "In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in\nthe request a builder receives.",
+              "x-flatbuffer-type": "[DRBOutcome]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/DRB",
+      "x-flatbuffer-root-type": "DRB",
+      "x-flatbuffer-file-identifier": "$DRB"
     },
     KMF: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -644564,7 +644904,7 @@ format class are named by $NCD's container format.`,
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.",
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
               "x-flatbuffer-type": "[MORWindow]"
             },
             WINDOW_COEFF_HEADS: {
@@ -693653,6 +693993,40 @@ stated.`,
             }
           }
         },
+        drbRecordOutcome: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "EXCLUDED",
+            "SOURCE_REFUSED",
+            "UNSUPPORTED",
+            "NOT_REQUESTED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            EXCLUDED: {
+              value: 1,
+              description: "The receiver serves this record without rows by its own rule (for example a record it never serves from rows: several sets, another theory, a wide record without WIDE_RECORDS)."
+            },
+            SOURCE_REFUSED: {
+              value: 2,
+              description: "The theory refuses the record as a whole: no window can be made."
+            },
+            UNSUPPORTED: {
+              value: 3,
+              description: "The record carries what rows cannot stand for: a forecast or a hand-over."
+            },
+            NOT_REQUESTED: {
+              value: 4,
+              description: "No rows were asked for this record."
+            }
+          }
+        },
         dssSyncState: {
           type: "string",
           enum: [
@@ -712122,7 +712496,8 @@ stated.`,
             "SWA",
             "SWS",
             "SSY",
-            "MOR"
+            "MOR",
+            "DRB"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -712252,6 +712627,9 @@ stated.`,
             },
             MOR: {
               value: 296
+            },
+            DRB: {
+              value: 297
             }
           }
         },
@@ -759388,6 +759766,75 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           ],
           additionalProperties: false
         },
+        DRBOutcome: {
+          type: "object",
+          description: "The outcome of one input record that carries no rows.",
+          properties: {
+            RECORD_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Position of the record in the input stream, from 0."
+            },
+            OUTCOME: {
+              $ref: "#/definitions/drbRecordOutcome",
+              description: "Why it carries no rows."
+            }
+          },
+          additionalProperties: false
+        },
+        DRB: {
+          type: "object",
+          description: "Derived Row Build.",
+          properties: {
+            RECEIVER_ARTIFACT_SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the exact artifact that will load the rows (32 bytes): the receiving module file, not the\nbuilder. It becomes DPMDerivedBuild.BUILDER_DIGEST; a receiver whose own digest differs must not use\nthe rows.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            START_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Start of the first window, microseconds since 1970-01-01T00:00:00 UTC on the UNIX scale ($MOR\nEPOCH_UNIX_US).",
+              "x-flatbuffer-type": "int64"
+            },
+            WINDOW_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Windows per record, consecutive from START_UNIX_US as the receiver lays its windows out; 1 or 2.",
+              "x-flatbuffer-type": "ubyte",
+              "x-flatbuffer-default": "1"
+            },
+            POSITION_ONLY: {
+              type: "boolean",
+              description: "Position series only, no velocity series (flags bit 0).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            WIDE_RECORDS: {
+              type: "boolean",
+              description: "Rows also for the receiver's wide records (flags bit 1).",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            OUTCOMES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/DRBOutcome"
+              },
+              description: "In the returned request: one entry per input record without rows, ascending RECORD_INDEX. Empty in\nthe request a builder receives.",
+              "x-flatbuffer-type": "[DRBOutcome]"
+            }
+          },
+          additionalProperties: false
+        },
         DSS: {
           type: "object",
           properties: {
@@ -789620,7 +790067,7 @@ provider's reviewed register). Never free text.`,
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.",
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
               "x-flatbuffer-type": "[MORWindow]"
             },
             WINDOW_COEFF_HEADS: {
@@ -837873,6 +838320,9 @@ balance service's own rate.`,
                 },
                 MOR: {
                   value: 296
+                },
+                DRB: {
+                  value: 297
                 }
               },
               "x-flatbuffer-default": "NONE"
