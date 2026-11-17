@@ -1114,7 +1114,7 @@ class RFL : flatbuffers.handle
         return timingStandard(flatbuffers.field_int8(buf_, pos_, 18, 11))
     /// Access state per sample.
     def ACCESS_STATES(i:int) -> rflAccessState:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 1)
+        return rflAccessState(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 1))
     def ACCESS_STATES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 20)
     /// Slant range, metres.
@@ -1310,7 +1310,7 @@ class RFL : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 92)
     /// The single condition that bound the link at each sample.
     def LIMITING_CONSTRAINTS(i:int) -> rflConstraint:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 94) + i * 1)
+        return rflConstraint(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 94) + i * 1))
     def LIMITING_CONSTRAINTS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 94)
     /// Verbatim description required when a LIMITING_CONSTRAINTS entry is OTHER.
@@ -1348,7 +1348,7 @@ class RFL : flatbuffers.handle
     def SELECTED_MODCOD_INDEX_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 108)
     def SELECTED_MODCOD_VALID(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 110) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 110) + i * 1))
     def SELECTED_MODCOD_VALID_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 110)
     /// Spectral efficiency delivered by the selected entry, bit/s/Hz.

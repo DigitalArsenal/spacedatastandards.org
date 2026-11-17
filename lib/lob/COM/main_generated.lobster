@@ -110,7 +110,7 @@ class COM : flatbuffers.handle
     def CONNECTED_NODES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 26)
     def ACTIVE_LINKS(i:int) -> DataLinkType:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 1)
+        return DataLinkType(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 1))
     def ACTIVE_LINKS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 28)
     def LAST_UPDATE_MS() -> int:

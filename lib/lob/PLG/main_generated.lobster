@@ -277,7 +277,7 @@ class PLGAcceptedTypeSet : flatbuffers.handle
     /// Wire formats this set accepts. If ALIGNED_BINARY is present,
     /// FLATBUFFER MUST also be present for the same schemas.
     def ALLOWED_WIRE_FORMATS(i:int) -> payloadWireFormat:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 1)
+        return payloadWireFormat(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 1))
     def ALLOWED_WIRE_FORMATS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
     /// Human-readable explanation of the accepted schema family.
@@ -1140,7 +1140,7 @@ class PLG : flatbuffers.handle
     /// Canonical invoke surfaces this artifact exposes. A single plugin
     /// MAY list both DIRECT and COMMAND when it supports both.
     def INVOKE_SURFACES(i:int) -> invokeSurfaceKind:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 1)
+        return invokeSurfaceKind(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 90) + i * 1))
     def INVOKE_SURFACES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 90)
     /// Rich per-method invoke manifests (port shape, drain semantics,
@@ -1243,7 +1243,7 @@ class PLG : flatbuffers.handle
     /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
     /// a set PRIMARY_CATEGORY means the module belongs to that one category.
     def CATEGORIES(i:int) -> capabilityClass:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 118) + i * 1)
+        return capabilityClass(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 118) + i * 1))
     def CATEGORIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 118)
 

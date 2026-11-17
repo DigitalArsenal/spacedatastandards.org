@@ -523,7 +523,7 @@ class PRWBatchResponse : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Per-entity status flags (same cardinality as COUNT).
     def FLAGS(i:int) -> propagatorStateFlags:
-        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 4)
+        return propagatorStateFlags(read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 4))
     def FLAGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 12)
     /// Error code (0 == OK).
@@ -1096,7 +1096,7 @@ class PRWExecutionRequest : flatbuffers.handle
     /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
     /// 10x10). Each must be active in FORCES. Empty means the state alone.
     def DYNAMIC_PARAMETERS(i:int) -> prwDynamicParameter:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1)
+        return prwDynamicParameter(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1))
     def DYNAMIC_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
     /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
@@ -1376,7 +1376,7 @@ class PRWExecutionResult : flatbuffers.handle
         return prwDensityTreatment(flatbuffers.field_uint8(buf_, pos_, 14, 0))
     /// The parameters the samples' STM and COVARIANCE carry after the state.
     def DYNAMIC_PARAMETERS(i:int) -> prwDynamicParameter:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
+        return prwDynamicParameter(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1))
     def DYNAMIC_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// The located events with ACTION RECORD or STOP, in time order of propagation.

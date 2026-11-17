@@ -2610,7 +2610,7 @@ class OCMInspectionGeometry : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 8)
     /// True when the chaser-target segment clears a sphere of 6378.137 km.
     def LINE_OF_SIGHT(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1))
     def LINE_OF_SIGHT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 10)
     /// TARGET_SUNLIT times LINE_OF_SIGHT.
@@ -2644,11 +2644,11 @@ class OCMInspectionGeometry : flatbuffers.handle
     /// the azimuth beamwidth (0.886 wavelength / aperture length, -3 dB, uniform
     /// aperture) of the broadside plane. Empty without RADAR.
     def IN_SAR_RIGHT(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1))
     def IN_SAR_RIGHT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
     def IN_SAR_LEFT(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 1))
     def IN_SAR_LEFT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 24)
     /// The radar. Absent when no radar was given.
@@ -3633,7 +3633,7 @@ class OCM : flatbuffers.handle
     /// The covariance rows after the state block, typed, in the order of COV_PARAMETERS:
     /// every reader keys on these, never on the COV_PARAMETERS strings.
     def COV_PARAMETER_KINDS(i:int) -> prwDynamicParameter:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 74) + i * 1)
+        return prwDynamicParameter(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 74) + i * 1))
     def COV_PARAMETER_KINDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 74)
     /// Basis of the trajectory STATE_DATA states, the first block's TRAJ_BASIS

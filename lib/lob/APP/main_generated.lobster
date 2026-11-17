@@ -563,7 +563,7 @@ class APP : flatbuffers.handle
     /// per-category counting. An app MAY carry several. If nonempty it MUST
     /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
     def CATEGORIES(i:int) -> capabilityClass:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 1)
+        return capabilityClass(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 1))
     def CATEGORIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 30)
 

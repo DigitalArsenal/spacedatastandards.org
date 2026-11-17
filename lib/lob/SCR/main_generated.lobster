@@ -223,7 +223,7 @@ class SCRRoles : flatbuffers.handle
     /// One role per object, in the screen's index order. Absent roles mean
     /// every object is a primary (all against all).
     def ROLES(i:int) -> scrScreeningRole:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1)
+        return scrScreeningRole(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1))
     def ROLES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 4)
 

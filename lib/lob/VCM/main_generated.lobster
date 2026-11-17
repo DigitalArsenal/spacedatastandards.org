@@ -123,7 +123,7 @@ class propagatorConfig : flatbuffers.handle
     def TIME_STEP() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
     def ZONAL_HARMONIC_TERMS(i:int) -> zonalHarmonic:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
+        return zonalHarmonic(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1))
     def ZONAL_HARMONIC_TERMS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
 

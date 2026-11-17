@@ -596,7 +596,7 @@ class PPE : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 38)
     /// Why each unserved window is not served, in the order of UNSERVED_MID_SECONDS.
     def UNSERVED_STATUS(i:int) -> ppeWindowStatus:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1)
+        return ppeWindowStatus(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1))
     def UNSERVED_STATUS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 40)
 

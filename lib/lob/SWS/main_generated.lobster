@@ -157,7 +157,7 @@ class SWS : flatbuffers.handle
         return swsValueStatus(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Per-sample status, index-aligned; empty = STATUS for all.
     def SAMPLE_STATUS(i:int) -> swsValueStatus:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
+        return swsValueStatus(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1))
     def SAMPLE_STATUS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
     def LOCATION() -> swsLocation:
@@ -222,7 +222,7 @@ class SWS : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 48)
     /// True where the sample's platform was the source's operational one.
     def ACTIVE(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 50) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 50) + i * 1))
     def ACTIVE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 50)
     /// Source samples (or stations, for an index) behind each value.

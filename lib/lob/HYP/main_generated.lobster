@@ -70,7 +70,7 @@ class HYP : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 14)
     /// Matrix data as a boolean array in row major format; if overflow, adds additional rows
     def MATRIX(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1))
     def MATRIX_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// Scores for objects

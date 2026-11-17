@@ -2146,7 +2146,7 @@ class mplRendezvousSolution : flatbuffers.handle
     def SAMPLE_TIME_S_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 38)
     def SAMPLE_PHASE(i:int) -> mplRendezvousPhase:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1)
+        return mplRendezvousPhase(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 1))
     def SAMPLE_PHASE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 40)
     /// Actual and reference relative position (km) and velocity (km/s), 3
