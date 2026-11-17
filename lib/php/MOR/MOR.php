@@ -357,10 +357,10 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-    /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-    /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-    /// then those parameters in ascending ordinal. Absent: no covariance.
+    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+    /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+    /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+    /// ascending ordinal. Absent: no covariance.
     /**
      * @param int offset
      * @return double
@@ -388,8 +388,8 @@ class MOR extends Table
         return $o != 0 ? $obj->init($o + $this->bb_pos, $this->bb) : 0;
     }
 
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-    /// covariance as its $OCM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// any producer text: a record read alone flies the same covariance as its $OCM.
     /**
      * @return byte
      */
@@ -400,7 +400,8 @@ class MOR extends Table
     }
 
     /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+    /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     /**
      * @return ushort
      */
@@ -437,7 +438,7 @@ class MOR extends Table
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
     /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
     /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -516,12 +517,22 @@ class MOR extends Table
 
     /// The object's own element set for times beyond what this record serves (a reader's fallback
     /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-    /// object is this record's.
+    /// object is this record's. No TARGETER.
     public function getFALLBACK()
     {
         $obj = new MPE();
         $o = $this->__offset(90);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    /**
+     * @return bool
+     */
+    public function getROWS_ONLY()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
     /**
@@ -530,16 +541,16 @@ class MOR extends Table
      */
     public static function startMOR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(44);
+        $builder->StartObject(45);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MOR
      */
-    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $OBJECT_NAME, $MESSAGE_STATUS, $EPOCH_UNIX_US, $MEAN_ELEMENT_THEORY, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ECOM2_Y0, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_REALISM, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $FALLBACK)
+    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $OBJECT_NAME, $MESSAGE_STATUS, $EPOCH_UNIX_US, $MEAN_ELEMENT_THEORY, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ECOM2_Y0, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_REALISM, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $FALLBACK, $ROWS_ONLY)
     {
-        $builder->startObject(44);
+        $builder->startObject(45);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addINTERNATIONAL_DESIGNATOR($builder, $INTERNATIONAL_DESIGNATOR);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -584,6 +595,7 @@ class MOR extends Table
         self::addWINDOW_COEFF_TAILS($builder, $WINDOW_COEFF_TAILS);
         self::addWINDOW_RECORD_CHECK($builder, $WINDOW_RECORD_CHECK);
         self::addFALLBACK($builder, $FALLBACK);
+        self::addROWS_ONLY($builder, $ROWS_ONLY);
         $o = $builder->endObject();
         return $o;
     }
@@ -1122,6 +1134,16 @@ class MOR extends Table
     public static function addFALLBACK(FlatBufferBuilder $builder, $FALLBACK)
     {
         $builder->addOffsetX(43, $FALLBACK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addROWS_ONLY(FlatBufferBuilder $builder, $ROWS_ONLY)
+    {
+        $builder->addBoolX(44, $ROWS_ONLY, false);
     }
 
     /**

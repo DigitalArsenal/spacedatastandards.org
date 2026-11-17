@@ -290,10 +290,10 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-    # among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-    # OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-    # then those parameters in ascending ordinal. Absent: no covariance.
+    # The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+    # DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+    # position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+    # ascending ordinal. Absent: no covariance.
     # MOR
     def COVARIANCE_DATA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -333,8 +333,8 @@ class MOR(object):
             return obj
         return None
 
-    # Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-    # covariance as its $OCM.
+    # Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    # any producer text: a record read alone flies the same covariance as its $OCM.
     # MOR
     def COV_FLOOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
@@ -343,7 +343,8 @@ class MOR(object):
         return 0
 
     # The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-    # the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    # the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+    # ID the asset does not list leaves the figures unresolved, and a reader says so.
     # MOR
     def COV_REALISM_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
@@ -381,7 +382,7 @@ class MOR(object):
         return None
 
     # Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    # in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    # in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
     # ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
     # reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     # A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -479,7 +480,7 @@ class MOR(object):
 
     # The object's own element set for times beyond what this record serves (a reader's fallback
     # propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-    # object is this record's.
+    # object is this record's. No TARGETER.
     # MOR
     def FALLBACK(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
@@ -491,8 +492,16 @@ class MOR(object):
             return obj
         return None
 
+    # This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    # MOR
+    def ROWS_ONLY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def MORStart(builder):
-    builder.StartObject(44)
+    builder.StartObject(45)
 
 def Start(builder):
     MORStart(builder)
@@ -825,6 +834,12 @@ def MORAddFALLBACK(builder, FALLBACK):
 def AddFALLBACK(builder, FALLBACK):
     MORAddFALLBACK(builder, FALLBACK)
 
+def MORAddROWS_ONLY(builder, ROWS_ONLY):
+    builder.PrependBoolSlot(44, ROWS_ONLY, 0)
+
+def AddROWS_ONLY(builder, ROWS_ONLY):
+    MORAddROWS_ONLY(builder, ROWS_ONLY)
+
 def MOREnd(builder):
     return builder.EndObject()
 
@@ -889,6 +904,7 @@ class MORT(object):
         WINDOW_COEFF_TAILS = None,
         WINDOW_RECORD_CHECK = 0,
         FALLBACK = None,
+        ROWS_ONLY = False,
     ):
         self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
         self.INTERNATIONAL_DESIGNATOR = INTERNATIONAL_DESIGNATOR  # type: Optional[str]
@@ -934,6 +950,7 @@ class MORT(object):
         self.WINDOW_COEFF_TAILS = WINDOW_COEFF_TAILS  # type: Optional[List[float]]
         self.WINDOW_RECORD_CHECK = WINDOW_RECORD_CHECK  # type: int
         self.FALLBACK = FALLBACK  # type: Optional[MPE.MPET]
+        self.ROWS_ONLY = ROWS_ONLY  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1028,6 +1045,7 @@ class MORT(object):
         self.WINDOW_RECORD_CHECK = MOR.WINDOW_RECORD_CHECK()
         if MOR.FALLBACK() is not None:
             self.FALLBACK = MPE.MPET.InitFromObj(MOR.FALLBACK())
+        self.ROWS_ONLY = MOR.ROWS_ONLY()
 
     # MORT
     def Pack(self, builder):
@@ -1129,5 +1147,6 @@ class MORT(object):
         MORAddWINDOW_RECORD_CHECK(builder, self.WINDOW_RECORD_CHECK)
         if self.FALLBACK is not None:
             MORAddFALLBACK(builder, FALLBACK)
+        MORAddROWS_ONLY(builder, self.ROWS_ONLY)
         MOR = MOREnd(builder)
         return MOR

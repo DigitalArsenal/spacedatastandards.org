@@ -83,7 +83,39 @@ function frame(O, ofEpoch) {
 const gravityText = (m) => GRAVITY_TEXT[m.GRAVITY_FIELD] ?? (m.MEAN_ELEMENT_THEORY === THEORY.SGP4 ? 'WGS-72' : 'EGM-96');
 
 // ---- expansion ---------------------------------------------------------------------------------------------------
+/// What a reader refuses in a record (schema/MOR/main.fbs "Validity"), and a ROWS_ONLY record's own rules.
+export function invalid(m) {
+  const out = [];
+  if (m.COV_REALISM && m.COV_REALISM_ID > 0) out.push('COV_REALISM and COV_REALISM_ID both stated');
+  const w = m.WINDOWS ?? [];
+  for (let i = 0; i < w.length; i++) {
+    if (!(w[i].EPOCH_HALF_SPAN > 0)) out.push(`WINDOWS[${i}] half-span not above 0`);
+    if (i > 0 && !(w[i - 1].EPOCH_MID_SECONDS + w[i - 1].EPOCH_HALF_SPAN <= w[i].EPOCH_MID_SECONDS - w[i].EPOCH_HALF_SPAN)) out.push(`WINDOWS[${i}] out of order or overlapping`);
+  }
+  if (m.FALLBACK && (m.FALLBACK.ENTITY_ID != null || m.FALLBACK.TARGETER != null)) out.push('FALLBACK states an ENTITY_ID or a TARGETER');
+  if (m.ROWS_ONLY) {
+    if (w.length === 0 || BigInt(m.WINDOW_RECORD_CHECK ?? 0) === 0n) out.push('ROWS_ONLY without WINDOWS or WINDOW_RECORD_CHECK');
+    if (![THEORY.SGP4, THEORY.SGP4XP, THEORY.AP].includes(m.MEAN_ELEMENT_THEORY)) out.push('ROWS_ONLY without a theory');
+    const keep = new Set(['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US', 'WINDOWS', 'WINDOW_COEFF_HEADS', 'WINDOW_COEFF_TAILS', 'WINDOW_RECORD_CHECK', 'ROWS_ONLY']);
+    const fresh = new m.constructor();
+    for (const k of Object.keys(fresh)) if (!keep.has(k) && !same(m[k], fresh[k])) out.push(`ROWS_ONLY states ${k}`);
+  }
+  return out;
+}
+/// A ROWS_ONLY record carrying a set's new rows: its identity, theory and epoch, and nothing else of it.
+export function rowsOnly(m, M, windows, heads, tails, check) {
+  const r = new M.MORT();
+  for (const k of ['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US']) r[k] = m[k];
+  Object.assign(r, { WINDOWS: windows, WINDOW_COEFF_HEADS: heads, WINDOW_COEFF_TAILS: tails, WINDOW_RECORD_CHECK: check, ROWS_ONLY: true });
+  return r;
+}
 export function expand(m, asset, O) {
+  const refused = invalid(m);
+  if (m.ROWS_ONLY) refused.push('ROWS_ONLY has no expansion');
+  // COV_FLOOR governs; an $OCM can state the floor only through PRODUCER, so a contradicting asset text is refused
+  if ((m.COVARIANCE_DATA ?? []).length > 0 && asset?.provenance && floorOf(asset.provenance.PRODUCER) !== m.COV_FLOOR) refused.push('COV_FLOOR differs from the asset PRODUCER');
+  if (refused.length > 0) return { ocm: null, fallback: null, refused, unresolved: [] };
+  const unresolved = [];
   const sgp4 = m.MEAN_ELEMENT_THEORY === THEORY.SGP4, ofEpoch = ofEpochFrame(m), text = epochText(m.EPOCH_UNIX_US);
   const o = new O.OCMT();
   o.HEADER = new O.HeaderT();
@@ -150,6 +182,7 @@ export function expand(m, asset, O) {
     else if (m.COV_REALISM_ID > 0) {
       const model = (asset?.realismModels ?? []).find((x) => x.ID === m.COV_REALISM_ID);
       if (model) o.COV_REALISM = [copyInto(new O.CVRT(), model.REALISM)];
+      else unresolved.push(`COV_REALISM_ID ${m.COV_REALISM_ID}`);
     }
   }
   o.COV_CALIBRATION = m.COV_CALIBRATION;
@@ -198,8 +231,8 @@ export function expand(m, asset, O) {
     }
   }
   let fallback = null;
-  if (m.FALLBACK) { fallback = clone(m.FALLBACK); fallback.ENTITY_ID = m.NORAD_CAT_ID > 0 ? String(m.NORAD_CAT_ID) : null; }
-  return { ocm: o, fallback };
+  if (m.FALLBACK) { fallback = clone(m.FALLBACK); fallback.ENTITY_ID = m.NORAD_CAT_ID > 0 ? String(m.NORAD_CAT_ID) : (m.INTERNATIONAL_DESIGNATOR ?? null); }
+  return { ocm: o, fallback, refused: [], unresolved };
 }
 
 // ---- reduction ---------------------------------------------------------------------------------------------------
@@ -287,23 +320,25 @@ export function reduce(source, asset, O, M) {
   m.COV_CALIBRATION_REFERENCE = o.COV_CALIBRATION_REFERENCE ?? null;
   const d = o.DERIVED_EPHEMERIS;
   if (d) {
-    const windows = [], heads = [], tails = [];
+    const entries = []; // each window with its own coefficient runs, sorted together below
     for (const r of d.POSITION_RECORDS) {
       const hp = r.POS_COEFF_HEAD_COUNT, hv = r.VEL_COEFF_HEAD_COUNT;
       const pos = [r.POS_COEFF_X, r.POS_COEFF_Y, r.POS_COEFF_Z], vel = [r.VEL_COEFF_X, r.VEL_COEFF_Y, r.VEL_COEFF_Z];
       const np = minimal(pos, hp), nv = vel[0].length > 0 ? minimal(vel, hv) : 0;
       if (hp > np || hv > Math.max(nv, 0) || hp > 255 || np > 255) { problems.push('DERIVED_EPHEMERIS head counts'); continue; }
       const w = new M.MORWindowT(r.EPOCH_MID_SECONDS, r.EPOCH_HALF_SPAN, 0, np, hp, nv, nv > 0 ? hv : 0);
-      windows.push(w);
+      const heads = [], tails = [];
+      entries.push({ w, heads, tails });
       const runs = [[pos, np, hp], ...(nv > 0 ? [[vel, nv, hv]] : [])];
       for (const [axes, n, head] of runs) {
         for (const a of axes) heads.push(...a.slice(0, head));
         for (const a of axes) for (const v of a.slice(head, n)) { if (!Object.is(Math.fround(v), v)) problems.push('DERIVED_EPHEMERIS tail not binary32'); tails.push(v); }
       }
     }
-    d.UNSERVED_MID_SECONDS.forEach((mid, i) => windows.push(new M.MORWindowT(mid, d.UNSERVED_HALF_SPAN[i], d.UNSERVED_STATUS[i] ?? 0, 0, 0, 0, 0)));
+    d.UNSERVED_MID_SECONDS.forEach((mid, i) => entries.push({ w: new M.MORWindowT(mid, d.UNSERVED_HALF_SPAN[i], d.UNSERVED_STATUS[i] ?? 0, 0, 0, 0, 0), heads: [], tails: [] }));
     if (d.UNSERVED_STATUS.some((s) => s === 0)) problems.push('DERIVED_EPHEMERIS unserved status UNSPECIFIED');
-    windows.sort((a, b) => a.EPOCH_MID_SECONDS - b.EPOCH_MID_SECONDS);
+    entries.sort((a, b) => a.w.EPOCH_MID_SECONDS - b.w.EPOCH_MID_SECONDS);
+    const windows = entries.map((e) => e.w), heads = entries.flatMap((e) => e.heads), tails = entries.flatMap((e) => e.tails);
     m.WINDOWS = windows; m.WINDOW_COEFF_HEADS = heads; m.WINDOW_COEFF_TAILS = tails;
     if (windows.length > 0) {
       if ((d.BUILD?.RECORD_DIGEST?.length ?? 0) < 8) problems.push('DERIVED_EPHEMERIS.BUILD.RECORD_DIGEST');
@@ -312,7 +347,8 @@ export function reduce(source, asset, O, M) {
   }
   if (problems.length > 0) return { mor: null, dropped, problems };
   // Everything else must be what the expansion writes: expand the candidate and compare field by field.
-  const { ocm } = expand(m, { ...asset, recordDigest: () => d?.BUILD?.RECORD_DIGEST ?? [] }, O);
+  const { ocm, refused } = expand(m, { ...asset, recordDigest: () => d?.BUILD?.RECORD_DIGEST ?? [] }, O);
+  if (!ocm) return { mor: null, dropped, problems: refused };
   diff(ocm, o, 'OCM', problems);
   return problems.length > 0 ? { mor: null, dropped, problems } : { mor: m, dropped, problems };
 }
@@ -390,6 +426,7 @@ export function encode(fb, M, m) {
   M.MOR.addSolarRadPressure(b, m.SOLAR_RAD_PRESSURE);
   M.MOR.addCovCalibration(b, m.COV_CALIBRATION);
   M.MOR.addCovFloor(b, m.COV_FLOOR);
+  M.MOR.addRowsOnly(b, !!m.ROWS_ONLY);
   M.MOR.finishSizePrefixedMORBuffer(b, M.MOR.endMOR(b));
   return b.asUint8Array();
 }

@@ -240,7 +240,9 @@ class DPMAsset : Table() {
     /**
      * The builder of the derived polynomial rows the asset's records carry
      * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-     * carry no derived rows, or a reader must ignore them.
+     * carry no derived rows, or a reader must ignore them. It holds for this
+     * asset only: a reader sets it aside before reading another asset, and
+     * judges compatibility by every field, never by a version string alone.
      */
     val derivedBuild : DPMDerivedBuild? get() = derivedBuild(DPMDerivedBuild())
     fun derivedBuild(obj: DPMDerivedBuild) : DPMDerivedBuild? {
@@ -253,7 +255,9 @@ class DPMAsset : Table() {
     }
     /**
      * The covariance realism models the asset's records name by ID ($MOR
-     * COV_REALISM_ID), each stated once with its population figures.
+     * COV_REALISM_ID), each stated once with its population figures. IDs are
+     * 1 or more and unique within the asset; a reader refuses a list that
+     * repeats one.
      */
     fun covRealismModels(j: Int) : DPMRealismModel? = covRealismModels(DPMRealismModel(), j)
     fun covRealismModels(obj: DPMRealismModel, j: Int) : DPMRealismModel? {

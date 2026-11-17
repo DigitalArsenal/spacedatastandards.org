@@ -6,7 +6,8 @@
 //      with the generated bindings and read back equal; each expands to one $OCM (written, read back) that reduces
 //      to the same record; every fixed text of the expansion is the one schema/MOR/main.fbs states; read without
 //      its asset a record keeps its covariance and the floor COV_FLOOR names, and no rows; rows whose
-//      WINDOW_RECORD_CHECK does not match the elements are void;
+//      WINDOW_RECORD_CHECK does not match the elements are void; a ROWS_ONLY record reads back and has no expansion;
+//      COV_FLOOR wins over a contradicting producer; the validity rules are enforced;
 //   b. an $OCM carrying a field the record cannot say is not reducible, by name, for every class the schema lists;
 //      the descriptive fields the schema lists are dropped and reported;
 //   c. the epoch converts both ways without loss, and refuses a leap second and a seventh fraction digit;
@@ -158,6 +159,33 @@ try {
   const rewritten = Object.assign(Object.create(Object.getPrototypeOf(ap)), ap, { MEAN_MOTION: ap.MEAN_MOTION + 1e-9 });
   assert.equal(C.expand(rewritten, asset, O).ocm.DERIVED_EPHEMERIS, null, 'D: a mismatched check voids the rows');
   assert.notEqual(C.expand(ap, asset, O).ocm.DERIVED_EPHEMERIS, null, 'D: a matching check keeps them');
+  // validity and precedence (schema/MOR/main.fbs)
+  const variant = (patch) => Object.assign(Object.create(Object.getPrototypeOf(ap)), ap, patch);
+  const otherFloor = { ...asset, provenance: Object.assign(new O.PVNT(), { PRODUCER: 'com.example.fitter 1.0.0' }) };
+  assert.deepEqual(C.expand(ap, otherFloor, O).refused, ['COV_FLOOR differs from the asset PRODUCER'], 'a: COV_FLOOR governs; the expansion never restates another floor');
+  assert.deepEqual(C.expand(variant({ COV_REALISM_ID: 7 }), asset, O).unresolved, ['COV_REALISM_ID 7'], 'a: an unknown model ID is reported unresolved');
+  assert.ok(C.expand(variant({ COV_REALISM: Object.assign(new M.CVRT(), { MODEL_ID: 'x' }) }), asset, O).refused.length > 0, 'a: never both realism forms');
+  assert.ok(C.expand(variant({ WINDOWS: [ap.WINDOWS[1], ap.WINDOWS[0]] }), asset, O).refused.length > 0, 'a: windows in time order');
+  assert.ok(C.expand(variant({ WINDOWS: [ap.WINDOWS[0], new M.MORWindowT(2000, 1440, 1, 0, 0, 0, 0)] }), asset, O).refused.length > 0, 'a: windows do not overlap');
+  assert.ok(C.expand(variant({ FALLBACK: Object.assign(Object.create(Object.getPrototypeOf(ap.FALLBACK)), ap.FALLBACK, { ENTITY_ID: '1' }) }), asset, O).refused.length > 0, 'a: the fallback has no ENTITY_ID');
+  // two served windows: reduction keeps each window with its own coefficients, and refuses served records out of order
+  const two = variant({ WINDOWS: [ap.WINDOWS[0], new M.MORWindowT(4320, 1440, 0, 6, 4, 5, 3)], WINDOW_COEFF_HEADS: [...ap.WINDOW_COEFF_HEADS, ...ap.WINDOW_COEFF_HEADS.map((v) => v * 2)], WINDOW_COEFF_TAILS: [...ap.WINDOW_COEFF_TAILS, ...ap.WINDOW_COEFF_TAILS.map((v) => f32(v * 2))] });
+  const twoOcm = O.OCM.getRootAsOCM(new fb.ByteBuffer(finish(C.expand(two, asset, O).ocm, '$OCM'))).unpack();
+  const twoBack = C.reduce(twoOcm, asset, O, M);
+  const dTwo = []; C.diff(twoBack.mor?.WINDOW_COEFF_HEADS, two.WINDOW_COEFF_HEADS, 'heads', dTwo);
+  assert.deepEqual(dTwo, [], 'a: two windows reduce with their own coefficients');
+  twoOcm.DERIVED_EPHEMERIS.POSITION_RECORDS.reverse();
+  assert.equal(C.reduce(twoOcm, asset, O, M).mor, null, 'a: served records out of time order are not reducible');
+  // rows only
+  const update = C.rowsOnly(ap, M, ap.WINDOWS, ap.WINDOW_COEFF_HEADS, ap.WINDOW_COEFF_TAILS, ap.WINDOW_RECORD_CHECK);
+  const updateBytes = C.encode(fb, M, update);
+  const updateBack = M.MOR.getSizePrefixedRootAsMOR(new fb.ByteBuffer(updateBytes)).unpack();
+  const dU = []; C.diff(updateBack, update, 'rows-only', dU);
+  assert.deepEqual(dU, [], 'a: a rows-only record reads back equal');
+  assert.deepEqual(C.invalid(updateBack), [], 'a: a rows-only record is valid');
+  assert.ok(C.expand(updateBack, asset, O).refused.includes('ROWS_ONLY has no expansion'), 'a: a rows-only record has no expansion');
+  assert.ok(C.invalid(Object.assign(updateBack, { MEAN_MOTION: 15 })).includes('ROWS_ONLY states MEAN_MOTION'), 'a: a rows-only record carries no elements');
+  console.log(`PASS a: rows-only update ${updateBytes.length} bytes, written, read back, refused by the expansion; validity and floor precedence enforced`);
   console.log('PASS a: four records written, read, expanded to $OCM and reduced back unchanged; fixed texts as stated');
 
   // ---- b: not reducible, by name; descriptive fields dropped ----------------------------------------------------

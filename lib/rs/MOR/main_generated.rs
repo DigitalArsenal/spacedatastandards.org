@@ -632,7 +632,8 @@ impl<'a> ::flatbuffers::Verifiable for morWindowStatus {
 impl ::flatbuffers::SimpleToVerifyInSlice for morWindowStatus {}
 
 /// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-/// names, units and meanings, all thirteen always present.
+/// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+/// appended field of MOR, never as a change to this struct.
 // struct MORCovariancePropagation, aligned to 8
 #[repr(transparent)]
 #[derive(Clone, Copy, PartialEq)]
@@ -1613,6 +1614,7 @@ impl<'a> MOR<'a> {
     pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 86;
     pub const VT_WINDOW_RECORD_CHECK: ::flatbuffers::VOffsetT = 88;
     pub const VT_FALLBACK: ::flatbuffers::VOffsetT = 90;
+    pub const VT_ROWS_ONLY: ::flatbuffers::VOffsetT = 92;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1660,6 +1662,7 @@ impl<'a> MOR<'a> {
         if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         builder.add_COV_REALISM_ID(args.COV_REALISM_ID);
+        builder.add_ROWS_ONLY(args.ROWS_ONLY);
         builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
         builder.add_COV_FLOOR(args.COV_FLOOR);
         builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
@@ -1739,6 +1742,7 @@ impl<'a> MOR<'a> {
         let FALLBACK = self.FALLBACK().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let ROWS_ONLY = self.ROWS_ONLY();
         MORT {
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
@@ -1784,6 +1788,7 @@ impl<'a> MOR<'a> {
             WINDOW_COEFF_TAILS,
             WINDOW_RECORD_CHECK,
             FALLBACK,
+            ROWS_ONLY,
         }
     }
 
@@ -2080,10 +2085,10 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<f64>(MOR::VT_DAYS_SINCE_LAST_OBS, Some(f64::NAN)).unwrap()}
     }
 
-    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-    /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-    /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-    /// then those parameters in ascending ordinal. Absent: no covariance.
+    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+    /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+    /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+    /// ascending ordinal. Absent: no covariance.
     #[inline]
     pub fn COVARIANCE_DATA(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
         // Safety:
@@ -2101,8 +2106,8 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<MORCovariancePropagation>(MOR::VT_COV_PROPAGATION, None)}
     }
 
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-    /// covariance as its $OCM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// any producer text: a record read alone flies the same covariance as its $OCM.
     #[inline]
     pub fn COV_FLOOR(&self) -> morCovarianceFloor {
         // Safety:
@@ -2112,7 +2117,8 @@ impl<'a> MOR<'a> {
     }
 
     /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+    /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     #[inline]
     pub fn COV_REALISM_ID(&self) -> u16 {
         // Safety:
@@ -2150,7 +2156,7 @@ impl<'a> MOR<'a> {
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
     /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
     /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -2195,13 +2201,22 @@ impl<'a> MOR<'a> {
 
     /// The object's own element set for times beyond what this record serves (a reader's fallback
     /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-    /// object is this record's.
+    /// object is this record's. No TARGETER.
     #[inline]
     pub fn FALLBACK(&self) -> Option<MPE<'a>> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<MPE>>(MOR::VT_FALLBACK, None)}
+    }
+
+    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    #[inline]
+    pub fn ROWS_ONLY(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(MOR::VT_ROWS_ONLY, Some(false)).unwrap()}
     }
 }
 
@@ -2255,6 +2270,7 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("WINDOW_COEFF_TAILS", Self::VT_WINDOW_COEFF_TAILS, false)?
             .visit_field::<u64>("WINDOW_RECORD_CHECK", Self::VT_WINDOW_RECORD_CHECK, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<MPE>>("FALLBACK", Self::VT_FALLBACK, false)?
+            .visit_field::<bool>("ROWS_ONLY", Self::VT_ROWS_ONLY, false)?
             .finish();
         Ok(())
     }
@@ -2305,6 +2321,7 @@ pub struct MORArgs<'a> {
     pub WINDOW_COEFF_TAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
     pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<::flatbuffers::WIPOffset<MPE<'a>>>,
+    pub ROWS_ONLY: bool,
 }
 
 impl<'a> Default for MORArgs<'a> {
@@ -2355,6 +2372,7 @@ impl<'a> Default for MORArgs<'a> {
             WINDOW_COEFF_TAILS: None,
             WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
+            ROWS_ONLY: false,
         }
     }
 }
@@ -2586,6 +2604,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_ROWS_ONLY(&mut self, ROWS_ONLY: bool) {
+        self.fbb_.push_slot::<bool>(MOR::VT_ROWS_ONLY, ROWS_ONLY, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MORBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         MORBuilder {
@@ -2648,6 +2671,7 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("WINDOW_COEFF_TAILS", &self.WINDOW_COEFF_TAILS());
         ds.field("WINDOW_RECORD_CHECK", &self.WINDOW_RECORD_CHECK());
         ds.field("FALLBACK", &self.FALLBACK());
+        ds.field("ROWS_ONLY", &self.ROWS_ONLY());
         ds.finish()
     }
 }
@@ -2699,6 +2723,7 @@ pub struct MORT {
     pub WINDOW_COEFF_TAILS: Option<alloc::vec::Vec<f32>>,
     pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<alloc::boxed::Box<MPET>>,
+    pub ROWS_ONLY: bool,
 }
 
 impl Default for MORT {
@@ -2748,6 +2773,7 @@ impl Default for MORT {
             WINDOW_COEFF_TAILS: None,
             WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
+            ROWS_ONLY: false,
         }
     }
 }
@@ -2822,6 +2848,7 @@ impl MORT {
         let FALLBACK = self.FALLBACK.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let ROWS_ONLY = self.ROWS_ONLY;
         MOR::create(_fbb, &MORArgs{
             NORAD_CAT_ID,
             INTERNATIONAL_DESIGNATOR,
@@ -2867,6 +2894,7 @@ impl MORT {
             WINDOW_COEFF_TAILS,
             WINDOW_RECORD_CHECK,
             FALLBACK,
+            ROWS_ONLY,
         })
     }
 }

@@ -745,10 +745,10 @@ func (rcv *MOR) MutateDaysSinceLastObs(n float64) bool {
 	return rcv.MutateDAYS_SINCE_LAST_OBS(n)
 }
 
-/// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-/// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-/// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-/// then those parameters in ascending ordinal. Absent: no covariance.
+/// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+/// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+/// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+/// ascending ordinal. Absent: no covariance.
 func (rcv *MOR) COVARIANCE_DATA(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -774,10 +774,10 @@ func (rcv *MOR) CovarianceDataLength() int {
 	return rcv.COVARIANCE_DATALength()
 }
 
-/// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-/// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-/// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-/// then those parameters in ascending ordinal. Absent: no covariance.
+/// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+/// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+/// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+/// ascending ordinal. Absent: no covariance.
 func (rcv *MOR) MutateCOVARIANCE_DATA(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -810,8 +810,8 @@ func (rcv *MOR) CovPropagation(obj *MORCovariancePropagation) *MORCovarianceProp
 }
 
 /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
-/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-/// covariance as its $OCM.
+/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+/// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) COV_FLOOR() morCovarianceFloor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -824,8 +824,8 @@ func (rcv *MOR) CovFloor() morCovarianceFloor {
 	return rcv.COV_FLOOR()
 }
 
-/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-/// covariance as its $OCM.
+/// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+/// any producer text: a record read alone flies the same covariance as its $OCM.
 func (rcv *MOR) MutateCOV_FLOOR(n morCovarianceFloor) bool {
 	return rcv._tab.MutateByteSlot(72, byte(n))
 }
@@ -835,7 +835,8 @@ func (rcv *MOR) MutateCovFloor(n morCovarianceFloor) bool {
 }
 
 /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-/// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+/// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+/// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) COV_REALISM_ID() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -849,7 +850,8 @@ func (rcv *MOR) CovRealismId() uint16 {
 }
 
 /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-/// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+/// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+/// ID the asset does not list leaves the figures unresolved, and a reader says so.
 func (rcv *MOR) MutateCOV_REALISM_ID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(74, n)
 }
@@ -916,7 +918,7 @@ func (rcv *MOR) CovCalibrationReference() []byte {
 
 /// Identifier of that calibration evidence (a report or record).
 /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-/// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
 /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
 /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
 /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -951,7 +953,7 @@ func (rcv *MOR) WindowsLength() int {
 }
 
 /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-/// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+/// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
 /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
 /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
 /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -1067,7 +1069,7 @@ func (rcv *MOR) MutateWindowRecordCheck(n uint64) bool {
 
 /// The object's own element set for times beyond what this record serves (a reader's fallback
 /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-/// object is this record's.
+/// object is this record's. No TARGETER.
 func (rcv *MOR) FALLBACK(obj *MPE) *MPE {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
@@ -1087,9 +1089,31 @@ func (rcv *MOR) Fallback(obj *MPE) *MPE {
 
 /// The object's own element set for times beyond what this record serves (a reader's fallback
 /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-/// object is this record's.
+/// object is this record's. No TARGETER.
+/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+func (rcv *MOR) ROWS_ONLY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *MOR) RowsOnly() bool {
+	return rcv.ROWS_ONLY()
+}
+
+/// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+func (rcv *MOR) MutateROWS_ONLY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(92, n)
+}
+
+func (rcv *MOR) MutateRowsOnly(n bool) bool {
+	return rcv.MutateROWS_ONLY(n)
+}
+
 func MORStart(builder *flatbuffers.Builder) {
-	builder.StartObject(44)
+	builder.StartObject(45)
 }
 func MORAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	builder.PrependUint32Slot(0, NORAD_CAT_ID, 0)
@@ -1378,6 +1402,12 @@ func MORAddFALLBACK(builder *flatbuffers.Builder, FALLBACK flatbuffers.UOffsetT)
 }
 func MORAddFallback(builder *flatbuffers.Builder, FALLBACK flatbuffers.UOffsetT) {
 	MORAddFALLBACK(builder, FALLBACK)
+}
+func MORAddROWS_ONLY(builder *flatbuffers.Builder, ROWS_ONLY bool) {
+	builder.PrependBoolSlot(44, ROWS_ONLY, false)
+}
+func MORAddRowsOnly(builder *flatbuffers.Builder, ROWS_ONLY bool) {
+	MORAddROWS_ONLY(builder, ROWS_ONLY)
 }
 func MOREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

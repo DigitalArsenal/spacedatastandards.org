@@ -309,10 +309,10 @@ class MOR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-     * among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-     * OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-     * then those parameters in ascending ordinal. Absent: no covariance.
+     * The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+     * DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+     * position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+     * ascending ordinal. Absent: no covariance.
      */
     fun covarianceData(j: Int) : Double {
         val o = __offset(68)
@@ -341,8 +341,8 @@ class MOR : Table() {
         }
     }
     /**
-     * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-     * covariance as its $OCM.
+     * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+     * any producer text: a record read alone flies the same covariance as its $OCM.
      */
     val covFloor : UByte
         get() {
@@ -351,7 +351,8 @@ class MOR : Table() {
         }
     /**
      * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-     * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+     * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+     * ID the asset does not list leaves the figures unresolved, and a reader says so.
      */
     val covRealismId : UShort
         get() {
@@ -395,7 +396,7 @@ class MOR : Table() {
     fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
     /**
      * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-     * in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+     * in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
      * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
      * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
      * A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -462,7 +463,7 @@ class MOR : Table() {
     /**
      * The object's own element set for times beyond what this record serves (a reader's fallback
      * propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-     * object is this record's.
+     * object is this record's. No TARGETER.
      */
     val fallback : MPE? get() = fallback(MPE())
     fun fallback(obj: MPE) : MPE? {
@@ -473,6 +474,14 @@ class MOR : Table() {
             null
         }
     }
+    /**
+     * This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+     */
+    val rowsOnly : Boolean
+        get() {
+            val o = __offset(92)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMOR(_bb: ByteBuffer): MOR = getRootAsMOR(_bb, MOR())
@@ -481,7 +490,7 @@ class MOR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MORBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MOR")
-        fun startMOR(builder: FlatBufferBuilder) = builder.startTable(44)
+        fun startMOR(builder: FlatBufferBuilder) = builder.startTable(45)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(0, noradCatId.toInt(), 0)
         fun addINTERNATIONALDESIGNATOR(builder: FlatBufferBuilder, internationalDesignator: Int) = builder.addOffset(1, internationalDesignator, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -551,6 +560,7 @@ class MOR : Table() {
         fun startWindowCoeffTailsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addWINDOWRECORDCHECK(builder: FlatBufferBuilder, windowRecordCheck: ULong) = builder.addLong(42, windowRecordCheck.toLong(), 0)
         fun addFALLBACK(builder: FlatBufferBuilder, fallback: Int) = builder.addOffset(43, fallback, 0)
+        fun addROWSONLY(builder: FlatBufferBuilder, rowsOnly: Boolean) = builder.addBoolean(44, rowsOnly, false)
         fun endMOR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -135,13 +135,17 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
   /**
    * The builder of the derived polynomial rows the asset's records carry
    * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-   * carry no derived rows, or a reader must ignore them.
+   * carry no derived rows, or a reader must ignore them. It holds for this
+   * asset only: a reader sets it aside before reading another asset, and
+   * judges compatibility by every field, never by a version string alone.
    */
   public DPMDerivedBuild DERIVED_BUILD() { return DERIVED_BUILD(new DPMDerivedBuild()); }
   public DPMDerivedBuild DERIVED_BUILD(DPMDerivedBuild obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * The covariance realism models the asset's records name by ID ($MOR
-   * COV_REALISM_ID), each stated once with its population figures.
+   * COV_REALISM_ID), each stated once with its population figures. IDs are
+   * 1 or more and unique within the asset; a reader refuses a list that
+   * repeats one.
    */
   public DPMRealismModel COV_REALISM_MODELS(int j) { return COV_REALISM_MODELS(new DPMRealismModel(), j); }
   public DPMRealismModel COV_REALISM_MODELS(DPMRealismModel obj, int j) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }

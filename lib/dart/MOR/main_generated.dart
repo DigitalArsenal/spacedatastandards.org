@@ -238,7 +238,8 @@ class _morWindowStatusReader extends fb.Reader<morWindowStatus> {
 }
 
 ///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-///  names, units and meanings, all thirteen always present.
+///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+///  appended field of MOR, never as a change to this struct.
 class MORCovariancePropagation {
   MORCovariancePropagation._(this._bc, this._bcOffset);
 
@@ -612,21 +613,22 @@ class MOR {
   ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
   double get DAYS_SINCE_LAST_OBS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
   double get daysSinceLastObs => DAYS_SINCE_LAST_OBS;
-  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-  ///  among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-  ///  OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-  ///  then those parameters in ascending ordinal. Absent: no covariance.
+  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  ///  DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  ///  position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  ///  ascending ordinal. Absent: no covariance.
   List<double>? get COVARIANCE_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
   List<double>? get covarianceData => COVARIANCE_DATA;
   ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   MORCovariancePropagation? get COV_PROPAGATION => MORCovariancePropagation.reader.vTableGetNullable(_bc, _bcOffset, 70);
   MORCovariancePropagation? get covPropagation => COV_PROPAGATION;
-  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-  ///  covariance as its $OCM.
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  ///  any producer text: a record read alone flies the same covariance as its $OCM.
   morCovarianceFloor get COV_FLOOR => morCovarianceFloor.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 72, 0));
   morCovarianceFloor get covFloor => COV_FLOOR;
   ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
   int get COV_REALISM_ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 74, 0);
   int get covRealismId => COV_REALISM_ID;
   ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
@@ -640,7 +642,7 @@ class MOR {
   String? get COV_CALIBRATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
   String? get covCalibrationReference => COV_CALIBRATION_REFERENCE;
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  ///  in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   ///  A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -660,12 +662,15 @@ class MOR {
   int get windowRecordCheck => WINDOW_RECORD_CHECK;
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-  ///  object is this record's.
+  ///  object is this record's. No TARGETER.
   MPE? get FALLBACK => MPE.reader.vTableGetNullable(_bc, _bcOffset, 90);
+  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  bool get ROWS_ONLY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 92, false);
+  bool get rowsOnly => ROWS_ONLY;
 
   @override
   String toString() {
-    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, messageStatus: ${messageStatus}, epochUnixUs: ${epochUnixUs}, meanElementTheory: ${meanElementTheory}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, ecom2Y0: ${ecom2Y0}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covRealism: ${covRealism}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, FALLBACK: ${FALLBACK}}';
+    return 'MOR{noradCatId: ${noradCatId}, internationalDesignator: ${internationalDesignator}, ORIGINATOR: ${ORIGINATOR}, objectName: ${objectName}, messageStatus: ${messageStatus}, epochUnixUs: ${epochUnixUs}, meanElementTheory: ${meanElementTheory}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, raOfAscNode: ${raOfAscNode}, argOfPericenter: ${argOfPericenter}, meanAnomaly: ${meanAnomaly}, BTERM: ${BTERM}, AGOM: ${AGOM}, BSTAR: ${BSTAR}, meanMotionDot: ${meanMotionDot}, meanMotionDdot: ${meanMotionDdot}, gravityField: ${gravityField}, maximumTesseralDegree: ${maximumTesseralDegree}, maximumZonalDegree: ${maximumZonalDegree}, solidTidesModel: ${solidTidesModel}, solarRadPressure: ${solarRadPressure}, odParameters: ${odParameters}, odSolvedFor: ${odSolvedFor}, ecom2Y0: ${ecom2Y0}, actualOdSpan: ${actualOdSpan}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, weightedRms: ${weightedRms}, odEpochUnixUs: ${odEpochUnixUs}, daysSinceLastObs: ${daysSinceLastObs}, covarianceData: ${covarianceData}, covPropagation: ${covPropagation}, covFloor: ${covFloor}, covRealismId: ${covRealismId}, covRealism: ${covRealism}, covCalibration: ${covCalibration}, covCalibrationReference: ${covCalibrationReference}, WINDOWS: ${WINDOWS}, windowCoeffHeads: ${windowCoeffHeads}, windowCoeffTails: ${windowCoeffTails}, windowRecordCheck: ${windowRecordCheck}, FALLBACK: ${FALLBACK}, rowsOnly: ${rowsOnly}}';
   }
 }
 
@@ -683,7 +688,7 @@ class MORBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(44);
+    fbBuilder.startTable(45);
   }
 
   int addNoradCatId(int? NORAD_CAT_ID) {
@@ -862,6 +867,10 @@ class MORBuilder {
     fbBuilder.addOffset(43, offset);
     return fbBuilder.offset;
   }
+  int addRowsOnly(bool? ROWS_ONLY) {
+    fbBuilder.addBool(44, ROWS_ONLY);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -913,6 +922,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _WINDOW_COEFF_TAILS;
   final int? _WINDOW_RECORD_CHECK;
   final MPEObjectBuilder? _FALLBACK;
+  final bool? _ROWS_ONLY;
 
   MORObjectBuilder({
     int? NORAD_CAT_ID,
@@ -995,6 +1005,8 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     int? WINDOW_RECORD_CHECK,
     int? windowRecordCheck,
     MPEObjectBuilder? FALLBACK,
+    bool? ROWS_ONLY,
+    bool? rowsOnly,
   })
       : _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
         _INTERNATIONAL_DESIGNATOR = internationalDesignator ?? INTERNATIONAL_DESIGNATOR,
@@ -1039,7 +1051,8 @@ class MORObjectBuilder extends fb.ObjectBuilder {
         _WINDOW_COEFF_HEADS = windowCoeffHeads ?? WINDOW_COEFF_HEADS,
         _WINDOW_COEFF_TAILS = windowCoeffTails ?? WINDOW_COEFF_TAILS,
         _WINDOW_RECORD_CHECK = windowRecordCheck ?? WINDOW_RECORD_CHECK,
-        _FALLBACK = FALLBACK;
+        _FALLBACK = FALLBACK,
+        _ROWS_ONLY = rowsOnly ?? ROWS_ONLY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1062,7 +1075,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     final int? WINDOW_COEFF_TAILSOffset = _WINDOW_COEFF_TAILS == null ? null
         : fbBuilder.writeListFloat32(_WINDOW_COEFF_TAILS!);
     final int? FALLBACKOffset = _FALLBACK?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(44);
+    fbBuilder.startTable(45);
     fbBuilder.addUint32(0, _NORAD_CAT_ID);
     fbBuilder.addOffset(1, INTERNATIONAL_DESIGNATOROffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
@@ -1109,6 +1122,7 @@ class MORObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(41, WINDOW_COEFF_TAILSOffset);
     fbBuilder.addUint64(42, _WINDOW_RECORD_CHECK);
     fbBuilder.addOffset(43, FALLBACKOffset);
+    fbBuilder.addBool(44, _ROWS_ONLY);
     return fbBuilder.endTable();
   }
 

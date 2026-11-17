@@ -255,10 +255,14 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public var RECORD_PROVENANCE: PVN? { let o = _accessor.offset(VT.RECORD_PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  The builder of the derived polynomial rows the asset's records carry
   ///  ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-  ///  carry no derived rows, or a reader must ignore them.
+  ///  carry no derived rows, or a reader must ignore them. It holds for this
+  ///  asset only: a reader sets it aside before reading another asset, and
+  ///  judges compatibility by every field, never by a version string alone.
   public var DERIVED_BUILD: DPMDerivedBuild? { let o = _accessor.offset(VT.DERIVED_BUILD); return o == 0 ? nil : DPMDerivedBuild(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  The covariance realism models the asset's records name by ID ($MOR
-  ///  COV_REALISM_ID), each stated once with its population figures.
+  ///  COV_REALISM_ID), each stated once with its population figures. IDs are
+  ///  1 or more and unique within the asset; a reader refuses a list that
+  ///  repeats one.
   public var COV_REALISM_MODELS: FlatbufferVector<DPMRealismModel> { return _accessor.vector(at: VT.COV_REALISM_MODELS, byteSize: 4) }
   public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(ASSET_KIND: publicationAssetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ASSET_KIND.rawValue, def: 3, at: VT.ASSET_KIND) }

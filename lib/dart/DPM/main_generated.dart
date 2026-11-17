@@ -341,11 +341,15 @@ class DPMAsset {
   PVN? get recordProvenance => RECORD_PROVENANCE;
   ///  The builder of the derived polynomial rows the asset's records carry
   ///  ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-  ///  carry no derived rows, or a reader must ignore them.
+  ///  carry no derived rows, or a reader must ignore them. It holds for this
+  ///  asset only: a reader sets it aside before reading another asset, and
+  ///  judges compatibility by every field, never by a version string alone.
   DPMDerivedBuild? get DERIVED_BUILD => DPMDerivedBuild.reader.vTableGetNullable(_bc, _bcOffset, 34);
   DPMDerivedBuild? get derivedBuild => DERIVED_BUILD;
   ///  The covariance realism models the asset's records name by ID ($MOR
-  ///  COV_REALISM_ID), each stated once with its population figures.
+  ///  COV_REALISM_ID), each stated once with its population figures. IDs are
+  ///  1 or more and unique within the asset; a reader refuses a list that
+  ///  repeats one.
   List<DPMRealismModel>? get COV_REALISM_MODELS => const fb.ListReader<DPMRealismModel>(DPMRealismModel.reader).vTableGetNullable(_bc, _bcOffset, 36);
   List<DPMRealismModel>? get covRealismModels => COV_REALISM_MODELS;
 

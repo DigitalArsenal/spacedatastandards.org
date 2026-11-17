@@ -119,7 +119,8 @@ public enum morWindowStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-///  names, units and meanings, all thirteen always present.
+///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+///  appended field of MOR, never as a change to this struct.
 public struct MORCovariancePropagation: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -194,7 +195,8 @@ public struct MORCovariancePropagation: NativeStruct, FlatbuffersVectorInitializ
 }
 
 ///  What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-///  names, units and meanings, all thirteen always present.
+///  names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+///  appended field of MOR, never as a change to this struct.
 public struct MORCovariancePropagation_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -367,6 +369,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let WINDOW_COEFF_TAILS: VOffset = 86
     static let WINDOW_RECORD_CHECK: VOffset = 88
     static let FALLBACK: VOffset = 90
+    static let ROWS_ONLY: VOffset = 92
   }
 
   ///  The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
@@ -441,20 +444,21 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775808 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
   public var DAYS_SINCE_LAST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_LAST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-  ///  among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-  ///  OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-  ///  then those parameters in ascending ordinal. Absent: no covariance.
+  ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  ///  DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  ///  position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  ///  ascending ordinal. Absent: no covariance.
   public var COVARIANCE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VT.COVARIANCE_DATA, byteSize: 8) }
   public func withUnsafePointerToCovarianceData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COVARIANCE_DATA, body: body) }
   ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   public var COV_PROPAGATION: MORCovariancePropagation? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : _accessor.readBuffer(of: MORCovariancePropagation.self, at: o) }
   public var mutableCovPropagation: MORCovariancePropagation_Mutable? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : MORCovariancePropagation_Mutable(_accessor.bb, o: o + _accessor.position) }
-  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-  ///  covariance as its $OCM.
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  ///  any producer text: a record read alone flies the same covariance as its $OCM.
   public var COV_FLOOR: morCovarianceFloor { let o = _accessor.offset(VT.COV_FLOOR); return o == 0 ? .unstated : morCovarianceFloor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
   ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  ///  ID the asset does not list leaves the figures unresolved, and a reader says so.
   public var COV_REALISM_ID: UInt16 { let o = _accessor.offset(VT.COV_REALISM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
   ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
@@ -465,7 +469,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  ///  in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  ///  in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   ///  A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -486,9 +490,11 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var WINDOW_RECORD_CHECK: UInt64 { let o = _accessor.offset(VT.WINDOW_RECORD_CHECK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-  ///  object is this record's.
+  ///  object is this record's. No TARGETER.
   public var FALLBACK: MPE? { let o = _accessor.offset(VT.FALLBACK); return o == 0 ? nil : MPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 44) }
+  ///  This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  public var ROWS_ONLY: Bool { let o = _accessor.offset(VT.ROWS_ONLY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 45) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VT.INTERNATIONAL_DESIGNATOR) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -536,6 +542,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(WINDOW_COEFF_TAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_TAILS, at: VT.WINDOW_COEFF_TAILS) }
   public static func add(WINDOW_RECORD_CHECK: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_RECORD_CHECK, def: 0, at: VT.WINDOW_RECORD_CHECK) }
   public static func add(FALLBACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FALLBACK, at: VT.FALLBACK) }
+  public static func add(ROWS_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROWS_ONLY, def: false,
+   at: VT.ROWS_ONLY) }
   public static func endMOR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMOR(
     _ fbb: inout FlatBufferBuilder,
@@ -582,7 +590,8 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     WINDOW_COEFF_HEADSVectorOffset WINDOW_COEFF_HEADS: Offset = Offset(),
     WINDOW_COEFF_TAILSVectorOffset WINDOW_COEFF_TAILS: Offset = Offset(),
     WINDOW_RECORD_CHECK: UInt64 = 0,
-    FALLBACKOffset FALLBACK: Offset = Offset()
+    FALLBACKOffset FALLBACK: Offset = Offset(),
+    ROWS_ONLY: Bool = false
   ) -> Offset {
     let __start = MOR.startMOR(&fbb)
     MOR.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
@@ -629,6 +638,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MOR.addVectorOf(WINDOW_COEFF_TAILS: WINDOW_COEFF_TAILS, &fbb)
     MOR.add(WINDOW_RECORD_CHECK: WINDOW_RECORD_CHECK, &fbb)
     MOR.add(FALLBACK: FALLBACK, &fbb)
+    MOR.add(ROWS_ONLY: ROWS_ONLY, &fbb)
     return MOR.endMOR(&fbb, start: __start)
   }
 
@@ -678,6 +688,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.WINDOW_COEFF_TAILS, fieldName: "WINDOW_COEFF_TAILS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
     try _v.visit(field: VT.WINDOW_RECORD_CHECK, fieldName: "WINDOW_RECORD_CHECK", required: false, type: UInt64.self)
     try _v.visit(field: VT.FALLBACK, fieldName: "FALLBACK", required: false, type: ForwardOffset<MPE>.self)
+    try _v.visit(field: VT.ROWS_ONLY, fieldName: "ROWS_ONLY", required: false, type: Bool.self)
     _v.finish()
   }
 }

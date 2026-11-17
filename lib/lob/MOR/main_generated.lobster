@@ -73,7 +73,8 @@ class MORWindow
 class MOR
 
 /// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-/// names, units and meanings, all thirteen always present.
+/// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+/// appended field of MOR, never as a change to this struct.
 class MORCovariancePropagation : flatbuffers.handle
     def FLOOR_UU_KM2() -> float:
         return buf_.read_float64_le(pos_ + 0)
@@ -262,10 +263,10 @@ class MOR : flatbuffers.handle
     /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
     def DAYS_SINCE_LAST_OBS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, nan)
-    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-    /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-    /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-    /// then those parameters in ascending ordinal. Absent: no covariance.
+    /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+    /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+    /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+    /// ascending ordinal. Absent: no covariance.
     def COVARIANCE_DATA(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 68) + i * 8)
     def COVARIANCE_DATA_length() -> int:
@@ -274,12 +275,13 @@ class MOR : flatbuffers.handle
     def COV_PROPAGATION() -> MORCovariancePropagation?:
         let o = flatbuffers.field_struct(buf_, pos_, 70)
         return if o: MORCovariancePropagation { buf_, o } else: nil
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-    /// covariance as its $OCM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// any producer text: a record read alone flies the same covariance as its $OCM.
     def COV_FLOOR() -> morCovarianceFloor:
         return morCovarianceFloor(flatbuffers.field_uint8(buf_, pos_, 72, 0))
     /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+    /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     def COV_REALISM_ID() -> int:
         return flatbuffers.field_uint16(buf_, pos_, 74, 0)
     /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
@@ -294,7 +296,7 @@ class MOR : flatbuffers.handle
     def COV_CALIBRATION_REFERENCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 80)
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
     /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
     /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -321,17 +323,20 @@ class MOR : flatbuffers.handle
         return flatbuffers.field_uint64(buf_, pos_, 88, 0)
     /// The object's own element set for times beyond what this record serves (a reader's fallback
     /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-    /// object is this record's.
+    /// object is this record's. No TARGETER.
     def FALLBACK() -> MPE?:
         let o = flatbuffers.field_table(buf_, pos_, 90)
         return if o: MPE { buf_, o } else: nil
+    /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+    def ROWS_ONLY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 92, 0))
 
 def GetRootAsMOR(buf:string): return MOR { buf, flatbuffers.indirect(buf, 0) }
 
 struct MORBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(44)
+        b_.StartObject(45)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
         b_.PrependUint32Slot(0, NORAD_CAT_ID, 0)
@@ -464,6 +469,9 @@ struct MORBuilder:
         return this
     def add_FALLBACK(FALLBACK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(43, FALLBACK)
+        return this
+    def add_ROWS_ONLY(ROWS_ONLY:bool):
+        b_.PrependBoolSlot(44, ROWS_ONLY, 0)
         return this
     def end():
         return b_.EndObject()

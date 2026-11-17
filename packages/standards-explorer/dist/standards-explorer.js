@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.286.0+1794880110617",
+  version: "1.286.0+1794884268310",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -14599,7 +14599,7 @@ file_identifier "$SRG";`,
       ]
     },
     MOR: {
-      IDL: `// Hash: 47e5c2e4fe012fa9fb34ade7cad9a45f73c5c73f75365281adaf708db118d377
+      IDL: `// Hash: bf10f1ffca7ef7fcd841a0b03b65999b60f895e472dba6893dc193328f3299d3
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -14613,7 +14613,11 @@ include "../MPE/main.fbs";
 // (center, frames, averaging, units, covariance labels) follow from the fields below and are stated by
 // the expansion rule, never repeated per record.
 //
-// Expansion: every MOR expands to exactly one $OCM.
+// Validity: WINDOWS are in time order, do not overlap, and every EPOCH_HALF_SPAN is above 0; a record carries
+// COV_REALISM_ID or COV_REALISM, never both; FALLBACK has no ENTITY_ID and no TARGETER. A reader refuses a
+// record that breaks these.
+//
+// Expansion: every MOR but a ROWS_ONLY one expands to exactly one $OCM.
 //   HEADER: CCSDS_OCM_VERS "3.0"; ORIGINATOR and MESSAGE_STATUS as here (absent when absent).
 //   METADATA: OBJECT_NAME and INTERNATIONAL_DESIGNATOR as here; with NORAD_CAT_ID > 0 the NORAD_CAT_ID,
 //     CATALOG_NAME "NORAD" and OBJECT_DESIGNATOR its decimal digits; TIME_SYSTEM "UTC".
@@ -14635,16 +14639,20 @@ include "../MPE/main.fbs";
 //     prwDynamicParameter, NAME its enum name, SOLVED_FOR its bit in OD_SOLVED_FOR, and VALUE and UNITS
 //     BTERM "m**2/kg" (DRAG_AREA_OVER_MASS), AGOM "m**2/kg" (SRP_AREA_OVER_MASS), ECOM2_Y0 "m/s**2" (ECOM2_Y0).
 //   The covariance, when COVARIANCE_DATA is present: COV_TYPE "CARTPV", COV_ORDERING LTM, COV_SIZE N,
-//     COV_PARAMETER_KINDS the solved parameters among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
-//     SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION, ascending, COV_PARAMETERS
-//     their names, COV_UNITS "km" x3, "km/s" x3 and theirs ("m**2/kg", "m**2/kg/s", "m**2/kg", "m/s**2",
-//     "km/s**2"), COV_PROPAGATION, COV_CALIBRATION and COV_CALIBRATION_REFERENCE as here; COV_REALISM
-//     [COV_REALISM], or [the REALISM of the asset's COV_REALISM_MODELS entry whose ID is COV_REALISM_ID],
-//     or none when the record names a model and the asset is not at hand.
+//     COV_PARAMETER_KINDS the solved covariance parameters, ascending: DRAG_AREA_OVER_MASS and
+//     SRP_AREA_OVER_MASS are the only ones OD_PARAMETERS can carry (an $OCM with a DRAG_AREA_OVER_MASS_RATE,
+//     IN_TRACK_ACCELERATION or OUTGASSING_ACCELERATION row is outside the reducible profile); COV_PARAMETERS
+//     their names, COV_UNITS "km" x3, "km/s" x3 and "m**2/kg" for each; COV_PROPAGATION, COV_CALIBRATION and
+//     COV_CALIBRATION_REFERENCE as here; COV_REALISM [COV_REALISM], or [the REALISM of the asset's
+//     COV_REALISM_MODELS entry whose ID is COV_REALISM_ID], or none when that model cannot be found: the
+//     model's figures are then unresolved, and an expander says so; it never invents them.
 //   PROVENANCE: the RECORD_PROVENANCE of the $DPM asset that carries the record. Without one, and with
 //     COV_FLOOR MEAN_ELEMENTS_TWO_BODY, a PVN whose only field is PRODUCER
-//     "com.spacedatanetwork.sdn-ap-propagator 0.6.39", the text that states that floor (COV_FLOOR); absent
-//     otherwise.
+//     "com.spacedatanetwork.sdn-ap-propagator 0.6.39", the text that states that floor; absent otherwise.
+//     COV_FLOOR governs the covariance's numbers. A record whose COV_FLOOR differs from the floor its
+//     asset's RECORD_PROVENANCE.PRODUCER would state is read by its COV_FLOOR; an expander does not write it
+//     as an $OCM (the $OCM could only state the other floor), and a publisher keeps such records out of
+//     that asset.
 //   DERIVED_EPHEMERIS, when WINDOWS is present: a $PPE with REFERENCE_EPOCH the EPOCH text, CENTER_NAME
 //     "EARTH", REFERENCE_FRAME RFM CelestialFrameWrapper TEMEOFDATE, TIME_SYSTEM UTC, DEFAULT_BASIS_TYPE
 //     CHEBYSHEV; BUILD the asset's DERIVED_BUILD with RECORD_DIGEST by the rule its BUILDER_NAME publishes,
@@ -14654,7 +14662,22 @@ include "../MPE/main.fbs";
 //     NUM_COEFFICIENTS the larger count, the shorter series padded with +0.0, the head counts as here,
 //     HAS_VELOCITY_COEFFICIENTS when VEL_COEFF_COUNT > 0; per unserved window its midpoint, half-span and
 //     status in UNSERVED_MID_SECONDS, UNSERVED_HALF_SPAN and UNSERVED_STATUS.
-//   FALLBACK has no place in an $OCM: it expands to its own $MPE, ENTITY_ID the decimal NORAD_CAT_ID.
+//   FALLBACK has no place in an $OCM: it expands to its own $MPE, ENTITY_ID the decimal NORAD_CAT_ID, or the
+//     INTERNATIONAL_DESIGNATOR when NORAD_CAT_ID is 0. An $MPE has no originator: the set joins its object by
+//     that identifier alone, with no originator, never by name.
+//
+// Rows only (ROWS_ONLY true): a new set of rows for a set a receiver already holds, delivered without
+// republishing the set. Required: NORAD_CAT_ID, INTERNATIONAL_DESIGNATOR and ORIGINATOR exactly as the held
+// set states them (absent where it has none), MEAN_ELEMENT_THEORY, EPOCH_UNIX_US (the epoch of the set the rows
+// belong to), WINDOWS, their coefficient vectors and WINDOW_RECORD_CHECK. Every other field is at its default:
+// no elements, force settings, orbit determination, covariance, realism, fallback or descriptive fields. Such a
+// record has no expansion and is never the result of a reduction. The receiver: identity, theory and epoch
+// select exactly one set it holds; the record check it computes for that set equals WINDOW_RECORD_CHECK; the
+// asset's DERIVED_BUILD is present and matches its own build statement. Then the update REPLACES all the
+// set's windows at once, provided the update's last window ends later than the held rows' last window (or no
+// rows are held); a repeated update, or one ending no later, changes nothing. On a missing or ambiguous
+// match, a wrong check or an incompatible builder, the receiver changes nothing and the set takes its normal
+// build path. A rows-only record never changes elements or covariance.
 //
 // Reduction: an $OCM reduces to a MOR only when every field it carries is carried here, equals what the
 // expansion writes from the fields here, equals its asset's RECORD_PROVENANCE, or is in this list of
@@ -14738,7 +14761,8 @@ enum morWindowStatus : ubyte {
 }
 
 /// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-/// names, units and meanings, all thirteen always present.
+/// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+/// appended field of MOR, never as a change to this struct.
 struct MORCovariancePropagation {
   FLOOR_UU_KM2: double;
   FLOOR_VU_KM2: double;
@@ -14848,18 +14872,19 @@ table MOR {
   OD_EPOCH_UNIX_US: int64 = -9223372036854775808;
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
   DAYS_SINCE_LAST_OBS: double = nan;
-  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-  /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-  /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-  /// then those parameters in ascending ordinal. Absent: no covariance.
+  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  /// ascending ordinal. Absent: no covariance.
   COVARIANCE_DATA: [double];
   /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   COV_PROPAGATION: MORCovariancePropagation;
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-  /// covariance as its $OCM.
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// any producer text: a record read alone flies the same covariance as its $OCM.
   COV_FLOOR: morCovarianceFloor = UNSTATED;
   /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  /// ID the asset does not list leaves the figures unresolved, and a reader says so.
   COV_REALISM_ID: uint16;
   /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
   /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
@@ -14869,7 +14894,7 @@ table MOR {
   /// Identifier of that calibration evidence (a report or record).
   COV_CALIBRATION_REFERENCE: string;
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -14886,8 +14911,10 @@ table MOR {
   WINDOW_RECORD_CHECK: uint64;
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-  /// object is this record's.
+  /// object is this record's. No TARGETER.
   FALLBACK: MPE;
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  ROWS_ONLY: bool = false;
 }
 
 root_type MOR;
@@ -31907,7 +31934,7 @@ file_identifier "$VAM";`,
       ]
     },
     DPM: {
-      IDL: `// Hash: fa5a3bd7993b199a8e3f7d4b966d6a983c26555d170fcb0b8d82d8fea9742cac
+      IDL: `// Hash: e2222c0c37ba00ea4192a2ecedad7f9f16b21030680693f462a70591d7937beb
 // Version: 1.0.11
 // -----------------------------------END_HEADER
 include "../CVR/main.fbs";
@@ -32051,10 +32078,14 @@ table DPMAsset {
   RECORD_PROVENANCE: PVN;
   /// The builder of the derived polynomial rows the asset's records carry
   /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-  /// carry no derived rows, or a reader must ignore them.
+  /// carry no derived rows, or a reader must ignore them. It holds for this
+  /// asset only: a reader sets it aside before reading another asset, and
+  /// judges compatibility by every field, never by a version string alone.
   DERIVED_BUILD: DPMDerivedBuild;
   /// The covariance realism models the asset's records name by ID ($MOR
-  /// COV_REALISM_ID), each stated once with its population figures.
+  /// COV_REALISM_ID), each stated once with its population figures. IDs are
+  /// 1 or more and unique within the asset; a reader refuses a list that
+  /// repeats one.
   COV_REALISM_MODELS: [DPMRealismModel];
 }
 
@@ -146720,7 +146751,7 @@ format class are named by $NCD's container format.`
         },
         MORCovariancePropagation: {
           type: "object",
-          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
           properties: {
             FLOOR_UU_KM2: {
               type: "number"
@@ -146962,7 +146993,7 @@ format class are named by $NCD's container format.`
               items: {
                 type: "number"
               },
-              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance."
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved\nDRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);\nposition and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in\nascending ordinal. Absent: no covariance."
             },
             COV_PROPAGATION: {
               $ref: "#/definitions/MORCovariancePropagation",
@@ -146970,13 +147001,13 @@ format class are named by $NCD's container format.`
             },
             COV_FLOOR: {
               $ref: "#/definitions/morCovarianceFloor",
-              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM."
+              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM."
             },
             COV_REALISM_ID: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not."
+              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so."
             },
             COV_REALISM: {
               $ref: "#/definitions/CVR",
@@ -146995,7 +147026,7 @@ format class are named by $NCD's container format.`
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
             },
             WINDOW_COEFF_HEADS: {
               type: "array",
@@ -147019,7 +147050,11 @@ format class are named by $NCD's container format.`
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
-              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's."
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER."
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
             }
           },
           additionalProperties: false
@@ -197423,14 +197458,14 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             },
             DERIVED_BUILD: {
               $ref: "#/definitions/DPMDerivedBuild",
-              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them. It holds for this\nasset only: a reader sets it aside before reading another asset, and\njudges compatibility by every field, never by a version string alone."
             },
             COV_REALISM_MODELS: {
               type: "array",
               items: {
                 $ref: "#/definitions/DPMRealismModel"
               },
-              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures. IDs are\n1 or more and unique within the asset; a reader refuses a list that\nrepeats one."
             }
           },
           additionalProperties: false
@@ -218206,7 +218241,7 @@ provider's reviewed register). Never free text.`
         },
         MORCovariancePropagation: {
           type: "object",
-          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
           properties: {
             FLOOR_UU_KM2: {
               type: "number"
@@ -218448,7 +218483,7 @@ provider's reviewed register). Never free text.`
               items: {
                 type: "number"
               },
-              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance."
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved\nDRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);\nposition and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in\nascending ordinal. Absent: no covariance."
             },
             COV_PROPAGATION: {
               $ref: "#/definitions/MORCovariancePropagation",
@@ -218456,13 +218491,13 @@ provider's reviewed register). Never free text.`
             },
             COV_FLOOR: {
               $ref: "#/definitions/morCovarianceFloor",
-              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM."
+              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM."
             },
             COV_REALISM_ID: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not."
+              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so."
             },
             COV_REALISM: {
               $ref: "#/definitions/CVR",
@@ -218481,7 +218516,7 @@ provider's reviewed register). Never free text.`
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record."
             },
             WINDOW_COEFF_HEADS: {
               type: "array",
@@ -218505,7 +218540,11 @@ provider's reviewed register). Never free text.`
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
-              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's."
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER."
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).'
             }
           },
           additionalProperties: false
@@ -344612,14 +344651,14 @@ stated.`
             },
             DERIVED_BUILD: {
               $ref: "#/definitions/DPMDerivedBuild",
-              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them. It holds for this\nasset only: a reader sets it aside before reading another asset, and\njudges compatibility by every field, never by a version string alone."
             },
             COV_REALISM_MODELS: {
               type: "array",
               items: {
                 $ref: "#/definitions/DPMRealismModel"
               },
-              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures. IDs are\n1 or more and unique within the asset; a reader refuses a list that\nrepeats one."
             }
           },
           additionalProperties: false
@@ -644462,7 +644501,7 @@ format class are named by $NCD's container format.`,
         },
         MORCovariancePropagation: {
           type: "object",
-          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
           properties: {
             FLOOR_UU_KM2: {
               type: "number"
@@ -644832,7 +644871,7 @@ format class are named by $NCD's container format.`,
               items: {
                 type: "number"
               },
-              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance.",
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved\nDRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);\nposition and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in\nascending ordinal. Absent: no covariance.",
               "x-flatbuffer-type": "[double]"
             },
             COV_PROPAGATION: {
@@ -644842,7 +644881,7 @@ format class are named by $NCD's container format.`,
             },
             COV_FLOOR: {
               $ref: "#/definitions/morCovarianceFloor",
-              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM.",
+              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -644865,7 +644904,7 @@ format class are named by $NCD's container format.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.",
+              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
               "x-flatbuffer-type": "uint16"
             },
             COV_REALISM: {
@@ -644904,7 +644943,7 @@ format class are named by $NCD's container format.`,
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
               "x-flatbuffer-type": "[MORWindow]"
             },
             WINDOW_COEFF_HEADS: {
@@ -644932,8 +644971,14 @@ format class are named by $NCD's container format.`,
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
-              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's.",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER.",
               "x-flatbuffer-type": "MPE"
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -759384,14 +759429,14 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             DERIVED_BUILD: {
               $ref: "#/definitions/DPMDerivedBuild",
-              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them. It holds for this\nasset only: a reader sets it aside before reading another asset, and\njudges compatibility by every field, never by a version string alone."
             },
             COV_REALISM_MODELS: {
               type: "array",
               items: {
                 $ref: "#/definitions/DPMRealismModel"
               },
-              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures. IDs are\n1 or more and unique within the asset; a reader refuses a list that\nrepeats one."
             }
           },
           additionalProperties: false
@@ -789625,7 +789670,7 @@ provider's reviewed register). Never free text.`,
         },
         MORCovariancePropagation: {
           type: "object",
-          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
           properties: {
             FLOOR_UU_KM2: {
               type: "number"
@@ -789995,7 +790040,7 @@ provider's reviewed register). Never free text.`,
               items: {
                 type: "number"
               },
-              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance.",
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved\nDRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);\nposition and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in\nascending ordinal. Absent: no covariance.",
               "x-flatbuffer-type": "[double]"
             },
             COV_PROPAGATION: {
@@ -790005,7 +790050,7 @@ provider's reviewed register). Never free text.`,
             },
             COV_FLOOR: {
               $ref: "#/definitions/morCovarianceFloor",
-              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM.",
+              description: "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -790028,7 +790073,7 @@ provider's reviewed register). Never free text.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.",
+              description: "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
               "x-flatbuffer-type": "uint16"
             },
             COV_REALISM: {
@@ -790067,7 +790112,7 @@ provider's reviewed register). Never free text.`,
               items: {
                 $ref: "#/definitions/MORWindow"
               },
-              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.\nA record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.",
               "x-flatbuffer-type": "[MORWindow]"
             },
             WINDOW_COEFF_HEADS: {
@@ -790095,8 +790140,14 @@ provider's reviewed register). Never free text.`,
             },
             FALLBACK: {
               $ref: "#/definitions/MPE",
-              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's.",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's. No TARGETER.",
               "x-flatbuffer-type": "MPE"
+            },
+            ROWS_ONLY: {
+              type: "boolean",
+              description: 'This record carries only new rows for a set the receiver already holds (see "Rows only" above).',
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -1063112,14 +1063163,14 @@ stated.`,
             },
             DERIVED_BUILD: {
               $ref: "#/definitions/DPMDerivedBuild",
-              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them. It holds for this\nasset only: a reader sets it aside before reading another asset, and\njudges compatibility by every field, never by a version string alone."
             },
             COV_REALISM_MODELS: {
               type: "array",
               items: {
                 $ref: "#/definitions/DPMRealismModel"
               },
-              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+              description: "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures. IDs are\n1 or more and unique within the asset; a reader refuses a list that\nrepeats one."
             }
           },
           additionalProperties: false

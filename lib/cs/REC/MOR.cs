@@ -106,10 +106,10 @@ public struct MOR : IFlatbufferObject
   public long OD_EPOCH_UNIX_US { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)-9223372036854775808; } }
   /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
   public double DAYS_SINCE_LAST_OBS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-  /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-  /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-  /// then those parameters in ascending ordinal. Absent: no covariance.
+  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  /// ascending ordinal. Absent: no covariance.
   public double COVARIANCE_DATA(int j) { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int COVARIANCE_DATALength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -120,11 +120,12 @@ public struct MOR : IFlatbufferObject
   public double[] GetCOVARIANCE_DATAArray() { return __p.__vector_as_array<double>(68); }
   /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   public MORCovariancePropagation? COV_PROPAGATION { get { int o = __p.__offset(70); return o != 0 ? (MORCovariancePropagation?)(new MORCovariancePropagation()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-  /// covariance as its $OCM.
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// any producer text: a record read alone flies the same covariance as its $OCM.
   public morCovarianceFloor COV_FLOOR { get { int o = __p.__offset(72); return o != 0 ? (morCovarianceFloor)__p.bb.Get(o + __p.bb_pos) : morCovarianceFloor.UNSTATED; } }
   /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  /// ID the asset does not list leaves the figures unresolved, and a reader says so.
   public ushort COV_REALISM_ID { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
   /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
@@ -140,7 +141,7 @@ public struct MOR : IFlatbufferObject
 #endif
   public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(80); }
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -172,8 +173,10 @@ public struct MOR : IFlatbufferObject
   public ulong WINDOW_RECORD_CHECK { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-  /// object is this record's.
+  /// object is this record's. No TARGETER.
   public MPE? FALLBACK { get { int o = __p.__offset(90); return o != 0 ? (MPE?)(new MPE()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  public bool ROWS_ONLY { get { int o = __p.__offset(92); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<MOR> CreateMOR(FlatBufferBuilder builder,
       uint NORAD_CAT_ID = 0,
@@ -219,8 +222,9 @@ public struct MOR : IFlatbufferObject
       VectorOffset WINDOW_COEFF_HEADSOffset = default(VectorOffset),
       VectorOffset WINDOW_COEFF_TAILSOffset = default(VectorOffset),
       ulong WINDOW_RECORD_CHECK = 0,
-      Offset<MPE> FALLBACKOffset = default(Offset<MPE>)) {
-    builder.StartTable(44);
+      Offset<MPE> FALLBACKOffset = default(Offset<MPE>),
+      bool ROWS_ONLY = false) {
+    builder.StartTable(45);
     MOR.AddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK);
     MOR.AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS);
     MOR.AddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US);
@@ -256,6 +260,7 @@ public struct MOR : IFlatbufferObject
     MOR.AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOROffset);
     MOR.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     MOR.AddCOV_REALISM_ID(builder, COV_REALISM_ID);
+    MOR.AddROWS_ONLY(builder, ROWS_ONLY);
     MOR.AddCOV_CALIBRATION(builder, COV_CALIBRATION);
     MOR.AddCOV_FLOOR(builder, COV_FLOOR);
     MOR.AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE);
@@ -268,7 +273,7 @@ public struct MOR : IFlatbufferObject
     return MOR.EndMOR(builder);
   }
 
-  public static void StartMOR(FlatBufferBuilder builder) { builder.StartTable(44); }
+  public static void StartMOR(FlatBufferBuilder builder) { builder.StartTable(45); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(0, NORAD_CAT_ID, 0); }
   public static void AddINTERNATIONAL_DESIGNATOR(FlatBufferBuilder builder, StringOffset INTERNATIONAL_DESIGNATOROffset) { builder.AddOffset(1, INTERNATIONAL_DESIGNATOROffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
@@ -329,6 +334,7 @@ public struct MOR : IFlatbufferObject
   public static void StartWINDOW_COEFF_TAILSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddWINDOW_RECORD_CHECK(FlatBufferBuilder builder, ulong WINDOW_RECORD_CHECK) { builder.AddUlong(42, WINDOW_RECORD_CHECK, 0); }
   public static void AddFALLBACK(FlatBufferBuilder builder, Offset<MPE> FALLBACKOffset) { builder.AddOffset(43, FALLBACKOffset.Value, 0); }
+  public static void AddROWS_ONLY(FlatBufferBuilder builder, bool ROWS_ONLY) { builder.AddBool(44, ROWS_ONLY, false); }
   public static Offset<MOR> EndMOR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MOR>(o);
@@ -389,6 +395,7 @@ public struct MOR : IFlatbufferObject
     for (var _j = 0; _j < this.WINDOW_COEFF_TAILSLength; ++_j) {_o.WINDOW_COEFF_TAILS.Add(this.WINDOW_COEFF_TAILS(_j));}
     _o.WINDOW_RECORD_CHECK = this.WINDOW_RECORD_CHECK;
     _o.FALLBACK = this.FALLBACK.HasValue ? this.FALLBACK.Value.UnPack() : null;
+    _o.ROWS_ONLY = this.ROWS_ONLY;
   }
   public static Offset<MOR> Pack(FlatBufferBuilder builder, MORT _o) {
     if (_o == null) return default(Offset<MOR>);
@@ -464,7 +471,8 @@ public struct MOR : IFlatbufferObject
       _WINDOW_COEFF_HEADS,
       _WINDOW_COEFF_TAILS,
       _o.WINDOW_RECORD_CHECK,
-      _FALLBACK);
+      _FALLBACK,
+      _o.ROWS_ONLY);
   }
 }
 
@@ -514,6 +522,7 @@ public class MORT
   public List<float> WINDOW_COEFF_TAILS { get; set; }
   public ulong WINDOW_RECORD_CHECK { get; set; }
   public MPET FALLBACK { get; set; }
+  public bool ROWS_ONLY { get; set; }
 
   public MORT() {
     this.NORAD_CAT_ID = 0;
@@ -560,6 +569,7 @@ public class MORT
     this.WINDOW_COEFF_TAILS = null;
     this.WINDOW_RECORD_CHECK = 0;
     this.FALLBACK = null;
+    this.ROWS_ONLY = false;
   }
   public static MORT DeserializeFromBinary(byte[] fbBuffer) {
     return MOR.GetRootAsMOR(new ByteBuffer(fbBuffer)).UnPack();
@@ -621,6 +631,7 @@ static public class MORVerify
       && verifier.VerifyVectorOfData(tablePos, 86 /*WINDOW_COEFF_TAILS*/, 4 /*float*/, false)
       && verifier.VerifyField(tablePos, 88 /*WINDOW_RECORD_CHECK*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTable(tablePos, 90 /*FALLBACK*/, MPEVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 92 /*ROWS_ONLY*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

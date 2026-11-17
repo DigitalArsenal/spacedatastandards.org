@@ -666,14 +666,14 @@
         },
         "DERIVED_BUILD": {
           "$ref": "#/definitions/DPMDerivedBuild",
-          "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+          "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them. It holds for this\nasset only: a reader sets it aside before reading another asset, and\njudges compatibility by every field, never by a version string alone."
         },
         "COV_REALISM_MODELS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/DPMRealismModel"
           },
-          "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+          "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures. IDs are\n1 or more and unique within the asset; a reader refuses a list that\nrepeats one."
         }
       },
       "additionalProperties": false

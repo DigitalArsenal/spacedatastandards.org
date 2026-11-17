@@ -338,7 +338,9 @@ func (rcv *DPMAsset) RecordProvenance(obj *PVN) *PVN {
 /// record. Absent: the records state their own or have none.
 /// The builder of the derived polynomial rows the asset's records carry
 /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-/// carry no derived rows, or a reader must ignore them.
+/// carry no derived rows, or a reader must ignore them. It holds for this
+/// asset only: a reader sets it aside before reading another asset, and
+/// judges compatibility by every field, never by a version string alone.
 func (rcv *DPMAsset) DERIVED_BUILD(obj *DPMDerivedBuild) *DPMDerivedBuild {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -358,9 +360,13 @@ func (rcv *DPMAsset) DerivedBuild(obj *DPMDerivedBuild) *DPMDerivedBuild {
 
 /// The builder of the derived polynomial rows the asset's records carry
 /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-/// carry no derived rows, or a reader must ignore them.
+/// carry no derived rows, or a reader must ignore them. It holds for this
+/// asset only: a reader sets it aside before reading another asset, and
+/// judges compatibility by every field, never by a version string alone.
 /// The covariance realism models the asset's records name by ID ($MOR
-/// COV_REALISM_ID), each stated once with its population figures.
+/// COV_REALISM_ID), each stated once with its population figures. IDs are
+/// 1 or more and unique within the asset; a reader refuses a list that
+/// repeats one.
 func (rcv *DPMAsset) COV_REALISM_MODELS(obj *DPMRealismModel, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -393,7 +399,9 @@ func (rcv *DPMAsset) CovRealismModelsLength() int {
 }
 
 /// The covariance realism models the asset's records name by ID ($MOR
-/// COV_REALISM_ID), each stated once with its population figures.
+/// COV_REALISM_ID), each stated once with its population figures. IDs are
+/// 1 or more and unique within the asset; a reader refuses a list that
+/// repeats one.
 func DPMAssetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
 }

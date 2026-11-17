@@ -255,7 +255,8 @@ inline const char *EnumNamemorWindowStatus(morWindowStatus e) {
 }
 
 /// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
-/// names, units and meanings, all thirteen always present.
+/// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+/// appended field of MOR, never as a change to this struct.
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) MORCovariancePropagation FLATBUFFERS_FINAL_CLASS {
  private:
   double FLOOR_UU_KM2_;
@@ -466,7 +467,8 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_WINDOW_COEFF_HEADS = 84,
     VT_WINDOW_COEFF_TAILS = 86,
     VT_WINDOW_RECORD_CHECK = 88,
-    VT_FALLBACK = 90
+    VT_FALLBACK = 90,
+    VT_ROWS_ONLY = 92
   };
   /// The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
   uint32_t NORAD_CAT_ID() const {
@@ -601,10 +603,10 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DAYS_SINCE_LAST_OBS() const {
     return GetField<double>(VT_DAYS_SINCE_LAST_OBS, std::numeric_limits<double>::quiet_NaN());
   }
-  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
-  /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
-  /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
-  /// then those parameters in ascending ordinal. Absent: no covariance.
+  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved
+  /// DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS (the covariance parameters OD_PARAMETERS can carry);
+  /// position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion, then those parameters in
+  /// ascending ordinal. Absent: no covariance.
   const ::flatbuffers::Vector<double> *COVARIANCE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COVARIANCE_DATA);
   }
@@ -612,13 +614,14 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const MORCovariancePropagation *COV_PROPAGATION() const {
     return GetStruct<const MORCovariancePropagation *>(VT_COV_PROPAGATION);
   }
-  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
-  /// covariance as its $OCM.
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+  /// any producer text: a record read alone flies the same covariance as its $OCM.
   morCovarianceFloor COV_FLOOR() const {
     return static_cast<morCovarianceFloor>(GetField<uint8_t>(VT_COV_FLOOR, 0));
   }
   /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
-  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
+  /// ID the asset does not list leaves the figures unresolved, and a reader says so.
   uint16_t COV_REALISM_ID() const {
     return GetField<uint16_t>(VT_COV_REALISM_ID, 0);
   }
@@ -636,7 +639,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
   }
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  /// in time order, without overlap, each half-span above 0. A convenience: the elements remain authoritative and a reader may
   /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
   /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   /// A record without WINDOWS has no rows; why is stated by the build's $DRB OUTCOMES, never in the record.
@@ -661,9 +664,13 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
-  /// object is this record's.
+  /// object is this record's. No TARGETER.
   const MPE *FALLBACK() const {
     return GetPointer<const MPE *>(VT_FALLBACK);
+  }
+  /// This record carries only new rows for a set the receiver already holds (see "Rows only" above).
+  bool ROWS_ONLY() const {
+    return GetField<uint8_t>(VT_ROWS_ONLY, 0) != 0;
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -722,6 +729,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_WINDOW_RECORD_CHECK, 8) &&
            VerifyOffset(verifier, VT_FALLBACK) &&
            verifier.VerifyTable(FALLBACK()) &&
+           VerifyField<uint8_t>(verifier, VT_ROWS_ONLY, 1) &&
            verifier.EndTable();
   }
 };
@@ -862,6 +870,9 @@ struct MORBuilder {
   void add_FALLBACK(::flatbuffers::Offset<MPE> FALLBACK) {
     fbb_.AddOffset(MOR::VT_FALLBACK, FALLBACK);
   }
+  void add_ROWS_ONLY(bool ROWS_ONLY) {
+    fbb_.AddElement<uint8_t>(MOR::VT_ROWS_ONLY, static_cast<uint8_t>(ROWS_ONLY), 0);
+  }
   explicit MORBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -918,7 +929,8 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS = 0,
     uint64_t WINDOW_RECORD_CHECK = 0,
-    ::flatbuffers::Offset<MPE> FALLBACK = 0) {
+    ::flatbuffers::Offset<MPE> FALLBACK = 0,
+    bool ROWS_ONLY = false) {
   MORBuilder builder_(_fbb);
   builder_.add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK);
   builder_.add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS);
@@ -955,6 +967,7 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_INTERNATIONAL_DESIGNATOR(INTERNATIONAL_DESIGNATOR);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_COV_REALISM_ID(COV_REALISM_ID);
+  builder_.add_ROWS_ONLY(ROWS_ONLY);
   builder_.add_COV_CALIBRATION(COV_CALIBRATION);
   builder_.add_COV_FLOOR(COV_FLOOR);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
@@ -1012,7 +1025,8 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     const std::vector<double> *WINDOW_COEFF_HEADS = nullptr,
     const std::vector<float> *WINDOW_COEFF_TAILS = nullptr,
     uint64_t WINDOW_RECORD_CHECK = 0,
-    ::flatbuffers::Offset<MPE> FALLBACK = 0) {
+    ::flatbuffers::Offset<MPE> FALLBACK = 0,
+    bool ROWS_ONLY = false) {
   auto INTERNATIONAL_DESIGNATOR__ = INTERNATIONAL_DESIGNATOR ? _fbb.CreateString(INTERNATIONAL_DESIGNATOR) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
@@ -1066,7 +1080,8 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
       WINDOW_COEFF_HEADS__,
       WINDOW_COEFF_TAILS__,
       WINDOW_RECORD_CHECK,
-      FALLBACK);
+      FALLBACK,
+      ROWS_ONLY);
 }
 
 inline const MOR *GetMOR(const void *buf) {

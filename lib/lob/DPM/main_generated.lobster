@@ -199,12 +199,16 @@ class DPMAsset : flatbuffers.handle
         return if o: PVN { buf_, o } else: nil
     /// The builder of the derived polynomial rows the asset's records carry
     /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-    /// carry no derived rows, or a reader must ignore them.
+    /// carry no derived rows, or a reader must ignore them. It holds for this
+    /// asset only: a reader sets it aside before reading another asset, and
+    /// judges compatibility by every field, never by a version string alone.
     def DERIVED_BUILD() -> DPMDerivedBuild?:
         let o = flatbuffers.field_table(buf_, pos_, 34)
         return if o: DPMDerivedBuild { buf_, o } else: nil
     /// The covariance realism models the asset's records name by ID ($MOR
-    /// COV_REALISM_ID), each stated once with its population figures.
+    /// COV_REALISM_ID), each stated once with its population figures. IDs are
+    /// 1 or more and unique within the asset; a reader refuses a list that
+    /// repeats one.
     def COV_REALISM_MODELS(i:int) -> DPMRealismModel:
         return DPMRealismModel { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 36) + i * 4) }
     def COV_REALISM_MODELS_length() -> int:

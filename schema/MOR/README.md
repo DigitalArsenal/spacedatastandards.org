@@ -20,6 +20,20 @@ One mean element set with only what a propagator needs to fly it. `$MOR` stands 
 
 A compact form, not `$PPE`. One window as `$PPE` inside `$OCM` costs about 1,188 bytes per object (1,690 measured on the catalog below, with the builder statement); the same rows here add 480 bytes (median; 504 at the 95th percentile). The coefficients keep their binary64 heads and binary32 tails in two flat vectors (`WINDOW_COEFF_HEADS`, `WINDOW_COEFF_TAILS`) instead of six widened per-axis vectors; times are numbers relative to the element epoch, with no midpoint text; position and velocity keep their own counts, so nothing is padded. The builder's name, version, artifact digest, environment digest and tolerances are stated once per asset in `$DPM` `DPMAsset.DERIVED_BUILD`; without it a reader must not use the rows. Each record keeps `WINDOW_RECORD_CHECK`, the first 8 bytes of the builder's record digest over the record's decoded inputs: a step that rewrites the elements and keeps the rows leaves a mismatch, and a mismatch voids the rows.
 
+## Rows only
+
+A preseed holds for one start time and the next window, so it is rebuilt on a schedule. `ROWS_ONLY` records carry only new rows for a set the receiver already holds: its identity (`NORAD_CAT_ID`, `INTERNATIONAL_DESIGNATOR`, `ORIGINATOR`), `MEAN_ELEMENT_THEORY`, `EPOCH_UNIX_US`, the windows, their coefficients and `WINDOW_RECORD_CHECK`; every other field stays at its default, and the record has no `$OCM` expansion. The receiver matches identity, theory and epoch to exactly one held set, recomputes that set's record check, and requires the asset's `DERIVED_BUILD` to match its own; then the update replaces all of the set's windows at once, but only when its last window ends later than the held rows' last window. A repeated or older update changes nothing; any mismatch changes nothing and the set takes its normal build path. Elements and covariance never change. Replacing, not merging, keeps one rule: the newest complete bundle wins, and no mixture of two builds is ever served.
+
+## Reading rules
+
+- `COV_FLOOR` governs the covariance's numbers. If the asset's `RECORD_PROVENANCE.PRODUCER` would state another floor, the record wins; the reference expansion refuses to write such a record as an `$OCM` rather than restate the floor, and publishers keep such records out of that asset.
+- Realism model IDs in an asset are 1 or more and unique. A record carries `COV_REALISM_ID` or an inline `COV_REALISM`, never both. An ID the asset does not list leaves the figures unresolved, reported as such.
+- `WINDOWS` are in time order, do not overlap, and every half-span is above 0. The reference reducer sorts each window together with its own coefficient runs.
+- An embedded `FALLBACK` has no `ENTITY_ID` and no `TARGETER`. Expanded on its own, its `ENTITY_ID` is the parent's decimal `NORAD_CAT_ID` (its `INTERNATIONAL_DESIGNATOR` when the number is 0), and it joins its object by that identifier with no originator, never by name.
+- Of the covariance parameter kinds, only `DRAG_AREA_OVER_MASS` and `SRP_AREA_OVER_MASS` can occur: the orbit-determination mask carries no other. Rate, in-track and outgassing rows are outside the reducible profile.
+- `DERIVED_BUILD` holds for its asset only: a reader sets it aside between assets and judges compatibility by every field, never by a version string alone.
+- `MORCovariancePropagation` is closed: a later quantity comes as a new appended field of `MOR`.
+
 ## Fallback set
 
 `FALLBACK` embeds an `$MPE`, which now carries `BTERM` and `AGOM` (appended in this release) so an SGP4-XP set fits. Embedded rather than paired in the stream: one object, one record, no join, and the set the publisher chose travels with the record it backs up. It costs 144 bytes per record, about the size of the set as text.

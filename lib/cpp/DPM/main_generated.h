@@ -387,12 +387,16 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// The builder of the derived polynomial rows the asset's records carry
   /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
-  /// carry no derived rows, or a reader must ignore them.
+  /// carry no derived rows, or a reader must ignore them. It holds for this
+  /// asset only: a reader sets it aside before reading another asset, and
+  /// judges compatibility by every field, never by a version string alone.
   const DPMDerivedBuild *DERIVED_BUILD() const {
     return GetPointer<const DPMDerivedBuild *>(VT_DERIVED_BUILD);
   }
   /// The covariance realism models the asset's records name by ID ($MOR
-  /// COV_REALISM_ID), each stated once with its population figures.
+  /// COV_REALISM_ID), each stated once with its population figures. IDs are
+  /// 1 or more and unique within the asset; a reader refuses a list that
+  /// repeats one.
   const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *COV_REALISM_MODELS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *>(VT_COV_REALISM_MODELS);
   }

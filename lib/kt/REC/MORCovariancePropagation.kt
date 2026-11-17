@@ -18,7 +18,8 @@ import kotlin.math.sign
 
 /**
  * What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
- * names, units and meanings, all thirteen always present.
+ * names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
+ * appended field of MOR, never as a change to this struct.
  */
 @Suppress("unused")
 class MORCovariancePropagation : Struct() {
