@@ -183,6 +183,19 @@ class EGP : Table() {
         }
     val datasetCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
     fun datasetCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+     * GENERATED.
+     */
+    val walker : EGPWalker? get() = walker(EGPWalker())
+    fun walker(obj: EGPWalker) : EGPWalker? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEGP(_bb: ByteBuffer): EGP = getRootAsEGP(_bb, EGP())
@@ -191,8 +204,9 @@ class EGP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EGPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EGP")
-        fun createEGP(builder: FlatBufferBuilder, groupIdOffset: Int, nameOffset: Int, descriptionOffset: Int, tagsOffset: Int, membershipMode: Byte, membersOffset: Int, queryOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, provenanceOffset: Int, datasetCidOffset: Int) : Int {
-            builder.startTable(11)
+        fun createEGP(builder: FlatBufferBuilder, groupIdOffset: Int, nameOffset: Int, descriptionOffset: Int, tagsOffset: Int, membershipMode: Byte, membersOffset: Int, queryOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, provenanceOffset: Int, datasetCidOffset: Int, walkerOffset: Int) : Int {
+            builder.startTable(12)
+            addWALKER(builder, walkerOffset)
             addDATASETCID(builder, datasetCidOffset)
             addPROVENANCE(builder, provenanceOffset)
             addUPDATEDAT(builder, updatedAtOffset)
@@ -206,7 +220,7 @@ class EGP : Table() {
             addMEMBERSHIPMODE(builder, membershipMode)
             return endEGP(builder)
         }
-        fun startEGP(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startEGP(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addGROUPID(builder: FlatBufferBuilder, groupId: Int) = builder.addOffset(0, groupId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
@@ -242,6 +256,7 @@ class EGP : Table() {
         }
         fun startProvenanceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addDATASETCID(builder: FlatBufferBuilder, datasetCid: Int) = builder.addOffset(10, datasetCid, 0)
+        fun addWALKER(builder: FlatBufferBuilder, walker: Int) = builder.addOffset(11, walker, 0)
         fun endEGP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

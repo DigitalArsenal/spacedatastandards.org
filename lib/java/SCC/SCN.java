@@ -20,6 +20,11 @@ import java.nio.ByteOrder;
  * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
+ *
+ * A scenario that carries other records is one $REC whose first record is
+ * this $SCN; the other records follow under their own standards. A stored
+ * request carries only its request arm, with derived fields left empty to be
+ * computed again.
  */
 @SuppressWarnings("unused")
 public final class SCN extends com.google.flatbuffers.Table {
@@ -92,6 +97,63 @@ public final class SCN extends com.google.flatbuffers.Table {
    */
   public SCNAssetsChanged ASSETS_CHANGED() { return ASSETS_CHANGED(new SCNAssetsChanged()); }
   public SCNAssetsChanged ASSETS_CHANGED(SCNAssetsChanged obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+   * time.
+   */
+  public String START_EPOCH() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer START_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Clock interval stop as an ISO-8601 UTC timestamp.
+   */
+  public String STOP_EPOCH() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STOP_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer STOP_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * True when the clock was running.
+   */
+  public boolean ANIMATING() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Start of the analysis window, the span the timeline showed, as an
+   * ISO-8601 UTC timestamp.
+   */
+  public String WINDOW_START() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WINDOW_STARTAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer WINDOW_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Stop of the analysis window as an ISO-8601 UTC timestamp.
+   */
+  public String WINDOW_STOP() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WINDOW_STOPAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer WINDOW_STOPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+   * the catalog objects were flown with.
+   */
+  public String PROPAGATOR_MODULE_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROPAGATOR_MODULE_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer PROPAGATOR_MODULE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Timeline rows kept with the scenario.
+   */
+  public SCNPinnedRow PINNED_ROWS(int j) { return PINNED_ROWS(new SCNPinnedRow(), j); }
+  public SCNPinnedRow PINNED_ROWS(SCNPinnedRow obj, int j) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PINNED_ROWSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public SCNPinnedRow.Vector pinnedRowsVector() { return pinnedRowsVector(new SCNPinnedRow.Vector()); }
+  public SCNPinnedRow.Vector pinnedRowsVector(SCNPinnedRow.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+   * enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+   * enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+   * zero. The record's CID is computed over the signed bytes.
+   */
+  public int SIGNATURE(int j) { int o = __offset(42); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int SIGNATURELength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector signatureVector() { return signatureVector(new ByteVector()); }
+  public ByteVector signatureVector(ByteVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createSCN(FlatBufferBuilder builder,
       int SCENARIO_IDOffset,
@@ -105,9 +167,24 @@ public final class SCN extends com.google.flatbuffers.Table {
       int REFERENCE_FRAMEOffset,
       byte ACTION,
       int VIEW_STATEOffset,
-      int ASSETS_CHANGEDOffset) {
-    builder.startTable(12);
+      int ASSETS_CHANGEDOffset,
+      int START_EPOCHOffset,
+      int STOP_EPOCHOffset,
+      boolean ANIMATING,
+      int WINDOW_STARTOffset,
+      int WINDOW_STOPOffset,
+      int PROPAGATOR_MODULE_IDOffset,
+      int PINNED_ROWSOffset,
+      int SIGNATUREOffset) {
+    builder.startTable(20);
     SCN.addSimSpeed(builder, SIM_SPEED);
+    SCN.addSignature(builder, SIGNATUREOffset);
+    SCN.addPinnedRows(builder, PINNED_ROWSOffset);
+    SCN.addPropagatorModuleId(builder, PROPAGATOR_MODULE_IDOffset);
+    SCN.addWindowStop(builder, WINDOW_STOPOffset);
+    SCN.addWindowStart(builder, WINDOW_STARTOffset);
+    SCN.addStopEpoch(builder, STOP_EPOCHOffset);
+    SCN.addStartEpoch(builder, START_EPOCHOffset);
     SCN.addAssetsChanged(builder, ASSETS_CHANGEDOffset);
     SCN.addViewState(builder, VIEW_STATEOffset);
     SCN.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
@@ -117,12 +194,13 @@ public final class SCN extends com.google.flatbuffers.Table {
     SCN.addEvent(builder, EVENTOffset);
     SCN.addReferences(builder, REFERENCESOffset);
     SCN.addScenarioId(builder, SCENARIO_IDOffset);
+    SCN.addAnimating(builder, ANIMATING);
     SCN.addAction(builder, ACTION);
     SCN.addUseBodyFixedFrame(builder, USE_BODY_FIXED_FRAME);
     return SCN.endSCN(builder);
   }
 
-  public static void startSCN(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startSCN(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(0, SCENARIO_IDOffset, 0); }
   public static void addReferences(FlatBufferBuilder builder, int REFERENCESOffset) { builder.addOffset(1, REFERENCESOffset, 0); }
   public static int createReferencesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -137,6 +215,19 @@ public final class SCN extends com.google.flatbuffers.Table {
   public static void addAction(FlatBufferBuilder builder, byte ACTION) { builder.addByte(9, ACTION, 0); }
   public static void addViewState(FlatBufferBuilder builder, int VIEW_STATEOffset) { builder.addOffset(10, VIEW_STATEOffset, 0); }
   public static void addAssetsChanged(FlatBufferBuilder builder, int ASSETS_CHANGEDOffset) { builder.addOffset(11, ASSETS_CHANGEDOffset, 0); }
+  public static void addStartEpoch(FlatBufferBuilder builder, int START_EPOCHOffset) { builder.addOffset(12, START_EPOCHOffset, 0); }
+  public static void addStopEpoch(FlatBufferBuilder builder, int STOP_EPOCHOffset) { builder.addOffset(13, STOP_EPOCHOffset, 0); }
+  public static void addAnimating(FlatBufferBuilder builder, boolean ANIMATING) { builder.addBoolean(14, ANIMATING, false); }
+  public static void addWindowStart(FlatBufferBuilder builder, int WINDOW_STARTOffset) { builder.addOffset(15, WINDOW_STARTOffset, 0); }
+  public static void addWindowStop(FlatBufferBuilder builder, int WINDOW_STOPOffset) { builder.addOffset(16, WINDOW_STOPOffset, 0); }
+  public static void addPropagatorModuleId(FlatBufferBuilder builder, int PROPAGATOR_MODULE_IDOffset) { builder.addOffset(17, PROPAGATOR_MODULE_IDOffset, 0); }
+  public static void addPinnedRows(FlatBufferBuilder builder, int PINNED_ROWSOffset) { builder.addOffset(18, PINNED_ROWSOffset, 0); }
+  public static int createPinnedRowsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPinnedRowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(19, SIGNATUREOffset, 0); }
+  public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endSCN(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

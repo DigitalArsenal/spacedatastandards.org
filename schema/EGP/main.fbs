@@ -1,5 +1,5 @@
-// Hash: d7c38fac314fab6f5f3cc5b072ad7dfd1b613bc987cea8718a5e8a26e41e6843
-// Version: 0.0.1
+// Hash: 2c95c5988d0dc4422e80f3a4eb064a3de6e6e33c44221942cb6eca46a711a148
+// Version: 0.0.2
 // -----------------------------------END_HEADER
 // Entity Group (EGP)
 // Description
@@ -69,7 +69,48 @@ enum egpMembershipMode : byte {
   QUERY_SNAPSHOT,
   /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
   /// recompute; the query wins on disagreement.
-  QUERY_LIVE
+  QUERY_LIVE,
+  /// Members were generated from WALKER; MEMBERS is that generation, and each
+  /// member's elements are its own $OMM.
+  GENERATED
+}
+
+/// Walker pattern of a generated constellation. Append new values only.
+enum egpWalkerPattern : byte {
+  UNSPECIFIED = 0,
+  /// Planes spread over 360 degrees of right ascension.
+  DELTA,
+  /// Planes spread over 180 degrees of right ascension.
+  STAR,
+  /// Planes spread over RA_OF_ASC_NODE_SPREAD.
+  CUSTOM
+}
+
+/// The Walker definition a constellation group's members are generated from.
+/// Angles are in degrees, as an $OMM states them.
+table EGPWalker {
+  PATTERN:egpWalkerPattern = UNSPECIFIED;
+  /// T: number of satellites.
+  TOTAL_SATELLITES:uint;
+  /// P: number of planes.
+  PLANES:uint;
+  /// F: relative phasing, 0 to PLANES - 1.
+  PHASING:uint;
+  INCLINATION:double;
+  /// Circular height above the WGS 84 equatorial radius, km.
+  ALTITUDE_KM:double;
+  /// CUSTOM only: the right ascension the ascending nodes are spread over.
+  RA_OF_ASC_NODE_SPREAD:double;
+  /// Right ascension of the ascending node of the first plane.
+  FIRST_RA_OF_ASC_NODE:double;
+  /// Mean anomaly of the first satellite of the first plane.
+  FIRST_MEAN_ANOMALY:double;
+  ECCENTRICITY:double;
+  ARG_OF_PERICENTER:double;
+  /// Epoch of the generated elements, ISO 8601 UTC.
+  EPOCH:string;
+  /// Catalog number of the first satellite; the others follow it in order.
+  FIRST_NORAD_CAT_ID:uint;
 }
 
 /// Provenance of the assertions behind a group. Field-for-field the
@@ -165,6 +206,9 @@ table EGP {
   PROVENANCE:[EGPProvenance];
   /// Optional content identifier of the dataset the group was drawn from.
   DATASET_CID:string;
+  /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+  /// GENERATED.
+  WALKER:EGPWalker;
 }
 
 root_type EGP;

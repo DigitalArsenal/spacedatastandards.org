@@ -214,6 +214,8 @@ class RFLModelBinding
 
 class RFLProvenance
 
+class RFLJamming
+
 class RFL
 
 /// One obstacle interaction on one sample's path. SPARSE: entries exist only
@@ -987,6 +989,91 @@ def RFLProvenanceCreateMODELSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// A jamming assessment of one link: the jammer and the stated values the
+/// assessment and its countermeasures use. Inputs only; what it yields is this
+/// record's samples. A record that carries it with no samples is the
+/// assessment's definition, to be sampled.
+class RFLJamming : flatbuffers.handle
+    /// Index in LINKS of the link assessed.
+    def LINK_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// The jammer's end: its site (SIT_ID) or its platform.
+    def JAMMER_ENDPOINT() -> RFLEndpoint:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return RFLEndpoint { buf_, assert o }
+    /// Zero-based index, in the analysis window, of the spacecraft's pass over
+    /// the link's ground end that is assessed.
+    def PASS_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// The ground terminal antenna's stated gain toward the jammer, dBi.
+    def TERMINAL_GAIN_TOWARD_JAMMER_DBI() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+    def HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Countermeasure: the link's EIRP raised by this many dB.
+    def POWER_STEP_DB() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Countermeasure: processing gain, dB, as the operator states it.
+    def PROCESSING_GAIN_DB() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// True when PROCESSING_GAIN_DB is stated; it has no default.
+    def HAS_PROCESSING_GAIN_DB() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+    /// null countermeasures.
+    def ARRAY_PAP_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Denial area about the link's ground end: radius, km.
+    def AREA_RADIUS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Denial area: number of cells across the radius.
+    def AREA_RESOLUTION() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 24, 0)
+
+def GetRootAsRFLJamming(buf:string): return RFLJamming { buf, flatbuffers.indirect(buf, 0) }
+
+struct RFLJammingBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_LINK_INDEX(LINK_INDEX:int):
+        b_.PrependUint32Slot(0, LINK_INDEX, 0)
+        return this
+    def add_JAMMER_ENDPOINT(JAMMER_ENDPOINT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, JAMMER_ENDPOINT)
+        return this
+    def add_PASS_INDEX(PASS_INDEX:int):
+        b_.PrependUint32Slot(2, PASS_INDEX, 0)
+        return this
+    def add_TERMINAL_GAIN_TOWARD_JAMMER_DBI(TERMINAL_GAIN_TOWARD_JAMMER_DBI:float):
+        b_.PrependFloat64Slot(3, TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0.0)
+        return this
+    def add_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI:bool):
+        b_.PrependBoolSlot(4, HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0)
+        return this
+    def add_POWER_STEP_DB(POWER_STEP_DB:float):
+        b_.PrependFloat64Slot(5, POWER_STEP_DB, 0.0)
+        return this
+    def add_PROCESSING_GAIN_DB(PROCESSING_GAIN_DB:float):
+        b_.PrependFloat64Slot(6, PROCESSING_GAIN_DB, 0.0)
+        return this
+    def add_HAS_PROCESSING_GAIN_DB(HAS_PROCESSING_GAIN_DB:bool):
+        b_.PrependBoolSlot(7, HAS_PROCESSING_GAIN_DB, 0)
+        return this
+    def add_ARRAY_PAP_ID(ARRAY_PAP_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, ARRAY_PAP_ID)
+        return this
+    def add_AREA_RADIUS_KM(AREA_RADIUS_KM:float):
+        b_.PrependFloat64Slot(9, AREA_RADIUS_KM, 0.0)
+        return this
+    def add_AREA_RESOLUTION(AREA_RESOLUTION:int):
+        b_.PrependUint32Slot(10, AREA_RESOLUTION, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// RF Link Sample
 class RFL : flatbuffers.handle
     /// Stable identifier of this sample set.
@@ -1289,13 +1376,17 @@ class RFL : flatbuffers.handle
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 120) + i * 8)
     def BLOCK_ERROR_RATE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 120)
+    /// The jamming assessment this record answers, when it answers one.
+    def JAMMING() -> RFLJamming?:
+        let o = flatbuffers.field_table(buf_, pos_, 122)
+        return if o: RFLJamming { buf_, o } else: nil
 
 def GetRootAsRFL(buf:string): return RFL { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFLBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(59)
+        b_.StartObject(60)
         return this
     def add_RFL_ID(RFL_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, RFL_ID)
@@ -1473,6 +1564,9 @@ struct RFLBuilder:
         return this
     def add_BLOCK_ERROR_RATE(BLOCK_ERROR_RATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(58, BLOCK_ERROR_RATE)
+        return this
+    def add_JAMMING(JAMMING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(59, JAMMING)
         return this
     def end():
         return b_.EndObject()

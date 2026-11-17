@@ -96,6 +96,8 @@ enum snrAntennaPattern:
     snrAntennaPattern_TEARDROP = 9
     snrAntennaPattern_TOROIDAL = 10
     snrAntennaPattern_CARDIOID = 11
+    /// An electronically steered array; its pattern is a $PAP synthesis.
+    snrAntennaPattern_PHASED_ARRAY = 12
 
 class SNRSpectralBand
 

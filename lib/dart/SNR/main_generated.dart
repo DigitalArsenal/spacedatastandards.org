@@ -274,7 +274,8 @@ enum snrAntennaPattern {
   RINGED(8),
   TEARDROP(9),
   TOROIDAL(10),
-  CARDIOID(11);
+  CARDIOID(11),
+  PHASED_ARRAY(12);
 
   final int value;
   const snrAntennaPattern(this.value);
@@ -293,6 +294,7 @@ enum snrAntennaPattern {
       case 9: return snrAntennaPattern.TEARDROP;
       case 10: return snrAntennaPattern.TOROIDAL;
       case 11: return snrAntennaPattern.CARDIOID;
+      case 12: return snrAntennaPattern.PHASED_ARRAY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -301,7 +303,7 @@ enum snrAntennaPattern {
       value == null ? null : snrAntennaPattern.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 11;
+  static const int maxValue = 12;
   static const fb.Reader<snrAntennaPattern> reader = _snrAntennaPatternReader();
 }
 

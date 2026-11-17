@@ -50,6 +50,7 @@ export declare enum RecordTypeExtended {
     SWS = 294,
     SSY = 295,
     MOR = 296,
-    DRB = 297
+    DRB = 297,
+    COA = 298
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

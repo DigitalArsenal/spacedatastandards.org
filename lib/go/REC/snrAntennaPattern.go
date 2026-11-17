@@ -8,49 +8,53 @@ import "strconv"
 type snrAntennaPattern int8
 
 const (
-	snrAntennaPatternUNSPECIFIED snrAntennaPattern = 0
-	snrAntennaPatternISOTROPIC   snrAntennaPattern = 1
-	snrAntennaPatternHEMISPHERIC snrAntennaPattern = 2
-	snrAntennaPatternPARABOLIC   snrAntennaPattern = 3
-	snrAntennaPatternGAUSSIAN    snrAntennaPattern = 4
-	snrAntennaPatternPENCIL      snrAntennaPattern = 5
-	snrAntennaPatternHELIX       snrAntennaPattern = 6
-	snrAntennaPatternDIPOLE      snrAntennaPattern = 7
-	snrAntennaPatternRINGED      snrAntennaPattern = 8
+	snrAntennaPatternUNSPECIFIED  snrAntennaPattern = 0
+	snrAntennaPatternISOTROPIC    snrAntennaPattern = 1
+	snrAntennaPatternHEMISPHERIC  snrAntennaPattern = 2
+	snrAntennaPatternPARABOLIC    snrAntennaPattern = 3
+	snrAntennaPatternGAUSSIAN     snrAntennaPattern = 4
+	snrAntennaPatternPENCIL       snrAntennaPattern = 5
+	snrAntennaPatternHELIX        snrAntennaPattern = 6
+	snrAntennaPatternDIPOLE       snrAntennaPattern = 7
+	snrAntennaPatternRINGED       snrAntennaPattern = 8
 	/// The earth-coverage (teardrop) beam of a geostationary antenna.
-	snrAntennaPatternTEARDROP    snrAntennaPattern = 9
-	snrAntennaPatternTOROIDAL    snrAntennaPattern = 10
-	snrAntennaPatternCARDIOID    snrAntennaPattern = 11
+	snrAntennaPatternTEARDROP     snrAntennaPattern = 9
+	snrAntennaPatternTOROIDAL     snrAntennaPattern = 10
+	snrAntennaPatternCARDIOID     snrAntennaPattern = 11
+	/// An electronically steered array; its pattern is a $PAP synthesis.
+	snrAntennaPatternPHASED_ARRAY snrAntennaPattern = 12
 )
 
 var EnumNamessnrAntennaPattern = map[snrAntennaPattern]string{
-	snrAntennaPatternUNSPECIFIED: "UNSPECIFIED",
-	snrAntennaPatternISOTROPIC:   "ISOTROPIC",
-	snrAntennaPatternHEMISPHERIC: "HEMISPHERIC",
-	snrAntennaPatternPARABOLIC:   "PARABOLIC",
-	snrAntennaPatternGAUSSIAN:    "GAUSSIAN",
-	snrAntennaPatternPENCIL:      "PENCIL",
-	snrAntennaPatternHELIX:       "HELIX",
-	snrAntennaPatternDIPOLE:      "DIPOLE",
-	snrAntennaPatternRINGED:      "RINGED",
-	snrAntennaPatternTEARDROP:    "TEARDROP",
-	snrAntennaPatternTOROIDAL:    "TOROIDAL",
-	snrAntennaPatternCARDIOID:    "CARDIOID",
+	snrAntennaPatternUNSPECIFIED:  "UNSPECIFIED",
+	snrAntennaPatternISOTROPIC:    "ISOTROPIC",
+	snrAntennaPatternHEMISPHERIC:  "HEMISPHERIC",
+	snrAntennaPatternPARABOLIC:    "PARABOLIC",
+	snrAntennaPatternGAUSSIAN:     "GAUSSIAN",
+	snrAntennaPatternPENCIL:       "PENCIL",
+	snrAntennaPatternHELIX:        "HELIX",
+	snrAntennaPatternDIPOLE:       "DIPOLE",
+	snrAntennaPatternRINGED:       "RINGED",
+	snrAntennaPatternTEARDROP:     "TEARDROP",
+	snrAntennaPatternTOROIDAL:     "TOROIDAL",
+	snrAntennaPatternCARDIOID:     "CARDIOID",
+	snrAntennaPatternPHASED_ARRAY: "PHASED_ARRAY",
 }
 
 var EnumValuessnrAntennaPattern = map[string]snrAntennaPattern{
-	"UNSPECIFIED": snrAntennaPatternUNSPECIFIED,
-	"ISOTROPIC":   snrAntennaPatternISOTROPIC,
-	"HEMISPHERIC": snrAntennaPatternHEMISPHERIC,
-	"PARABOLIC":   snrAntennaPatternPARABOLIC,
-	"GAUSSIAN":    snrAntennaPatternGAUSSIAN,
-	"PENCIL":      snrAntennaPatternPENCIL,
-	"HELIX":       snrAntennaPatternHELIX,
-	"DIPOLE":      snrAntennaPatternDIPOLE,
-	"RINGED":      snrAntennaPatternRINGED,
-	"TEARDROP":    snrAntennaPatternTEARDROP,
-	"TOROIDAL":    snrAntennaPatternTOROIDAL,
-	"CARDIOID":    snrAntennaPatternCARDIOID,
+	"UNSPECIFIED":  snrAntennaPatternUNSPECIFIED,
+	"ISOTROPIC":    snrAntennaPatternISOTROPIC,
+	"HEMISPHERIC":  snrAntennaPatternHEMISPHERIC,
+	"PARABOLIC":    snrAntennaPatternPARABOLIC,
+	"GAUSSIAN":     snrAntennaPatternGAUSSIAN,
+	"PENCIL":       snrAntennaPatternPENCIL,
+	"HELIX":        snrAntennaPatternHELIX,
+	"DIPOLE":       snrAntennaPatternDIPOLE,
+	"RINGED":       snrAntennaPatternRINGED,
+	"TEARDROP":     snrAntennaPatternTEARDROP,
+	"TOROIDAL":     snrAntennaPatternTOROIDAL,
+	"CARDIOID":     snrAntennaPatternCARDIOID,
+	"PHASED_ARRAY": snrAntennaPatternPHASED_ARRAY,
 }
 
 func (v snrAntennaPattern) String() string {

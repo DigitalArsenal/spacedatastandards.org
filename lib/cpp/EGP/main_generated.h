@@ -13,6 +13,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+struct EGPWalker;
+struct EGPWalkerBuilder;
+
 struct EGPProvenance;
 struct EGPProvenanceBuilder;
 
@@ -36,35 +39,287 @@ enum egpMembershipMode : int8_t {
   /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
   /// recompute; the query wins on disagreement.
   egpMembershipMode_QUERY_LIVE = 3,
+  /// Members were generated from WALKER; MEMBERS is that generation, and each
+  /// member's elements are its own $OMM.
+  egpMembershipMode_GENERATED = 4,
   egpMembershipMode_MIN = egpMembershipMode_UNSPECIFIED,
-  egpMembershipMode_MAX = egpMembershipMode_QUERY_LIVE
+  egpMembershipMode_MAX = egpMembershipMode_GENERATED
 };
 
-inline const egpMembershipMode (&EnumValuesegpMembershipMode())[4] {
+inline const egpMembershipMode (&EnumValuesegpMembershipMode())[5] {
   static const egpMembershipMode values[] = {
     egpMembershipMode_UNSPECIFIED,
     egpMembershipMode_ENUMERATED,
     egpMembershipMode_QUERY_SNAPSHOT,
-    egpMembershipMode_QUERY_LIVE
+    egpMembershipMode_QUERY_LIVE,
+    egpMembershipMode_GENERATED
   };
   return values;
 }
 
 inline const char * const *EnumNamesegpMembershipMode() {
-  static const char * const names[5] = {
+  static const char * const names[6] = {
     "UNSPECIFIED",
     "ENUMERATED",
     "QUERY_SNAPSHOT",
     "QUERY_LIVE",
+    "GENERATED",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameegpMembershipMode(egpMembershipMode e) {
-  if (::flatbuffers::IsOutRange(e, egpMembershipMode_UNSPECIFIED, egpMembershipMode_QUERY_LIVE)) return "";
+  if (::flatbuffers::IsOutRange(e, egpMembershipMode_UNSPECIFIED, egpMembershipMode_GENERATED)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesegpMembershipMode()[index];
+}
+
+/// Walker pattern of a generated constellation. Append new values only.
+enum egpWalkerPattern : int8_t {
+  egpWalkerPattern_UNSPECIFIED = 0,
+  /// Planes spread over 360 degrees of right ascension.
+  egpWalkerPattern_DELTA = 1,
+  /// Planes spread over 180 degrees of right ascension.
+  egpWalkerPattern_STAR = 2,
+  /// Planes spread over RA_OF_ASC_NODE_SPREAD.
+  egpWalkerPattern_CUSTOM = 3,
+  egpWalkerPattern_MIN = egpWalkerPattern_UNSPECIFIED,
+  egpWalkerPattern_MAX = egpWalkerPattern_CUSTOM
+};
+
+inline const egpWalkerPattern (&EnumValuesegpWalkerPattern())[4] {
+  static const egpWalkerPattern values[] = {
+    egpWalkerPattern_UNSPECIFIED,
+    egpWalkerPattern_DELTA,
+    egpWalkerPattern_STAR,
+    egpWalkerPattern_CUSTOM
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesegpWalkerPattern() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "DELTA",
+    "STAR",
+    "CUSTOM",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameegpWalkerPattern(egpWalkerPattern e) {
+  if (::flatbuffers::IsOutRange(e, egpWalkerPattern_UNSPECIFIED, egpWalkerPattern_CUSTOM)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesegpWalkerPattern()[index];
+}
+
+/// The Walker definition a constellation group's members are generated from.
+/// Angles are in degrees, as an $OMM states them.
+struct EGPWalker FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EGPWalkerBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PATTERN = 4,
+    VT_TOTAL_SATELLITES = 6,
+    VT_PLANES = 8,
+    VT_PHASING = 10,
+    VT_INCLINATION = 12,
+    VT_ALTITUDE_KM = 14,
+    VT_RA_OF_ASC_NODE_SPREAD = 16,
+    VT_FIRST_RA_OF_ASC_NODE = 18,
+    VT_FIRST_MEAN_ANOMALY = 20,
+    VT_ECCENTRICITY = 22,
+    VT_ARG_OF_PERICENTER = 24,
+    VT_EPOCH = 26,
+    VT_FIRST_NORAD_CAT_ID = 28
+  };
+  egpWalkerPattern PATTERN() const {
+    return static_cast<egpWalkerPattern>(GetField<int8_t>(VT_PATTERN, 0));
+  }
+  /// T: number of satellites.
+  uint32_t TOTAL_SATELLITES() const {
+    return GetField<uint32_t>(VT_TOTAL_SATELLITES, 0);
+  }
+  /// P: number of planes.
+  uint32_t PLANES() const {
+    return GetField<uint32_t>(VT_PLANES, 0);
+  }
+  /// F: relative phasing, 0 to PLANES - 1.
+  uint32_t PHASING() const {
+    return GetField<uint32_t>(VT_PHASING, 0);
+  }
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Circular height above the WGS 84 equatorial radius, km.
+  double ALTITUDE_KM() const {
+    return GetField<double>(VT_ALTITUDE_KM, 0.0);
+  }
+  /// CUSTOM only: the right ascension the ascending nodes are spread over.
+  double RA_OF_ASC_NODE_SPREAD() const {
+    return GetField<double>(VT_RA_OF_ASC_NODE_SPREAD, 0.0);
+  }
+  /// Right ascension of the ascending node of the first plane.
+  double FIRST_RA_OF_ASC_NODE() const {
+    return GetField<double>(VT_FIRST_RA_OF_ASC_NODE, 0.0);
+  }
+  /// Mean anomaly of the first satellite of the first plane.
+  double FIRST_MEAN_ANOMALY() const {
+    return GetField<double>(VT_FIRST_MEAN_ANOMALY, 0.0);
+  }
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  double ARG_OF_PERICENTER() const {
+    return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
+  }
+  /// Epoch of the generated elements, ISO 8601 UTC.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Catalog number of the first satellite; the others follow it in order.
+  uint32_t FIRST_NORAD_CAT_ID() const {
+    return GetField<uint32_t>(VT_FIRST_NORAD_CAT_ID, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_PATTERN, 1) &&
+           VerifyField<uint32_t>(verifier, VT_TOTAL_SATELLITES, 4) &&
+           VerifyField<uint32_t>(verifier, VT_PLANES, 4) &&
+           VerifyField<uint32_t>(verifier, VT_PHASING, 4) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_ALTITUDE_KM, 8) &&
+           VerifyField<double>(verifier, VT_RA_OF_ASC_NODE_SPREAD, 8) &&
+           VerifyField<double>(verifier, VT_FIRST_RA_OF_ASC_NODE, 8) &&
+           VerifyField<double>(verifier, VT_FIRST_MEAN_ANOMALY, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<uint32_t>(verifier, VT_FIRST_NORAD_CAT_ID, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct EGPWalkerBuilder {
+  typedef EGPWalker Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PATTERN(egpWalkerPattern PATTERN) {
+    fbb_.AddElement<int8_t>(EGPWalker::VT_PATTERN, static_cast<int8_t>(PATTERN), 0);
+  }
+  void add_TOTAL_SATELLITES(uint32_t TOTAL_SATELLITES) {
+    fbb_.AddElement<uint32_t>(EGPWalker::VT_TOTAL_SATELLITES, TOTAL_SATELLITES, 0);
+  }
+  void add_PLANES(uint32_t PLANES) {
+    fbb_.AddElement<uint32_t>(EGPWalker::VT_PLANES, PLANES, 0);
+  }
+  void add_PHASING(uint32_t PHASING) {
+    fbb_.AddElement<uint32_t>(EGPWalker::VT_PHASING, PHASING, 0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(EGPWalker::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_ALTITUDE_KM(double ALTITUDE_KM) {
+    fbb_.AddElement<double>(EGPWalker::VT_ALTITUDE_KM, ALTITUDE_KM, 0.0);
+  }
+  void add_RA_OF_ASC_NODE_SPREAD(double RA_OF_ASC_NODE_SPREAD) {
+    fbb_.AddElement<double>(EGPWalker::VT_RA_OF_ASC_NODE_SPREAD, RA_OF_ASC_NODE_SPREAD, 0.0);
+  }
+  void add_FIRST_RA_OF_ASC_NODE(double FIRST_RA_OF_ASC_NODE) {
+    fbb_.AddElement<double>(EGPWalker::VT_FIRST_RA_OF_ASC_NODE, FIRST_RA_OF_ASC_NODE, 0.0);
+  }
+  void add_FIRST_MEAN_ANOMALY(double FIRST_MEAN_ANOMALY) {
+    fbb_.AddElement<double>(EGPWalker::VT_FIRST_MEAN_ANOMALY, FIRST_MEAN_ANOMALY, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(EGPWalker::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_ARG_OF_PERICENTER(double ARG_OF_PERICENTER) {
+    fbb_.AddElement<double>(EGPWalker::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(EGPWalker::VT_EPOCH, EPOCH);
+  }
+  void add_FIRST_NORAD_CAT_ID(uint32_t FIRST_NORAD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(EGPWalker::VT_FIRST_NORAD_CAT_ID, FIRST_NORAD_CAT_ID, 0);
+  }
+  explicit EGPWalkerBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<EGPWalker> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<EGPWalker>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<EGPWalker> CreateEGPWalker(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    egpWalkerPattern PATTERN = egpWalkerPattern_UNSPECIFIED,
+    uint32_t TOTAL_SATELLITES = 0,
+    uint32_t PLANES = 0,
+    uint32_t PHASING = 0,
+    double INCLINATION = 0.0,
+    double ALTITUDE_KM = 0.0,
+    double RA_OF_ASC_NODE_SPREAD = 0.0,
+    double FIRST_RA_OF_ASC_NODE = 0.0,
+    double FIRST_MEAN_ANOMALY = 0.0,
+    double ECCENTRICITY = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    uint32_t FIRST_NORAD_CAT_ID = 0) {
+  EGPWalkerBuilder builder_(_fbb);
+  builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_FIRST_MEAN_ANOMALY(FIRST_MEAN_ANOMALY);
+  builder_.add_FIRST_RA_OF_ASC_NODE(FIRST_RA_OF_ASC_NODE);
+  builder_.add_RA_OF_ASC_NODE_SPREAD(RA_OF_ASC_NODE_SPREAD);
+  builder_.add_ALTITUDE_KM(ALTITUDE_KM);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_FIRST_NORAD_CAT_ID(FIRST_NORAD_CAT_ID);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_PHASING(PHASING);
+  builder_.add_PLANES(PLANES);
+  builder_.add_TOTAL_SATELLITES(TOTAL_SATELLITES);
+  builder_.add_PATTERN(PATTERN);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<EGPWalker> CreateEGPWalkerDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    egpWalkerPattern PATTERN = egpWalkerPattern_UNSPECIFIED,
+    uint32_t TOTAL_SATELLITES = 0,
+    uint32_t PLANES = 0,
+    uint32_t PHASING = 0,
+    double INCLINATION = 0.0,
+    double ALTITUDE_KM = 0.0,
+    double RA_OF_ASC_NODE_SPREAD = 0.0,
+    double FIRST_RA_OF_ASC_NODE = 0.0,
+    double FIRST_MEAN_ANOMALY = 0.0,
+    double ECCENTRICITY = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    const char *EPOCH = nullptr,
+    uint32_t FIRST_NORAD_CAT_ID = 0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreateEGPWalker(
+      _fbb,
+      PATTERN,
+      TOTAL_SATELLITES,
+      PLANES,
+      PHASING,
+      INCLINATION,
+      ALTITUDE_KM,
+      RA_OF_ASC_NODE_SPREAD,
+      FIRST_RA_OF_ASC_NODE,
+      FIRST_MEAN_ANOMALY,
+      ECCENTRICITY,
+      ARG_OF_PERICENTER,
+      EPOCH__,
+      FIRST_NORAD_CAT_ID);
 }
 
 /// Provenance of the assertions behind a group. Field-for-field the
@@ -528,7 +783,8 @@ struct EGP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CREATED_AT = 18,
     VT_UPDATED_AT = 20,
     VT_PROVENANCE = 22,
-    VT_DATASET_CID = 24
+    VT_DATASET_CID = 24,
+    VT_WALKER = 26
   };
   /// Publisher-stable identifier of the group. Together with the publishing
   /// key it is the group's identity across versions.
@@ -577,6 +833,11 @@ struct EGP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DATASET_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DATASET_CID);
   }
+  /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+  /// GENERATED.
+  const EGPWalker *WALKER() const {
+    return GetPointer<const EGPWalker *>(VT_WALKER);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -604,6 +865,8 @@ struct EGP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(PROVENANCE()) &&
            VerifyOffset(verifier, VT_DATASET_CID) &&
            verifier.VerifyString(DATASET_CID()) &&
+           VerifyOffset(verifier, VT_WALKER) &&
+           verifier.VerifyTable(WALKER()) &&
            verifier.EndTable();
   }
 };
@@ -645,6 +908,9 @@ struct EGPBuilder {
   void add_DATASET_CID(::flatbuffers::Offset<::flatbuffers::String> DATASET_CID) {
     fbb_.AddOffset(EGP::VT_DATASET_CID, DATASET_CID);
   }
+  void add_WALKER(::flatbuffers::Offset<EGPWalker> WALKER) {
+    fbb_.AddOffset(EGP::VT_WALKER, WALKER);
+  }
   explicit EGPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -671,8 +937,10 @@ inline ::flatbuffers::Offset<EGP> CreateEGP(
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EGPProvenance>>> PROVENANCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATASET_CID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> DATASET_CID = 0,
+    ::flatbuffers::Offset<EGPWalker> WALKER = 0) {
   EGPBuilder builder_(_fbb);
+  builder_.add_WALKER(WALKER);
   builder_.add_DATASET_CID(DATASET_CID);
   builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -699,7 +967,8 @@ inline ::flatbuffers::Offset<EGP> CreateEGPDirect(
     const char *CREATED_AT = nullptr,
     const char *UPDATED_AT = nullptr,
     const std::vector<::flatbuffers::Offset<EGPProvenance>> *PROVENANCE = nullptr,
-    const char *DATASET_CID = nullptr) {
+    const char *DATASET_CID = nullptr,
+    ::flatbuffers::Offset<EGPWalker> WALKER = 0) {
   auto GROUP_ID__ = GROUP_ID ? _fbb.CreateString(GROUP_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
@@ -721,7 +990,8 @@ inline ::flatbuffers::Offset<EGP> CreateEGPDirect(
       CREATED_AT__,
       UPDATED_AT__,
       PROVENANCE__,
-      DATASET_CID__);
+      DATASET_CID__,
+      WALKER);
 }
 
 inline const EGP *GetEGP(const void *buf) {

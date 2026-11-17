@@ -1,0 +1,72 @@
+// Hash: fe48fdac3de91079d2899f8027fb5ea42a6b1a874fb955a4b63d0b4eb5aa0780
+// Version: 1.287.0
+// -----------------------------------END_HEADER
+// Course of Action (COA)
+// Description
+// One stated course of action for an object or a group: a maneuver (made at a lead before an event and
+// back in place within a stated time when it answers one), riding the event out, or the ordered steps
+// that restore service after an off-nominal event. Inputs only: what a course of action costs or yields
+// (delta-v, propellant, time out of service, risk) is computed from it and never stored here.
+//
+// Joins. NORAD_CAT_ID joins to $CAT and $OMM; GROUP_ID to $EGP GROUP_ID. EVENT_STANDARD and EVENT_ID name
+// the record of the event answered (for example "$OOE" and its ID). An event that is computed again
+// rather than stored (a close approach) is named by EVENT_STANDARD "$CDM" and EVENT_EPOCH, its time of
+// closest approach. PLAN_ID is the $MPL ID of the plan request that carries the maneuver, when one is
+// stored.
+
+/// What a course of action does. Append new values only.
+enum coaKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in
+  /// place within RETURN_WITHIN_SECONDS after it.
+  MANEUVER = 1,
+  /// No action: the event is accepted.
+  RIDE_OUT = 2,
+  /// STEPS, in order, restore service after the event.
+  RECOVERY = 3
+}
+
+/// One step of a course of action.
+table COAStep {
+  /// The step, in the operator's words.
+  NAME:string (required);
+  /// How long the step takes, s.
+  DURATION_SECONDS:double;
+}
+
+/// Course of Action
+table COA {
+  /// Identifier of the course of action, unique within its record set.
+  ID:string (required);
+  /// Display name, for example "Plan A".
+  NAME:string;
+  KIND:coaKind = UNSPECIFIED;
+  /// Catalog number of the object acted on; 0 when GROUP_ID names a group.
+  NORAD_CAT_ID:uint;
+  /// GROUP_ID of the $EGP acted on, when the course of action is for a group.
+  GROUP_ID:string;
+  /// Four-character standard code of the event answered, "$" included; never a union ordinal.
+  EVENT_STANDARD:string;
+  /// ID of the event's record; empty for an event that is computed again rather than stored.
+  EVENT_ID:string;
+  /// Time of the event, ISO 8601 UTC.
+  EVENT_EPOCH:string;
+  /// MANEUVER: made this long before EVENT_EPOCH, s.
+  LEAD_SECONDS:double;
+  /// MANEUVER: back in place within this long after the maneuver, s.
+  RETURN_WITHIN_SECONDS:double;
+  /// Time out of service before a maneuver, s.
+  PREPARATION_SECONDS:double;
+  /// Time out of service after a maneuver, s.
+  CHECKOUT_SECONDS:double;
+  /// Delta-v the operator allows the object each year, m/s per year; 0 = not stated.
+  DELTA_V_BUDGET_M_S_PER_YEAR:double;
+  /// RECOVERY: the steps, in order.
+  STEPS:[COAStep];
+  /// ID of the $MPL plan request that carries the maneuver, when one is stored.
+  PLAN_ID:string;
+}
+
+root_type COA;
+file_identifier "$COA";

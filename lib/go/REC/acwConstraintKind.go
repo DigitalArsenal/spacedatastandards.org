@@ -8,55 +8,60 @@ import "strconv"
 type acwConstraintKind int8
 
 const (
-	acwConstraintKindUNSPECIFIED     acwConstraintKind = 0
+	acwConstraintKindUNSPECIFIED           acwConstraintKind = 0
 	/// Observer-to-target elevation at or above THRESHOLD_RAD (ground observers).
-	acwConstraintKindMIN_ELEVATION   acwConstraintKind = 1
+	acwConstraintKindMIN_ELEVATION         acwConstraintKind = 1
 	/// Azimuth-dependent minimum elevation from MASK.
-	acwConstraintKindELEVATION_MASK  acwConstraintKind = 2
+	acwConstraintKindELEVATION_MASK        acwConstraintKind = 2
 	/// Observer-to-target range at or below MAX_RANGE_M.
-	acwConstraintKindMAX_RANGE       acwConstraintKind = 3
+	acwConstraintKindMAX_RANGE             acwConstraintKind = 3
 	/// Observer-to-target range at or above MIN_RANGE_M.
-	acwConstraintKindMIN_RANGE       acwConstraintKind = 4
+	acwConstraintKindMIN_RANGE             acwConstraintKind = 4
 	/// Angle between the observer-to-target and observer-to-Sun directions at
 	/// or above THRESHOLD_RAD (solar exclusion).
-	acwConstraintKindSUN_EXCLUSION   acwConstraintKind = 5
+	acwConstraintKindSUN_EXCLUSION         acwConstraintKind = 5
 	/// Angle between the observer-to-target and observer-to-Moon directions at
 	/// or above THRESHOLD_RAD (lunar exclusion).
-	acwConstraintKindMOON_EXCLUSION  acwConstraintKind = 6
+	acwConstraintKindMOON_EXCLUSION        acwConstraintKind = 6
 	/// Target illumination state matches LIGHTING.
-	acwConstraintKindTARGET_LIGHTING acwConstraintKind = 7
+	acwConstraintKindTARGET_LIGHTING       acwConstraintKind = 7
 	/// Straight-line visibility between observer and target not occulted by the
 	/// central body raised by OCCULTATION_ATMOSPHERE_HEIGHT_M, nor by any
 	/// ACWRequest.OCCULTING_BODIES entry.
-	acwConstraintKindLINE_OF_SIGHT   acwConstraintKind = 8
+	acwConstraintKindLINE_OF_SIGHT         acwConstraintKind = 8
 	/// Outside every observer blackout window.
-	acwConstraintKindBLACKOUT        acwConstraintKind = 9
+	acwConstraintKindBLACKOUT              acwConstraintKind = 9
+	/// Straight-line visibility between a ground observer and the target not
+	/// blocked by terrain.
+	acwConstraintKindTERRAIN_LINE_OF_SIGHT acwConstraintKind = 10
 )
 
 var EnumNamesacwConstraintKind = map[acwConstraintKind]string{
-	acwConstraintKindUNSPECIFIED:     "UNSPECIFIED",
-	acwConstraintKindMIN_ELEVATION:   "MIN_ELEVATION",
-	acwConstraintKindELEVATION_MASK:  "ELEVATION_MASK",
-	acwConstraintKindMAX_RANGE:       "MAX_RANGE",
-	acwConstraintKindMIN_RANGE:       "MIN_RANGE",
-	acwConstraintKindSUN_EXCLUSION:   "SUN_EXCLUSION",
-	acwConstraintKindMOON_EXCLUSION:  "MOON_EXCLUSION",
-	acwConstraintKindTARGET_LIGHTING: "TARGET_LIGHTING",
-	acwConstraintKindLINE_OF_SIGHT:   "LINE_OF_SIGHT",
-	acwConstraintKindBLACKOUT:        "BLACKOUT",
+	acwConstraintKindUNSPECIFIED:           "UNSPECIFIED",
+	acwConstraintKindMIN_ELEVATION:         "MIN_ELEVATION",
+	acwConstraintKindELEVATION_MASK:        "ELEVATION_MASK",
+	acwConstraintKindMAX_RANGE:             "MAX_RANGE",
+	acwConstraintKindMIN_RANGE:             "MIN_RANGE",
+	acwConstraintKindSUN_EXCLUSION:         "SUN_EXCLUSION",
+	acwConstraintKindMOON_EXCLUSION:        "MOON_EXCLUSION",
+	acwConstraintKindTARGET_LIGHTING:       "TARGET_LIGHTING",
+	acwConstraintKindLINE_OF_SIGHT:         "LINE_OF_SIGHT",
+	acwConstraintKindBLACKOUT:              "BLACKOUT",
+	acwConstraintKindTERRAIN_LINE_OF_SIGHT: "TERRAIN_LINE_OF_SIGHT",
 }
 
 var EnumValuesacwConstraintKind = map[string]acwConstraintKind{
-	"UNSPECIFIED":     acwConstraintKindUNSPECIFIED,
-	"MIN_ELEVATION":   acwConstraintKindMIN_ELEVATION,
-	"ELEVATION_MASK":  acwConstraintKindELEVATION_MASK,
-	"MAX_RANGE":       acwConstraintKindMAX_RANGE,
-	"MIN_RANGE":       acwConstraintKindMIN_RANGE,
-	"SUN_EXCLUSION":   acwConstraintKindSUN_EXCLUSION,
-	"MOON_EXCLUSION":  acwConstraintKindMOON_EXCLUSION,
-	"TARGET_LIGHTING": acwConstraintKindTARGET_LIGHTING,
-	"LINE_OF_SIGHT":   acwConstraintKindLINE_OF_SIGHT,
-	"BLACKOUT":        acwConstraintKindBLACKOUT,
+	"UNSPECIFIED":           acwConstraintKindUNSPECIFIED,
+	"MIN_ELEVATION":         acwConstraintKindMIN_ELEVATION,
+	"ELEVATION_MASK":        acwConstraintKindELEVATION_MASK,
+	"MAX_RANGE":             acwConstraintKindMAX_RANGE,
+	"MIN_RANGE":             acwConstraintKindMIN_RANGE,
+	"SUN_EXCLUSION":         acwConstraintKindSUN_EXCLUSION,
+	"MOON_EXCLUSION":        acwConstraintKindMOON_EXCLUSION,
+	"TARGET_LIGHTING":       acwConstraintKindTARGET_LIGHTING,
+	"LINE_OF_SIGHT":         acwConstraintKindLINE_OF_SIGHT,
+	"BLACKOUT":              acwConstraintKindBLACKOUT,
+	"TERRAIN_LINE_OF_SIGHT": acwConstraintKindTERRAIN_LINE_OF_SIGHT,
 }
 
 func (v acwConstraintKind) String() string {

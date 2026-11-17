@@ -17,6 +17,8 @@ class snrAntennaPattern
     const TEARDROP = 9;
     const TOROIDAL = 10;
     const CARDIOID = 11;
+    /// An electronically steered array; its pattern is a $PAP synthesis.
+    const PHASED_ARRAY = 12;
 
     private static $names = array(
         snrAntennaPattern::UNSPECIFIED=>"UNSPECIFIED",
@@ -31,6 +33,7 @@ class snrAntennaPattern
         snrAntennaPattern::TEARDROP=>"TEARDROP",
         snrAntennaPattern::TOROIDAL=>"TOROIDAL",
         snrAntennaPattern::CARDIOID=>"CARDIOID",
+        snrAntennaPattern::PHASED_ARRAY=>"PHASED_ARRAY",
     );
 
     public static function Name($e)

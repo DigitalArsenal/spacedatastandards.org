@@ -18,4 +18,6 @@ public enum snrAntennaPattern : sbyte
   TEARDROP = 9,
   TOROIDAL = 10,
   CARDIOID = 11,
+  /// An electronically steered array; its pattern is a $PAP synthesis.
+  PHASED_ARRAY = 12,
 };

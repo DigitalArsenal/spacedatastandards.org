@@ -115,7 +115,7 @@
     },
     "snrAntennaPattern" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID"]
+      "enum": ["UNSPECIFIED", "ISOTROPIC", "HEMISPHERIC", "PARABOLIC", "GAUSSIAN", "PENCIL", "HELIX", "DIPOLE", "RINGED", "TEARDROP", "TOROIDAL", "CARDIOID", "PHASED_ARRAY"]
     },
     "OPPProvenance" : {
       "type" : "object",

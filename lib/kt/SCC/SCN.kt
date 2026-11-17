@@ -20,6 +20,11 @@ import kotlin.math.sign
  * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
+ *
+ * A scenario that carries other records is one $REC whose first record is
+ * this $SCN; the other records follow under their own standards. A stored
+ * request carries only its request arm, with derived fields left empty to be
+ * computed again.
  */
 @Suppress("unused")
 class SCN : Table() {
@@ -169,6 +174,123 @@ class SCN : Table() {
             null
         }
     }
+    /**
+     * Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+     * time.
+     */
+    val startEpoch : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val startEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun startEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Clock interval stop as an ISO-8601 UTC timestamp.
+     */
+    val stopEpoch : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val stopEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun stopEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * True when the clock was running.
+     */
+    val animating : Boolean
+        get() {
+            val o = __offset(32)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Start of the analysis window, the span the timeline showed, as an
+     * ISO-8601 UTC timestamp.
+     */
+    val windowStart : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val windowStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun windowStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Stop of the analysis window as an ISO-8601 UTC timestamp.
+     */
+    val windowStop : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val windowStopAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun windowStopInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+     * the catalog objects were flown with.
+     */
+    val propagatorModuleId : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val propagatorModuleIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun propagatorModuleIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Timeline rows kept with the scenario.
+     */
+    fun pinnedRows(j: Int) : SCNPinnedRow? = pinnedRows(SCNPinnedRow(), j)
+    fun pinnedRows(obj: SCNPinnedRow, j: Int) : SCNPinnedRow? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val pinnedRowsLength : Int
+        get() {
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+     * enclosing $REC, over the five bytes "\$SCN" and 0x00, followed by the
+     * enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+     * zero. The record's CID is computed over the signed bytes.
+     */
+    fun signature(j: Int) : UByte {
+        val o = __offset(42)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val signatureLength : Int
+        get() {
+            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
+        }
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCN(_bb: ByteBuffer): SCN = getRootAsSCN(_bb, SCN())
@@ -177,9 +299,16 @@ class SCN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCN")
-        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int) : Int {
-            builder.startTable(12)
+        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int, startEpochOffset: Int, stopEpochOffset: Int, animating: Boolean, windowStartOffset: Int, windowStopOffset: Int, propagatorModuleIdOffset: Int, pinnedRowsOffset: Int, signatureOffset: Int) : Int {
+            builder.startTable(20)
             addSIMSPEED(builder, simSpeed)
+            addSIGNATURE(builder, signatureOffset)
+            addPINNEDROWS(builder, pinnedRowsOffset)
+            addPROPAGATORMODULEID(builder, propagatorModuleIdOffset)
+            addWINDOWSTOP(builder, windowStopOffset)
+            addWINDOWSTART(builder, windowStartOffset)
+            addSTOPEPOCH(builder, stopEpochOffset)
+            addSTARTEPOCH(builder, startEpochOffset)
             addASSETSCHANGED(builder, assetsChangedOffset)
             addVIEWSTATE(builder, viewStateOffset)
             addREFERENCEFRAME(builder, referenceFrameOffset)
@@ -189,11 +318,12 @@ class SCN : Table() {
             addEVENT(builder, eventOffset)
             addREFERENCES(builder, referencesOffset)
             addSCENARIOID(builder, scenarioIdOffset)
+            addANIMATING(builder, animating)
             addACTION(builder, action)
             addUSEBODYFIXEDFRAME(builder, useBodyFixedFrame)
             return endSCN(builder)
         }
-        fun startSCN(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startSCN(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(0, scenarioId, 0)
         fun addREFERENCES(builder: FlatBufferBuilder, references: Int) = builder.addOffset(1, references, 0)
         fun createReferencesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -214,6 +344,31 @@ class SCN : Table() {
         fun addACTION(builder: FlatBufferBuilder, action: Byte) = builder.addByte(9, action, 0)
         fun addVIEWSTATE(builder: FlatBufferBuilder, viewState: Int) = builder.addOffset(10, viewState, 0)
         fun addASSETSCHANGED(builder: FlatBufferBuilder, assetsChanged: Int) = builder.addOffset(11, assetsChanged, 0)
+        fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(12, startEpoch, 0)
+        fun addSTOPEPOCH(builder: FlatBufferBuilder, stopEpoch: Int) = builder.addOffset(13, stopEpoch, 0)
+        fun addANIMATING(builder: FlatBufferBuilder, animating: Boolean) = builder.addBoolean(14, animating, false)
+        fun addWINDOWSTART(builder: FlatBufferBuilder, windowStart: Int) = builder.addOffset(15, windowStart, 0)
+        fun addWINDOWSTOP(builder: FlatBufferBuilder, windowStop: Int) = builder.addOffset(16, windowStop, 0)
+        fun addPROPAGATORMODULEID(builder: FlatBufferBuilder, propagatorModuleId: Int) = builder.addOffset(17, propagatorModuleId, 0)
+        fun addPINNEDROWS(builder: FlatBufferBuilder, pinnedRows: Int) = builder.addOffset(18, pinnedRows, 0)
+        fun createPinnedRowsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPinnedRowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(19, signature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endSCN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

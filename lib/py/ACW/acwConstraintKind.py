@@ -27,3 +27,6 @@ class acwConstraintKind(object):
     LINE_OF_SIGHT = 8
     # Outside every observer blackout window.
     BLACKOUT = 9
+    # Straight-line visibility between a ground observer and the target not
+    # blocked by terrain.
+    TERRAIN_LINE_OF_SIGHT = 10

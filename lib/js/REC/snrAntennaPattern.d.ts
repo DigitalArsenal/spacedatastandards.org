@@ -16,6 +16,10 @@ export declare enum snrAntennaPattern {
      */
     TEARDROP = 9,
     TOROIDAL = 10,
-    CARDIOID = 11
+    CARDIOID = 11,
+    /**
+     * An electronically steered array; its pattern is a $PAP synthesis.
+     */
+    PHASED_ARRAY = 12
 }
 //# sourceMappingURL=snrAntennaPattern.d.ts.map

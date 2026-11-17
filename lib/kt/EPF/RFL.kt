@@ -1002,6 +1002,18 @@ class RFL : Table() {
         }
     val blockErrorRateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(120, 8)
     fun blockErrorRateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 120, 8)
+    /**
+     * The jamming assessment this record answers, when it answers one.
+     */
+    val jamming : RFLJamming? get() = jamming(RFLJamming())
+    fun jamming(obj: RFLJamming) : RFLJamming? {
+        val o = __offset(122)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFL(_bb: ByteBuffer): RFL = getRootAsRFL(_bb, RFL())
@@ -1010,9 +1022,10 @@ class RFL : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFL")
-        fun createRFL(builder: FlatBufferBuilder, rflIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, linksOffset: Int, sampleCount: UInt, sampleLinkIndexesOffset: Int, sampleEpochsOffset: Int, timeSystem: Byte, accessStatesOffset: Int, rangeMOffset: Int, rangeRateMSOffset: Int, azimuthDegOffset: Int, elevationDegOffset: Int, transmitAzimuthDegOffset: Int, transmitElevationDegOffset: Int, dopplerShiftHzOffset: Int, dopplerRateHzSOffset: Int, eirpDbwOffset: Int, transmitAntennaGainDbiOffset: Int, receiveAntennaGainDbiOffset: Int, freeSpacePathLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, rainLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, terrainDiffractionLossDbOffset: Int, obstructionLossDbOffset: Int, polarizationLossDbOffset: Int, pointingLossDbOffset: Int, implementationLossDbOffset: Int, totalPathLossDbOffset: Int, receivedPowerDbwOffset: Int, systemNoiseTemperatureKOffset: Int, gainToNoiseTemperatureDbPerKOffset: Int, carrierToNoiseDensityDbhzOffset: Int, carrierToNoiseDbOffset: Int, energyPerBitToNoiseDensityDbOffset: Int, bitErrorRateOffset: Int, linkMarginDbOffset: Int, channelCapacityBpsOffset: Int, interferencePowerDbwOffset: Int, carrierToNoisePlusInterferenceDbOffset: Int, signalToInterferencePlusNoiseDbOffset: Int, interferenceContributionsOffset: Int, obstructionsOffset: Int, limitingConstraintsOffset: Int, limitingConstraintNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, selectedModcodIndexOffset: Int, selectedModcodValidOffset: Int, spectralEfficiencyBpsHzOffset: Int, achievedDataRateBpsOffset: Int, acmMarginDbOffset: Int, energyPerSymbolToNoiseDensityDbOffset: Int, blockErrorRateOffset: Int) : Int {
-            builder.startTable(59)
+        fun createRFL(builder: FlatBufferBuilder, rflIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, linksOffset: Int, sampleCount: UInt, sampleLinkIndexesOffset: Int, sampleEpochsOffset: Int, timeSystem: Byte, accessStatesOffset: Int, rangeMOffset: Int, rangeRateMSOffset: Int, azimuthDegOffset: Int, elevationDegOffset: Int, transmitAzimuthDegOffset: Int, transmitElevationDegOffset: Int, dopplerShiftHzOffset: Int, dopplerRateHzSOffset: Int, eirpDbwOffset: Int, transmitAntennaGainDbiOffset: Int, receiveAntennaGainDbiOffset: Int, freeSpacePathLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, rainLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, terrainDiffractionLossDbOffset: Int, obstructionLossDbOffset: Int, polarizationLossDbOffset: Int, pointingLossDbOffset: Int, implementationLossDbOffset: Int, totalPathLossDbOffset: Int, receivedPowerDbwOffset: Int, systemNoiseTemperatureKOffset: Int, gainToNoiseTemperatureDbPerKOffset: Int, carrierToNoiseDensityDbhzOffset: Int, carrierToNoiseDbOffset: Int, energyPerBitToNoiseDensityDbOffset: Int, bitErrorRateOffset: Int, linkMarginDbOffset: Int, channelCapacityBpsOffset: Int, interferencePowerDbwOffset: Int, carrierToNoisePlusInterferenceDbOffset: Int, signalToInterferencePlusNoiseDbOffset: Int, interferenceContributionsOffset: Int, obstructionsOffset: Int, limitingConstraintsOffset: Int, limitingConstraintNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, selectedModcodIndexOffset: Int, selectedModcodValidOffset: Int, spectralEfficiencyBpsHzOffset: Int, achievedDataRateBpsOffset: Int, acmMarginDbOffset: Int, energyPerSymbolToNoiseDensityDbOffset: Int, blockErrorRateOffset: Int, jammingOffset: Int) : Int {
+            builder.startTable(60)
             addCOMPUTEDAT(builder, computedAt)
+            addJAMMING(builder, jammingOffset)
             addBLOCKERRORRATE(builder, blockErrorRateOffset)
             addENERGYPERSYMBOLTONOISEDENSITYDB(builder, energyPerSymbolToNoiseDensityDbOffset)
             addACMMARGINDB(builder, acmMarginDbOffset)
@@ -1073,7 +1086,7 @@ class RFL : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endRFL(builder)
         }
-        fun startRFL(builder: FlatBufferBuilder) = builder.startTable(59)
+        fun startRFL(builder: FlatBufferBuilder) = builder.startTable(60)
         fun addRFLID(builder: FlatBufferBuilder, rflId: Int) = builder.addOffset(0, rflId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(2, scenarioId, 0)
@@ -1537,6 +1550,7 @@ class RFL : Table() {
             return builder.endVector()
         }
         fun startBlockErrorRateVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addJAMMING(builder: FlatBufferBuilder, jamming: Int) = builder.addOffset(59, jamming, 0)
         fun endRFL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -8,5 +8,9 @@ class acwRefractionModelKind private constructor() {
          * Orekit-compatible EarthStandardAtmosphereRefraction correction.
          */
         const val EARTH_STANDARD_ATMOSPHERE: Byte = 1
+        /**
+         * ITU-R P.834 tropospheric refraction.
+         */
+        const val ITU_R_P834: Byte = 2
     }
 }

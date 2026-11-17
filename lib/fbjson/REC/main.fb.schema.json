@@ -2079,7 +2079,8 @@
       "type": "string",
       "enum": [
         "NONE",
-        "EARTH_STANDARD_ATMOSPHERE"
+        "EARTH_STANDARD_ATMOSPHERE",
+        "ITU_R_P834"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -2090,6 +2091,10 @@
         "EARTH_STANDARD_ATMOSPHERE": {
           "value": 1,
           "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+        },
+        "ITU_R_P834": {
+          "value": 2,
+          "description": "ITU-R P.834 tropospheric refraction."
         }
       }
     },
@@ -2105,7 +2110,8 @@
         "MOON_EXCLUSION",
         "TARGET_LIGHTING",
         "LINE_OF_SIGHT",
-        "BLACKOUT"
+        "BLACKOUT",
+        "TERRAIN_LINE_OF_SIGHT"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -2148,6 +2154,10 @@
         "BLACKOUT": {
           "value": 9,
           "description": "Outside every observer blackout window."
+        },
+        "TERRAIN_LINE_OF_SIGHT": {
+          "value": 10,
+          "description": "Straight-line visibility between a ground observer and the target not blocked by terrain."
         }
       }
     },
@@ -7345,6 +7355,35 @@
         "OTHER": {
           "value": 8,
           "description": "The source states a method none of the above names."
+        }
+      }
+    },
+    "coaKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MANEUVER",
+        "RIDE_OUT",
+        "RECOVERY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "MANEUVER": {
+          "value": 1,
+          "description": "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+        },
+        "RIDE_OUT": {
+          "value": 2,
+          "description": "No action: the event is accepted."
+        },
+        "RECOVERY": {
+          "value": 3,
+          "description": "STEPS, in order, restore service after the event."
         }
       }
     },
@@ -13568,7 +13607,8 @@
         "UNSPECIFIED",
         "ENUMERATED",
         "QUERY_SNAPSHOT",
-        "QUERY_LIVE"
+        "QUERY_LIVE",
+        "GENERATED"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -13587,6 +13627,38 @@
         "QUERY_LIVE": {
           "value": 3,
           "description": "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+        },
+        "GENERATED": {
+          "value": 4,
+          "description": "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
+        }
+      }
+    },
+    "egpWalkerPattern": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "DELTA",
+        "STAR",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "DELTA": {
+          "value": 1,
+          "description": "Planes spread over 360 degrees of right ascension."
+        },
+        "STAR": {
+          "value": 2,
+          "description": "Planes spread over 180 degrees of right ascension."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "Planes spread over RA_OF_ASC_NODE_SPREAD."
         }
       }
     },
@@ -24414,7 +24486,9 @@
         "VARIABLE_SITE",
         "POINT_OF_INTEREST",
         "EXCLUSION_ZONE",
-        "OBSERVATION"
+        "OBSERVATION",
+        "GROUP",
+        "AREA_OF_INTEREST"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -24445,6 +24519,14 @@
         },
         "OBSERVATION": {
           "value": 8
+        },
+        "GROUP": {
+          "value": 9,
+          "description": "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+        },
+        "AREA_OF_INTEREST": {
+          "value": 10,
+          "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
         }
       }
     },
@@ -26328,7 +26410,8 @@
         "RINGED",
         "TEARDROP",
         "TOROIDAL",
-        "CARDIOID"
+        "CARDIOID",
+        "PHASED_ARRAY"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -26369,6 +26452,10 @@
         },
         "CARDIOID": {
           "value": 11
+        },
+        "PHASED_ARRAY": {
+          "value": 12,
+          "description": "An electronically steered array; its pattern is a $PAP synthesis."
         }
       }
     },
@@ -31701,7 +31788,8 @@
         "SWS",
         "SSY",
         "MOR",
-        "DRB"
+        "DRB",
+        "COA"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -31834,6 +31922,9 @@
         },
         "DRB": {
           "value": 297
+        },
+        "COA": {
+          "value": 298
         }
       }
     },
@@ -33959,6 +34050,80 @@
       ],
       "additionalProperties": false
     },
+    "RFLJamming": {
+      "type": "object",
+      "description": "A jamming assessment of one link: the jammer and the stated values the\nassessment and its countermeasures use. Inputs only; what it yields is this\nrecord's samples. A record that carries it with no samples is the\nassessment's definition, to be sampled.",
+      "properties": {
+        "LINK_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index in LINKS of the link assessed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "JAMMER_ENDPOINT": {
+          "$ref": "#/definitions/RFLEndpoint",
+          "description": "The jammer's end: its site (SIT_ID) or its platform.",
+          "x-flatbuffer-type": "RFLEndpoint",
+          "x-flatbuffer-required": true
+        },
+        "PASS_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based index, in the analysis window, of the spacecraft's pass over\nthe link's ground end that is assessed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TERMINAL_GAIN_TOWARD_JAMMER_DBI": {
+          "type": "number",
+          "description": "The ground terminal antenna's stated gain toward the jammer, dBi.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI": {
+          "type": "boolean",
+          "description": "True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "POWER_STEP_DB": {
+          "type": "number",
+          "description": "Countermeasure: the link's EIRP raised by this many dB.",
+          "x-flatbuffer-type": "double"
+        },
+        "PROCESSING_GAIN_DB": {
+          "type": "number",
+          "description": "Countermeasure: processing gain, dB, as the operator states it.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_PROCESSING_GAIN_DB": {
+          "type": "boolean",
+          "description": "True when PROCESSING_GAIN_DB is stated; it has no default.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ARRAY_PAP_ID": {
+          "type": "string",
+          "description": "PAP_ID of the $PAP of the receiving array used by the narrower-beam and\nnull countermeasures.",
+          "x-flatbuffer-type": "string"
+        },
+        "AREA_RADIUS_KM": {
+          "type": "number",
+          "description": "Denial area about the link's ground end: radius, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "AREA_RESOLUTION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Denial area: number of cells across the radius.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "JAMMER_ENDPOINT"
+      ],
+      "additionalProperties": false
+    },
     "RFL": {
       "type": "object",
       "description": "RF Link Sample",
@@ -34503,6 +34668,11 @@
           },
           "description": "Decoded block error probability [0-1].",
           "x-flatbuffer-type": "[double]"
+        },
+        "JAMMING": {
+          "$ref": "#/definitions/RFLJamming",
+          "description": "The jamming assessment this record answers, when it answers one.",
+          "x-flatbuffer-type": "RFLJamming"
         }
       },
       "required": [
@@ -39286,6 +39456,10 @@
             "EARTH_STANDARD_ATMOSPHERE": {
               "value": 1,
               "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
+            },
+            "ITU_R_P834": {
+              "value": 2,
+              "description": "ITU-R P.834 tropospheric refraction."
             }
           }
         },
@@ -39418,6 +39592,10 @@
             "BLACKOUT": {
               "value": 9,
               "description": "Outside every observer blackout window."
+            },
+            "TERRAIN_LINE_OF_SIGHT": {
+              "value": 10,
+              "description": "Straight-line visibility between a ground observer and the target not blocked by terrain."
             }
           }
         },
@@ -53087,6 +53265,137 @@
           "x-flatbuffer-type": "string"
         }
       },
+      "additionalProperties": false
+    },
+    "COAStep": {
+      "type": "object",
+      "description": "One step of a course of action.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "The step, in the operator's words.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DURATION_SECONDS": {
+          "type": "number",
+          "description": "How long the step takes, s.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "COA": {
+      "type": "object",
+      "description": "Course of Action",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Identifier of the course of action, unique within its record set.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name, for example \"Plan A\".",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/coaKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "MANEUVER": {
+              "value": 1,
+              "description": "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+            },
+            "RIDE_OUT": {
+              "value": 2,
+              "description": "No action: the event is accepted."
+            },
+            "RECOVERY": {
+              "value": 3,
+              "description": "STEPS, in order, restore service after the event."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Catalog number of the object acted on; 0 when GROUP_ID names a group.",
+          "x-flatbuffer-type": "uint"
+        },
+        "GROUP_ID": {
+          "type": "string",
+          "description": "GROUP_ID of the $EGP acted on, when the course of action is for a group.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_STANDARD": {
+          "type": "string",
+          "description": "Four-character standard code of the event answered, \"$\" included; never a union ordinal.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "description": "ID of the event's record; empty for an event that is computed again rather than stored.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_EPOCH": {
+          "type": "string",
+          "description": "Time of the event, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAD_SECONDS": {
+          "type": "number",
+          "description": "MANEUVER: made this long before EVENT_EPOCH, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "RETURN_WITHIN_SECONDS": {
+          "type": "number",
+          "description": "MANEUVER: back in place within this long after the maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "PREPARATION_SECONDS": {
+          "type": "number",
+          "description": "Time out of service before a maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "CHECKOUT_SECONDS": {
+          "type": "number",
+          "description": "Time out of service after a maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_BUDGET_M_S_PER_YEAR": {
+          "type": "number",
+          "description": "Delta-v the operator allows the object each year, m/s per year; 0 = not stated.",
+          "x-flatbuffer-type": "double"
+        },
+        "STEPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/COAStep"
+          },
+          "description": "RECOVERY: the steps, in order.",
+          "x-flatbuffer-type": "[COAStep]"
+        },
+        "PLAN_ID": {
+          "type": "string",
+          "description": "ID of the $MPL plan request that carries the maneuver, when one is stored.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
       "additionalProperties": false
     },
     "COM": {
@@ -80041,6 +80350,101 @@
       ],
       "additionalProperties": false
     },
+    "EGPWalker": {
+      "type": "object",
+      "description": "The Walker definition a constellation group's members are generated from.\nAngles are in degrees, as an $OMM states them.",
+      "properties": {
+        "PATTERN": {
+          "$ref": "#/definitions/egpWalkerPattern",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "DELTA": {
+              "value": 1,
+              "description": "Planes spread over 360 degrees of right ascension."
+            },
+            "STAR": {
+              "value": 2,
+              "description": "Planes spread over 180 degrees of right ascension."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "Planes spread over RA_OF_ASC_NODE_SPREAD."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TOTAL_SATELLITES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "T: number of satellites.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PLANES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "P: number of planes.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PHASING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "F: relative phasing, 0 to PLANES - 1.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_KM": {
+          "type": "number",
+          "description": "Circular height above the WGS 84 equatorial radius, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE_SPREAD": {
+          "type": "number",
+          "description": "CUSTOM only: the right ascension the ascending nodes are spread over.",
+          "x-flatbuffer-type": "double"
+        },
+        "FIRST_RA_OF_ASC_NODE": {
+          "type": "number",
+          "description": "Right ascension of the ascending node of the first plane.",
+          "x-flatbuffer-type": "double"
+        },
+        "FIRST_MEAN_ANOMALY": {
+          "type": "number",
+          "description": "Mean anomaly of the first satellite of the first plane.",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of the generated elements, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRST_NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Catalog number of the first satellite; the others follow it in order.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
     "EGPProvenance": {
       "type": "object",
       "description": "Provenance of the assertions behind a group. Field-for-field the\n`$CMR` provenance shape, so one consumer parses both.",
@@ -80240,6 +80644,10 @@
             "QUERY_LIVE": {
               "value": 3,
               "description": "QUERY is the definition and MEMBERS is an advisory cache a consumer may recompute; the query wins on disagreement."
+            },
+            "GENERATED": {
+              "value": 4,
+              "description": "Members were generated from WALKER; MEMBERS is that generation, and each member's elements are its own $OMM."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -80280,6 +80688,11 @@
           "type": "string",
           "description": "Optional content identifier of the dataset the group was drawn from.",
           "x-flatbuffer-type": "string"
+        },
+        "WALKER": {
+          "$ref": "#/definitions/EGPWalker",
+          "description": "The definition MEMBERS were generated from, when MEMBERSHIP_MODE is\nGENERATED.",
+          "x-flatbuffer-type": "EGPWalker"
         }
       },
       "required": [
@@ -127249,6 +127662,14 @@
             },
             "OBSERVATION": {
               "value": 8
+            },
+            "GROUP": {
+              "value": 9,
+              "description": "A group: the $EGP of the enclosing $REC whose GROUP_ID equals REFERENCE_ID."
+            },
+            "AREA_OF_INTEREST": {
+              "value": 10,
+              "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
             }
           }
         },
@@ -127497,9 +127918,44 @@
       },
       "additionalProperties": false
     },
+    "SCNPinnedRow": {
+      "type": "object",
+      "description": "A timeline row a scenario keeps: what was run, and on what. Never its bars;\nthe inputs of the run are the request records of the enclosing $REC.",
+      "properties": {
+        "ROW_ID": {
+          "type": "string",
+          "description": "Row identifier, unique in the scenario.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODE_ID": {
+          "type": "string",
+          "description": "The application's identifier of the mode the row belongs to.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERB_ID": {
+          "type": "string",
+          "description": "The application's identifier of the verb that produced the row; empty\nwhen the row came without a run.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "REFERENCE_IDs of the scenario references the row was run on.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "RECORD_CID": {
+          "type": "string",
+          "description": "CID of the stored record the row shows, when it shows one (for example\nan event's descriptor $SCN); empty otherwise.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "SCN": {
       "type": "object",
-      "description": "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.",
+      "description": "Scenario - canonical scene composition and simulation state for external\nscenario controls integrations. Domain records remain in their native SDS\nschemas and are referenced or embedded here only as scenario content.\n\nA scenario that carries other records is one $REC whose first record is\nthis $SCN; the other records follow under their own standards. A stored\nrequest carries only its request arm, with derived fields left empty to be\ncomputed again.",
       "properties": {
         "SCENARIO_ID": {
           "type": "string",
@@ -127578,6 +128034,54 @@
           "$ref": "#/definitions/SCNAssetsChanged",
           "description": "Asset-change notification payload for the scenario.",
           "x-flatbuffer-type": "SCNAssetsChanged"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current\ntime.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "Clock interval stop as an ISO-8601 UTC timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "ANIMATING": {
+          "type": "boolean",
+          "description": "True when the clock was running.",
+          "x-flatbuffer-type": "bool"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "Start of the analysis window, the span the timeline showed, as an\nISO-8601 UTC timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "description": "Stop of the analysis window as an ISO-8601 UTC timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR_MODULE_ID": {
+          "type": "string",
+          "description": "Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator\nthe catalog objects were flown with.",
+          "x-flatbuffer-type": "string"
+        },
+        "PINNED_ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNPinnedRow"
+          },
+          "description": "Timeline rows kept with the scenario.",
+          "x-flatbuffer-type": "[SCNPinnedRow]"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the\nenclosing $REC, over the five bytes \"$SCN\" and 0x00, followed by the\nenclosing $REC's bytes (without a size prefix) with these 64 bytes set to\nzero. The record's CID is computed over the signed bytes.",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "additionalProperties": false
@@ -138015,6 +138519,10 @@
             },
             "CARDIOID": {
               "value": 11
+            },
+            "PHASED_ARRAY": {
+              "value": 12,
+              "description": "An electronically steered array; its pattern is a $PAP synthesis."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -157535,6 +158043,9 @@
             },
             "DRB": {
               "value": 297
+            },
+            "COA": {
+              "value": 298
             }
           },
           "x-flatbuffer-default": "NONE"

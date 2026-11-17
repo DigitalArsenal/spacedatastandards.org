@@ -27,6 +27,9 @@ class acwConstraintKind
     const LINE_OF_SIGHT = 8;
     /// Outside every observer blackout window.
     const BLACKOUT = 9;
+    /// Straight-line visibility between a ground observer and the target not
+    /// blocked by terrain.
+    const TERRAIN_LINE_OF_SIGHT = 10;
 
     private static $names = array(
         acwConstraintKind::UNSPECIFIED=>"UNSPECIFIED",
@@ -39,6 +42,7 @@ class acwConstraintKind
         acwConstraintKind::TARGET_LIGHTING=>"TARGET_LIGHTING",
         acwConstraintKind::LINE_OF_SIGHT=>"LINE_OF_SIGHT",
         acwConstraintKind::BLACKOUT=>"BLACKOUT",
+        acwConstraintKind::TERRAIN_LINE_OF_SIGHT=>"TERRAIN_LINE_OF_SIGHT",
     );
 
     public static function Name($e)

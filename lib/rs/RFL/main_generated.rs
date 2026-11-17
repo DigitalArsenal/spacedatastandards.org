@@ -5023,6 +5023,420 @@ impl RFLProvenanceT {
     }
 }
 
+pub enum RFLJammingOffset {}
+
+/// A jamming assessment of one link: the jammer and the stated values the
+/// assessment and its countermeasures use. Inputs only; what it yields is this
+/// record's samples. A record that carries it with no samples is the
+/// assessment's definition, to be sampled.
+#[derive(Copy, Clone, PartialEq)]
+pub struct RFLJamming<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for RFLJamming<'a> {
+    type Inner = RFLJamming<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> RFLJamming<'a> {
+    pub const VT_LINK_INDEX: ::flatbuffers::VOffsetT = 4;
+    pub const VT_JAMMER_ENDPOINT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_PASS_INDEX: ::flatbuffers::VOffsetT = 8;
+    pub const VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI: ::flatbuffers::VOffsetT = 10;
+    pub const VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: ::flatbuffers::VOffsetT = 12;
+    pub const VT_POWER_STEP_DB: ::flatbuffers::VOffsetT = 14;
+    pub const VT_PROCESSING_GAIN_DB: ::flatbuffers::VOffsetT = 16;
+    pub const VT_HAS_PROCESSING_GAIN_DB: ::flatbuffers::VOffsetT = 18;
+    pub const VT_ARRAY_PAP_ID: ::flatbuffers::VOffsetT = 20;
+    pub const VT_AREA_RADIUS_KM: ::flatbuffers::VOffsetT = 22;
+    pub const VT_AREA_RESOLUTION: ::flatbuffers::VOffsetT = 24;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        RFLJamming { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args RFLJammingArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<RFLJamming<'bldr>> {
+        let mut builder = RFLJammingBuilder::new(_fbb);
+        builder.add_AREA_RADIUS_KM(args.AREA_RADIUS_KM);
+        builder.add_PROCESSING_GAIN_DB(args.PROCESSING_GAIN_DB);
+        builder.add_POWER_STEP_DB(args.POWER_STEP_DB);
+        builder.add_TERMINAL_GAIN_TOWARD_JAMMER_DBI(args.TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+        builder.add_AREA_RESOLUTION(args.AREA_RESOLUTION);
+        if let Some(x) = args.ARRAY_PAP_ID { builder.add_ARRAY_PAP_ID(x); }
+        builder.add_PASS_INDEX(args.PASS_INDEX);
+        if let Some(x) = args.JAMMER_ENDPOINT { builder.add_JAMMER_ENDPOINT(x); }
+        builder.add_LINK_INDEX(args.LINK_INDEX);
+        builder.add_HAS_PROCESSING_GAIN_DB(args.HAS_PROCESSING_GAIN_DB);
+        builder.add_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(args.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> RFLJammingT {
+        let LINK_INDEX = self.LINK_INDEX();
+        let JAMMER_ENDPOINT = {
+            let x = self.JAMMER_ENDPOINT();
+            alloc::boxed::Box::new(x.unpack())
+        };
+        let PASS_INDEX = self.PASS_INDEX();
+        let TERMINAL_GAIN_TOWARD_JAMMER_DBI = self.TERMINAL_GAIN_TOWARD_JAMMER_DBI();
+        let HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = self.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI();
+        let POWER_STEP_DB = self.POWER_STEP_DB();
+        let PROCESSING_GAIN_DB = self.PROCESSING_GAIN_DB();
+        let HAS_PROCESSING_GAIN_DB = self.HAS_PROCESSING_GAIN_DB();
+        let ARRAY_PAP_ID = self.ARRAY_PAP_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let AREA_RADIUS_KM = self.AREA_RADIUS_KM();
+        let AREA_RESOLUTION = self.AREA_RESOLUTION();
+        RFLJammingT {
+            LINK_INDEX,
+            JAMMER_ENDPOINT,
+            PASS_INDEX,
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+            POWER_STEP_DB,
+            PROCESSING_GAIN_DB,
+            HAS_PROCESSING_GAIN_DB,
+            ARRAY_PAP_ID,
+            AREA_RADIUS_KM,
+            AREA_RESOLUTION,
+        }
+    }
+
+    /// Index in LINKS of the link assessed.
+    #[inline]
+    pub fn LINK_INDEX(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RFLJamming::VT_LINK_INDEX, Some(0)).unwrap()}
+    }
+
+    /// The jammer's end: its site (SIT_ID) or its platform.
+    #[inline]
+    pub fn JAMMER_ENDPOINT(&self) -> RFLEndpoint<'a> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFLEndpoint>>(RFLJamming::VT_JAMMER_ENDPOINT, None).unwrap()}
+    }
+
+    /// Zero-based index, in the analysis window, of the spacecraft's pass over
+    /// the link's ground end that is assessed.
+    #[inline]
+    pub fn PASS_INDEX(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RFLJamming::VT_PASS_INDEX, Some(0)).unwrap()}
+    }
+
+    /// The ground terminal antenna's stated gain toward the jammer, dBi.
+    #[inline]
+    pub fn TERMINAL_GAIN_TOWARD_JAMMER_DBI(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFLJamming::VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, Some(0.0)).unwrap()}
+    }
+
+    /// True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+    #[inline]
+    pub fn HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(RFLJamming::VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, Some(false)).unwrap()}
+    }
+
+    /// Countermeasure: the link's EIRP raised by this many dB.
+    #[inline]
+    pub fn POWER_STEP_DB(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFLJamming::VT_POWER_STEP_DB, Some(0.0)).unwrap()}
+    }
+
+    /// Countermeasure: processing gain, dB, as the operator states it.
+    #[inline]
+    pub fn PROCESSING_GAIN_DB(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFLJamming::VT_PROCESSING_GAIN_DB, Some(0.0)).unwrap()}
+    }
+
+    /// True when PROCESSING_GAIN_DB is stated; it has no default.
+    #[inline]
+    pub fn HAS_PROCESSING_GAIN_DB(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(RFLJamming::VT_HAS_PROCESSING_GAIN_DB, Some(false)).unwrap()}
+    }
+
+    /// PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+    /// null countermeasures.
+    #[inline]
+    pub fn ARRAY_PAP_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFLJamming::VT_ARRAY_PAP_ID, None)}
+    }
+
+    /// Denial area about the link's ground end: radius, km.
+    #[inline]
+    pub fn AREA_RADIUS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFLJamming::VT_AREA_RADIUS_KM, Some(0.0)).unwrap()}
+    }
+
+    /// Denial area: number of cells across the radius.
+    #[inline]
+    pub fn AREA_RESOLUTION(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(RFLJamming::VT_AREA_RESOLUTION, Some(0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for RFLJamming<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u32>("LINK_INDEX", Self::VT_LINK_INDEX, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<RFLEndpoint>>("JAMMER_ENDPOINT", Self::VT_JAMMER_ENDPOINT, true)?
+            .visit_field::<u32>("PASS_INDEX", Self::VT_PASS_INDEX, false)?
+            .visit_field::<f64>("TERMINAL_GAIN_TOWARD_JAMMER_DBI", Self::VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, false)?
+            .visit_field::<bool>("HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI", Self::VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, false)?
+            .visit_field::<f64>("POWER_STEP_DB", Self::VT_POWER_STEP_DB, false)?
+            .visit_field::<f64>("PROCESSING_GAIN_DB", Self::VT_PROCESSING_GAIN_DB, false)?
+            .visit_field::<bool>("HAS_PROCESSING_GAIN_DB", Self::VT_HAS_PROCESSING_GAIN_DB, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ARRAY_PAP_ID", Self::VT_ARRAY_PAP_ID, false)?
+            .visit_field::<f64>("AREA_RADIUS_KM", Self::VT_AREA_RADIUS_KM, false)?
+            .visit_field::<u32>("AREA_RESOLUTION", Self::VT_AREA_RESOLUTION, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct RFLJammingArgs<'a> {
+    pub LINK_INDEX: u32,
+    pub JAMMER_ENDPOINT: Option<::flatbuffers::WIPOffset<RFLEndpoint<'a>>>,
+    pub PASS_INDEX: u32,
+    pub TERMINAL_GAIN_TOWARD_JAMMER_DBI: f64,
+    pub HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: bool,
+    pub POWER_STEP_DB: f64,
+    pub PROCESSING_GAIN_DB: f64,
+    pub HAS_PROCESSING_GAIN_DB: bool,
+    pub ARRAY_PAP_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AREA_RADIUS_KM: f64,
+    pub AREA_RESOLUTION: u32,
+}
+
+impl<'a> Default for RFLJammingArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        RFLJammingArgs {
+            LINK_INDEX: 0,
+            JAMMER_ENDPOINT: None, // required field
+            PASS_INDEX: 0,
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: 0.0,
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: false,
+            POWER_STEP_DB: 0.0,
+            PROCESSING_GAIN_DB: 0.0,
+            HAS_PROCESSING_GAIN_DB: false,
+            ARRAY_PAP_ID: None,
+            AREA_RADIUS_KM: 0.0,
+            AREA_RESOLUTION: 0,
+        }
+    }
+}
+
+pub struct RFLJammingBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLJammingBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_LINK_INDEX(&mut self, LINK_INDEX: u32) {
+        self.fbb_.push_slot::<u32>(RFLJamming::VT_LINK_INDEX, LINK_INDEX, 0);
+    }
+
+    #[inline]
+    pub fn add_JAMMER_ENDPOINT(&mut self, JAMMER_ENDPOINT: ::flatbuffers::WIPOffset<RFLEndpoint<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFLEndpoint>>(RFLJamming::VT_JAMMER_ENDPOINT, JAMMER_ENDPOINT);
+    }
+
+    #[inline]
+    pub fn add_PASS_INDEX(&mut self, PASS_INDEX: u32) {
+        self.fbb_.push_slot::<u32>(RFLJamming::VT_PASS_INDEX, PASS_INDEX, 0);
+    }
+
+    #[inline]
+    pub fn add_TERMINAL_GAIN_TOWARD_JAMMER_DBI(&mut self, TERMINAL_GAIN_TOWARD_JAMMER_DBI: f64) {
+        self.fbb_.push_slot::<f64>(RFLJamming::VT_TERMINAL_GAIN_TOWARD_JAMMER_DBI, TERMINAL_GAIN_TOWARD_JAMMER_DBI, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI(&mut self, HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: bool) {
+        self.fbb_.push_slot::<bool>(RFLJamming::VT_HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, false);
+    }
+
+    #[inline]
+    pub fn add_POWER_STEP_DB(&mut self, POWER_STEP_DB: f64) {
+        self.fbb_.push_slot::<f64>(RFLJamming::VT_POWER_STEP_DB, POWER_STEP_DB, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PROCESSING_GAIN_DB(&mut self, PROCESSING_GAIN_DB: f64) {
+        self.fbb_.push_slot::<f64>(RFLJamming::VT_PROCESSING_GAIN_DB, PROCESSING_GAIN_DB, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_PROCESSING_GAIN_DB(&mut self, HAS_PROCESSING_GAIN_DB: bool) {
+        self.fbb_.push_slot::<bool>(RFLJamming::VT_HAS_PROCESSING_GAIN_DB, HAS_PROCESSING_GAIN_DB, false);
+    }
+
+    #[inline]
+    pub fn add_ARRAY_PAP_ID(&mut self, ARRAY_PAP_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFLJamming::VT_ARRAY_PAP_ID, ARRAY_PAP_ID);
+    }
+
+    #[inline]
+    pub fn add_AREA_RADIUS_KM(&mut self, AREA_RADIUS_KM: f64) {
+        self.fbb_.push_slot::<f64>(RFLJamming::VT_AREA_RADIUS_KM, AREA_RADIUS_KM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_AREA_RESOLUTION(&mut self, AREA_RESOLUTION: u32) {
+        self.fbb_.push_slot::<u32>(RFLJamming::VT_AREA_RESOLUTION, AREA_RESOLUTION, 0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLJammingBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        RFLJammingBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<RFLJamming<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, RFLJamming::VT_JAMMER_ENDPOINT,"JAMMER_ENDPOINT");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for RFLJamming<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("RFLJamming");
+        ds.field("LINK_INDEX", &self.LINK_INDEX());
+        ds.field("JAMMER_ENDPOINT", &self.JAMMER_ENDPOINT());
+        ds.field("PASS_INDEX", &self.PASS_INDEX());
+        ds.field("TERMINAL_GAIN_TOWARD_JAMMER_DBI", &self.TERMINAL_GAIN_TOWARD_JAMMER_DBI());
+        ds.field("HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI", &self.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI());
+        ds.field("POWER_STEP_DB", &self.POWER_STEP_DB());
+        ds.field("PROCESSING_GAIN_DB", &self.PROCESSING_GAIN_DB());
+        ds.field("HAS_PROCESSING_GAIN_DB", &self.HAS_PROCESSING_GAIN_DB());
+        ds.field("ARRAY_PAP_ID", &self.ARRAY_PAP_ID());
+        ds.field("AREA_RADIUS_KM", &self.AREA_RADIUS_KM());
+        ds.field("AREA_RESOLUTION", &self.AREA_RESOLUTION());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct RFLJammingT {
+    pub LINK_INDEX: u32,
+    pub JAMMER_ENDPOINT: alloc::boxed::Box<RFLEndpointT>,
+    pub PASS_INDEX: u32,
+    pub TERMINAL_GAIN_TOWARD_JAMMER_DBI: f64,
+    pub HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: bool,
+    pub POWER_STEP_DB: f64,
+    pub PROCESSING_GAIN_DB: f64,
+    pub HAS_PROCESSING_GAIN_DB: bool,
+    pub ARRAY_PAP_ID: Option<alloc::string::String>,
+    pub AREA_RADIUS_KM: f64,
+    pub AREA_RESOLUTION: u32,
+}
+
+impl Default for RFLJammingT {
+    fn default() -> Self {
+        Self {
+            LINK_INDEX: 0,
+            JAMMER_ENDPOINT: Default::default(),
+            PASS_INDEX: 0,
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI: 0.0,
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: false,
+            POWER_STEP_DB: 0.0,
+            PROCESSING_GAIN_DB: 0.0,
+            HAS_PROCESSING_GAIN_DB: false,
+            ARRAY_PAP_ID: None,
+            AREA_RADIUS_KM: 0.0,
+            AREA_RESOLUTION: 0,
+        }
+    }
+}
+
+impl RFLJammingT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<RFLJamming<'b>> {
+        let LINK_INDEX = self.LINK_INDEX;
+        let JAMMER_ENDPOINT = Some({
+            let x = &self.JAMMER_ENDPOINT;
+            x.pack(_fbb)
+        });
+        let PASS_INDEX = self.PASS_INDEX;
+        let TERMINAL_GAIN_TOWARD_JAMMER_DBI = self.TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+        let HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = self.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+        let POWER_STEP_DB = self.POWER_STEP_DB;
+        let PROCESSING_GAIN_DB = self.PROCESSING_GAIN_DB;
+        let HAS_PROCESSING_GAIN_DB = self.HAS_PROCESSING_GAIN_DB;
+        let ARRAY_PAP_ID = self.ARRAY_PAP_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let AREA_RADIUS_KM = self.AREA_RADIUS_KM;
+        let AREA_RESOLUTION = self.AREA_RESOLUTION;
+        RFLJamming::create(_fbb, &RFLJammingArgs{
+            LINK_INDEX,
+            JAMMER_ENDPOINT,
+            PASS_INDEX,
+            TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+            HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+            POWER_STEP_DB,
+            PROCESSING_GAIN_DB,
+            HAS_PROCESSING_GAIN_DB,
+            ARRAY_PAP_ID,
+            AREA_RADIUS_KM,
+            AREA_RESOLUTION,
+        })
+    }
+}
+
 pub enum RFLOffset {}
 
 /// RF Link Sample
@@ -5100,6 +5514,7 @@ impl<'a> RFL<'a> {
     pub const VT_ACM_MARGIN_DB: ::flatbuffers::VOffsetT = 116;
     pub const VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: ::flatbuffers::VOffsetT = 118;
     pub const VT_BLOCK_ERROR_RATE: ::flatbuffers::VOffsetT = 120;
+    pub const VT_JAMMING: ::flatbuffers::VOffsetT = 122;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5113,6 +5528,7 @@ impl<'a> RFL<'a> {
     ) -> ::flatbuffers::WIPOffset<RFL<'bldr>> {
         let mut builder = RFLBuilder::new(_fbb);
         builder.add_COMPUTED_AT(args.COMPUTED_AT);
+        if let Some(x) = args.JAMMING { builder.add_JAMMING(x); }
         if let Some(x) = args.BLOCK_ERROR_RATE { builder.add_BLOCK_ERROR_RATE(x); }
         if let Some(x) = args.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB { builder.add_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(x); }
         if let Some(x) = args.ACM_MARGIN_DB { builder.add_ACM_MARGIN_DB(x); }
@@ -5351,6 +5767,9 @@ impl<'a> RFL<'a> {
         let BLOCK_ERROR_RATE = self.BLOCK_ERROR_RATE().map(|x| {
             x.into_iter().collect()
         });
+        let JAMMING = self.JAMMING().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         RFLT {
             RFL_ID,
             NAME,
@@ -5411,6 +5830,7 @@ impl<'a> RFL<'a> {
             ACM_MARGIN_DB,
             ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
             BLOCK_ERROR_RATE,
+            JAMMING,
         }
     }
 
@@ -5966,6 +6386,15 @@ impl<'a> RFL<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFL::VT_BLOCK_ERROR_RATE, None)}
     }
+
+    /// The jamming assessment this record answers, when it answers one.
+    #[inline]
+    pub fn JAMMING(&self) -> Option<RFLJamming<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFLJamming>>(RFL::VT_JAMMING, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for RFL<'_> {
@@ -6033,6 +6462,7 @@ impl ::flatbuffers::Verifiable for RFL<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ACM_MARGIN_DB", Self::VT_ACM_MARGIN_DB, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", Self::VT_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BLOCK_ERROR_RATE", Self::VT_BLOCK_ERROR_RATE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<RFLJamming>>("JAMMING", Self::VT_JAMMING, false)?
             .finish();
         Ok(())
     }
@@ -6098,6 +6528,7 @@ pub struct RFLArgs<'a> {
     pub ACM_MARGIN_DB: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub BLOCK_ERROR_RATE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub JAMMING: Option<::flatbuffers::WIPOffset<RFLJamming<'a>>>,
 }
 
 impl<'a> Default for RFLArgs<'a> {
@@ -6163,6 +6594,7 @@ impl<'a> Default for RFLArgs<'a> {
             ACM_MARGIN_DB: None,
             ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: None,
             BLOCK_ERROR_RATE: None,
+            JAMMING: None,
         }
     }
 }
@@ -6469,6 +6901,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFLBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_JAMMING(&mut self, JAMMING: ::flatbuffers::WIPOffset<RFLJamming<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFLJamming>>(RFL::VT_JAMMING, JAMMING);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFLBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         RFLBuilder {
@@ -6551,6 +6988,7 @@ impl ::core::fmt::Debug for RFL<'_> {
         ds.field("ACM_MARGIN_DB", &self.ACM_MARGIN_DB());
         ds.field("ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", &self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB());
         ds.field("BLOCK_ERROR_RATE", &self.BLOCK_ERROR_RATE());
+        ds.field("JAMMING", &self.JAMMING());
         ds.finish()
     }
 }
@@ -6617,6 +7055,7 @@ pub struct RFLT {
     pub ACM_MARGIN_DB: Option<alloc::vec::Vec<f64>>,
     pub ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Option<alloc::vec::Vec<f64>>,
     pub BLOCK_ERROR_RATE: Option<alloc::vec::Vec<f64>>,
+    pub JAMMING: Option<alloc::boxed::Box<RFLJammingT>>,
 }
 
 impl Default for RFLT {
@@ -6681,6 +7120,7 @@ impl Default for RFLT {
             ACM_MARGIN_DB: None,
             ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: None,
             BLOCK_ERROR_RATE: None,
+            JAMMING: None,
         }
     }
 }
@@ -6866,6 +7306,9 @@ impl RFLT {
         let BLOCK_ERROR_RATE = self.BLOCK_ERROR_RATE.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let JAMMING = self.JAMMING.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         RFL::create(_fbb, &RFLArgs{
             RFL_ID,
             NAME,
@@ -6926,6 +7369,7 @@ impl RFLT {
             ACM_MARGIN_DB,
             ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
             BLOCK_ERROR_RATE,
+            JAMMING,
         })
     }
 }

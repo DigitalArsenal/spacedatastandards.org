@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "coaKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MANEUVER",
+        "RIDE_OUT",
+        "RECOVERY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "MANEUVER": {
+          "value": 1,
+          "description": "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+        },
+        "RIDE_OUT": {
+          "value": 2,
+          "description": "No action: the event is accepted."
+        },
+        "RECOVERY": {
+          "value": 3,
+          "description": "STEPS, in order, restore service after the event."
+        }
+      }
+    },
+    "COAStep": {
+      "type": "object",
+      "description": "One step of a course of action.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "The step, in the operator's words.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DURATION_SECONDS": {
+          "type": "number",
+          "description": "How long the step takes, s.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "COA": {
+      "type": "object",
+      "description": "Course of Action",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Identifier of the course of action, unique within its record set.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name, for example \"Plan A\".",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/coaKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "MANEUVER": {
+              "value": 1,
+              "description": "A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in place within RETURN_WITHIN_SECONDS after it."
+            },
+            "RIDE_OUT": {
+              "value": 2,
+              "description": "No action: the event is accepted."
+            },
+            "RECOVERY": {
+              "value": 3,
+              "description": "STEPS, in order, restore service after the event."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Catalog number of the object acted on; 0 when GROUP_ID names a group.",
+          "x-flatbuffer-type": "uint"
+        },
+        "GROUP_ID": {
+          "type": "string",
+          "description": "GROUP_ID of the $EGP acted on, when the course of action is for a group.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_STANDARD": {
+          "type": "string",
+          "description": "Four-character standard code of the event answered, \"$\" included; never a union ordinal.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "description": "ID of the event's record; empty for an event that is computed again rather than stored.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_EPOCH": {
+          "type": "string",
+          "description": "Time of the event, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAD_SECONDS": {
+          "type": "number",
+          "description": "MANEUVER: made this long before EVENT_EPOCH, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "RETURN_WITHIN_SECONDS": {
+          "type": "number",
+          "description": "MANEUVER: back in place within this long after the maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "PREPARATION_SECONDS": {
+          "type": "number",
+          "description": "Time out of service before a maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "CHECKOUT_SECONDS": {
+          "type": "number",
+          "description": "Time out of service after a maneuver, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_BUDGET_M_S_PER_YEAR": {
+          "type": "number",
+          "description": "Delta-v the operator allows the object each year, m/s per year; 0 = not stated.",
+          "x-flatbuffer-type": "double"
+        },
+        "STEPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/COAStep"
+          },
+          "description": "RECOVERY: the steps, in order.",
+          "x-flatbuffer-type": "[COAStep]"
+        },
+        "PLAN_ID": {
+          "type": "string",
+          "description": "ID of the $MPL plan request that carries the maneuver, when one is stored.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/COA",
+  "x-flatbuffer-root-type": "COA",
+  "x-flatbuffer-file-identifier": "$COA"
+}

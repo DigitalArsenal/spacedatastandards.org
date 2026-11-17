@@ -15,6 +15,13 @@ class scenarioReferenceKind
     const POINT_OF_INTEREST = 6;
     const EXCLUSION_ZONE = 7;
     const OBSERVATION = 8;
+    /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+    /// REFERENCE_ID.
+    const GROUP = 9;
+    /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+    /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+    /// alpha-2 code when the area is a country.
+    const AREA_OF_INTEREST = 10;
 
     private static $names = array(
         scenarioReferenceKind::UNKNOWN=>"UNKNOWN",
@@ -26,6 +33,8 @@ class scenarioReferenceKind
         scenarioReferenceKind::POINT_OF_INTEREST=>"POINT_OF_INTEREST",
         scenarioReferenceKind::EXCLUSION_ZONE=>"EXCLUSION_ZONE",
         scenarioReferenceKind::OBSERVATION=>"OBSERVATION",
+        scenarioReferenceKind::GROUP=>"GROUP",
+        scenarioReferenceKind::AREA_OF_INTEREST=>"AREA_OF_INTEREST",
     );
 
     public static function Name($e)

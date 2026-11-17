@@ -542,6 +542,11 @@ public final class RFL extends com.google.flatbuffers.Table {
   public DoubleVector blockErrorRateVector(DoubleVector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer BLOCK_ERROR_RATEAsByteBuffer() { return __vector_as_bytebuffer(120, 8); }
   public ByteBuffer BLOCK_ERROR_RATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 120, 8); }
+  /**
+   * The jamming assessment this record answers, when it answers one.
+   */
+  public RFLJamming JAMMING() { return JAMMING(new RFLJamming()); }
+  public RFLJamming JAMMING(RFLJamming obj) { int o = __offset(122); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createRFL(FlatBufferBuilder builder,
       int RFL_IDOffset,
@@ -602,9 +607,11 @@ public final class RFL extends com.google.flatbuffers.Table {
       int ACHIEVED_DATA_RATE_BPSOffset,
       int ACM_MARGIN_DBOffset,
       int ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset,
-      int BLOCK_ERROR_RATEOffset) {
-    builder.startTable(59);
+      int BLOCK_ERROR_RATEOffset,
+      int JAMMINGOffset) {
+    builder.startTable(60);
     RFL.addComputedAt(builder, COMPUTED_AT);
+    RFL.addJamming(builder, JAMMINGOffset);
     RFL.addBlockErrorRate(builder, BLOCK_ERROR_RATEOffset);
     RFL.addEnergyPerSymbolToNoiseDensityDb(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
     RFL.addAcmMarginDb(builder, ACM_MARGIN_DBOffset);
@@ -666,7 +673,7 @@ public final class RFL extends com.google.flatbuffers.Table {
     return RFL.endRFL(builder);
   }
 
-  public static void startRFL(FlatBufferBuilder builder) { builder.startTable(59); }
+  public static void startRFL(FlatBufferBuilder builder) { builder.startTable(60); }
   public static void addRflId(FlatBufferBuilder builder, int RFL_IDOffset) { builder.addOffset(0, RFL_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(2, SCENARIO_IDOffset, 0); }
@@ -830,6 +837,7 @@ public final class RFL extends com.google.flatbuffers.Table {
   public static void addBlockErrorRate(FlatBufferBuilder builder, int BLOCK_ERROR_RATEOffset) { builder.addOffset(58, BLOCK_ERROR_RATEOffset, 0); }
   public static int createBlockErrorRateVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startBlockErrorRateVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addJamming(FlatBufferBuilder builder, int JAMMINGOffset) { builder.addOffset(59, JAMMINGOffset, 0); }
   public static int endRFL(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // RFL_ID

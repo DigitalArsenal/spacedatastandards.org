@@ -1521,8 +1521,20 @@ class RFL(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
+    # The jamming assessment this record answers, when it answers one.
+    # RFL
+    def JAMMING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFLJamming import RFLJamming
+            obj = RFLJamming()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def RFLStart(builder):
-    builder.StartObject(59)
+    builder.StartObject(60)
 
 def Start(builder):
     RFLStart(builder)
@@ -2669,6 +2681,12 @@ def RFLCreateBLOCK_ERROR_RATEVector(builder, data):
 def CreateBLOCK_ERROR_RATEVector(builder, data):
     return RFLCreateBLOCK_ERROR_RATEVector(builder, data)
 
+def RFLAddJAMMING(builder, JAMMING):
+    builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(JAMMING), 0)
+
+def AddJAMMING(builder, JAMMING):
+    RFLAddJAMMING(builder, JAMMING)
+
 def RFLEnd(builder):
     return builder.EndObject()
 
@@ -2676,6 +2694,7 @@ def End(builder):
     return RFLEnd(builder)
 
 import RFLInterferenceContribution
+import RFLJamming
 import RFLLink
 import RFLObstruction
 import RFLProvenance
@@ -2748,6 +2767,7 @@ class RFLT(object):
         ACM_MARGIN_DB = None,
         ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = None,
         BLOCK_ERROR_RATE = None,
+        JAMMING = None,
     ):
         self.RFL_ID = RFL_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -2808,6 +2828,7 @@ class RFLT(object):
         self.ACM_MARGIN_DB = ACM_MARGIN_DB  # type: Optional[List[float]]
         self.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB  # type: Optional[List[float]]
         self.BLOCK_ERROR_RATE = BLOCK_ERROR_RATE  # type: Optional[List[float]]
+        self.JAMMING = JAMMING  # type: Optional[RFLJamming.RFLJammingT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -3193,6 +3214,8 @@ class RFLT(object):
                     self.BLOCK_ERROR_RATE.append(RFL.BLOCK_ERROR_RATE(i))
             else:
                 self.BLOCK_ERROR_RATE = RFL.BLOCK_ERROR_RATEAsNumpy()
+        if RFL.JAMMING() is not None:
+            self.JAMMING = RFLJamming.RFLJammingT.InitFromObj(RFL.JAMMING())
 
     # RFLT
     def Pack(self, builder):
@@ -3608,6 +3631,8 @@ class RFLT(object):
                 for i in reversed(range(len(self.BLOCK_ERROR_RATE))):
                     builder.PrependFloat64(self.BLOCK_ERROR_RATE[i])
                 BLOCK_ERROR_RATE = builder.EndVector()
+        if self.JAMMING is not None:
+            JAMMING = self.JAMMING.Pack(builder)
         RFLStart(builder)
         if self.RFL_ID is not None:
             RFLAddRFL_ID(builder, RFL_ID)
@@ -3724,5 +3749,7 @@ class RFLT(object):
             RFLAddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB)
         if self.BLOCK_ERROR_RATE is not None:
             RFLAddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATE)
+        if self.JAMMING is not None:
+            RFLAddJAMMING(builder, JAMMING)
         RFL = RFLEnd(builder)
         return RFL

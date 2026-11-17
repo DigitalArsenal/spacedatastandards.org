@@ -1300,6 +1300,121 @@ public struct RFLProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
+///  A jamming assessment of one link: the jammer and the stated values the
+///  assessment and its countermeasures use. Inputs only; what it yields is this
+///  record's samples. A record that carries it with no samples is the
+///  assessment's definition, to be sampled.
+public struct RFLJamming: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RFL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFLJamming.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let LINK_INDEX: VOffset = 4
+    static let JAMMER_ENDPOINT: VOffset = 6
+    static let PASS_INDEX: VOffset = 8
+    static let TERMINAL_GAIN_TOWARD_JAMMER_DBI: VOffset = 10
+    static let HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: VOffset = 12
+    static let POWER_STEP_DB: VOffset = 14
+    static let PROCESSING_GAIN_DB: VOffset = 16
+    static let HAS_PROCESSING_GAIN_DB: VOffset = 18
+    static let ARRAY_PAP_ID: VOffset = 20
+    static let AREA_RADIUS_KM: VOffset = 22
+    static let AREA_RESOLUTION: VOffset = 24
+  }
+
+  ///  Index in LINKS of the link assessed.
+  public var LINK_INDEX: UInt32 { let o = _accessor.offset(VT.LINK_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The jammer's end: its site (SIT_ID) or its platform.
+  public var JAMMER_ENDPOINT: RFLEndpoint! { let o = _accessor.offset(VT.JAMMER_ENDPOINT); return RFLEndpoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Zero-based index, in the analysis window, of the spacecraft's pass over
+  ///  the link's ground end that is assessed.
+  public var PASS_INDEX: UInt32 { let o = _accessor.offset(VT.PASS_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The ground terminal antenna's stated gain toward the jammer, dBi.
+  public var TERMINAL_GAIN_TOWARD_JAMMER_DBI: Double { let o = _accessor.offset(VT.TERMINAL_GAIN_TOWARD_JAMMER_DBI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+  public var HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: Bool { let o = _accessor.offset(VT.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Countermeasure: the link's EIRP raised by this many dB.
+  public var POWER_STEP_DB: Double { let o = _accessor.offset(VT.POWER_STEP_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Countermeasure: processing gain, dB, as the operator states it.
+  public var PROCESSING_GAIN_DB: Double { let o = _accessor.offset(VT.PROCESSING_GAIN_DB); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when PROCESSING_GAIN_DB is stated; it has no default.
+  public var HAS_PROCESSING_GAIN_DB: Bool { let o = _accessor.offset(VT.HAS_PROCESSING_GAIN_DB); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+  ///  null countermeasures.
+  public var ARRAY_PAP_ID: String? { let o = _accessor.offset(VT.ARRAY_PAP_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ARRAY_PAP_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARRAY_PAP_ID) }
+  ///  Denial area about the link's ground end: radius, km.
+  public var AREA_RADIUS_KM: Double { let o = _accessor.offset(VT.AREA_RADIUS_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Denial area: number of cells across the radius.
+  public var AREA_RESOLUTION: UInt32 { let o = _accessor.offset(VT.AREA_RESOLUTION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startRFLJamming(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(LINK_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_INDEX, def: 0, at: VT.LINK_INDEX) }
+  public static func add(JAMMER_ENDPOINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JAMMER_ENDPOINT, at: VT.JAMMER_ENDPOINT) }
+  public static func add(PASS_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PASS_INDEX, def: 0, at: VT.PASS_INDEX) }
+  public static func add(TERMINAL_GAIN_TOWARD_JAMMER_DBI: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TERMINAL_GAIN_TOWARD_JAMMER_DBI, def: 0.0, at: VT.TERMINAL_GAIN_TOWARD_JAMMER_DBI) }
+  public static func add(HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, def: false,
+   at: VT.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI) }
+  public static func add(POWER_STEP_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_STEP_DB, def: 0.0, at: VT.POWER_STEP_DB) }
+  public static func add(PROCESSING_GAIN_DB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROCESSING_GAIN_DB, def: 0.0, at: VT.PROCESSING_GAIN_DB) }
+  public static func add(HAS_PROCESSING_GAIN_DB: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_PROCESSING_GAIN_DB, def: false,
+   at: VT.HAS_PROCESSING_GAIN_DB) }
+  public static func add(ARRAY_PAP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARRAY_PAP_ID, at: VT.ARRAY_PAP_ID) }
+  public static func add(AREA_RADIUS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_RADIUS_KM, def: 0.0, at: VT.AREA_RADIUS_KM) }
+  public static func add(AREA_RESOLUTION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_RESOLUTION, def: 0, at: VT.AREA_RESOLUTION) }
+  public static func endRFLJamming(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [6]); return end }
+  public static func createRFLJamming(
+    _ fbb: inout FlatBufferBuilder,
+    LINK_INDEX: UInt32 = 0,
+    JAMMER_ENDPOINTOffset JAMMER_ENDPOINT: Offset,
+    PASS_INDEX: UInt32 = 0,
+    TERMINAL_GAIN_TOWARD_JAMMER_DBI: Double = 0.0,
+    HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: Bool = false,
+    POWER_STEP_DB: Double = 0.0,
+    PROCESSING_GAIN_DB: Double = 0.0,
+    HAS_PROCESSING_GAIN_DB: Bool = false,
+    ARRAY_PAP_IDOffset ARRAY_PAP_ID: Offset = Offset(),
+    AREA_RADIUS_KM: Double = 0.0,
+    AREA_RESOLUTION: UInt32 = 0
+  ) -> Offset {
+    let __start = RFLJamming.startRFLJamming(&fbb)
+    RFLJamming.add(LINK_INDEX: LINK_INDEX, &fbb)
+    RFLJamming.add(JAMMER_ENDPOINT: JAMMER_ENDPOINT, &fbb)
+    RFLJamming.add(PASS_INDEX: PASS_INDEX, &fbb)
+    RFLJamming.add(TERMINAL_GAIN_TOWARD_JAMMER_DBI: TERMINAL_GAIN_TOWARD_JAMMER_DBI, &fbb)
+    RFLJamming.add(HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, &fbb)
+    RFLJamming.add(POWER_STEP_DB: POWER_STEP_DB, &fbb)
+    RFLJamming.add(PROCESSING_GAIN_DB: PROCESSING_GAIN_DB, &fbb)
+    RFLJamming.add(HAS_PROCESSING_GAIN_DB: HAS_PROCESSING_GAIN_DB, &fbb)
+    RFLJamming.add(ARRAY_PAP_ID: ARRAY_PAP_ID, &fbb)
+    RFLJamming.add(AREA_RADIUS_KM: AREA_RADIUS_KM, &fbb)
+    RFLJamming.add(AREA_RESOLUTION: AREA_RESOLUTION, &fbb)
+    return RFLJamming.endRFLJamming(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.LINK_INDEX, fieldName: "LINK_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.JAMMER_ENDPOINT, fieldName: "JAMMER_ENDPOINT", required: true, type: ForwardOffset<RFLEndpoint>.self)
+    try _v.visit(field: VT.PASS_INDEX, fieldName: "PASS_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TERMINAL_GAIN_TOWARD_JAMMER_DBI, fieldName: "TERMINAL_GAIN_TOWARD_JAMMER_DBI", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI, fieldName: "HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI", required: false, type: Bool.self)
+    try _v.visit(field: VT.POWER_STEP_DB, fieldName: "POWER_STEP_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.PROCESSING_GAIN_DB, fieldName: "PROCESSING_GAIN_DB", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_PROCESSING_GAIN_DB, fieldName: "HAS_PROCESSING_GAIN_DB", required: false, type: Bool.self)
+    try _v.visit(field: VT.ARRAY_PAP_ID, fieldName: "ARRAY_PAP_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AREA_RADIUS_KM, fieldName: "AREA_RADIUS_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_RESOLUTION, fieldName: "AREA_RESOLUTION", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
 ///  RF Link Sample
 public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -1372,6 +1487,7 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ACM_MARGIN_DB: VOffset = 116
     static let ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: VOffset = 118
     static let BLOCK_ERROR_RATE: VOffset = 120
+    static let JAMMING: VOffset = 122
   }
 
   ///  Stable identifier of this sample set.
@@ -1564,7 +1680,9 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Decoded block error probability [0-1].
   public var BLOCK_ERROR_RATE: FlatbufferVector<Double> { return _accessor.vector(at: VT.BLOCK_ERROR_RATE, byteSize: 8) }
   public func withUnsafePointerToBlockErrorRate<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BLOCK_ERROR_RATE, body: body) }
-  public static func startRFL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  ///  The jamming assessment this record answers, when it answers one.
+  public var JAMMING: RFLJamming? { let o = _accessor.offset(VT.JAMMING); return o == 0 ? nil : RFLJamming(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startRFL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 60) }
   public static func add(RFL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RFL_ID, at: VT.RFL_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
@@ -1624,6 +1742,7 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(ACM_MARGIN_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACM_MARGIN_DB, at: VT.ACM_MARGIN_DB) }
   public static func addVectorOf(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, at: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB) }
   public static func addVectorOf(BLOCK_ERROR_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BLOCK_ERROR_RATE, at: VT.BLOCK_ERROR_RATE) }
+  public static func add(JAMMING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JAMMING, at: VT.JAMMING) }
   public static func endRFL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 14, 16, 98]); return end }
   public static func createRFL(
     _ fbb: inout FlatBufferBuilder,
@@ -1685,7 +1804,8 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ACHIEVED_DATA_RATE_BPSVectorOffset ACHIEVED_DATA_RATE_BPS: Offset = Offset(),
     ACM_MARGIN_DBVectorOffset ACM_MARGIN_DB: Offset = Offset(),
     ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBVectorOffset ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: Offset = Offset(),
-    BLOCK_ERROR_RATEVectorOffset BLOCK_ERROR_RATE: Offset = Offset()
+    BLOCK_ERROR_RATEVectorOffset BLOCK_ERROR_RATE: Offset = Offset(),
+    JAMMINGOffset JAMMING: Offset = Offset()
   ) -> Offset {
     let __start = RFL.startRFL(&fbb)
     RFL.add(RFL_ID: RFL_ID, &fbb)
@@ -1747,6 +1867,7 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RFL.addVectorOf(ACM_MARGIN_DB: ACM_MARGIN_DB, &fbb)
     RFL.addVectorOf(ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, &fbb)
     RFL.addVectorOf(BLOCK_ERROR_RATE: BLOCK_ERROR_RATE, &fbb)
+    RFL.add(JAMMING: JAMMING, &fbb)
     return RFL.endRFL(&fbb, start: __start)
   }
 
@@ -1811,6 +1932,7 @@ public struct RFL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ACM_MARGIN_DB, fieldName: "ACM_MARGIN_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB, fieldName: "ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.BLOCK_ERROR_RATE, fieldName: "BLOCK_ERROR_RATE", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.JAMMING, fieldName: "JAMMING", required: false, type: ForwardOffset<RFLJamming>.self)
     _v.finish()
   }
 }

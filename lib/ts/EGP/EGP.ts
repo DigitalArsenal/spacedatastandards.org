@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { EGPMember, EGPMemberT } from './EGPMember.js';
 import { EGPProvenance, EGPProvenanceT } from './EGPProvenance.js';
 import { EGPQuery, EGPQueryT } from './EGPQuery.js';
+import { EGPWalker, EGPWalkerT } from './EGPWalker.js';
 import { egpMembershipMode } from './egpMembershipMode.js';
 
 
@@ -155,8 +156,17 @@ DATASET_CID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+ * GENERATED.
+ */
+WALKER(obj?:EGPWalker):EGPWalker|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new EGPWalker()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startEGP(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(12);
 }
 
 static addGroupId(builder:flatbuffers.Builder, GROUP_IDOffset:flatbuffers.Offset) {
@@ -239,6 +249,10 @@ static addDatasetCid(builder:flatbuffers.Builder, DATASET_CIDOffset:flatbuffers.
   builder.addFieldOffset(10, DATASET_CIDOffset, 0);
 }
 
+static addWalker(builder:flatbuffers.Builder, WALKEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, WALKEROffset, 0);
+}
+
 static endEGP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // GROUP_ID
@@ -268,7 +282,8 @@ unpack(): EGPT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.bb!.createObjList<EGPProvenance, EGPProvenanceT>(this.PROVENANCE.bind(this), this.provenanceLength()),
-    this.DATASET_CID()
+    this.DATASET_CID(),
+    (this.WALKER() !== null ? this.WALKER()!.unpack() : null)
   );
 }
 
@@ -285,6 +300,7 @@ unpackTo(_o: EGPT): void {
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.PROVENANCE = this.bb!.createObjList<EGPProvenance, EGPProvenanceT>(this.PROVENANCE.bind(this), this.provenanceLength());
   _o.DATASET_CID = this.DATASET_CID();
+  _o.WALKER = (this.WALKER() !== null ? this.WALKER()!.unpack() : null);
 }
 }
 
@@ -300,7 +316,8 @@ constructor(
   public CREATED_AT: string|Uint8Array|null = null,
   public UPDATED_AT: string|Uint8Array|null = null,
   public PROVENANCE: (EGPProvenanceT)[] = [],
-  public DATASET_CID: string|Uint8Array|null = null
+  public DATASET_CID: string|Uint8Array|null = null,
+  public WALKER: EGPWalkerT|null = null
 ){}
 
 
@@ -315,6 +332,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
   const PROVENANCE = EGP.createProvenanceVector(builder, builder.createObjectOffsetList(this.PROVENANCE));
   const DATASET_CID = (this.DATASET_CID !== null ? builder.createString(this.DATASET_CID!) : 0);
+  const WALKER = (this.WALKER !== null ? this.WALKER!.pack(builder) : 0);
 
   EGP.startEGP(builder);
   EGP.addGroupId(builder, GROUP_ID);
@@ -328,6 +346,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EGP.addUpdatedAt(builder, UPDATED_AT);
   EGP.addProvenance(builder, PROVENANCE);
   EGP.addDatasetCid(builder, DATASET_CID);
+  EGP.addWalker(builder, WALKER);
 
   return EGP.endEGP(builder);
 }

@@ -17,8 +17,19 @@ public final class scenarioReferenceKind {
   public static final byte POINT_OF_INTEREST = 6;
   public static final byte EXCLUSION_ZONE = 7;
   public static final byte OBSERVATION = 8;
+  /**
+   * A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+   * REFERENCE_ID.
+   */
+  public static final byte GROUP = 9;
+  /**
+   * An area of interest: the $GJN feature of the enclosing $REC whose ID
+   * equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+   * alpha-2 code when the area is a country.
+   */
+  public static final byte AREA_OF_INTEREST = 10;
 
-  public static final String[] names = { "UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", };
+  public static final String[] names = { "UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST", };
 
   public static String name(int e) { return names[e]; }
 }

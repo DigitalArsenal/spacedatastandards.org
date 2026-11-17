@@ -99,6 +99,12 @@ public final class EGP extends com.google.flatbuffers.Table {
   public String DATASET_CID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DATASET_CIDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer DATASET_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+   * GENERATED.
+   */
+  public EGPWalker WALKER() { return WALKER(new EGPWalker()); }
+  public EGPWalker WALKER(EGPWalker obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createEGP(FlatBufferBuilder builder,
       int GROUP_IDOffset,
@@ -111,8 +117,10 @@ public final class EGP extends com.google.flatbuffers.Table {
       int CREATED_ATOffset,
       int UPDATED_ATOffset,
       int PROVENANCEOffset,
-      int DATASET_CIDOffset) {
-    builder.startTable(11);
+      int DATASET_CIDOffset,
+      int WALKEROffset) {
+    builder.startTable(12);
+    EGP.addWalker(builder, WALKEROffset);
     EGP.addDatasetCid(builder, DATASET_CIDOffset);
     EGP.addProvenance(builder, PROVENANCEOffset);
     EGP.addUpdatedAt(builder, UPDATED_ATOffset);
@@ -127,7 +135,7 @@ public final class EGP extends com.google.flatbuffers.Table {
     return EGP.endEGP(builder);
   }
 
-  public static void startEGP(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startEGP(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addGroupId(FlatBufferBuilder builder, int GROUP_IDOffset) { builder.addOffset(0, GROUP_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(2, DESCRIPTIONOffset, 0); }
@@ -145,6 +153,7 @@ public final class EGP extends com.google.flatbuffers.Table {
   public static int createProvenanceVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startProvenanceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addDatasetCid(FlatBufferBuilder builder, int DATASET_CIDOffset) { builder.addOffset(10, DATASET_CIDOffset, 0); }
+  public static void addWalker(FlatBufferBuilder builder, int WALKEROffset) { builder.addOffset(11, WALKEROffset, 0); }
   public static int endEGP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // GROUP_ID

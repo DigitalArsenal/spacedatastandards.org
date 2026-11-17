@@ -12,6 +12,21 @@ enum egpMembershipMode:
     /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
     /// recompute; the query wins on disagreement.
     egpMembershipMode_QUERY_LIVE = 3
+    /// Members were generated from WALKER; MEMBERS is that generation, and each
+    /// member's elements are its own $OMM.
+    egpMembershipMode_GENERATED = 4
+
+/// Walker pattern of a generated constellation. Append new values only.
+enum egpWalkerPattern:
+    egpWalkerPattern_UNSPECIFIED = 0
+    /// Planes spread over 360 degrees of right ascension.
+    egpWalkerPattern_DELTA = 1
+    /// Planes spread over 180 degrees of right ascension.
+    egpWalkerPattern_STAR = 2
+    /// Planes spread over RA_OF_ASC_NODE_SPREAD.
+    egpWalkerPattern_CUSTOM = 3
+
+class EGPWalker
 
 class EGPProvenance
 
@@ -20,6 +35,94 @@ class EGPQuery
 class EGPMember
 
 class EGP
+
+/// The Walker definition a constellation group's members are generated from.
+/// Angles are in degrees, as an $OMM states them.
+class EGPWalker : flatbuffers.handle
+    def PATTERN() -> egpWalkerPattern:
+        return egpWalkerPattern(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// T: number of satellites.
+    def TOTAL_SATELLITES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// P: number of planes.
+    def PLANES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// F: relative phasing, 0 to PLANES - 1.
+    def PHASING() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    def INCLINATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Circular height above the WGS 84 equatorial radius, km.
+    def ALTITUDE_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// CUSTOM only: the right ascension the ascending nodes are spread over.
+    def RA_OF_ASC_NODE_SPREAD() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Right ascension of the ascending node of the first plane.
+    def FIRST_RA_OF_ASC_NODE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Mean anomaly of the first satellite of the first plane.
+    def FIRST_MEAN_ANOMALY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    def ECCENTRICITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    def ARG_OF_PERICENTER() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Epoch of the generated elements, ISO 8601 UTC.
+    def EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Catalog number of the first satellite; the others follow it in order.
+    def FIRST_NORAD_CAT_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 28, 0)
+
+def GetRootAsEGPWalker(buf:string): return EGPWalker { buf, flatbuffers.indirect(buf, 0) }
+
+struct EGPWalkerBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_PATTERN(PATTERN:egpWalkerPattern):
+        b_.PrependInt8Slot(0, PATTERN, 0)
+        return this
+    def add_TOTAL_SATELLITES(TOTAL_SATELLITES:int):
+        b_.PrependUint32Slot(1, TOTAL_SATELLITES, 0)
+        return this
+    def add_PLANES(PLANES:int):
+        b_.PrependUint32Slot(2, PLANES, 0)
+        return this
+    def add_PHASING(PHASING:int):
+        b_.PrependUint32Slot(3, PHASING, 0)
+        return this
+    def add_INCLINATION(INCLINATION:float):
+        b_.PrependFloat64Slot(4, INCLINATION, 0.0)
+        return this
+    def add_ALTITUDE_KM(ALTITUDE_KM:float):
+        b_.PrependFloat64Slot(5, ALTITUDE_KM, 0.0)
+        return this
+    def add_RA_OF_ASC_NODE_SPREAD(RA_OF_ASC_NODE_SPREAD:float):
+        b_.PrependFloat64Slot(6, RA_OF_ASC_NODE_SPREAD, 0.0)
+        return this
+    def add_FIRST_RA_OF_ASC_NODE(FIRST_RA_OF_ASC_NODE:float):
+        b_.PrependFloat64Slot(7, FIRST_RA_OF_ASC_NODE, 0.0)
+        return this
+    def add_FIRST_MEAN_ANOMALY(FIRST_MEAN_ANOMALY:float):
+        b_.PrependFloat64Slot(8, FIRST_MEAN_ANOMALY, 0.0)
+        return this
+    def add_ECCENTRICITY(ECCENTRICITY:float):
+        b_.PrependFloat64Slot(9, ECCENTRICITY, 0.0)
+        return this
+    def add_ARG_OF_PERICENTER(ARG_OF_PERICENTER:float):
+        b_.PrependFloat64Slot(10, ARG_OF_PERICENTER, 0.0)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, EPOCH)
+        return this
+    def add_FIRST_NORAD_CAT_ID(FIRST_NORAD_CAT_ID:int):
+        b_.PrependUint32Slot(12, FIRST_NORAD_CAT_ID, 0)
+        return this
+    def end():
+        return b_.EndObject()
 
 /// Provenance of the assertions behind a group. Field-for-field the
 /// `$CMR` provenance shape, so one consumer parses both.
@@ -243,13 +346,18 @@ class EGP : flatbuffers.handle
     /// Optional content identifier of the dataset the group was drawn from.
     def DATASET_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
+    /// The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+    /// GENERATED.
+    def WALKER() -> EGPWalker?:
+        let o = flatbuffers.field_table(buf_, pos_, 26)
+        return if o: EGPWalker { buf_, o } else: nil
 
 def GetRootAsEGP(buf:string): return EGP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EGPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(12)
         return this
     def add_GROUP_ID(GROUP_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, GROUP_ID)
@@ -283,6 +391,9 @@ struct EGPBuilder:
         return this
     def add_DATASET_CID(DATASET_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, DATASET_CID)
+        return this
+    def add_WALKER(WALKER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, WALKER)
         return this
     def end():
         return b_.EndObject()

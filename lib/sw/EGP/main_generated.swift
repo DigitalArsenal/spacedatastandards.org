@@ -22,11 +22,151 @@ public enum egpMembershipMode: Int8, FlatbuffersVectorInitializable, Enum, Verif
   ///  QUERY is the definition and MEMBERS is an advisory cache a consumer may
   ///  recompute; the query wins on disagreement.
   case queryLive = 3
+  ///  Members were generated from WALKER; MEMBERS is that generation, and each
+  ///  member's elements are its own $OMM.
+  case generated = 4
 
-  public static var max: egpMembershipMode { return .queryLive }
+  public static var max: egpMembershipMode { return .generated }
   public static var min: egpMembershipMode { return .unspecified }
 }
 
+
+///  Walker pattern of a generated constellation. Append new values only.
+public enum egpWalkerPattern: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unspecified = 0
+  ///  Planes spread over 360 degrees of right ascension.
+  case delta = 1
+  ///  Planes spread over 180 degrees of right ascension.
+  case star = 2
+  ///  Planes spread over RA_OF_ASC_NODE_SPREAD.
+  case custom = 3
+
+  public static var max: egpWalkerPattern { return .custom }
+  public static var min: egpWalkerPattern { return .unspecified }
+}
+
+
+///  The Walker definition a constellation group's members are generated from.
+///  Angles are in degrees, as an $OMM states them.
+public struct EGPWalker: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EGP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EGPWalker.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PATTERN: VOffset = 4
+    static let TOTAL_SATELLITES: VOffset = 6
+    static let PLANES: VOffset = 8
+    static let PHASING: VOffset = 10
+    static let INCLINATION: VOffset = 12
+    static let ALTITUDE_KM: VOffset = 14
+    static let RA_OF_ASC_NODE_SPREAD: VOffset = 16
+    static let FIRST_RA_OF_ASC_NODE: VOffset = 18
+    static let FIRST_MEAN_ANOMALY: VOffset = 20
+    static let ECCENTRICITY: VOffset = 22
+    static let ARG_OF_PERICENTER: VOffset = 24
+    static let EPOCH: VOffset = 26
+    static let FIRST_NORAD_CAT_ID: VOffset = 28
+  }
+
+  public var PATTERN: egpWalkerPattern { let o = _accessor.offset(VT.PATTERN); return o == 0 ? .unspecified : egpWalkerPattern(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  T: number of satellites.
+  public var TOTAL_SATELLITES: UInt32 { let o = _accessor.offset(VT.TOTAL_SATELLITES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  P: number of planes.
+  public var PLANES: UInt32 { let o = _accessor.offset(VT.PLANES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  F: relative phasing, 0 to PLANES - 1.
+  public var PHASING: UInt32 { let o = _accessor.offset(VT.PHASING); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var INCLINATION: Double { let o = _accessor.offset(VT.INCLINATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Circular height above the WGS 84 equatorial radius, km.
+  public var ALTITUDE_KM: Double { let o = _accessor.offset(VT.ALTITUDE_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CUSTOM only: the right ascension the ascending nodes are spread over.
+  public var RA_OF_ASC_NODE_SPREAD: Double { let o = _accessor.offset(VT.RA_OF_ASC_NODE_SPREAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of the ascending node of the first plane.
+  public var FIRST_RA_OF_ASC_NODE: Double { let o = _accessor.offset(VT.FIRST_RA_OF_ASC_NODE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean anomaly of the first satellite of the first plane.
+  public var FIRST_MEAN_ANOMALY: Double { let o = _accessor.offset(VT.FIRST_MEAN_ANOMALY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VT.ECCENTRICITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VT.ARG_OF_PERICENTER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of the generated elements, ISO 8601 UTC.
+  public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Catalog number of the first satellite; the others follow it in order.
+  public var FIRST_NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.FIRST_NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startEGPWalker(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(PATTERN: egpWalkerPattern, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATTERN.rawValue, def: 0, at: VT.PATTERN) }
+  public static func add(TOTAL_SATELLITES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_SATELLITES, def: 0, at: VT.TOTAL_SATELLITES) }
+  public static func add(PLANES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PLANES, def: 0, at: VT.PLANES) }
+  public static func add(PHASING: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PHASING, def: 0, at: VT.PHASING) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VT.INCLINATION) }
+  public static func add(ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_KM, def: 0.0, at: VT.ALTITUDE_KM) }
+  public static func add(RA_OF_ASC_NODE_SPREAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE_SPREAD, def: 0.0, at: VT.RA_OF_ASC_NODE_SPREAD) }
+  public static func add(FIRST_RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_RA_OF_ASC_NODE, def: 0.0, at: VT.FIRST_RA_OF_ASC_NODE) }
+  public static func add(FIRST_MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_MEAN_ANOMALY, def: 0.0, at: VT.FIRST_MEAN_ANOMALY) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VT.ECCENTRICITY) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VT.ARG_OF_PERICENTER) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(FIRST_NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIRST_NORAD_CAT_ID, def: 0, at: VT.FIRST_NORAD_CAT_ID) }
+  public static func endEGPWalker(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEGPWalker(
+    _ fbb: inout FlatBufferBuilder,
+    PATTERN: egpWalkerPattern = .unspecified,
+    TOTAL_SATELLITES: UInt32 = 0,
+    PLANES: UInt32 = 0,
+    PHASING: UInt32 = 0,
+    INCLINATION: Double = 0.0,
+    ALTITUDE_KM: Double = 0.0,
+    RA_OF_ASC_NODE_SPREAD: Double = 0.0,
+    FIRST_RA_OF_ASC_NODE: Double = 0.0,
+    FIRST_MEAN_ANOMALY: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    ARG_OF_PERICENTER: Double = 0.0,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    FIRST_NORAD_CAT_ID: UInt32 = 0
+  ) -> Offset {
+    let __start = EGPWalker.startEGPWalker(&fbb)
+    EGPWalker.add(PATTERN: PATTERN, &fbb)
+    EGPWalker.add(TOTAL_SATELLITES: TOTAL_SATELLITES, &fbb)
+    EGPWalker.add(PLANES: PLANES, &fbb)
+    EGPWalker.add(PHASING: PHASING, &fbb)
+    EGPWalker.add(INCLINATION: INCLINATION, &fbb)
+    EGPWalker.add(ALTITUDE_KM: ALTITUDE_KM, &fbb)
+    EGPWalker.add(RA_OF_ASC_NODE_SPREAD: RA_OF_ASC_NODE_SPREAD, &fbb)
+    EGPWalker.add(FIRST_RA_OF_ASC_NODE: FIRST_RA_OF_ASC_NODE, &fbb)
+    EGPWalker.add(FIRST_MEAN_ANOMALY: FIRST_MEAN_ANOMALY, &fbb)
+    EGPWalker.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    EGPWalker.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
+    EGPWalker.add(EPOCH: EPOCH, &fbb)
+    EGPWalker.add(FIRST_NORAD_CAT_ID: FIRST_NORAD_CAT_ID, &fbb)
+    return EGPWalker.endEGPWalker(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PATTERN, fieldName: "PATTERN", required: false, type: egpWalkerPattern.self)
+    try _v.visit(field: VT.TOTAL_SATELLITES, fieldName: "TOTAL_SATELLITES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PLANES, fieldName: "PLANES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PHASING, fieldName: "PHASING", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INCLINATION, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_KM, fieldName: "ALTITUDE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.RA_OF_ASC_NODE_SPREAD, fieldName: "RA_OF_ASC_NODE_SPREAD", required: false, type: Double.self)
+    try _v.visit(field: VT.FIRST_RA_OF_ASC_NODE, fieldName: "FIRST_RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VT.FIRST_MEAN_ANOMALY, fieldName: "FIRST_MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRICITY, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.ARG_OF_PERICENTER, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIRST_NORAD_CAT_ID, fieldName: "FIRST_NORAD_CAT_ID", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
 
 ///  Provenance of the assertions behind a group. Field-for-field the
 ///  `$CMR` provenance shape, so one consumer parses both.
@@ -320,6 +460,7 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let UPDATED_AT: VOffset = 20
     static let PROVENANCE: VOffset = 22
     static let DATASET_CID: VOffset = 24
+    static let WALKER: VOffset = 26
   }
 
   ///  Publisher-stable identifier of the group. Together with the publishing
@@ -353,7 +494,10 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Optional content identifier of the dataset the group was drawn from.
   public var DATASET_CID: String? { let o = _accessor.offset(VT.DATASET_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var DATASET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATASET_CID) }
-  public static func startEGP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+  ///  GENERATED.
+  public var WALKER: EGPWalker? { let o = _accessor.offset(VT.WALKER); return o == 0 ? nil : EGPWalker(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEGP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(GROUP_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GROUP_ID, at: VT.GROUP_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
@@ -365,6 +509,7 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
   public static func addVectorOf(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func add(DATASET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATASET_CID, at: VT.DATASET_CID) }
+  public static func add(WALKER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WALKER, at: VT.WALKER) }
   public static func endEGP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 20]); return end }
   public static func createEGP(
     _ fbb: inout FlatBufferBuilder,
@@ -378,7 +523,8 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
     UPDATED_ATOffset UPDATED_AT: Offset,
     PROVENANCEVectorOffset PROVENANCE: Offset = Offset(),
-    DATASET_CIDOffset DATASET_CID: Offset = Offset()
+    DATASET_CIDOffset DATASET_CID: Offset = Offset(),
+    WALKEROffset WALKER: Offset = Offset()
   ) -> Offset {
     let __start = EGP.startEGP(&fbb)
     EGP.add(GROUP_ID: GROUP_ID, &fbb)
@@ -392,6 +538,7 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EGP.add(UPDATED_AT: UPDATED_AT, &fbb)
     EGP.addVectorOf(PROVENANCE: PROVENANCE, &fbb)
     EGP.add(DATASET_CID: DATASET_CID, &fbb)
+    EGP.add(WALKER: WALKER, &fbb)
     return EGP.endEGP(&fbb, start: __start)
   }
 
@@ -408,6 +555,7 @@ public struct EGP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<Vector<ForwardOffset<EGPProvenance>, EGPProvenance>>.self)
     try _v.visit(field: VT.DATASET_CID, fieldName: "DATASET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WALKER, fieldName: "WALKER", required: false, type: ForwardOffset<EGPWalker>.self)
     _v.finish()
   }
 }

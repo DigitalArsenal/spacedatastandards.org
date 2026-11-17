@@ -24,8 +24,15 @@ public enum scenarioReferenceKind: Int8, FlatbuffersVectorInitializable, Enum, V
   case pointOfInterest = 6
   case exclusionZone = 7
   case observation = 8
+  ///  A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+  ///  REFERENCE_ID.
+  case group = 9
+  ///  An area of interest: the $GJN feature of the enclosing $REC whose ID
+  ///  equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+  ///  alpha-2 code when the area is a country.
+  case areaOfInterest = 10
 
-  public static var max: scenarioReferenceKind { return .observation }
+  public static var max: scenarioReferenceKind { return .areaOfInterest }
   public static var min: scenarioReferenceKind { return .unknown }
 }
 
@@ -705,9 +712,86 @@ public struct SCNAssetsChanged: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
+///  A timeline row a scenario keeps: what was run, and on what. Never its bars;
+///  the inputs of the run are the request records of the enclosing $REC.
+public struct SCNPinnedRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCN" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCNPinnedRow.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROW_ID: VOffset = 4
+    static let MODE_ID: VOffset = 6
+    static let VERB_ID: VOffset = 8
+    static let REFERENCE_IDS: VOffset = 10
+    static let RECORD_CID: VOffset = 12
+  }
+
+  ///  Row identifier, unique in the scenario.
+  public var ROW_ID: String? { let o = _accessor.offset(VT.ROW_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROW_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROW_ID) }
+  ///  The application's identifier of the mode the row belongs to.
+  public var MODE_ID: String? { let o = _accessor.offset(VT.MODE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODE_ID) }
+  ///  The application's identifier of the verb that produced the row; empty
+  ///  when the row came without a run.
+  public var VERB_ID: String? { let o = _accessor.offset(VT.VERB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VERB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VERB_ID) }
+  ///  REFERENCE_IDs of the scenario references the row was run on.
+  public var REFERENCE_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REFERENCE_IDS, byteSize: 4) }
+  ///  CID of the stored record the row shows, when it shows one (for example
+  ///  an event's descriptor $SCN); empty otherwise.
+  public var RECORD_CID: String? { let o = _accessor.offset(VT.RECORD_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORD_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORD_CID) }
+  public static func startSCNPinnedRow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(ROW_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROW_ID, at: VT.ROW_ID) }
+  public static func add(MODE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODE_ID, at: VT.MODE_ID) }
+  public static func add(VERB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERB_ID, at: VT.VERB_ID) }
+  public static func addVectorOf(REFERENCE_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_IDS, at: VT.REFERENCE_IDS) }
+  public static func add(RECORD_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_CID, at: VT.RECORD_CID) }
+  public static func endSCNPinnedRow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCNPinnedRow(
+    _ fbb: inout FlatBufferBuilder,
+    ROW_IDOffset ROW_ID: Offset = Offset(),
+    MODE_IDOffset MODE_ID: Offset = Offset(),
+    VERB_IDOffset VERB_ID: Offset = Offset(),
+    REFERENCE_IDSVectorOffset REFERENCE_IDS: Offset = Offset(),
+    RECORD_CIDOffset RECORD_CID: Offset = Offset()
+  ) -> Offset {
+    let __start = SCNPinnedRow.startSCNPinnedRow(&fbb)
+    SCNPinnedRow.add(ROW_ID: ROW_ID, &fbb)
+    SCNPinnedRow.add(MODE_ID: MODE_ID, &fbb)
+    SCNPinnedRow.add(VERB_ID: VERB_ID, &fbb)
+    SCNPinnedRow.addVectorOf(REFERENCE_IDS: REFERENCE_IDS, &fbb)
+    SCNPinnedRow.add(RECORD_CID: RECORD_CID, &fbb)
+    return SCNPinnedRow.endSCNPinnedRow(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROW_ID, fieldName: "ROW_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODE_ID, fieldName: "MODE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VERB_ID, fieldName: "VERB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_IDS, fieldName: "REFERENCE_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.RECORD_CID, fieldName: "RECORD_CID", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Scenario - canonical scene composition and simulation state for external
 ///  scenario controls integrations. Domain records remain in their native SDS
 ///  schemas and are referenced or embedded here only as scenario content.
+///
+///  A scenario that carries other records is one $REC whose first record is
+///  this $SCN; the other records follow under their own standards. A stored
+///  request carries only its request arm, with derived fields left empty to be
+///  computed again.
 public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -732,6 +816,14 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ACTION: VOffset = 22
     static let VIEW_STATE: VOffset = 24
     static let ASSETS_CHANGED: VOffset = 26
+    static let START_EPOCH: VOffset = 28
+    static let STOP_EPOCH: VOffset = 30
+    static let ANIMATING: VOffset = 32
+    static let WINDOW_START: VOffset = 34
+    static let WINDOW_STOP: VOffset = 36
+    static let PROPAGATOR_MODULE_ID: VOffset = 38
+    static let PINNED_ROWS: VOffset = 40
+    static let SIGNATURE: VOffset = 42
   }
 
   ///  Stable id for the scenario.
@@ -761,7 +853,35 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var VIEW_STATE: VST? { let o = _accessor.offset(VT.VIEW_STATE); return o == 0 ? nil : VST(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Asset-change notification payload for the scenario.
   public var ASSETS_CHANGED: SCNAssetsChanged? { let o = _accessor.offset(VT.ASSETS_CHANGED); return o == 0 ? nil : SCNAssetsChanged(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSCN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  ///  Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  ///  time.
+  public var START_EPOCH: String? { let o = _accessor.offset(VT.START_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.START_EPOCH) }
+  ///  Clock interval stop as an ISO-8601 UTC timestamp.
+  public var STOP_EPOCH: String? { let o = _accessor.offset(VT.STOP_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STOP_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STOP_EPOCH) }
+  ///  True when the clock was running.
+  public var ANIMATING: Bool { let o = _accessor.offset(VT.ANIMATING); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Start of the analysis window, the span the timeline showed, as an
+  ///  ISO-8601 UTC timestamp.
+  public var WINDOW_START: String? { let o = _accessor.offset(VT.WINDOW_START); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WINDOW_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WINDOW_START) }
+  ///  Stop of the analysis window as an ISO-8601 UTC timestamp.
+  public var WINDOW_STOP: String? { let o = _accessor.offset(VT.WINDOW_STOP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var WINDOW_STOPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.WINDOW_STOP) }
+  ///  Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  ///  the catalog objects were flown with.
+  public var PROPAGATOR_MODULE_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_MODULE_ID) }
+  ///  Timeline rows kept with the scenario.
+  public var PINNED_ROWS: FlatbufferVector<SCNPinnedRow> { return _accessor.vector(at: VT.PINNED_ROWS, byteSize: 4) }
+  ///  Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  ///  enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  ///  enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  ///  zero. The record's CID is computed over the signed bytes.
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public static func startSCN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
   public static func addVectorOf(REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCES, at: VT.REFERENCES) }
   public static func add(EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT, at: VT.EVENT) }
@@ -775,6 +895,15 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ACTION: scenarioActionCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 0, at: VT.ACTION) }
   public static func add(VIEW_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VIEW_STATE, at: VT.VIEW_STATE) }
   public static func add(ASSETS_CHANGED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSETS_CHANGED, at: VT.ASSETS_CHANGED) }
+  public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
+  public static func add(STOP_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_EPOCH, at: VT.STOP_EPOCH) }
+  public static func add(ANIMATING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANIMATING, def: false,
+   at: VT.ANIMATING) }
+  public static func add(WINDOW_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_START, at: VT.WINDOW_START) }
+  public static func add(WINDOW_STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_STOP, at: VT.WINDOW_STOP) }
+  public static func add(PROPAGATOR_MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_MODULE_ID, at: VT.PROPAGATOR_MODULE_ID) }
+  public static func addVectorOf(PINNED_ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PINNED_ROWS, at: VT.PINNED_ROWS) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
   public static func endSCN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCN(
     _ fbb: inout FlatBufferBuilder,
@@ -789,7 +918,15 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
     ACTION: scenarioActionCode = .none_,
     VIEW_STATEOffset VIEW_STATE: Offset = Offset(),
-    ASSETS_CHANGEDOffset ASSETS_CHANGED: Offset = Offset()
+    ASSETS_CHANGEDOffset ASSETS_CHANGED: Offset = Offset(),
+    START_EPOCHOffset START_EPOCH: Offset = Offset(),
+    STOP_EPOCHOffset STOP_EPOCH: Offset = Offset(),
+    ANIMATING: Bool = false,
+    WINDOW_STARTOffset WINDOW_START: Offset = Offset(),
+    WINDOW_STOPOffset WINDOW_STOP: Offset = Offset(),
+    PROPAGATOR_MODULE_IDOffset PROPAGATOR_MODULE_ID: Offset = Offset(),
+    PINNED_ROWSVectorOffset PINNED_ROWS: Offset = Offset(),
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
   ) -> Offset {
     let __start = SCN.startSCN(&fbb)
     SCN.add(SCENARIO_ID: SCENARIO_ID, &fbb)
@@ -804,6 +941,14 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SCN.add(ACTION: ACTION, &fbb)
     SCN.add(VIEW_STATE: VIEW_STATE, &fbb)
     SCN.add(ASSETS_CHANGED: ASSETS_CHANGED, &fbb)
+    SCN.add(START_EPOCH: START_EPOCH, &fbb)
+    SCN.add(STOP_EPOCH: STOP_EPOCH, &fbb)
+    SCN.add(ANIMATING: ANIMATING, &fbb)
+    SCN.add(WINDOW_START: WINDOW_START, &fbb)
+    SCN.add(WINDOW_STOP: WINDOW_STOP, &fbb)
+    SCN.add(PROPAGATOR_MODULE_ID: PROPAGATOR_MODULE_ID, &fbb)
+    SCN.addVectorOf(PINNED_ROWS: PINNED_ROWS, &fbb)
+    SCN.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
     return SCN.endSCN(&fbb, start: __start)
   }
 
@@ -821,6 +966,14 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ACTION, fieldName: "ACTION", required: false, type: scenarioActionCode.self)
     try _v.visit(field: VT.VIEW_STATE, fieldName: "VIEW_STATE", required: false, type: ForwardOffset<VST>.self)
     try _v.visit(field: VT.ASSETS_CHANGED, fieldName: "ASSETS_CHANGED", required: false, type: ForwardOffset<SCNAssetsChanged>.self)
+    try _v.visit(field: VT.START_EPOCH, fieldName: "START_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STOP_EPOCH, fieldName: "STOP_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANIMATING, fieldName: "ANIMATING", required: false, type: Bool.self)
+    try _v.visit(field: VT.WINDOW_START, fieldName: "WINDOW_START", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.WINDOW_STOP, fieldName: "WINDOW_STOP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROPAGATOR_MODULE_ID, fieldName: "PROPAGATOR_MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PINNED_ROWS, fieldName: "PINNED_ROWS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCNPinnedRow>, SCNPinnedRow>>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

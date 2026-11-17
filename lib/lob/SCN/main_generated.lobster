@@ -29,6 +29,13 @@ enum scenarioReferenceKind:
     scenarioReferenceKind_POINT_OF_INTEREST = 6
     scenarioReferenceKind_EXCLUSION_ZONE = 7
     scenarioReferenceKind_OBSERVATION = 8
+    /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+    /// REFERENCE_ID.
+    scenarioReferenceKind_GROUP = 9
+    /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+    /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+    /// alpha-2 code when the area is a country.
+    scenarioReferenceKind_AREA_OF_INTEREST = 10
 
 /// Scenario command action.
 enum scenarioActionCode:
@@ -49,6 +56,8 @@ class SCNReference
 class SCNEvent
 
 class SCNAssetsChanged
+
+class SCNPinnedRow
 
 class SCN
 
@@ -683,9 +692,69 @@ def SCNAssetsChangedCreateREFERENCESVector(b_:flatbuffers.builder, v_:[flatbuffe
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// A timeline row a scenario keeps: what was run, and on what. Never its bars;
+/// the inputs of the run are the request records of the enclosing $REC.
+class SCNPinnedRow : flatbuffers.handle
+    /// Row identifier, unique in the scenario.
+    def ROW_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// The application's identifier of the mode the row belongs to.
+    def MODE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// The application's identifier of the verb that produced the row; empty
+    /// when the row came without a run.
+    def VERB_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// REFERENCE_IDs of the scenario references the row was run on.
+    def REFERENCE_IDS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 4)
+    def REFERENCE_IDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// CID of the stored record the row shows, when it shows one (for example
+    /// an event's descriptor $SCN); empty otherwise.
+    def RECORD_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+
+def GetRootAsSCNPinnedRow(buf:string): return SCNPinnedRow { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCNPinnedRowBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_ROW_ID(ROW_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ROW_ID)
+        return this
+    def add_MODE_ID(MODE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MODE_ID)
+        return this
+    def add_VERB_ID(VERB_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, VERB_ID)
+        return this
+    def add_REFERENCE_IDS(REFERENCE_IDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, REFERENCE_IDS)
+        return this
+    def add_RECORD_CID(RECORD_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, RECORD_CID)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCNPinnedRowStartREFERENCEIDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCNPinnedRowCreateREFERENCEIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 class SCN : flatbuffers.handle
     /// Stable id for the scenario.
     def SCENARIO_ID() -> string:
@@ -729,13 +798,47 @@ class SCN : flatbuffers.handle
     def ASSETS_CHANGED() -> SCNAssetsChanged?:
         let o = flatbuffers.field_table(buf_, pos_, 26)
         return if o: SCNAssetsChanged { buf_, o } else: nil
+    /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+    /// time.
+    def START_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+    /// Clock interval stop as an ISO-8601 UTC timestamp.
+    def STOP_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// True when the clock was running.
+    def ANIMATING() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    /// Start of the analysis window, the span the timeline showed, as an
+    /// ISO-8601 UTC timestamp.
+    def WINDOW_START() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+    def WINDOW_STOP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+    /// the catalog objects were flown with.
+    def PROPAGATOR_MODULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// Timeline rows kept with the scenario.
+    def PINNED_ROWS(i:int) -> SCNPinnedRow:
+        return SCNPinnedRow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 40) + i * 4) }
+    def PINNED_ROWS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 40)
+    /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+    /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+    /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+    /// zero. The record's CID is computed over the signed bytes.
+    def SIGNATURE(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 1)
+    def SIGNATURE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
 
 def GetRootAsSCN(buf:string): return SCN { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCNBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(20)
         return this
     def add_SCENARIO_ID(SCENARIO_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SCENARIO_ID)
@@ -773,6 +876,30 @@ struct SCNBuilder:
     def add_ASSETS_CHANGED(ASSETS_CHANGED:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, ASSETS_CHANGED)
         return this
+    def add_START_EPOCH(START_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, START_EPOCH)
+        return this
+    def add_STOP_EPOCH(STOP_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, STOP_EPOCH)
+        return this
+    def add_ANIMATING(ANIMATING:bool):
+        b_.PrependBoolSlot(14, ANIMATING, 0)
+        return this
+    def add_WINDOW_START(WINDOW_START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, WINDOW_START)
+        return this
+    def add_WINDOW_STOP(WINDOW_STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, WINDOW_STOP)
+        return this
+    def add_PROPAGATOR_MODULE_ID(PROPAGATOR_MODULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, PROPAGATOR_MODULE_ID)
+        return this
+    def add_PINNED_ROWS(PINNED_ROWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, PINNED_ROWS)
+        return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, SIGNATURE)
+        return this
     def end():
         return b_.EndObject()
 
@@ -781,4 +908,18 @@ def SCNStartREFERENCESVector(b_:flatbuffers.builder, n_:int):
 def SCNCreateREFERENCESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCNStartPINNEDROWSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCNCreatePINNEDROWSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCNStartSIGNATUREVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def SCNCreateSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

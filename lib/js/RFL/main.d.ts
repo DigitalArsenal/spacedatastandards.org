@@ -11,6 +11,7 @@ export * from './rflConstraint.js';
 export * from './RFLEndpoint.js';
 export * from './rflEndpointKind.js';
 export * from './RFLInterferenceContribution.js';
+export * from './RFLJamming.js';
 export * from './RFLLink.js';
 export * from './rflLinkKind.js';
 export * from './rflMethod.js';

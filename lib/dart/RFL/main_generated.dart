@@ -2317,6 +2317,209 @@ class RFLProvenanceObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  A jamming assessment of one link: the jammer and the stated values the
+///  assessment and its countermeasures use. Inputs only; what it yields is this
+///  record's samples. A record that carries it with no samples is the
+///  assessment's definition, to be sampled.
+class RFLJamming {
+  RFLJamming._(this._bc, this._bcOffset);
+  factory RFLJamming(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RFLJamming> reader = _RFLJammingReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Index in LINKS of the link assessed.
+  int get LINK_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get linkIndex => LINK_INDEX;
+  ///  The jammer's end: its site (SIT_ID) or its platform.
+  RFLEndpoint? get JAMMER_ENDPOINT => RFLEndpoint.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  RFLEndpoint? get jammerEndpoint => JAMMER_ENDPOINT;
+  ///  Zero-based index, in the analysis window, of the spacecraft's pass over
+  ///  the link's ground end that is assessed.
+  int get PASS_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get passIndex => PASS_INDEX;
+  ///  The ground terminal antenna's stated gain toward the jammer, dBi.
+  double get TERMINAL_GAIN_TOWARD_JAMMER_DBI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get terminalGainTowardJammerDbi => TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+  ///  True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+  bool get HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasTerminalGainTowardJammerDbi => HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+  ///  Countermeasure: the link's EIRP raised by this many dB.
+  double get POWER_STEP_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get powerStepDb => POWER_STEP_DB;
+  ///  Countermeasure: processing gain, dB, as the operator states it.
+  double get PROCESSING_GAIN_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get processingGainDb => PROCESSING_GAIN_DB;
+  ///  True when PROCESSING_GAIN_DB is stated; it has no default.
+  bool get HAS_PROCESSING_GAIN_DB => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasProcessingGainDb => HAS_PROCESSING_GAIN_DB;
+  ///  PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+  ///  null countermeasures.
+  String? get ARRAY_PAP_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get arrayPapId => ARRAY_PAP_ID;
+  ///  Denial area about the link's ground end: radius, km.
+  double get AREA_RADIUS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get areaRadiusKm => AREA_RADIUS_KM;
+  ///  Denial area: number of cells across the radius.
+  int get AREA_RESOLUTION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  int get areaResolution => AREA_RESOLUTION;
+
+  @override
+  String toString() {
+    return 'RFLJamming{linkIndex: ${linkIndex}, jammerEndpoint: ${jammerEndpoint}, passIndex: ${passIndex}, terminalGainTowardJammerDbi: ${terminalGainTowardJammerDbi}, hasTerminalGainTowardJammerDbi: ${hasTerminalGainTowardJammerDbi}, powerStepDb: ${powerStepDb}, processingGainDb: ${processingGainDb}, hasProcessingGainDb: ${hasProcessingGainDb}, arrayPapId: ${arrayPapId}, areaRadiusKm: ${areaRadiusKm}, areaResolution: ${areaResolution}}';
+  }
+}
+
+class _RFLJammingReader extends fb.TableReader<RFLJamming> {
+  const _RFLJammingReader();
+
+  @override
+  RFLJamming createObject(fb.BufferContext bc, int offset) =>
+    RFLJamming._(bc, offset);
+}
+
+class RFLJammingBuilder {
+  RFLJammingBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addLinkIndex(int? LINK_INDEX) {
+    fbBuilder.addUint32(0, LINK_INDEX);
+    return fbBuilder.offset;
+  }
+  int addJammerEndpointOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPassIndex(int? PASS_INDEX) {
+    fbBuilder.addUint32(2, PASS_INDEX);
+    return fbBuilder.offset;
+  }
+  int addTerminalGainTowardJammerDbi(double? TERMINAL_GAIN_TOWARD_JAMMER_DBI) {
+    fbBuilder.addFloat64(3, TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+    return fbBuilder.offset;
+  }
+  int addHasTerminalGainTowardJammerDbi(bool? HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI) {
+    fbBuilder.addBool(4, HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+    return fbBuilder.offset;
+  }
+  int addPowerStepDb(double? POWER_STEP_DB) {
+    fbBuilder.addFloat64(5, POWER_STEP_DB);
+    return fbBuilder.offset;
+  }
+  int addProcessingGainDb(double? PROCESSING_GAIN_DB) {
+    fbBuilder.addFloat64(6, PROCESSING_GAIN_DB);
+    return fbBuilder.offset;
+  }
+  int addHasProcessingGainDb(bool? HAS_PROCESSING_GAIN_DB) {
+    fbBuilder.addBool(7, HAS_PROCESSING_GAIN_DB);
+    return fbBuilder.offset;
+  }
+  int addArrayPapIdOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addAreaRadiusKm(double? AREA_RADIUS_KM) {
+    fbBuilder.addFloat64(9, AREA_RADIUS_KM);
+    return fbBuilder.offset;
+  }
+  int addAreaResolution(int? AREA_RESOLUTION) {
+    fbBuilder.addUint32(10, AREA_RESOLUTION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RFLJammingObjectBuilder extends fb.ObjectBuilder {
+  final int? _LINK_INDEX;
+  final RFLEndpointObjectBuilder? _JAMMER_ENDPOINT;
+  final int? _PASS_INDEX;
+  final double? _TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+  final bool? _HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI;
+  final double? _POWER_STEP_DB;
+  final double? _PROCESSING_GAIN_DB;
+  final bool? _HAS_PROCESSING_GAIN_DB;
+  final String? _ARRAY_PAP_ID;
+  final double? _AREA_RADIUS_KM;
+  final int? _AREA_RESOLUTION;
+
+  RFLJammingObjectBuilder({
+    int? LINK_INDEX,
+    int? linkIndex,
+    RFLEndpointObjectBuilder? JAMMER_ENDPOINT,
+    RFLEndpointObjectBuilder? jammerEndpoint,
+    int? PASS_INDEX,
+    int? passIndex,
+    double? TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+    double? terminalGainTowardJammerDbi,
+    bool? HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+    bool? hasTerminalGainTowardJammerDbi,
+    double? POWER_STEP_DB,
+    double? powerStepDb,
+    double? PROCESSING_GAIN_DB,
+    double? processingGainDb,
+    bool? HAS_PROCESSING_GAIN_DB,
+    bool? hasProcessingGainDb,
+    String? ARRAY_PAP_ID,
+    String? arrayPapId,
+    double? AREA_RADIUS_KM,
+    double? areaRadiusKm,
+    int? AREA_RESOLUTION,
+    int? areaResolution,
+  })
+      : _LINK_INDEX = linkIndex ?? LINK_INDEX,
+        _JAMMER_ENDPOINT = jammerEndpoint ?? JAMMER_ENDPOINT,
+        _PASS_INDEX = passIndex ?? PASS_INDEX,
+        _TERMINAL_GAIN_TOWARD_JAMMER_DBI = terminalGainTowardJammerDbi ?? TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+        _HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI = hasTerminalGainTowardJammerDbi ?? HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI,
+        _POWER_STEP_DB = powerStepDb ?? POWER_STEP_DB,
+        _PROCESSING_GAIN_DB = processingGainDb ?? PROCESSING_GAIN_DB,
+        _HAS_PROCESSING_GAIN_DB = hasProcessingGainDb ?? HAS_PROCESSING_GAIN_DB,
+        _ARRAY_PAP_ID = arrayPapId ?? ARRAY_PAP_ID,
+        _AREA_RADIUS_KM = areaRadiusKm ?? AREA_RADIUS_KM,
+        _AREA_RESOLUTION = areaResolution ?? AREA_RESOLUTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? JAMMER_ENDPOINTOffset = _JAMMER_ENDPOINT?.getOrCreateOffset(fbBuilder);
+    final int? ARRAY_PAP_IDOffset = _ARRAY_PAP_ID == null ? null
+        : fbBuilder.writeString(_ARRAY_PAP_ID!);
+    fbBuilder.startTable(11);
+    fbBuilder.addUint32(0, _LINK_INDEX);
+    fbBuilder.addOffset(1, JAMMER_ENDPOINTOffset);
+    fbBuilder.addUint32(2, _PASS_INDEX);
+    fbBuilder.addFloat64(3, _TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+    fbBuilder.addBool(4, _HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI);
+    fbBuilder.addFloat64(5, _POWER_STEP_DB);
+    fbBuilder.addFloat64(6, _PROCESSING_GAIN_DB);
+    fbBuilder.addBool(7, _HAS_PROCESSING_GAIN_DB);
+    fbBuilder.addOffset(8, ARRAY_PAP_IDOffset);
+    fbBuilder.addFloat64(9, _AREA_RADIUS_KM);
+    fbBuilder.addUint32(10, _AREA_RESOLUTION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  RF Link Sample
 class RFL {
   RFL._(this._bc, this._bcOffset);
@@ -2524,10 +2727,12 @@ class RFL {
   ///  Decoded block error probability [0-1].
   List<double>? get BLOCK_ERROR_RATE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 120);
   List<double>? get blockErrorRate => BLOCK_ERROR_RATE;
+  ///  The jamming assessment this record answers, when it answers one.
+  RFLJamming? get JAMMING => RFLJamming.reader.vTableGetNullable(_bc, _bcOffset, 122);
 
   @override
   String toString() {
-    return 'RFL{rflId: ${rflId}, NAME: ${NAME}, scenarioId: ${scenarioId}, LINKS: ${LINKS}, sampleCount: ${sampleCount}, sampleLinkIndexes: ${sampleLinkIndexes}, sampleEpochs: ${sampleEpochs}, timeSystem: ${timeSystem}, accessStates: ${accessStates}, rangeM: ${rangeM}, rangeRateMS: ${rangeRateMS}, azimuthDeg: ${azimuthDeg}, elevationDeg: ${elevationDeg}, transmitAzimuthDeg: ${transmitAzimuthDeg}, transmitElevationDeg: ${transmitElevationDeg}, dopplerShiftHz: ${dopplerShiftHz}, dopplerRateHzS: ${dopplerRateHzS}, eirpDbw: ${eirpDbw}, transmitAntennaGainDbi: ${transmitAntennaGainDbi}, receiveAntennaGainDbi: ${receiveAntennaGainDbi}, freeSpacePathLossDb: ${freeSpacePathLossDb}, gaseousAbsorptionLossDb: ${gaseousAbsorptionLossDb}, rainLossDb: ${rainLossDb}, cloudFogLossDb: ${cloudFogLossDb}, scintillationLossDb: ${scintillationLossDb}, terrainDiffractionLossDb: ${terrainDiffractionLossDb}, obstructionLossDb: ${obstructionLossDb}, polarizationLossDb: ${polarizationLossDb}, pointingLossDb: ${pointingLossDb}, implementationLossDb: ${implementationLossDb}, totalPathLossDb: ${totalPathLossDb}, receivedPowerDbw: ${receivedPowerDbw}, systemNoiseTemperatureK: ${systemNoiseTemperatureK}, gainToNoiseTemperatureDbPerK: ${gainToNoiseTemperatureDbPerK}, carrierToNoiseDensityDbhz: ${carrierToNoiseDensityDbhz}, carrierToNoiseDb: ${carrierToNoiseDb}, energyPerBitToNoiseDensityDb: ${energyPerBitToNoiseDensityDb}, bitErrorRate: ${bitErrorRate}, linkMarginDb: ${linkMarginDb}, channelCapacityBps: ${channelCapacityBps}, interferencePowerDbw: ${interferencePowerDbw}, carrierToNoisePlusInterferenceDb: ${carrierToNoisePlusInterferenceDb}, signalToInterferencePlusNoiseDb: ${signalToInterferencePlusNoiseDb}, interferenceContributions: ${interferenceContributions}, OBSTRUCTIONS: ${OBSTRUCTIONS}, limitingConstraints: ${limitingConstraints}, limitingConstraintNote: ${limitingConstraintNote}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}, selectedModcodIndex: ${selectedModcodIndex}, selectedModcodValid: ${selectedModcodValid}, spectralEfficiencyBpsHz: ${spectralEfficiencyBpsHz}, achievedDataRateBps: ${achievedDataRateBps}, acmMarginDb: ${acmMarginDb}, energyPerSymbolToNoiseDensityDb: ${energyPerSymbolToNoiseDensityDb}, blockErrorRate: ${blockErrorRate}}';
+    return 'RFL{rflId: ${rflId}, NAME: ${NAME}, scenarioId: ${scenarioId}, LINKS: ${LINKS}, sampleCount: ${sampleCount}, sampleLinkIndexes: ${sampleLinkIndexes}, sampleEpochs: ${sampleEpochs}, timeSystem: ${timeSystem}, accessStates: ${accessStates}, rangeM: ${rangeM}, rangeRateMS: ${rangeRateMS}, azimuthDeg: ${azimuthDeg}, elevationDeg: ${elevationDeg}, transmitAzimuthDeg: ${transmitAzimuthDeg}, transmitElevationDeg: ${transmitElevationDeg}, dopplerShiftHz: ${dopplerShiftHz}, dopplerRateHzS: ${dopplerRateHzS}, eirpDbw: ${eirpDbw}, transmitAntennaGainDbi: ${transmitAntennaGainDbi}, receiveAntennaGainDbi: ${receiveAntennaGainDbi}, freeSpacePathLossDb: ${freeSpacePathLossDb}, gaseousAbsorptionLossDb: ${gaseousAbsorptionLossDb}, rainLossDb: ${rainLossDb}, cloudFogLossDb: ${cloudFogLossDb}, scintillationLossDb: ${scintillationLossDb}, terrainDiffractionLossDb: ${terrainDiffractionLossDb}, obstructionLossDb: ${obstructionLossDb}, polarizationLossDb: ${polarizationLossDb}, pointingLossDb: ${pointingLossDb}, implementationLossDb: ${implementationLossDb}, totalPathLossDb: ${totalPathLossDb}, receivedPowerDbw: ${receivedPowerDbw}, systemNoiseTemperatureK: ${systemNoiseTemperatureK}, gainToNoiseTemperatureDbPerK: ${gainToNoiseTemperatureDbPerK}, carrierToNoiseDensityDbhz: ${carrierToNoiseDensityDbhz}, carrierToNoiseDb: ${carrierToNoiseDb}, energyPerBitToNoiseDensityDb: ${energyPerBitToNoiseDensityDb}, bitErrorRate: ${bitErrorRate}, linkMarginDb: ${linkMarginDb}, channelCapacityBps: ${channelCapacityBps}, interferencePowerDbw: ${interferencePowerDbw}, carrierToNoisePlusInterferenceDb: ${carrierToNoisePlusInterferenceDb}, signalToInterferencePlusNoiseDb: ${signalToInterferencePlusNoiseDb}, interferenceContributions: ${interferenceContributions}, OBSTRUCTIONS: ${OBSTRUCTIONS}, limitingConstraints: ${limitingConstraints}, limitingConstraintNote: ${limitingConstraintNote}, PROVENANCE: ${PROVENANCE}, computedAt: ${computedAt}, producerId: ${producerId}, SIGNATURE: ${SIGNATURE}, canonicalJsonSignature: ${canonicalJsonSignature}, selectedModcodIndex: ${selectedModcodIndex}, selectedModcodValid: ${selectedModcodValid}, spectralEfficiencyBpsHz: ${spectralEfficiencyBpsHz}, achievedDataRateBps: ${achievedDataRateBps}, acmMarginDb: ${acmMarginDb}, energyPerSymbolToNoiseDensityDb: ${energyPerSymbolToNoiseDensityDb}, blockErrorRate: ${blockErrorRate}, JAMMING: ${JAMMING}}';
   }
 }
 
@@ -2545,7 +2750,7 @@ class RFLBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(59);
+    fbBuilder.startTable(60);
   }
 
   int addRflIdOffset(int? offset) {
@@ -2784,6 +2989,10 @@ class RFLBuilder {
     fbBuilder.addOffset(58, offset);
     return fbBuilder.offset;
   }
+  int addJammingOffset(int? offset) {
+    fbBuilder.addOffset(59, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2850,6 +3059,7 @@ class RFLObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _ACM_MARGIN_DB;
   final List<double>? _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB;
   final List<double>? _BLOCK_ERROR_RATE;
+  final RFLJammingObjectBuilder? _JAMMING;
 
   RFLObjectBuilder({
     String? RFL_ID,
@@ -2965,6 +3175,7 @@ class RFLObjectBuilder extends fb.ObjectBuilder {
     List<double>? energyPerSymbolToNoiseDensityDb,
     List<double>? BLOCK_ERROR_RATE,
     List<double>? blockErrorRate,
+    RFLJammingObjectBuilder? JAMMING,
   })
       : _RFL_ID = rflId ?? RFL_ID,
         _NAME = NAME,
@@ -3024,7 +3235,8 @@ class RFLObjectBuilder extends fb.ObjectBuilder {
         _ACHIEVED_DATA_RATE_BPS = achievedDataRateBps ?? ACHIEVED_DATA_RATE_BPS,
         _ACM_MARGIN_DB = acmMarginDb ?? ACM_MARGIN_DB,
         _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = energyPerSymbolToNoiseDensityDb ?? ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
-        _BLOCK_ERROR_RATE = blockErrorRate ?? BLOCK_ERROR_RATE;
+        _BLOCK_ERROR_RATE = blockErrorRate ?? BLOCK_ERROR_RATE,
+        _JAMMING = JAMMING;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3140,7 +3352,8 @@ class RFLObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB!);
     final int? BLOCK_ERROR_RATEOffset = _BLOCK_ERROR_RATE == null ? null
         : fbBuilder.writeListFloat64(_BLOCK_ERROR_RATE!);
-    fbBuilder.startTable(59);
+    final int? JAMMINGOffset = _JAMMING?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(60);
     fbBuilder.addOffset(0, RFL_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, SCENARIO_IDOffset);
@@ -3200,6 +3413,7 @@ class RFLObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(56, ACM_MARGIN_DBOffset);
     fbBuilder.addOffset(57, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
     fbBuilder.addOffset(58, BLOCK_ERROR_RATEOffset);
+    fbBuilder.addOffset(59, JAMMINGOffset);
     return fbBuilder.endTable();
   }
 

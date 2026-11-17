@@ -21,5 +21,9 @@ class snrAntennaPattern private constructor() {
         const val TEARDROP: Byte = 9
         const val TOROIDAL: Byte = 10
         const val CARDIOID: Byte = 11
+        /**
+         * An electronically steered array; its pattern is a $PAP synthesis.
+         */
+        const val PHASED_ARRAY: Byte = 12
     }
 }

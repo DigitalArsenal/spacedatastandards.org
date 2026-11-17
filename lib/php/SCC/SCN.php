@@ -9,6 +9,11 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 class SCN extends Table
 {
     /**
@@ -156,22 +161,121 @@ class SCN extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+    /// time.
+    public function getSTART_EPOCH()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Clock interval stop as an ISO-8601 UTC timestamp.
+    public function getSTOP_EPOCH()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True when the clock was running.
+    /**
+     * @return bool
+     */
+    public function getANIMATING()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Start of the analysis window, the span the timeline showed, as an
+    /// ISO-8601 UTC timestamp.
+    public function getWINDOW_START()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+    public function getWINDOW_STOP()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+    /// the catalog objects were flown with.
+    public function getPROPAGATOR_MODULE_ID()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Timeline rows kept with the scenario.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPINNED_ROWS($j)
+    {
+        $o = $this->__offset(40);
+        $obj = new SCNPinnedRow();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPINNED_ROWSLength()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+    /// enclosing $REC, over the five bytes '$SCN' and 0x00, followed by the
+    /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+    /// zero. The record's CID is computed over the signed bytes.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getSIGNATURE($j)
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSIGNATURELength()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(42);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCN(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCN
      */
-    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $EPOCH, $SIM_SPEED, $USE_BODY_FIXED_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED)
+    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $EPOCH, $SIM_SPEED, $USE_BODY_FIXED_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED, $START_EPOCH, $STOP_EPOCH, $ANIMATING, $WINDOW_START, $WINDOW_STOP, $PROPAGATOR_MODULE_ID, $PINNED_ROWS, $SIGNATURE)
     {
-        $builder->startObject(12);
+        $builder->startObject(20);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
         self::addREFERENCES($builder, $REFERENCES);
         self::addEVENT($builder, $EVENT);
@@ -184,6 +288,14 @@ class SCN extends Table
         self::addACTION($builder, $ACTION);
         self::addVIEW_STATE($builder, $VIEW_STATE);
         self::addASSETS_CHANGED($builder, $ASSETS_CHANGED);
+        self::addSTART_EPOCH($builder, $START_EPOCH);
+        self::addSTOP_EPOCH($builder, $STOP_EPOCH);
+        self::addANIMATING($builder, $ANIMATING);
+        self::addWINDOW_START($builder, $WINDOW_START);
+        self::addWINDOW_STOP($builder, $WINDOW_STOP);
+        self::addPROPAGATOR_MODULE_ID($builder, $PROPAGATOR_MODULE_ID);
+        self::addPINNED_ROWS($builder, $PINNED_ROWS);
+        self::addSIGNATURE($builder, $SIGNATURE);
         $o = $builder->endObject();
         return $o;
     }
@@ -330,6 +442,134 @@ class SCN extends Table
     public static function addASSETS_CHANGED(FlatBufferBuilder $builder, $ASSETS_CHANGED)
     {
         $builder->addOffsetX(11, $ASSETS_CHANGED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_EPOCH(FlatBufferBuilder $builder, $START_EPOCH)
+    {
+        $builder->addOffsetX(12, $START_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTOP_EPOCH(FlatBufferBuilder $builder, $STOP_EPOCH)
+    {
+        $builder->addOffsetX(13, $STOP_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addANIMATING(FlatBufferBuilder $builder, $ANIMATING)
+    {
+        $builder->addBoolX(14, $ANIMATING, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addWINDOW_START(FlatBufferBuilder $builder, $WINDOW_START)
+    {
+        $builder->addOffsetX(15, $WINDOW_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addWINDOW_STOP(FlatBufferBuilder $builder, $WINDOW_STOP)
+    {
+        $builder->addOffsetX(16, $WINDOW_STOP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROPAGATOR_MODULE_ID(FlatBufferBuilder $builder, $PROPAGATOR_MODULE_ID)
+    {
+        $builder->addOffsetX(17, $PROPAGATOR_MODULE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPINNED_ROWS(FlatBufferBuilder $builder, $PINNED_ROWS)
+    {
+        $builder->addOffsetX(18, $PINNED_ROWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPINNED_ROWSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPINNED_ROWSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
+    {
+        $builder->addOffsetX(19, $SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

@@ -1,5 +1,5 @@
-// Hash: 27620fd7dca9079faf5500ba9bd51aaf2882cfc17d8dc7f4fe002b9721d45798
-// Version: 0.0.3
+// Hash: 9117ec8500fc3dcf8f9eb4c6d03a7c01860aff49192c564240b471010f677f7b
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 include "../OPP/main.fbs";
 include "../RFB/main.fbs";
@@ -100,7 +100,9 @@ enum snrAntennaPattern : byte {
   /// The earth-coverage (teardrop) beam of a geostationary antenna.
   TEARDROP,
   TOROIDAL,
-  CARDIOID
+  CARDIOID,
+  /// An electronically steered array; its pattern is a $PAP synthesis.
+  PHASED_ARRAY
 }
 
 /// One spectral band of a sensor, in Hz. Hz is the unit for every band, optical

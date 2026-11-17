@@ -173,8 +173,21 @@ class EGP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The definition MEMBERS were generated from, when MEMBERSHIP_MODE is
+    # GENERATED.
+    # EGP
+    def WALKER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from EGPWalker import EGPWalker
+            obj = EGPWalker()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def EGPStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(12)
 
 def Start(builder):
     EGPStart(builder)
@@ -281,6 +294,12 @@ def EGPAddDATASET_CID(builder, DATASET_CID):
 def AddDATASET_CID(builder, DATASET_CID):
     EGPAddDATASET_CID(builder, DATASET_CID)
 
+def EGPAddWALKER(builder, WALKER):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(WALKER), 0)
+
+def AddWALKER(builder, WALKER):
+    EGPAddWALKER(builder, WALKER)
+
 def EGPEnd(builder):
     return builder.EndObject()
 
@@ -290,6 +309,7 @@ def End(builder):
 import EGPMember
 import EGPProvenance
 import EGPQuery
+import EGPWalker
 try:
     from typing import List, Optional
 except:
@@ -311,6 +331,7 @@ class EGPT(object):
         UPDATED_AT = None,
         PROVENANCE = None,
         DATASET_CID = None,
+        WALKER = None,
     ):
         self.GROUP_ID = GROUP_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -323,6 +344,7 @@ class EGPT(object):
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
         self.PROVENANCE = PROVENANCE  # type: Optional[List[EGPProvenance.EGPProvenanceT]]
         self.DATASET_CID = DATASET_CID  # type: Optional[str]
+        self.WALKER = WALKER  # type: Optional[EGPWalker.EGPWalkerT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -374,6 +396,8 @@ class EGPT(object):
                     eGPProvenance_ = EGPProvenance.EGPProvenanceT.InitFromObj(EGP.PROVENANCE(i))
                     self.PROVENANCE.append(eGPProvenance_)
         self.DATASET_CID = EGP.DATASET_CID()
+        if EGP.WALKER() is not None:
+            self.WALKER = EGPWalker.EGPWalkerT.InitFromObj(EGP.WALKER())
 
     # EGPT
     def Pack(self, builder):
@@ -415,6 +439,8 @@ class EGPT(object):
             PROVENANCE = builder.EndVector()
         if self.DATASET_CID is not None:
             DATASET_CID = builder.CreateString(self.DATASET_CID)
+        if self.WALKER is not None:
+            WALKER = self.WALKER.Pack(builder)
         EGPStart(builder)
         if self.GROUP_ID is not None:
             EGPAddGROUP_ID(builder, GROUP_ID)
@@ -437,5 +463,7 @@ class EGPT(object):
             EGPAddPROVENANCE(builder, PROVENANCE)
         if self.DATASET_CID is not None:
             EGPAddDATASET_CID(builder, DATASET_CID)
+        if self.WALKER is not None:
+            EGPAddWALKER(builder, WALKER)
         EGP = EGPEnd(builder)
         return EGP

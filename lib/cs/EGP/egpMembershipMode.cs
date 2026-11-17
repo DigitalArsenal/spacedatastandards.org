@@ -14,4 +14,7 @@ public enum egpMembershipMode : sbyte
   /// QUERY is the definition and MEMBERS is an advisory cache a consumer may
   /// recompute; the query wins on disagreement.
   QUERY_LIVE = 3,
+  /// Members were generated from WALKER; MEMBERS is that generation, and each
+  /// member's elements are its own $OMM.
+  GENERATED = 4,
 };

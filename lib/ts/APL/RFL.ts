@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { RFLInterferenceContribution, RFLInterferenceContributionT } from './RFLInterferenceContribution.js';
+import { RFLJamming, RFLJammingT } from './RFLJamming.js';
 import { RFLLink, RFLLinkT } from './RFLLink.js';
 import { RFLObstruction, RFLObstructionT } from './RFLObstruction.js';
 import { RFLProvenance, RFLProvenanceT } from './RFLProvenance.js';
@@ -1025,8 +1026,16 @@ blockErrorRateArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * The jamming assessment this record answers, when it answers one.
+ */
+JAMMING(obj?:RFLJamming):RFLJamming|null {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? (obj || new RFLJamming()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startRFL(builder:flatbuffers.Builder) {
-  builder.startObject(59);
+  builder.startObject(60);
 }
 
 static addRflId(builder:flatbuffers.Builder, RFL_IDOffset:flatbuffers.Offset) {
@@ -2075,6 +2084,10 @@ static startBlockErrorRateVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addJamming(builder:flatbuffers.Builder, JAMMINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(59, JAMMINGOffset, 0);
+}
+
 static endRFL(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // RFL_ID
@@ -2154,7 +2167,8 @@ unpack(): RFLT {
     this.bb!.createScalarList<number>(this.ACHIEVED_DATA_RATE_BPS.bind(this), this.achievedDataRateBpsLength()),
     this.bb!.createScalarList<number>(this.ACM_MARGIN_DB.bind(this), this.acmMarginDbLength()),
     this.bb!.createScalarList<number>(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.bind(this), this.energyPerSymbolToNoiseDensityDbLength()),
-    this.bb!.createScalarList<number>(this.BLOCK_ERROR_RATE.bind(this), this.blockErrorRateLength())
+    this.bb!.createScalarList<number>(this.BLOCK_ERROR_RATE.bind(this), this.blockErrorRateLength()),
+    (this.JAMMING() !== null ? this.JAMMING()!.unpack() : null)
   );
 }
 
@@ -2219,6 +2233,7 @@ unpackTo(_o: RFLT): void {
   _o.ACM_MARGIN_DB = this.bb!.createScalarList<number>(this.ACM_MARGIN_DB.bind(this), this.acmMarginDbLength());
   _o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = this.bb!.createScalarList<number>(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.bind(this), this.energyPerSymbolToNoiseDensityDbLength());
   _o.BLOCK_ERROR_RATE = this.bb!.createScalarList<number>(this.BLOCK_ERROR_RATE.bind(this), this.blockErrorRateLength());
+  _o.JAMMING = (this.JAMMING() !== null ? this.JAMMING()!.unpack() : null);
 }
 }
 
@@ -2282,7 +2297,8 @@ constructor(
   public ACHIEVED_DATA_RATE_BPS: (number)[] = [],
   public ACM_MARGIN_DB: (number)[] = [],
   public ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: (number)[] = [],
-  public BLOCK_ERROR_RATE: (number)[] = []
+  public BLOCK_ERROR_RATE: (number)[] = [],
+  public JAMMING: RFLJammingT|null = null
 ){}
 
 
@@ -2343,6 +2359,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ACM_MARGIN_DB = RFL.createAcmMarginDbVector(builder, this.ACM_MARGIN_DB);
   const ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = RFL.createEnergyPerSymbolToNoiseDensityDbVector(builder, this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
   const BLOCK_ERROR_RATE = RFL.createBlockErrorRateVector(builder, this.BLOCK_ERROR_RATE);
+  const JAMMING = (this.JAMMING !== null ? this.JAMMING!.pack(builder) : 0);
 
   RFL.startRFL(builder);
   RFL.addRflId(builder, RFL_ID);
@@ -2404,6 +2421,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   RFL.addAcmMarginDb(builder, ACM_MARGIN_DB);
   RFL.addEnergyPerSymbolToNoiseDensityDb(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB);
   RFL.addBlockErrorRate(builder, BLOCK_ERROR_RATE);
+  RFL.addJamming(builder, JAMMING);
 
   return RFL.endRFL(builder);
 }

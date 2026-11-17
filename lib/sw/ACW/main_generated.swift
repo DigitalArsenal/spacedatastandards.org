@@ -53,8 +53,10 @@ public enum acwRefractionModelKind: Int8, FlatbuffersVectorInitializable, Enum, 
   case none_ = 0
   ///  Orekit-compatible EarthStandardAtmosphereRefraction correction.
   case earthStandardAtmosphere = 1
+  ///  ITU-R P.834 tropospheric refraction.
+  case ituRP834 = 2
 
-  public static var max: acwRefractionModelKind { return .earthStandardAtmosphere }
+  public static var max: acwRefractionModelKind { return .ituRP834 }
   public static var min: acwRefractionModelKind { return .none_ }
 }
 
@@ -87,8 +89,11 @@ public enum acwConstraintKind: Int8, FlatbuffersVectorInitializable, Enum, Verif
   case lineOfSight = 8
   ///  Outside every observer blackout window.
   case blackout = 9
+  ///  Straight-line visibility between a ground observer and the target not
+  ///  blocked by terrain.
+  case terrainLineOfSight = 10
 
-  public static var max: acwConstraintKind { return .blackout }
+  public static var max: acwConstraintKind { return .terrainLineOfSight }
   public static var min: acwConstraintKind { return .unspecified }
 }
 

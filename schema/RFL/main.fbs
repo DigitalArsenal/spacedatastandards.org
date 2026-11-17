@@ -1,5 +1,5 @@
-// Hash: 9de4dfc933f9cd58cf185dff7812713cc78d607aad4126ff2ee5a61010136ac4
-// Version: 1.186.3
+// Hash: 4e018a4ad958ddb0e630ce22eccceec64a1769cf016b0a415124eda76efb9184
+// Version: 1.186.4
 // -----------------------------------END_HEADER
 include "../RFB/main.fbs";
 include "../TIM/main.fbs";
@@ -508,6 +508,37 @@ table RFLProvenance {
   MODULE_CONTENT_HASH: string;
 }
 
+/// A jamming assessment of one link: the jammer and the stated values the
+/// assessment and its countermeasures use. Inputs only; what it yields is this
+/// record's samples. A record that carries it with no samples is the
+/// assessment's definition, to be sampled.
+table RFLJamming {
+  /// Index in LINKS of the link assessed.
+  LINK_INDEX: uint32;
+  /// The jammer's end: its site (SIT_ID) or its platform.
+  JAMMER_ENDPOINT: RFLEndpoint (required);
+  /// Zero-based index, in the analysis window, of the spacecraft's pass over
+  /// the link's ground end that is assessed.
+  PASS_INDEX: uint32;
+  /// The ground terminal antenna's stated gain toward the jammer, dBi.
+  TERMINAL_GAIN_TOWARD_JAMMER_DBI: double;
+  /// True when TERMINAL_GAIN_TOWARD_JAMMER_DBI is stated.
+  HAS_TERMINAL_GAIN_TOWARD_JAMMER_DBI: bool = false;
+  /// Countermeasure: the link's EIRP raised by this many dB.
+  POWER_STEP_DB: double;
+  /// Countermeasure: processing gain, dB, as the operator states it.
+  PROCESSING_GAIN_DB: double;
+  /// True when PROCESSING_GAIN_DB is stated; it has no default.
+  HAS_PROCESSING_GAIN_DB: bool = false;
+  /// PAP_ID of the $PAP of the receiving array used by the narrower-beam and
+  /// null countermeasures.
+  ARRAY_PAP_ID: string;
+  /// Denial area about the link's ground end: radius, km.
+  AREA_RADIUS_KM: double;
+  /// Denial area: number of cells across the radius.
+  AREA_RESOLUTION: uint32;
+}
+
 /// RF Link Sample
 table RFL {
   /// Stable identifier of this sample set.
@@ -668,6 +699,8 @@ table RFL {
   ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB: [double];
   /// Decoded block error probability [0-1].
   BLOCK_ERROR_RATE: [double];
+  /// The jamming assessment this record answers, when it answers one.
+  JAMMING: RFLJamming;
 }
 
 root_type RFL;

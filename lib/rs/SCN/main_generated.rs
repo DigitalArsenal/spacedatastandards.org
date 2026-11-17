@@ -21,11 +21,11 @@ extern crate alloc;
 pub const ENUM_MIN_SCENARIO_REFERENCE_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCENARIO_REFERENCE_KIND: i8 = 8;
+pub const ENUM_MAX_SCENARIO_REFERENCE_KIND: i8 = 10;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 9] = [
+pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 11] = [
     scenarioReferenceKind::UNKNOWN,
     scenarioReferenceKind::SATELLITE,
     scenarioReferenceKind::GROUND_SITE,
@@ -35,6 +35,8 @@ pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 9] = [
     scenarioReferenceKind::POINT_OF_INTEREST,
     scenarioReferenceKind::EXCLUSION_ZONE,
     scenarioReferenceKind::OBSERVATION,
+    scenarioReferenceKind::GROUP,
+    scenarioReferenceKind::AREA_OF_INTEREST,
 ];
 
 /// Scenario reference category. This is intentionally broader than the
@@ -55,9 +57,16 @@ impl scenarioReferenceKind {
     pub const POINT_OF_INTEREST: Self = Self(6);
     pub const EXCLUSION_ZONE: Self = Self(7);
     pub const OBSERVATION: Self = Self(8);
+    /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+    /// REFERENCE_ID.
+    pub const GROUP: Self = Self(9);
+    /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+    /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+    /// alpha-2 code when the area is a country.
+    pub const AREA_OF_INTEREST: Self = Self(10);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 8;
+    pub const ENUM_MAX: i8 = 10;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNKNOWN,
         Self::SATELLITE,
@@ -68,6 +77,8 @@ impl scenarioReferenceKind {
         Self::POINT_OF_INTEREST,
         Self::EXCLUSION_ZONE,
         Self::OBSERVATION,
+        Self::GROUP,
+        Self::AREA_OF_INTEREST,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -82,6 +93,8 @@ impl scenarioReferenceKind {
             Self::POINT_OF_INTEREST => Some("POINT_OF_INTEREST"),
             Self::EXCLUSION_ZONE => Some("EXCLUSION_ZONE"),
             Self::OBSERVATION => Some("OBSERVATION"),
+            Self::GROUP => Some("GROUP"),
+            Self::AREA_OF_INTEREST => Some("AREA_OF_INTEREST"),
             _ => None,
         }
     }
@@ -2807,11 +2820,281 @@ impl SCNAssetsChangedT {
     }
 }
 
+pub enum SCNPinnedRowOffset {}
+
+/// A timeline row a scenario keeps: what was run, and on what. Never its bars;
+/// the inputs of the run are the request records of the enclosing $REC.
+#[derive(Copy, Clone, PartialEq)]
+pub struct SCNPinnedRow<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCNPinnedRow<'a> {
+    type Inner = SCNPinnedRow<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> SCNPinnedRow<'a> {
+    pub const VT_ROW_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_MODE_ID: ::flatbuffers::VOffsetT = 6;
+    pub const VT_VERB_ID: ::flatbuffers::VOffsetT = 8;
+    pub const VT_REFERENCE_IDS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_RECORD_CID: ::flatbuffers::VOffsetT = 12;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        SCNPinnedRow { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args SCNPinnedRowArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<SCNPinnedRow<'bldr>> {
+        let mut builder = SCNPinnedRowBuilder::new(_fbb);
+        if let Some(x) = args.RECORD_CID { builder.add_RECORD_CID(x); }
+        if let Some(x) = args.REFERENCE_IDS { builder.add_REFERENCE_IDS(x); }
+        if let Some(x) = args.VERB_ID { builder.add_VERB_ID(x); }
+        if let Some(x) = args.MODE_ID { builder.add_MODE_ID(x); }
+        if let Some(x) = args.ROW_ID { builder.add_ROW_ID(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> SCNPinnedRowT {
+        let ROW_ID = self.ROW_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MODE_ID = self.MODE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let VERB_ID = self.VERB_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REFERENCE_IDS = self.REFERENCE_IDS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let RECORD_CID = self.RECORD_CID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        SCNPinnedRowT {
+            ROW_ID,
+            MODE_ID,
+            VERB_ID,
+            REFERENCE_IDS,
+            RECORD_CID,
+        }
+    }
+
+    /// Row identifier, unique in the scenario.
+    #[inline]
+    pub fn ROW_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPinnedRow::VT_ROW_ID, None)}
+    }
+
+    /// The application's identifier of the mode the row belongs to.
+    #[inline]
+    pub fn MODE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPinnedRow::VT_MODE_ID, None)}
+    }
+
+    /// The application's identifier of the verb that produced the row; empty
+    /// when the row came without a run.
+    #[inline]
+    pub fn VERB_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPinnedRow::VT_VERB_ID, None)}
+    }
+
+    /// REFERENCE_IDs of the scenario references the row was run on.
+    #[inline]
+    pub fn REFERENCE_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNPinnedRow::VT_REFERENCE_IDS, None)}
+    }
+
+    /// CID of the stored record the row shows, when it shows one (for example
+    /// an event's descriptor $SCN); empty otherwise.
+    #[inline]
+    pub fn RECORD_CID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPinnedRow::VT_RECORD_CID, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for SCNPinnedRow<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ROW_ID", Self::VT_ROW_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODE_ID", Self::VT_MODE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VERB_ID", Self::VT_VERB_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REFERENCE_IDS", Self::VT_REFERENCE_IDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RECORD_CID", Self::VT_RECORD_CID, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct SCNPinnedRowArgs<'a> {
+    pub ROW_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VERB_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub RECORD_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+
+impl<'a> Default for SCNPinnedRowArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        SCNPinnedRowArgs {
+            ROW_ID: None,
+            MODE_ID: None,
+            VERB_ID: None,
+            REFERENCE_IDS: None,
+            RECORD_CID: None,
+        }
+    }
+}
+
+pub struct SCNPinnedRowBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNPinnedRowBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ROW_ID(&mut self, ROW_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPinnedRow::VT_ROW_ID, ROW_ID);
+    }
+
+    #[inline]
+    pub fn add_MODE_ID(&mut self, MODE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPinnedRow::VT_MODE_ID, MODE_ID);
+    }
+
+    #[inline]
+    pub fn add_VERB_ID(&mut self, VERB_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPinnedRow::VT_VERB_ID, VERB_ID);
+    }
+
+    #[inline]
+    pub fn add_REFERENCE_IDS(&mut self, REFERENCE_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPinnedRow::VT_REFERENCE_IDS, REFERENCE_IDS);
+    }
+
+    #[inline]
+    pub fn add_RECORD_CID(&mut self, RECORD_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPinnedRow::VT_RECORD_CID, RECORD_CID);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNPinnedRowBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        SCNPinnedRowBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<SCNPinnedRow<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for SCNPinnedRow<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("SCNPinnedRow");
+        ds.field("ROW_ID", &self.ROW_ID());
+        ds.field("MODE_ID", &self.MODE_ID());
+        ds.field("VERB_ID", &self.VERB_ID());
+        ds.field("REFERENCE_IDS", &self.REFERENCE_IDS());
+        ds.field("RECORD_CID", &self.RECORD_CID());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCNPinnedRowT {
+    pub ROW_ID: Option<alloc::string::String>,
+    pub MODE_ID: Option<alloc::string::String>,
+    pub VERB_ID: Option<alloc::string::String>,
+    pub REFERENCE_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub RECORD_CID: Option<alloc::string::String>,
+}
+
+impl Default for SCNPinnedRowT {
+    fn default() -> Self {
+        Self {
+            ROW_ID: None,
+            MODE_ID: None,
+            VERB_ID: None,
+            REFERENCE_IDS: None,
+            RECORD_CID: None,
+        }
+    }
+}
+
+impl SCNPinnedRowT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<SCNPinnedRow<'b>> {
+        let ROW_ID = self.ROW_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MODE_ID = self.MODE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let VERB_ID = self.VERB_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REFERENCE_IDS = self.REFERENCE_IDS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let RECORD_CID = self.RECORD_CID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        SCNPinnedRow::create(_fbb, &SCNPinnedRowArgs{
+            ROW_ID,
+            MODE_ID,
+            VERB_ID,
+            REFERENCE_IDS,
+            RECORD_CID,
+        })
+    }
+}
+
 pub enum SCNOffset {}
 
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 #[derive(Copy, Clone, PartialEq)]
 pub struct SCN<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -2839,6 +3122,14 @@ impl<'a> SCN<'a> {
     pub const VT_ACTION: ::flatbuffers::VOffsetT = 22;
     pub const VT_VIEW_STATE: ::flatbuffers::VOffsetT = 24;
     pub const VT_ASSETS_CHANGED: ::flatbuffers::VOffsetT = 26;
+    pub const VT_START_EPOCH: ::flatbuffers::VOffsetT = 28;
+    pub const VT_STOP_EPOCH: ::flatbuffers::VOffsetT = 30;
+    pub const VT_ANIMATING: ::flatbuffers::VOffsetT = 32;
+    pub const VT_WINDOW_START: ::flatbuffers::VOffsetT = 34;
+    pub const VT_WINDOW_STOP: ::flatbuffers::VOffsetT = 36;
+    pub const VT_PROPAGATOR_MODULE_ID: ::flatbuffers::VOffsetT = 38;
+    pub const VT_PINNED_ROWS: ::flatbuffers::VOffsetT = 40;
+    pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 42;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2852,6 +3143,13 @@ impl<'a> SCN<'a> {
     ) -> ::flatbuffers::WIPOffset<SCN<'bldr>> {
         let mut builder = SCNBuilder::new(_fbb);
         builder.add_SIM_SPEED(args.SIM_SPEED);
+        if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+        if let Some(x) = args.PINNED_ROWS { builder.add_PINNED_ROWS(x); }
+        if let Some(x) = args.PROPAGATOR_MODULE_ID { builder.add_PROPAGATOR_MODULE_ID(x); }
+        if let Some(x) = args.WINDOW_STOP { builder.add_WINDOW_STOP(x); }
+        if let Some(x) = args.WINDOW_START { builder.add_WINDOW_START(x); }
+        if let Some(x) = args.STOP_EPOCH { builder.add_STOP_EPOCH(x); }
+        if let Some(x) = args.START_EPOCH { builder.add_START_EPOCH(x); }
         if let Some(x) = args.ASSETS_CHANGED { builder.add_ASSETS_CHANGED(x); }
         if let Some(x) = args.VIEW_STATE { builder.add_VIEW_STATE(x); }
         if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
@@ -2861,6 +3159,7 @@ impl<'a> SCN<'a> {
         if let Some(x) = args.EVENT { builder.add_EVENT(x); }
         if let Some(x) = args.REFERENCES { builder.add_REFERENCES(x); }
         if let Some(x) = args.SCENARIO_ID { builder.add_SCENARIO_ID(x); }
+        builder.add_ANIMATING(args.ANIMATING);
         builder.add_ACTION(args.ACTION);
         builder.add_USE_BODY_FIXED_FRAME(args.USE_BODY_FIXED_FRAME);
         builder.finish()
@@ -2895,6 +3194,28 @@ impl<'a> SCN<'a> {
         let ASSETS_CHANGED = self.ASSETS_CHANGED().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let START_EPOCH = self.START_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let STOP_EPOCH = self.STOP_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ANIMATING = self.ANIMATING();
+        let WINDOW_START = self.WINDOW_START().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let WINDOW_STOP = self.WINDOW_STOP().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PROPAGATOR_MODULE_ID = self.PROPAGATOR_MODULE_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PINNED_ROWS = self.PINNED_ROWS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let SIGNATURE = self.SIGNATURE().map(|x| {
+            x.into_iter().collect()
+        });
         SCNT {
             SCENARIO_ID,
             REFERENCES,
@@ -2908,6 +3229,14 @@ impl<'a> SCN<'a> {
             ACTION,
             VIEW_STATE,
             ASSETS_CHANGED,
+            START_EPOCH,
+            STOP_EPOCH,
+            ANIMATING,
+            WINDOW_START,
+            WINDOW_STOP,
+            PROPAGATOR_MODULE_ID,
+            PINNED_ROWS,
+            SIGNATURE,
         }
     }
 
@@ -3018,6 +3347,84 @@ impl<'a> SCN<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNAssetsChanged>>(SCN::VT_ASSETS_CHANGED, None)}
     }
+
+    /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+    /// time.
+    #[inline]
+    pub fn START_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_START_EPOCH, None)}
+    }
+
+    /// Clock interval stop as an ISO-8601 UTC timestamp.
+    #[inline]
+    pub fn STOP_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_STOP_EPOCH, None)}
+    }
+
+    /// True when the clock was running.
+    #[inline]
+    pub fn ANIMATING(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(SCN::VT_ANIMATING, Some(false)).unwrap()}
+    }
+
+    /// Start of the analysis window, the span the timeline showed, as an
+    /// ISO-8601 UTC timestamp.
+    #[inline]
+    pub fn WINDOW_START(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_WINDOW_START, None)}
+    }
+
+    /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+    #[inline]
+    pub fn WINDOW_STOP(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_WINDOW_STOP, None)}
+    }
+
+    /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+    /// the catalog objects were flown with.
+    #[inline]
+    pub fn PROPAGATOR_MODULE_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_PROPAGATOR_MODULE_ID, None)}
+    }
+
+    /// Timeline rows kept with the scenario.
+    #[inline]
+    pub fn PINNED_ROWS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPinnedRow<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPinnedRow>>>>(SCN::VT_PINNED_ROWS, None)}
+    }
+
+    /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+    /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+    /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+    /// zero. The record's CID is computed over the signed bytes.
+    #[inline]
+    pub fn SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(SCN::VT_SIGNATURE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCN<'_> {
@@ -3038,6 +3445,14 @@ impl ::flatbuffers::Verifiable for SCN<'_> {
             .visit_field::<scenarioActionCode>("ACTION", Self::VT_ACTION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<VST>>("VIEW_STATE", Self::VT_VIEW_STATE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<SCNAssetsChanged>>("ASSETS_CHANGED", Self::VT_ASSETS_CHANGED, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_EPOCH", Self::VT_START_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STOP_EPOCH", Self::VT_STOP_EPOCH, false)?
+            .visit_field::<bool>("ANIMATING", Self::VT_ANIMATING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WINDOW_START", Self::VT_WINDOW_START, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WINDOW_STOP", Self::VT_WINDOW_STOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROPAGATOR_MODULE_ID", Self::VT_PROPAGATOR_MODULE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNPinnedRow>>>>("PINNED_ROWS", Self::VT_PINNED_ROWS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
             .finish();
         Ok(())
     }
@@ -3056,6 +3471,14 @@ pub struct SCNArgs<'a> {
     pub ACTION: scenarioActionCode,
     pub VIEW_STATE: Option<::flatbuffers::WIPOffset<VST<'a>>>,
     pub ASSETS_CHANGED: Option<::flatbuffers::WIPOffset<SCNAssetsChanged<'a>>>,
+    pub START_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STOP_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ANIMATING: bool,
+    pub WINDOW_START: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WINDOW_STOP: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROPAGATOR_MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PINNED_ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPinnedRow<'a>>>>>,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 
 impl<'a> Default for SCNArgs<'a> {
@@ -3074,6 +3497,14 @@ impl<'a> Default for SCNArgs<'a> {
             ACTION: scenarioActionCode::NONE,
             VIEW_STATE: None,
             ASSETS_CHANGED: None,
+            START_EPOCH: None,
+            STOP_EPOCH: None,
+            ANIMATING: false,
+            WINDOW_START: None,
+            WINDOW_STOP: None,
+            PROPAGATOR_MODULE_ID: None,
+            PINNED_ROWS: None,
+            SIGNATURE: None,
         }
     }
 }
@@ -3145,6 +3576,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_START_EPOCH(&mut self, START_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_START_EPOCH, START_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_STOP_EPOCH(&mut self, STOP_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_STOP_EPOCH, STOP_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_ANIMATING(&mut self, ANIMATING: bool) {
+        self.fbb_.push_slot::<bool>(SCN::VT_ANIMATING, ANIMATING, false);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_START(&mut self, WINDOW_START: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_WINDOW_START, WINDOW_START);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_STOP(&mut self, WINDOW_STOP: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_WINDOW_STOP, WINDOW_STOP);
+    }
+
+    #[inline]
+    pub fn add_PROPAGATOR_MODULE_ID(&mut self, PROPAGATOR_MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_PROPAGATOR_MODULE_ID, PROPAGATOR_MODULE_ID);
+    }
+
+    #[inline]
+    pub fn add_PINNED_ROWS(&mut self, PINNED_ROWS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCNPinnedRow<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_PINNED_ROWS, PINNED_ROWS);
+    }
+
+    #[inline]
+    pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_SIGNATURE, SIGNATURE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCNBuilder {
@@ -3175,6 +3646,14 @@ impl ::core::fmt::Debug for SCN<'_> {
         ds.field("ACTION", &self.ACTION());
         ds.field("VIEW_STATE", &self.VIEW_STATE());
         ds.field("ASSETS_CHANGED", &self.ASSETS_CHANGED());
+        ds.field("START_EPOCH", &self.START_EPOCH());
+        ds.field("STOP_EPOCH", &self.STOP_EPOCH());
+        ds.field("ANIMATING", &self.ANIMATING());
+        ds.field("WINDOW_START", &self.WINDOW_START());
+        ds.field("WINDOW_STOP", &self.WINDOW_STOP());
+        ds.field("PROPAGATOR_MODULE_ID", &self.PROPAGATOR_MODULE_ID());
+        ds.field("PINNED_ROWS", &self.PINNED_ROWS());
+        ds.field("SIGNATURE", &self.SIGNATURE());
         ds.finish()
     }
 }
@@ -3194,6 +3673,14 @@ pub struct SCNT {
     pub ACTION: scenarioActionCode,
     pub VIEW_STATE: Option<alloc::boxed::Box<VSTT>>,
     pub ASSETS_CHANGED: Option<alloc::boxed::Box<SCNAssetsChangedT>>,
+    pub START_EPOCH: Option<alloc::string::String>,
+    pub STOP_EPOCH: Option<alloc::string::String>,
+    pub ANIMATING: bool,
+    pub WINDOW_START: Option<alloc::string::String>,
+    pub WINDOW_STOP: Option<alloc::string::String>,
+    pub PROPAGATOR_MODULE_ID: Option<alloc::string::String>,
+    pub PINNED_ROWS: Option<alloc::vec::Vec<SCNPinnedRowT>>,
+    pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 
 impl Default for SCNT {
@@ -3211,6 +3698,14 @@ impl Default for SCNT {
             ACTION: scenarioActionCode::NONE,
             VIEW_STATE: None,
             ASSETS_CHANGED: None,
+            START_EPOCH: None,
+            STOP_EPOCH: None,
+            ANIMATING: false,
+            WINDOW_START: None,
+            WINDOW_STOP: None,
+            PROPAGATOR_MODULE_ID: None,
+            PINNED_ROWS: None,
+            SIGNATURE: None,
         }
     }
 }
@@ -3248,6 +3743,28 @@ impl SCNT {
         let ASSETS_CHANGED = self.ASSETS_CHANGED.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let START_EPOCH = self.START_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let STOP_EPOCH = self.STOP_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ANIMATING = self.ANIMATING;
+        let WINDOW_START = self.WINDOW_START.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let WINDOW_STOP = self.WINDOW_STOP.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PROPAGATOR_MODULE_ID = self.PROPAGATOR_MODULE_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PINNED_ROWS = self.PINNED_ROWS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         SCN::create(_fbb, &SCNArgs{
             SCENARIO_ID,
             REFERENCES,
@@ -3261,6 +3778,14 @@ impl SCNT {
             ACTION,
             VIEW_STATE,
             ASSETS_CHANGED,
+            START_EPOCH,
+            STOP_EPOCH,
+            ANIMATING,
+            WINDOW_START,
+            WINDOW_STOP,
+            PROPAGATOR_MODULE_ID,
+            PINNED_ROWS,
+            SIGNATURE,
         })
     }
 }

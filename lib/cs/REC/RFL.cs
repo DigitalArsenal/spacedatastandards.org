@@ -521,6 +521,8 @@ public struct RFL : IFlatbufferObject
   public ArraySegment<byte>? GetBLOCK_ERROR_RATEBytes() { return __p.__vector_as_arraysegment(120); }
 #endif
   public double[] GetBLOCK_ERROR_RATEArray() { return __p.__vector_as_array<double>(120); }
+  /// The jamming assessment this record answers, when it answers one.
+  public RFLJamming? JAMMING { get { int o = __p.__offset(122); return o != 0 ? (RFLJamming?)(new RFLJamming()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<RFL> CreateRFL(FlatBufferBuilder builder,
       StringOffset RFL_IDOffset = default(StringOffset),
@@ -581,9 +583,11 @@ public struct RFL : IFlatbufferObject
       VectorOffset ACHIEVED_DATA_RATE_BPSOffset = default(VectorOffset),
       VectorOffset ACM_MARGIN_DBOffset = default(VectorOffset),
       VectorOffset ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset = default(VectorOffset),
-      VectorOffset BLOCK_ERROR_RATEOffset = default(VectorOffset)) {
-    builder.StartTable(59);
+      VectorOffset BLOCK_ERROR_RATEOffset = default(VectorOffset),
+      Offset<RFLJamming> JAMMINGOffset = default(Offset<RFLJamming>)) {
+    builder.StartTable(60);
     RFL.AddCOMPUTED_AT(builder, COMPUTED_AT);
+    RFL.AddJAMMING(builder, JAMMINGOffset);
     RFL.AddBLOCK_ERROR_RATE(builder, BLOCK_ERROR_RATEOffset);
     RFL.AddENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(builder, ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBOffset);
     RFL.AddACM_MARGIN_DB(builder, ACM_MARGIN_DBOffset);
@@ -645,7 +649,7 @@ public struct RFL : IFlatbufferObject
     return RFL.EndRFL(builder);
   }
 
-  public static void StartRFL(FlatBufferBuilder builder) { builder.StartTable(59); }
+  public static void StartRFL(FlatBufferBuilder builder) { builder.StartTable(60); }
   public static void AddRFL_ID(FlatBufferBuilder builder, StringOffset RFL_IDOffset) { builder.AddOffset(0, RFL_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(2, SCENARIO_IDOffset.Value, 0); }
@@ -955,6 +959,7 @@ public struct RFL : IFlatbufferObject
   public static VectorOffset CreateBLOCK_ERROR_RATEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBLOCK_ERROR_RATEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBLOCK_ERROR_RATEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddJAMMING(FlatBufferBuilder builder, Offset<RFLJamming> JAMMINGOffset) { builder.AddOffset(59, JAMMINGOffset.Value, 0); }
   public static Offset<RFL> EndRFL(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // RFL_ID
@@ -1081,6 +1086,7 @@ public struct RFL : IFlatbufferObject
     for (var _j = 0; _j < this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DBLength; ++_j) {_o.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB.Add(this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB(_j));}
     _o.BLOCK_ERROR_RATE = new List<double>();
     for (var _j = 0; _j < this.BLOCK_ERROR_RATELength; ++_j) {_o.BLOCK_ERROR_RATE.Add(this.BLOCK_ERROR_RATE(_j));}
+    _o.JAMMING = this.JAMMING.HasValue ? this.JAMMING.Value.UnPack() : null;
   }
   public static Offset<RFL> Pack(FlatBufferBuilder builder, RFLT _o) {
     if (_o == null) return default(Offset<RFL>);
@@ -1343,6 +1349,7 @@ public struct RFL : IFlatbufferObject
       var __BLOCK_ERROR_RATE = _o.BLOCK_ERROR_RATE.ToArray();
       _BLOCK_ERROR_RATE = CreateBLOCK_ERROR_RATEVector(builder, __BLOCK_ERROR_RATE);
     }
+    var _JAMMING = _o.JAMMING == null ? default(Offset<RFLJamming>) : RFLJamming.Pack(builder, _o.JAMMING);
     return CreateRFL(
       builder,
       _RFL_ID,
@@ -1403,7 +1410,8 @@ public struct RFL : IFlatbufferObject
       _ACHIEVED_DATA_RATE_BPS,
       _ACM_MARGIN_DB,
       _ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB,
-      _BLOCK_ERROR_RATE);
+      _BLOCK_ERROR_RATE,
+      _JAMMING);
   }
 }
 
@@ -1468,6 +1476,7 @@ public class RFLT
   public List<double> ACM_MARGIN_DB { get; set; }
   public List<double> ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB { get; set; }
   public List<double> BLOCK_ERROR_RATE { get; set; }
+  public RFLJammingT JAMMING { get; set; }
 
   public RFLT() {
     this.RFL_ID = null;
@@ -1529,6 +1538,7 @@ public class RFLT
     this.ACM_MARGIN_DB = null;
     this.ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB = null;
     this.BLOCK_ERROR_RATE = null;
+    this.JAMMING = null;
   }
   public static RFLT DeserializeFromBinary(byte[] fbBuffer) {
     return RFL.GetRootAsRFL(new ByteBuffer(fbBuffer)).UnPack();
@@ -1605,6 +1615,7 @@ static public class RFLVerify
       && verifier.VerifyVectorOfData(tablePos, 116 /*ACM_MARGIN_DB*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 118 /*ENERGY_PER_SYMBOL_TO_NOISE_DENSITY_DB*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 120 /*BLOCK_ERROR_RATE*/, 8 /*double*/, false)
+      && verifier.VerifyTable(tablePos, 122 /*JAMMING*/, RFLJammingVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -8,8 +8,12 @@ public final class acwRefractionModelKind {
    * Orekit-compatible EarthStandardAtmosphereRefraction correction.
    */
   public static final byte EARTH_STANDARD_ATMOSPHERE = 1;
+  /**
+   * ITU-R P.834 tropospheric refraction.
+   */
+  public static final byte ITU_R_P834 = 2;
 
-  public static final String[] names = { "NONE", "EARTH_STANDARD_ATMOSPHERE", };
+  public static final String[] names = { "NONE", "EARTH_STANDARD_ATMOSPHERE", "ITU_R_P834", };
 
   public static String name(int e) { return names[e]; }
 }

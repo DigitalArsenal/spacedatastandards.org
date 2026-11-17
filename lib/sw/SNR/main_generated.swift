@@ -142,8 +142,10 @@ public enum snrAntennaPattern: Int8, FlatbuffersVectorInitializable, Enum, Verif
   case teardrop = 9
   case toroidal = 10
   case cardioid = 11
+  ///  An electronically steered array; its pattern is a $PAP synthesis.
+  case phasedArray = 12
 
-  public static var max: snrAntennaPattern { return .cardioid }
+  public static var max: snrAntennaPattern { return .phasedArray }
   public static var min: snrAntennaPattern { return .unspecified }
 }
 

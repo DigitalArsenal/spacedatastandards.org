@@ -9,6 +9,11 @@ using global::Google.FlatBuffers;
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 public struct SCN : IFlatbufferObject
 {
   private Table __p;
@@ -64,6 +69,66 @@ public struct SCN : IFlatbufferObject
   public VST? VIEW_STATE { get { int o = __p.__offset(24); return o != 0 ? (VST?)(new VST()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Asset-change notification payload for the scenario.
   public SCNAssetsChanged? ASSETS_CHANGED { get { int o = __p.__offset(26); return o != 0 ? (SCNAssetsChanged?)(new SCNAssetsChanged()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  /// time.
+  public string START_EPOCH { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTART_EPOCHBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetSTART_EPOCHBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetSTART_EPOCHArray() { return __p.__vector_as_array<byte>(28); }
+  /// Clock interval stop as an ISO-8601 UTC timestamp.
+  public string STOP_EPOCH { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTOP_EPOCHBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetSTOP_EPOCHBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetSTOP_EPOCHArray() { return __p.__vector_as_array<byte>(30); }
+  /// True when the clock was running.
+  public bool ANIMATING { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Start of the analysis window, the span the timeline showed, as an
+  /// ISO-8601 UTC timestamp.
+  public string WINDOW_START { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetWINDOW_STARTBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetWINDOW_STARTBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetWINDOW_STARTArray() { return __p.__vector_as_array<byte>(34); }
+  /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+  public string WINDOW_STOP { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetWINDOW_STOPBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetWINDOW_STOPBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetWINDOW_STOPArray() { return __p.__vector_as_array<byte>(36); }
+  /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  /// the catalog objects were flown with.
+  public string PROPAGATOR_MODULE_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROPAGATOR_MODULE_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetPROPAGATOR_MODULE_IDBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetPROPAGATOR_MODULE_IDArray() { return __p.__vector_as_array<byte>(38); }
+  /// Timeline rows kept with the scenario.
+  public SCNPinnedRow? PINNED_ROWS(int j) { int o = __p.__offset(40); return o != 0 ? (SCNPinnedRow?)(new SCNPinnedRow()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PINNED_ROWSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  /// zero. The record's CID is computed over the signed bytes.
+  public byte SIGNATURE(int j) { int o = __p.__offset(42); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<SCN> CreateSCN(FlatBufferBuilder builder,
       StringOffset SCENARIO_IDOffset = default(StringOffset),
@@ -77,9 +142,24 @@ public struct SCN : IFlatbufferObject
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       scenarioActionCode ACTION = scenarioActionCode.NONE,
       Offset<VST> VIEW_STATEOffset = default(Offset<VST>),
-      Offset<SCNAssetsChanged> ASSETS_CHANGEDOffset = default(Offset<SCNAssetsChanged>)) {
-    builder.StartTable(12);
+      Offset<SCNAssetsChanged> ASSETS_CHANGEDOffset = default(Offset<SCNAssetsChanged>),
+      StringOffset START_EPOCHOffset = default(StringOffset),
+      StringOffset STOP_EPOCHOffset = default(StringOffset),
+      bool ANIMATING = false,
+      StringOffset WINDOW_STARTOffset = default(StringOffset),
+      StringOffset WINDOW_STOPOffset = default(StringOffset),
+      StringOffset PROPAGATOR_MODULE_IDOffset = default(StringOffset),
+      VectorOffset PINNED_ROWSOffset = default(VectorOffset),
+      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
+    builder.StartTable(20);
     SCN.AddSIM_SPEED(builder, SIM_SPEED);
+    SCN.AddSIGNATURE(builder, SIGNATUREOffset);
+    SCN.AddPINNED_ROWS(builder, PINNED_ROWSOffset);
+    SCN.AddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_IDOffset);
+    SCN.AddWINDOW_STOP(builder, WINDOW_STOPOffset);
+    SCN.AddWINDOW_START(builder, WINDOW_STARTOffset);
+    SCN.AddSTOP_EPOCH(builder, STOP_EPOCHOffset);
+    SCN.AddSTART_EPOCH(builder, START_EPOCHOffset);
     SCN.AddASSETS_CHANGED(builder, ASSETS_CHANGEDOffset);
     SCN.AddVIEW_STATE(builder, VIEW_STATEOffset);
     SCN.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
@@ -89,12 +169,13 @@ public struct SCN : IFlatbufferObject
     SCN.AddEVENT(builder, EVENTOffset);
     SCN.AddREFERENCES(builder, REFERENCESOffset);
     SCN.AddSCENARIO_ID(builder, SCENARIO_IDOffset);
+    SCN.AddANIMATING(builder, ANIMATING);
     SCN.AddACTION(builder, ACTION);
     SCN.AddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME);
     return SCN.EndSCN(builder);
   }
 
-  public static void StartSCN(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartSCN(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(0, SCENARIO_IDOffset.Value, 0); }
   public static void AddREFERENCES(FlatBufferBuilder builder, VectorOffset REFERENCESOffset) { builder.AddOffset(1, REFERENCESOffset.Value, 0); }
   public static VectorOffset CreateREFERENCESVector(FlatBufferBuilder builder, Offset<SCNReference>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -112,6 +193,24 @@ public struct SCN : IFlatbufferObject
   public static void AddACTION(FlatBufferBuilder builder, scenarioActionCode ACTION) { builder.AddSbyte(9, (sbyte)ACTION, 0); }
   public static void AddVIEW_STATE(FlatBufferBuilder builder, Offset<VST> VIEW_STATEOffset) { builder.AddOffset(10, VIEW_STATEOffset.Value, 0); }
   public static void AddASSETS_CHANGED(FlatBufferBuilder builder, Offset<SCNAssetsChanged> ASSETS_CHANGEDOffset) { builder.AddOffset(11, ASSETS_CHANGEDOffset.Value, 0); }
+  public static void AddSTART_EPOCH(FlatBufferBuilder builder, StringOffset START_EPOCHOffset) { builder.AddOffset(12, START_EPOCHOffset.Value, 0); }
+  public static void AddSTOP_EPOCH(FlatBufferBuilder builder, StringOffset STOP_EPOCHOffset) { builder.AddOffset(13, STOP_EPOCHOffset.Value, 0); }
+  public static void AddANIMATING(FlatBufferBuilder builder, bool ANIMATING) { builder.AddBool(14, ANIMATING, false); }
+  public static void AddWINDOW_START(FlatBufferBuilder builder, StringOffset WINDOW_STARTOffset) { builder.AddOffset(15, WINDOW_STARTOffset.Value, 0); }
+  public static void AddWINDOW_STOP(FlatBufferBuilder builder, StringOffset WINDOW_STOPOffset) { builder.AddOffset(16, WINDOW_STOPOffset.Value, 0); }
+  public static void AddPROPAGATOR_MODULE_ID(FlatBufferBuilder builder, StringOffset PROPAGATOR_MODULE_IDOffset) { builder.AddOffset(17, PROPAGATOR_MODULE_IDOffset.Value, 0); }
+  public static void AddPINNED_ROWS(FlatBufferBuilder builder, VectorOffset PINNED_ROWSOffset) { builder.AddOffset(18, PINNED_ROWSOffset.Value, 0); }
+  public static VectorOffset CreatePINNED_ROWSVector(FlatBufferBuilder builder, Offset<SCNPinnedRow>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePINNED_ROWSVectorBlock(FlatBufferBuilder builder, Offset<SCNPinnedRow>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePINNED_ROWSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCNPinnedRow>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePINNED_ROWSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCNPinnedRow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPINNED_ROWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(19, SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<SCN> EndSCN(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCN>(o);
@@ -137,6 +236,16 @@ public struct SCN : IFlatbufferObject
     _o.ACTION = this.ACTION;
     _o.VIEW_STATE = this.VIEW_STATE.HasValue ? this.VIEW_STATE.Value.UnPack() : null;
     _o.ASSETS_CHANGED = this.ASSETS_CHANGED.HasValue ? this.ASSETS_CHANGED.Value.UnPack() : null;
+    _o.START_EPOCH = this.START_EPOCH;
+    _o.STOP_EPOCH = this.STOP_EPOCH;
+    _o.ANIMATING = this.ANIMATING;
+    _o.WINDOW_START = this.WINDOW_START;
+    _o.WINDOW_STOP = this.WINDOW_STOP;
+    _o.PROPAGATOR_MODULE_ID = this.PROPAGATOR_MODULE_ID;
+    _o.PINNED_ROWS = new List<SCNPinnedRowT>();
+    for (var _j = 0; _j < this.PINNED_ROWSLength; ++_j) {_o.PINNED_ROWS.Add(this.PINNED_ROWS(_j).HasValue ? this.PINNED_ROWS(_j).Value.UnPack() : null);}
+    _o.SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
   }
   public static Offset<SCN> Pack(FlatBufferBuilder builder, SCNT _o) {
     if (_o == null) return default(Offset<SCN>);
@@ -153,6 +262,22 @@ public struct SCN : IFlatbufferObject
     var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
     var _VIEW_STATE = _o.VIEW_STATE == null ? default(Offset<VST>) : VST.Pack(builder, _o.VIEW_STATE);
     var _ASSETS_CHANGED = _o.ASSETS_CHANGED == null ? default(Offset<SCNAssetsChanged>) : SCNAssetsChanged.Pack(builder, _o.ASSETS_CHANGED);
+    var _START_EPOCH = _o.START_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.START_EPOCH);
+    var _STOP_EPOCH = _o.STOP_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.STOP_EPOCH);
+    var _WINDOW_START = _o.WINDOW_START == null ? default(StringOffset) : builder.CreateString(_o.WINDOW_START);
+    var _WINDOW_STOP = _o.WINDOW_STOP == null ? default(StringOffset) : builder.CreateString(_o.WINDOW_STOP);
+    var _PROPAGATOR_MODULE_ID = _o.PROPAGATOR_MODULE_ID == null ? default(StringOffset) : builder.CreateString(_o.PROPAGATOR_MODULE_ID);
+    var _PINNED_ROWS = default(VectorOffset);
+    if (_o.PINNED_ROWS != null) {
+      var __PINNED_ROWS = new Offset<SCNPinnedRow>[_o.PINNED_ROWS.Count];
+      for (var _j = 0; _j < __PINNED_ROWS.Length; ++_j) { __PINNED_ROWS[_j] = SCNPinnedRow.Pack(builder, _o.PINNED_ROWS[_j]); }
+      _PINNED_ROWS = CreatePINNED_ROWSVector(builder, __PINNED_ROWS);
+    }
+    var _SIGNATURE = default(VectorOffset);
+    if (_o.SIGNATURE != null) {
+      var __SIGNATURE = _o.SIGNATURE.ToArray();
+      _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
+    }
     return CreateSCN(
       builder,
       _SCENARIO_ID,
@@ -166,7 +291,15 @@ public struct SCN : IFlatbufferObject
       _REFERENCE_FRAME,
       _o.ACTION,
       _VIEW_STATE,
-      _ASSETS_CHANGED);
+      _ASSETS_CHANGED,
+      _START_EPOCH,
+      _STOP_EPOCH,
+      _o.ANIMATING,
+      _WINDOW_START,
+      _WINDOW_STOP,
+      _PROPAGATOR_MODULE_ID,
+      _PINNED_ROWS,
+      _SIGNATURE);
   }
 }
 
@@ -184,6 +317,14 @@ public class SCNT
   public scenarioActionCode ACTION { get; set; }
   public VSTT VIEW_STATE { get; set; }
   public SCNAssetsChangedT ASSETS_CHANGED { get; set; }
+  public string START_EPOCH { get; set; }
+  public string STOP_EPOCH { get; set; }
+  public bool ANIMATING { get; set; }
+  public string WINDOW_START { get; set; }
+  public string WINDOW_STOP { get; set; }
+  public string PROPAGATOR_MODULE_ID { get; set; }
+  public List<SCNPinnedRowT> PINNED_ROWS { get; set; }
+  public List<byte> SIGNATURE { get; set; }
 
   public SCNT() {
     this.SCENARIO_ID = null;
@@ -198,6 +339,14 @@ public class SCNT
     this.ACTION = scenarioActionCode.NONE;
     this.VIEW_STATE = null;
     this.ASSETS_CHANGED = null;
+    this.START_EPOCH = null;
+    this.STOP_EPOCH = null;
+    this.ANIMATING = false;
+    this.WINDOW_START = null;
+    this.WINDOW_STOP = null;
+    this.PROPAGATOR_MODULE_ID = null;
+    this.PINNED_ROWS = null;
+    this.SIGNATURE = null;
   }
   public static SCNT DeserializeFromBinary(byte[] fbBuffer) {
     return SCN.GetRootAsSCN(new ByteBuffer(fbBuffer)).UnPack();
@@ -227,6 +376,14 @@ static public class SCNVerify
       && verifier.VerifyField(tablePos, 22 /*ACTION*/, 1 /*scenarioActionCode*/, 1, false)
       && verifier.VerifyTable(tablePos, 24 /*VIEW_STATE*/, VSTVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 26 /*ASSETS_CHANGED*/, SCNAssetsChangedVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 28 /*START_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 30 /*STOP_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 32 /*ANIMATING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 34 /*WINDOW_START*/, false)
+      && verifier.VerifyString(tablePos, 36 /*WINDOW_STOP*/, false)
+      && verifier.VerifyString(tablePos, 38 /*PROPAGATOR_MODULE_ID*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 40 /*PINNED_ROWS*/, SCNPinnedRowVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 42 /*SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

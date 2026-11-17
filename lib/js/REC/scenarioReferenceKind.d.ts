@@ -12,6 +12,17 @@ export declare enum scenarioReferenceKind {
     VARIABLE_SITE = 5,
     POINT_OF_INTEREST = 6,
     EXCLUSION_ZONE = 7,
-    OBSERVATION = 8
+    OBSERVATION = 8,
+    /**
+     * A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+     * REFERENCE_ID.
+     */
+    GROUP = 9,
+    /**
+     * An area of interest: the $GJN feature of the enclosing $REC whose ID
+     * equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+     * alpha-2 code when the area is a country.
+     */
+    AREA_OF_INTEREST = 10
 }
 //# sourceMappingURL=scenarioReferenceKind.d.ts.map

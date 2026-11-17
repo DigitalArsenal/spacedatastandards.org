@@ -1,5 +1,5 @@
-// Hash: 5af79839265d0a4bf968d0fd83b2467f4689d2834ffb81dfb8fcd70ada15d444
-// Version: 1.136.5
+// Hash: 091ef0a1caaed12241e4d895843693dfe6fba10886f18bc073bd6abcb3a9d57a
+// Version: 1.136.6
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -24,7 +24,14 @@ enum scenarioReferenceKind : byte {
   VARIABLE_SITE,
   POINT_OF_INTEREST,
   EXCLUSION_ZONE,
-  OBSERVATION
+  OBSERVATION,
+  /// A group: the $EGP of the enclosing $REC whose GROUP_ID equals
+  /// REFERENCE_ID.
+  GROUP,
+  /// An area of interest: the $GJN feature of the enclosing $REC whose ID
+  /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
+  /// alpha-2 code when the area is a country.
+  AREA_OF_INTEREST
 }
 
 /// Scenario command action.
@@ -186,9 +193,31 @@ table SCNAssetsChanged {
   REFERENCES:[SCNReference];
 }
 
+/// A timeline row a scenario keeps: what was run, and on what. Never its bars;
+/// the inputs of the run are the request records of the enclosing $REC.
+table SCNPinnedRow {
+  /// Row identifier, unique in the scenario.
+  ROW_ID:string;
+  /// The application's identifier of the mode the row belongs to.
+  MODE_ID:string;
+  /// The application's identifier of the verb that produced the row; empty
+  /// when the row came without a run.
+  VERB_ID:string;
+  /// REFERENCE_IDs of the scenario references the row was run on.
+  REFERENCE_IDS:[string];
+  /// CID of the stored record the row shows, when it shows one (for example
+  /// an event's descriptor $SCN); empty otherwise.
+  RECORD_CID:string;
+}
+
 /// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
+///
+/// A scenario that carries other records is one $REC whose first record is
+/// this $SCN; the other records follow under their own standards. A stored
+/// request carries only its request arm, with derived fields left empty to be
+/// computed again.
 table SCN {
   /// Stable id for the scenario.
   SCENARIO_ID:string;
@@ -214,6 +243,28 @@ table SCN {
   VIEW_STATE:VST;
   /// Asset-change notification payload for the scenario.
   ASSETS_CHANGED:SCNAssetsChanged;
+  /// Clock interval start as an ISO-8601 UTC timestamp. EPOCH is the current
+  /// time.
+  START_EPOCH:string;
+  /// Clock interval stop as an ISO-8601 UTC timestamp.
+  STOP_EPOCH:string;
+  /// True when the clock was running.
+  ANIMATING:bool;
+  /// Start of the analysis window, the span the timeline showed, as an
+  /// ISO-8601 UTC timestamp.
+  WINDOW_START:string;
+  /// Stop of the analysis window as an ISO-8601 UTC timestamp.
+  WINDOW_STOP:string;
+  /// Module identifier (the $PRW PRWInstance.MODULE_ID form) of the propagator
+  /// the catalog objects were flown with.
+  PROPAGATOR_MODULE_ID:string;
+  /// Timeline rows kept with the scenario.
+  PINNED_ROWS:[SCNPinnedRow];
+  /// Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the
+  /// enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
+  /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
+  /// zero. The record's CID is computed over the signed bytes.
+  SIGNATURE:[ubyte];
 }
 
 root_type SCN;
