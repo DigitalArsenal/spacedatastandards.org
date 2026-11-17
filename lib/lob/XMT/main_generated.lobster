@@ -1122,12 +1122,12 @@ class XMTManeuverPolicy : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 8, nan)
     /// Statuses that make an object maneuverable.
     def MANEUVERABLE_STATUSES(i:int) -> maneuverStatus:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1)
+        return maneuverStatus(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 1))
     def MANEUVERABLE_STATUSES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 10)
     /// Statuses that retire the products before the maneuver.
     def RETIRING_STATUSES(i:int) -> maneuverStatus:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 1)
+        return maneuverStatus(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 1))
     def RETIRING_STATUSES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 12)
 

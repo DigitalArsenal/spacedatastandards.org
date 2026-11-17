@@ -1367,7 +1367,7 @@ class PCFEpochStore : flatbuffers.handle
         return pcfBlendShape(flatbuffers.field_uint8(buf_, pos_, 12, 0))
     /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
     def THEORIES(i:int) -> pcfTheory:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
+        return pcfTheory(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1))
     def THEORIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
     /// Window before each selected set's epoch inside which the set's own

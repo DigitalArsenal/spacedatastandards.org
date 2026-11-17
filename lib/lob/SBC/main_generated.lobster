@@ -302,7 +302,7 @@ class SBCDiagnostics : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 12)
     /// The contributor kinds combined, in order.
     def CONTRIBUTORS(i:int) -> sbcContributorKind:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
+        return sbcContributorKind(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1))
     def CONTRIBUTORS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
     /// Each contributor's added variances, totals first and then per sensor.

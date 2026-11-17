@@ -172,7 +172,7 @@ class SKR : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 32)
     /// SYNTHETIC_PHOTOMETRY: how each magnitude was obtained, same layout.
     def DERIVATIONS(i:int) -> phbDerivation:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 1)
+        return phbDerivation(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 1))
     def DERIVATIONS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 34)
     /// IDENTIFY: detections matched.

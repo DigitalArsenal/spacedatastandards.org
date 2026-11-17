@@ -5,7 +5,7 @@ For LLM agents. Read this when generated SDS code (`lib/<language>/`, the
 because an SDS name is also a keyword, macro or token in the target language.
 
 Every claim below was checked against the repo's generated output: flatc
-25.12.19 (shipped as flatc-wasm 26.1.38), the flags in `scripts/datatypes.json`
+25.12.19 (shipped as flatc-wasm 26.1.39), the flags in `scripts/datatypes.json`
 plus `--preserve-case`, the FlatBuffers 25.12.19 runtimes, Apple clang 21 on
 macOS (C++17), `kotlinc`, `javac`, `go build`, `php -l`. Windows entries come
 from the Windows SDK headers and were not compiled here.

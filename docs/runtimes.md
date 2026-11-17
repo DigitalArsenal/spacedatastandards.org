@@ -1,8 +1,8 @@
 # Runtimes the generated bindings need
 
-SDS generates with flatc 25.12.19, shipped as flatc-wasm 26.1.38, which is
-`DigitalArsenal/flatbuffers` at tag `wasm-v26.1.38` (commit
-`0e85c78b039f694032d1e8db837f101779b332fd`): FlatBuffers 25.12.19 plus the
+SDS generates with flatc 25.12.19, shipped as flatc-wasm 26.1.39, which is
+`DigitalArsenal/flatbuffers` at tag `wasm-v26.1.39` (commit
+`b7f1583e72312d052510830a52c0f7dd85539242`): FlatBuffers 25.12.19 plus the
 fork's changes. The generated code checks that version, so the runtime must
 match. `scripts/e2e/bindings-compile.mjs` builds every binding against these.
 

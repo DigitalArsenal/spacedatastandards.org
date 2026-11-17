@@ -263,7 +263,7 @@ class AVL : flatbuffers.handle
     /// Role of each ring. One entry per ring, so its length is RING_OFFSETS
     /// length - 1.
     def RING_ROLES(i:int) -> avlRingRole:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 1)
+        return avlRingRole(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 1))
     def RING_ROLES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 38)
     /// Number of polygons; equals max(RING_POLYGON_INDEXES) + 1, published so

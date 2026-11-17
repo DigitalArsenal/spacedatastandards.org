@@ -304,7 +304,7 @@ class PMMModuleEntry : flatbuffers.handle
     /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as
     /// PRIMARY_CATEGORY.
     def CATEGORIES(i:int) -> capabilityClass:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 56) + i * 1)
+        return capabilityClass(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 56) + i * 1))
     def CATEGORIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 56)
 

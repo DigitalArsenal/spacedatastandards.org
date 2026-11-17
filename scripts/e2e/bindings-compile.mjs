@@ -14,7 +14,7 @@
 // compiler does not finish, see docs/name-collisions.md).
 //
 // Runtimes (docs/runtimes.md): the DigitalArsenal/flatbuffers fork at tag
-// wasm-v26.1.38 (FlatBuffers 25.12.19 plus the fork's changes) for C++, Java,
+// wasm-v26.1.39 (FlatBuffers 25.12.19 plus the fork's changes) for C++, Java,
 // Kotlin, C#, PHP, Swift and Lobster; flatbuffers 25.12.19 from PyPI and the Go
 // module proxy; flat_buffers from pub.dev. The cache is ~/.cache/sds-bindings-compile.
 // A missing toolchain fails the run; --allow-missing skips it with its name.
@@ -34,8 +34,8 @@ const ALL = ["java", "kotlin", "csharp", "php", "python", "go", "cpp", "swift", 
 const wanted = args.filter((a) => !a.startsWith("--"));
 const languages = wanted.length ? wanted : ALL;
 
-const FORK_TAG = "wasm-v26.1.38";
-const FORK_COMMIT = "0e85c78b039f694032d1e8db837f101779b332fd";
+const FORK_TAG = "wasm-v26.1.39";
+const FORK_COMMIT = "b7f1583e72312d052510830a52c0f7dd85539242";
 const LOBSTER_TAG = "v2026.8";
 const LOBSTER_COMMIT = "acc66d71978ae5525be1356aa622fbaa9a57e848";
 const UA_ENV = { ...process.env };

@@ -790,7 +790,7 @@ class SCVCoverageRequest : flatbuffers.handle
     def TARGET_STATE_SAMPLES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
     def REQUESTED_PRODUCTS(i:int) -> scvMetricSeriesKind:
-        return read_uint16_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 2)
+        return scvMetricSeriesKind(read_uint16_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 2))
     def REQUESTED_PRODUCTS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 24)
     def SENSOR_BATCH_START() -> int:

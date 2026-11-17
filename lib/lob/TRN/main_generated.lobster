@@ -41,7 +41,7 @@ class TRN
 /// Terrain Models
 class TRN : flatbuffers.handle
     def SOURCES(i:int) -> TerrainDataSource:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1)
+        return TerrainDataSource(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1))
     def SOURCES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 4)
     def INTERPOLATION() -> TerrainInterpolation:

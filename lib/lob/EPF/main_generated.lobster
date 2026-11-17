@@ -180,7 +180,7 @@ class EPF : flatbuffers.handle
     def SAMPLE_MARGIN_DB_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 30)
     def SAMPLE_EXCEEDS_LIMIT(i:int) -> bool:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1)
+        return bool(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1))
     def SAMPLE_EXCEEDS_LIMIT_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
     def CONTRIBUTORS(i:int) -> EPFContributor:

@@ -110,7 +110,7 @@ class MDE
 class MDEDetectOptions : flatbuffers.handle
     /// Detectors enabled; empty = Crossing and LevelShift, combined.
     def DETECTORS(i:int) -> mdeDetector:
-        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1)
+        return mdeDetector(read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 1))
     def DETECTORS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 4)
     /// Report time of the emitted maneuvers, Unix ms; 0 = the ephemeris

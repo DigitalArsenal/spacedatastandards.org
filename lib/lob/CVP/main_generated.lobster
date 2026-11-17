@@ -625,7 +625,7 @@ class CVP : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 46)
     /// Role of each ring. Same length as RING_COUNT.
     def RING_ROLES(i:int) -> cvpRingRole:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 1)
+        return cvpRingRole(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 1))
     def RING_ROLES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 48)
     /// Number of polygons; equals max(RING_POLYGON_INDEXES) + 1 and is published

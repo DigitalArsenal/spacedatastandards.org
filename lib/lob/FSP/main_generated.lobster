@@ -160,7 +160,7 @@ class FSP : flatbuffers.handle
     def RULES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 20)
     def ALLOWED_OPERATIONS(i:int) -> fieldStreamOperationCategory:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1)
+        return fieldStreamOperationCategory(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 1))
     def ALLOWED_OPERATIONS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
     def KEY_SCOPE() -> string:

@@ -444,7 +444,7 @@ class TRSResult : flatbuffers.handle
     /// Path classification of every cell from the dominant-edge diffraction
     /// parameter — see trsPathClass.
     def PATH_CLASS(i:int) -> trsPathClass:
-        return read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 1)
+        return trsPathClass(read_int8_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 1))
     def PATH_CLASS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 18)
     /// Total path loss including every applied term, dB (positive).
