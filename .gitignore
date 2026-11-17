@@ -34,3 +34,5 @@ packages/ccsds-parser/build/
 # C++ build artifacts
 src/cpp/build/
 .worktrees/
+# Temporary folders of scripts/e2e/mor-record.mjs
+.mor-record-*/
