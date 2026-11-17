@@ -1,4 +1,4 @@
-// Hash: b5026b2307a82d7f52428fd56adaaafb3cb393825a01aaa197d94077210162e6
+// Hash: 3b656552894adcadd20e160bbf7b6de9356e8c55eea005efa98e7d2a7982615c
 // Version: 1.285.0
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -26,7 +26,10 @@ include "../MPE/main.fbs";
 //     texts of theirs (absent for NONE and UNSTATED); DENSITY_CORRECTION NONE. SGP4: WEATHER_SOURCE NONE,
 //     no ATMOSPHERIC_MODEL, no degree caps. SGP4XP and AP: ATMOSPHERIC_MODEL {JXX, 1970}, WEATHER_SOURCE
 //     THEORY_FLUX_MODEL, MAXIMUM_TESSERAL_DEGREE and MAXIMUM_ZONAL_DEGREE as here.
-//   ORBIT_DETERMINATION, present when ACTUAL_OD_SPAN is a number or OD_PARAMETERS is not 0: ACTUAL_OD_SPAN;
+//   ORBIT_DETERMINATION, present when ACTUAL_OD_SPAN is a number, OD_PARAMETERS is not 0 or any of the five
+//     values below is stated: ACTUAL_OD_SPAN; OD_OBSERVATIONS_USED and OD_TRACKS_USED (0 when not stated);
+//     WEIGHTED_RMS (0 when not stated); OD_EPOCH the text of OD_EPOCH_UNIX_US (absent when not stated);
+//     DAYS_SINCE_LAST_OBS;
 //     OD_DYNAMIC_PARAMETERS one entry per bit of OD_PARAMETERS, ascending: PARAMETER the bit's
 //     prwDynamicParameter, NAME its enum name, SOLVED_FOR its bit in OD_SOLVED_FOR, and VALUE and UNITS
 //     BTERM "m**2/kg" (DRAG_AREA_OVER_MASS), AGOM "m**2/kg" (SRP_AREA_OVER_MASS), ECOM2_Y0 "m/s**2" (ECOM2_Y0).
@@ -34,12 +37,18 @@ include "../MPE/main.fbs";
 //     COV_PARAMETER_KINDS the solved parameters among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
 //     SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION, ascending, COV_PARAMETERS
 //     their names, COV_UNITS "km" x3, "km/s" x3 and theirs ("m**2/kg", "m**2/kg/s", "m**2/kg", "m/s**2",
-//     "km/s**2"), COV_PROPAGATION, COV_REALISM [COV_REALISM], COV_CALIBRATION and COV_CALIBRATION_REFERENCE as here.
-//   PROVENANCE: the RECORD_PROVENANCE of the $DPM asset that carries the record; absent without one.
+//     "km/s**2"), COV_PROPAGATION, COV_CALIBRATION and COV_CALIBRATION_REFERENCE as here; COV_REALISM
+//     [COV_REALISM], or [the REALISM of the asset's COV_REALISM_MODELS entry whose ID is COV_REALISM_ID],
+//     or none when the record names a model and the asset is not at hand.
+//   PROVENANCE: the RECORD_PROVENANCE of the $DPM asset that carries the record. Without one, and with
+//     COV_FLOOR MEAN_ELEMENTS_TWO_BODY, a PVN whose only field is PRODUCER
+//     "com.spacedatanetwork.sdn-ap-propagator 0.6.39", the text that states that floor (COV_FLOOR); absent
+//     otherwise.
 //   DERIVED_EPHEMERIS, when WINDOWS is present: a $PPE with REFERENCE_EPOCH the EPOCH text, CENTER_NAME
 //     "EARTH", REFERENCE_FRAME RFM CelestialFrameWrapper TEMEOFDATE, TIME_SYSTEM UTC, DEFAULT_BASIS_TYPE
-//     CHEBYSHEV; BUILD the asset's DERIVED_BUILD with RECORD_DIGEST by the rule its BUILDER_NAME publishes
-//     (an expander that cannot compute it writes no DERIVED_EPHEMERIS); per served window a
+//     CHEBYSHEV; BUILD the asset's DERIVED_BUILD with RECORD_DIGEST by the rule its BUILDER_NAME publishes,
+//     whose first 8 bytes must be WINDOW_RECORD_CHECK (an expander without DERIVED_BUILD, that cannot
+//     compute the digest, or whose digest does not match writes no DERIVED_EPHEMERIS); per served window a
 //     PPEPositionRecord: EPOCH_MID_SECONDS and EPOCH_HALF_SPAN as here, EPOCH_MID its UTC text,
 //     NUM_COEFFICIENTS the larger count, the shorter series padded with +0.0, the head counts as here,
 //     HAS_VELOCITY_COEFFICIENTS when VEL_COEFF_COUNT > 0; per unserved window its midpoint, half-span and
@@ -50,13 +59,14 @@ include "../MPE/main.fbs";
 // expansion writes from the fields here, equals its asset's RECORD_PROVENANCE, or is in this list of
 // descriptive fields no propagator reads, which a reduction drops: HEADER COMMENT, CREATION_DATE and
 // MESSAGE_ID; METADATA COMMENT and the ORIGINATOR_ contact fields; every ORBIT_DETERMINATION field but
-// ACTUAL_OD_SPAN and OD_DYNAMIC_PARAMETERS (fit statistics, observation counts, weighting, residuals);
-// DERIVED_EPHEMERIS MAX_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL and NOMINAL_ fields. Anything else
-// (a maneuver, a state or covariance history, physical properties, a forecast or hand-over, seed sets,
-// SPACE_WEATHER rows or WEATHER_SOURCE RECORDS, NRLMSISE-00, a density correction, CLASSIFICATION, an
-// EXERCISE, user-defined parameters, a second COV_REALISM entry, a model text with no value here, an
-// epoch in a leap second or finer than a microsecond) means the $OCM is not reducible: it travels as an
-// $OCM, never as a MOR with the field dropped.
+// ACTUAL_OD_SPAN, OD_DYNAMIC_PARAMETERS and the five above (fit statistics, the available observation and
+// track counts, the recommended span, weighting, residuals); DERIVED_EPHEMERIS MAX_POSITION_RESIDUAL,
+// RMS_POSITION_RESIDUAL and NOMINAL_ fields. Anything else (a maneuver, a state or covariance history,
+// physical properties, a forecast or hand-over, seed sets, WEATHER_SOURCE RECORDS with its SPACE_WEATHER
+// rows, NRLMSISE-00, which reads those rows, a density correction, CLASSIFICATION, an EXERCISE,
+// user-defined parameters, a second COV_REALISM entry, a model text with no value here, an epoch in a leap
+// second or finer than a microsecond) means the $OCM is not reducible: it travels as an $OCM, never as a
+// MOR with the field dropped.
 
 /// The ordinals and meanings of $OCM ocmMessageStatus (an EXERCISE needs EXERCISE_NAME and is not
 /// reducible).
@@ -67,6 +77,20 @@ enum morMessageStatus : ubyte {
   REAL = 1,
   /// Test data.
   TEST = 2
+}
+
+/// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+/// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+/// COVARIANCE_DATA only. Append new values only.
+enum morCovarianceFloor : ubyte {
+  /// No covariance.
+  UNSTATED = 0,
+  /// At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+  /// reader of AP sets does not use this covariance (its states fly).
+  WRITER_THEORY_STATE = 1,
+  /// At the two-body state of the set's own mean elements: PRODUCER exactly
+  /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+  MEAN_ELEMENTS_TWO_BODY = 2
 }
 
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
@@ -213,6 +237,16 @@ table MOR {
   ECOM2_Y0: double;
   /// The span of the observations the orbit determination used, days; NaN when not stated.
   ACTUAL_OD_SPAN: double = nan;
+  /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+  OD_OBSERVATIONS_USED: int32 = -1;
+  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  OD_TRACKS_USED: int32 = -1;
+  /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+  WEIGHTED_RMS: double = nan;
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  OD_EPOCH_UNIX_US: int64 = -9223372036854775808;
+  /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+  DAYS_SINCE_LAST_OBS: double = nan;
   /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
   /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
   /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -220,15 +254,23 @@ table MOR {
   COVARIANCE_DATA: [double];
   /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   COV_PROPAGATION: MORCovariancePropagation;
-  /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+  /// covariance as its $OCM.
+  COV_FLOOR: morCovarianceFloor = UNSTATED;
+  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  COV_REALISM_ID: uint16;
+  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   COV_REALISM: CVR;
   /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
   COV_CALIBRATION: covarianceCalibration = Unspecified;
   /// Identifier of that calibration evidence (a report or record).
   COV_CALIBRATION_REFERENCE: string;
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-  /// the rows, and one that cannot reproduce the asset's build statement must.
+  /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   WINDOWS: [MORWindow];
   /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
   /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
@@ -236,6 +278,10 @@ table MOR {
   /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
   /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
   WINDOW_COEFF_TAILS: [float];
+  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  WINDOW_RECORD_CHECK: uint64;
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   /// object is this record's.

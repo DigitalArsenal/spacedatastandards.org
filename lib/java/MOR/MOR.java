@@ -148,76 +148,114 @@ public final class MOR extends com.google.flatbuffers.Table {
    */
   public double ACTUAL_OD_SPAN() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
+   * Observations the orbit determination used; -1 when not stated ($OCM 0).
+   */
+  public int OD_OBSERVATIONS_USED() { int o = __offset(58); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Tracks the orbit determination used; -1 when not stated ($OCM 0).
+   */
+  public int OD_TRACKS_USED() { int o = __offset(60); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+   */
+  public double WEIGHTED_RMS() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+   */
+  public long OD_EPOCH_UNIX_US() { int o = __offset(64); return o != 0 ? bb.getLong(o + bb_pos) : -9223372036854775808L; }
+  /**
+   * Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+   */
+  public double DAYS_SINCE_LAST_OBS() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
    * The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
    * among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
    * OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
    * then those parameters in ascending ordinal. Absent: no covariance.
    */
-  public double COVARIANCE_DATA(int j) { int o = __offset(58); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int COVARIANCE_DATALength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
+  public double COVARIANCE_DATA(int j) { int o = __offset(68); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int COVARIANCE_DATALength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector covarianceDataVector() { return covarianceDataVector(new DoubleVector()); }
-  public DoubleVector covarianceDataVector(DoubleVector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer COVARIANCE_DATAAsByteBuffer() { return __vector_as_bytebuffer(58, 8); }
-  public ByteBuffer COVARIANCE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 8); }
+  public DoubleVector covarianceDataVector(DoubleVector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COVARIANCE_DATAAsByteBuffer() { return __vector_as_bytebuffer(68, 8); }
+  public ByteBuffer COVARIANCE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 8); }
   /**
    * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
    */
   public MORCovariancePropagation COV_PROPAGATION() { return COV_PROPAGATION(new MORCovariancePropagation()); }
-  public MORCovariancePropagation COV_PROPAGATION(MORCovariancePropagation obj) { int o = __offset(60); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public MORCovariancePropagation COV_PROPAGATION(MORCovariancePropagation obj) { int o = __offset(70); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
   /**
-   * The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+   * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+   * covariance as its $OCM.
+   */
+  public int COV_FLOOR() { int o = __offset(72); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+   * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+   */
+  public int COV_REALISM_ID() { int o = __offset(74); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+   * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
    */
   public CVR COV_REALISM() { return COV_REALISM(new CVR()); }
-  public CVR COV_REALISM(CVR obj) { int o = __offset(62); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public CVR COV_REALISM(CVR obj) { int o = __offset(76); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
    */
-  public byte COV_CALIBRATION() { int o = __offset(64); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte COV_CALIBRATION() { int o = __offset(78); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Identifier of that calibration evidence (a report or record).
    */
-  public String COV_CALIBRATION_REFERENCE() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COV_CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
-  public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  public String COV_CALIBRATION_REFERENCE() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COV_CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
   /**
    * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-   * in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-   * the rows, and one that cannot reproduce the asset's build statement must.
+   * in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+   * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+   * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
    */
   public MORWindow WINDOWS(int j) { return WINDOWS(new MORWindow(), j); }
-  public MORWindow WINDOWS(MORWindow obj, int j) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o) + j * 24, bb) : null; }
-  public int WINDOWSLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public MORWindow WINDOWS(MORWindow obj, int j) { int o = __offset(82); return o != 0 ? obj.__assign(__vector(o) + j * 24, bb) : null; }
+  public int WINDOWSLength() { int o = __offset(82); return o != 0 ? __vector_len(o) : 0; }
   public MORWindow.Vector windowsVector() { return windowsVector(new MORWindow.Vector()); }
-  public MORWindow.Vector windowsVector(MORWindow.Vector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 24, bb) : null; }
+  public MORWindow.Vector windowsVector(MORWindow.Vector obj) { int o = __offset(82); return o != 0 ? obj.__assign(__vector(o), 24, bb) : null; }
   /**
    * The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
    * (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
    */
-  public double WINDOW_COEFF_HEADS(int j) { int o = __offset(70); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
-  public int WINDOW_COEFF_HEADSLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public double WINDOW_COEFF_HEADS(int j) { int o = __offset(84); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int WINDOW_COEFF_HEADSLength() { int o = __offset(84); return o != 0 ? __vector_len(o) : 0; }
   public DoubleVector windowCoeffHeadsVector() { return windowCoeffHeadsVector(new DoubleVector()); }
-  public DoubleVector windowCoeffHeadsVector(DoubleVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer WINDOW_COEFF_HEADSAsByteBuffer() { return __vector_as_bytebuffer(70, 8); }
-  public ByteBuffer WINDOW_COEFF_HEADSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 8); }
+  public DoubleVector windowCoeffHeadsVector(DoubleVector obj) { int o = __offset(84); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WINDOW_COEFF_HEADSAsByteBuffer() { return __vector_as_bytebuffer(84, 8); }
+  public ByteBuffer WINDOW_COEFF_HEADSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 8); }
   /**
    * The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
    * (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
    */
-  public float WINDOW_COEFF_TAILS(int j) { int o = __offset(72); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
-  public int WINDOW_COEFF_TAILSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public float WINDOW_COEFF_TAILS(int j) { int o = __offset(86); return o != 0 ? bb.getFloat(__vector(o) + j * 4) : 0; }
+  public int WINDOW_COEFF_TAILSLength() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
   public FloatVector windowCoeffTailsVector() { return windowCoeffTailsVector(new FloatVector()); }
-  public FloatVector windowCoeffTailsVector(FloatVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer WINDOW_COEFF_TAILSAsByteBuffer() { return __vector_as_bytebuffer(72, 4); }
-  public ByteBuffer WINDOW_COEFF_TAILSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 4); }
+  public FloatVector windowCoeffTailsVector(FloatVector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WINDOW_COEFF_TAILSAsByteBuffer() { return __vector_as_bytebuffer(86, 4); }
+  public ByteBuffer WINDOW_COEFF_TAILSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 4); }
+  /**
+   * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+   * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+   * record before using the rows: a mismatch voids the rows. With WINDOWS only.
+   */
+  public long WINDOW_RECORD_CHECK() { int o = __offset(88); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * The object's own element set for times beyond what this record serves (a reader's fallback
    * propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
    * object is this record's.
    */
   public MPE FALLBACK() { return FALLBACK(new MPE()); }
-  public MPE FALLBACK(MPE obj) { int o = __offset(74); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public MPE FALLBACK(MPE obj) { int o = __offset(90); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
-  public static void startMOR(FlatBufferBuilder builder) { builder.startTable(36); }
+  public static void startMOR(FlatBufferBuilder builder) { builder.startTable(44); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(0, (int) NORAD_CAT_ID, (int) 0L); }
   public static void addInternationalDesignator(FlatBufferBuilder builder, int INTERNATIONAL_DESIGNATOROffset) { builder.addOffset(1, INTERNATIONAL_DESIGNATOROffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -245,22 +283,30 @@ public final class MOR extends com.google.flatbuffers.Table {
   public static void addOdSolvedFor(FlatBufferBuilder builder, long OD_SOLVED_FOR) { builder.addInt(24, (int) OD_SOLVED_FOR, (int) 0L); }
   public static void addEcom2Y0(FlatBufferBuilder builder, double ECOM2_Y0) { builder.addDouble(25, ECOM2_Y0, 0.0); }
   public static void addActualOdSpan(FlatBufferBuilder builder, double ACTUAL_OD_SPAN) { builder.addDouble(26, ACTUAL_OD_SPAN, Double.NaN); }
-  public static void addCovarianceData(FlatBufferBuilder builder, int COVARIANCE_DATAOffset) { builder.addOffset(27, COVARIANCE_DATAOffset, 0); }
+  public static void addOdObservationsUsed(FlatBufferBuilder builder, int OD_OBSERVATIONS_USED) { builder.addInt(27, OD_OBSERVATIONS_USED, -1); }
+  public static void addOdTracksUsed(FlatBufferBuilder builder, int OD_TRACKS_USED) { builder.addInt(28, OD_TRACKS_USED, -1); }
+  public static void addWeightedRms(FlatBufferBuilder builder, double WEIGHTED_RMS) { builder.addDouble(29, WEIGHTED_RMS, Double.NaN); }
+  public static void addOdEpochUnixUs(FlatBufferBuilder builder, long OD_EPOCH_UNIX_US) { builder.addLong(30, OD_EPOCH_UNIX_US, -9223372036854775808L); }
+  public static void addDaysSinceLastObs(FlatBufferBuilder builder, double DAYS_SINCE_LAST_OBS) { builder.addDouble(31, DAYS_SINCE_LAST_OBS, Double.NaN); }
+  public static void addCovarianceData(FlatBufferBuilder builder, int COVARIANCE_DATAOffset) { builder.addOffset(32, COVARIANCE_DATAOffset, 0); }
   public static int createCovarianceDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startCovarianceDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addCovPropagation(FlatBufferBuilder builder, int COV_PROPAGATIONOffset) { builder.addStruct(28, COV_PROPAGATIONOffset, 0); }
-  public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(29, COV_REALISMOffset, 0); }
-  public static void addCovCalibration(FlatBufferBuilder builder, byte COV_CALIBRATION) { builder.addByte(30, COV_CALIBRATION, 0); }
-  public static void addCovCalibrationReference(FlatBufferBuilder builder, int COV_CALIBRATION_REFERENCEOffset) { builder.addOffset(31, COV_CALIBRATION_REFERENCEOffset, 0); }
-  public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(32, WINDOWSOffset, 0); }
+  public static void addCovPropagation(FlatBufferBuilder builder, int COV_PROPAGATIONOffset) { builder.addStruct(33, COV_PROPAGATIONOffset, 0); }
+  public static void addCovFloor(FlatBufferBuilder builder, int COV_FLOOR) { builder.addByte(34, (byte) COV_FLOOR, (byte) 0); }
+  public static void addCovRealismId(FlatBufferBuilder builder, int COV_REALISM_ID) { builder.addShort(35, (short) COV_REALISM_ID, (short) 0); }
+  public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(36, COV_REALISMOffset, 0); }
+  public static void addCovCalibration(FlatBufferBuilder builder, byte COV_CALIBRATION) { builder.addByte(37, COV_CALIBRATION, 0); }
+  public static void addCovCalibrationReference(FlatBufferBuilder builder, int COV_CALIBRATION_REFERENCEOffset) { builder.addOffset(38, COV_CALIBRATION_REFERENCEOffset, 0); }
+  public static void addWindows(FlatBufferBuilder builder, int WINDOWSOffset) { builder.addOffset(39, WINDOWSOffset, 0); }
   public static void startWindowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(24, numElems, 8); }
-  public static void addWindowCoeffHeads(FlatBufferBuilder builder, int WINDOW_COEFF_HEADSOffset) { builder.addOffset(33, WINDOW_COEFF_HEADSOffset, 0); }
+  public static void addWindowCoeffHeads(FlatBufferBuilder builder, int WINDOW_COEFF_HEADSOffset) { builder.addOffset(40, WINDOW_COEFF_HEADSOffset, 0); }
   public static int createWindowCoeffHeadsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startWindowCoeffHeadsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addWindowCoeffTails(FlatBufferBuilder builder, int WINDOW_COEFF_TAILSOffset) { builder.addOffset(34, WINDOW_COEFF_TAILSOffset, 0); }
+  public static void addWindowCoeffTails(FlatBufferBuilder builder, int WINDOW_COEFF_TAILSOffset) { builder.addOffset(41, WINDOW_COEFF_TAILSOffset, 0); }
   public static int createWindowCoeffTailsVector(FlatBufferBuilder builder, float[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addFloat(data[i]); return builder.endVector(); }
   public static void startWindowCoeffTailsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addFallback(FlatBufferBuilder builder, int FALLBACKOffset) { builder.addOffset(35, FALLBACKOffset, 0); }
+  public static void addWindowRecordCheck(FlatBufferBuilder builder, long WINDOW_RECORD_CHECK) { builder.addLong(42, WINDOW_RECORD_CHECK, 0L); }
+  public static void addFallback(FlatBufferBuilder builder, int FALLBACKOffset) { builder.addOffset(43, FALLBACKOffset, 0); }
   public static int endMOR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

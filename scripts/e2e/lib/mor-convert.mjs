@@ -21,6 +21,23 @@ export const SRP_TEXT = {
 };
 export const TIDE_TEXT = { 1: 'IERS 2010' };
 const DAY_US = 86400000000n;
+export const NOT_STATED_US = -9223372036854775808n;
+export const FLOOR_PRODUCER = 'com.spacedatanetwork.sdn-ap-propagator 0.6.39';
+/// COV_FLOOR of an $OCM covariance from its PROVENANCE.PRODUCER (morCovarianceFloor): 2 at the two-body state
+/// of the mean elements, 1 at the writer's theory state.
+export function floorOf(producer) {
+  const t = /^com\.spacedatanetwork\.sdn-ap-propagator (\d+)\.(\d+)\.(\d+)$/.exec(producer ?? '');
+  if (!t) return 1;
+  const v = t.slice(1).map(Number), since = [0, 6, 39];
+  for (let k = 0; k < 3; k++) if (v[k] !== since[k]) return v[k] > since[k] ? 2 : 1;
+  return 2;
+}
+/// WINDOW_RECORD_CHECK of a 32-byte record digest: its first 8 bytes as a little-endian uint64.
+export function recordCheck(digest) {
+  let v = 0n;
+  for (let k = 7; k >= 0; k--) v = (v << 8n) | BigInt(digest[k] ?? 0);
+  return v;
+}
 
 // ---- the epoch ---------------------------------------------------------------------------------------------
 const pad = (v, n) => String(v).padStart(n, '0');
@@ -98,9 +115,15 @@ export function expand(m, asset, O) {
     pt.MAXIMUM_TESSERAL_DEGREE = m.MAXIMUM_TESSERAL_DEGREE;
     pt.MAXIMUM_ZONAL_DEGREE = m.MAXIMUM_ZONAL_DEGREE;
   }
-  if (!Number.isNaN(m.ACTUAL_OD_SPAN) || m.OD_PARAMETERS !== 0) {
+  const odStated = m.OD_OBSERVATIONS_USED !== -1 || m.OD_TRACKS_USED !== -1 || !Number.isNaN(m.WEIGHTED_RMS) || BigInt(m.OD_EPOCH_UNIX_US) !== NOT_STATED_US || !Number.isNaN(m.DAYS_SINCE_LAST_OBS);
+  if (!Number.isNaN(m.ACTUAL_OD_SPAN) || m.OD_PARAMETERS !== 0 || odStated) {
     const od = (o.ORBIT_DETERMINATION = new O.OrbitDeterminationT());
     od.ACTUAL_OD_SPAN = m.ACTUAL_OD_SPAN;
+    od.OD_OBSERVATIONS_USED = m.OD_OBSERVATIONS_USED === -1 ? 0 : m.OD_OBSERVATIONS_USED;
+    od.OD_TRACKS_USED = m.OD_TRACKS_USED === -1 ? 0 : m.OD_TRACKS_USED;
+    od.WEIGHTED_RMS = Number.isNaN(m.WEIGHTED_RMS) ? 0 : m.WEIGHTED_RMS;
+    od.OD_EPOCH = BigInt(m.OD_EPOCH_UNIX_US) === NOT_STATED_US ? null : epochText(m.OD_EPOCH_UNIX_US);
+    od.DAYS_SINCE_LAST_OBS = m.DAYS_SINCE_LAST_OBS;
     od.OD_DYNAMIC_PARAMETERS = bits(m.OD_PARAMETERS).map((k) => {
       const p = new O.OCMDynamicParameterT();
       p.NAME = KIND_NAME[k] ?? null;
@@ -124,12 +147,18 @@ export function expand(m, asset, O) {
     o.COV_REF_FRAME = frame(O, ofEpoch);
     if (m.COV_PROPAGATION) o.COV_PROPAGATION = copyInto(new O.OCMCovariancePropagationT(), m.COV_PROPAGATION);
     if (m.COV_REALISM) o.COV_REALISM = [copyInto(new O.CVRT(), m.COV_REALISM)];
+    else if (m.COV_REALISM_ID > 0) {
+      const model = (asset?.realismModels ?? []).find((x) => x.ID === m.COV_REALISM_ID);
+      if (model) o.COV_REALISM = [copyInto(new O.CVRT(), model.REALISM)];
+    }
   }
   o.COV_CALIBRATION = m.COV_CALIBRATION;
   o.COV_CALIBRATION_REFERENCE = m.COV_CALIBRATION_REFERENCE ?? null;
   if (asset?.provenance) o.PROVENANCE = copyInto(new O.PVNT(), asset.provenance);
+  else if (cov.length > 0 && m.COV_FLOOR === 2) { o.PROVENANCE = new O.PVNT(); o.PROVENANCE.PRODUCER = FLOOR_PRODUCER; }
   const windows = m.WINDOWS ?? [];
-  if (windows.length > 0 && asset?.build && asset.recordDigest) {
+  const digest = windows.length > 0 && asset?.build && asset.recordDigest ? asset.recordDigest(m) : null;
+  if (digest && recordCheck(digest) === BigInt(m.WINDOW_RECORD_CHECK)) {
     const d = (o.DERIVED_EPHEMERIS = new O.PPET());
     d.REFERENCE_EPOCH = text;
     d.CENTER_NAME = 'EARTH';
@@ -137,7 +166,7 @@ export function expand(m, asset, O) {
     d.TIME_SYSTEM = O.timingStandard.UTC;
     d.DEFAULT_BASIS_TYPE = O.polynomialBasisType.CHEBYSHEV;
     d.BUILD = copyInto(new O.PPEBuildT(), asset.build);
-    d.BUILD.RECORD_DIGEST = [...asset.recordDigest(m)];
+    d.BUILD.RECORD_DIGEST = [...digest];
     let h = 0, t = 0;
     const heads = m.WINDOW_COEFF_HEADS ?? [], tails = m.WINDOW_COEFF_TAILS ?? [];
     for (const w of windows) {
@@ -174,7 +203,7 @@ export function expand(m, asset, O) {
 }
 
 // ---- reduction ---------------------------------------------------------------------------------------------------
-const OD_KEPT = new Set(['ACTUAL_OD_SPAN', 'OD_DYNAMIC_PARAMETERS']);
+const OD_KEPT = new Set(['ACTUAL_OD_SPAN', 'OD_DYNAMIC_PARAMETERS', 'OD_OBSERVATIONS_USED', 'OD_TRACKS_USED', 'WEIGHTED_RMS', 'OD_EPOCH', 'DAYS_SINCE_LAST_OBS']);
 /// The descriptive fields a reduction drops (schema/MOR/main.fbs), reset to their defaults on a copy.
 function stripDescriptive(o, O, dropped) {
   const reset = (obj, keys, fresh, where) => {
@@ -232,6 +261,11 @@ export function reduce(source, asset, O, M) {
   }
   if (od) {
     m.ACTUAL_OD_SPAN = od.ACTUAL_OD_SPAN;
+    m.OD_OBSERVATIONS_USED = od.OD_OBSERVATIONS_USED === 0 ? -1 : od.OD_OBSERVATIONS_USED;
+    m.OD_TRACKS_USED = od.OD_TRACKS_USED === 0 ? -1 : od.OD_TRACKS_USED;
+    m.WEIGHTED_RMS = od.WEIGHTED_RMS === 0 ? NaN : od.WEIGHTED_RMS;
+    m.DAYS_SINCE_LAST_OBS = od.DAYS_SINCE_LAST_OBS;
+    if (od.OD_EPOCH) { const us = epochUs(od.OD_EPOCH); if (us === null) problems.push('ORBIT_DETERMINATION.OD_EPOCH has no microsecond value'); else m.OD_EPOCH_UNIX_US = us; }
     for (const p of od.OD_DYNAMIC_PARAMETERS) {
       if (!OD_CARRIED.includes(p.PARAMETER)) { problems.push(`OD_DYNAMIC_PARAMETERS ${p.PARAMETER}`); continue; }
       m.OD_PARAMETERS = (m.OD_PARAMETERS | (1 << p.PARAMETER)) >>> 0;
@@ -243,7 +277,11 @@ export function reduce(source, asset, O, M) {
     m.COVARIANCE_DATA = [...o.COVARIANCE_DATA];
     if (o.COV_PROPAGATION) m.COV_PROPAGATION = copyInto(new M.MORCovariancePropagationT(), o.COV_PROPAGATION);
     if (o.COV_REALISM.length > 1) problems.push('COV_REALISM has more than one entry');
-    if (o.COV_REALISM.length === 1) m.COV_REALISM = copyInto(new M.CVRT(), o.COV_REALISM[0]);
+    if (o.COV_REALISM.length === 1) {
+      const model = (asset?.realismModels ?? []).find((x) => same(x.REALISM, o.COV_REALISM[0]));
+      if (model) m.COV_REALISM_ID = model.ID; else m.COV_REALISM = copyInto(new M.CVRT(), o.COV_REALISM[0]);
+    }
+    m.COV_FLOOR = floorOf(o.PROVENANCE?.PRODUCER);
   }
   m.COV_CALIBRATION = o.COV_CALIBRATION;
   m.COV_CALIBRATION_REFERENCE = o.COV_CALIBRATION_REFERENCE ?? null;
@@ -267,6 +305,10 @@ export function reduce(source, asset, O, M) {
     if (d.UNSERVED_STATUS.some((s) => s === 0)) problems.push('DERIVED_EPHEMERIS unserved status UNSPECIFIED');
     windows.sort((a, b) => a.EPOCH_MID_SECONDS - b.EPOCH_MID_SECONDS);
     m.WINDOWS = windows; m.WINDOW_COEFF_HEADS = heads; m.WINDOW_COEFF_TAILS = tails;
+    if (windows.length > 0) {
+      if ((d.BUILD?.RECORD_DIGEST?.length ?? 0) < 8) problems.push('DERIVED_EPHEMERIS.BUILD.RECORD_DIGEST');
+      else m.WINDOW_RECORD_CHECK = recordCheck(d.BUILD.RECORD_DIGEST);
+    }
   }
   if (problems.length > 0) return { mor: null, dropped, problems };
   // Everything else must be what the expansion writes: expand the candidate and compare field by field.
@@ -328,10 +370,17 @@ export function encode(fb, M, m) {
   M.MOR.addEpochUnixUs(b, BigInt(m.EPOCH_UNIX_US));
   for (const [k, add] of [['MEAN_MOTION', 'addMeanMotion'], ['ECCENTRICITY', 'addEccentricity'], ['INCLINATION', 'addInclination'], ['RA_OF_ASC_NODE', 'addRaOfAscNode'], ['ARG_OF_PERICENTER', 'addArgOfPericenter'], ['MEAN_ANOMALY', 'addMeanAnomaly'], ['BTERM', 'addBterm'], ['AGOM', 'addAgom'], ['BSTAR', 'addBstar'], ['MEAN_MOTION_DOT', 'addMeanMotionDot'], ['MEAN_MOTION_DDOT', 'addMeanMotionDdot'], ['ECOM2_Y0', 'addEcom2Y0']]) M.MOR[add](b, m[k]);
   if (!Number.isNaN(m.ACTUAL_OD_SPAN)) M.MOR.addActualOdSpan(b, m.ACTUAL_OD_SPAN);
+  if (!Number.isNaN(m.WEIGHTED_RMS)) M.MOR.addWeightedRms(b, m.WEIGHTED_RMS);
+  if (!Number.isNaN(m.DAYS_SINCE_LAST_OBS)) M.MOR.addDaysSinceLastObs(b, m.DAYS_SINCE_LAST_OBS);
+  M.MOR.addOdEpochUnixUs(b, BigInt(m.OD_EPOCH_UNIX_US));
+  if (m.WINDOWS?.length) M.MOR.addWindowRecordCheck(b, BigInt(m.WINDOW_RECORD_CHECK));
+  M.MOR.addOdObservationsUsed(b, m.OD_OBSERVATIONS_USED);
+  M.MOR.addOdTracksUsed(b, m.OD_TRACKS_USED);
   M.MOR.addNoradCatId(b, m.NORAD_CAT_ID);
   M.MOR.addOdParameters(b, m.OD_PARAMETERS);
   M.MOR.addOdSolvedFor(b, m.OD_SOLVED_FOR);
   for (const [v, add] of [[intl, 'addInternationalDesignator'], [orig, 'addOriginator'], [name, "addObjectName"], [calRef, "addCovCalibrationReference"], [cov, 'addCovarianceData'], [realism, 'addCovRealism'], [windows, 'addWindows'], [heads, 'addWindowCoeffHeads'], [tails, 'addWindowCoeffTails'], [fallback, 'addFallback']]) if (v) M.MOR[add](b, v);
+  M.MOR.addCovRealismId(b, m.COV_REALISM_ID);
   M.MOR.addMessageStatus(b, m.MESSAGE_STATUS);
   M.MOR.addMeanElementTheory(b, m.MEAN_ELEMENT_THEORY);
   M.MOR.addGravityField(b, m.GRAVITY_FIELD);
@@ -340,6 +389,7 @@ export function encode(fb, M, m) {
   M.MOR.addSolidTidesModel(b, m.SOLID_TIDES_MODEL);
   M.MOR.addSolarRadPressure(b, m.SOLAR_RAD_PRESSURE);
   M.MOR.addCovCalibration(b, m.COV_CALIBRATION);
+  M.MOR.addCovFloor(b, m.COV_FLOOR);
   M.MOR.finishSizePrefixedMORBuffer(b, M.MOR.endMOR(b));
   return b.asUint8Array();
 }

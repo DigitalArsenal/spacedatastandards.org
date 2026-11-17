@@ -62,6 +62,47 @@ inline const char *EnumNamemorMessageStatus(morMessageStatus e) {
   return EnumNamesmorMessageStatus()[index];
 }
 
+/// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+/// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+/// COVARIANCE_DATA only. Append new values only.
+enum morCovarianceFloor : uint8_t {
+  /// No covariance.
+  morCovarianceFloor_UNSTATED = 0,
+  /// At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+  /// reader of AP sets does not use this covariance (its states fly).
+  morCovarianceFloor_WRITER_THEORY_STATE = 1,
+  /// At the two-body state of the set's own mean elements: PRODUCER exactly
+  /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+  morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY = 2,
+  morCovarianceFloor_MIN = morCovarianceFloor_UNSTATED,
+  morCovarianceFloor_MAX = morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY
+};
+
+inline const morCovarianceFloor (&EnumValuesmorCovarianceFloor())[3] {
+  static const morCovarianceFloor values[] = {
+    morCovarianceFloor_UNSTATED,
+    morCovarianceFloor_WRITER_THEORY_STATE,
+    morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmorCovarianceFloor() {
+  static const char * const names[4] = {
+    "UNSTATED",
+    "WRITER_THEORY_STATE",
+    "MEAN_ELEMENTS_TWO_BODY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemorCovarianceFloor(morCovarianceFloor e) {
+  if (::flatbuffers::IsOutRange(e, morCovarianceFloor_UNSTATED, morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmorCovarianceFloor()[index];
+}
+
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 enum morGravityField : uint8_t {
   /// The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.
@@ -409,15 +450,23 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OD_SOLVED_FOR = 52,
     VT_ECOM2_Y0 = 54,
     VT_ACTUAL_OD_SPAN = 56,
-    VT_COVARIANCE_DATA = 58,
-    VT_COV_PROPAGATION = 60,
-    VT_COV_REALISM = 62,
-    VT_COV_CALIBRATION = 64,
-    VT_COV_CALIBRATION_REFERENCE = 66,
-    VT_WINDOWS = 68,
-    VT_WINDOW_COEFF_HEADS = 70,
-    VT_WINDOW_COEFF_TAILS = 72,
-    VT_FALLBACK = 74
+    VT_OD_OBSERVATIONS_USED = 58,
+    VT_OD_TRACKS_USED = 60,
+    VT_WEIGHTED_RMS = 62,
+    VT_OD_EPOCH_UNIX_US = 64,
+    VT_DAYS_SINCE_LAST_OBS = 66,
+    VT_COVARIANCE_DATA = 68,
+    VT_COV_PROPAGATION = 70,
+    VT_COV_FLOOR = 72,
+    VT_COV_REALISM_ID = 74,
+    VT_COV_REALISM = 76,
+    VT_COV_CALIBRATION = 78,
+    VT_COV_CALIBRATION_REFERENCE = 80,
+    VT_WINDOWS = 82,
+    VT_WINDOW_COEFF_HEADS = 84,
+    VT_WINDOW_COEFF_TAILS = 86,
+    VT_WINDOW_RECORD_CHECK = 88,
+    VT_FALLBACK = 90
   };
   /// The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
   uint32_t NORAD_CAT_ID() const {
@@ -532,6 +581,26 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ACTUAL_OD_SPAN() const {
     return GetField<double>(VT_ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
   }
+  /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+  int32_t OD_OBSERVATIONS_USED() const {
+    return GetField<int32_t>(VT_OD_OBSERVATIONS_USED, -1);
+  }
+  /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  int32_t OD_TRACKS_USED() const {
+    return GetField<int32_t>(VT_OD_TRACKS_USED, -1);
+  }
+  /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+  double WEIGHTED_RMS() const {
+    return GetField<double>(VT_WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
+  }
+  /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  int64_t OD_EPOCH_UNIX_US() const {
+    return GetField<int64_t>(VT_OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+  }
+  /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+  double DAYS_SINCE_LAST_OBS() const {
+    return GetField<double>(VT_DAYS_SINCE_LAST_OBS, std::numeric_limits<double>::quiet_NaN());
+  }
   /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
   /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
   /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -543,7 +612,18 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const MORCovariancePropagation *COV_PROPAGATION() const {
     return GetStruct<const MORCovariancePropagation *>(VT_COV_PROPAGATION);
   }
-  /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+  /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+  /// covariance as its $OCM.
+  morCovarianceFloor COV_FLOOR() const {
+    return static_cast<morCovarianceFloor>(GetField<uint8_t>(VT_COV_FLOOR, 0));
+  }
+  /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  uint16_t COV_REALISM_ID() const {
+    return GetField<uint16_t>(VT_COV_REALISM_ID, 0);
+  }
+  /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   const CVR *COV_REALISM() const {
     return GetPointer<const CVR *>(VT_COV_REALISM);
   }
@@ -556,8 +636,9 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_COV_CALIBRATION_REFERENCE);
   }
   /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-  /// the rows, and one that cannot reproduce the asset's build statement must.
+  /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   const ::flatbuffers::Vector<const MORWindow *> *WINDOWS() const {
     return GetPointer<const ::flatbuffers::Vector<const MORWindow *> *>(VT_WINDOWS);
   }
@@ -570,6 +651,12 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
   const ::flatbuffers::Vector<float> *WINDOW_COEFF_TAILS() const {
     return GetPointer<const ::flatbuffers::Vector<float> *>(VT_WINDOW_COEFF_TAILS);
+  }
+  /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  uint64_t WINDOW_RECORD_CHECK() const {
+    return GetField<uint64_t>(VT_WINDOW_RECORD_CHECK, 0);
   }
   /// The object's own element set for times beyond what this record serves (a reader's fallback
   /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
@@ -610,9 +697,16 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_OD_SOLVED_FOR, 4) &&
            VerifyField<double>(verifier, VT_ECOM2_Y0, 8) &&
            VerifyField<double>(verifier, VT_ACTUAL_OD_SPAN, 8) &&
+           VerifyField<int32_t>(verifier, VT_OD_OBSERVATIONS_USED, 4) &&
+           VerifyField<int32_t>(verifier, VT_OD_TRACKS_USED, 4) &&
+           VerifyField<double>(verifier, VT_WEIGHTED_RMS, 8) &&
+           VerifyField<int64_t>(verifier, VT_OD_EPOCH_UNIX_US, 8) &&
+           VerifyField<double>(verifier, VT_DAYS_SINCE_LAST_OBS, 8) &&
            VerifyOffset(verifier, VT_COVARIANCE_DATA) &&
            verifier.VerifyVector(COVARIANCE_DATA()) &&
            VerifyField<MORCovariancePropagation>(verifier, VT_COV_PROPAGATION, 8) &&
+           VerifyField<uint8_t>(verifier, VT_COV_FLOOR, 1) &&
+           VerifyField<uint16_t>(verifier, VT_COV_REALISM_ID, 2) &&
            VerifyOffset(verifier, VT_COV_REALISM) &&
            verifier.VerifyTable(COV_REALISM()) &&
            VerifyField<int8_t>(verifier, VT_COV_CALIBRATION, 1) &&
@@ -624,6 +718,7 @@ struct MOR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(WINDOW_COEFF_HEADS()) &&
            VerifyOffset(verifier, VT_WINDOW_COEFF_TAILS) &&
            verifier.VerifyVector(WINDOW_COEFF_TAILS()) &&
+           VerifyField<uint64_t>(verifier, VT_WINDOW_RECORD_CHECK, 8) &&
            VerifyOffset(verifier, VT_FALLBACK) &&
            verifier.VerifyTable(FALLBACK()) &&
            verifier.EndTable();
@@ -715,11 +810,32 @@ struct MORBuilder {
   void add_ACTUAL_OD_SPAN(double ACTUAL_OD_SPAN) {
     fbb_.AddElement<double>(MOR::VT_ACTUAL_OD_SPAN, ACTUAL_OD_SPAN, std::numeric_limits<double>::quiet_NaN());
   }
+  void add_OD_OBSERVATIONS_USED(int32_t OD_OBSERVATIONS_USED) {
+    fbb_.AddElement<int32_t>(MOR::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, -1);
+  }
+  void add_OD_TRACKS_USED(int32_t OD_TRACKS_USED) {
+    fbb_.AddElement<int32_t>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
+  }
+  void add_WEIGHTED_RMS(double WEIGHTED_RMS) {
+    fbb_.AddElement<double>(MOR::VT_WEIGHTED_RMS, WEIGHTED_RMS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_OD_EPOCH_UNIX_US(int64_t OD_EPOCH_UNIX_US) {
+    fbb_.AddElement<int64_t>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, (-9223372036854775807LL - 1LL));
+  }
+  void add_DAYS_SINCE_LAST_OBS(double DAYS_SINCE_LAST_OBS) {
+    fbb_.AddElement<double>(MOR::VT_DAYS_SINCE_LAST_OBS, DAYS_SINCE_LAST_OBS, std::numeric_limits<double>::quiet_NaN());
+  }
   void add_COVARIANCE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA) {
     fbb_.AddOffset(MOR::VT_COVARIANCE_DATA, COVARIANCE_DATA);
   }
   void add_COV_PROPAGATION(const MORCovariancePropagation *COV_PROPAGATION) {
     fbb_.AddStruct(MOR::VT_COV_PROPAGATION, COV_PROPAGATION);
+  }
+  void add_COV_FLOOR(morCovarianceFloor COV_FLOOR) {
+    fbb_.AddElement<uint8_t>(MOR::VT_COV_FLOOR, static_cast<uint8_t>(COV_FLOOR), 0);
+  }
+  void add_COV_REALISM_ID(uint16_t COV_REALISM_ID) {
+    fbb_.AddElement<uint16_t>(MOR::VT_COV_REALISM_ID, COV_REALISM_ID, 0);
   }
   void add_COV_REALISM(::flatbuffers::Offset<CVR> COV_REALISM) {
     fbb_.AddOffset(MOR::VT_COV_REALISM, COV_REALISM);
@@ -738,6 +854,9 @@ struct MORBuilder {
   }
   void add_WINDOW_COEFF_TAILS(::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS) {
     fbb_.AddOffset(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
+  }
+  void add_WINDOW_RECORD_CHECK(uint64_t WINDOW_RECORD_CHECK) {
+    fbb_.AddElement<uint64_t>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
   }
   void add_FALLBACK(::flatbuffers::Offset<MPE> FALLBACK) {
     fbb_.AddOffset(MOR::VT_FALLBACK, FALLBACK);
@@ -782,16 +901,28 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
     uint32_t OD_SOLVED_FOR = 0,
     double ECOM2_Y0 = 0.0,
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    int32_t OD_OBSERVATIONS_USED = -1,
+    int32_t OD_TRACKS_USED = -1,
+    double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
+    int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> COVARIANCE_DATA = 0,
     const MORCovariancePropagation *COV_PROPAGATION = nullptr,
+    morCovarianceFloor COV_FLOOR = morCovarianceFloor_UNSTATED,
+    uint16_t COV_REALISM_ID = 0,
     ::flatbuffers::Offset<CVR> COV_REALISM = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
     ::flatbuffers::Offset<::flatbuffers::String> COV_CALIBRATION_REFERENCE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<const MORWindow *>> WINDOWS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> WINDOW_COEFF_HEADS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<float>> WINDOW_COEFF_TAILS = 0,
+    uint64_t WINDOW_RECORD_CHECK = 0,
     ::flatbuffers::Offset<MPE> FALLBACK = 0) {
   MORBuilder builder_(_fbb);
+  builder_.add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK);
+  builder_.add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS);
+  builder_.add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US);
+  builder_.add_WEIGHTED_RMS(WEIGHTED_RMS);
   builder_.add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN);
   builder_.add_ECOM2_Y0(ECOM2_Y0);
   builder_.add_MEAN_MOTION_DDOT(MEAN_MOTION_DDOT);
@@ -814,13 +945,17 @@ inline ::flatbuffers::Offset<MOR> CreateMOR(
   builder_.add_COV_REALISM(COV_REALISM);
   builder_.add_COV_PROPAGATION(COV_PROPAGATION);
   builder_.add_COVARIANCE_DATA(COVARIANCE_DATA);
+  builder_.add_OD_TRACKS_USED(OD_TRACKS_USED);
+  builder_.add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED);
   builder_.add_OD_SOLVED_FOR(OD_SOLVED_FOR);
   builder_.add_OD_PARAMETERS(OD_PARAMETERS);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_INTERNATIONAL_DESIGNATOR(INTERNATIONAL_DESIGNATOR);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
+  builder_.add_COV_REALISM_ID(COV_REALISM_ID);
   builder_.add_COV_CALIBRATION(COV_CALIBRATION);
+  builder_.add_COV_FLOOR(COV_FLOOR);
   builder_.add_SOLAR_RAD_PRESSURE(SOLAR_RAD_PRESSURE);
   builder_.add_SOLID_TIDES_MODEL(SOLID_TIDES_MODEL);
   builder_.add_MAXIMUM_ZONAL_DEGREE(MAXIMUM_ZONAL_DEGREE);
@@ -860,14 +995,22 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
     uint32_t OD_SOLVED_FOR = 0,
     double ECOM2_Y0 = 0.0,
     double ACTUAL_OD_SPAN = std::numeric_limits<double>::quiet_NaN(),
+    int32_t OD_OBSERVATIONS_USED = -1,
+    int32_t OD_TRACKS_USED = -1,
+    double WEIGHTED_RMS = std::numeric_limits<double>::quiet_NaN(),
+    int64_t OD_EPOCH_UNIX_US = (-9223372036854775807LL - 1LL),
+    double DAYS_SINCE_LAST_OBS = std::numeric_limits<double>::quiet_NaN(),
     const std::vector<double> *COVARIANCE_DATA = nullptr,
     const MORCovariancePropagation *COV_PROPAGATION = nullptr,
+    morCovarianceFloor COV_FLOOR = morCovarianceFloor_UNSTATED,
+    uint16_t COV_REALISM_ID = 0,
     ::flatbuffers::Offset<CVR> COV_REALISM = 0,
     covarianceCalibration COV_CALIBRATION = covarianceCalibration_Unspecified,
     const char *COV_CALIBRATION_REFERENCE = nullptr,
     const std::vector<MORWindow> *WINDOWS = nullptr,
     const std::vector<double> *WINDOW_COEFF_HEADS = nullptr,
     const std::vector<float> *WINDOW_COEFF_TAILS = nullptr,
+    uint64_t WINDOW_RECORD_CHECK = 0,
     ::flatbuffers::Offset<MPE> FALLBACK = 0) {
   auto INTERNATIONAL_DESIGNATOR__ = INTERNATIONAL_DESIGNATOR ? _fbb.CreateString(INTERNATIONAL_DESIGNATOR) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
@@ -906,14 +1049,22 @@ inline ::flatbuffers::Offset<MOR> CreateMORDirect(
       OD_SOLVED_FOR,
       ECOM2_Y0,
       ACTUAL_OD_SPAN,
+      OD_OBSERVATIONS_USED,
+      OD_TRACKS_USED,
+      WEIGHTED_RMS,
+      OD_EPOCH_UNIX_US,
+      DAYS_SINCE_LAST_OBS,
       COVARIANCE_DATA__,
       COV_PROPAGATION,
+      COV_FLOOR,
+      COV_REALISM_ID,
       COV_REALISM,
       COV_CALIBRATION,
       COV_CALIBRATION_REFERENCE__,
       WINDOWS__,
       WINDOW_COEFF_HEADS__,
       WINDOW_COEFF_TAILS__,
+      WINDOW_RECORD_CHECK,
       FALLBACK);
 }
 

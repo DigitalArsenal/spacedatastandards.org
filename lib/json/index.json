@@ -110914,6 +110914,14 @@
                         "TEST"
                     ]
                 },
+                "morCovarianceFloor": {
+                    "type": "string",
+                    "enum": [
+                        "UNSTATED",
+                        "WRITER_THEORY_STATE",
+                        "MEAN_ELEMENTS_TWO_BODY"
+                    ]
+                },
                 "morGravityField": {
                     "type": "string",
                     "enum": [
@@ -111433,6 +111441,32 @@
                             "type": "number",
                             "description": "The span of the observations the orbit determination used, days; NaN when not stated."
                         },
+                        "OD_OBSERVATIONS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Observations the orbit determination used; -1 when not stated ($OCM 0)."
+                        },
+                        "OD_TRACKS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
+                        },
+                        "WEIGHTED_RMS": {
+                            "type": "number",
+                            "description": "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
+                        },
+                        "OD_EPOCH_UNIX_US": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+                        },
+                        "DAYS_SINCE_LAST_OBS": {
+                            "type": "number",
+                            "description": "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated."
+                        },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
@@ -111444,9 +111478,19 @@
                             "$ref": "#/definitions/MORCovariancePropagation",
                             "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
                         },
+                        "COV_FLOOR": {
+                            "$ref": "#/definitions/morCovarianceFloor",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM."
+                        },
+                        "COV_REALISM_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not."
+                        },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM."
+                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
                         },
                         "COV_CALIBRATION": {
                             "$ref": "#/definitions/covarianceCalibration",
@@ -111461,7 +111505,7 @@
                             "items": {
                                 "$ref": "#/definitions/MORWindow"
                             },
-                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must."
+                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
                         },
                         "WINDOW_COEFF_HEADS": {
                             "type": "array",
@@ -111476,6 +111520,12 @@
                                 "type": "number"
                             },
                             "description": "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+                        },
+                        "WINDOW_RECORD_CHECK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
                         },
                         "FALLBACK": {
                             "$ref": "#/definitions/MPE",
@@ -132564,6 +132614,14 @@
                         "UNSPECIFIED",
                         "REAL",
                         "TEST"
+                    ]
+                },
+                "morCovarianceFloor": {
+                    "type": "string",
+                    "enum": [
+                        "UNSTATED",
+                        "WRITER_THEORY_STATE",
+                        "MEAN_ELEMENTS_TWO_BODY"
                     ]
                 },
                 "morGravityField": {
@@ -161797,6 +161855,30 @@
                         "DERIVED_BUILD": {
                             "$ref": "#/definitions/DPMDerivedBuild",
                             "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+                        },
+                        "COV_REALISM_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DPMRealismModel"
+                            },
+                            "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DPMRealismModel": {
+                    "type": "object",
+                    "description": "One covariance realism model of an asset: the realism entry its records\nwould otherwise each repeat.",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The model's number within the asset, 1 or more; a record names it."
+                        },
+                        "REALISM": {
+                            "$ref": "#/definitions/CVR",
+                            "description": "The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM\nentry of each record that names this ID."
                         }
                     },
                     "additionalProperties": false
@@ -182691,6 +182773,32 @@
                             "type": "number",
                             "description": "The span of the observations the orbit determination used, days; NaN when not stated."
                         },
+                        "OD_OBSERVATIONS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Observations the orbit determination used; -1 when not stated ($OCM 0)."
+                        },
+                        "OD_TRACKS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
+                        },
+                        "WEIGHTED_RMS": {
+                            "type": "number",
+                            "description": "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
+                        },
+                        "OD_EPOCH_UNIX_US": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+                        },
+                        "DAYS_SINCE_LAST_OBS": {
+                            "type": "number",
+                            "description": "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated."
+                        },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
@@ -182702,9 +182810,19 @@
                             "$ref": "#/definitions/MORCovariancePropagation",
                             "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
                         },
+                        "COV_FLOOR": {
+                            "$ref": "#/definitions/morCovarianceFloor",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM."
+                        },
+                        "COV_REALISM_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not."
+                        },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM."
+                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
                         },
                         "COV_CALIBRATION": {
                             "$ref": "#/definitions/covarianceCalibration",
@@ -182719,7 +182837,7 @@
                             "items": {
                                 "$ref": "#/definitions/MORWindow"
                             },
-                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must."
+                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
                         },
                         "WINDOW_COEFF_HEADS": {
                             "type": "array",
@@ -182734,6 +182852,12 @@
                                 "type": "number"
                             },
                             "description": "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+                        },
+                        "WINDOW_RECORD_CHECK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
                         },
                         "FALLBACK": {
                             "$ref": "#/definitions/MPE",
@@ -308314,6 +308438,25 @@
         "DPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ]
+                },
+                "covarianceRule": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Operator",
+                        "ScaledFit",
+                        "SourceModel",
+                        "PooledModel",
+                        "EmpiricalHistoryShrunk"
+                    ]
+                },
                 "pvnSourceKind": {
                     "type": "string",
                     "enum": [
@@ -308353,6 +308496,119 @@
                         "SDN_QUERY",
                         "OTHER"
                     ]
+                },
+                "CVR": {
+                    "type": "object",
+                    "description": "Covariance Realism",
+                    "properties": {
+                        "RULE": {
+                            "$ref": "#/definitions/covarianceRule",
+                            "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration."
+                        },
+                        "REGIME": {
+                            "type": "string",
+                            "description": "Orbit regime of the cell, as the model names it."
+                        },
+                        "AGE_DAYS": {
+                            "type": "number",
+                            "description": "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+                        },
+                        "HORIZON_DAYS": {
+                            "type": "number",
+                            "description": "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+                        },
+                        "MEASURED_LINEAGE": {
+                            "type": "string",
+                            "description": "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+                        },
+                        "TEST_WINDOW": {
+                            "type": "string",
+                            "description": "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+                        },
+                        "MEAN_D2_OVER_3": {
+                            "type": "number",
+                            "description": "Mean of d2/3 over the held-out samples. NaN when not measured."
+                        },
+                        "COVERAGE_95": {
+                            "type": "number",
+                            "description": "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+                        },
+                        "SAMPLES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of held-out samples the test used."
+                        },
+                        "OBJECTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of distinct objects the samples came from."
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+                        },
+                        "CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+                        },
+                        "EVIDENCE": {
+                            "type": "string",
+                            "description": "Identifier of the report or record that holds the test."
+                        },
+                        "HISTORY_SAMPLES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES."
+                        },
+                        "HISTORY_SETS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS."
+                        },
+                        "HISTORY_WINDOW": {
+                            "type": "string",
+                            "description": "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS."
+                        },
+                        "SHRINKAGE_WEIGHT": {
+                            "type": "number",
+                            "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+                        },
+                        "TRUTH_EPOCHS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated."
+                        },
+                        "COVERAGE_1_SIGMA_AXIS1": {
+                            "type": "number",
+                            "description": "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured."
+                        },
+                        "COVERAGE_1_SIGMA_AXIS2": {
+                            "type": "number"
+                        },
+                        "COVERAGE_1_SIGMA_AXIS3": {
+                            "type": "number"
+                        },
+                        "COVERAGE_3_SIGMA_AXIS1": {
+                            "type": "number",
+                            "description": "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973."
+                        },
+                        "COVERAGE_3_SIGMA_AXIS2": {
+                            "type": "number"
+                        },
+                        "COVERAGE_3_SIGMA_AXIS3": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "PVN": {
                     "type": "object",
@@ -308517,6 +308773,30 @@
                         "DERIVED_BUILD": {
                             "$ref": "#/definitions/DPMDerivedBuild",
                             "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+                        },
+                        "COV_REALISM_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DPMRealismModel"
+                            },
+                            "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DPMRealismModel": {
+                    "type": "object",
+                    "description": "One covariance realism model of an asset: the realism entry its records\nwould otherwise each repeat.",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The model's number within the asset, 1 or more; a record names it."
+                        },
+                        "REALISM": {
+                            "$ref": "#/definitions/CVR",
+                            "description": "The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM\nentry of each record that names this ID."
                         }
                     },
                     "additionalProperties": false

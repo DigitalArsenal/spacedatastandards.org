@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// The minimum orbit record ($MOR) and the two additions it needs ($MPE BTERM and AGOM, $DPM DPMAsset
-// RECORD_PROVENANCE and DERIVED_BUILD).
+// The minimum orbit record ($MOR) and the additions it needs ($MPE BTERM and AGOM, $DPM DPMAsset
+// RECORD_PROVENANCE, DERIVED_BUILD and COV_REALISM_MODELS).
 //   a. four records (AP with gravity terms, covariance, realism, two windows of rows and a fallback set; AP with
 //      the ECOM2 Y0 term, the slow set, the solid tide and the output-map radiation text; SGP4XP; SGP4) are written
 //      with the generated bindings and read back equal; each expands to one $OCM (written, read back) that reduces
-//      to the same record; every fixed text of the expansion is the one schema/MOR/main.fbs states;
+//      to the same record; every fixed text of the expansion is the one schema/MOR/main.fbs states; read without
+//      its asset a record keeps its covariance and the floor COV_FLOOR names, and no rows; rows whose
+//      WINDOW_RECORD_CHECK does not match the elements are void;
 //   b. an $OCM carrying a field the record cannot say is not reducible, by name, for every class the schema lists;
 //      the descriptive fields the schema lists are dropped and reported;
 //   c. the epoch converts both ways without loss, and refuses a leap second and a seventh fraction digit;
@@ -43,21 +45,24 @@ try {
   // ---- the asset statement and four records ----------------------------------------------------------------
   const provenance = new O.PVNT();
   provenance.PROVIDER_ID = 'com.example.fitter';
-  provenance.PRODUCER = 'com.example.fitter 1.2.3';
+  provenance.PRODUCER = 'com.spacedatanetwork.sdn-ap-propagator 0.6.64';
   provenance.SOURCE_ID = 'example-batch-1';
   const buildStatement = { BUILDER_NAME: 'example-builder', BUILDER_VERSION: '1.2.3', BUILDER_DIGEST: [...crypto.createHash('sha256').update('artifact').digest()], ENVIRONMENT_DIGEST: [...crypto.createHash('sha256').update('pcf').digest()], TOL_POSITION: 5e-6, TOL_VELOCITY: 5e-8 };
   const recordDigest = (m) => [...crypto.createHash('sha256').update(`${m.NORAD_CAT_ID} ${m.EPOCH_UNIX_US} ${m.MEAN_MOTION}`).digest()];
-  const asset = { provenance, build: buildStatement, recordDigest };
+  const sharedRealism = Object.assign(new O.CVRT(), { MODEL_ID: 'example process noise', REGIME: 'DRAG', RULE: 3, CALIBRATION: 1, COVERAGE_95: 0.951, SCALE_FACTOR: 1.25 });
+  const asset = { provenance, build: buildStatement, recordDigest, realismModels: [{ ID: 1, REALISM: sharedRealism }] };
   const EPOCH = C.epochUs('2026-11-16T12:34:56.123456');
   const elements = (m, n) => Object.assign(m, { MEAN_MOTION: n, ECCENTRICITY: 0.0012345678901234, INCLINATION: 51.6412345678, RA_OF_ASC_NODE: 123.456789012, ARG_OF_PERICENTER: 98.7654321098, MEAN_ANOMALY: 261.234567891 });
 
   const ap = elements(new M.MORT(), 15.4987654321);
   Object.assign(ap, { NORAD_CAT_ID: 90001, INTERNATIONAL_DESIGNATOR: '2026-001A', ORIGINATOR: 'SDN', MESSAGE_STATUS: M.morMessageStatus.REAL, EPOCH_UNIX_US: EPOCH,
     MEAN_ELEMENT_THEORY: M.meanElementSource.AP, BTERM: 0.0123456789, AGOM: 0.0234567891, GRAVITY_FIELD: M.morGravityField.EGM2008, MAXIMUM_TESSERAL_DEGREE: 12, MAXIMUM_ZONAL_DEGREE: 6,
-    OD_PARAMETERS: (1 << 1) | (1 << 3), OD_SOLVED_FOR: (1 << 1) | (1 << 3), ACTUAL_OD_SPAN: 7.5 });
+    OD_PARAMETERS: (1 << 1) | (1 << 3), OD_SOLVED_FOR: (1 << 1) | (1 << 3), ACTUAL_OD_SPAN: 7.5,
+    OD_OBSERVATIONS_USED: 412, WEIGHTED_RMS: 1.07, OD_EPOCH_UNIX_US: EPOCH - 3600000000n, DAYS_SINCE_LAST_OBS: 0.25 });
   ap.COVARIANCE_DATA = Array.from({ length: 36 }, (_, k) => (k + 1) * 1.0000001e-3);
   ap.COV_PROPAGATION = new M.MORCovariancePropagationT(1e-6, 2e-7, 3e-6, 4e-8, 5e-8, 6e-6, 1e-9, 2e-9, 3e-9, 4e-9, -120, 0.25, 1.5e-4);
-  ap.COV_REALISM = Object.assign(new M.CVRT(), { MODEL_ID: 'example process noise', REGIME: 'DRAG', RULE: 3, CALIBRATION: 1, COVERAGE_95: 0.951, SCALE_FACTOR: 1.25 });
+  ap.COV_FLOOR = M.morCovarianceFloor.MEAN_ELEMENTS_TWO_BODY;
+  ap.COV_REALISM_ID = 1; // the asset's model: the record names it
   ap.COV_CALIBRATION = M.covarianceCalibration.Calibrated;
   ap.COV_CALIBRATION_REFERENCE = 'example-calibration-report';
   // window 1: position 6 (head 4) and velocity 5 (head 3); window 2 refused by the builder
@@ -66,6 +71,7 @@ try {
   ap.WINDOWS = [new M.MORWindowT(1440, 1440, M.morWindowStatus.SERVED, 6, 4, 5, 3), new M.MORWindowT(4320, 1440, M.morWindowStatus.TOLERANCE_NOT_HELD, 0, 0, 0, 0)];
   ap.WINDOW_COEFF_HEADS = [...pos.flatMap((a) => a.slice(0, 4)), ...vel.flatMap((a) => a.slice(0, 3))];
   ap.WINDOW_COEFF_TAILS = [...pos.flatMap((a) => a.slice(4)), ...vel.flatMap((a) => a.slice(3))];
+  ap.WINDOW_RECORD_CHECK = C.recordCheck(recordDigest(ap));
   ap.FALLBACK = elements(new M.MPET(), 15.4987);
   Object.assign(ap.FALLBACK, { EPOCH: Number(EPOCH - 3600000000n) / 1e6, MEAN_ELEMENT_THEORY: M.meanElementSource.SGP4XP, BTERM: 0.0125, AGOM: 0.023 });
 
@@ -75,6 +81,11 @@ try {
     SOLAR_RAD_PRESSURE: M.morRadiationModel.SPHERE_OUTPUT_MAP_ECOM2_Y0, OD_PARAMETERS: (1 << 1) | (1 << 3) | (1 << 6), OD_SOLVED_FOR: (1 << 3) | (1 << 6), ECOM2_Y0: -2.5e-9 });
   const xp = elements(new M.MORT(), 14.2);
   Object.assign(xp, { NORAD_CAT_ID: 90003, EPOCH_UNIX_US: EPOCH, MEAN_ELEMENT_THEORY: M.meanElementSource.SGP4XP, BTERM: 0.02, AGOM: 0.01 });
+  // a covariance whose realism is the record's own
+  xp.COVARIANCE_DATA = Array.from({ length: 21 }, (_, k) => (k + 1) * 2.5e-4);
+  xp.COV_PROPAGATION = new M.MORCovariancePropagationT(1e-6, 0, 2e-6, 0, 0, 3e-6, 1e-9, 1e-9, 1e-9, 0, 0, 0, 0);
+  xp.COV_FLOOR = M.morCovarianceFloor.MEAN_ELEMENTS_TWO_BODY;
+  xp.COV_REALISM = Object.assign(new M.CVRT(), { MODEL_ID: 'example per-record width 0.731' });
   const sgp4 = elements(new M.MORT(), 13.9);
   Object.assign(sgp4, { NORAD_CAT_ID: 90004, OBJECT_NAME: 'EXAMPLE', EPOCH_UNIX_US: EPOCH, MEAN_ELEMENT_THEORY: M.meanElementSource.SGP4, BSTAR: 1.2e-4, MEAN_MOTION_DOT: 3e-6, MEAN_MOTION_DDOT: 1e-12 });
   const records = { ap, apY0, xp, sgp4 };
@@ -121,6 +132,11 @@ try {
   assert.equal(expanded.sgp4.PERTURBATIONS.WEATHER_SOURCE, O.pcfWeatherSource.NONE);
   assert.deepEqual([e.COV_SIZE, e.COV_TYPE, e.COV_PARAMETERS, e.COV_UNITS], [8, 'CARTPV', ['DRAG_AREA_OVER_MASS', 'SRP_AREA_OVER_MASS'], ['km', 'km', 'km', 'km/s', 'km/s', 'km/s', 'm**2/kg', 'm**2/kg']]);
   assert.deepEqual(y.ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS.map((p) => [p.NAME, p.SOLVED_FOR, p.UNITS]), [['DRAG_AREA_OVER_MASS', false, 'm**2/kg'], ['SRP_AREA_OVER_MASS', true, 'm**2/kg'], ['ECOM2_Y0', true, 'm/s**2']]);
+  assert.deepEqual([e.ORBIT_DETERMINATION.OD_OBSERVATIONS_USED, e.ORBIT_DETERMINATION.OD_TRACKS_USED, e.ORBIT_DETERMINATION.WEIGHTED_RMS, e.ORBIT_DETERMINATION.OD_EPOCH, e.ORBIT_DETERMINATION.DAYS_SINCE_LAST_OBS],
+    [412, 0, 1.07, '2026-11-16T11:34:56.123456', 0.25], 'a: the five values a CDM takes; tracks not stated is $OCM 0');
+  assert.equal(expanded.sgp4.ORBIT_DETERMINATION, null, 'a: nothing stated, no orbit determination');
+  assert.equal(e.COV_REALISM[0].MODEL_ID, 'example process noise', 'a: the named model expands from the asset');
+  assert.equal(expanded.xp.COV_REALISM[0].MODEL_ID, 'example per-record width 0.731', 'a: the record\'s own realism expands as written');
   assert.deepEqual([e.METADATA.CATALOG_NAME, e.METADATA.OBJECT_DESIGNATOR, e.METADATA.TIME_SYSTEM, e.CENTER_NAME, e.HEADER.CCSDS_OCM_VERS], ['NORAD', '90001', 'UTC', 'EARTH', '3.0']);
   assert.equal(e.PROVENANCE.PRODUCER, provenance.PRODUCER);
   const de = e.DERIVED_EPHEMERIS;
@@ -128,6 +144,20 @@ try {
   const r0 = de.POSITION_RECORDS[0];
   assert.deepEqual([r0.NUM_COEFFICIENTS, r0.POS_COEFF_HEAD_COUNT, r0.VEL_COEFF_HEAD_COUNT, r0.EPOCH_MID], [6, 4, 3, '2026-11-16T12:58:56.123456']);
   assert.ok(Object.is(r0.VEL_COEFF_X[5], 0), 'a: the shorter velocity series is padded with +0.0');
+  // A: alone, without its asset, the record still carries its covariance and the floor it names
+  const alone = C.expand(M.MOR.getSizePrefixedRootAsMOR(new fb.ByteBuffer(C.encode(fb, M, ap))).unpack(), null, O).ocm;
+  assert.equal(alone.COVARIANCE_DATA.length, 36, 'A: the covariance without the asset');
+  assert.equal(C.floorOf(alone.PROVENANCE.PRODUCER), M.morCovarianceFloor.MEAN_ELEMENTS_TWO_BODY, 'A: the floor text without the asset');
+  assert.deepEqual(alone.COV_REALISM, [], 'A: the named model\'s figures need the asset');
+  assert.equal(alone.DERIVED_EPHEMERIS, null, 'D: no rows without the asset\'s DERIVED_BUILD');
+  assert.equal(C.floorOf('com.spacedatanetwork.sdn-ap-propagator 0.6.38'), M.morCovarianceFloor.WRITER_THEORY_STATE);
+  assert.equal(C.floorOf('com.spacedatanetwork.sdn-ap-propagator 0.6.39'), M.morCovarianceFloor.MEAN_ELEMENTS_TWO_BODY);
+  assert.equal(C.floorOf('com.spacedatanetwork.sdn-ap-propagator 0.6.39-rc1'), M.morCovarianceFloor.WRITER_THEORY_STATE);
+  assert.equal(C.floorOf(null), M.morCovarianceFloor.WRITER_THEORY_STATE);
+  // D: elements rewritten under kept rows: the check fails and the rows are void
+  const rewritten = Object.assign(Object.create(Object.getPrototypeOf(ap)), ap, { MEAN_MOTION: ap.MEAN_MOTION + 1e-9 });
+  assert.equal(C.expand(rewritten, asset, O).ocm.DERIVED_EPHEMERIS, null, 'D: a mismatched check voids the rows');
+  assert.notEqual(C.expand(ap, asset, O).ocm.DERIVED_EPHEMERIS, null, 'D: a matching check keeps them');
   console.log('PASS a: four records written, read, expanded to $OCM and reduced back unchanged; fixed texts as stated');
 
   // ---- b: not reducible, by name; descriptive fields dropped ----------------------------------------------------
@@ -159,10 +189,10 @@ try {
     assert.equal(r.mor, null, `b: an $OCM with ${name} is not reducible`);
     assert.ok(r.problems.length > 0, `b: ${name} is named`);
   }
-  const descriptive = mutate((o) => { o.HEADER.COMMENT = ['note']; o.HEADER.MESSAGE_ID = 'm-1'; o.ORBIT_DETERMINATION.WEIGHTED_RMS = 1.5; o.ORBIT_DETERMINATION.OD_OBSERVATIONS_USED = 42; o.DERIVED_EPHEMERIS.POSITION_RECORDS[0].MAX_POSITION_RESIDUAL = 1e-6; });
+  const descriptive = mutate((o) => { o.HEADER.COMMENT = ['note']; o.HEADER.MESSAGE_ID = 'm-1'; o.ORBIT_DETERMINATION.SEDR = 1.5; o.ORBIT_DETERMINATION.OBS_AVAILABLE = 42; o.DERIVED_EPHEMERIS.POSITION_RECORDS[0].MAX_POSITION_RESIDUAL = 1e-6; });
   const kept = C.reduce(descriptive, asset, O, M);
   assert.deepEqual(kept.problems, []);
-  assert.deepEqual(kept.dropped.sort(), ['DERIVED_EPHEMERIS.POSITION_RECORDS.MAX_POSITION_RESIDUAL', 'HEADER.COMMENT', 'HEADER.MESSAGE_ID', 'ORBIT_DETERMINATION.OD_OBSERVATIONS_USED', 'ORBIT_DETERMINATION.WEIGHTED_RMS']);
+  assert.deepEqual(kept.dropped.sort(), ['DERIVED_EPHEMERIS.POSITION_RECORDS.MAX_POSITION_RESIDUAL', 'HEADER.COMMENT', 'HEADER.MESSAGE_ID', 'ORBIT_DETERMINATION.OBS_AVAILABLE', 'ORBIT_DETERMINATION.SEDR']);
   console.log(`PASS b: ${Object.keys(refusals).length} classes of field not reducible, each named; 5 descriptive fields dropped and reported`);
 
   // ---- c: the epoch ------------------------------------------------------------------------------------------------
@@ -200,26 +230,30 @@ try {
   const assetEntry = Object.assign(new D.DPMAssetT(), { CID: 'bafy-example', SCHEMA_NAME: 'MOR.fbs', BYTE_LENGTH: 1234n });
   assetEntry.RECORD_PROVENANCE = Object.assign(new D.PVNT(), provenance);
   assetEntry.DERIVED_BUILD = Object.assign(new D.DPMDerivedBuildT(), buildStatement);
+  const model = Object.assign(new D.DPMRealismModelT(), { ID: 1 });
+  model.REALISM = Object.assign(new D.CVRT(), sharedRealism);
+  assetEntry.COV_REALISM_MODELS = [model];
   dpm.ASSETS = [assetEntry];
   const dpmBytes = finish(dpm, '$DPM');
   const newDpm = D.DPM.getRootAsDPM(new fb.ByteBuffer(dpmBytes)).unpack();
   assert.equal(newDpm.ASSETS[0].RECORD_PROVENANCE.PRODUCER, provenance.PRODUCER);
   assert.deepEqual(newDpm.ASSETS[0].DERIVED_BUILD.BUILDER_DIGEST, buildStatement.BUILDER_DIGEST);
-  const newPlain = plain(newDpm); for (const a of newPlain.ASSETS) { delete a.RECORD_PROVENANCE; delete a.DERIVED_BUILD; }
+  assert.equal(newDpm.ASSETS[0].COV_REALISM_MODELS[0].REALISM.MODEL_ID, sharedRealism.MODEL_ID);
+  const newPlain = plain(newDpm); for (const a of newPlain.ASSETS) { delete a.RECORD_PROVENANCE; delete a.DERIVED_BUILD; delete a.COV_REALISM_MODELS; }
   assert.deepEqual(plain(OD.DPM.getRootAsDPM(new fb.ByteBuffer(dpmBytes)).unpack()), newPlain, 'e: 1.285.0 reads the new $DPM');
   console.log('PASS e: 1.285.0 TypeScript reads the new $MPE and $DPM with every existing field unchanged');
 
   // ---- f: sizes of the AP record -----------------------------------------------------------------------------------
   const size = (fn) => { const m = Object.assign(Object.create(Object.getPrototypeOf(ap)), ap); fn(m); return C.encode(fb, M, m).length; };
-  const none = (m) => { m.COVARIANCE_DATA = []; m.COV_PROPAGATION = null; m.COV_REALISM = null; m.COV_CALIBRATION = 0; m.COV_CALIBRATION_REFERENCE = null; m.WINDOWS = []; m.WINDOW_COEFF_HEADS = []; m.WINDOW_COEFF_TAILS = []; m.FALLBACK = null; };
+  const none = (m) => { m.COVARIANCE_DATA = []; m.COV_PROPAGATION = null; m.COV_REALISM = null; m.COV_REALISM_ID = 0; m.COV_FLOOR = 0; m.COV_CALIBRATION = 0; m.COV_CALIBRATION_REFERENCE = null; m.WINDOWS = []; m.WINDOW_COEFF_HEADS = []; m.WINDOW_COEFF_TAILS = []; m.WINDOW_RECORD_CHECK = 0n; m.FALLBACK = null; };
   const base = size(none);
-  const withCov = size((m) => { const c = m.COV_REALISM; none(m); Object.assign(m, { COVARIANCE_DATA: ap.COVARIANCE_DATA, COV_PROPAGATION: ap.COV_PROPAGATION, COV_REALISM: Object.assign(new M.CVRT(), { MODEL_ID: c.MODEL_ID }) }); });
+  const withCov = size((m) => { none(m); Object.assign(m, { COVARIANCE_DATA: ap.COVARIANCE_DATA, COV_PROPAGATION: ap.COV_PROPAGATION, COV_FLOOR: 2, COV_REALISM_ID: 1 }); });
   // one served window as the catalog's builder makes them: position only, 26 coefficients, 7 held as binary64
-  const withRows = size((m) => { none(m); m.WINDOWS = [new M.MORWindowT(0, 1440, 0, 26, 7, 0, 0)]; m.WINDOW_COEFF_HEADS = new Array(21).fill(1.5); m.WINDOW_COEFF_TAILS = new Array(57).fill(0.25); });
+  const withRows = size((m) => { none(m); m.WINDOW_RECORD_CHECK = 0x0123456789abcdefn; m.WINDOWS = [new M.MORWindowT(0, 1440, 0, 26, 7, 0, 0)]; m.WINDOW_COEFF_HEADS = new Array(21).fill(1.5); m.WINDOW_COEFF_TAILS = new Array(57).fill(0.25); });
   const withFallback = size((m) => { const f = m.FALLBACK; none(m); m.FALLBACK = f; });
   assert.ok(base <= 300, `f: elements alone ${base} bytes`);
-  assert.ok(withCov - base <= 470, `f: the covariance adds ${withCov - base} bytes`);
-  assert.ok(withRows - base <= 480, `f: one window adds ${withRows - base} bytes`);
+  assert.ok(withCov - base <= 430, `f: the covariance adds ${withCov - base} bytes`);
+  assert.ok(withRows - base <= 490, `f: one window adds ${withRows - base} bytes`);
   assert.ok(withFallback - base <= 160, `f: the fallback set adds ${withFallback - base} bytes`);
   console.log(`PASS f: AP record ${base} bytes; with covariance ${withCov}; one window +${withRows - base}; fallback set +${withFallback - base}`);
   console.log('PASS mor-record');

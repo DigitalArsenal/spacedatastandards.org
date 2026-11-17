@@ -187,6 +187,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let THROUGH_SEQ: VOffset = 30
     static let RECORD_PROVENANCE: VOffset = 32
     static let DERIVED_BUILD: VOffset = 34
+    static let COV_REALISM_MODELS: VOffset = 36
   }
 
   ///  Asset role.
@@ -256,7 +257,10 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
   ///  carry no derived rows, or a reader must ignore them.
   public var DERIVED_BUILD: DPMDerivedBuild? { let o = _accessor.offset(VT.DERIVED_BUILD); return o == 0 ? nil : DPMDerivedBuild(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  The covariance realism models the asset's records name by ID ($MOR
+  ///  COV_REALISM_ID), each stated once with its population figures.
+  public var COV_REALISM_MODELS: FlatbufferVector<DPMRealismModel> { return _accessor.vector(at: VT.COV_REALISM_MODELS, byteSize: 4) }
+  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(ASSET_KIND: publicationAssetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ASSET_KIND.rawValue, def: 3, at: VT.ASSET_KIND) }
   public static func add(TRANSPORT_KIND: dpmTransportKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT_KIND.rawValue, def: 0, at: VT.TRANSPORT_KIND) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
@@ -273,6 +277,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func add(THROUGH_SEQ: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THROUGH_SEQ, def: 0, at: VT.THROUGH_SEQ) }
   public static func add(RECORD_PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_PROVENANCE, at: VT.RECORD_PROVENANCE) }
   public static func add(DERIVED_BUILD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_BUILD, at: VT.DERIVED_BUILD) }
+  public static func addVectorOf(COV_REALISM_MODELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM_MODELS, at: VT.COV_REALISM_MODELS) }
   public static func endDPMAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDPMAsset(
     _ fbb: inout FlatBufferBuilder,
@@ -291,7 +296,8 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset(),
     THROUGH_SEQ: UInt64 = 0,
     RECORD_PROVENANCEOffset RECORD_PROVENANCE: Offset = Offset(),
-    DERIVED_BUILDOffset DERIVED_BUILD: Offset = Offset()
+    DERIVED_BUILDOffset DERIVED_BUILD: Offset = Offset(),
+    COV_REALISM_MODELSVectorOffset COV_REALISM_MODELS: Offset = Offset()
   ) -> Offset {
     let __start = DPMAsset.startDPMAsset(&fbb)
     DPMAsset.add(ASSET_KIND: ASSET_KIND, &fbb)
@@ -310,6 +316,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     DPMAsset.add(THROUGH_SEQ: THROUGH_SEQ, &fbb)
     DPMAsset.add(RECORD_PROVENANCE: RECORD_PROVENANCE, &fbb)
     DPMAsset.add(DERIVED_BUILD: DERIVED_BUILD, &fbb)
+    DPMAsset.addVectorOf(COV_REALISM_MODELS: COV_REALISM_MODELS, &fbb)
     return DPMAsset.endDPMAsset(&fbb, start: __start)
   }
 
@@ -331,6 +338,53 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.THROUGH_SEQ, fieldName: "THROUGH_SEQ", required: false, type: UInt64.self)
     try _v.visit(field: VT.RECORD_PROVENANCE, fieldName: "RECORD_PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     try _v.visit(field: VT.DERIVED_BUILD, fieldName: "DERIVED_BUILD", required: false, type: ForwardOffset<DPMDerivedBuild>.self)
+    try _v.visit(field: VT.COV_REALISM_MODELS, fieldName: "COV_REALISM_MODELS", required: false, type: ForwardOffset<Vector<ForwardOffset<DPMRealismModel>, DPMRealismModel>>.self)
+    _v.finish()
+  }
+}
+
+///  One covariance realism model of an asset: the realism entry its records
+///  would otherwise each repeat.
+public struct DPMRealismModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$DPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DPMRealismModel.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ID: VOffset = 4
+    static let REALISM: VOffset = 6
+  }
+
+  ///  The model's number within the asset, 1 or more; a record names it.
+  public var ID: UInt16 { let o = _accessor.offset(VT.ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  ///  entry of each record that names this ID.
+  public var REALISM: CVR? { let o = _accessor.offset(VT.REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startDPMRealismModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ID, def: 0, at: VT.ID) }
+  public static func add(REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REALISM, at: VT.REALISM) }
+  public static func endDPMRealismModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDPMRealismModel(
+    _ fbb: inout FlatBufferBuilder,
+    ID: UInt16 = 0,
+    REALISMOffset REALISM: Offset = Offset()
+  ) -> Offset {
+    let __start = DPMRealismModel.startDPMRealismModel(&fbb)
+    DPMRealismModel.add(ID: ID, &fbb)
+    DPMRealismModel.add(REALISM: REALISM, &fbb)
+    return DPMRealismModel.endDPMRealismModel(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: UInt16.self)
+    try _v.visit(field: VT.REALISM, fieldName: "REALISM", required: false, type: ForwardOffset<CVR>.self)
     _v.finish()
   }
 }

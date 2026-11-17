@@ -17,6 +17,10 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "REAL", "TEST"]
     },
+    "morCovarianceFloor" : {
+      "type" : "string",
+      "enum": ["UNSTATED", "WRITER_THEORY_STATE", "MEAN_ELEMENTS_TWO_BODY"]
+    },
     "morGravityField" : {
       "type" : "string",
       "enum": ["THEORY", "EGM2008", "EGM2008_SLOW_TESSERAL_70"]
@@ -480,6 +484,26 @@
                 "type" : "number",
                 "description" : "The span of the observations the orbit determination used, days; NaN when not stated."
               },
+        "OD_OBSERVATIONS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Observations the orbit determination used; -1 when not stated ($OCM 0)."
+              },
+        "OD_TRACKS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Tracks the orbit determination used; -1 when not stated ($OCM 0)."
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0)."
+              },
+        "OD_EPOCH_UNIX_US" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated."
+              },
+        "DAYS_SINCE_LAST_OBS" : {
+                "type" : "number",
+                "description" : "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated."
+              },
         "COVARIANCE_DATA" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance."
@@ -488,9 +512,17 @@
                 "$ref" : "#/definitions/MORCovariancePropagation",
                 "description" : "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
               },
+        "COV_FLOOR" : {
+                "$ref" : "#/definitions/morCovarianceFloor",
+                "description" : "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM."
+              },
+        "COV_REALISM_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not."
+              },
         "COV_REALISM" : {
                 "$ref" : "#/definitions/CVR",
-                "description" : "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM."
+                "description" : "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID."
               },
         "COV_CALIBRATION" : {
                 "$ref" : "#/definitions/covarianceCalibration",
@@ -502,7 +534,7 @@
               },
         "WINDOWS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/MORWindow"},
-                "description" : "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must."
+                "description" : "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match."
               },
         "WINDOW_COEFF_HEADS" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -511,6 +543,10 @@
         "WINDOW_COEFF_TAILS" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+              },
+        "WINDOW_RECORD_CHECK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only."
               },
         "FALLBACK" : {
                 "$ref" : "#/definitions/MPE",

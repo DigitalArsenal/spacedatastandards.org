@@ -5,6 +5,7 @@ import { MORWindow, MORWindowT } from './MORWindow.js';
 import { MPE, MPET } from './MPE.js';
 import { covarianceCalibration } from './covarianceCalibration.js';
 import { meanElementSource } from './meanElementSource.js';
+import { morCovarianceFloor } from './morCovarianceFloor.js';
 import { morGravityField } from './morGravityField.js';
 import { morMessageStatus } from './morMessageStatus.js';
 import { morRadiationModel } from './morRadiationModel.js';
@@ -136,6 +137,26 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
      */
     ACTUAL_OD_SPAN(): number;
     /**
+     * Observations the orbit determination used; -1 when not stated ($OCM 0).
+     */
+    OD_OBSERVATIONS_USED(): number;
+    /**
+     * Tracks the orbit determination used; -1 when not stated ($OCM 0).
+     */
+    OD_TRACKS_USED(): number;
+    /**
+     * Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+     */
+    WEIGHTED_RMS(): number;
+    /**
+     * Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+     */
+    OD_EPOCH_UNIX_US(): bigint;
+    /**
+     * Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+     */
+    DAYS_SINCE_LAST_OBS(): number;
+    /**
      * The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
      * among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
      * OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -149,7 +170,18 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
      */
     COV_PROPAGATION(obj?: MORCovariancePropagation): MORCovariancePropagation | null;
     /**
-     * The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+     * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+     * covariance as its $OCM.
+     */
+    COV_FLOOR(): morCovarianceFloor;
+    /**
+     * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+     * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+     */
+    COV_REALISM_ID(): number;
+    /**
+     * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+     * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
      */
     COV_REALISM(obj?: CVR): CVR | null;
     /**
@@ -163,8 +195,9 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
     COV_CALIBRATION_REFERENCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-     * in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-     * the rows, and one that cannot reproduce the asset's build statement must.
+     * in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+     * ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+     * reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
      */
     WINDOWS(index: number, obj?: MORWindow): MORWindow | null;
     windowsLength(): number;
@@ -182,6 +215,12 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
     WINDOW_COEFF_TAILS(index: number): number | null;
     windowCoeffTailsLength(): number;
     windowCoeffTailsArray(): Float32Array | null;
+    /**
+     * The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+     * publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+     * record before using the rows: a mismatch voids the rows. With WINDOWS only.
+     */
+    WINDOW_RECORD_CHECK(): bigint;
     /**
      * The object's own element set for times beyond what this record serves (a reader's fallback
      * propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
@@ -216,6 +255,11 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
     static addOdSolvedFor(builder: flatbuffers.Builder, OD_SOLVED_FOR: number): void;
     static addEcom2Y0(builder: flatbuffers.Builder, ECOM2_Y0: number): void;
     static addActualOdSpan(builder: flatbuffers.Builder, ACTUAL_OD_SPAN: number): void;
+    static addOdObservationsUsed(builder: flatbuffers.Builder, OD_OBSERVATIONS_USED: number): void;
+    static addOdTracksUsed(builder: flatbuffers.Builder, OD_TRACKS_USED: number): void;
+    static addWeightedRms(builder: flatbuffers.Builder, WEIGHTED_RMS: number): void;
+    static addOdEpochUnixUs(builder: flatbuffers.Builder, OD_EPOCH_UNIX_US: bigint): void;
+    static addDaysSinceLastObs(builder: flatbuffers.Builder, DAYS_SINCE_LAST_OBS: number): void;
     static addCovarianceData(builder: flatbuffers.Builder, COVARIANCE_DATAOffset: flatbuffers.Offset): void;
     static createCovarianceDataVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
     /**
@@ -224,6 +268,8 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
     static createCovarianceDataVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCovarianceDataVector(builder: flatbuffers.Builder, numElems: number): void;
     static addCovPropagation(builder: flatbuffers.Builder, COV_PROPAGATIONOffset: flatbuffers.Offset): void;
+    static addCovFloor(builder: flatbuffers.Builder, COV_FLOOR: morCovarianceFloor): void;
+    static addCovRealismId(builder: flatbuffers.Builder, COV_REALISM_ID: number): void;
     static addCovRealism(builder: flatbuffers.Builder, COV_REALISMOffset: flatbuffers.Offset): void;
     static addCovCalibration(builder: flatbuffers.Builder, COV_CALIBRATION: covarianceCalibration): void;
     static addCovCalibrationReference(builder: flatbuffers.Builder, COV_CALIBRATION_REFERENCEOffset: flatbuffers.Offset): void;
@@ -243,6 +289,7 @@ export declare class MOR implements flatbuffers.IUnpackableObject<MORT> {
      */
     static createWindowCoeffTailsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startWindowCoeffTailsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addWindowRecordCheck(builder: flatbuffers.Builder, WINDOW_RECORD_CHECK: bigint): void;
     static addFallback(builder: flatbuffers.Builder, FALLBACKOffset: flatbuffers.Offset): void;
     static endMOR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishMORBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -278,16 +325,24 @@ export declare class MORT implements flatbuffers.IGeneratedObject {
     OD_SOLVED_FOR: number;
     ECOM2_Y0: number;
     ACTUAL_OD_SPAN: number;
+    OD_OBSERVATIONS_USED: number;
+    OD_TRACKS_USED: number;
+    WEIGHTED_RMS: number;
+    OD_EPOCH_UNIX_US: bigint;
+    DAYS_SINCE_LAST_OBS: number;
     COVARIANCE_DATA: (number)[];
     COV_PROPAGATION: MORCovariancePropagationT | null;
+    COV_FLOOR: morCovarianceFloor;
+    COV_REALISM_ID: number;
     COV_REALISM: CVRT | null;
     COV_CALIBRATION: covarianceCalibration;
     COV_CALIBRATION_REFERENCE: string | Uint8Array | null;
     WINDOWS: (MORWindowT)[];
     WINDOW_COEFF_HEADS: (number)[];
     WINDOW_COEFF_TAILS: (number)[];
+    WINDOW_RECORD_CHECK: bigint;
     FALLBACK: MPET | null;
-    constructor(NORAD_CAT_ID?: number, INTERNATIONAL_DESIGNATOR?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, MESSAGE_STATUS?: morMessageStatus, EPOCH_UNIX_US?: bigint, MEAN_ELEMENT_THEORY?: meanElementSource, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BTERM?: number, AGOM?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, GRAVITY_FIELD?: morGravityField, MAXIMUM_TESSERAL_DEGREE?: number, MAXIMUM_ZONAL_DEGREE?: number, SOLID_TIDES_MODEL?: morSolidTideModel, SOLAR_RAD_PRESSURE?: morRadiationModel, OD_PARAMETERS?: number, OD_SOLVED_FOR?: number, ECOM2_Y0?: number, ACTUAL_OD_SPAN?: number, COVARIANCE_DATA?: (number)[], COV_PROPAGATION?: MORCovariancePropagationT | null, COV_REALISM?: CVRT | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, WINDOWS?: (MORWindowT)[], WINDOW_COEFF_HEADS?: (number)[], WINDOW_COEFF_TAILS?: (number)[], FALLBACK?: MPET | null);
+    constructor(NORAD_CAT_ID?: number, INTERNATIONAL_DESIGNATOR?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, MESSAGE_STATUS?: morMessageStatus, EPOCH_UNIX_US?: bigint, MEAN_ELEMENT_THEORY?: meanElementSource, MEAN_MOTION?: number, ECCENTRICITY?: number, INCLINATION?: number, RA_OF_ASC_NODE?: number, ARG_OF_PERICENTER?: number, MEAN_ANOMALY?: number, BTERM?: number, AGOM?: number, BSTAR?: number, MEAN_MOTION_DOT?: number, MEAN_MOTION_DDOT?: number, GRAVITY_FIELD?: morGravityField, MAXIMUM_TESSERAL_DEGREE?: number, MAXIMUM_ZONAL_DEGREE?: number, SOLID_TIDES_MODEL?: morSolidTideModel, SOLAR_RAD_PRESSURE?: morRadiationModel, OD_PARAMETERS?: number, OD_SOLVED_FOR?: number, ECOM2_Y0?: number, ACTUAL_OD_SPAN?: number, OD_OBSERVATIONS_USED?: number, OD_TRACKS_USED?: number, WEIGHTED_RMS?: number, OD_EPOCH_UNIX_US?: bigint, DAYS_SINCE_LAST_OBS?: number, COVARIANCE_DATA?: (number)[], COV_PROPAGATION?: MORCovariancePropagationT | null, COV_FLOOR?: morCovarianceFloor, COV_REALISM_ID?: number, COV_REALISM?: CVRT | null, COV_CALIBRATION?: covarianceCalibration, COV_CALIBRATION_REFERENCE?: string | Uint8Array | null, WINDOWS?: (MORWindowT)[], WINDOW_COEFF_HEADS?: (number)[], WINDOW_COEFF_TAILS?: (number)[], WINDOW_RECORD_CHECK?: bigint, FALLBACK?: MPET | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=MOR.d.ts.map

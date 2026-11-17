@@ -251,6 +251,23 @@ class DPMAsset : Table() {
             null
         }
     }
+    /**
+     * The covariance realism models the asset's records name by ID ($MOR
+     * COV_REALISM_ID), each stated once with its population figures.
+     */
+    fun covRealismModels(j: Int) : DPMRealismModel? = covRealismModels(DPMRealismModel(), j)
+    fun covRealismModels(obj: DPMRealismModel, j: Int) : DPMRealismModel? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val covRealismModelsLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMAsset(_bb: ByteBuffer): DPMAsset = getRootAsDPMAsset(_bb, DPMAsset())
@@ -258,10 +275,11 @@ class DPMAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int, throughSeq: ULong, recordProvenanceOffset: Int, derivedBuildOffset: Int) : Int {
-            builder.startTable(16)
+        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int, throughSeq: ULong, recordProvenanceOffset: Int, derivedBuildOffset: Int, covRealismModelsOffset: Int) : Int {
+            builder.startTable(17)
             addTHROUGHSEQ(builder, throughSeq)
             addBYTELENGTH(builder, byteLength)
+            addCOVREALISMMODELS(builder, covRealismModelsOffset)
             addDERIVEDBUILD(builder, derivedBuildOffset)
             addRECORDPROVENANCE(builder, recordProvenanceOffset)
             addCONTENTKEYID(builder, contentKeyIdOffset)
@@ -278,7 +296,7 @@ class DPMAsset : Table() {
             addASSETKIND(builder, assetKind)
             return endDPMAsset(builder)
         }
-        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addASSETKIND(builder: FlatBufferBuilder, assetKind: Byte) = builder.addByte(0, assetKind, 3)
         fun addTRANSPORTKIND(builder: FlatBufferBuilder, transportKind: Byte) = builder.addByte(1, transportKind, 0)
         fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(2, cid, 0)
@@ -295,6 +313,15 @@ class DPMAsset : Table() {
         fun addTHROUGHSEQ(builder: FlatBufferBuilder, throughSeq: ULong) = builder.addLong(13, throughSeq.toLong(), 0)
         fun addRECORDPROVENANCE(builder: FlatBufferBuilder, recordProvenance: Int) = builder.addOffset(14, recordProvenance, 0)
         fun addDERIVEDBUILD(builder: FlatBufferBuilder, derivedBuild: Int) = builder.addOffset(15, derivedBuild, 0)
+        fun addCOVREALISMMODELS(builder: FlatBufferBuilder, covRealismModels: Int) = builder.addOffset(16, covRealismModels, 0)
+        fun createCovRealismModelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovRealismModelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endDPMAsset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -250,13 +250,53 @@ class MOR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
+    # Observations the orbit determination used; -1 when not stated ($OCM 0).
+    # MOR
+    def OD_OBSERVATIONS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return -1
+
+    # Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    # MOR
+    def OD_TRACKS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return -1
+
+    # Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+    # MOR
+    def WEIGHTED_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    # MOR
+    def OD_EPOCH_UNIX_US(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return -9223372036854775808
+
+    # Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+    # MOR
+    def DAYS_SINCE_LAST_OBS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
     # The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
     # among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
     # OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
     # then those parameters in ascending ordinal. Absent: no covariance.
     # MOR
     def COVARIANCE_DATA(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -264,27 +304,27 @@ class MOR(object):
 
     # MOR
     def COVARIANCE_DATAAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # MOR
     def COVARIANCE_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MOR
     def COVARIANCE_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         return o == 0
 
     # What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
     # MOR
     def COV_PROPAGATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             x = o + self._tab.Pos
             from MORCovariancePropagation import MORCovariancePropagation
@@ -293,10 +333,29 @@ class MOR(object):
             return obj
         return None
 
-    # The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+    # Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+    # covariance as its $OCM.
+    # MOR
+    def COV_FLOOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    # the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    # MOR
+    def COV_REALISM_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    # single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     # MOR
     def COV_REALISM(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from CVR import CVR
@@ -308,7 +367,7 @@ class MOR(object):
     # Whether COVARIANCE_DATA's coverage was measured against independent reference states.
     # MOR
     def COV_CALIBRATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
@@ -316,17 +375,18 @@ class MOR(object):
     # Identifier of that calibration evidence (a report or record).
     # MOR
     def COV_CALIBRATION_REFERENCE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    # in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-    # the rows, and one that cannot reproduce the asset's build statement must.
+    # in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    # ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    # reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     # MOR
     def WINDOWS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 24
@@ -338,21 +398,21 @@ class MOR(object):
 
     # MOR
     def WINDOWSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MOR
     def WINDOWSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         return o == 0
 
     # The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
     # (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
     # MOR
     def WINDOW_COEFF_HEADS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -360,28 +420,28 @@ class MOR(object):
 
     # MOR
     def WINDOW_COEFF_HEADSAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
         return 0
 
     # MOR
     def WINDOW_COEFF_HEADSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MOR
     def WINDOW_COEFF_HEADSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         return o == 0
 
     # The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
     # (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
     # MOR
     def WINDOW_COEFF_TAILS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -389,29 +449,39 @@ class MOR(object):
 
     # MOR
     def WINDOW_COEFF_TAILSAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
         return 0
 
     # MOR
     def WINDOW_COEFF_TAILSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MOR
     def WINDOW_COEFF_TAILSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         return o == 0
+
+    # The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    # publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    # record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    # MOR
+    def WINDOW_RECORD_CHECK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
 
     # The object's own element set for times beyond what this record serves (a reader's fallback
     # propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
     # object is this record's.
     # MOR
     def FALLBACK(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from MPE import MPE
@@ -421,7 +491,7 @@ class MOR(object):
         return None
 
 def MORStart(builder):
-    builder.StartObject(36)
+    builder.StartObject(44)
 
 def Start(builder):
     MORStart(builder)
@@ -588,8 +658,38 @@ def MORAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
 def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
     MORAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
 
+def MORAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
+    builder.PrependInt32Slot(27, OD_OBSERVATIONS_USED, -1)
+
+def AddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
+    MORAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED)
+
+def MORAddOD_TRACKS_USED(builder, OD_TRACKS_USED):
+    builder.PrependInt32Slot(28, OD_TRACKS_USED, -1)
+
+def AddOD_TRACKS_USED(builder, OD_TRACKS_USED):
+    MORAddOD_TRACKS_USED(builder, OD_TRACKS_USED)
+
+def MORAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    builder.PrependFloat64Slot(29, WEIGHTED_RMS, float('nan'))
+
+def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    MORAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+
+def MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US):
+    builder.PrependInt64Slot(30, OD_EPOCH_UNIX_US, -9223372036854775808)
+
+def AddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US):
+    MORAddOD_EPOCH_UNIX_US(builder, OD_EPOCH_UNIX_US)
+
+def MORAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS):
+    builder.PrependFloat64Slot(31, DAYS_SINCE_LAST_OBS, float('nan'))
+
+def AddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS):
+    MORAddDAYS_SINCE_LAST_OBS(builder, DAYS_SINCE_LAST_OBS)
+
 def MORAddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
-    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
 
 def AddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
     MORAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
@@ -611,31 +711,43 @@ def CreateCOVARIANCE_DATAVector(builder, data):
     return MORCreateCOVARIANCE_DATAVector(builder, data)
 
 def MORAddCOV_PROPAGATION(builder, COV_PROPAGATION):
-    builder.PrependStructSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(COV_PROPAGATION), 0)
+    builder.PrependStructSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(COV_PROPAGATION), 0)
 
 def AddCOV_PROPAGATION(builder, COV_PROPAGATION):
     MORAddCOV_PROPAGATION(builder, COV_PROPAGATION)
 
+def MORAddCOV_FLOOR(builder, COV_FLOOR):
+    builder.PrependUint8Slot(34, COV_FLOOR, 0)
+
+def AddCOV_FLOOR(builder, COV_FLOOR):
+    MORAddCOV_FLOOR(builder, COV_FLOOR)
+
+def MORAddCOV_REALISM_ID(builder, COV_REALISM_ID):
+    builder.PrependUint16Slot(35, COV_REALISM_ID, 0)
+
+def AddCOV_REALISM_ID(builder, COV_REALISM_ID):
+    MORAddCOV_REALISM_ID(builder, COV_REALISM_ID)
+
 def MORAddCOV_REALISM(builder, COV_REALISM):
-    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
 
 def AddCOV_REALISM(builder, COV_REALISM):
     MORAddCOV_REALISM(builder, COV_REALISM)
 
 def MORAddCOV_CALIBRATION(builder, COV_CALIBRATION):
-    builder.PrependInt8Slot(30, COV_CALIBRATION, 0)
+    builder.PrependInt8Slot(37, COV_CALIBRATION, 0)
 
 def AddCOV_CALIBRATION(builder, COV_CALIBRATION):
     MORAddCOV_CALIBRATION(builder, COV_CALIBRATION)
 
 def MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
-    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(COV_CALIBRATION_REFERENCE), 0)
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(COV_CALIBRATION_REFERENCE), 0)
 
 def AddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE):
     MORAddCOV_CALIBRATION_REFERENCE(builder, COV_CALIBRATION_REFERENCE)
 
 def MORAddWINDOWS(builder, WINDOWS):
-    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOWS), 0)
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOWS), 0)
 
 def AddWINDOWS(builder, WINDOWS):
     MORAddWINDOWS(builder, WINDOWS)
@@ -657,7 +769,7 @@ def CreateWINDOWSVector(builder, data):
     return MORCreateWINDOWSVector(builder, data)
 
 def MORAddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS):
-    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_COEFF_HEADS), 0)
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_COEFF_HEADS), 0)
 
 def AddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS):
     MORAddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS)
@@ -679,7 +791,7 @@ def CreateWINDOW_COEFF_HEADSVector(builder, data):
     return MORCreateWINDOW_COEFF_HEADSVector(builder, data)
 
 def MORAddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS):
-    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_COEFF_TAILS), 0)
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_COEFF_TAILS), 0)
 
 def AddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS):
     MORAddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS)
@@ -700,8 +812,14 @@ def MORCreateWINDOW_COEFF_TAILSVector(builder, data):
 def CreateWINDOW_COEFF_TAILSVector(builder, data):
     return MORCreateWINDOW_COEFF_TAILSVector(builder, data)
 
+def MORAddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK):
+    builder.PrependUint64Slot(42, WINDOW_RECORD_CHECK, 0)
+
+def AddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK):
+    MORAddWINDOW_RECORD_CHECK(builder, WINDOW_RECORD_CHECK)
+
 def MORAddFALLBACK(builder, FALLBACK):
-    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(FALLBACK), 0)
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(FALLBACK), 0)
 
 def AddFALLBACK(builder, FALLBACK):
     MORAddFALLBACK(builder, FALLBACK)
@@ -753,14 +871,22 @@ class MORT(object):
         OD_SOLVED_FOR = 0,
         ECOM2_Y0 = 0.0,
         ACTUAL_OD_SPAN = float('nan'),
+        OD_OBSERVATIONS_USED = -1,
+        OD_TRACKS_USED = -1,
+        WEIGHTED_RMS = float('nan'),
+        OD_EPOCH_UNIX_US = -9223372036854775808,
+        DAYS_SINCE_LAST_OBS = float('nan'),
         COVARIANCE_DATA = None,
         COV_PROPAGATION = None,
+        COV_FLOOR = 0,
+        COV_REALISM_ID = 0,
         COV_REALISM = None,
         COV_CALIBRATION = 0,
         COV_CALIBRATION_REFERENCE = None,
         WINDOWS = None,
         WINDOW_COEFF_HEADS = None,
         WINDOW_COEFF_TAILS = None,
+        WINDOW_RECORD_CHECK = 0,
         FALLBACK = None,
     ):
         self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
@@ -790,14 +916,22 @@ class MORT(object):
         self.OD_SOLVED_FOR = OD_SOLVED_FOR  # type: int
         self.ECOM2_Y0 = ECOM2_Y0  # type: float
         self.ACTUAL_OD_SPAN = ACTUAL_OD_SPAN  # type: float
+        self.OD_OBSERVATIONS_USED = OD_OBSERVATIONS_USED  # type: int
+        self.OD_TRACKS_USED = OD_TRACKS_USED  # type: int
+        self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
+        self.OD_EPOCH_UNIX_US = OD_EPOCH_UNIX_US  # type: int
+        self.DAYS_SINCE_LAST_OBS = DAYS_SINCE_LAST_OBS  # type: float
         self.COVARIANCE_DATA = COVARIANCE_DATA  # type: Optional[List[float]]
         self.COV_PROPAGATION = COV_PROPAGATION  # type: Optional[MORCovariancePropagation.MORCovariancePropagationT]
+        self.COV_FLOOR = COV_FLOOR  # type: int
+        self.COV_REALISM_ID = COV_REALISM_ID  # type: int
         self.COV_REALISM = COV_REALISM  # type: Optional[CVR.CVRT]
         self.COV_CALIBRATION = COV_CALIBRATION  # type: int
         self.COV_CALIBRATION_REFERENCE = COV_CALIBRATION_REFERENCE  # type: Optional[str]
         self.WINDOWS = WINDOWS  # type: Optional[List[MORWindow.MORWindowT]]
         self.WINDOW_COEFF_HEADS = WINDOW_COEFF_HEADS  # type: Optional[List[float]]
         self.WINDOW_COEFF_TAILS = WINDOW_COEFF_TAILS  # type: Optional[List[float]]
+        self.WINDOW_RECORD_CHECK = WINDOW_RECORD_CHECK  # type: int
         self.FALLBACK = FALLBACK  # type: Optional[MPE.MPET]
 
     @classmethod
@@ -848,6 +982,11 @@ class MORT(object):
         self.OD_SOLVED_FOR = MOR.OD_SOLVED_FOR()
         self.ECOM2_Y0 = MOR.ECOM2_Y0()
         self.ACTUAL_OD_SPAN = MOR.ACTUAL_OD_SPAN()
+        self.OD_OBSERVATIONS_USED = MOR.OD_OBSERVATIONS_USED()
+        self.OD_TRACKS_USED = MOR.OD_TRACKS_USED()
+        self.WEIGHTED_RMS = MOR.WEIGHTED_RMS()
+        self.OD_EPOCH_UNIX_US = MOR.OD_EPOCH_UNIX_US()
+        self.DAYS_SINCE_LAST_OBS = MOR.DAYS_SINCE_LAST_OBS()
         if not MOR.COVARIANCE_DATAIsNone():
             if np is None:
                 self.COVARIANCE_DATA = []
@@ -857,6 +996,8 @@ class MORT(object):
                 self.COVARIANCE_DATA = MOR.COVARIANCE_DATAAsNumpy()
         if MOR.COV_PROPAGATION() is not None:
             self.COV_PROPAGATION = MORCovariancePropagation.MORCovariancePropagationT.InitFromObj(MOR.COV_PROPAGATION())
+        self.COV_FLOOR = MOR.COV_FLOOR()
+        self.COV_REALISM_ID = MOR.COV_REALISM_ID()
         if MOR.COV_REALISM() is not None:
             self.COV_REALISM = CVR.CVRT.InitFromObj(MOR.COV_REALISM())
         self.COV_CALIBRATION = MOR.COV_CALIBRATION()
@@ -883,6 +1024,7 @@ class MORT(object):
                     self.WINDOW_COEFF_TAILS.append(MOR.WINDOW_COEFF_TAILS(i))
             else:
                 self.WINDOW_COEFF_TAILS = MOR.WINDOW_COEFF_TAILSAsNumpy()
+        self.WINDOW_RECORD_CHECK = MOR.WINDOW_RECORD_CHECK()
         if MOR.FALLBACK() is not None:
             self.FALLBACK = MPE.MPET.InitFromObj(MOR.FALLBACK())
 
@@ -960,11 +1102,18 @@ class MORT(object):
         MORAddOD_SOLVED_FOR(builder, self.OD_SOLVED_FOR)
         MORAddECOM2_Y0(builder, self.ECOM2_Y0)
         MORAddACTUAL_OD_SPAN(builder, self.ACTUAL_OD_SPAN)
+        MORAddOD_OBSERVATIONS_USED(builder, self.OD_OBSERVATIONS_USED)
+        MORAddOD_TRACKS_USED(builder, self.OD_TRACKS_USED)
+        MORAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
+        MORAddOD_EPOCH_UNIX_US(builder, self.OD_EPOCH_UNIX_US)
+        MORAddDAYS_SINCE_LAST_OBS(builder, self.DAYS_SINCE_LAST_OBS)
         if self.COVARIANCE_DATA is not None:
             MORAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
         if self.COV_PROPAGATION is not None:
             COV_PROPAGATION = self.COV_PROPAGATION.Pack(builder)
             MORAddCOV_PROPAGATION(builder, COV_PROPAGATION)
+        MORAddCOV_FLOOR(builder, self.COV_FLOOR)
+        MORAddCOV_REALISM_ID(builder, self.COV_REALISM_ID)
         if self.COV_REALISM is not None:
             MORAddCOV_REALISM(builder, COV_REALISM)
         MORAddCOV_CALIBRATION(builder, self.COV_CALIBRATION)
@@ -976,6 +1125,7 @@ class MORT(object):
             MORAddWINDOW_COEFF_HEADS(builder, WINDOW_COEFF_HEADS)
         if self.WINDOW_COEFF_TAILS is not None:
             MORAddWINDOW_COEFF_TAILS(builder, WINDOW_COEFF_TAILS)
+        MORAddWINDOW_RECORD_CHECK(builder, self.WINDOW_RECORD_CHECK)
         if self.FALLBACK is not None:
             MORAddFALLBACK(builder, FALLBACK)
         MOR = MOREnd(builder)

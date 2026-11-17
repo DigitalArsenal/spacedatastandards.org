@@ -127,6 +127,30 @@
         }
       }
     },
+    "morCovarianceFloor": {
+      "type": "string",
+      "enum": [
+        "UNSTATED",
+        "WRITER_THEORY_STATE",
+        "MEAN_ELEMENTS_TWO_BODY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSTATED": {
+          "value": 0,
+          "description": "No covariance."
+        },
+        "WRITER_THEORY_STATE": {
+          "value": 1,
+          "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+        },
+        "MEAN_ELEMENTS_TWO_BODY": {
+          "value": 2,
+          "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
+        }
+      }
+    },
     "morGravityField": {
       "type": "string",
       "enum": [
@@ -993,6 +1017,42 @@
           "x-flatbuffer-type": "double",
           "x-flatbuffer-default": "nan"
         },
+        "OD_OBSERVATIONS_USED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Observations the orbit determination used; -1 when not stated ($OCM 0).",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "OD_TRACKS_USED": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "WEIGHTED_RMS": {
+          "type": "number",
+          "description": "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "OD_EPOCH_UNIX_US": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
+          "x-flatbuffer-type": "int64",
+          "x-flatbuffer-default": "-9223372036854775808"
+        },
+        "DAYS_SINCE_LAST_OBS": {
+          "type": "number",
+          "description": "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
         "COVARIANCE_DATA": {
           "type": "array",
           "items": {
@@ -1006,9 +1066,37 @@
           "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
           "x-flatbuffer-type": "MORCovariancePropagation"
         },
+        "COV_FLOOR": {
+          "$ref": "#/definitions/morCovarianceFloor",
+          "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSTATED": {
+              "value": 0,
+              "description": "No covariance."
+            },
+            "WRITER_THEORY_STATE": {
+              "value": 1,
+              "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+            },
+            "MEAN_ELEMENTS_TWO_BODY": {
+              "value": 2,
+              "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
+            }
+          },
+          "x-flatbuffer-default": "UNSTATED"
+        },
+        "COV_REALISM_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.",
+          "x-flatbuffer-type": "uint16"
+        },
         "COV_REALISM": {
           "$ref": "#/definitions/CVR",
-          "description": "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.",
+          "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
           "x-flatbuffer-type": "CVR"
         },
         "COV_CALIBRATION": {
@@ -1042,7 +1130,7 @@
           "items": {
             "$ref": "#/definitions/MORWindow"
           },
-          "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must.",
+          "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.",
           "x-flatbuffer-type": "[MORWindow]"
         },
         "WINDOW_COEFF_HEADS": {
@@ -1060,6 +1148,13 @@
           },
           "description": "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
           "x-flatbuffer-type": "[float]"
+        },
+        "WINDOW_RECORD_CHECK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
+          "x-flatbuffer-type": "uint64"
         },
         "FALLBACK": {
           "$ref": "#/definitions/MPE",

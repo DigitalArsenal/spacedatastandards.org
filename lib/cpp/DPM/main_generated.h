@@ -13,6 +13,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "../CVR/main_generated.h"
 #include "../PVN/main_generated.h"
 
 struct DPMCompletenessIndex;
@@ -20,6 +21,9 @@ struct DPMCompletenessIndexBuilder;
 
 struct DPMAsset;
 struct DPMAssetBuilder;
+
+struct DPMRealismModel;
+struct DPMRealismModelBuilder;
 
 struct DPMDerivedBuild;
 struct DPMDerivedBuildBuilder;
@@ -295,7 +299,8 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CONTENT_KEY_ID = 28,
     VT_THROUGH_SEQ = 30,
     VT_RECORD_PROVENANCE = 32,
-    VT_DERIVED_BUILD = 34
+    VT_DERIVED_BUILD = 34,
+    VT_COV_REALISM_MODELS = 36
   };
   /// Asset role.
   publicationAssetKind ASSET_KIND() const {
@@ -386,6 +391,11 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const DPMDerivedBuild *DERIVED_BUILD() const {
     return GetPointer<const DPMDerivedBuild *>(VT_DERIVED_BUILD);
   }
+  /// The covariance realism models the asset's records name by ID ($MOR
+  /// COV_REALISM_ID), each stated once with its population figures.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *COV_REALISM_MODELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>> *>(VT_COV_REALISM_MODELS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -417,6 +427,9 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(RECORD_PROVENANCE()) &&
            VerifyOffset(verifier, VT_DERIVED_BUILD) &&
            verifier.VerifyTable(DERIVED_BUILD()) &&
+           VerifyOffset(verifier, VT_COV_REALISM_MODELS) &&
+           verifier.VerifyVector(COV_REALISM_MODELS()) &&
+           verifier.VerifyVectorOfTables(COV_REALISM_MODELS()) &&
            verifier.EndTable();
   }
 };
@@ -473,6 +486,9 @@ struct DPMAssetBuilder {
   void add_DERIVED_BUILD(::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD) {
     fbb_.AddOffset(DPMAsset::VT_DERIVED_BUILD, DERIVED_BUILD);
   }
+  void add_COV_REALISM_MODELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>>> COV_REALISM_MODELS) {
+    fbb_.AddOffset(DPMAsset::VT_COV_REALISM_MODELS, COV_REALISM_MODELS);
+  }
   explicit DPMAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -501,10 +517,12 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
     ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0,
     uint64_t THROUGH_SEQ = 0,
     ::flatbuffers::Offset<PVN> RECORD_PROVENANCE = 0,
-    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0) {
+    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<DPMRealismModel>>> COV_REALISM_MODELS = 0) {
   DPMAssetBuilder builder_(_fbb);
   builder_.add_THROUGH_SEQ(THROUGH_SEQ);
   builder_.add_BYTE_LENGTH(BYTE_LENGTH);
+  builder_.add_COV_REALISM_MODELS(COV_REALISM_MODELS);
   builder_.add_DERIVED_BUILD(DERIVED_BUILD);
   builder_.add_RECORD_PROVENANCE(RECORD_PROVENANCE);
   builder_.add_CONTENT_KEY_ID(CONTENT_KEY_ID);
@@ -539,7 +557,8 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
     const char *CONTENT_KEY_ID = nullptr,
     uint64_t THROUGH_SEQ = 0,
     ::flatbuffers::Offset<PVN> RECORD_PROVENANCE = 0,
-    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0) {
+    ::flatbuffers::Offset<DPMDerivedBuild> DERIVED_BUILD = 0,
+    const std::vector<::flatbuffers::Offset<DPMRealismModel>> *COV_REALISM_MODELS = nullptr) {
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
@@ -550,6 +569,7 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
   auto SCHEMA_HASH__ = SCHEMA_HASH ? _fbb.CreateString(SCHEMA_HASH) : 0;
   auto CONTENT_KEY_ID__ = CONTENT_KEY_ID ? _fbb.CreateString(CONTENT_KEY_ID) : 0;
+  auto COV_REALISM_MODELS__ = COV_REALISM_MODELS ? _fbb.CreateVector<::flatbuffers::Offset<DPMRealismModel>>(*COV_REALISM_MODELS) : 0;
   return CreateDPMAsset(
       _fbb,
       ASSET_KIND,
@@ -567,7 +587,66 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
       CONTENT_KEY_ID__,
       THROUGH_SEQ,
       RECORD_PROVENANCE,
-      DERIVED_BUILD);
+      DERIVED_BUILD,
+      COV_REALISM_MODELS__);
+}
+
+/// One covariance realism model of an asset: the realism entry its records
+/// would otherwise each repeat.
+struct DPMRealismModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef DPMRealismModelBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_REALISM = 6
+  };
+  /// The model's number within the asset, 1 or more; a record names it.
+  uint16_t ID() const {
+    return GetField<uint16_t>(VT_ID, 0);
+  }
+  /// The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  /// entry of each record that names this ID.
+  const CVR *REALISM() const {
+    return GetPointer<const CVR *>(VT_REALISM);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_ID, 2) &&
+           VerifyOffset(verifier, VT_REALISM) &&
+           verifier.VerifyTable(REALISM()) &&
+           verifier.EndTable();
+  }
+};
+
+struct DPMRealismModelBuilder {
+  typedef DPMRealismModel Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ID(uint16_t ID) {
+    fbb_.AddElement<uint16_t>(DPMRealismModel::VT_ID, ID, 0);
+  }
+  void add_REALISM(::flatbuffers::Offset<CVR> REALISM) {
+    fbb_.AddOffset(DPMRealismModel::VT_REALISM, REALISM);
+  }
+  explicit DPMRealismModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<DPMRealismModel> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<DPMRealismModel>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<DPMRealismModel> CreateDPMRealismModel(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t ID = 0,
+    ::flatbuffers::Offset<CVR> REALISM = 0) {
+  DPMRealismModelBuilder builder_(_fbb);
+  builder_.add_REALISM(REALISM);
+  builder_.add_ID(ID);
+  return builder_.Finish();
 }
 
 /// Who built the derived polynomial rows of an asset's records, and under what:

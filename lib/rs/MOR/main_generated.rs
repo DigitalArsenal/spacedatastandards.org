@@ -110,6 +110,113 @@ impl<'a> ::flatbuffers::Verifiable for morMessageStatus {
 impl ::flatbuffers::SimpleToVerifyInSlice for morMessageStatus {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MOR_COVARIANCE_FLOOR: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MOR_COVARIANCE_FLOOR: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MOR_COVARIANCE_FLOOR: [morCovarianceFloor; 3] = [
+    morCovarianceFloor::UNSTATED,
+    morCovarianceFloor::WRITER_THEORY_STATE,
+    morCovarianceFloor::MEAN_ELEMENTS_TWO_BODY,
+];
+
+/// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+/// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+/// COVARIANCE_DATA only. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct morCovarianceFloor(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl morCovarianceFloor {
+    /// No covariance.
+    pub const UNSTATED: Self = Self(0);
+    /// At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+    /// reader of AP sets does not use this covariance (its states fly).
+    pub const WRITER_THEORY_STATE: Self = Self(1);
+    /// At the two-body state of the set's own mean elements: PRODUCER exactly
+    /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+    pub const MEAN_ELEMENTS_TWO_BODY: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSTATED,
+        Self::WRITER_THEORY_STATE,
+        Self::MEAN_ELEMENTS_TWO_BODY,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSTATED => Some("UNSTATED"),
+            Self::WRITER_THEORY_STATE => Some("WRITER_THEORY_STATE"),
+            Self::MEAN_ELEMENTS_TWO_BODY => Some("MEAN_ELEMENTS_TWO_BODY"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for morCovarianceFloor {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for morCovarianceFloor {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for morCovarianceFloor {
+    type Output = morCovarianceFloor;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for morCovarianceFloor {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for morCovarianceFloor {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for morCovarianceFloor {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_MOR_GRAVITY_FIELD: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1489,15 +1596,23 @@ impl<'a> MOR<'a> {
     pub const VT_OD_SOLVED_FOR: ::flatbuffers::VOffsetT = 52;
     pub const VT_ECOM2_Y0: ::flatbuffers::VOffsetT = 54;
     pub const VT_ACTUAL_OD_SPAN: ::flatbuffers::VOffsetT = 56;
-    pub const VT_COVARIANCE_DATA: ::flatbuffers::VOffsetT = 58;
-    pub const VT_COV_PROPAGATION: ::flatbuffers::VOffsetT = 60;
-    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 62;
-    pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 64;
-    pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 66;
-    pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 68;
-    pub const VT_WINDOW_COEFF_HEADS: ::flatbuffers::VOffsetT = 70;
-    pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 72;
-    pub const VT_FALLBACK: ::flatbuffers::VOffsetT = 74;
+    pub const VT_OD_OBSERVATIONS_USED: ::flatbuffers::VOffsetT = 58;
+    pub const VT_OD_TRACKS_USED: ::flatbuffers::VOffsetT = 60;
+    pub const VT_WEIGHTED_RMS: ::flatbuffers::VOffsetT = 62;
+    pub const VT_OD_EPOCH_UNIX_US: ::flatbuffers::VOffsetT = 64;
+    pub const VT_DAYS_SINCE_LAST_OBS: ::flatbuffers::VOffsetT = 66;
+    pub const VT_COVARIANCE_DATA: ::flatbuffers::VOffsetT = 68;
+    pub const VT_COV_PROPAGATION: ::flatbuffers::VOffsetT = 70;
+    pub const VT_COV_FLOOR: ::flatbuffers::VOffsetT = 72;
+    pub const VT_COV_REALISM_ID: ::flatbuffers::VOffsetT = 74;
+    pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 76;
+    pub const VT_COV_CALIBRATION: ::flatbuffers::VOffsetT = 78;
+    pub const VT_COV_CALIBRATION_REFERENCE: ::flatbuffers::VOffsetT = 80;
+    pub const VT_WINDOWS: ::flatbuffers::VOffsetT = 82;
+    pub const VT_WINDOW_COEFF_HEADS: ::flatbuffers::VOffsetT = 84;
+    pub const VT_WINDOW_COEFF_TAILS: ::flatbuffers::VOffsetT = 86;
+    pub const VT_WINDOW_RECORD_CHECK: ::flatbuffers::VOffsetT = 88;
+    pub const VT_FALLBACK: ::flatbuffers::VOffsetT = 90;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1510,6 +1625,10 @@ impl<'a> MOR<'a> {
         args: &'args MORArgs<'args>
     ) -> ::flatbuffers::WIPOffset<MOR<'bldr>> {
         let mut builder = MORBuilder::new(_fbb);
+        builder.add_WINDOW_RECORD_CHECK(args.WINDOW_RECORD_CHECK);
+        builder.add_DAYS_SINCE_LAST_OBS(args.DAYS_SINCE_LAST_OBS);
+        builder.add_OD_EPOCH_UNIX_US(args.OD_EPOCH_UNIX_US);
+        builder.add_WEIGHTED_RMS(args.WEIGHTED_RMS);
         builder.add_ACTUAL_OD_SPAN(args.ACTUAL_OD_SPAN);
         builder.add_ECOM2_Y0(args.ECOM2_Y0);
         builder.add_MEAN_MOTION_DDOT(args.MEAN_MOTION_DDOT);
@@ -1532,13 +1651,17 @@ impl<'a> MOR<'a> {
         if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
         if let Some(x) = args.COV_PROPAGATION { builder.add_COV_PROPAGATION(x); }
         if let Some(x) = args.COVARIANCE_DATA { builder.add_COVARIANCE_DATA(x); }
+        builder.add_OD_TRACKS_USED(args.OD_TRACKS_USED);
+        builder.add_OD_OBSERVATIONS_USED(args.OD_OBSERVATIONS_USED);
         builder.add_OD_SOLVED_FOR(args.OD_SOLVED_FOR);
         builder.add_OD_PARAMETERS(args.OD_PARAMETERS);
         if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
         if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
         if let Some(x) = args.INTERNATIONAL_DESIGNATOR { builder.add_INTERNATIONAL_DESIGNATOR(x); }
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+        builder.add_COV_REALISM_ID(args.COV_REALISM_ID);
         builder.add_COV_CALIBRATION(args.COV_CALIBRATION);
+        builder.add_COV_FLOOR(args.COV_FLOOR);
         builder.add_SOLAR_RAD_PRESSURE(args.SOLAR_RAD_PRESSURE);
         builder.add_SOLID_TIDES_MODEL(args.SOLID_TIDES_MODEL);
         builder.add_MAXIMUM_ZONAL_DEGREE(args.MAXIMUM_ZONAL_DEGREE);
@@ -1583,12 +1706,19 @@ impl<'a> MOR<'a> {
         let OD_SOLVED_FOR = self.OD_SOLVED_FOR();
         let ECOM2_Y0 = self.ECOM2_Y0();
         let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN();
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED();
+        let OD_TRACKS_USED = self.OD_TRACKS_USED();
+        let WEIGHTED_RMS = self.WEIGHTED_RMS();
+        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US();
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS();
         let COVARIANCE_DATA = self.COVARIANCE_DATA().map(|x| {
             x.into_iter().collect()
         });
         let COV_PROPAGATION = self.COV_PROPAGATION().map(|x| {
             x.unpack()
         });
+        let COV_FLOOR = self.COV_FLOOR();
+        let COV_REALISM_ID = self.COV_REALISM_ID();
         let COV_REALISM = self.COV_REALISM().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
@@ -1605,6 +1735,7 @@ impl<'a> MOR<'a> {
         let WINDOW_COEFF_TAILS = self.WINDOW_COEFF_TAILS().map(|x| {
             x.into_iter().collect()
         });
+        let WINDOW_RECORD_CHECK = self.WINDOW_RECORD_CHECK();
         let FALLBACK = self.FALLBACK().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
@@ -1636,14 +1767,22 @@ impl<'a> MOR<'a> {
             OD_SOLVED_FOR,
             ECOM2_Y0,
             ACTUAL_OD_SPAN,
+            OD_OBSERVATIONS_USED,
+            OD_TRACKS_USED,
+            WEIGHTED_RMS,
+            OD_EPOCH_UNIX_US,
+            DAYS_SINCE_LAST_OBS,
             COVARIANCE_DATA,
             COV_PROPAGATION,
+            COV_FLOOR,
+            COV_REALISM_ID,
             COV_REALISM,
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
             WINDOWS,
             WINDOW_COEFF_HEADS,
             WINDOW_COEFF_TAILS,
+            WINDOW_RECORD_CHECK,
             FALLBACK,
         }
     }
@@ -1896,6 +2035,51 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<f64>(MOR::VT_ACTUAL_OD_SPAN, Some(f64::NAN)).unwrap()}
     }
 
+    /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+    #[inline]
+    pub fn OD_OBSERVATIONS_USED(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(MOR::VT_OD_OBSERVATIONS_USED, Some(-1)).unwrap()}
+    }
+
+    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    #[inline]
+    pub fn OD_TRACKS_USED(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(MOR::VT_OD_TRACKS_USED, Some(-1)).unwrap()}
+    }
+
+    /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+    #[inline]
+    pub fn WEIGHTED_RMS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MOR::VT_WEIGHTED_RMS, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    #[inline]
+    pub fn OD_EPOCH_UNIX_US(&self) -> i64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i64>(MOR::VT_OD_EPOCH_UNIX_US, Some(-9223372036854775808)).unwrap()}
+    }
+
+    /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+    #[inline]
+    pub fn DAYS_SINCE_LAST_OBS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(MOR::VT_DAYS_SINCE_LAST_OBS, Some(f64::NAN)).unwrap()}
+    }
+
     /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
     /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
     /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -1917,7 +2101,28 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<MORCovariancePropagation>(MOR::VT_COV_PROPAGATION, None)}
     }
 
-    /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+    /// covariance as its $OCM.
+    #[inline]
+    pub fn COV_FLOOR(&self) -> morCovarianceFloor {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<morCovarianceFloor>(MOR::VT_COV_FLOOR, Some(morCovarianceFloor::UNSTATED)).unwrap()}
+    }
+
+    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    #[inline]
+    pub fn COV_REALISM_ID(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(MOR::VT_COV_REALISM_ID, Some(0)).unwrap()}
+    }
+
+    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     #[inline]
     pub fn COV_REALISM(&self) -> Option<CVR<'a>> {
         // Safety:
@@ -1945,8 +2150,9 @@ impl<'a> MOR<'a> {
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-    /// the rows, and one that cannot reproduce the asset's build statement must.
+    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     #[inline]
     pub fn WINDOWS(&self) -> Option<::flatbuffers::Vector<'a, MORWindow>> {
         // Safety:
@@ -1973,6 +2179,17 @@ impl<'a> MOR<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(MOR::VT_WINDOW_COEFF_TAILS, None)}
+    }
+
+    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    #[inline]
+    pub fn WINDOW_RECORD_CHECK(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(MOR::VT_WINDOW_RECORD_CHECK, Some(0)).unwrap()}
     }
 
     /// The object's own element set for times beyond what this record serves (a reader's fallback
@@ -2020,14 +2237,22 @@ impl ::flatbuffers::Verifiable for MOR<'_> {
             .visit_field::<u32>("OD_SOLVED_FOR", Self::VT_OD_SOLVED_FOR, false)?
             .visit_field::<f64>("ECOM2_Y0", Self::VT_ECOM2_Y0, false)?
             .visit_field::<f64>("ACTUAL_OD_SPAN", Self::VT_ACTUAL_OD_SPAN, false)?
+            .visit_field::<i32>("OD_OBSERVATIONS_USED", Self::VT_OD_OBSERVATIONS_USED, false)?
+            .visit_field::<i32>("OD_TRACKS_USED", Self::VT_OD_TRACKS_USED, false)?
+            .visit_field::<f64>("WEIGHTED_RMS", Self::VT_WEIGHTED_RMS, false)?
+            .visit_field::<i64>("OD_EPOCH_UNIX_US", Self::VT_OD_EPOCH_UNIX_US, false)?
+            .visit_field::<f64>("DAYS_SINCE_LAST_OBS", Self::VT_DAYS_SINCE_LAST_OBS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("COVARIANCE_DATA", Self::VT_COVARIANCE_DATA, false)?
             .visit_field::<MORCovariancePropagation>("COV_PROPAGATION", Self::VT_COV_PROPAGATION, false)?
+            .visit_field::<morCovarianceFloor>("COV_FLOOR", Self::VT_COV_FLOOR, false)?
+            .visit_field::<u16>("COV_REALISM_ID", Self::VT_COV_REALISM_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<CVR>>("COV_REALISM", Self::VT_COV_REALISM, false)?
             .visit_field::<covarianceCalibration>("COV_CALIBRATION", Self::VT_COV_CALIBRATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_CALIBRATION_REFERENCE", Self::VT_COV_CALIBRATION_REFERENCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, MORWindow>>>("WINDOWS", Self::VT_WINDOWS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("WINDOW_COEFF_HEADS", Self::VT_WINDOW_COEFF_HEADS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("WINDOW_COEFF_TAILS", Self::VT_WINDOW_COEFF_TAILS, false)?
+            .visit_field::<u64>("WINDOW_RECORD_CHECK", Self::VT_WINDOW_RECORD_CHECK, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<MPE>>("FALLBACK", Self::VT_FALLBACK, false)?
             .finish();
         Ok(())
@@ -2062,14 +2287,22 @@ pub struct MORArgs<'a> {
     pub OD_SOLVED_FOR: u32,
     pub ECOM2_Y0: f64,
     pub ACTUAL_OD_SPAN: f64,
+    pub OD_OBSERVATIONS_USED: i32,
+    pub OD_TRACKS_USED: i32,
+    pub WEIGHTED_RMS: f64,
+    pub OD_EPOCH_UNIX_US: i64,
+    pub DAYS_SINCE_LAST_OBS: f64,
     pub COVARIANCE_DATA: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub COV_PROPAGATION: Option<&'a MORCovariancePropagation>,
+    pub COV_FLOOR: morCovarianceFloor,
+    pub COV_REALISM_ID: u16,
     pub COV_REALISM: Option<::flatbuffers::WIPOffset<CVR<'a>>>,
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub WINDOWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, MORWindow>>>,
     pub WINDOW_COEFF_HEADS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub WINDOW_COEFF_TAILS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
+    pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<::flatbuffers::WIPOffset<MPE<'a>>>,
 }
 
@@ -2104,14 +2337,22 @@ impl<'a> Default for MORArgs<'a> {
             OD_SOLVED_FOR: 0,
             ECOM2_Y0: 0.0,
             ACTUAL_OD_SPAN: f64::NAN,
+            OD_OBSERVATIONS_USED: -1,
+            OD_TRACKS_USED: -1,
+            WEIGHTED_RMS: f64::NAN,
+            OD_EPOCH_UNIX_US: -9223372036854775808,
+            DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
             COV_PROPAGATION: None,
+            COV_FLOOR: morCovarianceFloor::UNSTATED,
+            COV_REALISM_ID: 0,
             COV_REALISM: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
             WINDOWS: None,
             WINDOW_COEFF_HEADS: None,
             WINDOW_COEFF_TAILS: None,
+            WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
         }
     }
@@ -2259,6 +2500,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_OD_OBSERVATIONS_USED(&mut self, OD_OBSERVATIONS_USED: i32) {
+        self.fbb_.push_slot::<i32>(MOR::VT_OD_OBSERVATIONS_USED, OD_OBSERVATIONS_USED, -1);
+    }
+
+    #[inline]
+    pub fn add_OD_TRACKS_USED(&mut self, OD_TRACKS_USED: i32) {
+        self.fbb_.push_slot::<i32>(MOR::VT_OD_TRACKS_USED, OD_TRACKS_USED, -1);
+    }
+
+    #[inline]
+    pub fn add_WEIGHTED_RMS(&mut self, WEIGHTED_RMS: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_WEIGHTED_RMS, WEIGHTED_RMS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OD_EPOCH_UNIX_US(&mut self, OD_EPOCH_UNIX_US: i64) {
+        self.fbb_.push_slot::<i64>(MOR::VT_OD_EPOCH_UNIX_US, OD_EPOCH_UNIX_US, -9223372036854775808);
+    }
+
+    #[inline]
+    pub fn add_DAYS_SINCE_LAST_OBS(&mut self, DAYS_SINCE_LAST_OBS: f64) {
+        self.fbb_.push_slot::<f64>(MOR::VT_DAYS_SINCE_LAST_OBS, DAYS_SINCE_LAST_OBS, f64::NAN);
+    }
+
+    #[inline]
     pub fn add_COVARIANCE_DATA(&mut self, COVARIANCE_DATA: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_COVARIANCE_DATA, COVARIANCE_DATA);
     }
@@ -2266,6 +2532,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_COV_PROPAGATION(&mut self, COV_PROPAGATION: &MORCovariancePropagation) {
         self.fbb_.push_slot_always::<&MORCovariancePropagation>(MOR::VT_COV_PROPAGATION, COV_PROPAGATION);
+    }
+
+    #[inline]
+    pub fn add_COV_FLOOR(&mut self, COV_FLOOR: morCovarianceFloor) {
+        self.fbb_.push_slot::<morCovarianceFloor>(MOR::VT_COV_FLOOR, COV_FLOOR, morCovarianceFloor::UNSTATED);
+    }
+
+    #[inline]
+    pub fn add_COV_REALISM_ID(&mut self, COV_REALISM_ID: u16) {
+        self.fbb_.push_slot::<u16>(MOR::VT_COV_REALISM_ID, COV_REALISM_ID, 0);
     }
 
     #[inline]
@@ -2296,6 +2572,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MORBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_WINDOW_COEFF_TAILS(&mut self, WINDOW_COEFF_TAILS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MOR::VT_WINDOW_COEFF_TAILS, WINDOW_COEFF_TAILS);
+    }
+
+    #[inline]
+    pub fn add_WINDOW_RECORD_CHECK(&mut self, WINDOW_RECORD_CHECK: u64) {
+        self.fbb_.push_slot::<u64>(MOR::VT_WINDOW_RECORD_CHECK, WINDOW_RECORD_CHECK, 0);
     }
 
     #[inline]
@@ -2349,14 +2630,22 @@ impl ::core::fmt::Debug for MOR<'_> {
         ds.field("OD_SOLVED_FOR", &self.OD_SOLVED_FOR());
         ds.field("ECOM2_Y0", &self.ECOM2_Y0());
         ds.field("ACTUAL_OD_SPAN", &self.ACTUAL_OD_SPAN());
+        ds.field("OD_OBSERVATIONS_USED", &self.OD_OBSERVATIONS_USED());
+        ds.field("OD_TRACKS_USED", &self.OD_TRACKS_USED());
+        ds.field("WEIGHTED_RMS", &self.WEIGHTED_RMS());
+        ds.field("OD_EPOCH_UNIX_US", &self.OD_EPOCH_UNIX_US());
+        ds.field("DAYS_SINCE_LAST_OBS", &self.DAYS_SINCE_LAST_OBS());
         ds.field("COVARIANCE_DATA", &self.COVARIANCE_DATA());
         ds.field("COV_PROPAGATION", &self.COV_PROPAGATION());
+        ds.field("COV_FLOOR", &self.COV_FLOOR());
+        ds.field("COV_REALISM_ID", &self.COV_REALISM_ID());
         ds.field("COV_REALISM", &self.COV_REALISM());
         ds.field("COV_CALIBRATION", &self.COV_CALIBRATION());
         ds.field("COV_CALIBRATION_REFERENCE", &self.COV_CALIBRATION_REFERENCE());
         ds.field("WINDOWS", &self.WINDOWS());
         ds.field("WINDOW_COEFF_HEADS", &self.WINDOW_COEFF_HEADS());
         ds.field("WINDOW_COEFF_TAILS", &self.WINDOW_COEFF_TAILS());
+        ds.field("WINDOW_RECORD_CHECK", &self.WINDOW_RECORD_CHECK());
         ds.field("FALLBACK", &self.FALLBACK());
         ds.finish()
     }
@@ -2392,14 +2681,22 @@ pub struct MORT {
     pub OD_SOLVED_FOR: u32,
     pub ECOM2_Y0: f64,
     pub ACTUAL_OD_SPAN: f64,
+    pub OD_OBSERVATIONS_USED: i32,
+    pub OD_TRACKS_USED: i32,
+    pub WEIGHTED_RMS: f64,
+    pub OD_EPOCH_UNIX_US: i64,
+    pub DAYS_SINCE_LAST_OBS: f64,
     pub COVARIANCE_DATA: Option<alloc::vec::Vec<f64>>,
     pub COV_PROPAGATION: Option<MORCovariancePropagationT>,
+    pub COV_FLOOR: morCovarianceFloor,
+    pub COV_REALISM_ID: u16,
     pub COV_REALISM: Option<alloc::boxed::Box<CVRT>>,
     pub COV_CALIBRATION: covarianceCalibration,
     pub COV_CALIBRATION_REFERENCE: Option<alloc::string::String>,
     pub WINDOWS: Option<alloc::vec::Vec<MORWindowT>>,
     pub WINDOW_COEFF_HEADS: Option<alloc::vec::Vec<f64>>,
     pub WINDOW_COEFF_TAILS: Option<alloc::vec::Vec<f32>>,
+    pub WINDOW_RECORD_CHECK: u64,
     pub FALLBACK: Option<alloc::boxed::Box<MPET>>,
 }
 
@@ -2433,14 +2730,22 @@ impl Default for MORT {
             OD_SOLVED_FOR: 0,
             ECOM2_Y0: 0.0,
             ACTUAL_OD_SPAN: f64::NAN,
+            OD_OBSERVATIONS_USED: -1,
+            OD_TRACKS_USED: -1,
+            WEIGHTED_RMS: f64::NAN,
+            OD_EPOCH_UNIX_US: -9223372036854775808,
+            DAYS_SINCE_LAST_OBS: f64::NAN,
             COVARIANCE_DATA: None,
             COV_PROPAGATION: None,
+            COV_FLOOR: morCovarianceFloor::UNSTATED,
+            COV_REALISM_ID: 0,
             COV_REALISM: None,
             COV_CALIBRATION: covarianceCalibration::Unspecified,
             COV_CALIBRATION_REFERENCE: None,
             WINDOWS: None,
             WINDOW_COEFF_HEADS: None,
             WINDOW_COEFF_TAILS: None,
+            WINDOW_RECORD_CHECK: 0,
             FALLBACK: None,
         }
     }
@@ -2484,11 +2789,18 @@ impl MORT {
         let OD_SOLVED_FOR = self.OD_SOLVED_FOR;
         let ECOM2_Y0 = self.ECOM2_Y0;
         let ACTUAL_OD_SPAN = self.ACTUAL_OD_SPAN;
+        let OD_OBSERVATIONS_USED = self.OD_OBSERVATIONS_USED;
+        let OD_TRACKS_USED = self.OD_TRACKS_USED;
+        let WEIGHTED_RMS = self.WEIGHTED_RMS;
+        let OD_EPOCH_UNIX_US = self.OD_EPOCH_UNIX_US;
+        let DAYS_SINCE_LAST_OBS = self.DAYS_SINCE_LAST_OBS;
         let COVARIANCE_DATA = self.COVARIANCE_DATA.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
         let COV_PROPAGATION_tmp = self.COV_PROPAGATION.as_ref().map(|x| x.pack());
         let COV_PROPAGATION = COV_PROPAGATION_tmp.as_ref();
+        let COV_FLOOR = self.COV_FLOOR;
+        let COV_REALISM_ID = self.COV_REALISM_ID;
         let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
             x.pack(_fbb)
         });
@@ -2505,6 +2817,7 @@ impl MORT {
         let WINDOW_COEFF_TAILS = self.WINDOW_COEFF_TAILS.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let WINDOW_RECORD_CHECK = self.WINDOW_RECORD_CHECK;
         let FALLBACK = self.FALLBACK.as_ref().map(|x|{
             x.pack(_fbb)
         });
@@ -2536,14 +2849,22 @@ impl MORT {
             OD_SOLVED_FOR,
             ECOM2_Y0,
             ACTUAL_OD_SPAN,
+            OD_OBSERVATIONS_USED,
+            OD_TRACKS_USED,
+            WEIGHTED_RMS,
+            OD_EPOCH_UNIX_US,
+            DAYS_SINCE_LAST_OBS,
             COVARIANCE_DATA,
             COV_PROPAGATION,
+            COV_FLOOR,
+            COV_REALISM_ID,
             COV_REALISM,
             COV_CALIBRATION,
             COV_CALIBRATION_REFERENCE,
             WINDOWS,
             WINDOW_COEFF_HEADS,
             WINDOW_COEFF_TAILS,
+            WINDOW_RECORD_CHECK,
             FALLBACK,
         })
     }

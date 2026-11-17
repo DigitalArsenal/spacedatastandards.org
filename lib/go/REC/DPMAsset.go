@@ -359,8 +359,43 @@ func (rcv *DPMAsset) DerivedBuild(obj *DPMDerivedBuild) *DPMDerivedBuild {
 /// The builder of the derived polynomial rows the asset's records carry
 /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
 /// carry no derived rows, or a reader must ignore them.
+/// The covariance realism models the asset's records name by ID ($MOR
+/// COV_REALISM_ID), each stated once with its population figures.
+func (rcv *DPMAsset) COV_REALISM_MODELS(obj *DPMRealismModel, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(DPMRealismModel)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *DPMAsset) CovRealismModels(obj *DPMRealismModel, j int) bool {
+	return rcv.COV_REALISM_MODELS(obj, j)
+}
+
+func (rcv *DPMAsset) COV_REALISM_MODELSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *DPMAsset) CovRealismModelsLength() int {
+	return rcv.COV_REALISM_MODELSLength()
+}
+
+/// The covariance realism models the asset's records name by ID ($MOR
+/// COV_REALISM_ID), each stated once with its population figures.
 func DPMAssetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	builder.PrependInt8Slot(0, int8(ASSET_KIND), 3)
@@ -457,6 +492,18 @@ func DPMAssetAddDERIVED_BUILD(builder *flatbuffers.Builder, DERIVED_BUILD flatbu
 }
 func DPMAssetAddDerivedBuild(builder *flatbuffers.Builder, DERIVED_BUILD flatbuffers.UOffsetT) {
 	DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
+}
+func DPMAssetAddCOV_REALISM_MODELS(builder *flatbuffers.Builder, COV_REALISM_MODELS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(COV_REALISM_MODELS), 0)
+}
+func DPMAssetAddCovRealismModels(builder *flatbuffers.Builder, COV_REALISM_MODELS flatbuffers.UOffsetT) {
+	DPMAssetAddCOV_REALISM_MODELS(builder, COV_REALISM_MODELS)
+}
+func DPMAssetStartCOV_REALISM_MODELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func DPMAssetStartCovRealismModelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DPMAssetStartCOV_REALISM_MODELSVector(builder, numElems)
 }
 func DPMAssetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

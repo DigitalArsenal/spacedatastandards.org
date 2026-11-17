@@ -278538,6 +278538,30 @@
                         }
                     }
                 },
+                "morCovarianceFloor": {
+                    "type": "string",
+                    "enum": [
+                        "UNSTATED",
+                        "WRITER_THEORY_STATE",
+                        "MEAN_ELEMENTS_TWO_BODY"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSTATED": {
+                            "value": 0,
+                            "description": "No covariance."
+                        },
+                        "WRITER_THEORY_STATE": {
+                            "value": 1,
+                            "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+                        },
+                        "MEAN_ELEMENTS_TWO_BODY": {
+                            "value": 2,
+                            "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
+                        }
+                    }
+                },
                 "morGravityField": {
                     "type": "string",
                     "enum": [
@@ -279404,6 +279428,42 @@
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "nan"
                         },
+                        "OD_OBSERVATIONS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Observations the orbit determination used; -1 when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "int32",
+                            "x-flatbuffer-default": "-1"
+                        },
+                        "OD_TRACKS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "int32",
+                            "x-flatbuffer-default": "-1"
+                        },
+                        "WEIGHTED_RMS": {
+                            "type": "number",
+                            "description": "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OD_EPOCH_UNIX_US": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
+                            "x-flatbuffer-type": "int64",
+                            "x-flatbuffer-default": "-9223372036854775808"
+                        },
+                        "DAYS_SINCE_LAST_OBS": {
+                            "type": "number",
+                            "description": "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
@@ -279417,9 +279477,37 @@
                             "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
                             "x-flatbuffer-type": "MORCovariancePropagation"
                         },
+                        "COV_FLOOR": {
+                            "$ref": "#/definitions/morCovarianceFloor",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSTATED": {
+                                    "value": 0,
+                                    "description": "No covariance."
+                                },
+                                "WRITER_THEORY_STATE": {
+                                    "value": 1,
+                                    "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+                                },
+                                "MEAN_ELEMENTS_TWO_BODY": {
+                                    "value": 2,
+                                    "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSTATED"
+                        },
+                        "COV_REALISM_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.",
+                            "x-flatbuffer-type": "uint16"
+                        },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.",
+                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
                             "x-flatbuffer-type": "CVR"
                         },
                         "COV_CALIBRATION": {
@@ -279453,7 +279541,7 @@
                             "items": {
                                 "$ref": "#/definitions/MORWindow"
                             },
-                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must.",
+                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.",
                             "x-flatbuffer-type": "[MORWindow]"
                         },
                         "WINDOW_COEFF_HEADS": {
@@ -279471,6 +279559,13 @@
                             },
                             "description": "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
                             "x-flatbuffer-type": "[float]"
+                        },
+                        "WINDOW_RECORD_CHECK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
+                            "x-flatbuffer-type": "uint64"
                         },
                         "FALLBACK": {
                             "$ref": "#/definitions/MPE",
@@ -334956,6 +335051,30 @@
                         "TEST": {
                             "value": 2,
                             "description": "Test data."
+                        }
+                    }
+                },
+                "morCovarianceFloor": {
+                    "type": "string",
+                    "enum": [
+                        "UNSTATED",
+                        "WRITER_THEORY_STATE",
+                        "MEAN_ELEMENTS_TWO_BODY"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSTATED": {
+                            "value": 0,
+                            "description": "No covariance."
+                        },
+                        "WRITER_THEORY_STATE": {
+                            "value": 1,
+                            "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+                        },
+                        "MEAN_ELEMENTS_TWO_BODY": {
+                            "value": 2,
+                            "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
                         }
                     }
                 },
@@ -393797,6 +393916,32 @@
                         "DERIVED_BUILD": {
                             "$ref": "#/definitions/DPMDerivedBuild",
                             "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+                        },
+                        "COV_REALISM_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DPMRealismModel"
+                            },
+                            "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DPMRealismModel": {
+                    "type": "object",
+                    "description": "One covariance realism model of an asset: the realism entry its records\nwould otherwise each repeat.",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The model's number within the asset, 1 or more; a record names it.",
+                            "x-flatbuffer-type": "uint16"
+                        },
+                        "REALISM": {
+                            "$ref": "#/definitions/CVR",
+                            "description": "The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM\nentry of each record that names this ID.",
+                            "x-flatbuffer-type": "CVR"
                         }
                     },
                     "additionalProperties": false
@@ -424256,6 +424401,42 @@
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "nan"
                         },
+                        "OD_OBSERVATIONS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Observations the orbit determination used; -1 when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "int32",
+                            "x-flatbuffer-default": "-1"
+                        },
+                        "OD_TRACKS_USED": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Tracks the orbit determination used; -1 when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "int32",
+                            "x-flatbuffer-default": "-1"
+                        },
+                        "WEIGHTED_RMS": {
+                            "type": "number",
+                            "description": "Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OD_EPOCH_UNIX_US": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.",
+                            "x-flatbuffer-type": "int64",
+                            "x-flatbuffer-default": "-9223372036854775808"
+                        },
+                        "DAYS_SINCE_LAST_OBS": {
+                            "type": "number",
+                            "description": "Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
                         "COVARIANCE_DATA": {
                             "type": "array",
                             "items": {
@@ -424269,9 +424450,37 @@
                             "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
                             "x-flatbuffer-type": "MORCovariancePropagation"
                         },
+                        "COV_FLOOR": {
+                            "$ref": "#/definitions/morCovarianceFloor",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same\ncovariance as its $OCM.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSTATED": {
+                                    "value": 0,
+                                    "description": "No covariance."
+                                },
+                                "WRITER_THEORY_STATE": {
+                                    "value": 1,
+                                    "description": "At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A reader of AP sets does not use this covariance (its states fly)."
+                                },
+                                "MEAN_ELEMENTS_TWO_BODY": {
+                                    "value": 2,
+                                    "description": "At the two-body state of the set's own mean elements: PRODUCER exactly \"com.spacedatanetwork.sdn-ap-propagator X.Y.Z\", three decimal integers, X.Y.Z at 0.6.39 or later."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSTATED"
+                        },
+                        "COV_REALISM_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.",
+                            "x-flatbuffer-type": "uint16"
+                        },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.",
+                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
                             "x-flatbuffer-type": "CVR"
                         },
                         "COV_CALIBRATION": {
@@ -424305,7 +424514,7 @@
                             "items": {
                                 "$ref": "#/definitions/MORWindow"
                             },
-                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must.",
+                            "description": "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative and a reader may\nignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot\nreproduce that statement, nor when WINDOW_RECORD_CHECK does not match.",
                             "x-flatbuffer-type": "[MORWindow]"
                         },
                         "WINDOW_COEFF_HEADS": {
@@ -424323,6 +424532,13 @@
                             },
                             "description": "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
                             "x-flatbuffer-type": "[float]"
+                        },
+                        "WINDOW_RECORD_CHECK": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD\npublishes as its record digest (over the record's decoded inputs). A reader recomputes it from this\nrecord before using the rows: a mismatch voids the rows. With WINDOWS only.",
+                            "x-flatbuffer-type": "uint64"
                         },
                         "FALLBACK": {
                             "$ref": "#/definitions/MPE",
@@ -696479,6 +696695,69 @@
         "DPM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "covarianceCalibration": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Uncalibrated",
+                        "Calibrated"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Calibration not stated"
+                        },
+                        "Uncalibrated": {
+                            "value": 1,
+                            "description": "Not measured against independent reference states, or measured and failed"
+                        },
+                        "Calibrated": {
+                            "value": 2,
+                            "description": "Measured against independent reference states and passed"
+                        }
+                    }
+                },
+                "covarianceRule": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Operator",
+                        "ScaledFit",
+                        "SourceModel",
+                        "PooledModel",
+                        "EmpiricalHistoryShrunk"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "Operator": {
+                            "value": 1,
+                            "description": "The operator's covariance, as supplied"
+                        },
+                        "ScaledFit": {
+                            "value": 2,
+                            "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                        },
+                        "SourceModel": {
+                            "value": 3,
+                            "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                        },
+                        "PooledModel": {
+                            "value": 4,
+                            "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+                        },
+                        "EmpiricalHistoryShrunk": {
+                            "value": 5,
+                            "description": "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
+                        }
+                    }
+                },
                 "pvnSourceKind": {
                     "type": "string",
                     "enum": [
@@ -696610,6 +696889,200 @@
                             "description": "Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL."
                         }
                     }
+                },
+                "CVR": {
+                    "type": "object",
+                    "description": "Covariance Realism",
+                    "properties": {
+                        "RULE": {
+                            "$ref": "#/definitions/covarianceRule",
+                            "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Operator": {
+                                    "value": 1,
+                                    "description": "The operator's covariance, as supplied"
+                                },
+                                "ScaledFit": {
+                                    "value": 2,
+                                    "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                                },
+                                "SourceModel": {
+                                    "value": 3,
+                                    "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                                },
+                                "PooledModel": {
+                                    "value": 4,
+                                    "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+                                },
+                                "EmpiricalHistoryShrunk": {
+                                    "value": 5,
+                                    "description": "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REGIME": {
+                            "type": "string",
+                            "description": "Orbit regime of the cell, as the model names it.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "AGE_DAYS": {
+                            "type": "number",
+                            "description": "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "HORIZON_DAYS": {
+                            "type": "number",
+                            "description": "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MEASURED_LINEAGE": {
+                            "type": "string",
+                            "description": "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TEST_WINDOW": {
+                            "type": "string",
+                            "description": "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEAN_D2_OVER_3": {
+                            "type": "number",
+                            "description": "Mean of d2/3 over the held-out samples. NaN when not measured.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_95": {
+                            "type": "number",
+                            "description": "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SAMPLES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of held-out samples the test used.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "OBJECTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of distinct objects the samples came from.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "SCALE_FACTOR": {
+                            "type": "number",
+                            "description": "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "CALIBRATION": {
+                            "$ref": "#/definitions/covarianceCalibration",
+                            "description": "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Calibration not stated"
+                                },
+                                "Uncalibrated": {
+                                    "value": 1,
+                                    "description": "Not measured against independent reference states, or measured and failed"
+                                },
+                                "Calibrated": {
+                                    "value": 2,
+                                    "description": "Measured against independent reference states and passed"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "EVIDENCE": {
+                            "type": "string",
+                            "description": "Identifier of the report or record that holds the test.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "HISTORY_SAMPLES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "HISTORY_SETS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "HISTORY_WINDOW": {
+                            "type": "string",
+                            "description": "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SHRINKAGE_WEIGHT": {
+                            "type": "number",
+                            "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "TRUTH_EPOCHS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated.",
+                            "x-flatbuffer-type": "uint"
+                        },
+                        "COVERAGE_1_SIGMA_AXIS1": {
+                            "type": "number",
+                            "description": "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_1_SIGMA_AXIS2": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_1_SIGMA_AXIS3": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_3_SIGMA_AXIS1": {
+                            "type": "number",
+                            "description": "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_3_SIGMA_AXIS2": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVERAGE_3_SIGMA_AXIS3": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "PVN": {
                     "type": "object",
@@ -696888,6 +697361,32 @@
                         "DERIVED_BUILD": {
                             "$ref": "#/definitions/DPMDerivedBuild",
                             "description": "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+                        },
+                        "COV_REALISM_MODELS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DPMRealismModel"
+                            },
+                            "description": "The covariance realism models the asset's records name by ID ($MOR\nCOV_REALISM_ID), each stated once with its population figures."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DPMRealismModel": {
+                    "type": "object",
+                    "description": "One covariance realism model of an asset: the realism entry its records\nwould otherwise each repeat.",
+                    "properties": {
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The model's number within the asset, 1 or more; a record names it.",
+                            "x-flatbuffer-type": "uint16"
+                        },
+                        "REALISM": {
+                            "$ref": "#/definitions/CVR",
+                            "description": "The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM\nentry of each record that names this ID.",
+                            "x-flatbuffer-type": "CVR"
                         }
                     },
                     "additionalProperties": false

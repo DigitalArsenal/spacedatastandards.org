@@ -307,6 +307,56 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
+    /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+    /**
+     * @return int
+     */
+    public function getOD_OBSERVATIONS_USED()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
+    }
+
+    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    /**
+     * @return int
+     */
+    public function getOD_TRACKS_USED()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
+    }
+
+    /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+    /**
+     * @return double
+     */
+    public function getWEIGHTED_RMS()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+    /**
+     * @return long
+     */
+    public function getOD_EPOCH_UNIX_US()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : -9223372036854775808;
+    }
+
+    /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+    /**
+     * @return double
+     */
+    public function getDAYS_SINCE_LAST_OBS()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
     /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
     /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -317,7 +367,7 @@ class MOR extends Table
      */
     public function getCOVARIANCE_DATA($j)
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -326,7 +376,7 @@ class MOR extends Table
      */
     public function getCOVARIANCE_DATALength()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -334,15 +384,38 @@ class MOR extends Table
     public function getCOV_PROPAGATION()
     {
         $obj = new MORCovariancePropagation();
-        $o = $this->__offset(60);
+        $o = $this->__offset(70);
         return $o != 0 ? $obj->init($o + $this->bb_pos, $this->bb) : 0;
     }
 
-    /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+    /// covariance as its $OCM.
+    /**
+     * @return byte
+     */
+    public function getCOV_FLOOR()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \morCovarianceFloor::UNSTATED;
+    }
+
+    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    /**
+     * @return ushort
+     */
+    public function getCOV_REALISM_ID()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     public function getCOV_REALISM()
     {
         $obj = new CVR();
-        $o = $this->__offset(62);
+        $o = $this->__offset(76);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -352,26 +425,27 @@ class MOR extends Table
      */
     public function getCOV_CALIBRATION()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \covarianceCalibration::Unspecified;
     }
 
     /// Identifier of that calibration evidence (a report or record).
     public function getCOV_CALIBRATION_REFERENCE()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-    /// the rows, and one that cannot reproduce the asset's build statement must.
+    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     /**
      * @returnVectorOffset
      */
     public function getWINDOWS($j)
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(82);
         $obj = new MORWindow();
         return $o != 0 ? $obj->init($this->__vector($o) + $j *24, $this->bb) : null;
     }
@@ -381,7 +455,7 @@ class MOR extends Table
      */
     public function getWINDOWSLength()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -393,7 +467,7 @@ class MOR extends Table
      */
     public function getWINDOW_COEFF_HEADS($j)
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -402,7 +476,7 @@ class MOR extends Table
      */
     public function getWINDOW_COEFF_HEADSLength()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -414,7 +488,7 @@ class MOR extends Table
      */
     public function getWINDOW_COEFF_TAILS($j)
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getFloat($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -423,8 +497,20 @@ class MOR extends Table
      */
     public function getWINDOW_COEFF_TAILSLength()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    /**
+     * @return ulong
+     */
+    public function getWINDOW_RECORD_CHECK()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// The object's own element set for times beyond what this record serves (a reader's fallback
@@ -433,7 +519,7 @@ class MOR extends Table
     public function getFALLBACK()
     {
         $obj = new MPE();
-        $o = $this->__offset(74);
+        $o = $this->__offset(90);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -443,16 +529,16 @@ class MOR extends Table
      */
     public static function startMOR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(36);
+        $builder->StartObject(44);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MOR
      */
-    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $OBJECT_NAME, $MESSAGE_STATUS, $EPOCH_UNIX_US, $MEAN_ELEMENT_THEORY, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ECOM2_Y0, $ACTUAL_OD_SPAN, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_REALISM, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $FALLBACK)
+    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $OBJECT_NAME, $MESSAGE_STATUS, $EPOCH_UNIX_US, $MEAN_ELEMENT_THEORY, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ECOM2_Y0, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_REALISM, $COV_CALIBRATION, $COV_CALIBRATION_REFERENCE, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $FALLBACK)
     {
-        $builder->startObject(36);
+        $builder->startObject(44);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addINTERNATIONAL_DESIGNATOR($builder, $INTERNATIONAL_DESIGNATOR);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -480,14 +566,22 @@ class MOR extends Table
         self::addOD_SOLVED_FOR($builder, $OD_SOLVED_FOR);
         self::addECOM2_Y0($builder, $ECOM2_Y0);
         self::addACTUAL_OD_SPAN($builder, $ACTUAL_OD_SPAN);
+        self::addOD_OBSERVATIONS_USED($builder, $OD_OBSERVATIONS_USED);
+        self::addOD_TRACKS_USED($builder, $OD_TRACKS_USED);
+        self::addWEIGHTED_RMS($builder, $WEIGHTED_RMS);
+        self::addOD_EPOCH_UNIX_US($builder, $OD_EPOCH_UNIX_US);
+        self::addDAYS_SINCE_LAST_OBS($builder, $DAYS_SINCE_LAST_OBS);
         self::addCOVARIANCE_DATA($builder, $COVARIANCE_DATA);
         self::addCOV_PROPAGATION($builder, $COV_PROPAGATION);
+        self::addCOV_FLOOR($builder, $COV_FLOOR);
+        self::addCOV_REALISM_ID($builder, $COV_REALISM_ID);
         self::addCOV_REALISM($builder, $COV_REALISM);
         self::addCOV_CALIBRATION($builder, $COV_CALIBRATION);
         self::addCOV_CALIBRATION_REFERENCE($builder, $COV_CALIBRATION_REFERENCE);
         self::addWINDOWS($builder, $WINDOWS);
         self::addWINDOW_COEFF_HEADS($builder, $WINDOW_COEFF_HEADS);
         self::addWINDOW_COEFF_TAILS($builder, $WINDOW_COEFF_TAILS);
+        self::addWINDOW_RECORD_CHECK($builder, $WINDOW_RECORD_CHECK);
         self::addFALLBACK($builder, $FALLBACK);
         $o = $builder->endObject();
         return $o;
@@ -765,12 +859,62 @@ class MOR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addOD_OBSERVATIONS_USED(FlatBufferBuilder $builder, $OD_OBSERVATIONS_USED)
+    {
+        $builder->addIntX(27, $OD_OBSERVATIONS_USED, -1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addOD_TRACKS_USED(FlatBufferBuilder $builder, $OD_TRACKS_USED)
+    {
+        $builder->addIntX(28, $OD_TRACKS_USED, -1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWEIGHTED_RMS(FlatBufferBuilder $builder, $WEIGHTED_RMS)
+    {
+        $builder->addDoubleX(29, $WEIGHTED_RMS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addOD_EPOCH_UNIX_US(FlatBufferBuilder $builder, $OD_EPOCH_UNIX_US)
+    {
+        $builder->addLongX(30, $OD_EPOCH_UNIX_US, -9223372036854775808);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDAYS_SINCE_LAST_OBS(FlatBufferBuilder $builder, $DAYS_SINCE_LAST_OBS)
+    {
+        $builder->addDoubleX(31, $DAYS_SINCE_LAST_OBS, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addCOVARIANCE_DATA(FlatBufferBuilder $builder, $COVARIANCE_DATA)
     {
-        $builder->addOffsetX(27, $COVARIANCE_DATA, 0);
+        $builder->addOffsetX(32, $COVARIANCE_DATA, 0);
     }
 
     /**
@@ -804,7 +948,27 @@ class MOR extends Table
      */
     public static function addCOV_PROPAGATION(FlatBufferBuilder $builder, $COV_PROPAGATION)
     {
-        $builder->addStructX(28, $COV_PROPAGATION, 0);
+        $builder->addStructX(33, $COV_PROPAGATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCOV_FLOOR(FlatBufferBuilder $builder, $COV_FLOOR)
+    {
+        $builder->addByteX(34, $COV_FLOOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addCOV_REALISM_ID(FlatBufferBuilder $builder, $COV_REALISM_ID)
+    {
+        $builder->addUshortX(35, $COV_REALISM_ID, 0);
     }
 
     /**
@@ -814,7 +978,7 @@ class MOR extends Table
      */
     public static function addCOV_REALISM(FlatBufferBuilder $builder, $COV_REALISM)
     {
-        $builder->addOffsetX(29, $COV_REALISM, 0);
+        $builder->addOffsetX(36, $COV_REALISM, 0);
     }
 
     /**
@@ -824,7 +988,7 @@ class MOR extends Table
      */
     public static function addCOV_CALIBRATION(FlatBufferBuilder $builder, $COV_CALIBRATION)
     {
-        $builder->addSbyteX(30, $COV_CALIBRATION, 0);
+        $builder->addSbyteX(37, $COV_CALIBRATION, 0);
     }
 
     /**
@@ -834,7 +998,7 @@ class MOR extends Table
      */
     public static function addCOV_CALIBRATION_REFERENCE(FlatBufferBuilder $builder, $COV_CALIBRATION_REFERENCE)
     {
-        $builder->addOffsetX(31, $COV_CALIBRATION_REFERENCE, 0);
+        $builder->addOffsetX(38, $COV_CALIBRATION_REFERENCE, 0);
     }
 
     /**
@@ -844,7 +1008,7 @@ class MOR extends Table
      */
     public static function addWINDOWS(FlatBufferBuilder $builder, $WINDOWS)
     {
-        $builder->addOffsetX(32, $WINDOWS, 0);
+        $builder->addOffsetX(39, $WINDOWS, 0);
     }
 
     /**
@@ -878,7 +1042,7 @@ class MOR extends Table
      */
     public static function addWINDOW_COEFF_HEADS(FlatBufferBuilder $builder, $WINDOW_COEFF_HEADS)
     {
-        $builder->addOffsetX(33, $WINDOW_COEFF_HEADS, 0);
+        $builder->addOffsetX(40, $WINDOW_COEFF_HEADS, 0);
     }
 
     /**
@@ -912,7 +1076,7 @@ class MOR extends Table
      */
     public static function addWINDOW_COEFF_TAILS(FlatBufferBuilder $builder, $WINDOW_COEFF_TAILS)
     {
-        $builder->addOffsetX(34, $WINDOW_COEFF_TAILS, 0);
+        $builder->addOffsetX(41, $WINDOW_COEFF_TAILS, 0);
     }
 
     /**
@@ -941,12 +1105,22 @@ class MOR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addWINDOW_RECORD_CHECK(FlatBufferBuilder $builder, $WINDOW_RECORD_CHECK)
+    {
+        $builder->addUlongX(42, $WINDOW_RECORD_CHECK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addFALLBACK(FlatBufferBuilder $builder, $FALLBACK)
     {
-        $builder->addOffsetX(35, $FALLBACK, 0);
+        $builder->addOffsetX(43, $FALLBACK, 0);
     }
 
     /**

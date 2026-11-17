@@ -26,6 +26,27 @@ public enum morMessageStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 }
 
 
+///  Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+///  covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+///  COVARIANCE_DATA only. Append new values only.
+public enum morCovarianceFloor: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  No covariance.
+  case unstated = 0
+  ///  At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+  ///  reader of AP sets does not use this covariance (its states fly).
+  case writerTheoryState = 1
+  ///  At the two-body state of the set's own mean elements: PRODUCER exactly
+  ///  "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+  case meanElementsTwoBody = 2
+
+  public static var max: morCovarianceFloor { return .meanElementsTwoBody }
+  public static var min: morCovarianceFloor { return .unstated }
+}
+
+
 ///  The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 public enum morGravityField: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
@@ -329,15 +350,23 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let OD_SOLVED_FOR: VOffset = 52
     static let ECOM2_Y0: VOffset = 54
     static let ACTUAL_OD_SPAN: VOffset = 56
-    static let COVARIANCE_DATA: VOffset = 58
-    static let COV_PROPAGATION: VOffset = 60
-    static let COV_REALISM: VOffset = 62
-    static let COV_CALIBRATION: VOffset = 64
-    static let COV_CALIBRATION_REFERENCE: VOffset = 66
-    static let WINDOWS: VOffset = 68
-    static let WINDOW_COEFF_HEADS: VOffset = 70
-    static let WINDOW_COEFF_TAILS: VOffset = 72
-    static let FALLBACK: VOffset = 74
+    static let OD_OBSERVATIONS_USED: VOffset = 58
+    static let OD_TRACKS_USED: VOffset = 60
+    static let WEIGHTED_RMS: VOffset = 62
+    static let OD_EPOCH_UNIX_US: VOffset = 64
+    static let DAYS_SINCE_LAST_OBS: VOffset = 66
+    static let COVARIANCE_DATA: VOffset = 68
+    static let COV_PROPAGATION: VOffset = 70
+    static let COV_FLOOR: VOffset = 72
+    static let COV_REALISM_ID: VOffset = 74
+    static let COV_REALISM: VOffset = 76
+    static let COV_CALIBRATION: VOffset = 78
+    static let COV_CALIBRATION_REFERENCE: VOffset = 80
+    static let WINDOWS: VOffset = 82
+    static let WINDOW_COEFF_HEADS: VOffset = 84
+    static let WINDOW_COEFF_TAILS: VOffset = 86
+    static let WINDOW_RECORD_CHECK: VOffset = 88
+    static let FALLBACK: VOffset = 90
   }
 
   ///  The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
@@ -402,6 +431,16 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ECOM2_Y0: Double { let o = _accessor.offset(VT.ECOM2_Y0); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The span of the observations the orbit determination used, days; NaN when not stated.
   public var ACTUAL_OD_SPAN: Double { let o = _accessor.offset(VT.ACTUAL_OD_SPAN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observations the orbit determination used; -1 when not stated ($OCM 0).
+  public var OD_OBSERVATIONS_USED: Int32 { let o = _accessor.offset(VT.OD_OBSERVATIONS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Tracks the orbit determination used; -1 when not stated ($OCM 0).
+  public var OD_TRACKS_USED: Int32 { let o = _accessor.offset(VT.OD_TRACKS_USED); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+  public var WEIGHTED_RMS: Double { let o = _accessor.offset(VT.WEIGHTED_RMS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch of the orbit determination, in the form of EPOCH_UNIX_US; -9223372036854775808 when not stated.
+  public var OD_EPOCH_UNIX_US: Int64 { let o = _accessor.offset(VT.OD_EPOCH_UNIX_US); return o == 0 ? -9223372036854775808 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+  public var DAYS_SINCE_LAST_OBS: Double { let o = _accessor.offset(VT.DAYS_SINCE_LAST_OBS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
   ///  among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
   ///  OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
@@ -411,7 +450,14 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
   public var COV_PROPAGATION: MORCovariancePropagation? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : _accessor.readBuffer(of: MORCovariancePropagation.self, at: o) }
   public var mutableCovPropagation: MORCovariancePropagation_Mutable? { let o = _accessor.offset(VT.COV_PROPAGATION); return o == 0 ? nil : MORCovariancePropagation_Mutable(_accessor.bb, o: o + _accessor.position) }
-  ///  The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+  ///  Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+  ///  covariance as its $OCM.
+  public var COV_FLOOR: morCovarianceFloor { let o = _accessor.offset(VT.COV_FLOOR); return o == 0 ? .unstated : morCovarianceFloor(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unstated }
+  ///  The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+  ///  the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+  public var COV_REALISM_ID: UInt16 { let o = _accessor.offset(VT.COV_REALISM_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+  ///  single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
   public var COV_REALISM: CVR? { let o = _accessor.offset(VT.COV_REALISM); return o == 0 ? nil : CVR(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Whether COVARIANCE_DATA's coverage was measured against independent reference states.
   public var COV_CALIBRATION: covarianceCalibration { let o = _accessor.offset(VT.COV_CALIBRATION); return o == 0 ? .unspecified : covarianceCalibration(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
@@ -419,8 +465,9 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
   ///  Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-  ///  in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-  ///  the rows, and one that cannot reproduce the asset's build statement must.
+  ///  in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+  ///  ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+  ///  reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
   public var WINDOWS: FlatbufferVector<MORWindow> { return _accessor.vector(at: VT.WINDOWS, byteSize: 24) }
   public var mutableWindows: FlatbufferVector<MORWindow_Mutable> { return _accessor.vector(at: VT.WINDOWS, byteSize: 24) }
   public func withUnsafePointerToWindows<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WINDOWS, body: body) }
@@ -432,11 +479,15 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
   public var WINDOW_COEFF_TAILS: FlatbufferVector<Float32> { return _accessor.vector(at: VT.WINDOW_COEFF_TAILS, byteSize: 4) }
   public func withUnsafePointerToWindowCoeffTails<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.WINDOW_COEFF_TAILS, body: body) }
+  ///  The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+  ///  publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+  ///  record before using the rows: a mismatch voids the rows. With WINDOWS only.
+  public var WINDOW_RECORD_CHECK: UInt64 { let o = _accessor.offset(VT.WINDOW_RECORD_CHECK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  The object's own element set for times beyond what this record serves (a reader's fallback
   ///  propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
   ///  object is this record's.
   public var FALLBACK: MPE? { let o = _accessor.offset(VT.FALLBACK); return o == 0 ? nil : MPE(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
+  public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 44) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
   public static func add(INTERNATIONAL_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERNATIONAL_DESIGNATOR, at: VT.INTERNATIONAL_DESIGNATOR) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VT.ORIGINATOR) }
@@ -464,8 +515,15 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(OD_SOLVED_FOR: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_SOLVED_FOR, def: 0, at: VT.OD_SOLVED_FOR) }
   public static func add(ECOM2_Y0: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECOM2_Y0, def: 0.0, at: VT.ECOM2_Y0) }
   public static func add(ACTUAL_OD_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTUAL_OD_SPAN, def: .nan, at: VT.ACTUAL_OD_SPAN) }
+  public static func add(OD_OBSERVATIONS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_OBSERVATIONS_USED, def: -1, at: VT.OD_OBSERVATIONS_USED) }
+  public static func add(OD_TRACKS_USED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_TRACKS_USED, def: -1, at: VT.OD_TRACKS_USED) }
+  public static func add(WEIGHTED_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHTED_RMS, def: .nan, at: VT.WEIGHTED_RMS) }
+  public static func add(OD_EPOCH_UNIX_US: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_EPOCH_UNIX_US, def: -9223372036854775808, at: VT.OD_EPOCH_UNIX_US) }
+  public static func add(DAYS_SINCE_LAST_OBS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DAYS_SINCE_LAST_OBS, def: .nan, at: VT.DAYS_SINCE_LAST_OBS) }
   public static func addVectorOf(COVARIANCE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_DATA, at: VT.COVARIANCE_DATA) }
   public static func add(COV_PROPAGATION: MORCovariancePropagation?, _ fbb: inout FlatBufferBuilder) { guard let COV_PROPAGATION = COV_PROPAGATION else { return }; fbb.create(struct: COV_PROPAGATION, position: VT.COV_PROPAGATION) }
+  public static func add(COV_FLOOR: morCovarianceFloor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_FLOOR.rawValue, def: 0, at: VT.COV_FLOOR) }
+  public static func add(COV_REALISM_ID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_REALISM_ID, def: 0, at: VT.COV_REALISM_ID) }
   public static func add(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
   public static func add(COV_CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_CALIBRATION.rawValue, def: 0, at: VT.COV_CALIBRATION) }
   public static func add(COV_CALIBRATION_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_CALIBRATION_REFERENCE, at: VT.COV_CALIBRATION_REFERENCE) }
@@ -475,6 +533,7 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   }
   public static func addVectorOf(WINDOW_COEFF_HEADS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_HEADS, at: VT.WINDOW_COEFF_HEADS) }
   public static func addVectorOf(WINDOW_COEFF_TAILS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_COEFF_TAILS, at: VT.WINDOW_COEFF_TAILS) }
+  public static func add(WINDOW_RECORD_CHECK: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_RECORD_CHECK, def: 0, at: VT.WINDOW_RECORD_CHECK) }
   public static func add(FALLBACK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FALLBACK, at: VT.FALLBACK) }
   public static func endMOR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMOR(
@@ -506,14 +565,22 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OD_SOLVED_FOR: UInt32 = 0,
     ECOM2_Y0: Double = 0.0,
     ACTUAL_OD_SPAN: Double = .nan,
+    OD_OBSERVATIONS_USED: Int32 = -1,
+    OD_TRACKS_USED: Int32 = -1,
+    WEIGHTED_RMS: Double = .nan,
+    OD_EPOCH_UNIX_US: Int64 = -9223372036854775808,
+    DAYS_SINCE_LAST_OBS: Double = .nan,
     COVARIANCE_DATAVectorOffset COVARIANCE_DATA: Offset = Offset(),
     COV_PROPAGATION: MORCovariancePropagation? = nil,
+    COV_FLOOR: morCovarianceFloor = .unstated,
+    COV_REALISM_ID: UInt16 = 0,
     COV_REALISMOffset COV_REALISM: Offset = Offset(),
     COV_CALIBRATION: covarianceCalibration = .unspecified,
     COV_CALIBRATION_REFERENCEOffset COV_CALIBRATION_REFERENCE: Offset = Offset(),
     WINDOWSVectorOffset WINDOWS: Offset = Offset(),
     WINDOW_COEFF_HEADSVectorOffset WINDOW_COEFF_HEADS: Offset = Offset(),
     WINDOW_COEFF_TAILSVectorOffset WINDOW_COEFF_TAILS: Offset = Offset(),
+    WINDOW_RECORD_CHECK: UInt64 = 0,
     FALLBACKOffset FALLBACK: Offset = Offset()
   ) -> Offset {
     let __start = MOR.startMOR(&fbb)
@@ -544,14 +611,22 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MOR.add(OD_SOLVED_FOR: OD_SOLVED_FOR, &fbb)
     MOR.add(ECOM2_Y0: ECOM2_Y0, &fbb)
     MOR.add(ACTUAL_OD_SPAN: ACTUAL_OD_SPAN, &fbb)
+    MOR.add(OD_OBSERVATIONS_USED: OD_OBSERVATIONS_USED, &fbb)
+    MOR.add(OD_TRACKS_USED: OD_TRACKS_USED, &fbb)
+    MOR.add(WEIGHTED_RMS: WEIGHTED_RMS, &fbb)
+    MOR.add(OD_EPOCH_UNIX_US: OD_EPOCH_UNIX_US, &fbb)
+    MOR.add(DAYS_SINCE_LAST_OBS: DAYS_SINCE_LAST_OBS, &fbb)
     MOR.addVectorOf(COVARIANCE_DATA: COVARIANCE_DATA, &fbb)
     MOR.add(COV_PROPAGATION: COV_PROPAGATION, &fbb)
+    MOR.add(COV_FLOOR: COV_FLOOR, &fbb)
+    MOR.add(COV_REALISM_ID: COV_REALISM_ID, &fbb)
     MOR.add(COV_REALISM: COV_REALISM, &fbb)
     MOR.add(COV_CALIBRATION: COV_CALIBRATION, &fbb)
     MOR.add(COV_CALIBRATION_REFERENCE: COV_CALIBRATION_REFERENCE, &fbb)
     MOR.addVectorOf(WINDOWS: WINDOWS, &fbb)
     MOR.addVectorOf(WINDOW_COEFF_HEADS: WINDOW_COEFF_HEADS, &fbb)
     MOR.addVectorOf(WINDOW_COEFF_TAILS: WINDOW_COEFF_TAILS, &fbb)
+    MOR.add(WINDOW_RECORD_CHECK: WINDOW_RECORD_CHECK, &fbb)
     MOR.add(FALLBACK: FALLBACK, &fbb)
     return MOR.endMOR(&fbb, start: __start)
   }
@@ -585,14 +660,22 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.OD_SOLVED_FOR, fieldName: "OD_SOLVED_FOR", required: false, type: UInt32.self)
     try _v.visit(field: VT.ECOM2_Y0, fieldName: "ECOM2_Y0", required: false, type: Double.self)
     try _v.visit(field: VT.ACTUAL_OD_SPAN, fieldName: "ACTUAL_OD_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_OBSERVATIONS_USED, fieldName: "OD_OBSERVATIONS_USED", required: false, type: Int32.self)
+    try _v.visit(field: VT.OD_TRACKS_USED, fieldName: "OD_TRACKS_USED", required: false, type: Int32.self)
+    try _v.visit(field: VT.WEIGHTED_RMS, fieldName: "WEIGHTED_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_EPOCH_UNIX_US, fieldName: "OD_EPOCH_UNIX_US", required: false, type: Int64.self)
+    try _v.visit(field: VT.DAYS_SINCE_LAST_OBS, fieldName: "DAYS_SINCE_LAST_OBS", required: false, type: Double.self)
     try _v.visit(field: VT.COVARIANCE_DATA, fieldName: "COVARIANCE_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.COV_PROPAGATION, fieldName: "COV_PROPAGATION", required: false, type: MORCovariancePropagation.self)
+    try _v.visit(field: VT.COV_FLOOR, fieldName: "COV_FLOOR", required: false, type: morCovarianceFloor.self)
+    try _v.visit(field: VT.COV_REALISM_ID, fieldName: "COV_REALISM_ID", required: false, type: UInt16.self)
     try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<CVR>.self)
     try _v.visit(field: VT.COV_CALIBRATION, fieldName: "COV_CALIBRATION", required: false, type: covarianceCalibration.self)
     try _v.visit(field: VT.COV_CALIBRATION_REFERENCE, fieldName: "COV_CALIBRATION_REFERENCE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.WINDOWS, fieldName: "WINDOWS", required: false, type: ForwardOffset<Vector<MORWindow, MORWindow>>.self)
     try _v.visit(field: VT.WINDOW_COEFF_HEADS, fieldName: "WINDOW_COEFF_HEADS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.WINDOW_COEFF_TAILS, fieldName: "WINDOW_COEFF_TAILS", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.WINDOW_RECORD_CHECK, fieldName: "WINDOW_RECORD_CHECK", required: false, type: UInt64.self)
     try _v.visit(field: VT.FALLBACK, fieldName: "FALLBACK", required: false, type: ForwardOffset<MPE>.self)
     _v.finish()
   }

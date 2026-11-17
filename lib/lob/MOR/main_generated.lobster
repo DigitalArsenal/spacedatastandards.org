@@ -14,6 +14,19 @@ enum morMessageStatus:
     /// Test data.
     morMessageStatus_TEST = 2
 
+/// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
+/// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
+/// COVARIANCE_DATA only. Append new values only.
+enum morCovarianceFloor:
+    /// No covariance.
+    morCovarianceFloor_UNSTATED = 0
+    /// At the writer's own theory state: PRODUCER anything but the text MEAN_ELEMENTS_TWO_BODY names. A
+    /// reader of AP sets does not use this covariance (its states fly).
+    morCovarianceFloor_WRITER_THEORY_STATE = 1
+    /// At the two-body state of the set's own mean elements: PRODUCER exactly
+    /// "com.spacedatanetwork.sdn-ap-propagator X.Y.Z", three decimal integers, X.Y.Z at 0.6.39 or later.
+    morCovarianceFloor_MEAN_ELEMENTS_TWO_BODY = 2
+
 /// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
 enum morGravityField:
     /// The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.
@@ -234,52 +247,82 @@ class MOR : flatbuffers.handle
     /// The span of the observations the orbit determination used, days; NaN when not stated.
     def ACTUAL_OD_SPAN() -> float:
         return flatbuffers.field_float64(buf_, pos_, 56, nan)
+    /// Observations the orbit determination used; -1 when not stated ($OCM 0).
+    def OD_OBSERVATIONS_USED() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 58, -1)
+    /// Tracks the orbit determination used; -1 when not stated ($OCM 0).
+    def OD_TRACKS_USED() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 60, -1)
+    /// Weighted RMS residual ratio of the orbit determination; NaN when not stated ($OCM 0).
+    def WEIGHTED_RMS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+    /// Epoch of the orbit determination, in the form of EPOCH_UNIX_US; (-9223372036854775807 - 1) when not stated.
+    def OD_EPOCH_UNIX_US() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 64, (-9223372036854775807 - 1))
+    /// Days from the last observation the orbit determination used to OD_EPOCH; NaN when not stated.
+    def DAYS_SINCE_LAST_OBS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, nan)
     /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
     /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
     /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
     /// then those parameters in ascending ordinal. Absent: no covariance.
     def COVARIANCE_DATA(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 58) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 68) + i * 8)
     def COVARIANCE_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 58)
+        return flatbuffers.field_vector_len(buf_, pos_, 68)
     /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
     def COV_PROPAGATION() -> MORCovariancePropagation?:
-        let o = flatbuffers.field_struct(buf_, pos_, 60)
+        let o = flatbuffers.field_struct(buf_, pos_, 70)
         return if o: MORCovariancePropagation { buf_, o } else: nil
-    /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. A record read alone flies the same
+    /// covariance as its $OCM.
+    def COV_FLOOR() -> morCovarianceFloor:
+        return morCovarianceFloor(flatbuffers.field_uint8(buf_, pos_, 72, 0))
+    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not.
+    def COV_REALISM_ID() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 74, 0)
+    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     def COV_REALISM() -> CVR?:
-        let o = flatbuffers.field_table(buf_, pos_, 62)
+        let o = flatbuffers.field_table(buf_, pos_, 76)
         return if o: CVR { buf_, o } else: nil
     /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
     def COV_CALIBRATION() -> covarianceCalibration:
-        return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 64, 0))
+        return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 78, 0))
     /// Identifier of that calibration evidence (a report or record).
     def COV_CALIBRATION_REFERENCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 66)
+        return flatbuffers.field_string(buf_, pos_, 80)
     /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
-    /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
-    /// the rows, and one that cannot reproduce the asset's build statement must.
+    /// in time order, without overlap. A convenience: the elements remain authoritative and a reader may
+    /// ignore the rows. Without the asset's DERIVED_BUILD a reader must not use them, nor when it cannot
+    /// reproduce that statement, nor when WINDOW_RECORD_CHECK does not match.
     def WINDOWS(i:int) -> MORWindow:
-        return MORWindow { buf_, flatbuffers.field_vector(buf_, pos_, 68) + i * 24 }
+        return MORWindow { buf_, flatbuffers.field_vector(buf_, pos_, 82) + i * 24 }
     def WINDOWS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 68)
+        return flatbuffers.field_vector_len(buf_, pos_, 82)
     /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
     /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
     def WINDOW_COEFF_HEADS(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 70) + i * 8)
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 84) + i * 8)
     def WINDOW_COEFF_HEADS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 70)
+        return flatbuffers.field_vector_len(buf_, pos_, 84)
     /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
     /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
     def WINDOW_COEFF_TAILS(i:int) -> float:
-        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 72) + i * 4)
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 86) + i * 4)
     def WINDOW_COEFF_TAILS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 72)
+        return flatbuffers.field_vector_len(buf_, pos_, 86)
+    /// The first 8 bytes, as a little-endian uint64, of the SHA-256 the builder named in DERIVED_BUILD
+    /// publishes as its record digest (over the record's decoded inputs). A reader recomputes it from this
+    /// record before using the rows: a mismatch voids the rows. With WINDOWS only.
+    def WINDOW_RECORD_CHECK() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 88, 0)
     /// The object's own element set for times beyond what this record serves (a reader's fallback
     /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
     /// object is this record's.
     def FALLBACK() -> MPE?:
-        let o = flatbuffers.field_table(buf_, pos_, 74)
+        let o = flatbuffers.field_table(buf_, pos_, 90)
         return if o: MPE { buf_, o } else: nil
 
 def GetRootAsMOR(buf:string): return MOR { buf, flatbuffers.indirect(buf, 0) }
@@ -287,7 +330,7 @@ def GetRootAsMOR(buf:string): return MOR { buf, flatbuffers.indirect(buf, 0) }
 struct MORBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(36)
+        b_.StartObject(44)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
         b_.PrependUint32Slot(0, NORAD_CAT_ID, 0)
@@ -370,32 +413,56 @@ struct MORBuilder:
     def add_ACTUAL_OD_SPAN(ACTUAL_OD_SPAN:float):
         b_.PrependFloat64Slot(26, ACTUAL_OD_SPAN, nan)
         return this
+    def add_OD_OBSERVATIONS_USED(OD_OBSERVATIONS_USED:int):
+        b_.PrependInt32Slot(27, OD_OBSERVATIONS_USED, -1)
+        return this
+    def add_OD_TRACKS_USED(OD_TRACKS_USED:int):
+        b_.PrependInt32Slot(28, OD_TRACKS_USED, -1)
+        return this
+    def add_WEIGHTED_RMS(WEIGHTED_RMS:float):
+        b_.PrependFloat64Slot(29, WEIGHTED_RMS, nan)
+        return this
+    def add_OD_EPOCH_UNIX_US(OD_EPOCH_UNIX_US:int):
+        b_.PrependInt64Slot(30, OD_EPOCH_UNIX_US, (-9223372036854775807 - 1))
+        return this
+    def add_DAYS_SINCE_LAST_OBS(DAYS_SINCE_LAST_OBS:float):
+        b_.PrependFloat64Slot(31, DAYS_SINCE_LAST_OBS, nan)
+        return this
     def add_COVARIANCE_DATA(COVARIANCE_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(27, COVARIANCE_DATA)
+        b_.PrependUOffsetTRelativeSlot(32, COVARIANCE_DATA)
         return this
     def add_COV_PROPAGATION(COV_PROPAGATION:flatbuffers.offset):
-        b_.PrependStructSlot(28, COV_PROPAGATION)
+        b_.PrependStructSlot(33, COV_PROPAGATION)
+        return this
+    def add_COV_FLOOR(COV_FLOOR:morCovarianceFloor):
+        b_.PrependUint8Slot(34, COV_FLOOR, 0)
+        return this
+    def add_COV_REALISM_ID(COV_REALISM_ID:int):
+        b_.PrependUint16Slot(35, COV_REALISM_ID, 0)
         return this
     def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(29, COV_REALISM)
+        b_.PrependUOffsetTRelativeSlot(36, COV_REALISM)
         return this
     def add_COV_CALIBRATION(COV_CALIBRATION:covarianceCalibration):
-        b_.PrependInt8Slot(30, COV_CALIBRATION, 0)
+        b_.PrependInt8Slot(37, COV_CALIBRATION, 0)
         return this
     def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(31, COV_CALIBRATION_REFERENCE)
+        b_.PrependUOffsetTRelativeSlot(38, COV_CALIBRATION_REFERENCE)
         return this
     def add_WINDOWS(WINDOWS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(32, WINDOWS)
+        b_.PrependUOffsetTRelativeSlot(39, WINDOWS)
         return this
     def add_WINDOW_COEFF_HEADS(WINDOW_COEFF_HEADS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(33, WINDOW_COEFF_HEADS)
+        b_.PrependUOffsetTRelativeSlot(40, WINDOW_COEFF_HEADS)
         return this
     def add_WINDOW_COEFF_TAILS(WINDOW_COEFF_TAILS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(34, WINDOW_COEFF_TAILS)
+        b_.PrependUOffsetTRelativeSlot(41, WINDOW_COEFF_TAILS)
+        return this
+    def add_WINDOW_RECORD_CHECK(WINDOW_RECORD_CHECK:int):
+        b_.PrependUint64Slot(42, WINDOW_RECORD_CHECK, 0)
         return this
     def add_FALLBACK(FALLBACK:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(35, FALLBACK)
+        b_.PrependUOffsetTRelativeSlot(43, FALLBACK)
         return this
     def end():
         return b_.EndObject()

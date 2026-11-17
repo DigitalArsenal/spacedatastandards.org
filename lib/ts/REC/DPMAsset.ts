@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { DPMDerivedBuild, DPMDerivedBuildT } from './DPMDerivedBuild.js';
+import { DPMRealismModel, DPMRealismModelT } from './DPMRealismModel.js';
 import { PVN, PVNT } from './PVN.js';
 import { dpmTransportKind } from './dpmTransportKind.js';
 import { publicationAssetKind } from './publicationAssetKind.js';
@@ -205,8 +206,22 @@ DERIVED_BUILD(obj?:DPMDerivedBuild):DPMDerivedBuild|null {
   return offset ? (obj || new DPMDerivedBuild()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The covariance realism models the asset's records name by ID ($MOR
+ * COV_REALISM_ID), each stated once with its population figures.
+ */
+COV_REALISM_MODELS(index: number, obj?:DPMRealismModel):DPMRealismModel|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new DPMRealismModel()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covRealismModelsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startDPMAsset(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addAssetKind(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind) {
@@ -273,6 +288,22 @@ static addDerivedBuild(builder:flatbuffers.Builder, DERIVED_BUILDOffset:flatbuff
   builder.addFieldOffset(15, DERIVED_BUILDOffset, 0);
 }
 
+static addCovRealismModels(builder:flatbuffers.Builder, COV_REALISM_MODELSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, COV_REALISM_MODELSOffset, 0);
+}
+
+static createCovRealismModelsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovRealismModelsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endDPMAsset(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -296,7 +327,8 @@ unpack(): DPMAssetT {
     this.CONTENT_KEY_ID(),
     this.THROUGH_SEQ(),
     (this.RECORD_PROVENANCE() !== null ? this.RECORD_PROVENANCE()!.unpack() : null),
-    (this.DERIVED_BUILD() !== null ? this.DERIVED_BUILD()!.unpack() : null)
+    (this.DERIVED_BUILD() !== null ? this.DERIVED_BUILD()!.unpack() : null),
+    this.bb!.createObjList<DPMRealismModel, DPMRealismModelT>(this.COV_REALISM_MODELS.bind(this), this.covRealismModelsLength())
   );
 }
 
@@ -318,6 +350,7 @@ unpackTo(_o: DPMAssetT): void {
   _o.THROUGH_SEQ = this.THROUGH_SEQ();
   _o.RECORD_PROVENANCE = (this.RECORD_PROVENANCE() !== null ? this.RECORD_PROVENANCE()!.unpack() : null);
   _o.DERIVED_BUILD = (this.DERIVED_BUILD() !== null ? this.DERIVED_BUILD()!.unpack() : null);
+  _o.COV_REALISM_MODELS = this.bb!.createObjList<DPMRealismModel, DPMRealismModelT>(this.COV_REALISM_MODELS.bind(this), this.covRealismModelsLength());
 }
 }
 
@@ -338,7 +371,8 @@ constructor(
   public CONTENT_KEY_ID: string|Uint8Array|null = null,
   public THROUGH_SEQ: bigint = BigInt('0'),
   public RECORD_PROVENANCE: PVNT|null = null,
-  public DERIVED_BUILD: DPMDerivedBuildT|null = null
+  public DERIVED_BUILD: DPMDerivedBuildT|null = null,
+  public COV_REALISM_MODELS: (DPMRealismModelT)[] = []
 ){}
 
 
@@ -355,6 +389,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONTENT_KEY_ID = (this.CONTENT_KEY_ID !== null ? builder.createString(this.CONTENT_KEY_ID!) : 0);
   const RECORD_PROVENANCE = (this.RECORD_PROVENANCE !== null ? this.RECORD_PROVENANCE!.pack(builder) : 0);
   const DERIVED_BUILD = (this.DERIVED_BUILD !== null ? this.DERIVED_BUILD!.pack(builder) : 0);
+  const COV_REALISM_MODELS = DPMAsset.createCovRealismModelsVector(builder, builder.createObjectOffsetList(this.COV_REALISM_MODELS));
 
   DPMAsset.startDPMAsset(builder);
   DPMAsset.addAssetKind(builder, this.ASSET_KIND);
@@ -373,6 +408,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   DPMAsset.addThroughSeq(builder, this.THROUGH_SEQ);
   DPMAsset.addRecordProvenance(builder, RECORD_PROVENANCE);
   DPMAsset.addDerivedBuild(builder, DERIVED_BUILD);
+  DPMAsset.addCovRealismModels(builder, COV_REALISM_MODELS);
 
   return DPMAsset.endDPMAsset(builder);
 }

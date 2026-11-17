@@ -1,6 +1,7 @@
-// Hash: 1de363c9fe16271dbea26274088df2762554408c37f4b28deab78b47e661efa8
+// Hash: fa5a3bd7993b199a8e3f7d4b966d6a983c26555d170fcb0b8d82d8fea9742cac
 // Version: 1.0.11
 // -----------------------------------END_HEADER
+include "../CVR/main.fbs";
 include "../PVN/main.fbs";
 
 /// Dataset Publication Manifest.
@@ -143,6 +144,19 @@ table DPMAsset {
   /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
   /// carry no derived rows, or a reader must ignore them.
   DERIVED_BUILD: DPMDerivedBuild;
+  /// The covariance realism models the asset's records name by ID ($MOR
+  /// COV_REALISM_ID), each stated once with its population figures.
+  COV_REALISM_MODELS: [DPMRealismModel];
+}
+
+/// One covariance realism model of an asset: the realism entry its records
+/// would otherwise each repeat.
+table DPMRealismModel {
+  /// The model's number within the asset, 1 or more; a record names it.
+  ID: uint16;
+  /// The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  /// entry of each record that names this ID.
+  REALISM: CVR;
 }
 
 /// Who built the derived polynomial rows of an asset's records, and under what:

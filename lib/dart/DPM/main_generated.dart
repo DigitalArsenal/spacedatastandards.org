@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import '../CVR/main_generated.dart';
 import '../PVN/main_generated.dart';
 
 ///  Dataset Publication Manifest.
@@ -343,10 +344,14 @@ class DPMAsset {
   ///  carry no derived rows, or a reader must ignore them.
   DPMDerivedBuild? get DERIVED_BUILD => DPMDerivedBuild.reader.vTableGetNullable(_bc, _bcOffset, 34);
   DPMDerivedBuild? get derivedBuild => DERIVED_BUILD;
+  ///  The covariance realism models the asset's records name by ID ($MOR
+  ///  COV_REALISM_ID), each stated once with its population figures.
+  List<DPMRealismModel>? get COV_REALISM_MODELS => const fb.ListReader<DPMRealismModel>(DPMRealismModel.reader).vTableGetNullable(_bc, _bcOffset, 36);
+  List<DPMRealismModel>? get covRealismModels => COV_REALISM_MODELS;
 
   @override
   String toString() {
-    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}, throughSeq: ${throughSeq}, recordProvenance: ${recordProvenance}, derivedBuild: ${derivedBuild}}';
+    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}, throughSeq: ${throughSeq}, recordProvenance: ${recordProvenance}, derivedBuild: ${derivedBuild}, covRealismModels: ${covRealismModels}}';
   }
 }
 
@@ -364,7 +369,7 @@ class DPMAssetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(17);
   }
 
   int addAssetKind(publicationAssetKind? ASSET_KIND) {
@@ -431,6 +436,10 @@ class DPMAssetBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addCovRealismModelsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -454,6 +463,7 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
   final int? _THROUGH_SEQ;
   final PVNObjectBuilder? _RECORD_PROVENANCE;
   final DPMDerivedBuildObjectBuilder? _DERIVED_BUILD;
+  final List<DPMRealismModelObjectBuilder>? _COV_REALISM_MODELS;
 
   DPMAssetObjectBuilder({
     publicationAssetKind? ASSET_KIND,
@@ -487,6 +497,8 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     PVNObjectBuilder? recordProvenance,
     DPMDerivedBuildObjectBuilder? DERIVED_BUILD,
     DPMDerivedBuildObjectBuilder? derivedBuild,
+    List<DPMRealismModelObjectBuilder>? COV_REALISM_MODELS,
+    List<DPMRealismModelObjectBuilder>? covRealismModels,
   })
       : _ASSET_KIND = assetKind ?? ASSET_KIND,
         _TRANSPORT_KIND = transportKind ?? TRANSPORT_KIND,
@@ -503,7 +515,8 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
         _THROUGH_SEQ = throughSeq ?? THROUGH_SEQ,
         _RECORD_PROVENANCE = recordProvenance ?? RECORD_PROVENANCE,
-        _DERIVED_BUILD = derivedBuild ?? DERIVED_BUILD;
+        _DERIVED_BUILD = derivedBuild ?? DERIVED_BUILD,
+        _COV_REALISM_MODELS = covRealismModels ?? COV_REALISM_MODELS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -530,7 +543,9 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CONTENT_KEY_ID!);
     final int? RECORD_PROVENANCEOffset = _RECORD_PROVENANCE?.getOrCreateOffset(fbBuilder);
     final int? DERIVED_BUILDOffset = _DERIVED_BUILD?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(16);
+    final int? COV_REALISM_MODELSOffset = _COV_REALISM_MODELS == null ? null
+        : fbBuilder.writeList(_COV_REALISM_MODELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(17);
     fbBuilder.addInt8(0, _ASSET_KIND?.value);
     fbBuilder.addInt8(1, _TRANSPORT_KIND?.value);
     fbBuilder.addOffset(2, CIDOffset);
@@ -547,6 +562,93 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(13, _THROUGH_SEQ);
     fbBuilder.addOffset(14, RECORD_PROVENANCEOffset);
     fbBuilder.addOffset(15, DERIVED_BUILDOffset);
+    fbBuilder.addOffset(16, COV_REALISM_MODELSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One covariance realism model of an asset: the realism entry its records
+///  would otherwise each repeat.
+class DPMRealismModel {
+  DPMRealismModel._(this._bc, this._bcOffset);
+  factory DPMRealismModel(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DPMRealismModel> reader = _DPMRealismModelReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The model's number within the asset, 1 or more; a record names it.
+  int get ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  The realism entry, MODEL_ID and figures, exactly as an $OCM COV_REALISM
+  ///  entry of each record that names this ID.
+  CVR? get REALISM => CVR.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'DPMRealismModel{ID: ${ID}, REALISM: ${REALISM}}';
+  }
+}
+
+class _DPMRealismModelReader extends fb.TableReader<DPMRealismModel> {
+  const _DPMRealismModelReader();
+
+  @override
+  DPMRealismModel createObject(fb.BufferContext bc, int offset) =>
+    DPMRealismModel._(bc, offset);
+}
+
+class DPMRealismModelBuilder {
+  DPMRealismModelBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addId(int? ID) {
+    fbBuilder.addUint16(0, ID);
+    return fbBuilder.offset;
+  }
+  int addRealismOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DPMRealismModelObjectBuilder extends fb.ObjectBuilder {
+  final int? _ID;
+  final CVRObjectBuilder? _REALISM;
+
+  DPMRealismModelObjectBuilder({
+    int? ID,
+    CVRObjectBuilder? REALISM,
+  })
+      : _ID = ID,
+        _REALISM = REALISM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REALISMOffset = _REALISM?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addUint16(0, _ID);
+    fbBuilder.addOffset(1, REALISMOffset);
     return fbBuilder.endTable();
   }
 

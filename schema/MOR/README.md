@@ -12,15 +12,21 @@ One mean element set with only what a propagator needs to fly it. `$MOR` stands 
 - Texts a reader compares become enums with a stated text each (`morGravityField`, `morRadiationModel`, `morSolidTideModel`). Atmosphere, weather source and density correction are the theory's own (JXX 1970 on the theory's flux model for SGP4XP and AP, none for SGP4) and are not stored: records with daily weather rows, NRLMSISE-00 or a density correction stay `$OCM`.
 - The orbit determination is two bit masks over `prwDynamicParameter` ordinals (`OD_PARAMETERS`, `OD_SOLVED_FOR`), the span, and `ECOM2_Y0`; the parameter values are `BTERM` and `AGOM` as the writer states them. The covariance rows follow from the solved parameters.
 - Three enums mirror ordinals of standards `$MOR` does not include (`ocmMessageStatus`, `pcfSolidTideModel`, `ppeWindowStatus`): including `$OCM`, `$PCF` or `$PPE` would carry the Lobster generator defect on enum vectors into `$MOR` and pull those standards into every `$MOR` binding. The E2E checks the mirrored ordinals.
+- The covariance carries its own floor semantics, `COV_FLOOR` (`morCovarianceFloor`): the fact `$OCM` states only through the text of `PROVENANCE.PRODUCER` (the sdn-ap producer text at 0.6.39 or later means the floor sits at the two-body state of the mean elements; any other text means the writer's theory state, whose AP covariance a reader does not use). A record read without its manifest flies the same states and the same covariance.
+- The five orbit-determination values a conjunction assessment copies into a CDM are optional scalars: `OD_OBSERVATIONS_USED`, `OD_TRACKS_USED` (-1 not stated), `WEIGHTED_RMS`, `DAYS_SINCE_LAST_OBS` (NaN not stated) and `OD_EPOCH_UNIX_US` (the least int64 not stated). They cost 32 bytes on this catalog (three are stated).
 - Structs where the group is atomic and closed: `MORCovariancePropagation` (13 doubles, all present whenever the covariance is) and `MORWindow` (one window's times, status and counts). A struct cannot gain a field; a new number is a new table field beside it.
 
 ## Derived rows (the preseed)
 
-A compact form, not `$PPE`. One window as `$PPE` inside `$OCM` costs about 1,188 bytes per object (1,690 measured on the catalog below, with the builder statement); the same rows here add 480 bytes (median; 504 at the 95th percentile). The coefficients keep their binary64 heads and binary32 tails in two flat vectors (`WINDOW_COEFF_HEADS`, `WINDOW_COEFF_TAILS`) instead of six widened per-axis vectors; times are numbers relative to the element epoch, with no midpoint text; position and velocity keep their own counts, so nothing is padded. The builder's name, version, artifact digest, environment digest and tolerances are stated once per asset in `$DPM` `DPMAsset.DERIVED_BUILD`. No per-record digest: rows inside the record they derive from are bound to it by the record itself; the expansion computes `RECORD_DIGEST` by the builder's published rule.
+A compact form, not `$PPE`. One window as `$PPE` inside `$OCM` costs about 1,188 bytes per object (1,690 measured on the catalog below, with the builder statement); the same rows here add 480 bytes (median; 504 at the 95th percentile). The coefficients keep their binary64 heads and binary32 tails in two flat vectors (`WINDOW_COEFF_HEADS`, `WINDOW_COEFF_TAILS`) instead of six widened per-axis vectors; times are numbers relative to the element epoch, with no midpoint text; position and velocity keep their own counts, so nothing is padded. The builder's name, version, artifact digest, environment digest and tolerances are stated once per asset in `$DPM` `DPMAsset.DERIVED_BUILD`; without it a reader must not use the rows. Each record keeps `WINDOW_RECORD_CHECK`, the first 8 bytes of the builder's record digest over the record's decoded inputs: a step that rewrites the elements and keeps the rows leaves a mismatch, and a mismatch voids the rows.
 
 ## Fallback set
 
 `FALLBACK` embeds an `$MPE`, which now carries `BTERM` and `AGOM` (appended in this release) so an SGP4-XP set fits. Embedded rather than paired in the stream: one object, one record, no join, and the set the publisher chose travels with the record it backs up. It costs 144 bytes per record, about the size of the set as text.
+
+## Realism models
+
+The realism entry of a covariance is a population figure: 2 distinct entries in 16,755 records. `DPMAsset.COV_REALISM_MODELS` states each once with an `ID`; the record keeps `COV_REALISM_ID` (2 bytes). A realism entry that differs from record to record stays in the record's own `COV_REALISM`.
 
 ## Provenance and license
 
@@ -28,16 +34,17 @@ Once per asset: `DPMAsset.RECORD_PROVENANCE` (a `$PVN`, appended in this release
 
 ## Measured on the AP catalog
 
-16,755 real AP records with one window of rows, reduced with the generated bindings; all 16,755 reduce, expand back to their `$OCM` field for field (descriptive fields aside), and read back from the `$MOR` bytes unchanged. Bytes per record include the 4-byte size prefix. gzip level 6, Brotli quality 5, records compressed one by one for the medians and as one stream for the 100,000 projection (stream bytes x 100,000 / 16,755).
+16,755 real AP records with one window of rows, reduced with the generated bindings; all 16,755 reduce, expand back to their `$OCM` field for field (descriptive fields aside), and read back from the `$MOR` bytes unchanged. Bytes per record include the 4-byte size prefix. gzip level 6, Brotli quality 5, records compressed one by one for the medians and as one stream for the 100,000 projection (stream bytes x 100,000 / 16,755). Every row but the first carries the orbit-determination values the catalog states (three of the five).
 
 | Record | Raw median / p95 | gzip median | Brotli median | Structure | 100,000 raw / gzip / Brotli MB |
 |---|---:|---:|---:|---:|---:|
-| Elements, forces, determination | 184 / 184 | 178 | 173 | 46 % | 18.4 / 7.0 / 6.5 |
-| With covariance (realism entry as published) | 688 / 688 | 667 | 643 | 24 % | 68.8 / 42.3 / 40.8 |
-| With covariance (realism MODEL_ID only) | 640 / 640 | 644 | 614 | 20 % | 64.0 / 42.3 / 41.0 |
-| Elements and one window of rows | 664 / 688 | 649 | 616 | 21 % | 64.8 / 46.2 / 44.8 |
-| With covariance and one window | 1,160 / 1,184 | 1,133 | 1,082 | 19 % | 114.4 / 82.2 / 79.8 |
-| Elements and the fallback set | 328 / 328 | 218 | 222 | 48 % | 32.8 / 8.4 / 7.6 |
-| Covariance, one window and the fallback set | 1,280 / 1,304 | 1,177 | 1,133 | 21 % | 126.4 / 83.9 / 81.0 |
+| Minimum, without the five orbit-determination values | 184 / 184 | 178 | 173 | 46 % | 18.4 / 7.0 / 6.5 |
+| Minimum | 216 / 216 | 199 | 192 | 45 % | 21.6 / 8.1 / 7.4 |
+| With covariance (realism model by ID) | 632 / 632 | 635 | 605 | 19 % | 63.2 / 43.2 / 41.7 |
+| With covariance (realism entry in the record) | 728 / 728 | 691 | 663 | 26 % | 72.8 / 43.3 / 41.7 |
+| With covariance and one window | 1,112 / 1,136 | 1,107 | 1,063 | 15 % | 109.6 / 84.0 / 81.5 |
+| With the fallback set | 360 / 360 | 249 | 239 | 47 % | 36.0 / 9.5 / 8.6 |
+| Display: no covariance, one window, the fallback set | 832 / 856 | 728 | 694 | 25 % | 81.6 / 50.0 / 47.7 |
+| Covariance, one window and the fallback set | 1,240 / 1,264 | 1,156 | 1,117 | 18 % | 122.4 / 85.6 / 82.7 |
 
-The same catalog as `$OCM` is 2,884 bytes per record (288 MB at 100,000), and 4,584 with one window (457 MB). 53 records carry no rows (the builder excluded them). The fallback sets use each record's own elements labeled SGP4-XP, for size only. Structure is everything but numeric payload and text: the four-byte prefix, root offset and identifier (12 bytes), the root table's vtable (4 bytes plus 2 per field up to the last one present: 58 for the elements alone, 76 at most), offsets, vector lengths and alignment. FlatBuffers cannot share a vtable between records of a stream.
+The same catalog as `$OCM` is 2,884 bytes per record (288 MB at 100,000), and 4,584 with one window (457 MB). 53 records carry no rows (the builder excluded them). The fallback sets use each record's own elements labeled SGP4-XP, for size only. Structure is everything but numeric payload and text: the four-byte prefix, root offset and identifier (12 bytes), the root table's vtable (4 bytes plus 2 per field up to the last one present), offsets, vector lengths and alignment. FlatBuffers cannot share a vtable between records of a stream.
