@@ -311,8 +311,56 @@ func (rcv *DPMAsset) MutateThroughSeq(n uint64) bool {
 	return rcv.MutateTHROUGH_SEQ(n)
 }
 
+/// The provenance of every record of this asset that carries none of its own
+/// ($MOR records never do): stated once for the asset instead of in each
+/// record. A record's own PROVENANCE, where its standard has one, governs that
+/// record. Absent: the records state their own or have none.
+func (rcv *DPMAsset) RECORD_PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) RecordProvenance(obj *PVN) *PVN {
+	return rcv.RECORD_PROVENANCE(obj)
+}
+
+/// The provenance of every record of this asset that carries none of its own
+/// ($MOR records never do): stated once for the asset instead of in each
+/// record. A record's own PROVENANCE, where its standard has one, governs that
+/// record. Absent: the records state their own or have none.
+/// The builder of the derived polynomial rows the asset's records carry
+/// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+/// carry no derived rows, or a reader must ignore them.
+func (rcv *DPMAsset) DERIVED_BUILD(obj *DPMDerivedBuild) *DPMDerivedBuild {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(DPMDerivedBuild)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DPMAsset) DerivedBuild(obj *DPMDerivedBuild) *DPMDerivedBuild {
+	return rcv.DERIVED_BUILD(obj)
+}
+
+/// The builder of the derived polynomial rows the asset's records carry
+/// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+/// carry no derived rows, or a reader must ignore them.
 func DPMAssetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(16)
 }
 func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	builder.PrependInt8Slot(0, int8(ASSET_KIND), 3)
@@ -397,6 +445,18 @@ func DPMAssetAddTHROUGH_SEQ(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
 }
 func DPMAssetAddThroughSeq(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
 	DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
+}
+func DPMAssetAddRECORD_PROVENANCE(builder *flatbuffers.Builder, RECORD_PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(RECORD_PROVENANCE), 0)
+}
+func DPMAssetAddRecordProvenance(builder *flatbuffers.Builder, RECORD_PROVENANCE flatbuffers.UOffsetT) {
+	DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+}
+func DPMAssetAddDERIVED_BUILD(builder *flatbuffers.Builder, DERIVED_BUILD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(DERIVED_BUILD), 0)
+}
+func DPMAssetAddDerivedBuild(builder *flatbuffers.Builder, DERIVED_BUILD flatbuffers.UOffsetT) {
+	DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
 }
 func DPMAssetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

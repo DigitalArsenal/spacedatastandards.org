@@ -59,7 +59,13 @@ const CPP_SCALARS = { bool: 'bool', byte: 'int8_t', ubyte: 'uint8_t', short: 'in
 
 function parseIdl(codes) {
   const tables = new Map(), structs = new Set();
-  for (const code of codes) {
+  // the standards the listed ones include, so that an included table (DPM's PVN) is copied as a table
+  const all = [...codes];
+  for (let i = 0; i < all.length; i++) {
+    const idl = readFileSync(join(root, `schema/${all[i]}/main.fbs`), 'utf8');
+    for (const [, inc] of idl.matchAll(/^include\s+"\.\.\/(\w+)\/main\.fbs"\s*;/gm)) if (!all.includes(inc)) all.push(inc);
+  }
+  for (const code of all) {
     const idl = readFileSync(join(root, `schema/${code}/main.fbs`), 'utf8').replace(/\/\/.*$/gm, '');
     for (const [, name] of idl.matchAll(/^struct\s+(\w+)/gm)) structs.add(name);
     for (const [, name, body] of idl.matchAll(/^table\s+(\w+)\s*\{([\s\S]*?)^\}/gm)) {

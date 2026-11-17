@@ -60,6 +60,36 @@ public final class PCFEpochStore extends com.google.flatbuffers.Table {
   public ByteVector theoriesVector(ByteVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer THEORIESAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer THEORIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Window before each selected set's epoch inside which the set's own
+   * propagator answers, days of 86400 seconds, boundary included. Default -1:
+   * not set. Setting any of the window and fallback fields below to a value
+   * other than its default enables the window; a side left at -1 is then 7.
+   */
+  public double WINDOW_BEFORE_DAYS() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : -1.0; }
+  /**
+   * Window after each selected set's epoch, days of 86400 seconds, boundary
+   * included. Default -1: not set. Every set that contributes to a blend must
+   * contain the requested time.
+   */
+  public double WINDOW_AFTER_DAYS() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : -1.0; }
+  /**
+   * What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+   * object's own set of that theory, matched by catalog number and
+   * international designator; a missing or ambiguous set yields no state.
+   */
+  public int FALLBACK_PROPAGATOR() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * The fallback also answers inside the window when the propagator excludes
+   * or refuses the object or the time. Default false. A missing row, an
+   * allocation failure or a pool failure is not a refusal.
+   */
+  public boolean FALLBACK_ON_REFUSAL() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * The fallback also answers inside the window while the propagator's own row
+   * for the requested time is not built yet. Default false.
+   */
+  public boolean FALLBACK_WHILE_PENDING() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createPCFEpochStore(FlatBufferBuilder builder,
       double CACHE_DAYS,
@@ -67,18 +97,28 @@ public final class PCFEpochStore extends com.google.flatbuffers.Table {
       int SELECTION,
       double BLEND_WINDOW_SECONDS,
       int BLEND_SHAPE,
-      int THEORIESOffset) {
-    builder.startTable(6);
+      int THEORIESOffset,
+      double WINDOW_BEFORE_DAYS,
+      double WINDOW_AFTER_DAYS,
+      int FALLBACK_PROPAGATOR,
+      boolean FALLBACK_ON_REFUSAL,
+      boolean FALLBACK_WHILE_PENDING) {
+    builder.startTable(11);
+    PCFEpochStore.addWindowAfterDays(builder, WINDOW_AFTER_DAYS);
+    PCFEpochStore.addWindowBeforeDays(builder, WINDOW_BEFORE_DAYS);
     PCFEpochStore.addBlendWindowSeconds(builder, BLEND_WINDOW_SECONDS);
     PCFEpochStore.addCacheDays(builder, CACHE_DAYS);
     PCFEpochStore.addTheories(builder, THEORIESOffset);
     PCFEpochStore.addMaxSetsPerObject(builder, MAX_SETS_PER_OBJECT);
+    PCFEpochStore.addFallbackWhilePending(builder, FALLBACK_WHILE_PENDING);
+    PCFEpochStore.addFallbackOnRefusal(builder, FALLBACK_ON_REFUSAL);
+    PCFEpochStore.addFallbackPropagator(builder, FALLBACK_PROPAGATOR);
     PCFEpochStore.addBlendShape(builder, BLEND_SHAPE);
     PCFEpochStore.addSelection(builder, SELECTION);
     return PCFEpochStore.endPCFEpochStore(builder);
   }
 
-  public static void startPCFEpochStore(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startPCFEpochStore(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addCacheDays(FlatBufferBuilder builder, double CACHE_DAYS) { builder.addDouble(0, CACHE_DAYS, 7.0); }
   public static void addMaxSetsPerObject(FlatBufferBuilder builder, long MAX_SETS_PER_OBJECT) { builder.addInt(1, (int) MAX_SETS_PER_OBJECT, (int) 0L); }
   public static void addSelection(FlatBufferBuilder builder, int SELECTION) { builder.addByte(2, (byte) SELECTION, (byte) 0); }
@@ -88,6 +128,11 @@ public final class PCFEpochStore extends com.google.flatbuffers.Table {
   public static int createTheoriesVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createTheoriesVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startTheoriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addWindowBeforeDays(FlatBufferBuilder builder, double WINDOW_BEFORE_DAYS) { builder.addDouble(6, WINDOW_BEFORE_DAYS, -1.0); }
+  public static void addWindowAfterDays(FlatBufferBuilder builder, double WINDOW_AFTER_DAYS) { builder.addDouble(7, WINDOW_AFTER_DAYS, -1.0); }
+  public static void addFallbackPropagator(FlatBufferBuilder builder, int FALLBACK_PROPAGATOR) { builder.addByte(8, (byte) FALLBACK_PROPAGATOR, (byte) 0); }
+  public static void addFallbackOnRefusal(FlatBufferBuilder builder, boolean FALLBACK_ON_REFUSAL) { builder.addBoolean(9, FALLBACK_ON_REFUSAL, false); }
+  public static void addFallbackWhilePending(FlatBufferBuilder builder, boolean FALLBACK_WHILE_PENDING) { builder.addBoolean(10, FALLBACK_WHILE_PENDING, false); }
   public static int endPCFEpochStore(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

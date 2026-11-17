@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import '../PVN/main_generated.dart';
 
 ///  Dataset Publication Manifest.
 ///
@@ -331,10 +332,21 @@ class DPMAsset {
   ///  assets of a FlatSQL feed; 0 when not applicable.
   int get THROUGH_SEQ => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 30, 0);
   int get throughSeq => THROUGH_SEQ;
+  ///  The provenance of every record of this asset that carries none of its own
+  ///  ($MOR records never do): stated once for the asset instead of in each
+  ///  record. A record's own PROVENANCE, where its standard has one, governs that
+  ///  record. Absent: the records state their own or have none.
+  PVN? get RECORD_PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  PVN? get recordProvenance => RECORD_PROVENANCE;
+  ///  The builder of the derived polynomial rows the asset's records carry
+  ///  ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  ///  carry no derived rows, or a reader must ignore them.
+  DPMDerivedBuild? get DERIVED_BUILD => DPMDerivedBuild.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  DPMDerivedBuild? get derivedBuild => DERIVED_BUILD;
 
   @override
   String toString() {
-    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}, throughSeq: ${throughSeq}}';
+    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}, throughSeq: ${throughSeq}, recordProvenance: ${recordProvenance}, derivedBuild: ${derivedBuild}}';
   }
 }
 
@@ -352,7 +364,7 @@ class DPMAssetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(16);
   }
 
   int addAssetKind(publicationAssetKind? ASSET_KIND) {
@@ -411,6 +423,14 @@ class DPMAssetBuilder {
     fbBuilder.addUint64(13, THROUGH_SEQ);
     return fbBuilder.offset;
   }
+  int addRecordProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addDerivedBuildOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -432,6 +452,8 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
   final String? _SCHEMA_HASH;
   final String? _CONTENT_KEY_ID;
   final int? _THROUGH_SEQ;
+  final PVNObjectBuilder? _RECORD_PROVENANCE;
+  final DPMDerivedBuildObjectBuilder? _DERIVED_BUILD;
 
   DPMAssetObjectBuilder({
     publicationAssetKind? ASSET_KIND,
@@ -461,6 +483,10 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     String? contentKeyId,
     int? THROUGH_SEQ,
     int? throughSeq,
+    PVNObjectBuilder? RECORD_PROVENANCE,
+    PVNObjectBuilder? recordProvenance,
+    DPMDerivedBuildObjectBuilder? DERIVED_BUILD,
+    DPMDerivedBuildObjectBuilder? derivedBuild,
   })
       : _ASSET_KIND = assetKind ?? ASSET_KIND,
         _TRANSPORT_KIND = transportKind ?? TRANSPORT_KIND,
@@ -475,7 +501,9 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
         _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
         _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
-        _THROUGH_SEQ = throughSeq ?? THROUGH_SEQ;
+        _THROUGH_SEQ = throughSeq ?? THROUGH_SEQ,
+        _RECORD_PROVENANCE = recordProvenance ?? RECORD_PROVENANCE,
+        _DERIVED_BUILD = derivedBuild ?? DERIVED_BUILD;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -500,7 +528,9 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SCHEMA_HASH!);
     final int? CONTENT_KEY_IDOffset = _CONTENT_KEY_ID == null ? null
         : fbBuilder.writeString(_CONTENT_KEY_ID!);
-    fbBuilder.startTable(14);
+    final int? RECORD_PROVENANCEOffset = _RECORD_PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? DERIVED_BUILDOffset = _DERIVED_BUILD?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(16);
     fbBuilder.addInt8(0, _ASSET_KIND?.value);
     fbBuilder.addInt8(1, _TRANSPORT_KIND?.value);
     fbBuilder.addOffset(2, CIDOffset);
@@ -515,6 +545,158 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(11, SCHEMA_HASHOffset);
     fbBuilder.addOffset(12, CONTENT_KEY_IDOffset);
     fbBuilder.addUint64(13, _THROUGH_SEQ);
+    fbBuilder.addOffset(14, RECORD_PROVENANCEOffset);
+    fbBuilder.addOffset(15, DERIVED_BUILDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Who built the derived polynomial rows of an asset's records, and under what:
+///  the per-asset part of $PPE PPEBuild, same names and meanings. The per-record
+///  RECORD_DIGEST is not stated: rows carried inside the record they derive from
+///  are bound to it by the record itself. A reader that cannot reproduce
+///  BUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.
+class DPMDerivedBuild {
+  DPMDerivedBuild._(this._bc, this._bcOffset);
+  factory DPMDerivedBuild(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DPMDerivedBuild> reader = _DPMDerivedBuildReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Name of the builder, e.g. sdn-ap.
+  String? get BUILDER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get builderName => BUILDER_NAME;
+  ///  Version of the builder.
+  String? get BUILDER_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get builderVersion => BUILDER_VERSION;
+  ///  SHA-256 of the builder's executable artifact (32 bytes).
+  List<int>? get BUILDER_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 8);
+  List<int>? get builderDigest => BUILDER_DIGEST;
+  ///  SHA-256 over the configuration and environment inputs the builder used that
+  ///  are not in the source record, by the builder's published rule (32 bytes);
+  ///  empty when the builder uses none.
+  List<int>? get ENVIRONMENT_DIGEST => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 10);
+  List<int>? get environmentDigest => ENVIRONMENT_DIGEST;
+  ///  Build tolerance per position axis in km. NaN when not stated.
+  double get TOL_POSITION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, double.nan);
+  double get tolPosition => TOL_POSITION;
+  ///  Build tolerance per velocity axis in km/s. NaN when not stated or without
+  ///  velocity.
+  double get TOL_VELOCITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
+  double get tolVelocity => TOL_VELOCITY;
+
+  @override
+  String toString() {
+    return 'DPMDerivedBuild{builderName: ${builderName}, builderVersion: ${builderVersion}, builderDigest: ${builderDigest}, environmentDigest: ${environmentDigest}, tolPosition: ${tolPosition}, tolVelocity: ${tolVelocity}}';
+  }
+}
+
+class _DPMDerivedBuildReader extends fb.TableReader<DPMDerivedBuild> {
+  const _DPMDerivedBuildReader();
+
+  @override
+  DPMDerivedBuild createObject(fb.BufferContext bc, int offset) =>
+    DPMDerivedBuild._(bc, offset);
+}
+
+class DPMDerivedBuildBuilder {
+  DPMDerivedBuildBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addBuilderNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addBuilderVersionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addBuilderDigestOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvironmentDigestOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTolPosition(double? TOL_POSITION) {
+    fbBuilder.addFloat64(4, TOL_POSITION);
+    return fbBuilder.offset;
+  }
+  int addTolVelocity(double? TOL_VELOCITY) {
+    fbBuilder.addFloat64(5, TOL_VELOCITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DPMDerivedBuildObjectBuilder extends fb.ObjectBuilder {
+  final String? _BUILDER_NAME;
+  final String? _BUILDER_VERSION;
+  final List<int>? _BUILDER_DIGEST;
+  final List<int>? _ENVIRONMENT_DIGEST;
+  final double? _TOL_POSITION;
+  final double? _TOL_VELOCITY;
+
+  DPMDerivedBuildObjectBuilder({
+    String? BUILDER_NAME,
+    String? builderName,
+    String? BUILDER_VERSION,
+    String? builderVersion,
+    List<int>? BUILDER_DIGEST,
+    List<int>? builderDigest,
+    List<int>? ENVIRONMENT_DIGEST,
+    List<int>? environmentDigest,
+    double? TOL_POSITION,
+    double? tolPosition,
+    double? TOL_VELOCITY,
+    double? tolVelocity,
+  })
+      : _BUILDER_NAME = builderName ?? BUILDER_NAME,
+        _BUILDER_VERSION = builderVersion ?? BUILDER_VERSION,
+        _BUILDER_DIGEST = builderDigest ?? BUILDER_DIGEST,
+        _ENVIRONMENT_DIGEST = environmentDigest ?? ENVIRONMENT_DIGEST,
+        _TOL_POSITION = tolPosition ?? TOL_POSITION,
+        _TOL_VELOCITY = tolVelocity ?? TOL_VELOCITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? BUILDER_NAMEOffset = _BUILDER_NAME == null ? null
+        : fbBuilder.writeString(_BUILDER_NAME!);
+    final int? BUILDER_VERSIONOffset = _BUILDER_VERSION == null ? null
+        : fbBuilder.writeString(_BUILDER_VERSION!);
+    final int? BUILDER_DIGESTOffset = _BUILDER_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_BUILDER_DIGEST!);
+    final int? ENVIRONMENT_DIGESTOffset = _ENVIRONMENT_DIGEST == null ? null
+        : fbBuilder.writeListUint8(_ENVIRONMENT_DIGEST!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, BUILDER_NAMEOffset);
+    fbBuilder.addOffset(1, BUILDER_VERSIONOffset);
+    fbBuilder.addOffset(2, BUILDER_DIGESTOffset);
+    fbBuilder.addOffset(3, ENVIRONMENT_DIGESTOffset);
+    fbBuilder.addFloat64(4, _TOL_POSITION);
+    fbBuilder.addFloat64(5, _TOL_VELOCITY);
     return fbBuilder.endTable();
   }
 

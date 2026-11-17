@@ -76,6 +76,15 @@ public final class MPE extends com.google.flatbuffers.Table {
    */
   public MPETargeterSolution TARGETER() { return TARGETER(new MPETargeterSolution()); }
   public MPETargeterSolution TARGETER(MPETargeterSolution obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+   * SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+   */
+  public double BTERM() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+   */
+  public double AGOM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createMPE(FlatBufferBuilder builder,
       int ENTITY_IDOffset,
@@ -88,8 +97,12 @@ public final class MPE extends com.google.flatbuffers.Table {
       double MEAN_ANOMALY,
       double BSTAR,
       byte MEAN_ELEMENT_THEORY,
-      int TARGETEROffset) {
-    builder.startTable(11);
+      int TARGETEROffset,
+      double BTERM,
+      double AGOM) {
+    builder.startTable(13);
+    MPE.addAgom(builder, AGOM);
+    MPE.addBterm(builder, BTERM);
     MPE.addBstar(builder, BSTAR);
     MPE.addMeanAnomaly(builder, MEAN_ANOMALY);
     MPE.addArgOfPericenter(builder, ARG_OF_PERICENTER);
@@ -104,7 +117,7 @@ public final class MPE extends com.google.flatbuffers.Table {
     return MPE.endMPE(builder);
   }
 
-  public static void startMPE(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startMPE(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addEntityId(FlatBufferBuilder builder, int ENTITY_IDOffset) { builder.addOffset(0, ENTITY_IDOffset, 0); }
   public static void addEpoch(FlatBufferBuilder builder, double EPOCH) { builder.addDouble(1, EPOCH, 0.0); }
   public static void addMeanMotion(FlatBufferBuilder builder, double MEAN_MOTION) { builder.addDouble(2, MEAN_MOTION, 0.0); }
@@ -116,6 +129,8 @@ public final class MPE extends com.google.flatbuffers.Table {
   public static void addBstar(FlatBufferBuilder builder, double BSTAR) { builder.addDouble(8, BSTAR, 0.0); }
   public static void addMeanElementTheory(FlatBufferBuilder builder, byte MEAN_ELEMENT_THEORY) { builder.addByte(9, MEAN_ELEMENT_THEORY, 0); }
   public static void addTargeter(FlatBufferBuilder builder, int TARGETEROffset) { builder.addOffset(10, TARGETEROffset, 0); }
+  public static void addBterm(FlatBufferBuilder builder, double BTERM) { builder.addDouble(11, BTERM, 0.0); }
+  public static void addAgom(FlatBufferBuilder builder, double AGOM) { builder.addDouble(12, AGOM, 0.0); }
   public static int endMPE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

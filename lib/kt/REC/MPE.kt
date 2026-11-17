@@ -128,6 +128,23 @@ class MPE : Table() {
             null
         }
     }
+    /**
+     * BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+     * SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+     */
+    val bterm : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+     */
+    val agom : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMPE(_bb: ByteBuffer): MPE = getRootAsMPE(_bb, MPE())
@@ -136,8 +153,10 @@ class MPE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MPE")
-        fun createMPE(builder: FlatBufferBuilder, entityIdOffset: Int, epoch: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, bstar: Double, meanElementTheory: Byte, targeterOffset: Int) : Int {
-            builder.startTable(11)
+        fun createMPE(builder: FlatBufferBuilder, entityIdOffset: Int, epoch: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, bstar: Double, meanElementTheory: Byte, targeterOffset: Int, bterm: Double, agom: Double) : Int {
+            builder.startTable(13)
+            addAGOM(builder, agom)
+            addBTERM(builder, bterm)
             addBSTAR(builder, bstar)
             addMEANANOMALY(builder, meanAnomaly)
             addARGOFPERICENTER(builder, argOfPericenter)
@@ -151,7 +170,7 @@ class MPE : Table() {
             addMEANELEMENTTHEORY(builder, meanElementTheory)
             return endMPE(builder)
         }
-        fun startMPE(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startMPE(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(0, entityId, 0)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Double) = builder.addDouble(1, epoch, 0.0)
         fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(2, meanMotion, 0.0)
@@ -163,6 +182,8 @@ class MPE : Table() {
         fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(8, bstar, 0.0)
         fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(9, meanElementTheory, 0)
         fun addTARGETER(builder: FlatBufferBuilder, targeter: Int) = builder.addOffset(10, targeter, 0)
+        fun addBTERM(builder: FlatBufferBuilder, bterm: Double) = builder.addDouble(11, bterm, 0.0)
+        fun addAGOM(builder: FlatBufferBuilder, agom: Double) = builder.addDouble(12, agom, 0.0)
         fun endMPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

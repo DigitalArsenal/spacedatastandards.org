@@ -1,5 +1,5 @@
-// Hash: 2d741ad6a30d622f737e6bd8113d7ab9deab450b2ba546f70a2460031f2232f5
-// Version: 1.0.6
+// Hash: 5579fe68bdaac8b35b6d9e3dc74eca363b3133296c49979684d857297e32101f
+// Version: 1.0.7
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
@@ -80,6 +80,11 @@ table MPE {
   /// Targeter solution + convergence metadata when this element set is the
   /// product of maneuver targeting (absent for ordinary element sets)
   TARGETER: MPETargeterSolution;
+  /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+  /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+  BTERM: double;
+  /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+  AGOM: double;
 }
 
 root_type MPE;

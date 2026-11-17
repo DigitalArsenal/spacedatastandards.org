@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.285.0+1794869891338",
+  version: "1.286.0+1794878127593",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: 2d8f5f9d94a4f37f375fa1d9e01b8151d67b1fd5977d7c0a12eda1d54c24d10a
-// Version: 1.0.8
+      IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -83,6 +83,20 @@ enum pcfBlendShape : ubyte {
   SMOOTHSTEP = 0,
   /// Cubic Hermite matching of position and velocity across the window.
   HERMITE = 1
+}
+
+/// What answers a request time outside an element-set propagator's window
+/// (PCFEpochStore WINDOW_BEFORE_DAYS and WINDOW_AFTER_DAYS). Append new values
+/// only.
+enum pcfFallbackPropagator : ubyte {
+  /// Nothing: the state is NaN with a status that says outside the window.
+  NONE = 0,
+  /// SGP4 on the object's own SGP4 set.
+  SGP4 = 1,
+  /// SGP4-XP on the object's own SGP4-XP set.
+  SGP4XP = 2,
+  /// The host routes the request elsewhere: no state, a status that asks for it.
+  HOST = 3
 }
 
 enum pcfWeatherExtension : ubyte {
@@ -762,6 +776,26 @@ table PCFEpochStore {
   BLEND_SHAPE:pcfBlendShape = SMOOTHSTEP;
   /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   THEORIES:[pcfTheory];
+  /// Window before each selected set's epoch inside which the set's own
+  /// propagator answers, days of 86400 seconds, boundary included. Default -1:
+  /// not set. Setting any of the window and fallback fields below to a value
+  /// other than its default enables the window; a side left at -1 is then 7.
+  WINDOW_BEFORE_DAYS:double = -1;
+  /// Window after each selected set's epoch, days of 86400 seconds, boundary
+  /// included. Default -1: not set. Every set that contributes to a blend must
+  /// contain the requested time.
+  WINDOW_AFTER_DAYS:double = -1;
+  /// What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+  /// object's own set of that theory, matched by catalog number and
+  /// international designator; a missing or ambiguous set yields no state.
+  FALLBACK_PROPAGATOR:pcfFallbackPropagator = NONE;
+  /// The fallback also answers inside the window when the propagator excludes
+  /// or refuses the object or the time. Default false. A missing row, an
+  /// allocation failure or a pool failure is not a refusal.
+  FALLBACK_ON_REFUSAL:bool = false;
+  /// The fallback also answers inside the window while the propagator's own row
+  /// for the requested time is not built yet. Default false.
+  FALLBACK_WHILE_PENDING:bool = false;
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
@@ -14485,6 +14519,270 @@ file_identifier "$SRG";`,
         "./dist/TAB/TAB.ts.tar.gz"
       ]
     },
+    MOR: {
+      IDL: `// Hash: b5026b2307a82d7f52428fd56adaaafb3cb393825a01aaa197d94077210162e6
+// Version: 1.285.0
+// -----------------------------------END_HEADER
+include "../MET/main.fbs";
+include "../CVR/main.fbs";
+include "../MPE/main.fbs";
+
+// Minimum Orbit Record (MOR)
+// Description
+// One mean element set with only what a propagator needs to fly it: the minimum $OCM, as $MPE is the
+// minimum $OMM. Numbers and enums, no text a reader compares; the fixed parts of an $OCM element set
+// (center, frames, averaging, units, covariance labels) follow from the fields below and are stated by
+// the expansion rule, never repeated per record.
+//
+// Expansion: every MOR expands to exactly one $OCM.
+//   HEADER: CCSDS_OCM_VERS "3.0"; ORIGINATOR and MESSAGE_STATUS as here (absent when absent).
+//   METADATA: OBJECT_NAME and INTERNATIONAL_DESIGNATOR as here; with NORAD_CAT_ID > 0 the NORAD_CAT_ID,
+//     CATALOG_NAME "NORAD" and OBJECT_DESIGNATOR its decimal digits; TIME_SYSTEM "UTC".
+//   CENTER_NAME "EARTH". ORB_AVERAGING "KOZAI" for SGP4, "BROUWER" for SGP4XP and AP.
+//   TRAJ_REF_FRAME, and COV_REF_FRAME when COVARIANCE_DATA is present: for AP with a degree cap above 0,
+//     RFM CustomFrameWrapper TEMEOFEPOCH with NAME "TEMEOFEPOCH", and TRAJ_FRAME_EPOCH the EPOCH text;
+//     otherwise RFM CelestialFrameWrapper TEMEOFDATE with NAME "TEMEOFDATE" and no TRAJ_FRAME_EPOCH.
+//   MEAN_ELEMENTS: MEAN_ELEMENT_THEORY, the elements and their drag and radiation terms as here; EPOCH
+//     the text of EPOCH_UNIX_US, "YYYY-MM-DDTHH:MM:SS.ffffff" (26 characters, six fraction digits, no zone).
+//   PERTURBATIONS: GRAVITY_MODEL the text of GRAVITY_FIELD; SOLID_TIDES_MODEL and SOLAR_RAD_PRESSURE the
+//     texts of theirs (absent for NONE and UNSTATED); DENSITY_CORRECTION NONE. SGP4: WEATHER_SOURCE NONE,
+//     no ATMOSPHERIC_MODEL, no degree caps. SGP4XP and AP: ATMOSPHERIC_MODEL {JXX, 1970}, WEATHER_SOURCE
+//     THEORY_FLUX_MODEL, MAXIMUM_TESSERAL_DEGREE and MAXIMUM_ZONAL_DEGREE as here.
+//   ORBIT_DETERMINATION, present when ACTUAL_OD_SPAN is a number or OD_PARAMETERS is not 0: ACTUAL_OD_SPAN;
+//     OD_DYNAMIC_PARAMETERS one entry per bit of OD_PARAMETERS, ascending: PARAMETER the bit's
+//     prwDynamicParameter, NAME its enum name, SOLVED_FOR its bit in OD_SOLVED_FOR, and VALUE and UNITS
+//     BTERM "m**2/kg" (DRAG_AREA_OVER_MASS), AGOM "m**2/kg" (SRP_AREA_OVER_MASS), ECOM2_Y0 "m/s**2" (ECOM2_Y0).
+//   The covariance, when COVARIANCE_DATA is present: COV_TYPE "CARTPV", COV_ORDERING LTM, COV_SIZE N,
+//     COV_PARAMETER_KINDS the solved parameters among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE,
+//     SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and OUTGASSING_ACCELERATION, ascending, COV_PARAMETERS
+//     their names, COV_UNITS "km" x3, "km/s" x3 and theirs ("m**2/kg", "m**2/kg/s", "m**2/kg", "m/s**2",
+//     "km/s**2"), COV_PROPAGATION, COV_REALISM [COV_REALISM], COV_CALIBRATION and COV_CALIBRATION_REFERENCE as here.
+//   PROVENANCE: the RECORD_PROVENANCE of the $DPM asset that carries the record; absent without one.
+//   DERIVED_EPHEMERIS, when WINDOWS is present: a $PPE with REFERENCE_EPOCH the EPOCH text, CENTER_NAME
+//     "EARTH", REFERENCE_FRAME RFM CelestialFrameWrapper TEMEOFDATE, TIME_SYSTEM UTC, DEFAULT_BASIS_TYPE
+//     CHEBYSHEV; BUILD the asset's DERIVED_BUILD with RECORD_DIGEST by the rule its BUILDER_NAME publishes
+//     (an expander that cannot compute it writes no DERIVED_EPHEMERIS); per served window a
+//     PPEPositionRecord: EPOCH_MID_SECONDS and EPOCH_HALF_SPAN as here, EPOCH_MID its UTC text,
+//     NUM_COEFFICIENTS the larger count, the shorter series padded with +0.0, the head counts as here,
+//     HAS_VELOCITY_COEFFICIENTS when VEL_COEFF_COUNT > 0; per unserved window its midpoint, half-span and
+//     status in UNSERVED_MID_SECONDS, UNSERVED_HALF_SPAN and UNSERVED_STATUS.
+//   FALLBACK has no place in an $OCM: it expands to its own $MPE, ENTITY_ID the decimal NORAD_CAT_ID.
+//
+// Reduction: an $OCM reduces to a MOR only when every field it carries is carried here, equals what the
+// expansion writes from the fields here, equals its asset's RECORD_PROVENANCE, or is in this list of
+// descriptive fields no propagator reads, which a reduction drops: HEADER COMMENT, CREATION_DATE and
+// MESSAGE_ID; METADATA COMMENT and the ORIGINATOR_ contact fields; every ORBIT_DETERMINATION field but
+// ACTUAL_OD_SPAN and OD_DYNAMIC_PARAMETERS (fit statistics, observation counts, weighting, residuals);
+// DERIVED_EPHEMERIS MAX_POSITION_RESIDUAL, RMS_POSITION_RESIDUAL and NOMINAL_ fields. Anything else
+// (a maneuver, a state or covariance history, physical properties, a forecast or hand-over, seed sets,
+// SPACE_WEATHER rows or WEATHER_SOURCE RECORDS, NRLMSISE-00, a density correction, CLASSIFICATION, an
+// EXERCISE, user-defined parameters, a second COV_REALISM entry, a model text with no value here, an
+// epoch in a leap second or finer than a microsecond) means the $OCM is not reducible: it travels as an
+// $OCM, never as a MOR with the field dropped.
+
+/// The ordinals and meanings of $OCM ocmMessageStatus (an EXERCISE needs EXERCISE_NAME and is not
+/// reducible).
+enum morMessageStatus : ubyte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Real data.
+  REAL = 1,
+  /// Test data.
+  TEST = 2
+}
+
+/// The gravity field a set states, PERTURBATIONS.GRAVITY_MODEL of its $OCM. Append new values only.
+enum morGravityField : ubyte {
+  /// The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.
+  THEORY = 0,
+  /// "EGM2008": an AP set with a degree cap above 0.
+  EGM2008 = 1,
+  /// "EGM2008; slow tesseral terms to degree 70": an AP set with a degree cap above 0 whose slow set
+  /// carries terms beyond the shallow set's.
+  EGM2008_SLOW_TESSERAL_70 = 2
+}
+
+/// The ordinals and meanings of $PCF pcfSolidTideModel: PERTURBATIONS.SOLID_TIDES_MODEL absent (NONE) or
+/// "IERS 2010" (IERS_2010).
+enum morSolidTideModel : ubyte {
+  NONE = 0,
+  IERS_2010 = 1
+}
+
+/// The radiation pressure model a set states, PERTURBATIONS.SOLAR_RAD_PRESSURE of its $OCM. Append new
+/// values only.
+enum morRadiationModel : ubyte {
+  /// No text: the theory's own radiation pressure on AGOM.
+  UNSTATED = 0,
+  /// "SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".
+  SPHERE_ECOM2_Y0 = 1,
+  /// "SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".
+  SPHERE_OUTPUT_MAP = 2,
+  /// "SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL.
+  /// 2015)".
+  SPHERE_OUTPUT_MAP_ECOM2_Y0 = 3
+}
+
+/// A window of WINDOWS: served (its coefficients follow) or one no record serves, with the ordinals of
+/// $PPE ppeWindowStatus for the refusals. Append new values only.
+enum morWindowStatus : ubyte {
+  /// Served: the window's coefficients are in WINDOW_COEFF_HEADS and WINDOW_COEFF_TAILS.
+  SERVED = 0,
+  /// The theory refused the window; no coefficients.
+  THEORY_REFUSED = 1,
+  /// The builder could not hold its tolerance over the window; no coefficients.
+  TOLERANCE_NOT_HELD = 2
+}
+
+/// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+/// names, units and meanings, all thirteen always present.
+struct MORCovariancePropagation {
+  FLOOR_UU_KM2: double;
+  FLOOR_VU_KM2: double;
+  FLOOR_VV_KM2: double;
+  FLOOR_WU_KM2: double;
+  FLOOR_WV_KM2: double;
+  FLOOR_WW_KM2: double;
+  NOISE_ECCENTRICITY_PER_DAY: double;
+  NOISE_INCLINATION_PER_DAY: double;
+  NOISE_MEAN_MOTION_RELATIVE: double;
+  NOISE_NON_GRAVITATIONAL_RAD_DAY2: double;
+  NOISE_START_MINUTES: double;
+  NON_GRAVITATIONAL_SHARE: double;
+  NON_GRAVITATIONAL_RATE_PER_DAY: double;
+}
+
+/// One window of the polynomial rows derived from this record's elements: Chebyshev series of the first
+/// kind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and
+/// velocity in km/s, TEME of date, about the Earth.
+struct MORWindow {
+  /// Middle of the window, seconds after EPOCH_UNIX_US.
+  EPOCH_MID_SECONDS: double;
+  /// Half the window, seconds; above 0.
+  EPOCH_HALF_SPAN: double;
+  /// SERVED, or why no record serves the window.
+  STATUS: morWindowStatus;
+  /// Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes.
+  POS_COEFF_COUNT: ubyte;
+  /// Leading position coefficients per axis held as binary64; the rest are binary32. At most
+  /// POS_COEFF_COUNT.
+  POS_COEFF_HEAD_COUNT: ubyte;
+  /// Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all
+  /// three axes.
+  VEL_COEFF_COUNT: ubyte;
+  /// Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT.
+  VEL_COEFF_HEAD_COUNT: ubyte;
+}
+
+/// Minimum Orbit Record.
+table MOR {
+  /// The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.
+  NORAD_CAT_ID: uint32;
+  /// The object's COSPAR international designator.
+  INTERNATIONAL_DESIGNATOR: string;
+  /// Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,
+  /// INTERNATIONAL_DESIGNATOR and ORIGINATOR.
+  ORIGINATOR: string;
+  /// The object's name; absent unless a reader copies it into what it writes.
+  OBJECT_NAME: string;
+  /// Whether the set is real or test data.
+  MESSAGE_STATUS: morMessageStatus = UNSPECIFIED;
+  /// Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000
+  /// (the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both
+  /// ways without loss; an instant inside a leap second has no value here.
+  EPOCH_UNIX_US: int64;
+  /// The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.
+  MEAN_ELEMENT_THEORY: meanElementSource = UNSPECIFIED;
+  /// Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.
+  MEAN_MOTION: double;
+  /// Eccentricity.
+  ECCENTRICITY: double;
+  /// Inclination, deg.
+  INCLINATION: double;
+  /// Right ascension of the ascending node, deg.
+  RA_OF_ASC_NODE: double;
+  /// Argument of pericenter, deg.
+  ARG_OF_PERICENTER: double;
+  /// Mean anomaly, deg.
+  MEAN_ANOMALY: double;
+  /// Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  BTERM: double;
+  /// Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.
+  AGOM: double;
+  /// BSTAR, 1/Earth radii. SGP4 only.
+  BSTAR: double;
+  /// MEAN_MOTION_DOT, rev/day**2. SGP4 only.
+  MEAN_MOTION_DOT: double;
+  /// MEAN_MOTION_DDOT, rev/day**3. SGP4 only.
+  MEAN_MOTION_DDOT: double;
+  /// The gravity field the set flies on.
+  GRAVITY_FIELD: morGravityField = THEORY;
+  /// Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.
+  MAXIMUM_TESSERAL_DEGREE: ubyte;
+  /// Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.
+  MAXIMUM_ZONAL_DEGREE: ubyte;
+  /// The solid Earth tide the set flies with.
+  SOLID_TIDES_MODEL: morSolidTideModel = NONE;
+  /// The radiation pressure model the set states.
+  SOLAR_RAD_PRESSURE: morRadiationModel = UNSTATED;
+  /// The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:
+  /// DRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0
+  /// (bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.
+  OD_PARAMETERS: uint32;
+  /// Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).
+  OD_SOLVED_FOR: uint32;
+  /// The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.
+  ECOM2_Y0: double;
+  /// The span of the observations the orbit determination used, days; NaN when not stated.
+  ACTUAL_OD_SPAN: double = nan;
+  /// The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters
+  /// among DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and
+  /// OUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,
+  /// then those parameters in ascending ordinal. Absent: no covariance.
+  COVARIANCE_DATA: [double];
+  /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+  COV_PROPAGATION: MORCovariancePropagation;
+  /// The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.
+  COV_REALISM: CVR;
+  /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+  COV_CALIBRATION: covarianceCalibration = Unspecified;
+  /// Identifier of that calibration evidence (a report or record).
+  COV_CALIBRATION_REFERENCE: string;
+  /// Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),
+  /// in time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore
+  /// the rows, and one that cannot reproduce the asset's build statement must.
+  WINDOWS: [MORWindow];
+  /// The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position
+  /// (POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).
+  WINDOW_COEFF_HEADS: [double];
+  /// The binary32 coefficients of the served windows, in the same order: X, Y and Z of position
+  /// (POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.
+  WINDOW_COEFF_TAILS: [float];
+  /// The object's own element set for times beyond what this record serves (a reader's fallback
+  /// propagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the
+  /// object is this record's.
+  FALLBACK: MPE;
+}
+
+root_type MOR;
+file_identifier "$MOR";`,
+      files: [
+        "./dist/MOR/MOR.sw.tar.gz",
+        "./dist/MOR/MOR.py.tar.gz",
+        "./dist/MOR/MOR.lob.tar.gz",
+        "./dist/MOR/MOR.go.tar.gz",
+        "./dist/MOR/MOR.js.tar.gz",
+        "./dist/MOR/MOR.dart.tar.gz",
+        "./dist/MOR/MOR.cs.tar.gz",
+        "./dist/MOR/MOR.java.tar.gz",
+        "./dist/MOR/MOR.rs.tar.gz",
+        "./dist/MOR/MOR.php.tar.gz",
+        "./dist/MOR/MOR.json.tar.gz",
+        "./dist/MOR/MOR.cpp.tar.gz",
+        "./dist/MOR/MOR.kt.tar.gz",
+        "./dist/MOR/MOR.ts.tar.gz"
+      ]
+    },
     CES: {
       IDL: `// Hash: faa9ecbe08da77927b04bfecad8a94cd6fa7a34dca4045c1d1a65c3af26d1663
 // Version: 1.168.1
@@ -14932,8 +15230,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 5c8076966a3c6f63e900e431f05c9050c747eacf2560c6b03fce03ade73c9beb
-// Version: 1.44.89
+      IDL: `// Hash: 2cbcf1241ce82adef13092e87c0e3992d2c1481321cb4d380b05a9470c445ecc
+// Version: 1.44.90
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -15075,6 +15373,7 @@ include "../MET/main.fbs";
 include "../MFE/main.fbs";
 include "../MNF/main.fbs";
 include "../MNV/main.fbs";
+include "../MOR/main.fbs";
 include "../MPE/main.fbs";
 include "../MPL/main.fbs";
 include "../MSL/main.fbs";
@@ -15360,7 +15659,8 @@ enum RecordTypeExtended : ushort {
   CME = 292,
   SWA = 293,
   SWS = 294,
-  SSY = 295
+  SSY = 295,
+  MOR = 296
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -23806,7 +24106,7 @@ file_identifier "$FIL";`,
       ]
     },
     MPE: {
-      IDL: '// Hash: 2d741ad6a30d622f737e6bd8113d7ab9deab450b2ba546f70a2460031f2232f5\n// Version: 1.0.6\n// -----------------------------------END_HEADER\ninclude "../MET/main.fbs";\n\n// Minimum-Propagatable-Element-Set (MPE)\n// Description\n// Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.\n// Legacy format description can be found here.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\n/// One constraint in a maneuver-targeting problem and how well the converged\n/// solution satisfies it.\ntable MPETargeterConstraint {\n  /// Constraint identifier, e.g. "SMA", "INC", "RIC_R"\n  NAME: string;\n  /// Reference frame the constraint is expressed in\n  FRAME: string;\n  /// Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n  /// 1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT\n  EPOCH: double;\n  /// Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"\n  EVENT: string;\n  /// Target value of the constrained quantity\n  TARGET_VALUE: double;\n  /// Value achieved by the converged solution\n  ACHIEVED_VALUE: double;\n  /// Acceptable tolerance on the constrained quantity\n  TOLERANCE: double;\n  /// Relative weight of this constraint in the corrector\n  WEIGHT: double;\n}\n\n/// Maneuver-targeter solution and convergence metadata carried with an\n/// extended MPE: the solver that produced the targeted element set, its\n/// iteration/residual history, and the constraint set it satisfied.\ntable MPETargeterSolution {\n  /// Solver used, e.g. "differential-corrector"\n  SOLVER: string;\n  /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP\n  DYNAMICS: string;\n  /// Whether the corrector converged within tolerance\n  CONVERGED: bool;\n  /// Number of corrector iterations executed\n  ITERATIONS: uint32;\n  /// RMS of the final-iteration constraint residuals\n  RESIDUAL_RMS: double;\n  /// Final-iteration residual per constraint, aligned with CONSTRAINTS\n  RESIDUALS: [double];\n  /// The constraint set the solution was targeted against\n  CONSTRAINTS: [MPETargeterConstraint];\n  /// Total delta-v of the solved maneuver sequence in m/s\n  TOTAL_DELTA_V: double;\n  /// Unix ms the solution was produced\n  SOLVED_AT: uint64;\n}\n\n/// Minimum Propagatable Element Set\ntable MPE {\n  /// Unique ID as a String [no units]\n  ENTITY_ID: string;\n  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]\n  EPOCH: double;\n  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]\n  MEAN_MOTION: double;\n  /// Eccentricity (unitless)\n  ECCENTRICITY: double;\n  /// Inclination in degrees\n  INCLINATION: double;\n  /// Right ascension of ascending node in degrees\n  RA_OF_ASC_NODE: double;\n  /// Argument of pericenter in degrees\n  ARG_OF_PERICENTER: double;\n  /// Mean anomaly in degrees\n  MEAN_ANOMALY: double;\n  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]\n  BSTAR: double;\n  /// Description of the Mean Element Theory (SGP4, DSST, USM)\n  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;\n  /// Targeter solution + convergence metadata when this element set is the\n  /// product of maneuver targeting (absent for ordinary element sets)\n  TARGETER: MPETargeterSolution;\n}\n\nroot_type MPE;\nfile_identifier "$MPE";',
+      IDL: '// Hash: 5579fe68bdaac8b35b6d9e3dc74eca363b3133296c49979684d857297e32101f\n// Version: 1.0.7\n// -----------------------------------END_HEADER\ninclude "../MET/main.fbs";\n\n// Minimum-Propagatable-Element-Set (MPE)\n// Description\n// Truncated version of the Orbit Mean-Elements Message (OMM). Includes only the Mean Elements required to propagate an orbit.\n// Legacy format description can be found here.\n// CCSDS Reference documentation: 502x0b2c1e2.\n\n/// One constraint in a maneuver-targeting problem and how well the converged\n/// solution satisfies it.\ntable MPETargeterConstraint {\n  /// Constraint identifier, e.g. "SMA", "INC", "RIC_R"\n  NAME: string;\n  /// Reference frame the constraint is expressed in\n  FRAME: string;\n  /// Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n  /// 1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT\n  EPOCH: double;\n  /// Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"\n  EVENT: string;\n  /// Target value of the constrained quantity\n  TARGET_VALUE: double;\n  /// Value achieved by the converged solution\n  ACHIEVED_VALUE: double;\n  /// Acceptable tolerance on the constrained quantity\n  TOLERANCE: double;\n  /// Relative weight of this constraint in the corrector\n  WEIGHT: double;\n}\n\n/// Maneuver-targeter solution and convergence metadata carried with an\n/// extended MPE: the solver that produced the targeted element set, its\n/// iteration/residual history, and the constraint set it satisfied.\ntable MPETargeterSolution {\n  /// Solver used, e.g. "differential-corrector"\n  SOLVER: string;\n  /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP\n  DYNAMICS: string;\n  /// Whether the corrector converged within tolerance\n  CONVERGED: bool;\n  /// Number of corrector iterations executed\n  ITERATIONS: uint32;\n  /// RMS of the final-iteration constraint residuals\n  RESIDUAL_RMS: double;\n  /// Final-iteration residual per constraint, aligned with CONSTRAINTS\n  RESIDUALS: [double];\n  /// The constraint set the solution was targeted against\n  CONSTRAINTS: [MPETargeterConstraint];\n  /// Total delta-v of the solved maneuver sequence in m/s\n  TOTAL_DELTA_V: double;\n  /// Unix ms the solution was produced\n  SOLVED_AT: uint64;\n}\n\n/// Minimum Propagatable Element Set\ntable MPE {\n  /// Unique ID as a String [no units]\n  ENTITY_ID: string;\n  /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]\n  EPOCH: double;\n  /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]\n  MEAN_MOTION: double;\n  /// Eccentricity (unitless)\n  ECCENTRICITY: double;\n  /// Inclination in degrees\n  INCLINATION: double;\n  /// Right ascension of ascending node in degrees\n  RA_OF_ASC_NODE: double;\n  /// Argument of pericenter in degrees\n  ARG_OF_PERICENTER: double;\n  /// Mean anomaly in degrees\n  MEAN_ANOMALY: double;\n  /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]\n  BSTAR: double;\n  /// Description of the Mean Element Theory (SGP4, DSST, USM)\n  MEAN_ELEMENT_THEORY:meanElementSource = SGP4;\n  /// Targeter solution + convergence metadata when this element set is the\n  /// product of maneuver targeting (absent for ordinary element sets)\n  TARGETER: MPETargeterSolution;\n  /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\n  /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.\n  BTERM: double;\n  /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.\n  AGOM: double;\n}\n\nroot_type MPE;\nfile_identifier "$MPE";',
       files: [
         "./dist/MPE/MPE.sw.tar.gz",
         "./dist/MPE/MPE.py.tar.gz",
@@ -31479,9 +31779,11 @@ file_identifier "$VAM";`,
       ]
     },
     DPM: {
-      IDL: `// Hash: 231f0ff5c6cbd375903ddba46e10a17b76c44639b82d8e3b4a0fbd24c8efe112
-// Version: 1.0.10
+      IDL: `// Hash: 1de363c9fe16271dbea26274088df2762554408c37f4b28deab78b47e661efa8
+// Version: 1.0.11
 // -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+
 /// Dataset Publication Manifest.
 ///
 /// A DPM is the immutable, signed manifest for one dataset publication. A
@@ -31613,6 +31915,38 @@ table DPMAsset {
   /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
   /// assets of a FlatSQL feed; 0 when not applicable.
   THROUGH_SEQ: ulong;
+  /// The provenance of every record of this asset that carries none of its own
+  /// ($MOR records never do): stated once for the asset instead of in each
+  /// record. A record's own PROVENANCE, where its standard has one, governs that
+  /// record. Absent: the records state their own or have none.
+  RECORD_PROVENANCE: PVN;
+  /// The builder of the derived polynomial rows the asset's records carry
+  /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  /// carry no derived rows, or a reader must ignore them.
+  DERIVED_BUILD: DPMDerivedBuild;
+}
+
+/// Who built the derived polynomial rows of an asset's records, and under what:
+/// the per-asset part of $PPE PPEBuild, same names and meanings. The per-record
+/// RECORD_DIGEST is not stated: rows carried inside the record they derive from
+/// are bound to it by the record itself. A reader that cannot reproduce
+/// BUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.
+table DPMDerivedBuild {
+  /// Name of the builder, e.g. sdn-ap.
+  BUILDER_NAME: string;
+  /// Version of the builder.
+  BUILDER_VERSION: string;
+  /// SHA-256 of the builder's executable artifact (32 bytes).
+  BUILDER_DIGEST: [ubyte];
+  /// SHA-256 over the configuration and environment inputs the builder used that
+  /// are not in the source record, by the builder's published rule (32 bytes);
+  /// empty when the builder uses none.
+  ENVIRONMENT_DIGEST: [ubyte];
+  /// Build tolerance per position axis in km. NaN when not stated.
+  TOL_POSITION: double = nan;
+  /// Build tolerance per velocity axis in km/s. NaN when not stated or without
+  /// velocity.
+  TOL_VELOCITY: double = nan;
 }
 
 /// Source batch metadata bound into the dataset publication.
@@ -35463,6 +35797,15 @@ var json_default = {
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -37919,6 +38262,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -57110,6 +57473,15 @@ Decoding applies the inverses from the last back.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -60864,6 +61236,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -73839,6 +74231,15 @@ turned into a number.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -77954,6 +78355,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -86862,6 +87283,15 @@ verbatim what that source states about itself.`,
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -91068,6 +91498,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -104794,6 +105244,15 @@ provider's reviewed register). Never free text.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -109150,6 +109609,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -145666,6 +146145,620 @@ format class are named by $NCD's container format.`
       },
       $ref: "#/definitions/TAB"
     },
+    MOR: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        meanElementSource: {
+          type: "string",
+          enum: [
+            "SGP4",
+            "SGP4XP",
+            "DSST",
+            "USM",
+            "AP",
+            "UNSPECIFIED"
+          ]
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ]
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel",
+            "EmpiricalHistoryShrunk"
+          ]
+        },
+        morMessageStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "REAL",
+            "TEST"
+          ]
+        },
+        morGravityField: {
+          type: "string",
+          enum: [
+            "THEORY",
+            "EGM2008",
+            "EGM2008_SLOW_TESSERAL_70"
+          ]
+        },
+        morSolidTideModel: {
+          type: "string",
+          enum: [
+            "NONE",
+            "IERS_2010"
+          ]
+        },
+        morRadiationModel: {
+          type: "string",
+          enum: [
+            "UNSTATED",
+            "SPHERE_ECOM2_Y0",
+            "SPHERE_OUTPUT_MAP",
+            "SPHERE_OUTPUT_MAP_ECOM2_Y0"
+          ]
+        },
+        morWindowStatus: {
+          type: "string",
+          enum: [
+            "SERVED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ]
+        },
+        MET: {
+          type: "object",
+          description: "Mean Element Theory",
+          properties: {
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource"
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration."
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it."
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured."
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used."
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test."
+            },
+            HISTORY_SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES."
+            },
+            HISTORY_SETS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS."
+            },
+            HISTORY_WINDOW: {
+              type: "string",
+              description: "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS."
+            },
+            SHRINKAGE_WEIGHT: {
+              type: "number",
+              description: "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+            },
+            TRUTH_EPOCHS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated."
+            },
+            COVERAGE_1_SIGMA_AXIS1: {
+              type: "number",
+              description: "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured."
+            },
+            COVERAGE_1_SIGMA_AXIS2: {
+              type: "number"
+            },
+            COVERAGE_1_SIGMA_AXIS3: {
+              type: "number"
+            },
+            COVERAGE_3_SIGMA_AXIS1: {
+              type: "number",
+              description: "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973."
+            },
+            COVERAGE_3_SIGMA_AXIS2: {
+              type: "number"
+            },
+            COVERAGE_3_SIGMA_AXIS3: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MPETargeterConstraint: {
+          type: "object",
+          description: "One constraint in a maneuver-targeting problem and how well the converged\nsolution satisfies it.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: 'Constraint identifier, e.g. "SMA", "INC", "RIC_R"'
+            },
+            FRAME: {
+              type: "string",
+              description: "Reference frame the constraint is expressed in"
+            },
+            EPOCH: {
+              type: "number",
+              description: "Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT"
+            },
+            EVENT: {
+              type: "string",
+              description: 'Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"'
+            },
+            TARGET_VALUE: {
+              type: "number",
+              description: "Target value of the constrained quantity"
+            },
+            ACHIEVED_VALUE: {
+              type: "number",
+              description: "Value achieved by the converged solution"
+            },
+            TOLERANCE: {
+              type: "number",
+              description: "Acceptable tolerance on the constrained quantity"
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Relative weight of this constraint in the corrector"
+            }
+          },
+          additionalProperties: false
+        },
+        MPETargeterSolution: {
+          type: "object",
+          description: "Maneuver-targeter solution and convergence metadata carried with an\nextended MPE: the solver that produced the targeted element set, its\niteration/residual history, and the constraint set it satisfied.",
+          properties: {
+            SOLVER: {
+              type: "string",
+              description: 'Solver used, e.g. "differential-corrector"'
+            },
+            DYNAMICS: {
+              type: "string",
+              description: "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP"
+            },
+            CONVERGED: {
+              type: "boolean",
+              description: "Whether the corrector converged within tolerance"
+            },
+            ITERATIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of corrector iterations executed"
+            },
+            RESIDUAL_RMS: {
+              type: "number",
+              description: "RMS of the final-iteration constraint residuals"
+            },
+            RESIDUALS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Final-iteration residual per constraint, aligned with CONSTRAINTS"
+            },
+            CONSTRAINTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MPETargeterConstraint"
+              },
+              description: "The constraint set the solution was targeted against"
+            },
+            TOTAL_DELTA_V: {
+              type: "number",
+              description: "Total delta-v of the solved maneuver sequence in m/s"
+            },
+            SOLVED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix ms the solution was produced"
+            }
+          },
+          additionalProperties: false
+        },
+        MPE: {
+          type: "object",
+          description: "Minimum Propagatable Element Set",
+          properties: {
+            ENTITY_ID: {
+              type: "string",
+              description: "Unique ID as a String [no units]"
+            },
+            EPOCH: {
+              type: "number",
+              description: "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]"
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity (unitless)"
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination in degrees"
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of ascending node in degrees"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter in degrees"
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly in degrees"
+            },
+            BSTAR: {
+              type: "number",
+              description: "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]"
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "Description of the Mean Element Theory (SGP4, DSST, USM)"
+            },
+            TARGETER: {
+              $ref: "#/definitions/MPETargeterSolution",
+              description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4."
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4."
+            }
+          },
+          additionalProperties: false
+        },
+        MORCovariancePropagation: {
+          type: "object",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          properties: {
+            FLOOR_UU_KM2: {
+              type: "number"
+            },
+            FLOOR_VU_KM2: {
+              type: "number"
+            },
+            FLOOR_VV_KM2: {
+              type: "number"
+            },
+            FLOOR_WU_KM2: {
+              type: "number"
+            },
+            FLOOR_WV_KM2: {
+              type: "number"
+            },
+            FLOOR_WW_KM2: {
+              type: "number"
+            },
+            NOISE_ECCENTRICITY_PER_DAY: {
+              type: "number"
+            },
+            NOISE_INCLINATION_PER_DAY: {
+              type: "number"
+            },
+            NOISE_MEAN_MOTION_RELATIVE: {
+              type: "number"
+            },
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: {
+              type: "number"
+            },
+            NOISE_START_MINUTES: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_SHARE: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_RATE_PER_DAY: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MORWindow: {
+          type: "object",
+          description: "One window of the polynomial rows derived from this record's elements: Chebyshev series of the first\nkind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and\nvelocity in km/s, TEME of date, about the Earth.",
+          properties: {
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window, seconds after EPOCH_UNIX_US."
+            },
+            EPOCH_HALF_SPAN: {
+              type: "number",
+              description: "Half the window, seconds; above 0."
+            },
+            STATUS: {
+              $ref: "#/definitions/morWindowStatus",
+              description: "SERVED, or why no record serves the window."
+            },
+            POS_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading position coefficients per axis held as binary64; the rest are binary32. At most\nPOS_COEFF_COUNT."
+            },
+            VEL_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all\nthree axes."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT."
+            }
+          },
+          additionalProperties: false
+        },
+        MOR: {
+          type: "object",
+          description: "Minimum Orbit Record.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none."
+            },
+            INTERNATIONAL_DESIGNATOR: {
+              type: "string",
+              description: "The object's COSPAR international designator."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes."
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data."
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP."
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity."
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination, deg."
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node, deg."
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter, deg."
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly, deg."
+            },
+            BTERM: {
+              type: "number",
+              description: "Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+            },
+            AGOM: {
+              type: "number",
+              description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+            },
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only."
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
+            },
+            GRAVITY_FIELD: {
+              $ref: "#/definitions/morGravityField",
+              description: "The gravity field the set flies on."
+            },
+            MAXIMUM_TESSERAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP."
+            },
+            MAXIMUM_ZONAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP."
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with."
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states."
+            },
+            OD_PARAMETERS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:\nDRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0\n(bit 6, value ECOM2_Y0). Any other bit has no value here and is refused."
+            },
+            OD_SOLVED_FOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held)."
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "The span of the observations the orbit determination used, days; NaN when not stated."
+            },
+            COVARIANCE_DATA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance."
+            },
+            COV_PROPAGATION: {
+              $ref: "#/definitions/MORCovariancePropagation",
+              description: "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM."
+            },
+            COV_CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states."
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record)."
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must."
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+            },
+            FALLBACK: {
+              $ref: "#/definitions/MPE",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MOR"
+    },
     CES: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -148124,6 +149217,15 @@ format class are named by $NCD's container format.`
           enum: [
             "SMOOTHSTEP",
             "HERMITE"
+          ]
+        },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
           ]
         },
         pcfWeatherExtension: {
@@ -152291,6 +153393,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -163623,6 +164745,15 @@ stated.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -166713,6 +167844,46 @@ stated.`
             "REJECTED",
             "CORRELATED",
             "EXPIRED"
+          ]
+        },
+        morMessageStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "REAL",
+            "TEST"
+          ]
+        },
+        morGravityField: {
+          type: "string",
+          enum: [
+            "THEORY",
+            "EGM2008",
+            "EGM2008_SLOW_TESSERAL_70"
+          ]
+        },
+        morSolidTideModel: {
+          type: "string",
+          enum: [
+            "NONE",
+            "IERS_2010"
+          ]
+        },
+        morRadiationModel: {
+          type: "string",
+          enum: [
+            "UNSTATED",
+            "SPHERE_ECOM2_Y0",
+            "SPHERE_OUTPUT_MAP",
+            "SPHERE_OUTPUT_MAP_ECOM2_Y0"
+          ]
+        },
+        morWindowStatus: {
+          type: "string",
+          enum: [
+            "SERVED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
           ]
         },
         mplProblem: {
@@ -170616,7 +171787,8 @@ stated.`
             "CME",
             "SWA",
             "SWS",
-            "SSY"
+            "SSY",
+            "MOR"
           ]
         },
         ABA: {
@@ -185559,6 +186731,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -195937,6 +197129,55 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
+            },
+            RECORD_PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The provenance of every record of this asset that carries none of its own\n($MOR records never do): stated once for the asset instead of in each\nrecord. A record's own PROVENANCE, where its standard has one, governs that\nrecord. Absent: the records state their own or have none."
+            },
+            DERIVED_BUILD: {
+              $ref: "#/definitions/DPMDerivedBuild",
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+            }
+          },
+          additionalProperties: false
+        },
+        DPMDerivedBuild: {
+          type: "object",
+          description: "Who built the derived polynomial rows of an asset's records, and under what:\nthe per-asset part of $PPE PPEBuild, same names and meanings. The per-record\nRECORD_DIGEST is not stated: rows carried inside the record they derive from\nare bound to it by the record itself. A reader that cannot reproduce\nBUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, e.g. sdn-ap."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that\nare not in the source record, by the builder's published rule (32 bytes);\nempty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without\nvelocity."
             }
           },
           additionalProperties: false
@@ -216580,6 +217821,278 @@ provider's reviewed register). Never free text.`
             TARGETER: {
               $ref: "#/definitions/MPETargeterSolution",
               description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4."
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4."
+            }
+          },
+          additionalProperties: false
+        },
+        MORCovariancePropagation: {
+          type: "object",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          properties: {
+            FLOOR_UU_KM2: {
+              type: "number"
+            },
+            FLOOR_VU_KM2: {
+              type: "number"
+            },
+            FLOOR_VV_KM2: {
+              type: "number"
+            },
+            FLOOR_WU_KM2: {
+              type: "number"
+            },
+            FLOOR_WV_KM2: {
+              type: "number"
+            },
+            FLOOR_WW_KM2: {
+              type: "number"
+            },
+            NOISE_ECCENTRICITY_PER_DAY: {
+              type: "number"
+            },
+            NOISE_INCLINATION_PER_DAY: {
+              type: "number"
+            },
+            NOISE_MEAN_MOTION_RELATIVE: {
+              type: "number"
+            },
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: {
+              type: "number"
+            },
+            NOISE_START_MINUTES: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_SHARE: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_RATE_PER_DAY: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MORWindow: {
+          type: "object",
+          description: "One window of the polynomial rows derived from this record's elements: Chebyshev series of the first\nkind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and\nvelocity in km/s, TEME of date, about the Earth.",
+          properties: {
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window, seconds after EPOCH_UNIX_US."
+            },
+            EPOCH_HALF_SPAN: {
+              type: "number",
+              description: "Half the window, seconds; above 0."
+            },
+            STATUS: {
+              $ref: "#/definitions/morWindowStatus",
+              description: "SERVED, or why no record serves the window."
+            },
+            POS_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading position coefficients per axis held as binary64; the rest are binary32. At most\nPOS_COEFF_COUNT."
+            },
+            VEL_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all\nthree axes."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT."
+            }
+          },
+          additionalProperties: false
+        },
+        MOR: {
+          type: "object",
+          description: "Minimum Orbit Record.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none."
+            },
+            INTERNATIONAL_DESIGNATOR: {
+              type: "string",
+              description: "The object's COSPAR international designator."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes."
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data."
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here."
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED."
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP."
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity."
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination, deg."
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node, deg."
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter, deg."
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly, deg."
+            },
+            BTERM: {
+              type: "number",
+              description: "Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+            },
+            AGOM: {
+              type: "number",
+              description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4."
+            },
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only."
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only."
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only."
+            },
+            GRAVITY_FIELD: {
+              $ref: "#/definitions/morGravityField",
+              description: "The gravity field the set flies on."
+            },
+            MAXIMUM_TESSERAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP."
+            },
+            MAXIMUM_ZONAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP."
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with."
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states."
+            },
+            OD_PARAMETERS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:\nDRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0\n(bit 6, value ECOM2_Y0). Any other bit has no value here and is refused."
+            },
+            OD_SOLVED_FOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held)."
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6."
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "The span of the observations the orbit determination used, days; NaN when not stated."
+            },
+            COVARIANCE_DATA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance."
+            },
+            COV_PROPAGATION: {
+              $ref: "#/definitions/MORCovariancePropagation",
+              description: "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only."
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM."
+            },
+            COV_CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states."
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record)."
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must."
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each)."
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity."
+            },
+            FALLBACK: {
+              $ref: "#/definitions/MPE",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's."
             }
           },
           additionalProperties: false
@@ -266023,6 +267536,15 @@ balance service's own rate.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -270140,6 +271662,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -286791,6 +288333,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
             TARGETER: {
               $ref: "#/definitions/MPETargeterSolution",
               description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4."
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4."
             }
           },
           additionalProperties: false
@@ -301953,6 +303503,15 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -306393,6 +307952,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -331606,6 +333185,15 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -335324,6 +336912,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -342257,6 +343865,26 @@ stated.`
     DPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         publicationAssetKind: {
           type: "string",
           enum: [
@@ -342276,6 +343904,71 @@ stated.`
             "SDN_QUERY",
             "OTHER"
           ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+            },
+            SOURCE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+            }
+          },
+          additionalProperties: false
         },
         DPMCompletenessIndex: {
           type: "object",
@@ -342367,6 +344060,55 @@ stated.`
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
+            },
+            RECORD_PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The provenance of every record of this asset that carries none of its own\n($MOR records never do): stated once for the asset instead of in each\nrecord. A record's own PROVENANCE, where its standard has one, governs that\nrecord. Absent: the records state their own or have none."
+            },
+            DERIVED_BUILD: {
+              $ref: "#/definitions/DPMDerivedBuild",
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+            }
+          },
+          additionalProperties: false
+        },
+        DPMDerivedBuild: {
+          type: "object",
+          description: "Who built the derived polynomial rows of an asset's records, and under what:\nthe per-asset part of $PPE PPEBuild, same names and meanings. The per-record\nRECORD_DIGEST is not stated: rows carried inside the record they derive from\nare bound to it by the record itself. A reader that cannot reproduce\nBUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, e.g. sdn-ap."
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder."
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes)."
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that\nare not in the source record, by the builder's published rule (32 bytes);\nempty when the builder uses none."
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated."
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without\nvelocity."
             }
           },
           additionalProperties: false
@@ -353552,6 +355294,15 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "HERMITE"
           ]
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ]
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -358445,6 +360196,26 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/pcfTheory"
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
             }
           },
           additionalProperties: false
@@ -365572,6 +367343,35 @@ var fbjson_default = {
             HERMITE: {
               value: 1,
               description: "Cubic Hermite matching of position and velocity across the window."
+            }
+          }
+        },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
             }
           }
         },
@@ -376026,6 +377826,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -425973,6 +427822,35 @@ Decoding applies the inverses from the last back.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -440471,6 +442349,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -465680,6 +467607,35 @@ turned into a number.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -480657,6 +482613,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -498769,6 +500774,35 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -513592,6 +515626,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -552661,6 +554744,35 @@ provider's reviewed register). Never free text.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -568333,6 +570445,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -640931,6 +643092,1082 @@ format class are named by $NCD's container format.`,
       "x-flatbuffer-root-type": "TAB",
       "x-flatbuffer-file-identifier": "$TAB"
     },
+    MOR: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        meanElementSource: {
+          type: "string",
+          enum: [
+            "SGP4",
+            "SGP4XP",
+            "DSST",
+            "USM",
+            "AP",
+            "UNSPECIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SGP4: {
+              value: 0,
+              description: "Simplified General Perturbation Model 4"
+            },
+            SGP4XP: {
+              value: 1,
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+            },
+            DSST: {
+              value: 2,
+              description: "Draper Semi-analytical Satellite Theory"
+            },
+            USM: {
+              value: 3,
+              description: "Universal Semianalytical Method"
+            },
+            AP: {
+              value: 5,
+              description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+            },
+            UNSPECIFIED: {
+              value: 6,
+              description: "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
+            }
+          }
+        },
+        covarianceCalibration: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Uncalibrated",
+            "Calibrated"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Calibration not stated"
+            },
+            Uncalibrated: {
+              value: 1,
+              description: "Not measured against independent reference states, or measured and failed"
+            },
+            Calibrated: {
+              value: 2,
+              description: "Measured against independent reference states and passed"
+            }
+          }
+        },
+        covarianceRule: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Operator",
+            "ScaledFit",
+            "SourceModel",
+            "PooledModel",
+            "EmpiricalHistoryShrunk"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            Operator: {
+              value: 1,
+              description: "The operator's covariance, as supplied"
+            },
+            ScaledFit: {
+              value: 2,
+              description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            SourceModel: {
+              value: 3,
+              description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            PooledModel: {
+              value: 4,
+              description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+            },
+            EmpiricalHistoryShrunk: {
+              value: 5,
+              description: "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
+            }
+          }
+        },
+        morMessageStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "REAL",
+            "TEST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            REAL: {
+              value: 1,
+              description: "Real data."
+            },
+            TEST: {
+              value: 2,
+              description: "Test data."
+            }
+          }
+        },
+        morGravityField: {
+          type: "string",
+          enum: [
+            "THEORY",
+            "EGM2008",
+            "EGM2008_SLOW_TESSERAL_70"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            THEORY: {
+              value: 0,
+              description: `The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.`
+            },
+            EGM2008: {
+              value: 1,
+              description: '"EGM2008": an AP set with a degree cap above 0.'
+            },
+            EGM2008_SLOW_TESSERAL_70: {
+              value: 2,
+              description: `"EGM2008; slow tesseral terms to degree 70": an AP set with a degree cap above 0 whose slow set carries terms beyond the shallow set's.`
+            }
+          }
+        },
+        morSolidTideModel: {
+          type: "string",
+          enum: [
+            "NONE",
+            "IERS_2010"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            IERS_2010: {
+              value: 1
+            }
+          }
+        },
+        morRadiationModel: {
+          type: "string",
+          enum: [
+            "UNSTATED",
+            "SPHERE_ECOM2_Y0",
+            "SPHERE_OUTPUT_MAP",
+            "SPHERE_OUTPUT_MAP_ECOM2_Y0"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSTATED: {
+              value: 0,
+              description: "No text: the theory's own radiation pressure on AGOM."
+            },
+            SPHERE_ECOM2_Y0: {
+              value: 1,
+              description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+            },
+            SPHERE_OUTPUT_MAP: {
+              value: 2,
+              description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+            },
+            SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+              value: 3,
+              description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+            }
+          }
+        },
+        morWindowStatus: {
+          type: "string",
+          enum: [
+            "SERVED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            SERVED: {
+              value: 0,
+              description: "Served: the window's coefficients are in WINDOW_COEFF_HEADS and WINDOW_COEFF_TAILS."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refused the window; no coefficients."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "The builder could not hold its tolerance over the window; no coefficients."
+            }
+          }
+        },
+        MET: {
+          type: "object",
+          description: "Mean Element Theory",
+          properties: {
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SGP4: {
+                  value: 0,
+                  description: "Simplified General Perturbation Model 4"
+                },
+                SGP4XP: {
+                  value: 1,
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+                },
+                DSST: {
+                  value: 2,
+                  description: "Draper Semi-analytical Satellite Theory"
+                },
+                USM: {
+                  value: 3,
+                  description: "Universal Semianalytical Method"
+                },
+                AP: {
+                  value: 5,
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                },
+                UNSPECIFIED: {
+                  value: 6,
+                  description: "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        CVR: {
+          type: "object",
+          description: "Covariance Realism",
+          properties: {
+            RULE: {
+              $ref: "#/definitions/covarianceRule",
+              description: "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                Operator: {
+                  value: 1,
+                  description: "The operator's covariance, as supplied"
+                },
+                ScaledFit: {
+                  value: 2,
+                  description: "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+                },
+                SourceModel: {
+                  value: 3,
+                  description: "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+                },
+                PooledModel: {
+                  value: 4,
+                  description: "The empirical model pooled over all sources, for a source without its own model in the regime"
+                },
+                EmpiricalHistoryShrunk: {
+                  value: 5,
+                  description: "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration.",
+              "x-flatbuffer-type": "string"
+            },
+            REGIME: {
+              type: "string",
+              description: "Orbit regime of the cell, as the model names it.",
+              "x-flatbuffer-type": "string"
+            },
+            AGE_DAYS: {
+              type: "number",
+              description: "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HORIZON_DAYS: {
+              type: "number",
+              description: "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MEASURED_LINEAGE: {
+              type: "string",
+              description: "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+              "x-flatbuffer-type": "string"
+            },
+            TEST_WINDOW: {
+              type: "string",
+              description: "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+              "x-flatbuffer-type": "string"
+            },
+            MEAN_D2_OVER_3: {
+              type: "number",
+              description: "Mean of d2/3 over the held-out samples. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_95: {
+              type: "number",
+              description: "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of held-out samples the test used.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct objects the samples came from.",
+              "x-flatbuffer-type": "uint"
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            EVIDENCE: {
+              type: "string",
+              description: "Identifier of the report or record that holds the test.",
+              "x-flatbuffer-type": "string"
+            },
+            HISTORY_SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES.",
+              "x-flatbuffer-type": "uint"
+            },
+            HISTORY_SETS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS.",
+              "x-flatbuffer-type": "uint"
+            },
+            HISTORY_WINDOW: {
+              type: "string",
+              description: "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS.",
+              "x-flatbuffer-type": "string"
+            },
+            SHRINKAGE_WEIGHT: {
+              type: "number",
+              description: "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TRUTH_EPOCHS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Distinct truth epochs among the SAMPLES: predictions that share one truth\nstate count once here. 0 when not stated.",
+              "x-flatbuffer-type": "uint"
+            },
+            COVERAGE_1_SIGMA_AXIS1: {
+              type: "number",
+              description: "Share of the held-out samples whose error lies inside the 1-sigma band of\nthe first, second and third axis of the covariance's frame (radial,\nin-track and cross-track for an RTN or curvilinear covariance), 0 to 1;\nnominal 0.6827 for Gaussian errors. NaN when not measured.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_1_SIGMA_AXIS2: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_1_SIGMA_AXIS3: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_3_SIGMA_AXIS1: {
+              type: "number",
+              description: "As COVERAGE_1_SIGMA_AXISn for the 3-sigma band; nominal 0.9973.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_3_SIGMA_AXIS2: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVERAGE_3_SIGMA_AXIS3: {
+              type: "number",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            }
+          },
+          additionalProperties: false
+        },
+        MPETargeterConstraint: {
+          type: "object",
+          description: "One constraint in a maneuver-targeting problem and how well the converged\nsolution satisfies it.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: 'Constraint identifier, e.g. "SMA", "INC", "RIC_R"',
+              "x-flatbuffer-type": "string"
+            },
+            FRAME: {
+              type: "string",
+              description: "Reference frame the constraint is expressed in",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "number",
+              description: "Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT",
+              "x-flatbuffer-type": "double"
+            },
+            EVENT: {
+              type: "string",
+              description: 'Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"',
+              "x-flatbuffer-type": "string"
+            },
+            TARGET_VALUE: {
+              type: "number",
+              description: "Target value of the constrained quantity",
+              "x-flatbuffer-type": "double"
+            },
+            ACHIEVED_VALUE: {
+              type: "number",
+              description: "Value achieved by the converged solution",
+              "x-flatbuffer-type": "double"
+            },
+            TOLERANCE: {
+              type: "number",
+              description: "Acceptable tolerance on the constrained quantity",
+              "x-flatbuffer-type": "double"
+            },
+            WEIGHT: {
+              type: "number",
+              description: "Relative weight of this constraint in the corrector",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MPETargeterSolution: {
+          type: "object",
+          description: "Maneuver-targeter solution and convergence metadata carried with an\nextended MPE: the solver that produced the targeted element set, its\niteration/residual history, and the constraint set it satisfied.",
+          properties: {
+            SOLVER: {
+              type: "string",
+              description: 'Solver used, e.g. "differential-corrector"',
+              "x-flatbuffer-type": "string"
+            },
+            DYNAMICS: {
+              type: "string",
+              description: "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP",
+              "x-flatbuffer-type": "string"
+            },
+            CONVERGED: {
+              type: "boolean",
+              description: "Whether the corrector converged within tolerance",
+              "x-flatbuffer-type": "bool"
+            },
+            ITERATIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of corrector iterations executed",
+              "x-flatbuffer-type": "uint32"
+            },
+            RESIDUAL_RMS: {
+              type: "number",
+              description: "RMS of the final-iteration constraint residuals",
+              "x-flatbuffer-type": "double"
+            },
+            RESIDUALS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Final-iteration residual per constraint, aligned with CONSTRAINTS",
+              "x-flatbuffer-type": "[double]"
+            },
+            CONSTRAINTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MPETargeterConstraint"
+              },
+              description: "The constraint set the solution was targeted against",
+              "x-flatbuffer-type": "[MPETargeterConstraint]"
+            },
+            TOTAL_DELTA_V: {
+              type: "number",
+              description: "Total delta-v of the solved maneuver sequence in m/s",
+              "x-flatbuffer-type": "double"
+            },
+            SOLVED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix ms the solution was produced",
+              "x-flatbuffer-type": "uint64"
+            }
+          },
+          additionalProperties: false
+        },
+        MPE: {
+          type: "object",
+          description: "Minimum Propagatable Element Set",
+          properties: {
+            ENTITY_ID: {
+              type: "string",
+              description: "Unique ID as a String [no units]",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "number",
+              description: "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity (unitless)",
+              "x-flatbuffer-type": "double"
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of ascending node in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            BSTAR: {
+              type: "number",
+              description: "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "Description of the Mean Element Theory (SGP4, DSST, USM)",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SGP4: {
+                  value: 0,
+                  description: "Simplified General Perturbation Model 4"
+                },
+                SGP4XP: {
+                  value: 1,
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+                },
+                DSST: {
+                  value: 2,
+                  description: "Draper Semi-analytical Satellite Theory"
+                },
+                USM: {
+                  value: 3,
+                  description: "Universal Semianalytical Method"
+                },
+                AP: {
+                  value: 5,
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                },
+                UNSPECIFIED: {
+                  value: 6,
+                  description: "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
+                }
+              },
+              "x-flatbuffer-default": "SGP4"
+            },
+            TARGETER: {
+              $ref: "#/definitions/MPETargeterSolution",
+              description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)",
+              "x-flatbuffer-type": "MPETargeterSolution"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MORCovariancePropagation: {
+          type: "object",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          properties: {
+            FLOOR_UU_KM2: {
+              type: "number"
+            },
+            FLOOR_VU_KM2: {
+              type: "number"
+            },
+            FLOOR_VV_KM2: {
+              type: "number"
+            },
+            FLOOR_WU_KM2: {
+              type: "number"
+            },
+            FLOOR_WV_KM2: {
+              type: "number"
+            },
+            FLOOR_WW_KM2: {
+              type: "number"
+            },
+            NOISE_ECCENTRICITY_PER_DAY: {
+              type: "number"
+            },
+            NOISE_INCLINATION_PER_DAY: {
+              type: "number"
+            },
+            NOISE_MEAN_MOTION_RELATIVE: {
+              type: "number"
+            },
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: {
+              type: "number"
+            },
+            NOISE_START_MINUTES: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_SHARE: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_RATE_PER_DAY: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MORWindow: {
+          type: "object",
+          description: "One window of the polynomial rows derived from this record's elements: Chebyshev series of the first\nkind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and\nvelocity in km/s, TEME of date, about the Earth.",
+          properties: {
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window, seconds after EPOCH_UNIX_US."
+            },
+            EPOCH_HALF_SPAN: {
+              type: "number",
+              description: "Half the window, seconds; above 0."
+            },
+            STATUS: {
+              $ref: "#/definitions/morWindowStatus",
+              description: "SERVED, or why no record serves the window."
+            },
+            POS_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading position coefficients per axis held as binary64; the rest are binary32. At most\nPOS_COEFF_COUNT."
+            },
+            VEL_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all\nthree axes."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT."
+            }
+          },
+          additionalProperties: false
+        },
+        MOR: {
+          type: "object",
+          description: "Minimum Orbit Record.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.",
+              "x-flatbuffer-type": "uint32"
+            },
+            INTERNATIONAL_DESIGNATOR: {
+              type: "string",
+              description: "The object's COSPAR international designator.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                REAL: {
+                  value: 1,
+                  description: "Real data."
+                },
+                TEST: {
+                  value: 2,
+                  description: "Test data."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
+              "x-flatbuffer-type": "int64"
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SGP4: {
+                  value: 0,
+                  description: "Simplified General Perturbation Model 4"
+                },
+                SGP4XP: {
+                  value: 1,
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+                },
+                DSST: {
+                  value: 2,
+                  description: "Draper Semi-analytical Satellite Theory"
+                },
+                USM: {
+                  value: 3,
+                  description: "Universal Semianalytical Method"
+                },
+                AP: {
+                  value: 5,
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                },
+                UNSPECIFIED: {
+                  value: 6,
+                  description: "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity.",
+              "x-flatbuffer-type": "double"
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            BTERM: {
+              type: "number",
+              description: "Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            GRAVITY_FIELD: {
+              $ref: "#/definitions/morGravityField",
+              description: "The gravity field the set flies on.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                THEORY: {
+                  value: 0,
+                  description: `The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.`
+                },
+                EGM2008: {
+                  value: 1,
+                  description: '"EGM2008": an AP set with a degree cap above 0.'
+                },
+                EGM2008_SLOW_TESSERAL_70: {
+                  value: 2,
+                  description: `"EGM2008; slow tesseral terms to degree 70": an AP set with a degree cap above 0 whose slow set carries terms beyond the shallow set's.`
+                }
+              },
+              "x-flatbuffer-default": "THEORY"
+            },
+            MAXIMUM_TESSERAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MAXIMUM_ZONAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                IERS_2010: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSTATED: {
+                  value: 0,
+                  description: "No text: the theory's own radiation pressure on AGOM."
+                },
+                SPHERE_ECOM2_Y0: {
+                  value: 1,
+                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+                },
+                SPHERE_OUTPUT_MAP: {
+                  value: 2,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+                },
+                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+                  value: 3,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+                }
+              },
+              "x-flatbuffer-default": "UNSTATED"
+            },
+            OD_PARAMETERS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:\nDRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0\n(bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.",
+              "x-flatbuffer-type": "uint32"
+            },
+            OD_SOLVED_FOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).",
+              "x-flatbuffer-type": "uint32"
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
+              "x-flatbuffer-type": "double"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "The span of the observations the orbit determination used, days; NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVARIANCE_DATA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance.",
+              "x-flatbuffer-type": "[double]"
+            },
+            COV_PROPAGATION: {
+              $ref: "#/definitions/MORCovariancePropagation",
+              description: "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
+              "x-flatbuffer-type": "MORCovariancePropagation"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.",
+              "x-flatbuffer-type": "CVR"
+            },
+            COV_CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record).",
+              "x-flatbuffer-type": "string"
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must.",
+              "x-flatbuffer-type": "[MORWindow]"
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
+              "x-flatbuffer-type": "[double]"
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
+              "x-flatbuffer-type": "[float]"
+            },
+            FALLBACK: {
+              $ref: "#/definitions/MPE",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's.",
+              "x-flatbuffer-type": "MPE"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MOR",
+      "x-flatbuffer-root-type": "MOR",
+      "x-flatbuffer-file-identifier": "$MOR"
+    },
     CES: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -647554,6 +650791,35 @@ format class are named by $NCD's container format.`,
             HERMITE: {
               value: 1,
               description: "Cubic Hermite matching of position and velocity across the window."
+            }
+          }
+        },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
             }
           }
         },
@@ -662679,6 +665945,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -686703,6 +690018,35 @@ stated.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -696287,6 +699631,124 @@ stated.`,
             },
             EXPIRED: {
               value: 4
+            }
+          }
+        },
+        morMessageStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "REAL",
+            "TEST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated."
+            },
+            REAL: {
+              value: 1,
+              description: "Real data."
+            },
+            TEST: {
+              value: 2,
+              description: "Test data."
+            }
+          }
+        },
+        morGravityField: {
+          type: "string",
+          enum: [
+            "THEORY",
+            "EGM2008",
+            "EGM2008_SLOW_TESSERAL_70"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            THEORY: {
+              value: 0,
+              description: `The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.`
+            },
+            EGM2008: {
+              value: 1,
+              description: '"EGM2008": an AP set with a degree cap above 0.'
+            },
+            EGM2008_SLOW_TESSERAL_70: {
+              value: 2,
+              description: `"EGM2008; slow tesseral terms to degree 70": an AP set with a degree cap above 0 whose slow set carries terms beyond the shallow set's.`
+            }
+          }
+        },
+        morSolidTideModel: {
+          type: "string",
+          enum: [
+            "NONE",
+            "IERS_2010"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            IERS_2010: {
+              value: 1
+            }
+          }
+        },
+        morRadiationModel: {
+          type: "string",
+          enum: [
+            "UNSTATED",
+            "SPHERE_ECOM2_Y0",
+            "SPHERE_OUTPUT_MAP",
+            "SPHERE_OUTPUT_MAP_ECOM2_Y0"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSTATED: {
+              value: 0,
+              description: "No text: the theory's own radiation pressure on AGOM."
+            },
+            SPHERE_ECOM2_Y0: {
+              value: 1,
+              description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+            },
+            SPHERE_OUTPUT_MAP: {
+              value: 2,
+              description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+            },
+            SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+              value: 3,
+              description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+            }
+          }
+        },
+        morWindowStatus: {
+          type: "string",
+          enum: [
+            "SERVED",
+            "THEORY_REFUSED",
+            "TOLERANCE_NOT_HELD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            SERVED: {
+              value: 0,
+              description: "Served: the window's coefficients are in WINDOW_COEFF_HEADS and WINDOW_COEFF_TAILS."
+            },
+            THEORY_REFUSED: {
+              value: 1,
+              description: "The theory refused the window; no coefficients."
+            },
+            TOLERANCE_NOT_HELD: {
+              value: 2,
+              description: "The builder could not hold its tolerance over the window; no coefficients."
             }
           }
         },
@@ -708200,7 +711662,8 @@ stated.`,
             "CME",
             "SWA",
             "SWS",
-            "SSY"
+            "SSY",
+            "MOR"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -708327,6 +711790,9 @@ stated.`,
             },
             SSY: {
               value: 295
+            },
+            MOR: {
+              value: 296
             }
           }
         },
@@ -739720,6 +743186,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -755025,6 +758540,63 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
+            },
+            RECORD_PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The provenance of every record of this asset that carries none of its own\n($MOR records never do): stated once for the asset instead of in each\nrecord. A record's own PROVENANCE, where its standard has one, governs that\nrecord. Absent: the records state their own or have none."
+            },
+            DERIVED_BUILD: {
+              $ref: "#/definitions/DPMDerivedBuild",
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+            }
+          },
+          additionalProperties: false
+        },
+        DPMDerivedBuild: {
+          type: "object",
+          description: "Who built the derived polynomial rows of an asset's records, and under what:\nthe per-asset part of $PPE PPEBuild, same names and meanings. The per-record\nRECORD_DIGEST is not stated: rows carried inside the record they derive from\nare bound to it by the record itself. A reader that cannot reproduce\nBUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, e.g. sdn-ap.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that\nare not in the source record, by the builder's published rule (32 bytes);\nempty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without\nvelocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -785105,6 +788677,423 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/MPETargeterSolution",
               description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)",
               "x-flatbuffer-type": "MPETargeterSolution"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MORCovariancePropagation: {
+          type: "object",
+          description: "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present.",
+          properties: {
+            FLOOR_UU_KM2: {
+              type: "number"
+            },
+            FLOOR_VU_KM2: {
+              type: "number"
+            },
+            FLOOR_VV_KM2: {
+              type: "number"
+            },
+            FLOOR_WU_KM2: {
+              type: "number"
+            },
+            FLOOR_WV_KM2: {
+              type: "number"
+            },
+            FLOOR_WW_KM2: {
+              type: "number"
+            },
+            NOISE_ECCENTRICITY_PER_DAY: {
+              type: "number"
+            },
+            NOISE_INCLINATION_PER_DAY: {
+              type: "number"
+            },
+            NOISE_MEAN_MOTION_RELATIVE: {
+              type: "number"
+            },
+            NOISE_NON_GRAVITATIONAL_RAD_DAY2: {
+              type: "number"
+            },
+            NOISE_START_MINUTES: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_SHARE: {
+              type: "number"
+            },
+            NON_GRAVITATIONAL_RATE_PER_DAY: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MORWindow: {
+          type: "object",
+          description: "One window of the polynomial rows derived from this record's elements: Chebyshev series of the first\nkind over [EPOCH_MID_SECONDS - EPOCH_HALF_SPAN, EPOCH_MID_SECONDS + EPOCH_HALF_SPAN], position in km and\nvelocity in km/s, TEME of date, about the Earth.",
+          properties: {
+            EPOCH_MID_SECONDS: {
+              type: "number",
+              description: "Middle of the window, seconds after EPOCH_UNIX_US."
+            },
+            EPOCH_HALF_SPAN: {
+              type: "number",
+              description: "Half the window, seconds; above 0."
+            },
+            STATUS: {
+              $ref: "#/definitions/morWindowStatus",
+              description: "SERVED, or why no record serves the window."
+            },
+            POS_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Position coefficients per axis, 1 or more when SERVED; the last triple is not +0.0 on all three axes."
+            },
+            POS_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading position coefficients per axis held as binary64; the rest are binary32. At most\nPOS_COEFF_COUNT."
+            },
+            VEL_COEFF_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Velocity coefficients per axis; 0 for a position-only window. The last triple is not +0.0 on all\nthree axes."
+            },
+            VEL_COEFF_HEAD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Leading velocity coefficients per axis held as binary64. At most VEL_COEFF_COUNT."
+            }
+          },
+          additionalProperties: false
+        },
+        MOR: {
+          type: "object",
+          description: "Minimum Orbit Record.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The object's NORAD catalog number, the join key to $CAT, $OMM and $OCM; 0 when it has none.",
+              "x-flatbuffer-type": "uint32"
+            },
+            INTERNATIONAL_DESIGNATOR: {
+              type: "string",
+              description: "The object's COSPAR international designator.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Who issued the set ($OCM HEADER.ORIGINATOR). A reader keys a series on NORAD_CAT_ID,\nINTERNATIONAL_DESIGNATOR and ORIGINATOR.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "The object's name; absent unless a reader copies it into what it writes.",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE_STATUS: {
+              $ref: "#/definitions/morMessageStatus",
+              description: "Whether the set is real or test data.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated."
+                },
+                REAL: {
+                  value: 1,
+                  description: "Real data."
+                },
+                TEST: {
+                  value: 2,
+                  description: "Test data."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            EPOCH_UNIX_US: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Epoch of the elements: microseconds since 1970-01-01T00:00:00 UTC, every UTC day 86,400,000,000\n(the UNIX time scale of $MPE EPOCH). An $OCM EPOCH text with up to six fraction digits converts both\nways without loss; an instant inside a leap second has no value here.",
+              "x-flatbuffer-type": "int64"
+            },
+            MEAN_ELEMENT_THEORY: {
+              $ref: "#/definitions/meanElementSource",
+              description: "The theory the set is defined under: SGP4, SGP4XP or AP. A reader refuses UNSPECIFIED.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SGP4: {
+                  value: 0,
+                  description: "Simplified General Perturbation Model 4"
+                },
+                SGP4XP: {
+                  value: 1,
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+                },
+                DSST: {
+                  value: 2,
+                  description: "Draper Semi-analytical Satellite Theory"
+                },
+                USM: {
+                  value: 3,
+                  description: "Universal Semianalytical Method"
+                },
+                AP: {
+                  value: 5,
+                  description: "SDN Advanced Propagator (AP): an advanced propagator that builds on the entire history of astrodynamics (NRLMSISE-00 drag on the day's space weather; tesseral and zonal gravity terms). Its sets fly only on AP. 4 is left unused: it was a cut value of an earlier theory."
+                },
+                UNSPECIFIED: {
+                  value: 6,
+                  description: "Not stated. A reader of an element set refuses UNSPECIFIED by name: the theory of a set is always written."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            MEAN_MOTION: {
+              type: "number",
+              description: "Mean motion, rev/day, as the theory defines it: Kozai for SGP4, Brouwer for SGP4XP and AP.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity.",
+              "x-flatbuffer-type": "double"
+            },
+            INCLINATION: {
+              type: "number",
+              description: "Inclination, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            RA_OF_ASC_NODE: {
+              type: "number",
+              description: "Right ascension of the ascending node, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            ARG_OF_PERICENTER: {
+              type: "number",
+              description: "Argument of pericenter, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_ANOMALY: {
+              type: "number",
+              description: "Mean anomaly, deg.",
+              "x-flatbuffer-type": "double"
+            },
+            BTERM: {
+              type: "number",
+              description: "Drag term Cd*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: "Radiation term Cr*A/m, m**2/kg. SGP4XP and AP; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            BSTAR: {
+              type: "number",
+              description: "BSTAR, 1/Earth radii. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DOT: {
+              type: "number",
+              description: "MEAN_MOTION_DOT, rev/day**2. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            MEAN_MOTION_DDOT: {
+              type: "number",
+              description: "MEAN_MOTION_DDOT, rev/day**3. SGP4 only.",
+              "x-flatbuffer-type": "double"
+            },
+            GRAVITY_FIELD: {
+              $ref: "#/definitions/morGravityField",
+              description: "The gravity field the set flies on.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                THEORY: {
+                  value: 0,
+                  description: `The theory's own field: "WGS-72" for SGP4, "EGM-96" for SGP4XP and for AP with both degree caps 0.`
+                },
+                EGM2008: {
+                  value: 1,
+                  description: '"EGM2008": an AP set with a degree cap above 0.'
+                },
+                EGM2008_SLOW_TESSERAL_70: {
+                  value: 2,
+                  description: `"EGM2008; slow tesseral terms to degree 70": an AP set with a degree cap above 0 whose slow set carries terms beyond the shallow set's.`
+                }
+              },
+              "x-flatbuffer-default": "THEORY"
+            },
+            MAXIMUM_TESSERAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest tesseral degree of the field's terms; 0 for SGP4 and SGP4XP.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MAXIMUM_ZONAL_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Highest zonal degree of the field's terms; 0 for SGP4 and SGP4XP.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            SOLID_TIDES_MODEL: {
+              $ref: "#/definitions/morSolidTideModel",
+              description: "The solid Earth tide the set flies with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                IERS_2010: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            SOLAR_RAD_PRESSURE: {
+              $ref: "#/definitions/morRadiationModel",
+              description: "The radiation pressure model the set states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSTATED: {
+                  value: 0,
+                  description: "No text: the theory's own radiation pressure on AGOM."
+                },
+                SPHERE_ECOM2_Y0: {
+                  value: 1,
+                  description: `"SPHERE (AGOM) AND ECOM2 Y0 (ARNOLD ET AL. 2015), SPHERE'S CYLINDRICAL SHADOW".`
+                },
+                SPHERE_OUTPUT_MAP: {
+                  value: 2,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP".'
+                },
+                SPHERE_OUTPUT_MAP_ECOM2_Y0: {
+                  value: 3,
+                  description: '"SPHERE (AGOM) THROUGH THE OUTPUT MAP, CYLINDRICAL SHADOW OVER THE STEP, AND ECOM2 Y0 (ARNOLD ET AL. 2015)".'
+                }
+              },
+              "x-flatbuffer-default": "UNSTATED"
+            },
+            OD_PARAMETERS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The dynamic parameters the orbit determination carried, bit k for prwDynamicParameter ordinal k:\nDRAG_AREA_OVER_MASS (bit 1, value BTERM), SRP_AREA_OVER_MASS (bit 3, value AGOM) and ECOM2_Y0\n(bit 6, value ECOM2_Y0). Any other bit has no value here and is refused.",
+              "x-flatbuffer-type": "uint32"
+            },
+            OD_SOLVED_FOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Of OD_PARAMETERS, the ones the orbit determination solved for (the others were held).",
+              "x-flatbuffer-type": "uint32"
+            },
+            ECOM2_Y0: {
+              type: "number",
+              description: "The ECOM2 Y0 radiation acceleration, m/s**2, when OD_PARAMETERS has bit 6.",
+              "x-flatbuffer-type": "double"
+            },
+            ACTUAL_OD_SPAN: {
+              type: "number",
+              description: "The span of the observations the orbit determination used, days; NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            COVARIANCE_DATA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The epoch covariance, lower triangle row by row, N(N+1)/2 values: N = 6 plus the solved parameters\namong DRAG_AREA_OVER_MASS, DRAG_AREA_OVER_MASS_RATE, SRP_AREA_OVER_MASS, IN_TRACK_ACCELERATION and\nOUTGASSING_ACCELERATION; position and velocity in km and km/s in TRAJ_REF_FRAME of the expansion,\nthen those parameters in ascending ordinal. Absent: no covariance.",
+              "x-flatbuffer-type": "[double]"
+            },
+            COV_PROPAGATION: {
+              $ref: "#/definitions/MORCovariancePropagation",
+              description: "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
+              "x-flatbuffer-type": "MORCovariancePropagation"
+            },
+            COV_REALISM: {
+              $ref: "#/definitions/CVR",
+              description: "The realism of COVARIANCE_DATA, the single entry of $OCM COV_REALISM.",
+              "x-flatbuffer-type": "CVR"
+            },
+            COV_CALIBRATION: {
+              $ref: "#/definitions/covarianceCalibration",
+              description: "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Calibration not stated"
+                },
+                Uncalibrated: {
+                  value: 1,
+                  description: "Not measured against independent reference states, or measured and failed"
+                },
+                Calibrated: {
+                  value: 2,
+                  description: "Measured against independent reference states and passed"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            COV_CALIBRATION_REFERENCE: {
+              type: "string",
+              description: "Identifier of that calibration evidence (a report or record).",
+              "x-flatbuffer-type": "string"
+            },
+            WINDOWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MORWindow"
+              },
+              description: "Polynomial rows derived from this record by the builder its asset names ($DPM DPMAsset.DERIVED_BUILD),\nin time order, without overlap. A convenience: the elements remain authoritative, a reader may ignore\nthe rows, and one that cannot reproduce the asset's build statement must.",
+              "x-flatbuffer-type": "[MORWindow]"
+            },
+            WINDOW_COEFF_HEADS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary64 coefficients of the served windows, in window order: for each, X, Y and Z of position\n(POS_COEFF_HEAD_COUNT each), then X, Y and Z of velocity (VEL_COEFF_HEAD_COUNT each).",
+              "x-flatbuffer-type": "[double]"
+            },
+            WINDOW_COEFF_TAILS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "The binary32 coefficients of the served windows, in the same order: X, Y and Z of position\n(POS_COEFF_COUNT - POS_COEFF_HEAD_COUNT each), then of velocity.",
+              "x-flatbuffer-type": "[float]"
+            },
+            FALLBACK: {
+              $ref: "#/definitions/MPE",
+              description: "The object's own element set for times beyond what this record serves (a reader's fallback\npropagator), as an $MPE: SGP4 with BSTAR or SGP4XP with BTERM and AGOM. Its ENTITY_ID is absent: the\nobject is this record's.",
+              "x-flatbuffer-type": "MPE"
             }
           },
           additionalProperties: false
@@ -833325,6 +837314,9 @@ balance service's own rate.`,
                 },
                 SSY: {
                   value: 295
+                },
+                MOR: {
+                  value: 296
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -878904,6 +882896,35 @@ balance service's own rate.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -893392,6 +897413,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -932589,6 +936659,16 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/MPETargeterSolution",
               description: "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)",
               "x-flatbuffer-type": "MPETargeterSolution"
+            },
+            BTERM: {
+              type: "number",
+              description: "BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY\nSGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
+            },
+            AGOM: {
+              type: "number",
+              description: "AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.",
+              "x-flatbuffer-type": "double"
             }
           },
           additionalProperties: false
@@ -968777,6 +972857,35 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -984232,6 +988341,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -1031845,6 +1036003,35 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -1046227,6 +1050414,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -1057205,6 +1061441,74 @@ stated.`,
     DPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         publicationAssetKind: {
           type: "string",
           enum: [
@@ -1057268,6 +1061572,133 @@ stated.`,
               description: "Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL."
             }
           }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL).",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond time the source material was retrieved.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
+              "x-flatbuffer-type": "uint64"
+            },
+            PRODUCER_SHA256: {
+              type: "string",
+              description: "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
         },
         DPMCompletenessIndex: {
           type: "object",
@@ -1057411,6 +1061842,63 @@ stated.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               description: "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
+            },
+            RECORD_PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The provenance of every record of this asset that carries none of its own\n($MOR records never do): stated once for the asset instead of in each\nrecord. A record's own PROVENANCE, where its standard has one, governs that\nrecord. Absent: the records state their own or have none."
+            },
+            DERIVED_BUILD: {
+              $ref: "#/definitions/DPMDerivedBuild",
+              description: "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+            }
+          },
+          additionalProperties: false
+        },
+        DPMDerivedBuild: {
+          type: "object",
+          description: "Who built the derived polynomial rows of an asset's records, and under what:\nthe per-asset part of $PPE PPEBuild, same names and meanings. The per-record\nRECORD_DIGEST is not stated: rows carried inside the record they derive from\nare bound to it by the record itself. A reader that cannot reproduce\nBUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.",
+          properties: {
+            BUILDER_NAME: {
+              type: "string",
+              description: "Name of the builder, e.g. sdn-ap.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_VERSION: {
+              type: "string",
+              description: "Version of the builder.",
+              "x-flatbuffer-type": "string"
+            },
+            BUILDER_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 of the builder's executable artifact (32 bytes).",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            ENVIRONMENT_DIGEST: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "SHA-256 over the configuration and environment inputs the builder used that\nare not in the source record, by the builder's published rule (32 bytes);\nempty when the builder uses none.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TOL_POSITION: {
+              type: "number",
+              description: "Build tolerance per position axis in km. NaN when not stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            TOL_VELOCITY: {
+              type: "number",
+              description: "Build tolerance per velocity axis in km/s. NaN when not stated or without\nvelocity.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
             }
           },
           additionalProperties: false
@@ -1081698,6 +1086186,35 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             }
           }
         },
+        pcfFallbackPropagator: {
+          type: "string",
+          enum: [
+            "NONE",
+            "SGP4",
+            "SGP4XP",
+            "HOST"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "Nothing: the state is NaN with a status that says outside the window."
+            },
+            SGP4: {
+              value: 1,
+              description: "SGP4 on the object's own SGP4 set."
+            },
+            SGP4XP: {
+              value: 2,
+              description: "SGP4-XP on the object's own SGP4-XP set."
+            },
+            HOST: {
+              value: 3,
+              description: "The host routes the request elsewhere: no state, a status that asks for it."
+            }
+          }
+        },
         pcfWeatherExtension: {
           type: "string",
           enum: [
@@ -1097497,6 +1102014,55 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
+            },
+            WINDOW_BEFORE_DAYS: {
+              type: "number",
+              description: "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            WINDOW_AFTER_DAYS: {
+              type: "number",
+              description: "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "-1"
+            },
+            FALLBACK_PROPAGATOR: {
+              $ref: "#/definitions/pcfFallbackPropagator",
+              description: "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "Nothing: the state is NaN with a status that says outside the window."
+                },
+                SGP4: {
+                  value: 1,
+                  description: "SGP4 on the object's own SGP4 set."
+                },
+                SGP4XP: {
+                  value: 2,
+                  description: "SGP4-XP on the object's own SGP4-XP set."
+                },
+                HOST: {
+                  value: 3,
+                  description: "The host routes the request elsewhere: no state, a status that asks for it."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            FALLBACK_ON_REFUSAL: {
+              type: "boolean",
+              description: "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            FALLBACK_WHILE_PENDING: {
+              type: "boolean",
+              description: "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -1104484,7 +1109050,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

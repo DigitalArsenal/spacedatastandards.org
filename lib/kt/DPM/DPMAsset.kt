@@ -222,6 +222,35 @@ class DPMAsset : Table() {
             val o = __offset(30)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
+    /**
+     * The provenance of every record of this asset that carries none of its own
+     * ($MOR records never do): stated once for the asset instead of in each
+     * record. A record's own PROVENANCE, where its standard has one, governs that
+     * record. Absent: the records state their own or have none.
+     */
+    val recordProvenance : PVN? get() = recordProvenance(PVN())
+    fun recordProvenance(obj: PVN) : PVN? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * The builder of the derived polynomial rows the asset's records carry
+     * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+     * carry no derived rows, or a reader must ignore them.
+     */
+    val derivedBuild : DPMDerivedBuild? get() = derivedBuild(DPMDerivedBuild())
+    fun derivedBuild(obj: DPMDerivedBuild) : DPMDerivedBuild? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMAsset(_bb: ByteBuffer): DPMAsset = getRootAsDPMAsset(_bb, DPMAsset())
@@ -229,10 +258,12 @@ class DPMAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int, throughSeq: ULong) : Int {
-            builder.startTable(14)
+        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int, throughSeq: ULong, recordProvenanceOffset: Int, derivedBuildOffset: Int) : Int {
+            builder.startTable(16)
             addTHROUGHSEQ(builder, throughSeq)
             addBYTELENGTH(builder, byteLength)
+            addDERIVEDBUILD(builder, derivedBuildOffset)
+            addRECORDPROVENANCE(builder, recordProvenanceOffset)
             addCONTENTKEYID(builder, contentKeyIdOffset)
             addSCHEMAHASH(builder, schemaHashOffset)
             addSCHEMANAME(builder, schemaNameOffset)
@@ -247,7 +278,7 @@ class DPMAsset : Table() {
             addASSETKIND(builder, assetKind)
             return endDPMAsset(builder)
         }
-        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addASSETKIND(builder: FlatBufferBuilder, assetKind: Byte) = builder.addByte(0, assetKind, 3)
         fun addTRANSPORTKIND(builder: FlatBufferBuilder, transportKind: Byte) = builder.addByte(1, transportKind, 0)
         fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(2, cid, 0)
@@ -262,6 +293,8 @@ class DPMAsset : Table() {
         fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(11, schemaHash, 0)
         fun addCONTENTKEYID(builder: FlatBufferBuilder, contentKeyId: Int) = builder.addOffset(12, contentKeyId, 0)
         fun addTHROUGHSEQ(builder: FlatBufferBuilder, throughSeq: ULong) = builder.addLong(13, throughSeq.toLong(), 0)
+        fun addRECORDPROVENANCE(builder: FlatBufferBuilder, recordProvenance: Int) = builder.addOffset(14, recordProvenance, 0)
+        fun addDERIVEDBUILD(builder: FlatBufferBuilder, derivedBuild: Int) = builder.addOffset(15, derivedBuild, 0)
         fun endDPMAsset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -126,6 +126,15 @@ public struct DPMAsset : IFlatbufferObject
   /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
   /// assets of a FlatSQL feed; 0 when not applicable.
   public ulong THROUGH_SEQ { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// The provenance of every record of this asset that carries none of its own
+  /// ($MOR records never do): stated once for the asset instead of in each
+  /// record. A record's own PROVENANCE, where its standard has one, governs that
+  /// record. Absent: the records state their own or have none.
+  public PVN? RECORD_PROVENANCE { get { int o = __p.__offset(32); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The builder of the derived polynomial rows the asset's records carry
+  /// ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+  /// carry no derived rows, or a reader must ignore them.
+  public DPMDerivedBuild? DERIVED_BUILD { get { int o = __p.__offset(34); return o != 0 ? (DPMDerivedBuild?)(new DPMDerivedBuild()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<DPMAsset> CreateDPMAsset(FlatBufferBuilder builder,
       publicationAssetKind ASSET_KIND = publicationAssetKind.OTHER,
@@ -141,10 +150,14 @@ public struct DPMAsset : IFlatbufferObject
       StringOffset SCHEMA_NAMEOffset = default(StringOffset),
       StringOffset SCHEMA_HASHOffset = default(StringOffset),
       StringOffset CONTENT_KEY_IDOffset = default(StringOffset),
-      ulong THROUGH_SEQ = 0) {
-    builder.StartTable(14);
+      ulong THROUGH_SEQ = 0,
+      Offset<PVN> RECORD_PROVENANCEOffset = default(Offset<PVN>),
+      Offset<DPMDerivedBuild> DERIVED_BUILDOffset = default(Offset<DPMDerivedBuild>)) {
+    builder.StartTable(16);
     DPMAsset.AddTHROUGH_SEQ(builder, THROUGH_SEQ);
     DPMAsset.AddBYTE_LENGTH(builder, BYTE_LENGTH);
+    DPMAsset.AddDERIVED_BUILD(builder, DERIVED_BUILDOffset);
+    DPMAsset.AddRECORD_PROVENANCE(builder, RECORD_PROVENANCEOffset);
     DPMAsset.AddCONTENT_KEY_ID(builder, CONTENT_KEY_IDOffset);
     DPMAsset.AddSCHEMA_HASH(builder, SCHEMA_HASHOffset);
     DPMAsset.AddSCHEMA_NAME(builder, SCHEMA_NAMEOffset);
@@ -160,7 +173,7 @@ public struct DPMAsset : IFlatbufferObject
     return DPMAsset.EndDPMAsset(builder);
   }
 
-  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddASSET_KIND(FlatBufferBuilder builder, publicationAssetKind ASSET_KIND) { builder.AddSbyte(0, (sbyte)ASSET_KIND, 3); }
   public static void AddTRANSPORT_KIND(FlatBufferBuilder builder, dpmTransportKind TRANSPORT_KIND) { builder.AddSbyte(1, (sbyte)TRANSPORT_KIND, 0); }
   public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(2, CIDOffset.Value, 0); }
@@ -175,6 +188,8 @@ public struct DPMAsset : IFlatbufferObject
   public static void AddSCHEMA_HASH(FlatBufferBuilder builder, StringOffset SCHEMA_HASHOffset) { builder.AddOffset(11, SCHEMA_HASHOffset.Value, 0); }
   public static void AddCONTENT_KEY_ID(FlatBufferBuilder builder, StringOffset CONTENT_KEY_IDOffset) { builder.AddOffset(12, CONTENT_KEY_IDOffset.Value, 0); }
   public static void AddTHROUGH_SEQ(FlatBufferBuilder builder, ulong THROUGH_SEQ) { builder.AddUlong(13, THROUGH_SEQ, 0); }
+  public static void AddRECORD_PROVENANCE(FlatBufferBuilder builder, Offset<PVN> RECORD_PROVENANCEOffset) { builder.AddOffset(14, RECORD_PROVENANCEOffset.Value, 0); }
+  public static void AddDERIVED_BUILD(FlatBufferBuilder builder, Offset<DPMDerivedBuild> DERIVED_BUILDOffset) { builder.AddOffset(15, DERIVED_BUILDOffset.Value, 0); }
   public static Offset<DPMAsset> EndDPMAsset(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DPMAsset>(o);
@@ -199,6 +214,8 @@ public struct DPMAsset : IFlatbufferObject
     _o.SCHEMA_HASH = this.SCHEMA_HASH;
     _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID;
     _o.THROUGH_SEQ = this.THROUGH_SEQ;
+    _o.RECORD_PROVENANCE = this.RECORD_PROVENANCE.HasValue ? this.RECORD_PROVENANCE.Value.UnPack() : null;
+    _o.DERIVED_BUILD = this.DERIVED_BUILD.HasValue ? this.DERIVED_BUILD.Value.UnPack() : null;
   }
   public static Offset<DPMAsset> Pack(FlatBufferBuilder builder, DPMAssetT _o) {
     if (_o == null) return default(Offset<DPMAsset>);
@@ -212,6 +229,8 @@ public struct DPMAsset : IFlatbufferObject
     var _SCHEMA_NAME = _o.SCHEMA_NAME == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_NAME);
     var _SCHEMA_HASH = _o.SCHEMA_HASH == null ? default(StringOffset) : builder.CreateString(_o.SCHEMA_HASH);
     var _CONTENT_KEY_ID = _o.CONTENT_KEY_ID == null ? default(StringOffset) : builder.CreateString(_o.CONTENT_KEY_ID);
+    var _RECORD_PROVENANCE = _o.RECORD_PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.RECORD_PROVENANCE);
+    var _DERIVED_BUILD = _o.DERIVED_BUILD == null ? default(Offset<DPMDerivedBuild>) : DPMDerivedBuild.Pack(builder, _o.DERIVED_BUILD);
     return CreateDPMAsset(
       builder,
       _o.ASSET_KIND,
@@ -227,7 +246,9 @@ public struct DPMAsset : IFlatbufferObject
       _SCHEMA_NAME,
       _SCHEMA_HASH,
       _CONTENT_KEY_ID,
-      _o.THROUGH_SEQ);
+      _o.THROUGH_SEQ,
+      _RECORD_PROVENANCE,
+      _DERIVED_BUILD);
   }
 }
 
@@ -247,6 +268,8 @@ public class DPMAssetT
   public string SCHEMA_HASH { get; set; }
   public string CONTENT_KEY_ID { get; set; }
   public ulong THROUGH_SEQ { get; set; }
+  public PVNT RECORD_PROVENANCE { get; set; }
+  public DPMDerivedBuildT DERIVED_BUILD { get; set; }
 
   public DPMAssetT() {
     this.ASSET_KIND = publicationAssetKind.OTHER;
@@ -263,6 +286,8 @@ public class DPMAssetT
     this.SCHEMA_HASH = null;
     this.CONTENT_KEY_ID = null;
     this.THROUGH_SEQ = 0;
+    this.RECORD_PROVENANCE = null;
+    this.DERIVED_BUILD = null;
   }
 }
 
@@ -286,6 +311,8 @@ static public class DPMAssetVerify
       && verifier.VerifyString(tablePos, 26 /*SCHEMA_HASH*/, false)
       && verifier.VerifyString(tablePos, 28 /*CONTENT_KEY_ID*/, false)
       && verifier.VerifyField(tablePos, 30 /*THROUGH_SEQ*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyTable(tablePos, 32 /*RECORD_PROVENANCE*/, PVNVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 34 /*DERIVED_BUILD*/, DPMDerivedBuildVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

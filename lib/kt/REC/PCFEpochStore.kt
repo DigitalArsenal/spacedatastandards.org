@@ -90,6 +90,56 @@ class PCFEpochStore : Table() {
         }
     val theoriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun theoriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Window before each selected set's epoch inside which the set's own
+     * propagator answers, days of 86400 seconds, boundary included. Default -1:
+     * not set. Setting any of the window and fallback fields below to a value
+     * other than its default enables the window; a side left at -1 is then 7.
+     */
+    val windowBeforeDays : Double
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getDouble(o + bb_pos) else -1.0
+        }
+    /**
+     * Window after each selected set's epoch, days of 86400 seconds, boundary
+     * included. Default -1: not set. Every set that contributes to a blend must
+     * contain the requested time.
+     */
+    val windowAfterDays : Double
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getDouble(o + bb_pos) else -1.0
+        }
+    /**
+     * What answers outside the window. Default NONE. SGP4 and SGP4XP use the
+     * object's own set of that theory, matched by catalog number and
+     * international designator; a missing or ambiguous set yields no state.
+     */
+    val fallbackPropagator : UByte
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * The fallback also answers inside the window when the propagator excludes
+     * or refuses the object or the time. Default false. A missing row, an
+     * allocation failure or a pool failure is not a refusal.
+     */
+    val fallbackOnRefusal : Boolean
+        get() {
+            val o = __offset(22)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * The fallback also answers inside the window while the propagator's own row
+     * for the requested time is not built yet. Default false.
+     */
+    val fallbackWhilePending : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFEpochStore(_bb: ByteBuffer): PCFEpochStore = getRootAsPCFEpochStore(_bb, PCFEpochStore())
@@ -97,17 +147,22 @@ class PCFEpochStore : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFEpochStore(builder: FlatBufferBuilder, cacheDays: Double, maxSetsPerObject: UInt, selection: UByte, blendWindowSeconds: Double, blendShape: UByte, theoriesOffset: Int) : Int {
-            builder.startTable(6)
+        fun createPCFEpochStore(builder: FlatBufferBuilder, cacheDays: Double, maxSetsPerObject: UInt, selection: UByte, blendWindowSeconds: Double, blendShape: UByte, theoriesOffset: Int, windowBeforeDays: Double, windowAfterDays: Double, fallbackPropagator: UByte, fallbackOnRefusal: Boolean, fallbackWhilePending: Boolean) : Int {
+            builder.startTable(11)
+            addWINDOWAFTERDAYS(builder, windowAfterDays)
+            addWINDOWBEFOREDAYS(builder, windowBeforeDays)
             addBLENDWINDOWSECONDS(builder, blendWindowSeconds)
             addCACHEDAYS(builder, cacheDays)
             addTHEORIES(builder, theoriesOffset)
             addMAXSETSPEROBJECT(builder, maxSetsPerObject)
+            addFALLBACKWHILEPENDING(builder, fallbackWhilePending)
+            addFALLBACKONREFUSAL(builder, fallbackOnRefusal)
+            addFALLBACKPROPAGATOR(builder, fallbackPropagator)
             addBLENDSHAPE(builder, blendShape)
             addSELECTION(builder, selection)
             return endPCFEpochStore(builder)
         }
-        fun startPCFEpochStore(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startPCFEpochStore(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addCACHEDAYS(builder: FlatBufferBuilder, cacheDays: Double) = builder.addDouble(0, cacheDays, 7.0)
         fun addMAXSETSPEROBJECT(builder: FlatBufferBuilder, maxSetsPerObject: UInt) = builder.addInt(1, maxSetsPerObject.toInt(), 0)
         fun addSELECTION(builder: FlatBufferBuilder, selection: UByte) = builder.addByte(2, selection.toByte(), 0)
@@ -123,6 +178,11 @@ class PCFEpochStore : Table() {
             return builder.endVector()
         }
         fun startTheoriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addWINDOWBEFOREDAYS(builder: FlatBufferBuilder, windowBeforeDays: Double) = builder.addDouble(6, windowBeforeDays, -1.0)
+        fun addWINDOWAFTERDAYS(builder: FlatBufferBuilder, windowAfterDays: Double) = builder.addDouble(7, windowAfterDays, -1.0)
+        fun addFALLBACKPROPAGATOR(builder: FlatBufferBuilder, fallbackPropagator: UByte) = builder.addByte(8, fallbackPropagator.toByte(), 0)
+        fun addFALLBACKONREFUSAL(builder: FlatBufferBuilder, fallbackOnRefusal: Boolean) = builder.addBoolean(9, fallbackOnRefusal, false)
+        fun addFALLBACKWHILEPENDING(builder: FlatBufferBuilder, fallbackWhilePending: Boolean) = builder.addBoolean(10, fallbackWhilePending, false)
         fun endPCFEpochStore(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

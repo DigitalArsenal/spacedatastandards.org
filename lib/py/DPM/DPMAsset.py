@@ -162,8 +162,37 @@ class DPMAsset(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # The provenance of every record of this asset that carries none of its own
+    # ($MOR records never do): stated once for the asset instead of in each
+    # record. A record's own PROVENANCE, where its standard has one, governs that
+    # record. Absent: the records state their own or have none.
+    # DPMAsset
+    def RECORD_PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The builder of the derived polynomial rows the asset's records carry
+    # ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+    # carry no derived rows, or a reader must ignore them.
+    # DPMAsset
+    def DERIVED_BUILD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DPMDerivedBuild import DPMDerivedBuild
+            obj = DPMDerivedBuild()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def DPMAssetStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(16)
 
 def Start(builder):
     DPMAssetStart(builder)
@@ -252,12 +281,30 @@ def DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ):
 def AddTHROUGH_SEQ(builder, THROUGH_SEQ):
     DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
 
+def DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RECORD_PROVENANCE), 0)
+
+def AddRECORD_PROVENANCE(builder, RECORD_PROVENANCE):
+    DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+
+def DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_BUILD), 0)
+
+def AddDERIVED_BUILD(builder, DERIVED_BUILD):
+    DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
+
 def DPMAssetEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return DPMAssetEnd(builder)
 
+import DPMDerivedBuild
+import PVN
+try:
+    from typing import Optional
+except:
+    pass
 
 class DPMAssetT(object):
 
@@ -278,6 +325,8 @@ class DPMAssetT(object):
         SCHEMA_HASH = None,
         CONTENT_KEY_ID = None,
         THROUGH_SEQ = 0,
+        RECORD_PROVENANCE = None,
+        DERIVED_BUILD = None,
     ):
         self.ASSET_KIND = ASSET_KIND  # type: int
         self.TRANSPORT_KIND = TRANSPORT_KIND  # type: int
@@ -293,6 +342,8 @@ class DPMAssetT(object):
         self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[str]
         self.CONTENT_KEY_ID = CONTENT_KEY_ID  # type: Optional[str]
         self.THROUGH_SEQ = THROUGH_SEQ  # type: int
+        self.RECORD_PROVENANCE = RECORD_PROVENANCE  # type: Optional[PVN.PVNT]
+        self.DERIVED_BUILD = DERIVED_BUILD  # type: Optional[DPMDerivedBuild.DPMDerivedBuildT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -329,6 +380,10 @@ class DPMAssetT(object):
         self.SCHEMA_HASH = DPMAsset.SCHEMA_HASH()
         self.CONTENT_KEY_ID = DPMAsset.CONTENT_KEY_ID()
         self.THROUGH_SEQ = DPMAsset.THROUGH_SEQ()
+        if DPMAsset.RECORD_PROVENANCE() is not None:
+            self.RECORD_PROVENANCE = PVN.PVNT.InitFromObj(DPMAsset.RECORD_PROVENANCE())
+        if DPMAsset.DERIVED_BUILD() is not None:
+            self.DERIVED_BUILD = DPMDerivedBuild.DPMDerivedBuildT.InitFromObj(DPMAsset.DERIVED_BUILD())
 
     # DPMAssetT
     def Pack(self, builder):
@@ -352,6 +407,10 @@ class DPMAssetT(object):
             SCHEMA_HASH = builder.CreateString(self.SCHEMA_HASH)
         if self.CONTENT_KEY_ID is not None:
             CONTENT_KEY_ID = builder.CreateString(self.CONTENT_KEY_ID)
+        if self.RECORD_PROVENANCE is not None:
+            RECORD_PROVENANCE = self.RECORD_PROVENANCE.Pack(builder)
+        if self.DERIVED_BUILD is not None:
+            DERIVED_BUILD = self.DERIVED_BUILD.Pack(builder)
         DPMAssetStart(builder)
         DPMAssetAddASSET_KIND(builder, self.ASSET_KIND)
         DPMAssetAddTRANSPORT_KIND(builder, self.TRANSPORT_KIND)
@@ -377,5 +436,9 @@ class DPMAssetT(object):
         if self.CONTENT_KEY_ID is not None:
             DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)
         DPMAssetAddTHROUGH_SEQ(builder, self.THROUGH_SEQ)
+        if self.RECORD_PROVENANCE is not None:
+            DPMAssetAddRECORD_PROVENANCE(builder, RECORD_PROVENANCE)
+        if self.DERIVED_BUILD is not None:
+            DPMAssetAddDERIVED_BUILD(builder, DERIVED_BUILD)
         DPMAsset = DPMAssetEnd(builder)
         return DPMAsset

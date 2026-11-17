@@ -58,6 +58,9 @@ const CHANGED_TABLES = {
   PPEPositionRecord: [13, 'c2f395b504b48cb8', ['EPOCH_MID_SECONDS:double=nan', 'POS_COEFF_HEAD_COUNT:uint16=65535',
     'VEL_COEFF_HEAD_COUNT:uint16=65535']],
   PCFFitPolicy: [17, '8b169698906c3135', ['WEATHER_HORIZON_DAYS:ushort=30']],
+  // 1.286.0: the window and fallback of the epoch store (scripts/e2e/mor-record.mjs ships beside it).
+  PCFEpochStore: [6, '0d2167b9817005d2', ['WINDOW_BEFORE_DAYS:double=-1', 'WINDOW_AFTER_DAYS:double=-1',
+    'FALLBACK_PROPAGATOR:pcfFallbackPropagator=NONE', 'FALLBACK_ON_REFUSAL:bool=false', 'FALLBACK_WHILE_PENDING:bool=false']],
   PCFOutput: [3, 'd9fed6a075087887', ['EPOCHS:[string]=', 'START_TIME:string=', 'STOP_TIME:string=']],
   CVR: [18, '47539c60ddc3d947', ['TRUTH_EPOCHS:uint=', ...['1', '3'].flatMap((s) => [1, 2, 3].map((a) => `COVERAGE_${s}_SIGMA_AXIS${a}:double=nan`))]],
   PVN: [8, '7ed6295d2d012013', ['SOURCE_URL:string=', 'SOURCE_VERSION:string=', 'RETRIEVED_AT:string=', 'SOURCE_SHA256:string=', 'SOURCE_BYTES:uint64=',
@@ -90,13 +93,13 @@ TEVLParameterConditionConfiguration TFRM TFRMFrameTransformRequest TFRMFrameTran
 TFRMStateVector TFRMVector3 TFrequencyRange TIDM TLCC TMET TOCMCovarianceBlock TOCMTrajectoryBlock TOrbitFrameWrapper
 TPCE TPCEEvaluationContext TPCEEvaluationRequest TPCEEvaluationResult TPCEParameterCatalog TPCEParameterCondition
 TPCEParameterDescriptor TPCEParameterRef TPCEParameterSample TPCEParameterValue TPCEStopReport TPCEStopRequest TPCF
-TPCFEcom2 TPCFEpochStore TPCFEventDefinition TPCFExpression TPCFExpressionTerm TPCFForceModel TPCFGaussianPrior
+TPCFEcom2 TPCFEventDefinition TPCFExpression TPCFExpressionTerm TPCFForceModel TPCFGaussianPrior
 TPCFIntegratorSettings TPCFSpaceWeather TPLD TPPEOrbitalElementRecord TPhysicalProperties
 TRFM TRFMCoordinateSystem TRFMCoordinateSystemWrapper TRFMLocalAlignedConstrainedAxes TRFMObjectReferencedAxes
 TRFMOrigin TSpacecraftFrameWrapper TStateVector TStokesParameters TTIM TTIMCcsdsTimeCode TTIMConversionRequest
 TTIMConversionResult TTIMInstant TUserDefinedParameters`.split(/\s+/);
 // 1.285.0 moved TPPE and TPPEPositionRecord to CHANGED_TABLES (DERIVED_EPHEMERIS); the 143 left digest the same at 1.275.0.
-const UNCHANGED_DIGEST = '74b50a1e5b3e23774745420d0d529f5ee22abe328e909d1957ccad7aabd5d4e5';
+const UNCHANGED_DIGEST = 'e5b8def274b41b6de22462d4e9337cbd10ecd08478e70726c1e42ae4a6dd23d0';
 const NEW_TABLES = {
   OCMHeldOutDay: 'DAY:ushort=;STATES:uint=;RMS_KM:double=nan',
   OCMFitStatistics: 'FIT_STATES:uint=;FIT_RMS_KM:double=nan;FIT_MAX_KM:double=nan;FIT_RADIAL_RMS_KM:double=nan;FIT_IN_TRACK_RMS_KM:double=nan;'
@@ -129,6 +132,7 @@ const NEW_ENUMS = {
   ocmPartialsMethod: 'ubyte|UNSPECIFIED=0;ANALYTIC=1;FULL_NUMERICAL=2;FAST_NUMERICAL=3',
   ocmStepMode: 'ubyte|UNSPECIFIED=0;AUTO=1;TIME=2;S=3',
   ocmStepSelection: 'ubyte|UNSPECIFIED=0;AUTO=1;MANUAL=2',
+  pcfFallbackPropagator: 'ubyte|NONE=0;SGP4=1;SGP4XP=2;HOST=3',
 };
 // The cut of the earlier theory (owner 2026-10-25), in every spelling a binding uses.
 const REMOVED = 'sdnap|pcf_?empirical_?terms|pcf_?mean_?element_?options|pcf_?segment_?options|pcf_?maneuver_?detection|pcf_?reentry|pcf_?launch|pcf_?innovation_?correlation|innovation_?correlation|reentry_?window_?method|empirical_?terms';

@@ -124,6 +124,21 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
    * assets of a FlatSQL feed; 0 when not applicable.
    */
   public long THROUGH_SEQ() { int o = __offset(30); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * The provenance of every record of this asset that carries none of its own
+   * ($MOR records never do): stated once for the asset instead of in each
+   * record. A record's own PROVENANCE, where its standard has one, governs that
+   * record. Absent: the records state their own or have none.
+   */
+  public PVN RECORD_PROVENANCE() { return RECORD_PROVENANCE(new PVN()); }
+  public PVN RECORD_PROVENANCE(PVN obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The builder of the derived polynomial rows the asset's records carry
+   * ($MOR WINDOWS), stated once for the asset. Absent: the asset's records
+   * carry no derived rows, or a reader must ignore them.
+   */
+  public DPMDerivedBuild DERIVED_BUILD() { return DERIVED_BUILD(new DPMDerivedBuild()); }
+  public DPMDerivedBuild DERIVED_BUILD(DPMDerivedBuild obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createDPMAsset(FlatBufferBuilder builder,
       byte ASSET_KIND,
@@ -139,10 +154,14 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
       int SCHEMA_NAMEOffset,
       int SCHEMA_HASHOffset,
       int CONTENT_KEY_IDOffset,
-      long THROUGH_SEQ) {
-    builder.startTable(14);
+      long THROUGH_SEQ,
+      int RECORD_PROVENANCEOffset,
+      int DERIVED_BUILDOffset) {
+    builder.startTable(16);
     DPMAsset.addThroughSeq(builder, THROUGH_SEQ);
     DPMAsset.addByteLength(builder, BYTE_LENGTH);
+    DPMAsset.addDerivedBuild(builder, DERIVED_BUILDOffset);
+    DPMAsset.addRecordProvenance(builder, RECORD_PROVENANCEOffset);
     DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
     DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
     DPMAsset.addSchemaName(builder, SCHEMA_NAMEOffset);
@@ -158,7 +177,7 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
     return DPMAsset.endDPMAsset(builder);
   }
 
-  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addAssetKind(FlatBufferBuilder builder, byte ASSET_KIND) { builder.addByte(0, ASSET_KIND, 3); }
   public static void addTransportKind(FlatBufferBuilder builder, byte TRANSPORT_KIND) { builder.addByte(1, TRANSPORT_KIND, 0); }
   public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(2, CIDOffset, 0); }
@@ -173,6 +192,8 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
   public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(11, SCHEMA_HASHOffset, 0); }
   public static void addContentKeyId(FlatBufferBuilder builder, int CONTENT_KEY_IDOffset) { builder.addOffset(12, CONTENT_KEY_IDOffset, 0); }
   public static void addThroughSeq(FlatBufferBuilder builder, long THROUGH_SEQ) { builder.addLong(13, THROUGH_SEQ, 0L); }
+  public static void addRecordProvenance(FlatBufferBuilder builder, int RECORD_PROVENANCEOffset) { builder.addOffset(14, RECORD_PROVENANCEOffset, 0); }
+  public static void addDerivedBuild(FlatBufferBuilder builder, int DERIVED_BUILDOffset) { builder.addOffset(15, DERIVED_BUILDOffset, 0); }
   public static int endDPMAsset(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -222,6 +222,8 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let BSTAR: VOffset = 20
     static let MEAN_ELEMENT_THEORY: VOffset = 22
     static let TARGETER: VOffset = 24
+    static let BTERM: VOffset = 26
+    static let AGOM: VOffset = 28
   }
 
   ///  Unique ID as a String [no units]
@@ -248,7 +250,12 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Targeter solution + convergence metadata when this element set is the
   ///  product of maneuver targeting (absent for ordinary element sets)
   public var TARGETER: MPETargeterSolution? { let o = _accessor.offset(VT.TARGETER); return o == 0 ? nil : MPETargeterSolution(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+  ///  SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+  public var BTERM: Double { let o = _accessor.offset(VT.BTERM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+  public var AGOM: Double { let o = _accessor.offset(VT.AGOM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startMPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
   public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VT.EPOCH) }
   public static func add(MEAN_MOTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_MOTION, def: 0.0, at: VT.MEAN_MOTION) }
@@ -260,6 +267,8 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(BSTAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSTAR, def: 0.0, at: VT.BSTAR) }
   public static func add(MEAN_ELEMENT_THEORY: meanElementSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ELEMENT_THEORY.rawValue, def: 0, at: VT.MEAN_ELEMENT_THEORY) }
   public static func add(TARGETER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGETER, at: VT.TARGETER) }
+  public static func add(BTERM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BTERM, def: 0.0, at: VT.BTERM) }
+  public static func add(AGOM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGOM, def: 0.0, at: VT.AGOM) }
   public static func endMPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMPE(
     _ fbb: inout FlatBufferBuilder,
@@ -273,7 +282,9 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MEAN_ANOMALY: Double = 0.0,
     BSTAR: Double = 0.0,
     MEAN_ELEMENT_THEORY: meanElementSource = .sgp4,
-    TARGETEROffset TARGETER: Offset = Offset()
+    TARGETEROffset TARGETER: Offset = Offset(),
+    BTERM: Double = 0.0,
+    AGOM: Double = 0.0
   ) -> Offset {
     let __start = MPE.startMPE(&fbb)
     MPE.add(ENTITY_ID: ENTITY_ID, &fbb)
@@ -287,6 +298,8 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MPE.add(BSTAR: BSTAR, &fbb)
     MPE.add(MEAN_ELEMENT_THEORY: MEAN_ELEMENT_THEORY, &fbb)
     MPE.add(TARGETER: TARGETER, &fbb)
+    MPE.add(BTERM: BTERM, &fbb)
+    MPE.add(AGOM: AGOM, &fbb)
     return MPE.endMPE(&fbb, start: __start)
   }
 
@@ -303,6 +316,8 @@ public struct MPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
     try _v.visit(field: VT.MEAN_ELEMENT_THEORY, fieldName: "MEAN_ELEMENT_THEORY", required: false, type: meanElementSource.self)
     try _v.visit(field: VT.TARGETER, fieldName: "TARGETER", required: false, type: ForwardOffset<MPETargeterSolution>.self)
+    try _v.visit(field: VT.BTERM, fieldName: "BTERM", required: false, type: Double.self)
+    try _v.visit(field: VT.AGOM, fieldName: "AGOM", required: false, type: Double.self)
     _v.finish()
   }
 }

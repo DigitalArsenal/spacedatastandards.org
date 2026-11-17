@@ -225,6 +225,10 @@
       "type" : "string",
       "enum": ["SMOOTHSTEP", "HERMITE"]
     },
+    "pcfFallbackPropagator" : {
+      "type" : "string",
+      "enum": ["NONE", "SGP4", "SGP4XP", "HOST"]
+    },
     "pcfWeatherExtension" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "REFUSE", "HOLD_LAST", "FORECAST_CHAIN"]
@@ -3269,6 +3273,26 @@
         "THEORIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/pcfTheory"},
                 "description" : "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
+              },
+        "WINDOW_BEFORE_DAYS" : {
+                "type" : "number",
+                "description" : "Window before each selected set's epoch inside which the set's own\npropagator answers, days of 86400 seconds, boundary included. Default -1:\nnot set. Setting any of the window and fallback fields below to a value\nother than its default enables the window; a side left at -1 is then 7."
+              },
+        "WINDOW_AFTER_DAYS" : {
+                "type" : "number",
+                "description" : "Window after each selected set's epoch, days of 86400 seconds, boundary\nincluded. Default -1: not set. Every set that contributes to a blend must\ncontain the requested time."
+              },
+        "FALLBACK_PROPAGATOR" : {
+                "$ref" : "#/definitions/pcfFallbackPropagator",
+                "description" : "What answers outside the window. Default NONE. SGP4 and SGP4XP use the\nobject's own set of that theory, matched by catalog number and\ninternational designator; a missing or ambiguous set yields no state."
+              },
+        "FALLBACK_ON_REFUSAL" : {
+                "type" : "boolean",
+                "description" : "The fallback also answers inside the window when the propagator excludes\nor refuses the object or the time. Default false. A missing row, an\nallocation failure or a pool failure is not a refusal."
+              },
+        "FALLBACK_WHILE_PENDING" : {
+                "type" : "boolean",
+                "description" : "The fallback also answers inside the window while the propagator's own row\nfor the requested time is not built yet. Default false."
               }
       },
       "additionalProperties" : false

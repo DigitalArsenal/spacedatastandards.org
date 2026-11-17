@@ -195,13 +195,20 @@ class MPE : flatbuffers.handle
     def TARGETER() -> MPETargeterSolution?:
         let o = flatbuffers.field_table(buf_, pos_, 24)
         return if o: MPETargeterSolution { buf_, o } else: nil
+    /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+    /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+    def BTERM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+    def AGOM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
 
 def GetRootAsMPE(buf:string): return MPE { buf, flatbuffers.indirect(buf, 0) }
 
 struct MPEBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(13)
         return this
     def add_ENTITY_ID(ENTITY_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENTITY_ID)
@@ -235,6 +242,12 @@ struct MPEBuilder:
         return this
     def add_TARGETER(TARGETER:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, TARGETER)
+        return this
+    def add_BTERM(BTERM:float):
+        b_.PrependFloat64Slot(11, BTERM, 0.0)
+        return this
+    def add_AGOM(AGOM:float):
+        b_.PrependFloat64Slot(12, AGOM, 0.0)
         return this
     def end():
         return b_.EndObject()

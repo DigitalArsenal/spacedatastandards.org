@@ -138,6 +138,7 @@ export * as MET from './MET/main.js';
 export * as MFE from './MFE/main.js';
 export * as MNF from './MNF/main.js';
 export * as MNV from './MNV/main.js';
+export * as MOR from './MOR/main.js';
 export * as MPE from './MPE/main.js';
 export * as MPL from './MPL/main.js';
 export * as MSL from './MSL/main.js';

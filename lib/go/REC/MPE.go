@@ -287,8 +287,54 @@ func (rcv *MPE) Targeter(obj *MPETargeterSolution) *MPETargeterSolution {
 
 /// Targeter solution + convergence metadata when this element set is the
 /// product of maneuver targeting (absent for ordinary element sets)
+/// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+/// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+func (rcv *MPE) BTERM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MPE) Bterm() float64 {
+	return rcv.BTERM()
+}
+
+/// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+/// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+func (rcv *MPE) MutateBTERM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *MPE) MutateBterm(n float64) bool {
+	return rcv.MutateBTERM(n)
+}
+
+/// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+func (rcv *MPE) AGOM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *MPE) Agom() float64 {
+	return rcv.AGOM()
+}
+
+/// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+func (rcv *MPE) MutateAGOM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *MPE) MutateAgom(n float64) bool {
+	return rcv.MutateAGOM(n)
+}
+
 func MPEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(13)
 }
 func MPEAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENTITY_ID), 0)
@@ -355,6 +401,18 @@ func MPEAddTARGETER(builder *flatbuffers.Builder, TARGETER flatbuffers.UOffsetT)
 }
 func MPEAddTargeter(builder *flatbuffers.Builder, TARGETER flatbuffers.UOffsetT) {
 	MPEAddTARGETER(builder, TARGETER)
+}
+func MPEAddBTERM(builder *flatbuffers.Builder, BTERM float64) {
+	builder.PrependFloat64Slot(11, BTERM, 0.0)
+}
+func MPEAddBterm(builder *flatbuffers.Builder, BTERM float64) {
+	MPEAddBTERM(builder, BTERM)
+}
+func MPEAddAGOM(builder *flatbuffers.Builder, AGOM float64) {
+	builder.PrependFloat64Slot(12, AGOM, 0.0)
+}
+func MPEAddAgom(builder *flatbuffers.Builder, AGOM float64) {
+	MPEAddAGOM(builder, AGOM)
 }
 func MPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -48,6 +48,11 @@ public struct MPE : IFlatbufferObject
   /// Targeter solution + convergence metadata when this element set is the
   /// product of maneuver targeting (absent for ordinary element sets)
   public MPETargeterSolution? TARGETER { get { int o = __p.__offset(24); return o != 0 ? (MPETargeterSolution?)(new MPETargeterSolution()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+  /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+  public double BTERM { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+  public double AGOM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<MPE> CreateMPE(FlatBufferBuilder builder,
       StringOffset ENTITY_IDOffset = default(StringOffset),
@@ -60,8 +65,12 @@ public struct MPE : IFlatbufferObject
       double MEAN_ANOMALY = 0.0,
       double BSTAR = 0.0,
       meanElementSource MEAN_ELEMENT_THEORY = meanElementSource.SGP4,
-      Offset<MPETargeterSolution> TARGETEROffset = default(Offset<MPETargeterSolution>)) {
-    builder.StartTable(11);
+      Offset<MPETargeterSolution> TARGETEROffset = default(Offset<MPETargeterSolution>),
+      double BTERM = 0.0,
+      double AGOM = 0.0) {
+    builder.StartTable(13);
+    MPE.AddAGOM(builder, AGOM);
+    MPE.AddBTERM(builder, BTERM);
     MPE.AddBSTAR(builder, BSTAR);
     MPE.AddMEAN_ANOMALY(builder, MEAN_ANOMALY);
     MPE.AddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER);
@@ -76,7 +85,7 @@ public struct MPE : IFlatbufferObject
     return MPE.EndMPE(builder);
   }
 
-  public static void StartMPE(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartMPE(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddENTITY_ID(FlatBufferBuilder builder, StringOffset ENTITY_IDOffset) { builder.AddOffset(0, ENTITY_IDOffset.Value, 0); }
   public static void AddEPOCH(FlatBufferBuilder builder, double EPOCH) { builder.AddDouble(1, EPOCH, 0.0); }
   public static void AddMEAN_MOTION(FlatBufferBuilder builder, double MEAN_MOTION) { builder.AddDouble(2, MEAN_MOTION, 0.0); }
@@ -88,6 +97,8 @@ public struct MPE : IFlatbufferObject
   public static void AddBSTAR(FlatBufferBuilder builder, double BSTAR) { builder.AddDouble(8, BSTAR, 0.0); }
   public static void AddMEAN_ELEMENT_THEORY(FlatBufferBuilder builder, meanElementSource MEAN_ELEMENT_THEORY) { builder.AddSbyte(9, (sbyte)MEAN_ELEMENT_THEORY, 0); }
   public static void AddTARGETER(FlatBufferBuilder builder, Offset<MPETargeterSolution> TARGETEROffset) { builder.AddOffset(10, TARGETEROffset.Value, 0); }
+  public static void AddBTERM(FlatBufferBuilder builder, double BTERM) { builder.AddDouble(11, BTERM, 0.0); }
+  public static void AddAGOM(FlatBufferBuilder builder, double AGOM) { builder.AddDouble(12, AGOM, 0.0); }
   public static Offset<MPE> EndMPE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MPE>(o);
@@ -111,6 +122,8 @@ public struct MPE : IFlatbufferObject
     _o.BSTAR = this.BSTAR;
     _o.MEAN_ELEMENT_THEORY = this.MEAN_ELEMENT_THEORY;
     _o.TARGETER = this.TARGETER.HasValue ? this.TARGETER.Value.UnPack() : null;
+    _o.BTERM = this.BTERM;
+    _o.AGOM = this.AGOM;
   }
   public static Offset<MPE> Pack(FlatBufferBuilder builder, MPET _o) {
     if (_o == null) return default(Offset<MPE>);
@@ -128,7 +141,9 @@ public struct MPE : IFlatbufferObject
       _o.MEAN_ANOMALY,
       _o.BSTAR,
       _o.MEAN_ELEMENT_THEORY,
-      _TARGETER);
+      _TARGETER,
+      _o.BTERM,
+      _o.AGOM);
   }
 }
 
@@ -145,6 +160,8 @@ public class MPET
   public double BSTAR { get; set; }
   public meanElementSource MEAN_ELEMENT_THEORY { get; set; }
   public MPETargeterSolutionT TARGETER { get; set; }
+  public double BTERM { get; set; }
+  public double AGOM { get; set; }
 
   public MPET() {
     this.ENTITY_ID = null;
@@ -158,6 +175,8 @@ public class MPET
     this.BSTAR = 0.0;
     this.MEAN_ELEMENT_THEORY = meanElementSource.SGP4;
     this.TARGETER = null;
+    this.BTERM = 0.0;
+    this.AGOM = 0.0;
   }
   public static MPET DeserializeFromBinary(byte[] fbBuffer) {
     return MPE.GetRootAsMPE(new ByteBuffer(fbBuffer)).UnPack();
@@ -186,6 +205,8 @@ static public class MPEVerify
       && verifier.VerifyField(tablePos, 20 /*BSTAR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 22 /*MEAN_ELEMENT_THEORY*/, 1 /*meanElementSource*/, 1, false)
       && verifier.VerifyTable(tablePos, 24 /*TARGETER*/, MPETargeterSolutionVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 26 /*BTERM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*AGOM*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

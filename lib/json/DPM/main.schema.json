@@ -1,6 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
     "publicationAssetKind" : {
       "type" : "string",
       "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL", "CAR_ARCHIVE"]
@@ -8,6 +16,69 @@
     "dpmTransportKind" : {
       "type" : "string",
       "enum": ["CONTENT_ADDRESS", "SDN_QUERY", "OTHER"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+              }
+      },
+      "additionalProperties" : false
     },
     "DPMCompletenessIndex" : {
       "type" : "object",
@@ -95,6 +166,45 @@
         "THROUGH_SEQ" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
                 "description" : "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
+              },
+        "RECORD_PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "The provenance of every record of this asset that carries none of its own\n($MOR records never do): stated once for the asset instead of in each\nrecord. A record's own PROVENANCE, where its standard has one, governs that\nrecord. Absent: the records state their own or have none."
+              },
+        "DERIVED_BUILD" : {
+                "$ref" : "#/definitions/DPMDerivedBuild",
+                "description" : "The builder of the derived polynomial rows the asset's records carry\n($MOR WINDOWS), stated once for the asset. Absent: the asset's records\ncarry no derived rows, or a reader must ignore them."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "DPMDerivedBuild" : {
+      "type" : "object",
+      "description" : "Who built the derived polynomial rows of an asset's records, and under what:\nthe per-asset part of $PPE PPEBuild, same names and meanings. The per-record\nRECORD_DIGEST is not stated: rows carried inside the record they derive from\nare bound to it by the record itself. A reader that cannot reproduce\nBUILDER_DIGEST and ENVIRONMENT_DIGEST must not use the rows.",
+      "properties" : {
+        "BUILDER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the builder, e.g. sdn-ap."
+              },
+        "BUILDER_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the builder."
+              },
+        "BUILDER_DIGEST" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the builder's executable artifact (32 bytes)."
+              },
+        "ENVIRONMENT_DIGEST" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 over the configuration and environment inputs the builder used that\nare not in the source record, by the builder's published rule (32 bytes);\nempty when the builder uses none."
+              },
+        "TOL_POSITION" : {
+                "type" : "number",
+                "description" : "Build tolerance per position axis in km. NaN when not stated."
+              },
+        "TOL_VELOCITY" : {
+                "type" : "number",
+                "description" : "Build tolerance per velocity axis in km/s. NaN when not stated or without\nvelocity."
               }
       },
       "additionalProperties" : false

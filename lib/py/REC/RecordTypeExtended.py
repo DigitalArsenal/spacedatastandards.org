@@ -51,3 +51,4 @@ class RecordTypeExtended(object):
     SWA = 293
     SWS = 294
     SSY = 295
+    MOR = 296

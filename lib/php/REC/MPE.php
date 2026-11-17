@@ -147,22 +147,43 @@ class MPE extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// BTERM, the SGP4-XP drag term Cd*A/m in m**2/kg ($OMM BTERM). An SGP4XP set (MEAN_ELEMENT_THEORY
+    /// SGP4XP) carries BTERM and AGOM and leaves BSTAR 0; 0 for SGP4.
+    /**
+     * @return double
+     */
+    public function getBTERM()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// AGOM, the SGP4-XP radiation term gamma*A/m in m**2/kg ($OMM AGOM). SGP4XP only; 0 for SGP4.
+    /**
+     * @return double
+     */
+    public function getAGOM()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMPE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MPE
      */
-    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR, $MEAN_ELEMENT_THEORY, $TARGETER)
+    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR, $MEAN_ELEMENT_THEORY, $TARGETER, $BTERM, $AGOM)
     {
-        $builder->startObject(11);
+        $builder->startObject(13);
         self::addENTITY_ID($builder, $ENTITY_ID);
         self::addEPOCH($builder, $EPOCH);
         self::addMEAN_MOTION($builder, $MEAN_MOTION);
@@ -174,6 +195,8 @@ class MPE extends Table
         self::addBSTAR($builder, $BSTAR);
         self::addMEAN_ELEMENT_THEORY($builder, $MEAN_ELEMENT_THEORY);
         self::addTARGETER($builder, $TARGETER);
+        self::addBTERM($builder, $BTERM);
+        self::addAGOM($builder, $AGOM);
         $o = $builder->endObject();
         return $o;
     }
@@ -286,6 +309,26 @@ class MPE extends Table
     public static function addTARGETER(FlatBufferBuilder $builder, $TARGETER)
     {
         $builder->addOffsetX(10, $TARGETER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBTERM(FlatBufferBuilder $builder, $BTERM)
+    {
+        $builder->addDoubleX(11, $BTERM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAGOM(FlatBufferBuilder $builder, $AGOM)
+    {
+        $builder->addDoubleX(12, $AGOM, 0.0);
     }
 
     /**
