@@ -17,6 +17,10 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # onnxruntime-node (a development dependency, through @huggingface/transformers) downloads a CUDA
+  # build from a GitHub release in its install step on Linux x64. Nothing here uses CUDA, and on
+  # 2026-11-18 that download answered 404 and failed `npm ci` for v1.289.0. Skip it.
+  ONNXRUNTIME_NODE_INSTALL_CUDA: skip
   NODE_VERSION: '24'
   PYTHON_VERSION: '3.11'
   GO_VERSION: '1.21'
