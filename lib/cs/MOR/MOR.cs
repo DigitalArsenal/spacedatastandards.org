@@ -181,9 +181,10 @@ public struct MOR : IFlatbufferObject
 #endif
   public byte[] GetCOV_CALIBRATION_REFERENCEArray() { return __p.__vector_as_array<byte>(92); }
   /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-  /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-  /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-  /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+  /// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+  /// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+  /// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+  /// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
   public byte COV_FACTOR(int j) { int o = __p.__offset(94); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int COV_FACTORLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -192,8 +193,8 @@ public struct MOR : IFlatbufferObject
   public ArraySegment<byte>? GetCOV_FACTORBytes() { return __p.__vector_as_arraysegment(94); }
 #endif
   public byte[] GetCOV_FACTORArray() { return __p.__vector_as_array<byte>(94); }
-  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-  /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+  /// covariance from COV_FACTOR; its other fields are read under their own rules.
   public morCovFactorFormat COV_FACTOR_ENCODING { get { int o = __p.__offset(96); return o != 0 ? (morCovFactorFormat)__p.bb.Get(o + __p.bb_pos) : morCovFactorFormat.NONE; } }
 
   public static Offset<MOR> CreateMOR(FlatBufferBuilder builder,

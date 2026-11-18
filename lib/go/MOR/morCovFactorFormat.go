@@ -15,7 +15,7 @@ const (
 	morCovFactorFormatNONE                  morCovFactorFormat = 0
 	/// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
 	/// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
-	/// (P = F + G G^T); directions masked under F over 7 days may be omitted.
+	/// (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md.
 	morCovFactorFormatROE_HYPERSPHERICAL_V1 morCovFactorFormat = 1
 )
 

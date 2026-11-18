@@ -19876,7 +19876,7 @@
         },
         "ROE_HYPERSPHERICAL_V1": {
           "value": 1,
-          "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted."
+          "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
         }
       }
     },
@@ -109785,12 +109785,12 @@
             "minimum": 0,
             "maximum": 255
           },
-          "description": "Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor\nCOV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is\nauthoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor\ndirections or horizons beyond 7 days require COVARIANCE_DATA.",
+          "description": "Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor\nCOV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on\nan AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.\nDefined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer\nthat needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.",
           "x-flatbuffer-type": "[ubyte]"
         },
         "COV_FACTOR_ENCODING": {
           "$ref": "#/definitions/morCovFactorFormat",
-          "description": "Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the\nrecord without covariance from COV_FACTOR while its elements and rows remain valid.",
+          "description": "Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without\ncovariance from COV_FACTOR; its other fields are read under their own rules.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
@@ -109800,7 +109800,7 @@
             },
             "ROE_HYPERSPHERICAL_V1": {
               "value": 1,
-              "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted."
+              "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
             }
           },
           "x-flatbuffer-default": "NONE"

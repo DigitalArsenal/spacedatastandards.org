@@ -146,7 +146,7 @@ public enum morCovFactorFormat: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case none_ = 0
   ///  Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
   ///  covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
-  ///  (P = F + G G^T); directions masked under F over 7 days may be omitted.
+  ///  (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md.
   case roeHypersphericalV1 = 1
 
   public static var max: morCovFactorFormat { return .roeHypersphericalV1 }
@@ -536,13 +536,14 @@ public struct MOR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var COV_CALIBRATION_REFERENCE: String? { let o = _accessor.offset(VT.COV_CALIBRATION_REFERENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var COV_CALIBRATION_REFERENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COV_CALIBRATION_REFERENCE) }
   ///  Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-  ///  COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-  ///  authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-  ///  directions or horizons beyond 7 days require COVARIANCE_DATA.
+  ///  COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+  ///  an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+  ///  Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+  ///  that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
   public var COV_FACTOR: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.COV_FACTOR, byteSize: 1) }
   public func withUnsafePointerToCovFactor<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COV_FACTOR, body: body) }
-  ///  Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-  ///  record without covariance from COV_FACTOR while its elements and rows remain valid.
+  ///  Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+  ///  covariance from COV_FACTOR; its other fields are read under their own rules.
   public var COV_FACTOR_ENCODING: morCovFactorFormat { let o = _accessor.offset(VT.COV_FACTOR_ENCODING); return o == 0 ? .none_ : morCovFactorFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public static func startMOR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }

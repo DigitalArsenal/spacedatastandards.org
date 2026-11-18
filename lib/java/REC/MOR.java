@@ -265,9 +265,10 @@ public final class MOR extends com.google.flatbuffers.Table {
   public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
   /**
    * Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-   * COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-   * authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-   * directions or horizons beyond 7 days require COVARIANCE_DATA.
+   * COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+   * an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+   * Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+   * that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
    */
   public int COV_FACTOR(int j) { int o = __offset(94); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
   public int COV_FACTORLength() { int o = __offset(94); return o != 0 ? __vector_len(o) : 0; }
@@ -276,8 +277,8 @@ public final class MOR extends com.google.flatbuffers.Table {
   public ByteBuffer COV_FACTORAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
   public ByteBuffer COV_FACTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
   /**
-   * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-   * record without covariance from COV_FACTOR while its elements and rows remain valid.
+   * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+   * covariance from COV_FACTOR; its other fields are read under their own rules.
    */
   public int COV_FACTOR_ENCODING() { int o = __offset(96); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 

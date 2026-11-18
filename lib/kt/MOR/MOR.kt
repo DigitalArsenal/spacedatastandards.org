@@ -487,9 +487,10 @@ class MOR : Table() {
     fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
     /**
      * Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-     * COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-     * authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-     * directions or horizons beyond 7 days require COVARIANCE_DATA.
+     * COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+     * an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+     * Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+     * that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
      */
     fun covFactor(j: Int) : UByte {
         val o = __offset(94)
@@ -506,8 +507,8 @@ class MOR : Table() {
     val covFactorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
     fun covFactorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
     /**
-     * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-     * record without covariance from COV_FACTOR while its elements and rows remain valid.
+     * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+     * covariance from COV_FACTOR; its other fields are read under their own rules.
      */
     val covFactorEncoding : UByte
         get() {

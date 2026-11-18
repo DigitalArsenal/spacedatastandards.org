@@ -757,7 +757,7 @@ impl morCovFactorFormat {
     pub const NONE: Self = Self(0);
     /// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
     /// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
-    /// (P = F + G G^T); directions masked under F over 7 days may be omitted.
+    /// (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md.
     pub const ROE_HYPERSPHERICAL_V1: Self = Self(1);
 
     pub const ENUM_MIN: u8 = 0;
@@ -2435,9 +2435,10 @@ impl<'a> MOR<'a> {
     }
 
     /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-    /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-    /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-    /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+    /// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+    /// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+    /// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+    /// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
     #[inline]
     pub fn COV_FACTOR(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
         // Safety:
@@ -2446,8 +2447,8 @@ impl<'a> MOR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(MOR::VT_COV_FACTOR, None)}
     }
 
-    /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-    /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+    /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+    /// covariance from COV_FACTOR; its other fields are read under their own rules.
     #[inline]
     pub fn COV_FACTOR_ENCODING(&self) -> morCovFactorFormat {
         // Safety:

@@ -1119,9 +1119,10 @@ func (rcv *MOR) CovCalibrationReference() []byte {
 
 /// Identifier of that calibration evidence (a report or record).
 /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-/// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-/// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-/// directions or horizons beyond 7 days require COVARIANCE_DATA.
+/// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+/// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+/// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+/// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
 func (rcv *MOR) COV_FACTOR(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
@@ -1160,9 +1161,10 @@ func (rcv *MOR) CovFactorBytes() []byte {
 }
 
 /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-/// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-/// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-/// directions or horizons beyond 7 days require COVARIANCE_DATA.
+/// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+/// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+/// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+/// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
 func (rcv *MOR) MutateCOV_FACTOR(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
@@ -1176,8 +1178,8 @@ func (rcv *MOR) MutateCovFactor(j int, n byte) bool {
 	return rcv.MutateCOV_FACTOR(j, n)
 }
 
-/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-/// record without covariance from COV_FACTOR while its elements and rows remain valid.
+/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+/// covariance from COV_FACTOR; its other fields are read under their own rules.
 func (rcv *MOR) COV_FACTOR_ENCODING() morCovFactorFormat {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
@@ -1190,8 +1192,8 @@ func (rcv *MOR) CovFactorEncoding() morCovFactorFormat {
 	return rcv.COV_FACTOR_ENCODING()
 }
 
-/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-/// record without covariance from COV_FACTOR while its elements and rows remain valid.
+/// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+/// covariance from COV_FACTOR; its other fields are read under their own rules.
 func (rcv *MOR) MutateCOV_FACTOR_ENCODING(n morCovFactorFormat) bool {
 	return rcv._tab.MutateByteSlot(96, byte(n))
 }
