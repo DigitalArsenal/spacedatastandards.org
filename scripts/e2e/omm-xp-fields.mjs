@@ -36,9 +36,12 @@ const enumSig = (e) => `${e.base}|${e.members.map((m) => `${m.name}=${m.value}`)
 const OMM_TABLE = ['OMM', 45, 'a0263f2458c20052', ['BTERM:double=', 'AGOM:double=']];
 const OEM_TABLE = ['ephemerisDataBlock', 21, '594806ca1b23b65a', ['ORBIT_DETERMINATION:OEMOrbitDetermination=']];
 const NEW_TABLE = ['OEMOrbitDetermination', 'OD_OBSERVATIONS_USED:uint=;OD_ARC_START:string=;OD_ARC_STOP:string=;OD_METHOD:string='];
-// Every other table (T) and enum (E) of each family at 1.276.0: count and one digest over their signatures.
-const OMM_OTHERS = [37, '11786f12e1deba67'];
-const OEM_OTHERS = [58, '41dca4590dd0a474'];
+// Every other table (T) and enum (E) of each family: count and one digest over their signatures. Baseline 1.276.0
+// ([37, '11786f12e1deba67'] and [58, '41dca4590dd0a474']), refreshed for 1.289.0 after appends only: PVN.PRODUCER_SHA256
+// (1.278.0); PPEPositionRecord EPOCH_MID_SECONDS, POS_COEFF_HEAD_COUNT, VEL_COEFF_HEAD_COUNT, PPE REFERENCE_EPOCH, BUILD,
+// UNSERVED_MID_SECONDS, UNSERVED_HALF_SPAN, UNSERVED_STATUS, and the new PPEBuild and ppeWindowStatus (1.285.0).
+const OMM_OTHERS = [37, '231805026da422cd'];
+const OEM_OTHERS = [60, 'ae732c21eb1ee376'];
 const BTERM = 0.0123, AGOM = 0.0045, BSTAR = 0.000020128;
 
 const typesOf = (model) => {

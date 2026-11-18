@@ -28,8 +28,11 @@ const enumSig = (e) => `${e.base}|${e.members.map((m) => `${m.name}=${m.value}`)
 
 // 1.283.0 (264606d95d): [count, first 16 hex of sha256 of the signature of the first `count` fields, additions in order].
 const REQUEST = ['mplRequest', 7, '880f3e29738e7d16', ['INITIAL_MASS_KG:double=', 'SPECIFIC_IMPULSE_S:double=']];
-// Every other table (T) and enum (E) of the $MPL family at 1.283.0: count and one digest over their signatures.
-const OTHERS = [109, '363e8a801081c7af'];
+// Every other table (T) and enum (E) of the $MPL family: count and one digest over their signatures. Baseline 1.283.0
+// ([109, '363e8a801081c7af']), refreshed for 1.289.0 after appends only (1.285.0): PPEPositionRecord EPOCH_MID_SECONDS,
+// POS_COEFF_HEAD_COUNT, VEL_COEFF_HEAD_COUNT; PPE REFERENCE_EPOCH, BUILD, UNSERVED_MID_SECONDS, UNSERVED_HALF_SPAN,
+// UNSERVED_STATUS; the new PPEBuild and ppeWindowStatus.
+const OTHERS = [111, 'b24e80907111b3b6'];
 const MASS = 1250.5, ISP = 228.75;
 
 try {
