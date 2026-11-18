@@ -37,8 +37,13 @@ const enumSig = (e) => `${e.base}|${e.members.map((m) => `${m.name}=${m.value}`)
 const PRW_ENUM = ['prwDynamicParameter', 16, '3f42d5adcac9d8f7', ['OUTGASSING_ACCELERATION=16']];
 const ODR_TABLE = ['ODREditedObservation', 5, '01715a23d9a69e95', ['EPOCH:string=', 'OBSERVATION_TYPE:memMeasurementType=UNSPECIFIED',
   'OBSERVED_VALUE:double=', 'COMPUTED_VALUE:double=', 'WEIGHT:double=', 'ACCEPTED:bool=false', 'PERTURBATION_MODEL_CODE:string=']];
-// Every other table (T) and enum (E) of the $PRW, $ODR and $OCM families at 1.276.0: count and one digest over their signatures.
-const UNCHANGED = [254, '92b068e7d15a4186'];
+// Every other table (T) and enum (E) of the $PRW, $ODR and $OCM families: count and one digest over their signatures.
+// Baseline 1.276.0 ([254, '92b068e7d15a4186']), refreshed for 1.289.0 after appends only: PVN.PRODUCER_SHA256 (1.278.0);
+// PPEPositionRecord EPOCH_MID_SECONDS, POS_COEFF_HEAD_COUNT, VEL_COEFF_HEAD_COUNT, PPE REFERENCE_EPOCH, BUILD,
+// UNSERVED_MID_SECONDS, UNSERVED_HALF_SPAN, UNSERVED_STATUS, OCM.DERIVED_EPHEMERIS and the new PPEBuild and ppeWindowStatus
+// (1.285.0); PCFEpochStore WINDOW_BEFORE_DAYS, WINDOW_AFTER_DAYS, FALLBACK_PROPAGATOR, FALLBACK_ON_REFUSAL,
+// FALLBACK_WHILE_PENDING and the new pcfFallbackPropagator (1.286.0).
+const UNCHANGED = [257, 'a5090690aec6b848'];
 // $ODR now includes $MEM for the measurement class: these types are new to its closure and nothing else is.
 const MEM_TYPES = ['EmemEditingAction', 'EmemEditingReason', 'EmemIonosphereModel', 'EmemMeasurementType', 'EmemTroposphereModel', 'TMEM', 'TMEMAttestation', 'TMEMEditingDecision', 'TMEMErrorModel'];
 const OCM_SENTENCES = [
@@ -84,7 +89,7 @@ try {
   const memTypes = [...models.MEM.tables.keys()].map((n) => `T${n}`).concat([...models.MEM.enums.keys()].map((n) => `E${n}`)).sort();
   assert.deepEqual(memTypes, MEM_TYPES, 'the $MEM types are the ones listed');
   const other = [...types.keys()].filter((k) => k !== `E${enumName}` && k !== `T${tableName}` && !MEM_TYPES.includes(k)).sort();
-  assert.equal(other.length, UNCHANGED[0], 'the other types of the three families are the 1.276.0 ones');
+  assert.equal(other.length, UNCHANGED[0], 'the other types of the three families are the 1.276.0 ones and the new types listed above');
   assert.equal(sha(other.map((k) => `${k}:${types.get(k)}`).join('\n')).slice(0, 16), UNCHANGED[1], `the other ${UNCHANGED[0]} types are unchanged`);
   assert.deepEqual([...enumAdded, ...fieldsAdded].map((s) => s.split(/[:=]/)[0]).filter((n) => /USER_DEFINED/i.test(n)), [], 'no new name contains USER_DEFINED');
   const prwText = fs.readFileSync(path.join(schemaRoot, 'PRW/main.fbs'), 'utf8');

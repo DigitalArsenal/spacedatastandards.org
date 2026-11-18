@@ -393,7 +393,7 @@ class MOR extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+    /// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
     public function getCOV_PROPAGATION()
     {
         $obj = new MORCovariancePropagation();
@@ -401,7 +401,7 @@ class MOR extends Table
         return $o != 0 ? $obj->init($o + $this->bb_pos, $this->bb) : 0;
     }
 
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
     /// any producer text: a record read alone flies the same covariance as its $OCM.
     /**
      * @return byte
@@ -412,7 +412,7 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \morCovarianceFloor::UNSTATED;
     }
 
-    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
     /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
     /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     /**
@@ -424,7 +424,7 @@ class MOR extends Table
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
-    /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+    /// Whether the covariance's coverage was measured against independent reference states.
     /**
      * @return sbyte
      */
@@ -522,7 +522,7 @@ class MOR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// The realism of the covariance when it is the record's own (it differs from record to record), the
     /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     public function getCOV_REALISM()
     {
@@ -538,22 +538,65 @@ class MOR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+    /// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+    /// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+    /// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+    /// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getCOV_FACTOR($j)
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_FACTORLength()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCOV_FACTORBytes()
+    {
+        return $this->__vector_as_bytes(94);
+    }
+
+    /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+    /// covariance from COV_FACTOR; its other fields are read under their own rules.
+    /**
+     * @return byte
+     */
+    public function getCOV_FACTOR_ENCODING()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \morCovFactorFormat::NONE;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMOR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(45);
+        $builder->StartObject(47);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MOR
      */
-    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $MEAN_ELEMENT_THEORY, $EPOCH_UNIX_US, $RECORD_KIND, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $OD_TRACKS_USED, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_CALIBRATION, $FALLBACK, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $ECOM2_Y0, $MESSAGE_STATUS, $OBJECT_NAME, $COV_REALISM, $COV_CALIBRATION_REFERENCE)
+    public static function createMOR(FlatBufferBuilder $builder, $NORAD_CAT_ID, $INTERNATIONAL_DESIGNATOR, $ORIGINATOR, $MEAN_ELEMENT_THEORY, $EPOCH_UNIX_US, $RECORD_KIND, $WINDOWS, $WINDOW_COEFF_HEADS, $WINDOW_COEFF_TAILS, $WINDOW_RECORD_CHECK, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BTERM, $AGOM, $GRAVITY_FIELD, $MAXIMUM_TESSERAL_DEGREE, $MAXIMUM_ZONAL_DEGREE, $OD_PARAMETERS, $OD_SOLVED_FOR, $ACTUAL_OD_SPAN, $OD_OBSERVATIONS_USED, $WEIGHTED_RMS, $OD_EPOCH_UNIX_US, $OD_TRACKS_USED, $DAYS_SINCE_LAST_OBS, $COVARIANCE_DATA, $COV_PROPAGATION, $COV_FLOOR, $COV_REALISM_ID, $COV_CALIBRATION, $FALLBACK, $BSTAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SOLID_TIDES_MODEL, $SOLAR_RAD_PRESSURE, $ECOM2_Y0, $MESSAGE_STATUS, $OBJECT_NAME, $COV_REALISM, $COV_CALIBRATION_REFERENCE, $COV_FACTOR, $COV_FACTOR_ENCODING)
     {
-        $builder->startObject(45);
+        $builder->startObject(47);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addINTERNATIONAL_DESIGNATOR($builder, $INTERNATIONAL_DESIGNATOR);
         self::addORIGINATOR($builder, $ORIGINATOR);
@@ -599,6 +642,8 @@ class MOR extends Table
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addCOV_REALISM($builder, $COV_REALISM);
         self::addCOV_CALIBRATION_REFERENCE($builder, $COV_CALIBRATION_REFERENCE);
+        self::addCOV_FACTOR($builder, $COV_FACTOR);
+        self::addCOV_FACTOR_ENCODING($builder, $COV_FACTOR_ENCODING);
         $o = $builder->endObject();
         return $o;
     }
@@ -1147,6 +1192,50 @@ class MOR extends Table
     public static function addCOV_CALIBRATION_REFERENCE(FlatBufferBuilder $builder, $COV_CALIBRATION_REFERENCE)
     {
         $builder->addOffsetX(44, $COV_CALIBRATION_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_FACTOR(FlatBufferBuilder $builder, $COV_FACTOR)
+    {
+        $builder->addOffsetX(45, $COV_FACTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_FACTORVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_FACTORVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addCOV_FACTOR_ENCODING(FlatBufferBuilder $builder, $COV_FACTOR_ENCODING)
+    {
+        $builder->addByteX(46, $COV_FACTOR_ENCODING, 0);
     }
 
     /**

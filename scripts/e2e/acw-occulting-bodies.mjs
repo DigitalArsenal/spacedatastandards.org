@@ -39,8 +39,10 @@ const NEW = [
     'STATES:[ACWStateSample]=', 'ORIENTATION:[ACWOrientationSample]=']],
   ['ACWOrientationSample', ['JULIAN_DATE_TT:double=', 'Q1:double=', 'Q2:double=', 'Q3:double=', 'QC:double=']],
 ];
-// Every other table (T) and enum (E) of the $ACW family at 1.286.0: count and one digest over their signatures.
-const OTHERS = [39, '369bc1f49da2c164'];
+// Every other table (T) and enum (E) of the $ACW family: count and one digest over their signatures. Baseline 1.286.0
+// ([39, '369bc1f49da2c164']), refreshed for 1.289.0 after appends only: acwRefractionModelKind ITU_R_P834 = 2 and
+// acwConstraintKind TERRAIN_LINE_OF_SIGHT = 10 (1.288.0).
+const OTHERS = [39, '332c48155e238139'];
 const MOON = 301, EARTH = 399, MOON_RADIUS_M = 1737400;
 const JD0 = 2461000.5, HOUR = 1 / 24;
 

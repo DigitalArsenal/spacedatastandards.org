@@ -16,7 +16,7 @@ enum morMessageStatus:
 
 /// Where the theory floor of COV_PROPAGATION sits, which decides how a reader takes the floor off the epoch
 /// covariance and puts it back: the fact $OCM states through PROVENANCE.PRODUCER. Present with
-/// COVARIANCE_DATA only. Append new values only.
+/// COVARIANCE_DATA or COV_FACTOR. Append new values only.
 enum morCovarianceFloor:
     /// No covariance.
     morCovarianceFloor_UNSTATED = 0
@@ -74,13 +74,25 @@ enum morWindowStatus:
     /// The builder could not hold its tolerance over the window; no coefficients.
     morWindowStatus_TOLERANCE_NOT_HELD = 2
 
+/// Identifier and version of the fitted-covariance factor encoding in COV_FACTOR. When COVARIANCE_DATA is
+/// present, COVARIANCE_DATA is authoritative and COV_FACTOR is ignored. A reader that meets an ordinal it
+/// does not know ignores COV_FACTOR and treats the record as having no covariance from it. Append new
+/// values only.
+enum morCovFactorFormat:
+    /// No covariance factor.
+    morCovFactorFormat_NONE = 0
+    /// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
+    /// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
+    /// (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md.
+    morCovFactorFormat_ROE_HYPERSPHERICAL_V1 = 1
+
 class MORCovariancePropagation
 
 class MORWindow
 
 class MOR
 
-/// What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same
+/// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same
 /// names, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new
 /// appended field of MOR, never as a change to this struct.
 class MORCovariancePropagation : flatbuffers.handle
@@ -286,20 +298,20 @@ class MOR : flatbuffers.handle
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 62) + i * 8)
     def COVARIANCE_DATA_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 62)
-    /// What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+    /// What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
     def COV_PROPAGATION() -> MORCovariancePropagation?:
         let o = flatbuffers.field_struct(buf_, pos_, 64)
         return if o: MORCovariancePropagation { buf_, o } else: nil
-    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+    /// Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
     /// any producer text: a record read alone flies the same covariance as its $OCM.
     def COV_FLOOR() -> morCovarianceFloor:
         return morCovarianceFloor(flatbuffers.field_uint8(buf_, pos_, 66, 0))
-    /// The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+    /// The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
     /// the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
     /// ID the asset does not list leaves the figures unresolved, and a reader says so.
     def COV_REALISM_ID() -> int:
         return flatbuffers.field_uint16(buf_, pos_, 68, 0)
-    /// Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+    /// Whether the covariance's coverage was measured against independent reference states.
     def COV_CALIBRATION() -> covarianceCalibration:
         return covarianceCalibration(flatbuffers.field_int8(buf_, pos_, 70, 0))
     /// The object's own element set for times beyond what this record serves (a reader's fallback
@@ -333,7 +345,7 @@ class MOR : flatbuffers.handle
     /// The object's name; absent unless a reader copies it into what it writes.
     def OBJECT_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 88)
-    /// The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+    /// The realism of the covariance when it is the record's own (it differs from record to record), the
     /// single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
     def COV_REALISM() -> CVR?:
         let o = flatbuffers.field_table(buf_, pos_, 90)
@@ -341,13 +353,26 @@ class MOR : flatbuffers.handle
     /// Identifier of that calibration evidence (a report or record).
     def COV_CALIBRATION_REFERENCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 92)
+    /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+    /// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+    /// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+    /// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+    /// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
+    def COV_FACTOR(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 94) + i * 1)
+    def COV_FACTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 94)
+    /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+    /// covariance from COV_FACTOR; its other fields are read under their own rules.
+    def COV_FACTOR_ENCODING() -> morCovFactorFormat:
+        return morCovFactorFormat(flatbuffers.field_uint8(buf_, pos_, 96, 0))
 
 def GetRootAsMOR(buf:string): return MOR { buf, flatbuffers.indirect(buf, 0) }
 
 struct MORBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(45)
+        b_.StartObject(47)
         return this
     def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
         b_.PrependUint32Slot(0, NORAD_CAT_ID, 0)
@@ -484,6 +509,12 @@ struct MORBuilder:
     def add_COV_CALIBRATION_REFERENCE(COV_CALIBRATION_REFERENCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(44, COV_CALIBRATION_REFERENCE)
         return this
+    def add_COV_FACTOR(COV_FACTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, COV_FACTOR)
+        return this
+    def add_COV_FACTOR_ENCODING(COV_FACTOR_ENCODING:morCovFactorFormat):
+        b_.PrependUint8Slot(46, COV_FACTOR_ENCODING, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -509,4 +540,11 @@ def MORStartCOVARIANCEDATAVector(b_:flatbuffers.builder, n_:int):
 def MORCreateCOVARIANCEDATAVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def MORStartCOVFACTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def MORCreateCOVFACTORVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

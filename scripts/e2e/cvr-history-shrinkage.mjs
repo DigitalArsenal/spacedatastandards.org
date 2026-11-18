@@ -34,7 +34,8 @@ try {
     goBindings = path.join(mod.Dir, 'CVR');
   }
   const version = JSON.parse(fs.readFileSync(path.join(artifact, 'package.json'))).version;
-  assert.equal(version.split('+')[0], published || '1.261.0');
+  // the candidate is whatever release this tree is (the test was written at 1.261.0); a published run checks its version
+  if (published) assert.equal(version.split('+')[0], published);
   const M = await import(pathToFileURL(path.join(artifact, 'lib/js/CVR/main.js')));
   const fb = await import(pathToFileURL(path.join(root, 'node_modules/flatbuffers/js/flatbuffers.js')));
   ['Unspecified', 'Operator', 'ScaledFit', 'SourceModel', 'PooledModel', 'EmpiricalHistoryShrunk']

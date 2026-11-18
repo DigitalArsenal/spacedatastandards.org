@@ -8,6 +8,9 @@
 // `asset` is the publication's statement for the asset that carries the record: { provenance: PVN object or
 // null, build: DPMDerivedBuild-like object or null, recordDigest(mor) -> number[] (the builder's rule) }.
 
+import { MOR_COV_FACTOR_FORMAT, decodeCovFactor, encodeCovFactor } from './mor-cov-factor.mjs';
+export { MOR_COV_FACTOR_FORMAT, decodeCovFactor, encodeCovFactor };
+
 export const THEORY = { SGP4: 0, SGP4XP: 1, AP: 5 };
 const COV_KINDS = [1, 2, 3, 4, 16];
 const OD_CARRIED = [1, 3, 6];
@@ -103,6 +106,20 @@ export function invalid(m) {
   }
   return out;
 }
+/// The covariance a FULL record carries (schema/MOR/COV_FACTOR.md 2.2): COVARIANCE_DATA when present (COV_FACTOR is then
+/// not read); otherwise the decoded COV_FACTOR. A refused factor (or an encoding this reader does not know, or a floor
+/// at the writer's theory state, which this expansion cannot add) leaves the record without covariance and says why;
+/// the record's other fields are read under their own rules.
+export function covarianceOf(m) {
+  const full = m.COVARIANCE_DATA ?? [];
+  if (full.length > 0) return { cov: full, note: null };
+  const d = decodeCovFactor(m);
+  if (d.error) return { cov: [], note: `COV_FACTOR refused (${d.error}): no covariance` };
+  if (d.ignored) return { cov: [], note: `COV_FACTOR_ENCODING ${m.COV_FACTOR_ENCODING} unknown: no covariance` };
+  if (!d.present) return { cov: [], note: null };
+  if (!d.ltm) return { cov: [], note: 'COV_FACTOR floor at the writer theory state: no covariance in this expansion' };
+  return { cov: d.ltm, note: null };
+}
 /// A ROWS_ONLY record carrying a set's new rows: its identity, theory and epoch, and nothing else of it.
 export function rowsOnly(m, M, windows, heads, tails, check) {
   const r = new M.MORT();
@@ -115,10 +132,11 @@ export function expand(m, asset, O) {
   if (m.RECORD_KIND !== KIND.FULL && m.RECORD_KIND !== KIND.ROWS_ONLY) return { ocm: null, fallback: null, refused: [`RECORD_KIND ${m.RECORD_KIND} unknown: ignored`], unresolved: [], ignored: true };
   const refused = invalid(m);
   if (m.RECORD_KIND === KIND.ROWS_ONLY) refused.push('ROWS_ONLY has no expansion');
+  const { cov, note } = m.RECORD_KIND === KIND.FULL ? covarianceOf(m) : { cov: [], note: null };
   // COV_FLOOR governs; an $OCM can state the floor only through PRODUCER, so a contradicting asset text is refused
-  if ((m.COVARIANCE_DATA ?? []).length > 0 && asset?.provenance && floorOf(asset.provenance.PRODUCER) !== m.COV_FLOOR) refused.push('COV_FLOOR differs from the asset PRODUCER');
+  if (cov.length > 0 && asset?.provenance && floorOf(asset.provenance.PRODUCER) !== m.COV_FLOOR) refused.push('COV_FLOOR differs from the asset PRODUCER');
   if (refused.length > 0) return { ocm: null, fallback: null, refused, unresolved: [] };
-  const unresolved = [];
+  const unresolved = note ? [note] : [];
   const sgp4 = m.MEAN_ELEMENT_THEORY === THEORY.SGP4, ofEpoch = ofEpochFrame(m), text = epochText(m.EPOCH_UNIX_US);
   const o = new O.OCMT();
   o.HEADER = new O.HeaderT();
@@ -169,7 +187,6 @@ export function expand(m, asset, O) {
       return p;
     });
   }
-  const cov = m.COVARIANCE_DATA ?? [];
   if (cov.length > 0) {
     const kinds = COV_KINDS.filter((k) => ((m.OD_SOLVED_FOR >>> k) & 1) === 1);
     o.COVARIANCE_DATA = [...cov];
@@ -266,7 +283,7 @@ const minimal = (axes, head) => {
   while (n > Math.max(head, 1) && axes.every((a) => Object.is(a[n - 1], 0))) n--;
   return n;
 };
-export function reduce(source, asset, O, M) {
+export function reduce(source, asset, O, M, options = {}) {
   const dropped = [], problems = [];
   const o = clone(source);
   stripDescriptive(o, O, dropped);
@@ -353,7 +370,17 @@ export function reduce(source, asset, O, M) {
   const { ocm, refused } = expand(m, { ...asset, recordDigest: () => d?.BUILD?.RECORD_DIGEST ?? [] }, O);
   if (!ocm) return { mor: null, dropped, problems: refused };
   diff(ocm, o, 'OCM', problems);
-  return problems.length > 0 ? { mor: null, dropped, problems } : { mor: m, dropped, problems };
+  if (problems.length > 0) return { mor: null, dropped, problems };
+  if (options.covFactor && m.COVARIANCE_DATA.length > 0) {
+    // a record outside the factor's validity domain gets no factor and keeps COVARIANCE_DATA
+    const encoded = encodeCovFactor(m, options.covFactor);
+    if (encoded) {
+      m.COV_FACTOR = [...encoded.bytes];
+      m.COV_FACTOR_ENCODING = encoded.encoding;
+      if (!options.keepCovarianceData) m.COVARIANCE_DATA = [];
+    }
+  }
+  return { mor: m, dropped, problems };
 }
 
 // ---- comparison ---------------------------------------------------------------------------------------------------
@@ -394,6 +421,7 @@ export function encode(fb, M, m) {
   const str = (s) => (s == null ? 0 : b.createString(s));
   const intl = str(m.INTERNATIONAL_DESIGNATOR), orig = str(m.ORIGINATOR), name = str(m.OBJECT_NAME), calRef = str(m.COV_CALIBRATION_REFERENCE);
   const cov = m.COVARIANCE_DATA?.length ? M.MOR.createCovarianceDataVector(b, m.COVARIANCE_DATA) : 0;
+  const covFactor = m.COV_FACTOR?.length ? M.MOR.createCovFactorVector(b, m.COV_FACTOR) : 0;
   const realism = m.COV_REALISM ? packStated(b, M.CVR, 'CVR', m.COV_REALISM, new M.CVRT()) : 0;
   let windows = 0, heads = 0, tails = 0;
   if (m.WINDOWS?.length) {
@@ -418,7 +446,7 @@ export function encode(fb, M, m) {
   M.MOR.addNoradCatId(b, m.NORAD_CAT_ID);
   M.MOR.addOdParameters(b, m.OD_PARAMETERS);
   M.MOR.addOdSolvedFor(b, m.OD_SOLVED_FOR);
-  for (const [v, add] of [[intl, 'addInternationalDesignator'], [orig, 'addOriginator'], [name, "addObjectName"], [calRef, "addCovCalibrationReference"], [cov, 'addCovarianceData'], [realism, 'addCovRealism'], [windows, 'addWindows'], [heads, 'addWindowCoeffHeads'], [tails, 'addWindowCoeffTails'], [fallback, 'addFallback']]) if (v) M.MOR[add](b, v);
+  for (const [v, add] of [[intl, 'addInternationalDesignator'], [orig, 'addOriginator'], [name, "addObjectName"], [calRef, "addCovCalibrationReference"], [cov, 'addCovarianceData'], [covFactor, 'addCovFactor'], [realism, 'addCovRealism'], [windows, 'addWindows'], [heads, 'addWindowCoeffHeads'], [tails, 'addWindowCoeffTails'], [fallback, 'addFallback']]) if (v) M.MOR[add](b, v);
   M.MOR.addCovRealismId(b, m.COV_REALISM_ID);
   M.MOR.addMessageStatus(b, m.MESSAGE_STATUS);
   M.MOR.addMeanElementTheory(b, m.MEAN_ELEMENT_THEORY);
@@ -429,6 +457,7 @@ export function encode(fb, M, m) {
   M.MOR.addSolarRadPressure(b, m.SOLAR_RAD_PRESSURE);
   M.MOR.addCovCalibration(b, m.COV_CALIBRATION);
   M.MOR.addCovFloor(b, m.COV_FLOOR);
+  M.MOR.addCovFactorEncoding(b, m.COV_FACTOR_ENCODING ?? 0);
   M.MOR.addRecordKind(b, m.RECORD_KIND);
   M.MOR.finishSizePrefixedMORBuffer(b, M.MOR.endMOR(b));
   return b.asUint8Array();

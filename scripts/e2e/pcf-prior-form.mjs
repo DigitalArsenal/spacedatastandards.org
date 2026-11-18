@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // One E2E for $PCF 1.0.6's prior forms: PCFFitPolicy DRAG_PRIOR_FORM and SRP_PRIOR_FORM, enum pcfPriorForm.
-//   a. the IDL: pcfPriorForm is GAUSSIAN_SIGNED = 0 and LOG_NORMAL = 1; the two fields are appended last in PCFFitPolicy, after
-//      SRP_PRIOR, each defaulting to GAUSSIAN_SIGNED; the generated JS defaults agree;
+//   a. the IDL: pcfPriorForm is GAUSSIAN_SIGNED = 0 and LOG_NORMAL = 1; the two fields are appended in PCFFitPolicy right after
+//      SRP_PRIOR (only later appends follow them), each defaulting to GAUSSIAN_SIGNED; the generated JS defaults agree;
 //   b. an absent FIT table, a FIT with the forms unset and every explicit pair read as the schema says in JS, C++ and Go, from
 //      buffers whose bytes show what was written (an unset form equals an explicit GAUSSIAN_SIGNED byte for byte);
 //   c. a fully populated $PCF round-trips JS -> C++ -> Go -> JS, re-encoding reproduces the first bytes, and a copy that drops
@@ -30,10 +30,12 @@ try {
   const pcf = parseIdl(path.join(root, 'schema'), 'PCF');
   assert.deepEqual(pcf.enums.get('pcfPriorForm').members.map((m) => `${m.name}=${m.value}`), ['GAUSSIAN_SIGNED=0', 'LOG_NORMAL=1'], 'pcfPriorForm numbering');
   const fit = pcf.tables.get('PCFFitPolicy').fields;
-  assert.deepEqual(fit.slice(-4).map((f) => [f.name, f.elem, f.vector, f.def ?? null]), [
+  // The forms were last in 1.272.0; fields appended after them since then are listed (WEATHER_HORIZON_DAYS, 1.276.0).
+  const later = [['WEATHER_HORIZON_DAYS', 'ushort', false, '30']];
+  assert.deepEqual(fit.slice(-4 - later.length).map((f) => [f.name, f.elem, f.vector, f.def ?? null]), [
     ['DRAG_PRIOR', 'PCFGaussianPrior', false, null], ['SRP_PRIOR', 'PCFGaussianPrior', false, null],
-    ['DRAG_PRIOR_FORM', 'pcfPriorForm', false, 'GAUSSIAN_SIGNED'], ['SRP_PRIOR_FORM', 'pcfPriorForm', false, 'GAUSSIAN_SIGNED'],
-  ], 'the two forms are appended last in PCFFitPolicy, after the priors they qualify');
+    ['DRAG_PRIOR_FORM', 'pcfPriorForm', false, 'GAUSSIAN_SIGNED'], ['SRP_PRIOR_FORM', 'pcfPriorForm', false, 'GAUSSIAN_SIGNED'], ...later,
+  ], 'the two forms are appended in PCFFitPolicy right after the priors they qualify, followed only by later appends');
   const header = fs.readFileSync(path.join(root, 'schema/PCF/main.fbs'), 'utf8').match(/^\/\/ Version: (\d+)\.(\d+)\.(\d+)$/m);
   assert.ok(Number(header[1]) === 1 && Number(header[2]) === 0 && Number(header[3]) >= 6, `the $PCF schema version must be 1.0.6 or later, found ${header[0]}`);
   const P = await import(pathToFileURL(path.join(root, 'lib/js/PCF/main.js')));

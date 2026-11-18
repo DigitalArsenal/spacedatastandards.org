@@ -279380,6 +279380,25 @@
                         }
                     }
                 },
+                "morCovFactorFormat": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "ROE_HYPERSPHERICAL_V1"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0,
+                            "description": "No covariance factor."
+                        },
+                        "ROE_HYPERSPHERICAL_V1": {
+                            "value": 1,
+                            "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
+                        }
+                    }
+                },
                 "MET": {
                     "type": "object",
                     "description": "Mean Element Theory",
@@ -279823,7 +279842,7 @@
                 },
                 "MORCovariancePropagation": {
                     "type": "object",
-                    "description": "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
+                    "description": "What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
                     "properties": {
                         "FLOOR_UU_KM2": {
                             "type": "number"
@@ -280160,12 +280179,12 @@
                         },
                         "COV_PROPAGATION": {
                             "$ref": "#/definitions/MORCovariancePropagation",
-                            "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
+                            "description": "What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.",
                             "x-flatbuffer-type": "MORCovariancePropagation"
                         },
                         "COV_FLOOR": {
                             "$ref": "#/definitions/morCovarianceFloor",
-                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "ubyte",
                             "x-flatbuffer-enum-values": {
@@ -280188,12 +280207,12 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
+                            "description": "The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
                             "x-flatbuffer-type": "uint16"
                         },
                         "COV_CALIBRATION": {
                             "$ref": "#/definitions/covarianceCalibration",
-                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
+                            "description": "Whether the covariance's coverage was measured against independent reference states.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -280305,13 +280324,40 @@
                         },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
+                            "description": "The realism of the covariance when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
                             "x-flatbuffer-type": "CVR"
                         },
                         "COV_CALIBRATION_REFERENCE": {
                             "type": "string",
                             "description": "Identifier of that calibration evidence (a report or record).",
                             "x-flatbuffer-type": "string"
+                        },
+                        "COV_FACTOR": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor\nCOV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on\nan AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.\nDefined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer\nthat needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "COV_FACTOR_ENCODING": {
+                            "$ref": "#/definitions/morCovFactorFormat",
+                            "description": "Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without\ncovariance from COV_FACTOR; its other fields are read under their own rules.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0,
+                                    "description": "No covariance factor."
+                                },
+                                "ROE_HYPERSPHERICAL_V1": {
+                                    "value": 1,
+                                    "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
+                                }
+                            },
+                            "x-flatbuffer-default": "NONE"
                         }
                     },
                     "additionalProperties": false
@@ -336114,6 +336160,25 @@
                         "TOLERANCE_NOT_HELD": {
                             "value": 2,
                             "description": "The builder could not hold its tolerance over the window; no coefficients."
+                        }
+                    }
+                },
+                "morCovFactorFormat": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "ROE_HYPERSPHERICAL_V1"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "NONE": {
+                            "value": 0,
+                            "description": "No covariance factor."
+                        },
+                        "ROE_HYPERSPHERICAL_V1": {
+                            "value": 1,
+                            "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
                         }
                     }
                 },
@@ -425525,7 +425590,7 @@
                 },
                 "MORCovariancePropagation": {
                     "type": "object",
-                    "description": "What propagates COVARIANCE_DATA beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
+                    "description": "What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch: the values of $OCM OCMCovariancePropagation, same\nnames, units and meanings, all thirteen always present. A closed struct: a later quantity comes as a new\nappended field of MOR, never as a change to this struct.",
                     "properties": {
                         "FLOOR_UU_KM2": {
                             "type": "number"
@@ -425862,12 +425927,12 @@
                         },
                         "COV_PROPAGATION": {
                             "$ref": "#/definitions/MORCovariancePropagation",
-                            "description": "What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.",
+                            "description": "What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.",
                             "x-flatbuffer-type": "MORCovariancePropagation"
                         },
                         "COV_FLOOR": {
                             "$ref": "#/definitions/morCovarianceFloor",
-                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
+                            "description": "Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over\nany producer text: a record read alone flies the same covariance as its $OCM.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "ubyte",
                             "x-flatbuffer-enum-values": {
@@ -425890,12 +425955,12 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 65535,
-                            "description": "The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
+                            "description": "The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when\nthe record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An\nID the asset does not list leaves the figures unresolved, and a reader says so.",
                             "x-flatbuffer-type": "uint16"
                         },
                         "COV_CALIBRATION": {
                             "$ref": "#/definitions/covarianceCalibration",
-                            "description": "Whether COVARIANCE_DATA's coverage was measured against independent reference states.",
+                            "description": "Whether the covariance's coverage was measured against independent reference states.",
                             "x-flatbuffer-type": "enum",
                             "x-flatbuffer-enum-type": "byte",
                             "x-flatbuffer-enum-values": {
@@ -426007,13 +426072,40 @@
                         },
                         "COV_REALISM": {
                             "$ref": "#/definitions/CVR",
-                            "description": "The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
+                            "description": "The realism of the covariance when it is the record's own (it differs from record to record), the\nsingle entry of $OCM COV_REALISM. Never with COV_REALISM_ID.",
                             "x-flatbuffer-type": "CVR"
                         },
                         "COV_CALIBRATION_REFERENCE": {
                             "type": "string",
                             "description": "Identifier of that calibration evidence (a report or record).",
                             "x-flatbuffer-type": "string"
+                        },
+                        "COV_FACTOR": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor\nCOV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on\nan AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.\nDefined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer\nthat needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.",
+                            "x-flatbuffer-type": "[ubyte]"
+                        },
+                        "COV_FACTOR_ENCODING": {
+                            "$ref": "#/definitions/morCovFactorFormat",
+                            "description": "Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without\ncovariance from COV_FACTOR; its other fields are read under their own rules.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NONE": {
+                                    "value": 0,
+                                    "description": "No covariance factor."
+                                },
+                                "ROE_HYPERSPHERICAL_V1": {
+                                    "value": 1,
+                                    "description": "Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md."
+                                }
+                            },
+                            "x-flatbuffer-default": "NONE"
                         }
                     },
                     "additionalProperties": false

@@ -190,23 +190,23 @@ public final class MOR extends com.google.flatbuffers.Table {
   public ByteBuffer COVARIANCE_DATAAsByteBuffer() { return __vector_as_bytebuffer(62, 8); }
   public ByteBuffer COVARIANCE_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 8); }
   /**
-   * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+   * What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
    */
   public MORCovariancePropagation COV_PROPAGATION() { return COV_PROPAGATION(new MORCovariancePropagation()); }
   public MORCovariancePropagation COV_PROPAGATION(MORCovariancePropagation obj) { int o = __offset(64); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
   /**
-   * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+   * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
    * any producer text: a record read alone flies the same covariance as its $OCM.
    */
   public int COV_FLOOR() { int o = __offset(66); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+   * The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
    * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
    * ID the asset does not list leaves the figures unresolved, and a reader says so.
    */
   public int COV_REALISM_ID() { int o = __offset(68); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
   /**
-   * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+   * Whether the covariance's coverage was measured against independent reference states.
    */
   public byte COV_CALIBRATION() { int o = __offset(70); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
@@ -252,7 +252,7 @@ public final class MOR extends com.google.flatbuffers.Table {
   public ByteBuffer OBJECT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
   public ByteBuffer OBJECT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
   /**
-   * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+   * The realism of the covariance when it is the record's own (it differs from record to record), the
    * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
    */
   public CVR COV_REALISM() { return COV_REALISM(new CVR()); }
@@ -263,8 +263,26 @@ public final class MOR extends com.google.flatbuffers.Table {
   public String COV_CALIBRATION_REFERENCE() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COV_CALIBRATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
   public ByteBuffer COV_CALIBRATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+   * COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+   * an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+   * Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+   * that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
+   */
+  public int COV_FACTOR(int j) { int o = __offset(94); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int COV_FACTORLength() { int o = __offset(94); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector covFactorVector() { return covFactorVector(new ByteVector()); }
+  public ByteVector covFactorVector(ByteVector obj) { int o = __offset(94); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer COV_FACTORAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
+  public ByteBuffer COV_FACTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
+  /**
+   * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+   * covariance from COV_FACTOR; its other fields are read under their own rules.
+   */
+  public int COV_FACTOR_ENCODING() { int o = __offset(96); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
-  public static void startMOR(FlatBufferBuilder builder) { builder.startTable(45); }
+  public static void startMOR(FlatBufferBuilder builder) { builder.startTable(47); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(0, (int) NORAD_CAT_ID, (int) 0L); }
   public static void addInternationalDesignator(FlatBufferBuilder builder, int INTERNATIONAL_DESIGNATOROffset) { builder.addOffset(1, INTERNATIONAL_DESIGNATOROffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
@@ -317,6 +335,11 @@ public final class MOR extends com.google.flatbuffers.Table {
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(42, OBJECT_NAMEOffset, 0); }
   public static void addCovRealism(FlatBufferBuilder builder, int COV_REALISMOffset) { builder.addOffset(43, COV_REALISMOffset, 0); }
   public static void addCovCalibrationReference(FlatBufferBuilder builder, int COV_CALIBRATION_REFERENCEOffset) { builder.addOffset(44, COV_CALIBRATION_REFERENCEOffset, 0); }
+  public static void addCovFactor(FlatBufferBuilder builder, int COV_FACTOROffset) { builder.addOffset(45, COV_FACTOROffset, 0); }
+  public static int createCovFactorVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createCovFactorVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startCovFactorVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addCovFactorEncoding(FlatBufferBuilder builder, int COV_FACTOR_ENCODING) { builder.addByte(46, (byte) COV_FACTOR_ENCODING, (byte) 0); }
   public static int endMOR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

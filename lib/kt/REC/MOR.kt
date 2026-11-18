@@ -335,7 +335,7 @@ class MOR : Table() {
     val covarianceDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 8)
     fun covarianceDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 8)
     /**
-     * What propagates COVARIANCE_DATA beyond its epoch; with COVARIANCE_DATA only.
+     * What propagates COVARIANCE_DATA or COV_FACTOR beyond its epoch; with COVARIANCE_DATA or COV_FACTOR.
      */
     val covPropagation : MORCovariancePropagation? get() = covPropagation(MORCovariancePropagation())
     fun covPropagation(obj: MORCovariancePropagation) : MORCovariancePropagation? {
@@ -347,7 +347,7 @@ class MOR : Table() {
         }
     }
     /**
-     * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA only. It governs the covariance's numbers, over
+     * Where COV_PROPAGATION's floor sits; with COVARIANCE_DATA or COV_FACTOR. It governs the covariance's numbers, over
      * any producer text: a record read alone flies the same covariance as its $OCM.
      */
     val covFloor : UByte
@@ -356,7 +356,7 @@ class MOR : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * The realism model of COVARIANCE_DATA among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
+     * The realism model of COVARIANCE_DATA or COV_FACTOR among its asset's $DPM DPMAsset.COV_REALISM_MODELS, by ID; 0 when
      * the record states its own COV_REALISM or none. The model's figures need the asset; the ID does not. An
      * ID the asset does not list leaves the figures unresolved, and a reader says so.
      */
@@ -366,7 +366,7 @@ class MOR : Table() {
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     /**
-     * Whether COVARIANCE_DATA's coverage was measured against independent reference states.
+     * Whether the covariance's coverage was measured against independent reference states.
      */
     val covCalibration : Byte
         get() {
@@ -459,7 +459,7 @@ class MOR : Table() {
     val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
     fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
     /**
-     * The realism of COVARIANCE_DATA when it is the record's own (it differs from record to record), the
+     * The realism of the covariance when it is the record's own (it differs from record to record), the
      * single entry of $OCM COV_REALISM. Never with COV_REALISM_ID.
      */
     val covRealism : CVR? get() = covRealism(CVR())
@@ -485,6 +485,36 @@ class MOR : Table() {
         }
     val covCalibrationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 1)
     fun covCalibrationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
+     * COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+     * an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+     * Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+     * that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
+     */
+    fun covFactor(j: Int) : UByte {
+        val o = __offset(94)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val covFactorLength : Int
+        get() {
+            val o = __offset(94); return if (o != 0) __vector_len(o) else 0
+        }
+    val covFactorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun covFactorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
+    /**
+     * Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+     * covariance from COV_FACTOR; its other fields are read under their own rules.
+     */
+    val covFactorEncoding : UByte
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMOR(_bb: ByteBuffer): MOR = getRootAsMOR(_bb, MOR())
@@ -493,7 +523,7 @@ class MOR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MORBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MOR")
-        fun startMOR(builder: FlatBufferBuilder) = builder.startTable(45)
+        fun startMOR(builder: FlatBufferBuilder) = builder.startTable(47)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(0, noradCatId.toInt(), 0)
         fun addINTERNATIONALDESIGNATOR(builder: FlatBufferBuilder, internationalDesignator: Int) = builder.addOffset(1, internationalDesignator, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
@@ -564,6 +594,17 @@ class MOR : Table() {
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(42, objectName, 0)
         fun addCOVREALISM(builder: FlatBufferBuilder, covRealism: Int) = builder.addOffset(43, covRealism, 0)
         fun addCOVCALIBRATIONREFERENCE(builder: FlatBufferBuilder, covCalibrationReference: Int) = builder.addOffset(44, covCalibrationReference, 0)
+        fun addCOVFACTOR(builder: FlatBufferBuilder, covFactor: Int) = builder.addOffset(45, covFactor, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createCovFactorVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startCovFactorVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addCOVFACTORENCODING(builder: FlatBufferBuilder, covFactorEncoding: UByte) = builder.addByte(46, covFactorEncoding.toByte(), 0)
         fun endMOR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
