@@ -11,9 +11,13 @@
 //   c. precedence and unknown-identifier rules: COVARIANCE_DATA overrides COV_FACTOR
 //      when both are present; an unknown COV_FACTOR_ENCODING ordinal (> 1) is ignored
 //      without refusing the record's elements; ROWS_ONLY rejects COV_FACTOR and
-//      non-default COV_FACTOR_ENCODING; reserved modes, truncated streams, and non-zero
-//      padding bits are refused;
-//   d. forward and backward wire compatibility with 1.288.0 TypeScript $MOR bindings.
+//      non-default COV_FACTOR_ENCODING; reserved modes, trailing bytes, truncated streams,
+//      non-zero padding and every edge of the validity domain (schema/MOR/COV_FACTOR.md
+//      section 3) are refused at once, with no partial result; a refused factor leaves the
+//      record with its elements, no covariance, and the reason;
+//   d. a record without a factor has the bytes 1.288.0's bindings and converter write, and
+//      1.288.0 TypeScript reads records with a factor.
+// The fuzz of the decoder's domain is scripts/e2e/mor-cov-factor-fuzz.mjs.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -170,16 +174,43 @@ try {
   assert.ok(C.invalid(Object.assign(new M.MORT(), rowsBase, { COV_FACTOR: [0] })).includes('ROWS_ONLY states COV_FACTOR'), 'c: ROWS_ONLY rejects COV_FACTOR');
   assert.ok(C.invalid(Object.assign(new M.MORT(), rowsBase, { COV_FACTOR_ENCODING: 1 })).includes('ROWS_ONLY states COV_FACTOR_ENCODING'), 'c: ROWS_ONLY rejects COV_FACTOR_ENCODING');
 
-  // 4. Malformed payloads refused under ROE_HYPERSPHERICAL_V1
-  const reservedBytes = new Uint8Array([25 << 3, 0]);
-  assert.ok(decodeCovFactor({ ...sample.input, COV_FACTOR: reservedBytes, COV_FACTOR_ENCODING: 1 }).error, 'c: reserved mode refused');
-  const badPad = Uint8Array.from(Buffer.from(sample.factorHex, 'hex'));
-  badPad[badPad.length - 1] |= 1; // flip final padding bit if any, or append extra byte
-  const trailing = new Uint8Array(badPad.length + 1);
-  trailing.set(badPad);
-  assert.ok(decodeCovFactor({ ...sample.input, COV_FACTOR: trailing, COV_FACTOR_ENCODING: 1 }).error, 'c: trailing byte refused');
-  assert.ok(C.invalid(makeMor({ COVARIANCE_DATA: [], COV_FACTOR: [1, 2], COV_FACTOR_ENCODING: 0 })).length > 0, 'c: COV_FACTOR with NONE encoding refused');
-  console.log('PASS c: COVARIANCE_DATA precedence, unknown-encoding ignore rule, ROWS_ONLY exclusion, and malformed rejections verified');
+  // 4. Malformed payloads refused under ROE_HYPERSPHERICAL_V1; a refusal returns no partial result
+  const factorOf = (hex, patch = {}) => ({ ...sample.input, COVARIANCE_DATA: [], COV_FACTOR: Uint8Array.from(Buffer.from(hex, 'hex')), COV_FACTOR_ENCODING: 1, ...patch });
+  const refusedOnly = (d) => d.error && !d.present && d.G === undefined && d.ltm === undefined;
+  assert.ok(refusedOnly(decodeCovFactor(factorOf('c800'))), 'c: reserved mode 25 refused');
+  const good = Buffer.from(sample.factorHex, 'hex');
+  assert.ok(refusedOnly(decodeCovFactor(factorOf(Buffer.concat([good, Buffer.from([0])]).toString('hex')))), 'c: trailing byte refused');
+  assert.ok(refusedOnly(decodeCovFactor(factorOf(good.subarray(0, good.length - 1).toString('hex')))), 'c: truncated stream refused');
+  // vector 0 ends in padding bits; setting the last one makes the padding non-zero
+  const padded = Buffer.from(good); padded[padded.length - 1] |= 1;
+  assert.ok(refusedOnly(decodeCovFactor(factorOf(padded.toString('hex')))), 'c: non-zero padding refused');
+  // the validity domain: outside it the decoder refuses at once (these mean motions looped forever before 1.289.0)
+  for (const MEAN_MOTION of [1e-159, 5e-324, 1e300, 0.0000152587890625 / 2, 512]) {
+    const t0 = process.hrtime.bigint();
+    assert.ok(refusedOnly(decodeCovFactor(factorOf(sample.factorHex, { MEAN_MOTION }))), `c: MEAN_MOTION ${MEAN_MOTION} refused`);
+    assert.ok(process.hrtime.bigint() - t0 < 100_000_000n, `c: MEAN_MOTION ${MEAN_MOTION} refused within 100 ms`);
+  }
+  for (const MEAN_MOTION of [0.0000152587890625, 256]) assert.equal(decodeCovFactor(factorOf(sample.factorHex, { MEAN_MOTION })).error, null, `c: MEAN_MOTION ${MEAN_MOTION} (a bound) decodes`);
+  for (const patch of [{ INCLINATION: 180.5 }, { MEAN_ANOMALY: 360.5 }, { RA_OF_ASC_NODE: -361 }, { ECCENTRICITY: 1 }, { COV_FLOOR: 0 }, { COV_PROPAGATION: null },
+    { COV_PROPAGATION: { ...sample.input.COV_PROPAGATION, FLOOR_UU_KM2: -1e-6 } }, { COV_PROPAGATION: { ...sample.input.COV_PROPAGATION, FLOOR_VU_KM2: 1 } }]) {
+    assert.ok(refusedOnly(decodeCovFactor(factorOf(sample.factorHex, patch))), `c: ${JSON.stringify(patch).slice(0, 60)} refused`);
+  }
+  // a writer gives a record outside the domain no factor (it keeps COVARIANCE_DATA)
+  for (const patch of [{ MEAN_MOTION: 512 }, { INCLINATION: 1e-12 }, { COV_PROPAGATION: { ...sample.input.COV_PROPAGATION, FLOOR_WW_KM2: -1e-6 } }]) {
+    assert.equal(encodeCovFactor({ ...sample.input, ...patch }, 'strict'), null, `c: writer gives ${JSON.stringify(patch).slice(0, 50)} no factor`);
+  }
+  const bigEscape = Buffer.alloc(1 + 8 * 36); bigEscape[0] = (31 << 3) | 7; bigEscape.writeDoubleLE(1e200, 1);
+  assert.ok(refusedOnly(decodeCovFactor(factorOf(bigEscape.toString('hex')))), 'c: escape value above 2^32 refused');
+  // one outcome for every refusal: the record expands with its elements and no covariance, and says why
+  for (const patch of [{ COV_FACTOR: [1, 2], COV_FACTOR_ENCODING: 0 }, { COV_FACTOR: [], COV_FACTOR_ENCODING: 1 }, { COV_FACTOR: [...padded], COV_FACTOR_ENCODING: 1 },
+    { COV_FACTOR: [...good], COV_FACTOR_ENCODING: 1, COV_PROPAGATION: Object.assign(new M.MORCovariancePropagationT(), sample.input.COV_PROPAGATION, { FLOOR_UU_KM2: -1 }) }]) {
+    const x = C.expand(M.MOR.getSizePrefixedRootAsMOR(new fb.ByteBuffer(C.encode(fb, M, makeMor({ COVARIANCE_DATA: [], ...patch })))).unpack(), null, O);
+    assert.deepEqual(x.refused, [], 'c: a refused factor does not refuse the record');
+    assert.equal(x.ocm.COVARIANCE_DATA.length, 0, 'c: a refused factor leaves no covariance');
+    assert.equal(x.ocm.MEAN_ELEMENTS.MEAN_MOTION, fullMor.MEAN_MOTION, 'c: elements read under their own rules');
+    assert.ok(x.unresolved.some((u) => u.startsWith('COV_FACTOR refused')), 'c: the reader says why');
+  }
+  console.log('PASS c: COVARIANCE_DATA precedence, unknown-encoding ignore rule, ROWS_ONLY exclusion, validity domain and malformed refusals (one outcome) verified');
 
   // ---- d: wire compatibility with 1.288.0 TypeScript $MOR bindings ----
   const oldRoot = path.join(tmp, 'old');
@@ -188,7 +219,14 @@ try {
     fs.writeFileSync(path.join(oldRoot, file), execFileSync('git', ['show', `${baseline}:${file}`], { cwd: root }));
   }
   const OldM = await bundle(oldRoot, 'MOR', 'old');
-  // Default-off byte identity: encoding fullMor with new bindings produces identical bytes to 1.288.0
+  // Default-off byte identity: a record without a factor encodes, with the new bindings and converter, to the bytes
+  // 1.288.0's bindings and converter write
+  const oldConvert = path.join(oldRoot, 'scripts/e2e/lib/mor-convert.mjs');
+  fs.mkdirSync(path.dirname(oldConvert), { recursive: true });
+  fs.writeFileSync(oldConvert, execFileSync('git', ['show', `${baseline}:scripts/e2e/lib/mor-convert.mjs`], { cwd: root }));
+  const OldC = await import(pathToFileURL(oldConvert));
+  const oldMor = Object.assign(new OldM.MORT(), makeMor(), { COV_PROPAGATION: Object.assign(new OldM.MORCovariancePropagationT(), sample.input.COV_PROPAGATION) });
+  assert.equal(Buffer.from(OldC.encode(fb, OldM, oldMor)).toString('hex'), Buffer.from(fullBytes).toString('hex'), 'd: a record without a factor has the bytes 1.288.0 writes');
   const oldFullMor = OldM.MOR.getSizePrefixedRootAsMOR(new fb.ByteBuffer(fullBytes)).unpack();
   assert.equal(oldFullMor.NORAD_CAT_ID, fullMor.NORAD_CAT_ID, 'd: 1.288.0 reads new full $MOR');
   assert.deepEqual(oldFullMor.COVARIANCE_DATA, fullMor.COVARIANCE_DATA, 'd: 1.288.0 reads COVARIANCE_DATA unchanged');

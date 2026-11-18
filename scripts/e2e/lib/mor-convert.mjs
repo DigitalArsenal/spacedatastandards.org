@@ -103,20 +103,22 @@ export function invalid(m) {
     const keep = new Set(['NORAD_CAT_ID', 'INTERNATIONAL_DESIGNATOR', 'ORIGINATOR', 'MEAN_ELEMENT_THEORY', 'EPOCH_UNIX_US', 'WINDOWS', 'WINDOW_COEFF_HEADS', 'WINDOW_COEFF_TAILS', 'WINDOW_RECORD_CHECK', 'RECORD_KIND']);
     const fresh = new m.constructor();
     for (const k of Object.keys(fresh)) if (!keep.has(k) && !same(m[k], fresh[k])) out.push(`ROWS_ONLY states ${k}`);
-  } else if ((m.COVARIANCE_DATA ?? []).length === 0) {
-    const enc = m.COV_FACTOR_ENCODING ?? 0;
-    const fac = m.COV_FACTOR ?? [];
-    if (enc === 0 && fac.length > 0) out.push('COV_FACTOR stated with COV_FACTOR_ENCODING NONE');
-    if (enc === MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1) {
-      if (fac.length === 0) out.push('COV_FACTOR empty for ROE_HYPERSPHERICAL_V1');
-      else if (!m.COV_PROPAGATION || (m.COV_FLOOR ?? 0) === 0) out.push('COV_FACTOR without COV_PROPAGATION or COV_FLOOR');
-      else {
-        const d = decodeCovFactor(m);
-        if (d.error) out.push(d.error);
-      }
-    }
   }
   return out;
+}
+/// The covariance a FULL record carries (schema/MOR/COV_FACTOR.md 2.2): COVARIANCE_DATA when present (COV_FACTOR is then
+/// not read); otherwise the decoded COV_FACTOR. A refused factor (or an encoding this reader does not know, or a floor
+/// at the writer's theory state, which this expansion cannot add) leaves the record without covariance and says why;
+/// the record's other fields are read under their own rules.
+export function covarianceOf(m) {
+  const full = m.COVARIANCE_DATA ?? [];
+  if (full.length > 0) return { cov: full, note: null };
+  const d = decodeCovFactor(m);
+  if (d.error) return { cov: [], note: `COV_FACTOR refused (${d.error}): no covariance` };
+  if (d.ignored) return { cov: [], note: `COV_FACTOR_ENCODING ${m.COV_FACTOR_ENCODING} unknown: no covariance` };
+  if (!d.present) return { cov: [], note: null };
+  if (!d.ltm) return { cov: [], note: 'COV_FACTOR floor at the writer theory state: no covariance in this expansion' };
+  return { cov: d.ltm, note: null };
 }
 /// A ROWS_ONLY record carrying a set's new rows: its identity, theory and epoch, and nothing else of it.
 export function rowsOnly(m, M, windows, heads, tails, check) {
@@ -130,16 +132,11 @@ export function expand(m, asset, O) {
   if (m.RECORD_KIND !== KIND.FULL && m.RECORD_KIND !== KIND.ROWS_ONLY) return { ocm: null, fallback: null, refused: [`RECORD_KIND ${m.RECORD_KIND} unknown: ignored`], unresolved: [], ignored: true };
   const refused = invalid(m);
   if (m.RECORD_KIND === KIND.ROWS_ONLY) refused.push('ROWS_ONLY has no expansion');
-  const fullCov = m.COVARIANCE_DATA ?? [];
-  let cov = fullCov;
-  if (fullCov.length === 0 && (m.COV_FACTOR_ENCODING ?? 0) === MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1 && refused.length === 0) {
-    if (m.COV_FLOOR !== 2) refused.push('COV_FACTOR expansion requires COV_FLOOR MEAN_ELEMENTS_TWO_BODY');
-    else cov = decodeCovFactor(m).ltm ?? [];
-  }
+  const { cov, note } = m.RECORD_KIND === KIND.FULL ? covarianceOf(m) : { cov: [], note: null };
   // COV_FLOOR governs; an $OCM can state the floor only through PRODUCER, so a contradicting asset text is refused
   if (cov.length > 0 && asset?.provenance && floorOf(asset.provenance.PRODUCER) !== m.COV_FLOOR) refused.push('COV_FLOOR differs from the asset PRODUCER');
   if (refused.length > 0) return { ocm: null, fallback: null, refused, unresolved: [] };
-  const unresolved = [];
+  const unresolved = note ? [note] : [];
   const sgp4 = m.MEAN_ELEMENT_THEORY === THEORY.SGP4, ofEpoch = ofEpochFrame(m), text = epochText(m.EPOCH_UNIX_US);
   const o = new O.OCMT();
   o.HEADER = new O.HeaderT();
@@ -375,10 +372,13 @@ export function reduce(source, asset, O, M, options = {}) {
   diff(ocm, o, 'OCM', problems);
   if (problems.length > 0) return { mor: null, dropped, problems };
   if (options.covFactor && m.COVARIANCE_DATA.length > 0) {
+    // a record outside the factor's validity domain gets no factor and keeps COVARIANCE_DATA
     const encoded = encodeCovFactor(m, options.covFactor);
-    m.COV_FACTOR = [...encoded.bytes];
-    m.COV_FACTOR_ENCODING = encoded.encoding;
-    if (!options.keepCovarianceData) m.COVARIANCE_DATA = [];
+    if (encoded) {
+      m.COV_FACTOR = [...encoded.bytes];
+      m.COV_FACTOR_ENCODING = encoded.encoding;
+      if (!options.keepCovarianceData) m.COVARIANCE_DATA = [];
+    }
   }
   return { mor: m, dropped, problems };
 }

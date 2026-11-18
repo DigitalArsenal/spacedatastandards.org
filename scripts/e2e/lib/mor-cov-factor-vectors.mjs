@@ -1,4 +1,6 @@
-// Normative synthetic test vectors for $MOR ROE_HYPERSPHERICAL_V1 covariance factor.
+// Normative synthetic test vectors for $MOR ROE_HYPERSPHERICAL_V1 covariance factor (schema/MOR/COV_FACTOR.md
+// section 11): decodedGHex is G row-major N x r, decodedLtmHex the lower triangle of P = F + G G^T row by row, each
+// value 8 bytes little-endian binary64. A decoder reads the factor with COVARIANCE_DATA taken as absent.
 export const COV_FACTOR_VECTORS = [
   {
     "name": "strict_rank_lt_8_zero_flags",
@@ -153,7 +155,7 @@ export const COV_FACTOR_VECTORS = [
     }
   },
   {
-    "name": "escape_rank_5",
+    "name": "escape_rank_6",
     "policy": "escape",
     "mode": 31,
     "N": 8,

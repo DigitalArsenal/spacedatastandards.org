@@ -1,4 +1,4 @@
-// Hash: 190e300abeefa81a7c008d03ea523620b7bf0018e2cfd20d1ee52b6dca804ce8
+// Hash: 769ba1c885d90bedb12f262ee75f8da5cf694f35280ca9f86d07e6f747c7bdd7
 // Version: 1.285.1
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
@@ -13,10 +13,16 @@ include "../MPE/main.fbs";
 // the expansion rule, never repeated per record.
 //
 // Validity: WINDOWS are in time order, do not overlap, and every EPOCH_HALF_SPAN is above 0; a record carries
-// COV_REALISM_ID or COV_REALISM, never both; FALLBACK has no ENTITY_ID and no TARGETER; COV_FACTOR is absent
-// when COV_FACTOR_ENCODING is NONE, and when COVARIANCE_DATA is absent and COV_FACTOR_ENCODING is
-// ROE_HYPERSPHERICAL_V1, COV_FACTOR is non-empty, COV_PROPAGATION is present, and COV_FLOOR is not UNSTATED.
-// A reader refuses a record that breaks these.
+// COV_REALISM_ID or COV_REALISM, never both; FALLBACK has no ENTITY_ID and no TARGETER. A reader refuses a
+// record that breaks these.
+//
+// Covariance factor (COV_FACTOR, COV_FACTOR_ENCODING): specified in full in schema/MOR/COV_FACTOR.md, the
+// normative text (bit layout, constants, order of operations, validity domain, limits, test vectors). When
+// COVARIANCE_DATA is present it is the covariance and COV_FACTOR is not read. Otherwise a reader that knows
+// the encoding decodes COV_FACTOR, or refuses it: outside the validity domain (the elements, the floor, the
+// bytes), with COV_FACTOR stated under NONE, or empty under ROE_HYPERSPHERICAL_V1. A refused factor, or an
+// encoding the reader does not know, leaves the record with no covariance and nothing partial; the record's
+// other fields are read under their own rules.
 //
 // Record kinds (RECORD_KIND): FULL, a whole set; ROWS_ONLY, new rows for a held set. A reader that meets a
 // kind it does not know ignores that record entirely and changes nothing it holds; it never reads it as FULL.
@@ -42,10 +48,9 @@ include "../MPE/main.fbs";
 //     OD_DYNAMIC_PARAMETERS one entry per bit of OD_PARAMETERS, ascending: PARAMETER the bit's
 //     prwDynamicParameter, NAME its enum name, SOLVED_FOR its bit in OD_SOLVED_FOR, and VALUE and UNITS
 //     BTERM "m**2/kg" (DRAG_AREA_OVER_MASS), AGOM "m**2/kg" (SRP_AREA_OVER_MASS), ECOM2_Y0 "m/s**2" (ECOM2_Y0).
-//   The covariance, when COVARIANCE_DATA is present (authoritative when both COVARIANCE_DATA and COV_FACTOR
-//     are carried) or when COVARIANCE_DATA is absent and COV_FACTOR_ENCODING is ROE_HYPERSPHERICAL_V1
-//     (decoded from the stated elements and COV_PROPAGATION floor F to P = F + G G^T under COV_FLOOR
-//     MEAN_ELEMENTS_TWO_BODY; an unknown COV_FACTOR_ENCODING ordinal is ignored as no covariance):
+//   The covariance, when COVARIANCE_DATA is present, or when it is absent and COV_FACTOR decodes under
+//     COV_FLOOR MEAN_ELEMENTS_TWO_BODY (P = F + G G^T, schema/MOR/COV_FACTOR.md section 9; a factor whose floor
+//     is at the writer's theory state has no expansion of its covariance):
 //     COV_TYPE "CARTPV", COV_ORDERING LTM, COV_SIZE N,
 //     COV_PARAMETER_KINDS the solved covariance parameters, ascending: DRAG_AREA_OVER_MASS and
 //     SRP_AREA_OVER_MASS are the only ones OD_PARAMETERS can carry (an $OCM with a DRAG_AREA_OVER_MASS_RATE,
@@ -186,7 +191,7 @@ enum morCovFactorFormat : ubyte {
   NONE = 0,
   /// Kepler two-body relative-orbital-element hyperspherical and lossless-escape factor of the fitted
   /// covariance P_fit = G G^T over a 7-day horizon, with floor F from COV_PROPAGATION and COV_FLOOR
-  /// (P = F + G G^T); directions masked under F over 7 days may be omitted.
+  /// (P = F + G G^T); directions masked under F over 7 days may be omitted. schema/MOR/COV_FACTOR.md.
   ROE_HYPERSPHERICAL_V1 = 1
 }
 
@@ -349,12 +354,13 @@ table MOR {
   /// Identifier of that calibration evidence (a report or record).
   COV_CALIBRATION_REFERENCE: string;
   /// Encoded factor G of the fitted epoch covariance P_fit = G G^T (P = F + G G^T, where F is the floor
-  /// COV_PROPAGATION and COV_FLOOR specify). When COVARIANCE_DATA is present, COVARIANCE_DATA is
-  /// authoritative. Directions masked beneath F over 7 days may be omitted; consumers needing sub-floor
-  /// directions or horizons beyond 7 days require COVARIANCE_DATA.
+  /// COV_PROPAGATION and COV_FLOOR specify), in place of COVARIANCE_DATA: 2 to 289 bytes, about 87 to 117 on
+  /// an AP catalog against 288 for the N = 8 lower triangle. Not read when COVARIANCE_DATA is present.
+  /// Defined in schema/MOR/COV_FACTOR.md. Directions masked beneath F over 7 days may be omitted; a consumer
+  /// that needs sub-floor directions, horizons beyond 7 days or the exact doubles needs COVARIANCE_DATA.
   COV_FACTOR: [ubyte];
-  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal is ignored, leaving the
-  /// record without covariance from COV_FACTOR while its elements and rows remain valid.
+  /// Encoding and version of COV_FACTOR; NONE when absent. An unknown ordinal leaves the record without
+  /// covariance from COV_FACTOR; its other fields are read under their own rules.
   COV_FACTOR_ENCODING: morCovFactorFormat = NONE;
 }
 

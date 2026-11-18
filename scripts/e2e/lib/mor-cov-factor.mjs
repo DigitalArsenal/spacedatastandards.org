@@ -25,7 +25,25 @@ export const LOG2_SIGMA_LO = -26.0;
 export const LOG2_SIGMA_HI = 18.0;
 export const LOG2_SIGMA_SPAN = 44.0;
 
-const COV_PARAMETER_BITS = [1, 2, 3, 4, 16];
+// Validity domain (schema/MOR/COV_FACTOR.md section 3): every bound an exact binary64 value. A record outside it is
+// refused: no covariance from COV_FACTOR, never a partial result.
+export const DOMAIN = {
+  MEAN_MOTION_MIN: 0.0000152587890625, // 2^-16 rev/day
+  MEAN_MOTION_MAX: 256.0, // 2^8 rev/day
+  INCLINATION_MIN: 0.0000000009313225746154785, // 2^-30 deg (or exactly 0)
+  INCLINATION_MAX: 180.0,
+  ANGLE_MIN: -360.0, // RA_OF_ASC_NODE, ARG_OF_PERICENTER, MEAN_ANOMALY
+  ANGLE_MAX: 360.0,
+  VALUE_ABS_MIN: 3.054936363499605e-151, // 2^-500: a floor scalar or escape value is 0 or at least this in magnitude
+  FLOOR_ABS_MAX: 68719476736.0, // 2^36 km^2
+  ESCAPE_ABS_MAX: 4294967296.0, // 2^32
+  FACTOR_BYTES_MIN: 2,
+  FACTOR_BYTES_MAX: 289,
+  CBRT_REDUCTION_STEPS: 16,
+};
+
+// Only bits 1 (DRAG_AREA_OVER_MASS) and 3 (SRP_AREA_OVER_MASS) are covariance rows; bit 6 (ECOM2_Y0) is not.
+const COV_PARAMETER_BITS = [1, 3];
 
 // Odd Taylor coefficients of sin(pi * t) on t in [-0.5, 0.5], degrees 1..21.
 const SIN_C1 = 3.141592653589793;
@@ -100,18 +118,22 @@ export function sincosPi(x) {
   return [canonZero(-c0), canonZero(s0)];
 }
 
-/// Deterministic cube root for x > 0 using exact power-of-8 scaling and 6 Newton steps.
+/// Deterministic cube root for x > 0 using exact power-of-8 scaling and 6 Newton steps. Each scaling loop runs at
+/// most DOMAIN.CBRT_REDUCTION_STEPS times; an argument it cannot bring into [0.5, 4) returns NaN (refused). Inside
+/// the mean-motion domain the argument is in [0.0044, 1.25e12]: at most 13 steps down or 3 up.
 export function cbrtPos(x) {
+  if (!(x > 0.0) || !Number.isFinite(x)) return NaN;
   let m = x;
   let s = 1.0;
-  while (m >= 4.0) {
+  for (let it = 0; it < DOMAIN.CBRT_REDUCTION_STEPS && m >= 4.0; it++) {
     m = m * 0.125;
     s = s * 2.0;
   }
-  while (m < 0.5) {
+  for (let it = 0; it < DOMAIN.CBRT_REDUCTION_STEPS && m < 0.5; it++) {
     m = m * 8.0;
     s = s * 0.5;
   }
+  if (!(m >= 0.5 && m < 4.0)) return NaN;
   let y = 0.55 + (0.3 * m);
   for (let it = 0; it < 6; it++) {
     y = ((2.0 * y) + (m / (y * y))) / 3.0;
@@ -149,8 +171,25 @@ export function solvedCovParamCount(odSolvedFor) {
   return count;
 }
 
-/// Deterministic two-body TEME state (km, km/s) from stated MOR mean elements at epoch.
+/// Deterministic two-body TEME state (km, km/s) from stated MOR mean elements at epoch; null outside the domain.
 export function twoBodyState(m) {
+  const inRange = (x, lo, hi) => x >= lo && x <= hi; // false for NaN
+  if (
+    !inRange(Number(m.MEAN_MOTION), DOMAIN.MEAN_MOTION_MIN, DOMAIN.MEAN_MOTION_MAX) ||
+    !(Number(m.ECCENTRICITY) >= 0.0 && Number(m.ECCENTRICITY) < 1.0) ||
+    !(Number(m.INCLINATION) === 0.0 || inRange(Number(m.INCLINATION), DOMAIN.INCLINATION_MIN, DOMAIN.INCLINATION_MAX)) ||
+    !inRange(Number(m.RA_OF_ASC_NODE), DOMAIN.ANGLE_MIN, DOMAIN.ANGLE_MAX) ||
+    !inRange(Number(m.ARG_OF_PERICENTER), DOMAIN.ANGLE_MIN, DOMAIN.ANGLE_MAX) ||
+    !inRange(Number(m.MEAN_ANOMALY), DOMAIN.ANGLE_MIN, DOMAIN.ANGLE_MAX)
+  ) {
+    return null;
+  }
+  return twoBodyStateOf(m);
+}
+
+/// The same state without the record domain, for the writer's own perturbed and propagated elements (finite values
+/// only; the cube root still refuses an argument it cannot reduce).
+function twoBodyStateOf(m) {
   const nRev = Number(m.MEAN_MOTION);
   const e = Number(m.ECCENTRICITY);
   const incDeg = Number(m.INCLINATION);
@@ -167,6 +206,7 @@ export function twoBodyState(m) {
   }
   const nMin = (nRev * (2.0 * PI)) / 1440.0;
   const a = cbrtPos(K_MU_ER / (nMin * nMin)) * K_RE;
+  if (!Number.isFinite(a)) return null;
   const xM = maDeg / 180.0;
   const uM = xM - (2.0 * Math.floor((0.5 * xM) + 0.5));
   const mRad = PI * uM;
@@ -347,6 +387,27 @@ export function extractFloor6(covPropagation) {
   ];
 }
 
+/// A floor scalar or escape value: exactly 0, or a magnitude in [2^-64, max] (false for NaN and the infinities).
+function valueInRange(x, max) {
+  if (x === 0.0) return true;
+  const a = Math.abs(x);
+  return a >= DOMAIN.VALUE_ABS_MIN && a <= max;
+}
+
+/// The floor domain: six finite scalars of magnitude at most 2^36 km^2 forming a positive semi-definite UVW matrix,
+/// tested by its principal minors in this exact order of binary64 operations.
+export function floorInDomain(floor6) {
+  if (!floor6 || floor6.length !== 6) return false;
+  const [f0, f1, f2, f3, f4, f5] = floor6.map(Number);
+  for (const f of [f0, f1, f2, f3, f4, f5]) if (!valueInRange(f, DOMAIN.FLOOR_ABS_MAX)) return false;
+  if (!(f0 >= 0.0 && f2 >= 0.0 && f5 >= 0.0)) return false;
+  if (!((f1 * f1) <= (f0 * f2))) return false;
+  if (!((f3 * f3) <= (f0 * f5))) return false;
+  if (!((f4 * f4) <= (f2 * f5))) return false;
+  const det = ((f0 * ((f2 * f5) - (f4 * f4))) - (f1 * ((f1 * f5) - (f4 * f3)))) + (f3 * ((f1 * f4) - (f2 * f3)));
+  return det >= 0.0;
+}
+
 class BitWriter {
   constructor() {
     this.bits = [];
@@ -403,16 +464,27 @@ export function stepPalettes(step) {
 /// or returns { ignored: true } for unknown encoding identifiers, or { error } if malformed.
 export function decodeCovFactor(mor) {
   const encoding = Number(mor.COV_FACTOR_ENCODING ?? 0);
+  const raw = mor.COV_FACTOR;
   if (encoding === MOR_COV_FACTOR_FORMAT.NONE) {
+    if (raw && raw.length > 0) return { present: false, ignored: false, error: 'COV_FACTOR stated with COV_FACTOR_ENCODING NONE' };
     return { present: false, ignored: false, error: null };
   }
   if (encoding !== MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1) {
     // Normative rule: unknown encoding identifier or version is ignored without error.
     return { present: false, ignored: true, error: null };
   }
-  const raw = mor.COV_FACTOR;
   if (!raw || raw.length === 0) {
     return { present: false, ignored: false, error: 'COV_FACTOR empty for ROE_HYPERSPHERICAL_V1' };
+  }
+  if (raw.length < DOMAIN.FACTOR_BYTES_MIN || raw.length > DOMAIN.FACTOR_BYTES_MAX) {
+    return { present: false, ignored: false, error: 'COV_FACTOR length outside 2..289 bytes' };
+  }
+  const covFloor = Number(mor.COV_FLOOR ?? 0);
+  if (covFloor !== 1 && covFloor !== 2) {
+    return { present: false, ignored: false, error: 'COV_FACTOR needs COV_FLOOR WRITER_THEORY_STATE or MEAN_ELEMENTS_TWO_BODY' };
+  }
+  if (!mor.COV_PROPAGATION || !floorInDomain(extractFloor6(mor.COV_PROPAGATION))) {
+    return { present: false, ignored: false, error: 'COV_PROPAGATION absent or its floor outside the domain' };
   }
   const bytes = raw instanceof Uint8Array ? raw : Uint8Array.from(raw);
   const paramCount = solvedCovParamCount(mor.OD_SOLVED_FOR ?? 0);
@@ -455,8 +527,8 @@ export function decodeCovFactor(mor) {
       for (let i = j; i < N; i++) {
         const val = view.getFloat64(off, true);
         off += 8;
-        if (!Number.isFinite(val)) {
-          return { present: false, ignored: false, error: 'Non-finite value in escape factor' };
+        if (!valueInRange(val, DOMAIN.ESCAPE_ABS_MAX)) {
+          return { present: false, ignored: false, error: 'Escape factor value not 0 and not in magnitude [2^-64, 2^32]' };
         }
         G[i * rank + j] = canonZero(val);
       }
@@ -633,6 +705,10 @@ export function decodeCovFactor(mor) {
         ltm[q++] = P[i * N + j];
       }
     }
+  }
+  // Inside the domain every output is finite; the check makes a refusal the only other outcome.
+  if (!G.every(Number.isFinite) || !Pfit.every(Number.isFinite) || (P && !P.every(Number.isFinite))) {
+    return { present: false, ignored: false, error: 'Decoded covariance not finite' };
   }
 
   return {
@@ -906,7 +982,7 @@ function propagatedModelState(base, d, dEquin, dDrag, dSrp) {
   const maFinal = ma0 + maDot * d + dLamDrag + dLamSrp;
 
   const rad2deg = 180.0 / PI;
-  return twoBodyState({
+  return twoBodyStateOf({
     MEAN_MOTION: nRevD,
     ECCENTRICITY: eFinal,
     INCLINATION: incRad0 * rad2deg,
@@ -1282,6 +1358,8 @@ function encodeAtStep(mor, nativeG, tb, paramCount, horizon, step) {
   }
   for (const [val, bits] of angleQueue) w.write(val, bits);
 
+  // A row scale above the palette's top (2^18) cannot be written; the caller falls back to the escape.
+  for (let i = 0; i < N; i++) if (used[i] && !(sg[i] <= Math.pow(2.0, LOG2_SIGMA_HI))) return null;
   for (let i = 0; i < N; i++) {
     if (!used[i]) continue;
     let bSigma;
@@ -1490,9 +1568,11 @@ export function encodeCovFactor(mor, options = {}) {
   if (Number(mor.COV_FLOOR ?? 0) !== 2 || !mor.COV_PROPAGATION) {
     throw new Error('COV_FACTOR encoding requires COV_FLOOR = MEAN_ELEMENTS_TWO_BODY (2) and COV_PROPAGATION');
   }
+  // A record a reader would refuse (outside the validity domain) gets no factor: null, and it keeps COVARIANCE_DATA.
   const tb = twoBodyState(mor);
-  if (!tb) throw new Error('Invalid MOR mean elements for two-body state');
+  if (!tb) return null;
   const floor6 = extractFloor6(mor.COV_PROPAGATION);
+  if (!floorInDomain(floor6)) return null;
   const F0 = floorMatrixAtState(floor6, tb.r, tb.v);
   if (!F0) throw new Error('Invalid COV_PROPAGATION floor');
 
@@ -1503,11 +1583,19 @@ export function encodeCovFactor(mor, options = {}) {
   const nativeG = psdFactor(Pfit, N);
   if (!nativeG) throw new Error('Epoch covariance minus floor is not positive semidefinite');
 
-  if (options.escape === true || policy === 'escape') {
-    const bytes = encodeEscape(nativeG, N);
-    return { bytes, encoding: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1, mode: MODE_ESCAPE, selection: 'escape' };
-  }
+  let escapeInDomain = true;
+  for (let i = 0; i < N; i++) for (let j = 0; j <= i; j++) escapeInDomain = escapeInDomain && valueInRange(nativeG[i * N + j], DOMAIN.ESCAPE_ABS_MAX);
+  // an escape a reader would refuse is not written: null, and the record keeps COVARIANCE_DATA
+  const escape = () => (escapeInDomain ? { bytes: encodeEscape(nativeG, N), encoding: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1, mode: MODE_ESCAPE, selection: 'escape' } : null);
+  if (options.escape === true || policy === 'escape') return escape();
 
+  // A compressed stream is kept only when it decodes; otherwise the writer falls back to the lossless escape.
+  const decodes = (bytes) => bytes && !decodeCovFactor({
+    MEAN_MOTION: mor.MEAN_MOTION, ECCENTRICITY: mor.ECCENTRICITY, INCLINATION: mor.INCLINATION,
+    RA_OF_ASC_NODE: mor.RA_OF_ASC_NODE, ARG_OF_PERICENTER: mor.ARG_OF_PERICENTER, MEAN_ANOMALY: mor.MEAN_ANOMALY,
+    OD_SOLVED_FOR: mor.OD_SOLVED_FOR, COV_FLOOR: mor.COV_FLOOR, COV_PROPAGATION: mor.COV_PROPAGATION,
+    COV_FACTOR: bytes, COV_FACTOR_ENCODING: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1,
+  }).error;
   const horizon = buildAnalyticalHorizon(mor, tb, paramCount);
   if (typeof options.step === 'number') {
     const step = options.step;
@@ -1515,12 +1603,14 @@ export function encodeCovFactor(mor, options = {}) {
       throw new Error(`Invalid explicit step ${step}`);
     }
     const bytes = encodeAtStep(mor, nativeG, tb, paramCount, horizon, step);
+    if (!decodes(bytes)) return escape();
     return { bytes, encoding: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1, mode: step, selection: `step-${step}` };
   }
 
   if (policy === 'fixed') {
     const step = 12;
     const bytes = encodeAtStep(mor, nativeG, tb, paramCount, horizon, step);
+    if (!decodes(bytes)) return escape();
     return { bytes, encoding: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1, mode: step, selection: 'step-12' };
   }
 
@@ -1552,6 +1642,5 @@ export function encodeCovFactor(mor, options = {}) {
     }
   }
 
-  const bytes = encodeEscape(nativeG, N);
-  return { bytes, encoding: MOR_COV_FACTOR_FORMAT.ROE_HYPERSPHERICAL_V1, mode: MODE_ESCAPE, selection: 'escape' };
+  return escape();
 }
