@@ -2186,6 +2186,13 @@ pub enum SNROffset {}
 ///
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
+///
+/// A record with none of the platform fields is a DEFINITION: one sensor
+/// configuration, published once, that any number of hosts carry. A $SLO
+/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
+/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
+/// position, serial number, mounting, status). A definition's SENSOR_ID names
+/// the configuration, not one physical sensor, so it has no $SEN.
 #[derive(Copy, Clone, PartialEq)]
 pub struct SNR<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -2312,7 +2319,8 @@ impl<'a> SNR<'a> {
         }
     }
 
-    /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+    /// Stable identifier of this sensor, or of the configuration when the record
+    /// is a definition. $SEN.ID of the same sensor when the record has a platform.
     #[inline]
     pub fn SENSOR_ID(&self) -> &'a str {
         // Safety:

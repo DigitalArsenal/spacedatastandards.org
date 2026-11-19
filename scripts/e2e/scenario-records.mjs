@@ -81,7 +81,7 @@ try {
   assert.match(fs.readFileSync(path.join(schemaRoot, 'COA/main.fbs'), 'utf8'), /file_identifier "\$COA";/, '$COA: file identifier');
   const ordinals = JSON.parse(fs.readFileSync(path.join(schemaRoot, 'REC/RECORDTYPE_ORDINALS.json'), 'utf8'));
   assert.equal(ordinals.extended_ordinals.COA, 298, '$COA is wide record type 298');
-  assert.equal(Math.max(...Object.values(ordinals.extended_ordinals)), 298, '298 is the last wide ordinal');
+  assert.deepEqual(Object.entries(ordinals.extended_ordinals).filter(([, v]) => v === 298).map(([k]) => k), ['COA'], 'no other standard holds 298');
 
   // ---- b. One scenario $REC, written and read back.
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(tmp, 'node_modules'));

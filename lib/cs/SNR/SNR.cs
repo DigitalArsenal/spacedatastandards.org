@@ -16,6 +16,13 @@ using global::Google.FlatBuffers;
 ///
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
+///
+/// A record with none of the platform fields is a DEFINITION: one sensor
+/// configuration, published once, that any number of hosts carry. A $SLO
+/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
+/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
+/// position, serial number, mounting, status). A definition's SENSOR_ID names
+/// the configuration, not one physical sensor, so it has no $SEN.
 public struct SNR : IFlatbufferObject
 {
   private Table __p;
@@ -28,7 +35,8 @@ public struct SNR : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SNR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Stable identifier of this sensor. $SEN.ID of the same sensor.
+  /// Stable identifier of this sensor, or of the configuration when the record
+  /// is a definition. $SEN.ID of the same sensor when the record has a platform.
   public string SENSOR_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }

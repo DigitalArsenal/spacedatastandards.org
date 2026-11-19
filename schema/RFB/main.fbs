@@ -1,5 +1,5 @@
-// Hash: 59c60bc1b2ea74493068a0e374ba11f8a24ac505b7d955fdc8670c7fbcfab88e
-// Version: 0.0.6
+// Hash: 82291cccdc0e6ef66c967e72835656a1daedff73d8f659386baa6416533073ad
+// Version: 0.0.7
 // -----------------------------------END_HEADER
 include "../LKS/main.fbs";
 
@@ -77,6 +77,13 @@ enum rfTransmitterState : byte {
 /// transponder is therefore represented as TWO RFB records — one UPLINK and
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
+///
+/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
+/// published once, that any number of hosts carry. The definition is every
+/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
+/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
+/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status).
 table RFB {
   /// Unique identifier
   ID:string;
